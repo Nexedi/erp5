@@ -79,16 +79,20 @@
 # - Check language dependencies (e.g. "Account Of" should not be allowed, because it cannot be\n
 #   translated naturally for other languages).\n
 # - Check skin names.\n
+# - Check script names (from skin folders and workflows).\n
 \n
-ABBRIVIATION_WORD_LIST = (\'ID\', \'URL\', \'VAT\', \'FAX\', \'GAP\', \'IBAN\', \'BBAN\', \'EAN\', \'BOM\', \'BIC\', \'CSV\', \'UBM\', \'VPN\')\n
+ABBRIVIATION_WORD_LIST = ( \'ID\', \'URL\', \'VAT\', \'FAX\', \'GAP\', \'IBAN\', \'BBAN\', \'EAN\', \'BOM\', \'BIC\'\n
+                         , \'CSV\', \'SVN\', \'UBM\', \'VPN\', \'CAD\', \'ERP5\'\n
+                         )\n
 ABBRIVIATION_WORD_DICT = dict([(word, 1) for word in ABBRIVIATION_WORD_LIST])\n
 \n
 # List of words that do not need to be titlecased\n
-LOWERCASE_WORD_LIST = (\'g\', \'cm\', \'%\', \'/\', \'...\')\n
+LOWERCASE_WORD_LIST = (\'g\', \'cm\', \'kg\', \'%\', \'/\', \'...\')\n
 LOWERCASE_WORD_DICT = dict([(word, 1) for word in LOWERCASE_WORD_LIST])\n
 \n
 # List of allowed characters, usefull to detect non-english strings\n
-ALLOWED_CHARS = \'abcdefghijklmnopqrstuvwxyz0123456789%/. ()-\'\n
+ALLOWED_CHARS = \'abcdefghijklmnopqrstuvwxyz0123456789%/. ()-_?&\'\n
+\n
 \n
 \n
 def checkField(folder, form, field):\n
@@ -128,10 +132,10 @@ def checkTitle(path, id, title):\n
 \n
     if word.upper() in ABBRIVIATION_WORD_DICT:\n
       if not word.isupper():\n
-        error_message += \'%s : %s : %r is not uppper case even though it is an abbriviation\\n\' % (path, id, word)\n
+        error_message += \'%s : %s : %r is not upper case even though it is an abbriviation\\n\' % (path, id, word)\n
     elif word.endswith(\'s\') and word[:-1].upper() in ABBRIVIATION_WORD_DICT:\n
       if not word[:-1].isupper():\n
-        error_message += \'%s : %s : %r is not uppper case even though it is an abbriviation\\n\' % (path, id, word)\n
+        error_message += \'%s : %s : %r is not upper case even though it is an abbriviation\\n\' % (path, id, word)\n
     else:\n
       if not word.istitle() and word not in LOWERCASE_WORD_DICT:\n
         error_message += \'%s : %s : %r is not titlecased\\n\' % (path, id, word)\n
@@ -140,7 +144,9 @@ def checkTitle(path, id, title):\n
   return error_message\n
 \n
 \n
+\n
 message_list = []\n
+\n
 \n
 # Test portal_skins content\n
 for folder in context.portal_skins.objectValues(spec=(\'Folder\',)):\n
@@ -160,15 +166,28 @@ for folder in context.portal_skins.objectValues(spec=(\'Folder\',)):\n
         if message:\n
           message_list.append(message)\n
 \n
-# Test workflow states\n
+\n
+# Test worflow related stuff\n
 for wf in context.portal_workflow.objectValues():\n
+\n
+  # Test workflow states\n
   wf_states = wf.states\n
+  message = \'\'\n
   if wf_states not in (None, (), [], \'\'):\n
-    message = \'\'\n
     for state in wf_states.objectValues() :\n
       message += checkTitle(\'/\'.join([\'portal_workflow\', wf.id, \'states\', state.id]), \'title\', state.title)\n
     if message:\n
       message_list.append(message)\n
+\n
+#   # Test workflow states\n
+#   wf_scripts = wf.scripts\n
+#   message = \'\'\n
+#   if wf_scripts not in (None, (), [], \'\'):\n
+#     for script in wf_scripts.objectValues():\n
+#       message += checkTitle(\'/\'.join([\'portal_workflow\', wf.id, \'scripts\', script.id]), \'id\', script.id)\n
+#     if message:\n
+#       message_list.append(message)\n
+\n
 \n
 # Test portal types\n
 for ptype in context.portal_types.objectValues():\n
@@ -194,6 +213,7 @@ if html_output :\n
       else:\n
         print "<br/>"\n
   return printed\n
+\n
 \n
 return ("%d problems found :\\n\\n" % len(message_list)) + \'\\n\'.join(message_list)\n
 
