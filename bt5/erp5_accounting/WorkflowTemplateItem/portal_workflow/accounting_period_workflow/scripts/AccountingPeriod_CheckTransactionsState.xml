@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -79,28 +81,30 @@ valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
-search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
-                  \'delivery.stop_date\'  : \'<= %s\' % stop_date, \n
-                  \'simulation_state\' : [\'draft\', \'planned\', \'confirmed\', ] }\n
+search_params = { \'delivery.start_date\': \'>= %s\' % start_date\n
+                , \'delivery.stop_date\' : \'<= %s\' % stop_date\n
+                , \'simulation_state\'   : [\'draft\', \'planned\', \'confirmed\'] \n
+                }\n
 transaction_list = accounting_module.searchFolder( **search_params )\n
 \n
 organisation_section = closing_period.getParentValue()\n
-for transaction in transaction_list :\n
+for transaction in transaction_list:\n
   transaction = transaction.getObject()\n
   # we only take into account transaction that are related to this\n
   # organisation. \n
   # FIXME: this approach is not compatible with categories as section.\n
   # FIXME: and not compatible with 100 000 transactions, but as we only search\n
   # for draft, planned or confirmed transactions, it should be ok.\n
-  if transaction.getSourceSectionUid() == organisation_section.getUid() or \\\n
-     transaction.getDestinationSectionUid() == organisation_section.getUid() :\n
-    if transaction.getSimulationState() not in valid_states :\n
+  if organisation_section.getUid() in [ transaction.getSourceSectionUid()\n
+                                      , transaction.getDestinationSectionUid()]:\n
+    if transaction.getSimulationState() not in valid_states:\n
       raise ValidationFailed, N_(\n
-          "Transaction ${transaction_path} is in invalid "+\n
-          "state (${transaction_translated_state})",\n
-           mapping =  { \'transaction_path\' : transaction.getPath(),\n
-                        \'transaction_translated_state\' :\n
-            unicode(transaction.getTranslatedSimulationStateTitle(), \'utf8\')})\n
+           "Transaction <a href=\'${url}\'>${path}</a> is in invalid state (${state})",\n
+           mapping = { \'url\'  : transaction.absolute_url()\n
+                     , \'path\' : transaction.getPath()\n
+                     , \'state\': unicode(transaction.getTranslatedSimulationStateTitle(), \'utf8\')\n
+                     }\n
+          )\n
 
 
 ]]></string> </value>
