@@ -52,7 +52,7 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
   """
   Unit test class for the check payment module
   """
-  
+
   login = PortalTestCase.login
 
   # pseudo constants
@@ -106,7 +106,7 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_10000}
-    
+
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.billet_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
@@ -118,10 +118,11 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_5000}
-    
+
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
-    self.bi_counter = self.paris.surface.banque_interne.guichet_1
-    self.createCashInventory(source=None, destination=self.bi_counter, currency=self.currency_1,
+    self.bi_counter = self.paris.surface.banque_interne
+    self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
+    self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
                              line_list=line_list)
     self.stepTic()
     # create a person and a bank account
@@ -131,24 +132,24 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     self.bank_account_1 = self.createBankAccount(person=self.person_1,
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
-                                                 amount=100000) 
+                                                 amount=100000)
 
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
                                             vault=self.bi_counter,
                                             bank_account=self.bank_account_1,
                                             min=50,
-                                            max=100,                                            
+                                            max=100,
                                             )
 
     self.check_1 = self.createCheck(id='check_1',
                                     reference='50',
                                     checkbook=self.checkbook_1)
-    
+
     # open counter date and counter
     self.openCounterDate(site=self.paris)
-    self.openCounter(site=self.bi_counter)
-    
+    self.openCounter(site=self.bi_counter_vault)
+
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
@@ -157,7 +158,7 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
                           function='banking', group='baobab',  site='testsite/paris')
     # define the user
     user_dict = {
-        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris']
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
@@ -184,14 +185,14 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
@@ -255,18 +256,18 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check the inventory of the bank account, must be planned to be decrease by 20000
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
-    
+
 
   def stepInputCashDetails(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -302,14 +303,14 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 4.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 4.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 4.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 4.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
     # check the final inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
