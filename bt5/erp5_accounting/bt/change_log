@@ -1,3 +1,6 @@
+2006-06-09 Kevin
+* Delete empty accounting lines in roundDebitCredit script.
+
 2006-06-08 Kevin
 * Don't create empty lines when the closing balance is generated.
 * Add direct link to the wrong transaction object when closing the accounting period.

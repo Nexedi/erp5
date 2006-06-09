@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -81,8 +83,15 @@ net_balance    = 0.0\n
 debit_balance  = 0.0\n
 credit_balance = 0.0\n
 \n
-for line in context.getMovementList(portal_type=context.getPortalAccountingMovementTypeList()):\n
+line_list = context.getMovementList(portal_type=context.getPortalAccountingMovementTypeList())\n
+\n
+for line in line_list:\n
   line_quantity = r_(line.getQuantity())\n
+  # Auto remove empty lines\n
+  if line_quantity == 0.0: \n
+    context.deleteContent(line.getId())\n
+    # Proceed to next line\n
+    continue\n
   line.setQuantity(line_quantity)  \n
   if line.getSourceDebit() > 0:\n
     line.setSourceDebit(r_(line.getSourceDebit()))\n
@@ -154,6 +163,7 @@ if abs(net_balance) > 0 or \\\n
                             <string>net_balance</string>
                             <string>debit_balance</string>
                             <string>credit_balance</string>
+                            <string>line_list</string>
                             <string>_getiter_</string>
                             <string>line_quantity</string>
                             <string>abs</string>
