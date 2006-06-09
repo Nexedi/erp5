@@ -47,8 +47,8 @@ except ImportError:
 
 class AlarmTool(BaseTool):
   """
-    This tool manages alarms. 
-    
+    This tool manages alarms.
+
     It is used as a central managment point for all alarms.
 
     Inside this tool we have a way to retrieve all reports comings
@@ -68,12 +68,20 @@ class AlarmTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal , 'manageAlarmList' )
   manageAlarmList = DTMLFile( 'manageAlarmList', _dtmldir )
 
+  security.declareProtected( Permissions.ManagePortal , 'manageAlarmAdvanced' )
+  manageAlarmAdvanced = DTMLFile( 'manageAlarmAdvanced', _dtmldir )
+
+
   manage_options = ( ( { 'label'   : 'Overview'
                        , 'action'   : 'manage_overview'
                        }
                      , { 'label'   : 'All Alarms'
                        , 'action'   : 'manageAlarmList'
                        }
+                     , { 'label'   : 'Advanced'
+                       , 'action'   : 'manageAlarmAdvanced'
+                       }
+                     ,
                      )
                      + Folder.manage_options
                    )
@@ -133,10 +141,26 @@ class AlarmTool(BaseTool):
       if alarm:
         user = alarm.getOwner()
         newSecurityManager(self.REQUEST, user)
-        if alarm.isActive() or not alarm.isEnabled(): 
+        if alarm.isActive() or not alarm.isEnabled():
           # do nothing if already active, or not enabled
           continue
         alarm.activate().activeSense()
+
+  security.declareProtected(Permissions.ManageProperties, 'isSubscribed')
+  def isSubscribed(self):
+      """
+      return True, if we are subscribed to TimerService.
+      Otherwise return False.
+      """
+      service = getTimerService(self)
+      if not service:
+          LOG('AlarmTool', INFO, 'TimerService not available')
+          return False
+
+      path = '/'.join(self.getPhysicalPath())
+      if path in service.lisSubscriptions():
+          return True
+      return False
 
   security.declareProtected(Permissions.ManageProperties, 'subscribe')
   def subscribe(self):
@@ -165,13 +189,13 @@ class AlarmTool(BaseTool):
   def manage_beforeDelete(self, item, container):
     self.unsubscribe()
     BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
-    
+
   def manage_afterAdd(self, item, container):
     self.subscribe()
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
-        
+
   def process_timer(self, tick, interval, prev="", next=""):
-    """ 
+    """
       Call tic() every x seconds. x is defined in self.interval
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
