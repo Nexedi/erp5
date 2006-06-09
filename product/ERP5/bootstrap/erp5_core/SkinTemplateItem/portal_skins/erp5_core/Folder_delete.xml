@@ -118,7 +118,15 @@ elif uids is not None:\n
         qs = \'?portal_status_message=%s\' % message  \n
   else:\n
     try : \n
+      object_ids = \', \'.join([ x.getObject().getId() for x in context.portal_catalog(uid=uids)])\n
       context.manage_delObjects(uids=uids, REQUEST=REQUEST)\n
+      comment = N_(\'Deleted objects: ${object_ids}\',\n
+                   mapping={\'object_ids\': object_ids})\n
+      # record object deletion in workflow history\n
+      context.getPortalObject().portal_workflow.doActionFor(\n
+                      context,\n
+                      \'edit_action\',\n
+                      comment=comment)\n
       message = N_("Deleted.")\n
       qs = \'?portal_status_message=%s\' % message\n
     except ConflictError : raise\n
@@ -200,6 +208,11 @@ return REQUEST.RESPONSE.redirect( ret_url + qs )\n
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>repr</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>object_ids</string>
+                            <string>comment</string>
                             <string>Exception</string>
                           </tuple>
                         </value>
