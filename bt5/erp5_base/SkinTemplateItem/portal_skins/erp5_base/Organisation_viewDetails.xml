@@ -90,7 +90,6 @@
                     <key>                 <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_financial_year_stop_date</string>
                         <string>my_economical_class</string>
                         <string>my_bic_code</string>
                       </list>
