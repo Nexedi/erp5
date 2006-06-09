@@ -203,7 +203,9 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1, include_if_child=1, sort_on=None, sort_order=None, **kw):
+    def getCategoryChildValueList(self, recursive=1, include_if_child=1,
+                                  is_self_excluded=0, sort_on=None,
+                                  sort_order=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -211,6 +213,8 @@ class Category(Folder):
 
           include_if_child - if set to 1, categories having child categories
                              are not included
+          
+          is_self_excluded - if set to 1, exclude this category from the list
 
           sort_on, sort_order - the same semantics as ZSQLCatalog
                                 sort_on specifies properties used for sorting
@@ -220,7 +224,9 @@ class Category(Folder):
                                 significantly, because this is written in
                                 Python
       """
-      if not(include_if_child) and len(self.objectValues(self.allowed_types))>0:
+      if is_self_excluded or (
+                    not(include_if_child) and
+                    len(self.objectValues(self.allowed_types)) > 0):
         value_list = []
       else:
         value_list = [self]
@@ -228,7 +234,8 @@ class Category(Folder):
         for c in self.objectValues(self.allowed_types):
           # Do not pass sort parameters intentionally, because sorting
           # needs to be done only at the end of recursive calls.
-          value_list.extend(c.getCategoryChildValueList(recursive = 1,include_if_child=include_if_child))
+          value_list.extend(c.getCategoryChildValueList(recursive=1,
+                                       include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
           value_list.append(c)
@@ -585,8 +592,9 @@ class BaseCategory(Category):
       return self
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1, include_if_child=1, sort_on=None, sort_order=None, **kw):
+                                                 'getCategoryChildValueList')
+    def getCategoryChildValueList(self, is_self_excluded=1, recursive=1,
+                     include_if_child=1, sort_on=None, sort_order=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -606,9 +614,12 @@ class BaseCategory(Category):
 
       """
       value_list = []
+      if not is_self_excluded:
+        value_list = [self]
       if recursive:
         for c in self.objectValues(self.allowed_types):
-          value_list.extend(c.getCategoryChildValueList(recursive = 1,include_if_child=include_if_child))
+          value_list.extend(c.getCategoryChildValueList(recursive=1,
+                                        include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
           if include_if_child:
