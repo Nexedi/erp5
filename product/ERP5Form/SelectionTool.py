@@ -99,8 +99,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return
 
       context = self.aq_parent
-      if form_id is None:
-        form_id = 'view'
+      form_id = form_id or REQUEST.get('form_id', 'view')
       url = context.absolute_url() + '/' + form_id
       if query_string is not None:
         if no_reset:
