@@ -194,13 +194,13 @@ class AlarmTool(BaseTool):
     self.subscribe()
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-  def process_timer(self, tick, interval, prev="", next=""):
+  def process_timer(self, interval, tick, prev="", next=""):
     """
       Call tic() every x seconds. x is defined in self.interval
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
     """
-    if tick - self.last_tic >= self.interval:
+    if tick.timeTime() - self.last_tic >= self.interval:
       self.tic()
-      self.last_tic = tick
+      self.last_tic = tick.timeTime()
 
