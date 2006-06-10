@@ -122,6 +122,7 @@ Payment Transaction | source_asset
 Payment Transaction | view
 Person | jump_to_accounting
 Person | transactions
+Preference | view_accounting
 Purchase Invoice Transaction Line | history
 Purchase Invoice Transaction Line | metadata
 Purchase Invoice Transaction Line | print
