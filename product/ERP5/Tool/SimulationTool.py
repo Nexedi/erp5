@@ -172,15 +172,19 @@ class SimulationTool (BaseTool):
       property_uid_list = []
       if type(property) is type('') :
         if as_text == 0:
-          property_uid_list.append(
-              category_tool.getCategoryValue(property).getUid())
+          prop_value = category_tool.getCategoryValue(property)
+          if prop_value is None:
+            raise ValueError, 'Category %s does not exists' % property
+          property_uid_list.append(prop_value.getUid())
         else:
           property_uid_list.append(property)
       elif type(property) is type([]) or type(property) is type(()) :
         for property_item in property :
           if as_text == 0:
-            property_uid_list.append(
-                category_tool.getCategoryValue(property_item).getUid())
+            prop_value = category_tool.getCategoryValue(property_item)
+            if prop_value is None:
+              raise ValueError, 'Category %s does not exists' % property_item
+            property_uid_list.append(prop_value.getUid())
           else:
             property_uid_list.append(property_item)
       elif type(property) is type({}) :
@@ -189,8 +193,10 @@ class SimulationTool (BaseTool):
           property['query'] = [property['query']]
         for property_item in property['query'] :
           if as_text == 0:
-            tmp_uid_list.append(
-                category_tool.getCategoryValue(property_item).getUid())
+            prop_value = category_tool.getCategoryValue(property_item)
+            if prop_value is None:
+              raise ValueError, 'Category %s does not exists' % property_item
+            tmp_uid_list.append(prop_value.getUid())
           else:
             tmp_uid_list.append(property_item)
         if len(tmp_uid_list) :
@@ -437,9 +443,9 @@ class SimulationTool (BaseTool):
 
       omit_transit - do not evaluate transit_simulation_state
 
-      input_simulation_state - only take rows with specified input_simulation_state and quantity > 0
+      input_simulation_state - only take rows with specified simulation_state and quantity > 0
 
-      output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
+      output_simulation_state - only take rows with specified simulation_state and quantity < 0
 
       ignore_variation - do not take into account variation in inventory calculation (useless on getInventory,
                          but useful on getInventoryList)
