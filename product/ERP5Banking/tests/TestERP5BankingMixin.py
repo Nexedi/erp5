@@ -347,7 +347,7 @@ class TestERP5BankingMixin:
     # get the base category site
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
-    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category', codification='TEST', vault_type='site')
+    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category')
     self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P1',  vault_type='site')
     self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S1',  vault_type='site')
 
