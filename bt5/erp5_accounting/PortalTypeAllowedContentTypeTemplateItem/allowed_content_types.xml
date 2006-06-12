@@ -22,7 +22,7 @@
   <item>Agent</item>
  </portal_type>
  <portal_type id="Closing Transaction">
-  <item>Accounting Transaction Line</item>
+  <item>Closing Transaction Line</item>
  </portal_type>
  <portal_type id="Invoice Line">
   <item>Discount</item>
