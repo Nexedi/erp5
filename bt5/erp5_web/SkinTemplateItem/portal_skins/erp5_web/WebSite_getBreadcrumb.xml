@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -71,10 +73,10 @@
 html_list = []\n
 \n
 for crumb in context.WebSite_getBreadcrumbValue():\n
-  text = None\n
-  for property in (\'title\', \'short_title\', \'id\'):\n
-    if text in (None, \'\') and hasattr(crumb, property):\n
-      text = getattr(crumb, property)\n
+  if crumb.getTitle() is None or crumb.getTitle() == \'\':\n
+    text = crumb.getId()\n
+  else:\n
+    text = crumb.getTitle()\n
   html_list.append(\'<a href="%s">%s</a>\' % (crumb.WebSite_getUrl(), text))\n
 \n
 return \' &gt; \'.join(html_list)\n
@@ -90,7 +92,7 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getBreadcrumb</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getBreadcrumb</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -127,9 +129,6 @@ return \' &gt; \'.join(html_list)\n
                             <string>crumb</string>
                             <string>None</string>
                             <string>text</string>
-                            <string>property</string>
-                            <string>hasattr</string>
-                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
