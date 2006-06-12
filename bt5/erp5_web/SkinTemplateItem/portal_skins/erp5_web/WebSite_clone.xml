@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -77,8 +79,11 @@ dest = directory[paste_result[0][\'new_id\']]\n
 #if id is not None:\n
 #  directory.manage_renameObject(id=dest.getId(),new_id=id)\n
 \n
+context.log(\'WebSite_clone\', context.REQUEST.form)\n
+\n
 for (key, val) in context.REQUEST.form.items():\n
   if key != \'id\' and dest.hasProperty(key):\n
+    context.log(\'WebSite_clone\',\'overwriting attr "%s" to value "%s"\' % (key,val))\n
     dest.setProperty(key, val)\n
 \n
 return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl(), dest.getId()))\n
@@ -94,7 +99,13 @@ return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl()
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_clone</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_clone</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -125,7 +136,7 @@ return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl()
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>directory</string>
                             <string>clipboard</string>
                             <string>paste_result</string>
