@@ -16,6 +16,7 @@ portal_categories/tax_category
 portal_categories/tax_category/**
 portal_deliveries/pay_sheet_transaction_builder
 portal_rules/default_pay_sheet_transaction_rule
+portal_rules/default_pay_sheet_transaction_rule/**
 service_module/agff
 service_module/agff_tranche_a
 service_module/agff_tranche_b
