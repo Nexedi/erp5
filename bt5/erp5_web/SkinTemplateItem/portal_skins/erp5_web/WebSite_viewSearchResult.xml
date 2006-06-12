@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,10 +109,10 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
-<string>context</string>
-                            <string>kw</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

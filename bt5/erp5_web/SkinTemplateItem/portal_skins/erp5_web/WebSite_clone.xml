@@ -79,11 +79,8 @@ dest = directory[paste_result[0][\'new_id\']]\n
 #if id is not None:\n
 #  directory.manage_renameObject(id=dest.getId(),new_id=id)\n
 \n
-context.log(\'WebSite_clone\', context.REQUEST.form)\n
-\n
 for (key, val) in context.REQUEST.form.items():\n
   if key != \'id\' and dest.hasProperty(key):\n
-    context.log(\'WebSite_clone\',\'overwriting attr "%s" to value "%s"\' % (key,val))\n
     dest.setProperty(key, val)\n
 \n
 return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl(), dest.getId()))\n

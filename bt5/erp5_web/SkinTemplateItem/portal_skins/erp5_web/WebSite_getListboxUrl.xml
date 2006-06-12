@@ -72,7 +72,7 @@
 if brain is not None:\n
   o = brain.getObject()\n
   url = \'%s/%s\' % (context.REQUEST[\'URL1\'], o.getRelativeUrl())\n
-  if context.REQUEST.has_key(\'editable_mode\') and context.REQUEST[\'editable_mode\']:\n
+  if getattr(context.REQUEST, \'editable_mode\', None):\n
     url = \'%s/view?editable_mode=%s\' % (url, context.REQUEST[\'editable_mode\'])\n
 return url\n
 </string> </value>
@@ -129,6 +129,7 @@ return url\n
                             <string>o</string>
                             <string>_getitem_</string>
                             <string>context</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
