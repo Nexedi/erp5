@@ -274,6 +274,12 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       #FIXME We should check the type of the acl_users folder instead of
       #      checking which product is installed.
       if user_name is None:
+        # First try to guess from the owner
+        try:
+          user_name = object.getOwnerInfo()['id']
+        except AttributeError:
+          pass
+      if user_name is None:
         if ERP5UserManager is not None:
           # We use id for roles in ERP5Security
           user_name = getSecurityManager().getUser().getId()
