@@ -1,3 +1,6 @@
+2006-06-12 Kevin
+* Add Closing Transaction Line portal type to use in AccountingTransactionModule_createClosingTransaction script.
+
 2006-06-09 Kevin
 * Delete empty accounting lines in roundDebitCredit script.
 

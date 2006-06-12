@@ -155,7 +155,7 @@ for account in account_list:\n
 \n
       # Create the transaction line for this third party\n
       if tp_balance != 0.0:\n
-        closing_transaction.newContent( portal_type               = \'Accounting Transaction Line\'\n
+        closing_transaction.newContent( portal_type               = \'Closing Transaction Line\'\n
                                       , source_value              = account\n
                                       , quantity                  = tp_balance\n
                                       , destination_section_value = tp\n
@@ -189,7 +189,7 @@ for account in account_list:\n
 \n
     # Create a line for all transaction without any third party\n
     if no_third_parties_balance != 0.0:\n
-      closing_transaction.newContent( portal_type  = \'Accounting Transaction Line\'\n
+      closing_transaction.newContent( portal_type  = \'Closing Transaction Line\'\n
                                     , source_value = account\n
                                     , quantity     = no_third_parties_balance\n
                                     )\n
@@ -200,7 +200,7 @@ for account in account_list:\n
 \n
   # Don\'t make any distinction within transactions\n
   elif account_balance != 0.0:\n
-    closing_transaction.newContent( portal_type  = \'Accounting Transaction Line\'\n
+    closing_transaction.newContent( portal_type  = \'Closing Transaction Line\'\n
                                   , source_value = account\n
                                   , quantity     = account_balance\n
                                   )\n
@@ -212,7 +212,7 @@ for account in account_list:\n
 # Create a transaction line to balance the closing transaction.\n
 # The user is pleased to choose the destination account where the profit or loose will be sent to.\n
 # Set id to \'000\' to put the line at listbox top.\n
-closing_transaction.newContent( portal_type = \'Accounting Transaction Line\'\n
+closing_transaction.newContent( portal_type = \'Closing Transaction Line\'\n
                               , source      = N_(\'Select your result account\')\n
                               , quantity    = -result_balance\n
                               , id          = \'000\'\n

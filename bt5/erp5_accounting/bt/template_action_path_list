@@ -1,3 +1,4 @@
+
 Account Module | account_statement_report
 Account Module | bank_accounts_report
 Account Module | csv_export
@@ -76,6 +77,10 @@ Cash Register | metadata
 Cash Register | print_pdf
 Cash Register | transactions
 Cash Register | view
+Closing Transaction Line | history
+Closing Transaction Line | metadata
+Closing Transaction Line | print
+Closing Transaction Line | view
 Closing Transaction | create_reversal
 Closing Transaction | destination_asset
 Closing Transaction | details
