@@ -150,7 +150,7 @@ if from_date is not None:\n
 \n
     previous_balance.edit( \\\n
         title                  = context.Base_translateString("Previous Balance")\n
-      , date                   = from_date - 1\n
+      , date                   = from_date and (from_date - 1) or None\n
       , portal_type            = ""\n
       , simulation_state_title = ""\n
       , debit                  = previous_total_debit\n
