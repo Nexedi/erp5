@@ -91,6 +91,7 @@ print \'\'\'\n
     var isMenu  = false ;\n
     var menuSelObj = null ;\n
     var overpopupmenu = false;\n
+    var curHeight = 300;\n
 \n
     // This script is intended for use with a minimum of Netscape 4 or IE 4.\n
     if(document.getElementById) {\n
@@ -390,6 +391,20 @@ print \'\'\'\n
       document.getElementById(\'menudiv\').style.display = "none";\n
       open(\'%(absURL)s/BusinessTemplate_doSvnLs?added=\'+tree.getSelectedItemId(), \'_self\');\n
     }\n
+\n
+   function treeTaller(){\n
+     if(curHeight < 1000){\n
+       curHeight += 100;\n
+       document.getElementById(\'MainTreeTD\').style.height = curHeight+"px";\n
+     }\n
+   }\n
+\n
+   function treeShorter(){\n
+     if(curHeight > 200){\n
+       curHeight -= 100;\n
+       document.getElementById(\'MainTreeTD\').style.height = curHeight+"px";\n
+     }\n
+   }\n
   </script>\n
 \'\'\'% {\'btId\' : context.getId(), \'absURL\' : context.absolute_url(), \'extract\' : do_extract}\n
 \n
