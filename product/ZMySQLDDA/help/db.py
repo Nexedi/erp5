@@ -1,13 +1,13 @@
 class DB:
 
-    """This is the ZMySQLDDA Database Deferred Connection Object."""
+    """This is the ZMySQLDDA Deferred Database Connection Object."""
 
     def __init__(self,connection):
         """
             connection
                blah blah
         """
-        
+
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
         """Returns a list of tables in the current database."""
@@ -20,7 +20,7 @@ class DB:
 
     def _begin(self, *ignored):
         """Begin a transaction (when TM is enabled)."""
-        
+
     def _finish(self, *ignored):
         """Commit a transaction (when TM is enabled)."""
 

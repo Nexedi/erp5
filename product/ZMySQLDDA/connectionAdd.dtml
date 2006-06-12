@@ -1,43 +1,43 @@
 <html>
-  <head><title>Add Z MySQL Database Connection</title></head>
+  <head><title>Add Z MySQL Deferred Database Connection</title></head>
   <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
-  
+
     <h2>Add Z MySQL Database Deferred Connection</h2>
-    
+
     <form action="manage_addZMySQLConnection" method="POST">
       <table cellspacing="2">
-	<tr>
-	  <th align="LEFT" valign="TOP">Id</th>
-	  <td align="LEFT" valign="TOP">
+  <tr>
+    <th align="LEFT" valign="TOP">Id</th>
+    <td align="LEFT" valign="TOP">
             <input type="TEXT" name="id" size="40"
                 value="MySQL_database_connection">
           </td>
-	</tr>
-	<tr>
-	  <th align="LEFT" valign="TOP"><em>Title</em></th>
-	  <td align="LEFT" valign="TOP">
+  </tr>
+  <tr>
+    <th align="LEFT" valign="TOP"><em>Title</em></th>
+    <td align="LEFT" valign="TOP">
             <input type="TEXT" name="title" size="40"
                 value="Z MySQL Database Connection">
           </td>
-	</tr>
-	<tr>
-	  <th align="LEFT" valign="TOP">
+  </tr>
+  <tr>
+    <th align="LEFT" valign="TOP">
              Enter a Database Connection String
-	     <a href="#1"><sup>1</sup></a></th>
-	  <td align="LEFT" valign="TOP">
+       <a href="#1"><sup>1</sup></a></th>
+    <td align="LEFT" valign="TOP">
             <input type="TEXT" name="connection_string" size="40">
           </td>
-	</tr>
-	<tr>
-	  <th align="LEFT" valign="TOP">Connect immediately</th>
-	  <td align="LEFT" valign="TOP">
+  </tr>
+  <tr>
+    <th align="LEFT" valign="TOP">Connect immediately</th>
+    <td align="LEFT" valign="TOP">
             <input name="check" type="CHECKBOX" value="YES" CHECKED>
           </td>
-	</tr>
-	<tr>
-	  <td></td>
-	  <td><br><input type="SUBMIT" value="Add"></td>
-	</tr>
+  </tr>
+  <tr>
+    <td></td>
+    <td><br><input type="SUBMIT" value="Add"></td>
+  </tr>
       </table>
     </form>
 
@@ -85,7 +85,7 @@
     respect, it's equivalent to transactions turned off.
 <p>
     Transactions are highly recommended. Using a named lock in
-    conjunctions with transactions is probably pointless.  
+    conjunctions with transactions is probably pointless.
 </dd></dl>
 
   </body>
