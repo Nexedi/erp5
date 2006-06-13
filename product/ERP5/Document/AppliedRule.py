@@ -180,26 +180,6 @@ class AppliedRule(XMLObject):
         return rule.getSolverList(self)
       return ()
 
-    # Optimized Reindexing
-    security.declareProtected(Permissions.View, 'getMovementIndex')
-    def getMovementIndex(self):
-      """
-        Returns a list of indexable movements
-      """
-      result = [ { 'uid'                        : self.getUid(),
-                   'id'                         : self.getId(),
-                   'portal_type'                : self.getPortalType(),
-                   'url'                        : self.getUrl(),
-                   'relative_url'               : self.getRelativeUrl(),
-                   'parent_uid'                 : self.getParentUid(),
-                   'simulation_state'           : None,
-                   'causality_uid'              : self.getCausalityUid(),
-                   'specialise_uid'             : self.getSpecialiseUid(),
-                  } ]
-      for m in self.objectValues():
-        result.extend(m.getMovementIndex())
-      return result
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'isRootAppliedRule')
     def isRootAppliedRule(self):
@@ -217,9 +197,6 @@ class AppliedRule(XMLObject):
       if self.getParentValue().getMetaType() == "ERP5 Simulation Tool":
         return self
       return self.getParentValue().getRootAppliedRule()
-
-    # Psyco optimizations
-    psyco.bind(getMovementIndex)
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'notifySimulationChange')
