@@ -85,8 +85,8 @@ paysheet_cat = {}\n
 object_list = []\n
 \n
 # get all Pay Sheet Line\n
-gross_salary = 0.0\n
-net_salary   = 0.0\n
+gross_salary   = 0.0\n
+net_salary     = 0.0\n
 for object in context.objectValues():\n
   if object.getPortalType()==\'Pay Sheet Line\':\n
     # get the gross salary\n
@@ -105,6 +105,53 @@ net_salary   = r_(-net_salary)\n
 \n
 total_employee_share = r_(gross_salary - net_salary)\n
 \n
+\n
+# Get the CSG salary\n
+# This is only used for report\n
+csg_salary = r_(0.97 * gross_salary)\n
+\n
+# Calculate the ceiling salary\n
+# This is only used for report\n
+ceiling_salary = 0.0\n
+ceiling_salary_list = { 2003 : 2432.0\n
+                      , 2004 : 2476.0\n
+                      , 2005 : 2516.0\n
+                      , 2006 : 2589.0\n
+                      }\n
+# the default ceiling salary is the last one\n
+paysheet_year = context.getStartDate().year()\n
+ceiling_salary_available_years = ceiling_salary_list.keys()\n
+if paysheet_year not in ceiling_salary_available_years:\n
+  paysheet_year = ceiling_salary_available_years[-1]\n
+salary_limit = ceiling_salary_list[paysheet_year]\n
+# limited salary = salaire plafonnee\n
+if gross_salary < salary_limit:\n
+  ceiling_salary = gross_salary\n
+else:\n
+  ceiling_salary = salary_limit\n
+\n
+# Get the list of all slice the employee fall in\n
+# This is only used for report\n
+slice_a_salary = 0.0\n
+slice_b_salary = 0.0\n
+slice_c_salary = 0.0\n
+# "Char" slice type\n
+slice_a_value = salary_limit\n
+slice_b_value = salary_limit * 4\n
+slice_c_value = salary_limit * 8\n
+if gross_salary < slice_a_value:\n
+  slice_a_salary = gross_salary\n
+else:\n
+  slice_a_salary = slice_a_value\n
+  if gross_salary < slice_b_value:\n
+    slice_b_salary = float(gross_salary) - float(slice_a_value)\n
+  else:\n
+    slice_b_salary = slice_b_value\n
+    if gross_salary < slice_c_value:\n
+      slice_c_salary = float(gross_salary) - float(slice_b_value)\n
+    else:\n
+      slice_c_salary = slice_c_value\n
+\n
 # Sort the list by id since lines are already ordered by id.\n
 object_list.sort(lambda x, y: cmp(int(x.getId()), int(y.getId())))\n
 for pay_sheet_line in object_list:\n
@@ -115,6 +162,7 @@ for pay_sheet_line in object_list:\n
       if not variation in range_variation: # Extra checking because\n
                                            # get VariationCategoryList returns\n
                                            # the same 1 items 2 times\n
+                                           # This is normally no longer true, I fix this bug years ago (!)\n
         range_variation += [variation]\n
   for range in range_variation:\n
     pay_sheet_dict = {}\n
@@ -132,11 +180,13 @@ for pay_sheet_line in object_list:\n
           # Hack not to display prime and ser\n
           if cell_total_price != 0 or cell.getResourceId() not in (\'primes\', \'retenue_maladie\'):\n
             if category.find(\'employee_share\') >= 0:\n
-              pay_sheet_dict[\'base\'] = -cell_quantity # change the sign for the beautification effect\n
+              pay_sheet_dict[\'base\'] = -cell_quantity # change the sign to beautify\n
               pay_sheet_dict[\'employee_share\'] = -cell_total_price\n
               pay_sheet_dict[\'employee_share_rate\'] = cell_price * 100\n
               # here we decide if a resource is taxable\n
-              if str(pay_sheet_line.getResource())[-14:] == \'non_deductible\' or str(pay_sheet_line.getResource())[-4:] == \'crds\' or str(pay_sheet_line.getResource())[-7:] == \'taxable\':\n
+              if str(pay_sheet_line.getResource())[-14:] == \'non_deductible\' or \\\n
+                 str(pay_sheet_line.getResource())[-4:]  == \'crds\'           or \\\n
+                 str(pay_sheet_line.getResource())[-7:]  == \'taxable\':\n
                 pay_sheet_dict[\'taxable\'] = \'yes\'\n
               elif str(pay_sheet_line.getResource())[-10:] == \'deductible\':\n
                 pay_sheet_dict[\'taxable\'] = \'no\'\n
@@ -182,6 +232,11 @@ paysheet_transactions = accounting_folder.searchFolder(portal_type=\'Pay Sheet T
 # initialize every yearly variable\n
 yearly_net_salary         = 0.0\n
 yearly_gross_salary       = 0.0\n
+yearly_csg_salary         = 0.0\n
+yearly_ceiling_salary     = 0.0\n
+yearly_slice_a_salary     = 0.0\n
+yearly_slice_b_salary     = 0.0\n
+yearly_slice_c_salary     = 0.0\n
 yearly_employee_share     = 0.0\n
 yearly_employer_share     = 0.0\n
 yearly_taxable_net_salary = 0.0\n
@@ -222,6 +277,11 @@ for paysheet_obj in paysheet_transactions:\n
         # sum of yearly values\n
         yearly_net_salary         = r_(yearly_net_salary         + r_(old_ps[\'net_salary\']))\n
         yearly_gross_salary       = r_(yearly_gross_salary       + r_(old_ps[\'gross_salary\']))\n
+        yearly_csg_salary         = r_(yearly_csg_salary         + r_(old_ps[\'csg_salary\']))\n
+        yearly_ceiling_salary     = r_(yearly_ceiling_salary     + r_(old_ps[\'ceiling_salary\']))\n
+        yearly_slice_a_salary     = r_(yearly_slice_a_salary     + r_(old_ps[\'slice_a_salary\']))\n
+        yearly_slice_b_salary     = r_(yearly_slice_b_salary     + r_(old_ps[\'slice_b_salary\']))\n
+        yearly_slice_c_salary     = r_(yearly_slice_c_salary     + r_(old_ps[\'slice_c_salary\']))\n
         yearly_employee_share     = r_(yearly_employee_share     + r_(old_ps[\'total_employee_share\']))\n
         yearly_employer_share     = r_(yearly_employer_share     + r_(old_ps[\'total_employer_share\']))\n
         yearly_taxable_net_salary = r_(yearly_taxable_net_salary + r_(old_ps[\'taxable_net_salary\']))\n
@@ -229,6 +289,11 @@ for paysheet_obj in paysheet_transactions:\n
 # save the total share values in the exported dict\n
 details[\'net_salary\']                   = net_salary\n
 details[\'gross_salary\']                 = gross_salary\n
+details[\'csg_salary\']                   = csg_salary\n
+details[\'ceiling_salary\']               = ceiling_salary\n
+details[\'slice_a_salary\']               = slice_a_salary\n
+details[\'slice_b_salary\']               = slice_b_salary\n
+details[\'slice_c_salary\']               = slice_c_salary\n
 details[\'paysheet_categories\']          = paysheet_cat\n
 details[\'total_employee_share\']         = total_employee_share\n
 details[\'total_employer_share\']         = total_employer_share\n
@@ -238,6 +303,11 @@ details[\'taxable_net_salary\']           = r_(total_taxable_employee_share + r_
 # don\'t forget to add the current values to the yearly sum\n
 details[\'yearly_net_salary\']         = r_(yearly_net_salary         + r_(details[\'net_salary\']))\n
 details[\'yearly_gross_salary\']       = r_(yearly_gross_salary       + r_(details[\'gross_salary\']))\n
+details[\'yearly_csg_salary\']         = r_(yearly_csg_salary         + r_(details[\'csg_salary\']))\n
+details[\'yearly_ceiling_salary\']     = r_(yearly_ceiling_salary     + r_(details[\'ceiling_salary\']))\n
+details[\'yearly_slice_a_salary\']     = r_(yearly_slice_a_salary     + r_(details[\'slice_a_salary\']))\n
+details[\'yearly_slice_b_salary\']     = r_(yearly_slice_b_salary     + r_(details[\'slice_b_salary\']))\n
+details[\'yearly_slice_c_salary\']     = r_(yearly_slice_c_salary     + r_(details[\'slice_c_salary\']))\n
 details[\'yearly_employee_share\']     = r_(yearly_employee_share     + r_(details[\'total_employee_share\']))\n
 details[\'yearly_employer_share\']     = r_(yearly_employer_share     + r_(details[\'total_employer_share\']))\n
 details[\'yearly_taxable_net_salary\'] = r_(yearly_taxable_net_salary + r_(details[\'taxable_net_salary\']))\n
@@ -256,12 +326,6 @@ return details\n
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_getDetails</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -306,6 +370,20 @@ return details\n
                             <string>object</string>
                             <string>cell</string>
                             <string>total_employee_share</string>
+                            <string>csg_salary</string>
+                            <string>ceiling_salary</string>
+                            <string>ceiling_salary_list</string>
+                            <string>paysheet_year</string>
+                            <string>ceiling_salary_available_years</string>
+                            <string>_getitem_</string>
+                            <string>salary_limit</string>
+                            <string>slice_a_salary</string>
+                            <string>slice_b_salary</string>
+                            <string>slice_c_salary</string>
+                            <string>slice_a_value</string>
+                            <string>slice_b_value</string>
+                            <string>slice_c_value</string>
+                            <string>float</string>
                             <string>pay_sheet_line</string>
                             <string>variation_list</string>
                             <string>range_variation</string>
@@ -318,7 +396,6 @@ return details\n
                             <string>cell_price</string>
                             <string>cell_quantity</string>
                             <string>cell_total_price</string>
-                            <string>_getitem_</string>
                             <string>str</string>
                             <string>None</string>
                             <string>key</string>
@@ -330,6 +407,11 @@ return details\n
                             <string>paysheet_transactions</string>
                             <string>yearly_net_salary</string>
                             <string>yearly_gross_salary</string>
+                            <string>yearly_csg_salary</string>
+                            <string>yearly_ceiling_salary</string>
+                            <string>yearly_slice_a_salary</string>
+                            <string>yearly_slice_b_salary</string>
+                            <string>yearly_slice_c_salary</string>
                             <string>yearly_employee_share</string>
                             <string>yearly_employer_share</string>
                             <string>yearly_taxable_net_salary</string>

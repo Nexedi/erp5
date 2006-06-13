@@ -70,128 +70,116 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+  WARNING: Please don\'t use this report as model.\n
+           This report is a quick and dirty mockup, a protoype\n
+             not intended to be used in production environment.\n
+"""\n
+\n
 import DateTime\n
-portal_catalog = context.getPortalObject().portal_catalog\n
+portal         = context.getPortalObject()\n
+portal_catalog = portal.portal_catalog\n
+N_ = portal.Base_translateString\n
 \n
-query = {\n
-  "portal_type" : "Pay Sheet Transaction",\n
-  "simulation_state" : ["confirmed", "stopped", "delivered", "draft", "planned"],\n
-  "delivery.stop_date" : ">2004-12-31",\n
-  "delivery.start_date" : "<2005-12-31",\n
-  "sort_on" : ("delivery.start_date", "ASC")\n
-}\n
+year = int(year)\n
 \n
-if 0 :\n
-  print portal_catalog(src__ = 1, **query)\n
-  return printed\n
+query = { \'portal_type\'        : \'Pay Sheet Transaction\'\n
+        , \'simulation_state\'   : [\'confirmed\', \'stopped\', \'delivered\']\n
+        , \'delivery.stop_date\' : \'>%s-12-31\' % (year - 1)\n
+        , \'delivery.start_date\': \'<%s-12-31\' % (year)\n
+        , \'sort_on\'            : (\'delivery.start_date\', \'ASC\')\n
+        }\n
+\n
+# if 0:\n
+#   print portal_catalog(src__ = 1, **query)\n
+#   return printed\n
 \n
 \n
 # DATA GATHERING part\n
 \n
 paysheet_par_person = {}\n
 \n
-for ps in portal_catalog( **query ) :\n
+for ps in portal_catalog(**query):\n
   ps = ps.getObject()\n
 # Quick hack to fix some problems on a local site\n
 #  if ps.getStopDate()<DateTime.DateTime("2006-01-01"):\n
 #    print "<a href=\\"%s\\">%s</a> candidate to be updated (%s -> %s)<br>" % (ps.getPath(),ps.getDestinationSection(),ps.getSource(),ps.getDestination())\n
 #    #ps.setSource(ps.getSourceSection())\n
 #    #ps.setDestination(ps.getDestinationSection())\n
-  if not paysheet_par_person.has_key(ps.getDestinationSection()) :\n
+  if not paysheet_par_person.has_key(ps.getDestinationSection()):\n
     paysheet_par_person[ps.getDestinationSection()] = []\n
   paysheet_par_person[ps.getDestinationSection()].append(ps)\n
 \n
 gathered_data = {}\n
 \n
-for p, paysheets in paysheet_par_person.items() :\n
+for p, paysheets in paysheet_par_person.items():\n
   gathered_data[p] = {}\n
-  for paysheet in paysheets :\n
+  for paysheet in paysheets:\n
     start_month = paysheet.start_date.month() - 1\n
-    if not gathered_data[p].has_key(start_month) :\n
+    if not gathered_data[p].has_key(start_month):\n
       gathered_data[p][start_month] = {}\n
-    if gathered_data[p][start_month].has_key("salary") :\n
-      if not gathered_data[p][start_month].has_key("duplicates") :\n
+    if gathered_data[p][start_month].has_key("salary"):\n
+      if not gathered_data[p][start_month].has_key("duplicates"):\n
         gathered_data[p][start_month]["duplicates"] = []\n
       gathered_data[p][start_month]["duplicates"].append(paysheet)\n
     else :\n
-      # get the taxable salary\n
+      # Get paysheet details\n
       ps_details = paysheet.PaySheetTransaction_getDetails()\n
       salary_value = ps_details[salary_type]\n
-      # Round the value the same way it is printed by PaySheetTransaction_viewPaySheetTransactionAsPDF.\n
-      # In fact the rounding must be done by PaySheetTransaction_getDetails to homogenize the value in the paysheet module.\n
+      # Render the value the same way it is printed by PaySheetTransaction_viewPaySheetTransactionAsPDF.\n
       gathered_data[p][start_month]["salary"] = float(\'%.2f\' % salary_value)\n
       gathered_data[p][start_month]["url"] = paysheet.getPath()\n
       gathered_data[p][start_month]["state"] = paysheet.getSimulationState()\n
 \n
-# DISPLAY part\n
+# Sort by person name\n
+sorted_data = {}\n
+for person_path, paysheet_dict in gathered_data.items():\n
+  person_title = context.restrictedTraverse(person_path).getTitle()\n
+  sorted_data[(person_path, person_title)] = paysheet_dict\n
+items = sorted_data.items()\n
+items.sort(lambda x, y: cmp(x[0][1], y[0][1]))\n
+gathered_data = [item for item in items]\n
 \n
-print """\n
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
- "DTD/xhtml1-strict.dtd">\n
-<html>\n
-<head>\n
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />\n
-<title>R\xc3\xa9capitulatif des salaires bruts</title>\n
+\n
+# REPORT part\n
+# TODO: separate the rendering part and the logical part\n
+# TODO: use true ERP5 report\n
+\n
+print """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
+<html><head>\n
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>\n
+<title>%s</title>\n
 <style>\n
-a {text-decoration : none;}\n
-a:hover {text-decoration : underline;}\n
-\n
-.warning           {color: #f00;}\n
-.warning a:link    {color: #f00;}\n
-.warning a:visited {color: #f00;}\n
-.warning a:hover   {color: #f00;}\n
-\n
-table {\n
-  border-collapse : collapse;\n
-}\n
-th, td {\n
-  border : 1px solid #CCC;\n
-}\n
-\n
-td {\n
-  text-align : right;\n
-}\n
-\n
-th.total {\n
-  background : #999;\n
-}\n
-\n
-th.error {\n
-  background : #F00;\n
-}\n
+a {text-decoration: none}\n
+a:hover {text-decoration: underline}\n
+.warning,\n
+.warning a:link,\n
+.warning a:visited,\n
+.warning a:hover {color: #f00}\n
+table {border-collapse: collapse}\n
+th, td {border: 1px solid #ccc}\n
+td {text-align: right}\n
+th.total {background: #999}\n
+th.error {background: #f00}\n
 </style>\n
-</head>\n
-<body>"""\n
+</head><body>""" % (N_(\'Payroll Report\'))\n
 \n
-print "<h1>Annual %s Report</h1>" % (salary_type.replace(\'_\', \' \').title())\n
-print "<h2>Fiscal year 2005</h2>"\n
+print "<h1>%s</h1>" % N_("Annual ${report_type} Report", mapping={\'report_type\': unicode(salary_type.replace(\'_\', \' \').title(), \'utf8\')})\n
 \n
-print """\n
-<table>\n
-<tr>\n
-<th></th>\n
-<th>janvier</th>\n
-<th>fevrier</th>\n
-<th>mars</th>\n
-<th>avril</th>\n
-<th>mai</th>\n
-<th>juin</th>\n
-<th>juillet</th>\n
-<th>aout</th>\n
-<th>septembre</th>\n
-<th>october</th>\n
-<th>novembre</th>\n
-<th>decembre</th>\n
-<th class="total">Total</th>\n
-</tr>\n
-"""\n
+print "<h2>%s</h2>" % N_("Fiscal year ${year}", mapping={\'year\': unicode(str(year), \'utf8\')})\n
+\n
+print "<table><tr><th></th>"\n
+month_list = [\'January\', \'February\', \'March\', \'April\', \'May\', \'June\', \'July\', \'August\', \'September\', \'October\', \'November\', \'December\']\n
+for month in month_list:\n
+  print "<th>%s</th>" % (N_(month))\n
+print "<th class=\'total\'>%s</th></tr>" % (N_(\'Total\'))\n
 \n
 total = 0\n
 monthly_total = {}\n
 \n
-for person_path, person_dict in gathered_data.items() :\n
+for ((person_path, person_title), person_dict) in gathered_data:\n
   person_total = 0\n
-  print "<tr><td><a href=\\"%s\\">%s</a></td>" % (person_path, context.restrictedTraverse(person_path).getTitle())\n
+  print "<tr><td><a href=\\"%s\\">%s</a></td>" % (person_path, person_title)\n
   for month in range(12) :\n
     print "<td>"\n
     if person_dict.has_key(month) :\n
@@ -208,24 +196,20 @@ for person_path, person_dict in gathered_data.items() :\n
   print "<td>%s</td></tr>" % person_total\n
   total += person_total\n
 \n
-print "<th class=\\"total\\">Total</th>"\n
+print "<th class=\'total\'>%s</th>" % (N_(\'Total\'))\n
 check_total = 0\n
-for month in range(12) :\n
+for month in range(12):\n
   print "<td>"\n
-  if monthly_total.has_key(month) :\n
+  if monthly_total.has_key(month):\n
     print monthly_total[month]\n
     check_total += monthly_total[month]\n
   print "</td>"\n
 \n
-print "<th class=\\""\n
-if check_total != total :\n
+print "<th class=\'"\n
+if check_total != total:\n
   print "error"\n
-print \'\\">%s</th>\' % total\n
-print """\n
-</table>\n
-</body>\n
-</html>\n
-"""\n
+print "\'>%s</th>" % total\n
+print "</table></body></html>"\n
 \n
 return printed\n
 
@@ -243,14 +227,8 @@ return printed\n
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/AccountingTransactionModule_viewAnnualSalaryReport</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>salary_type="gross_salary"</string> </value>
+            <value> <string>year, salary_type="gross_salary"</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -270,19 +248,23 @@ return printed\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>year</string>
                             <string>salary_type</string>
                             <string>_print_</string>
                             <string>_print</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>portal_catalog</string>
+                            <string>N_</string>
+                            <string>int</string>
                             <string>query</string>
                             <string>paysheet_par_person</string>
                             <string>_getiter_</string>
@@ -298,13 +280,23 @@ return printed\n
                             <string>ps_details</string>
                             <string>salary_value</string>
                             <string>float</string>
+                            <string>sorted_data</string>
+                            <string>person_path</string>
+                            <string>paysheet_dict</string>
+                            <string>person_title</string>
+                            <string>items</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>item</string>
+                            <string>unicode</string>
+                            <string>str</string>
+                            <string>month_list</string>
+                            <string>month</string>
                             <string>total</string>
                             <string>monthly_total</string>
-                            <string>person_path</string>
                             <string>person_dict</string>
                             <string>person_total</string>
                             <string>range</string>
-                            <string>month</string>
                             <string>dup_ps</string>
                             <string>check_total</string>
                           </tuple>
