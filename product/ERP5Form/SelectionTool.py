@@ -565,22 +565,79 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return self.checkAll(selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
 
-    security.declareProtected(ERP5Permissions.View, 'setZoom')
-    def setZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
+    # PlanningBox related methods
+    security.declareProtected(ERP5Permissions.View, 'setZoomLevel')
+    def setZoomLevel(self, uids=None, REQUEST=None):
       """
-      Set graphic zoom in PlanningBox
+      Set graphic zoom level in PlanningBox
       """
       if uids is None: uids = []
-      zoom=REQUEST.get('zoom')
+      request = REQUEST
+      #zoom_level=request.get('zoom_level')
       selection_name=request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        params['zoom'] = zoom
+        zoom_level = request.form.get('zoom_level',1)
+        zoom_start = request.form.get('zoom_start',0)
+        params['zoom_level'] = zoom_level
+        if zoom_level <= zoom_start:
+          zoom_start = max(int(float(zoom_level)),1) - 1
+          params['zoom_start'] = zoom_start
         selection.edit(params= params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
-                                            query_string=query_string)
+        return self._redirectToOriginalForm(REQUEST=REQUEST)
+
+    security.declareProtected(ERP5Permissions.View, 'setZoom')
+    def setZoom(self, uids=None, REQUEST=None):
+      """
+      Set graphic zoom in PlanningBox
+      """
+      if uids is None: uids = []
+      request = REQUEST
+      selection_name=request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        params = selection.getParams()
+        zoom_start = request.form.get('zoom_start')
+        params['zoom_start'] = zoom_start
+        selection.edit(params= params)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST)
+
+    security.declareProtected(ERP5Permissions.View, 'nextZoom')
+    def nextZoom(self, uids=None, REQUEST=None):
+      """
+      Set next graphic zoom start in PlanningBox
+      """
+      if uids is None: uids = []
+      request = REQUEST
+      selection_name=request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        params = selection.getParams()
+        zoom_start = params.get('zoom_start')
+        params['zoom_start'] = int(zoom_start) + 1
+        selection.edit(params= params)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST)
+
+    security.declareProtected(ERP5Permissions.View, 'previousZoom')
+    def previousZoom(self, uids=None, REQUEST=None):
+      """
+      Set previous graphic zoom in PlanningBox
+      """
+      if uids is None: uids = []
+      request = REQUEST
+      selection_name=request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        params = selection.getParams()
+        zoom_start = params.get('zoom_start')
+        params['zoom_start'] = int(zoom_start) - 1
+        selection.edit(params= params)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
     def setDomainRoot(self, REQUEST, form_id=None, query_string=None):
