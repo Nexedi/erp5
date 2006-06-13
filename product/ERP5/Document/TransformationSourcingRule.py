@@ -173,18 +173,6 @@ class TransformationSourcingRule(Rule):
           result = 0
       return result
 
-    # Simulation workflow
-    def reset(self, applied_rule):
-      """
-        DO WE NEED IT ?
-
-        -> this does either a diverge or a reset depending
-        on the position in the tree
-
-        if it is in root position, it is a solve
-        if it is in non root position, it is a diverse
-      """
-
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, activate_kw=None,**kw):
       """

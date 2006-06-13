@@ -85,21 +85,6 @@ class AppliedRule(XMLObject):
         rule = self.getSpecialiseValue()
         return rule.test(my_parent)
 
-    # Simulation workflow
-    def reset(self):
-      """
-        DO WE NEED IT ?
-
-        -> this does either a diverge or a reset depending
-        on the position in the tree
-
-        if it is in root position, it is a solve
-        if it is in non root position, it is a diverse
-      """
-      rule = self.getSpecialiseValue()
-      if rule is not None:
-        rule.reset(self)
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self, movement):
