@@ -1,12 +1,12 @@
 <dtml-var manage_page_header>
 
 <dtml-var "manage_form_title(this(), _,
-           form_title='Add ERP5 Formulator Form',
+           form_title='Add ERP5 OOo Template',
            )">
 
 <p class="form-help">
-OOo Templates allow to generate dynamic OpenOffice.org documents based
-on templates.
+OOo Templates allows generation of dynamic OpenOffice.org documents based on
+templates.
 </p>
 
 <form action="addOOoTemplate" enctype="multipart/form-data" method="POST">
