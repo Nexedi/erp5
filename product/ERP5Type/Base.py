@@ -780,8 +780,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return default_value
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  _marker=[]
-  def getProperty(self, key, d=_marker, **kw):
+  def getProperty(self, key, d=None, **kw):
     """
       Previous Name: getValue
 
@@ -802,11 +801,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method = getattr(self, accessor_name)
       return method(**kw)
     else:
-      value = ERP5PropertyManager.getProperty(self, key, d=d, **kw)
-      if value is self._marker:
-	return getattr(self,key)
-      else:
-	return getattr(self,key,d)
+      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
