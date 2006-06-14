@@ -92,8 +92,13 @@ if len(related_list) == 0:\n
 \n
 elif len(related_list) == 1:\n
   related_object = context.restrictedTraverse(related_list[0], None)\n
+  if related_object is None:\n
+    # this might be a category\n
+    related_object = context.portal_categories.resolveCategory(\n
+                           "%s/%s" % (base_category, related_list[0]))\n
+\n
   if related_object is not None and checkPerm("View", related_object) :\n
-    url = related_list[0]\n
+    url = related_object.absolute_url()\n
     message = N_(\n
       # first, try to get a full translated message with portal types\n
       "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),\n
@@ -110,6 +115,11 @@ else :\n
   related_object_list = []\n
   for path in search_method(portal_type=portal_type) :\n
     obj = context.getPortalObject().restrictedTraverse(path, None)\n
+    if obj is None:\n
+      # this might be a category\n
+      obj = context.portal_categories.resolveCategory(\n
+                           "%s/%s" % (base_category, path))\n
+\n
     if obj is not None and checkPerm("View", obj):\n
       related_object_list.append(obj)\n
   if len(related_object_list) == 0 :\n
