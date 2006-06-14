@@ -164,9 +164,9 @@ th.error {background: #f00}\n
 </style>\n
 </head><body>""" % (N_(\'Payroll Report\'))\n
 \n
-print "<h1>%s</h1>" % N_("Annual ${report_type} Report", mapping={\'report_type\': unicode(salary_type.replace(\'_\', \' \').title(), \'utf8\')})\n
+print "<h1>%s</h1>" % N_("Annual ${report_type} Report", mapping={\'report_type\': N_(salary_type.replace(\'_\', \' \').title())})\n
 \n
-print "<h2>%s</h2>" % N_("Fiscal year ${year}", mapping={\'year\': unicode(str(year), \'utf8\')})\n
+print "<h2>%s</h2>" % N_("Fiscal year ${year}", mapping={\'year\': str(year)})\n
 \n
 print "<table><tr><th></th>"\n
 month_list = [\'January\', \'February\', \'March\', \'April\', \'May\', \'June\', \'July\', \'August\', \'September\', \'October\', \'November\', \'December\']\n
@@ -288,7 +288,6 @@ return printed\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>item</string>
-                            <string>unicode</string>
                             <string>str</string>
                             <string>month_list</string>
                             <string>month</string>

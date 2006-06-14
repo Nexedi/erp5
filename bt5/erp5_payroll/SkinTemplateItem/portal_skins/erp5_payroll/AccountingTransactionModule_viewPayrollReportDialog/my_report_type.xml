@@ -152,7 +152,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>orientation</string> </key>
@@ -224,52 +226,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Gross Salary (default)</string>
-                          <string>gross_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>Net Salary</string>
-                          <string>net_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>Taxable Net Salary</string>
-                          <string>taxable_net_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>Employee Share</string>
-                          <string>total_employee_share</string>
-                        </tuple>
-                        <tuple>
-                          <string>Taxable Employee Share</string>
-                          <string>total_taxable_employee_share</string>
-                        </tuple>
-                        <tuple>
-                          <string>Employer Share</string>
-                          <string>total_employer_share</string>
-                        </tuple>
-                        <tuple>
-                          <string>Ceiling Salary</string>
-                          <string>ceiling_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>CSG Salary</string>
-                          <string>csg_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>Slice A Salary</string>
-                          <string>slice_a_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>Slice B Salary</string>
-                          <string>slice_b_salary</string>
-                        </tuple>
-                        <tuple>
-                          <string>Slice C Salary</string>
-                          <string>slice_c_salary</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -294,6 +251,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.AccountingTransactionModule_getTranslatedPayrollReportTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
