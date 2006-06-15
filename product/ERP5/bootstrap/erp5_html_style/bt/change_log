@@ -1,3 +1,6 @@
+2006-06-15 Thomas
+* Added support for PlanningBox : including scripts to generate data, and page template to display XHTML.
+
 2006-06-08 Kevin
 * Use Structure in view_master portal status message to introduce flexible links.
 

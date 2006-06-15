@@ -89,6 +89,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
   <script language="JavaScript" src="erp5.js"\n
           tal:attributes="src python:\'%s/erp5.js\' % here.portal_url()">\n
   </script>\n
+  <script type="text/javascript" src="wz_dragdrop.js" tal:attributes="src python:\'%s/wz_dragdrop.js\' % here.portal_url()">\n
+  </script>\n
 \n
   <!-- HEAD -->\n
   <head tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
