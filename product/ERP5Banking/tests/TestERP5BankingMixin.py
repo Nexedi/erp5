@@ -269,6 +269,13 @@ class TestERP5BankingMixin:
     # 7 coins of 200 for the year 2003
     self.quantity_200[self.variation_list[1]] = 7
 
+    # quantity of coin of 100
+    self.quantity_100 = {}
+    # 5 coins of 100 for the year 1992
+    self.quantity_100[self.variation_list[0]] = 4
+    # 7 coins of 100 for the year 2003
+    self.quantity_100[self.variation_list[1]] = 6
+
     # quantity of banknotes of 5000
     self.quantity_5000 = {}
     # 11 banknotes of 5000 for hte year 1992
