@@ -66,7 +66,7 @@ BODY {\n
  padding:0px;\n
  font-family: &dtml-default_font_family;;\n
  font-size: &dtml-default_font_size;;\n
- line-height: &dtml-default_font_size;;\n
+/* line-height: &dtml-default_font_size;;*/\n
  text-decoration: none;\n
  font-style: normal;\n
  color: &dtml-default_font_color;;\n
@@ -146,7 +146,7 @@ TABLE.px{\n
 \n
 .Breadcrumb{\n
  color:  &dtml-default_font_color;;\n
- line-height: 23px;\n
+/* line-height: 23px;*/\n
  vertical-align: middle;\n
  }\n
 \n
@@ -517,7 +517,7 @@ td.ModuleShortcut p{\n
  padding:3px;\n
  font-family: &dtml-default_font_family;;\n
  font-size: &dtml-default_font_size;;\n
- line-height: &dtml-default_font_size;;\n
+/* line-height: &dtml-default_font_size;;*/\n
  text-decoration: none;\n
  font-style: normal;\n
 }\n
