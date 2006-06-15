@@ -2,6 +2,7 @@
 <SQLCatalogData>
   <property id="sql_catalog_clear_reserved" type="str">z_clear_reserved</property>
   <property id="sql_catalog_full_text_search_keys" type="tuple">
+    <item type="str">full_text.SearchableText</item>
   </property>
   <property id="sql_catalog_keyword_search_keys" type="tuple">
     <item type="str">catalog.description</item>
@@ -22,6 +23,7 @@
     <item type="str">z_catalog_predicate_list</item>
     <item type="str">z_catalog_roles_and_users_list</item>
     <item type="str">z_catalog_stock_list</item>
+    <item type="str">z_catalog_fulltext_list</item>
   </property>
   <property id="sql_catalog_paths" type="str">z_catalog_paths</property>
   <property id="sql_catalog_produce_reserved" type="str">z_produce_reserved_uid_list</property>
@@ -85,6 +87,7 @@
     <item type="str">z0_drop_delivery</item>
     <item type="str">z0_drop_item</item>
     <item type="str">z0_drop_movement</item>
+    <item type="str">z0_drop_fulltext</item>
     <item type="str">z0_drop_predicate</item>
     <item type="str">z0_drop_predicate_category</item>
     <item type="str">z0_drop_record</item>
@@ -98,6 +101,7 @@
     <item type="str">z_create_delivery</item>
     <item type="str">z_create_item</item>
     <item type="str">z_create_movement</item>
+    <item type="str">z_create_fulltext</item>
     <item type="str">z_create_predicate</item>
     <item type="str">z_create_predicate_category</item>
     <item type="str">z_create_record</item>
@@ -127,6 +131,7 @@
     <item type="str">roles_and_users</item>
     <item type="str">stock</item>
     <item type="str">item</item>
+    <item type="str">full_text</item>
   </property>
   <property id="sql_uncatalog_object" type="tuple">
     <item type="str">z0_uncatalog_category</item>
@@ -137,6 +142,7 @@
     <item type="str">z0_uncatalog_stock</item>
     <item type="str">z_uncatalog_delivery</item>
     <item type="str">z_uncatalog_object</item>
+    <item type="str">z_uncatalog_fulltext</item>
   </property>
   <property id="sql_unique_values" type="str">z_unique_values</property>
   <property id="sql_catalog_translation_list" type="str">z_catalog_translation_list</property>
