@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Get Precision\n
+            <value> <string>portal = context.getPortalObject()\n
+N_     = portal.Base_translateString\n
+\n
+# Get Precision\n
 precision = context.Base_getPreferredPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
@@ -121,24 +124,32 @@ def createPaySheetItem(title=\'\', res=\'\', dest_org=\'\', cells=[]):\n
                 , category_list              = cell_cat_list\n
                 )\n
 \n
-# set the title of the paysheet if empty\n
-# TODO: translate using current language\n
-months = (\'janvier\', \'f\xc3\xa9vrier\', \'mars\', \'avril\', \'mai\', \'juin\', \'juillet\', \'ao\xc3\xbbt\', \'septembre\', \'octobre\', \'novembre\', \'d\xc3\xa9cembre\')\n
+# Set the title of the paysheet if empty\n
+months = [ \'January\', \'February\', \'March\', \'April\', \'May\', \'June\', \'July\'\n
+         , \'August\', \'September\', \'October\', \'November\', \'December\'\n
+         ]\n
 if context.getTitle() in (\'\', None):\n
-  if context.getStartDate() in (\'\', None):\n
-    context.setTitle(\'Salaire %s\' % context.getDestinationSectionValue().getTitle())\n
-  else:\n
-    context.setTitle(\'Salaire %s %s %s\' % (context.getDestinationSectionValue().getTitle(), months[int(str(context.getStartDate())[5:7])-1], str(context.getStartDate())[0:4]))\n
+  new_title = \'%s %s\' % ( N_(\'Salary\')\n
+                        , context.getDestinationSectionValue().getTitle()\n
+                        )\n
+  if context.getStartDate() not in (\'\', None):\n
+    payroll_date = context.getStartDate()\n
+    new_title += \' %s %s\' % ( N_(months[payroll_date.month()])\n
+                            , payroll_date.year()\n
+                            )\n
+  context.setTitle(new_title)\n
 \n
-# get the ordered list of standard preview line objects\n
+# Get the ordered list of standard preview line objects\n
 std_lines = context.PaySheetTransaction_initializePreview()\n
-# this list contain all paysheet items, indexed by service\n
+\n
+# This list contain all paysheet items, indexed by service\n
 paysheet_items = {}\n
-# initialise the user preview line index\n
+\n
+# Initialise the user preview line index\n
 user_line_index = 0\n
 total_employee_share = 0.0\n
 \n
-# scan every standard preview line to create an item for each service\n
+# Scan every standard preview line to create an item for each service\n
 for std_line in std_lines:\n
   # get the service url (unique because containing the id)\n
   service = std_line.getProperty(\'service_url\')\n
@@ -225,7 +236,8 @@ createPaySheetItem( title    = \'Salary\'\n
                   )\n
 \n
 # Return to pay sheet\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Pay+sheet+calculation+done.\')\n
+if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Pay+sheet+calculation+done.\')\n
 </string> </value>
         </item>
         <item>
@@ -237,12 +249,6 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_postCalculation</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -276,6 +282,8 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>precision</string>
                             <string>r_</string>
                             <string>id_list</string>
@@ -284,9 +292,9 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
                             <string>createPaySheetItem</string>
                             <string>months</string>
                             <string>None</string>
+                            <string>new_title</string>
+                            <string>payroll_date</string>
                             <string>_getitem_</string>
-                            <string>int</string>
-                            <string>str</string>
                             <string>std_lines</string>
                             <string>paysheet_items</string>
                             <string>user_line_index</string>
@@ -297,17 +305,20 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
                             <string>tax_cat</string>
                             <string>_write_</string>
                             <string>user_line</string>
+                            <string>int</string>
                             <string>base</string>
                             <string>cat</string>
                             <string>new_cell</string>
                             <string>employer_rate</string>
                             <string>employee_rate</string>
+                            <string>str</string>
                             <string>float</string>
                             <string>rate</string>
                             <string>item</string>
                             <string>hasattr</string>
                             <string>service_module_name</string>
                             <string>gross_salary</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
