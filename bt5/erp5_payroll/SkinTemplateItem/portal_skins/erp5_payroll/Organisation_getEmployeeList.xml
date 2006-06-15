@@ -87,12 +87,12 @@ if start_date == None and stop_date == None:\n
 employees = []\n
 \n
 for person in subordinate_list:\n
-  if person.getPortalType()             == \'Person\'    and \\\n
-     person.getValidationState()        == \'validated\' and \\\n
-     person.getRole()                   == \'internal\'  and \\\n
-     person.getDefaultCareerGrade()     != \'trainee\'   and \\\n
-     person.getDefaultCareerStopDate()  >= stop_date   and \\\n
-     person.getDefaultCareerStartDate() <= start_date:\n
+  if person.getPortalType()             == \'Person\'     and \\\n
+     person.getValidationState()        == \'validated\'  and \\\n
+     person.getDefaultCareerStopDate()  >= stop_date    and \\\n
+     person.getDefaultCareerStartDate() <= start_date   and \\\n
+     person.getRole().endswith(\'internal\')              and \\\n
+     not person.getDefaultCareerGrade().endswith(\'trainee\'):\n
     # TODO: take car of discontinued career step period\n
     if person not in employees:\n
       employees.append(person)\n
