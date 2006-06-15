@@ -823,7 +823,7 @@ class ListBoxWidget(Widget.Widget):
             for cname in params.keys():
               if params[cname] != '' and params[cname]!=None:
                 kw.setdefault(cname, params[cname])
-            
+
             # Try to get the method through acquisition
             try:
               list_method = getattr(here, list_method.method_name)
@@ -1758,7 +1758,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     pass
                   else:
                     #attribute_original_value = attribute_value
-                    attribute_value = float("%.2f" % attribute_value)
+                    attribute_value = float("%f" % attribute_value)
                   td_align = "right"
                 elif isinstance(attribute_value, (int, long)):
                   attribute_original_value = attribute_value
@@ -2234,8 +2234,8 @@ class ListBox(ZMIField):
     def get_value(self, id, **kw):
       if (id == 'default'):
         if (kw.get('render_format') in ('list', )):
-          return self.widget.render(self, self.generate_field_key(), None, 
-                                    kw.get('REQUEST'), 
+          return self.widget.render(self, self.generate_field_key(), None,
+                                    kw.get('REQUEST'),
                                     render_format=kw.get('render_format'))
         else:
           return None
