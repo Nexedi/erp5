@@ -157,17 +157,17 @@ for serv in paysheet_services:\n
         new_employee_rate = default_values[name][\'employee_rate\']\n
         new_employer_rate = default_values[name][\'employer_rate\']\n
         # create a preview line for every salary_range value of the service\n
-        createPreviewLine( new_id                = serv.getId()\n
-                          , new_title             = serv.getTitleOrId()\n
-                          , new_base              = new_base\n
-                          , new_base_name         = context.portal_categories.resolveCategory(base).getTitleOrId()\n
-                          , new_employee_rate     = new_employee_rate\n
-                          , new_employer_rate     = new_employer_rate\n
-                          , new_service_url       = serv.getRelativeUrl()\n
-                          , new_organisation_url  = serv.getSource()\n
-                          , new_salary_range_cat  = base\n
-                          , new_tax_cat           = tax_cat\n
-                          )\n
+        createPreviewLine( new_id               = serv.getId()\n
+                         , new_title            = serv.getTitleOrId()\n
+                         , new_base             = new_base\n
+                         , new_base_name        = context.portal_categories.resolveCategory(base).getTitleOrId()\n
+                         , new_employee_rate    = new_employee_rate\n
+                         , new_employer_rate    = new_employer_rate\n
+                         , new_service_url      = serv.getRelativeUrl()\n
+                         , new_organisation_url = serv.getSource()\n
+                         , new_salary_range_cat = base\n
+                         , new_tax_cat          = tax_cat\n
+                         )\n
 \n
 # return the list of preview lines\n
 return l\n

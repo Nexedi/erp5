@@ -90,10 +90,6 @@ query = { \'portal_type\'        : \'Pay Sheet Transaction\'\n
         , \'sort_on\'            : (\'delivery.start_date\', \'ASC\')\n
         }\n
 \n
-# if 0:\n
-#   print portal_catalog(src__ = 1, **query)\n
-#   return printed\n
-\n
 \n
 # DATA GATHERING part\n
 \n
@@ -128,8 +124,8 @@ for p, paysheets in paysheet_par_person.items():\n
       salary_value = ps_details[salary_type]\n
       # Render the value the same way it is printed by PaySheetTransaction_viewPaySheetTransactionAsPDF.\n
       gathered_data[p][start_month]["salary"] = float(\'%.2f\' % salary_value)\n
-      gathered_data[p][start_month]["url"] = paysheet.getPath()\n
-      gathered_data[p][start_month]["state"] = paysheet.getSimulationState()\n
+      gathered_data[p][start_month]["url"]    = paysheet.getPath()\n
+      gathered_data[p][start_month]["state"]  = paysheet.getSimulationState()\n
 \n
 # Sort by person name\n
 sorted_data = {}\n
