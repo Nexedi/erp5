@@ -77,7 +77,7 @@ section_cat_obj = context.portal_categories.resolveCategory(section_cat)\n
 valids = section_cat_obj.getGroupRelatedValueList(portal_type=\'Organisation\')\n
 \n
 # convert to ListField format\n
-return [(valid.getCorporateName() or valid.getTitle(), valid.getRelativeUrl()) for valid in valids]\n
+return [(valid.getTitle(), valid.getRelativeUrl()) for valid in valids]\n
 </string> </value>
         </item>
         <item>

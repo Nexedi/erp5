@@ -1,3 +1,6 @@
+2006-06-15 Kevin
+* Revert previous commit.
+
 2006-06-14 Kevin
 * Return corporate name if possible when displaying the list of organisations.
 
