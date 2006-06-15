@@ -343,6 +343,11 @@ class TestERP5BankingMixin:
          portal_type='Coin', base_price=200, 
          price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
          quantity_unit_value=self.unit)
+    # create document for coin of 200 euros from years 1992 and 2003
+    self.piece_100 = self.currency_cash_module.newContent(id='piece_100', 
+         portal_type='Coin', base_price=100, 
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+         quantity_unit_value=self.unit)
     # create document for banknote of 200 euros from years 1992 and 2003
     self.billet_200 = self.currency_cash_module.newContent(id='billet_200', 
          portal_type='Banknote', base_price=200, 
