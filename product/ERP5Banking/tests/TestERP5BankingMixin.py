@@ -276,6 +276,19 @@ class TestERP5BankingMixin:
     # 13 banknotes of 5000 for the year 2003
     self.quantity_5000[self.variation_list[1]] = 13
 
+    # quantity of usd banknote of 200
+    self.quantity_usd_200 = {}
+    # 2 banknotes of 200
+    self.quantity_usd_200['variation/not_defined'] = 2
+    # quantity of usd banknote of 50
+    self.quantity_usd_50 = {}
+    # 3 banknotes of 50
+    self.quantity_usd_50['variation/not_defined'] = 3
+    # quantity of usd banknote of 20
+    self.quantity_usd_20 = {}
+    # 5 banknotes of 20
+    self.quantity_usd_20['variation/not_defined'] = 5
+
     # Now create required category for banknotes and coin
     self.cash_status_base_category = getattr(self.category_tool, 'cash_status')
     # add the category valid in cash_status which define status of banknotes and coin
@@ -297,8 +310,11 @@ class TestERP5BankingMixin:
     self.variation_base_category = getattr(self.category_tool, 'variation')
     # add the category 1992 in variation
     self.variation_1992 = self.variation_base_category.newContent(id='1992', portal_type='Category')
-    # add the category 2003 in varitation
+    # add the category 2003 in variation
     self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
+    # add the category not_defined in variation
+    self.variation_not_defined = self.variation_base_category.newContent(id='not_defined', 
+                                      portal_type='Category')
 
     # Create Resources Document (Banknotes & Coins)
     # get the currency cash module
@@ -306,13 +322,42 @@ class TestERP5BankingMixin:
     # Create Resources Document (Banknotes & Coins)
     self.currency_1 = self.createCurrency()
     # create document for banknote of 10000 euros from years 1992 and 2003
-    self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000', portal_type='Banknote', base_price=10000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
+    self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000', 
+         portal_type='Banknote', base_price=10000, 
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+         quantity_unit_value=self.unit)
     # create document for banknote of 500 euros from years 1992 and 2003
-    self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000', portal_type='Banknote', base_price=5000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
+    self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000', 
+         portal_type='Banknote', base_price=5000, 
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+         quantity_unit_value=self.unit)
     # create document for coin of 200 euros from years 1992 and 2003
-    self.piece_200 = self.currency_cash_module.newContent(id='piece_200', portal_type='Coin', base_price=200, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
+    self.piece_200 = self.currency_cash_module.newContent(id='piece_200', 
+         portal_type='Coin', base_price=200, 
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+         quantity_unit_value=self.unit)
     # create document for banknote of 200 euros from years 1992 and 2003
-    self.billet_200 = self.currency_cash_module.newContent(id='billet_200', portal_type='Banknote', base_price=200, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
+    self.billet_200 = self.currency_cash_module.newContent(id='billet_200', 
+         portal_type='Banknote', base_price=200, 
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+         quantity_unit_value=self.unit)
+    # Create Resources Document (Banknotes & Coins) in USD
+    self.currency_2 = self.createCurrency(id='USD',title='US Dollar')
+    # create document for banknote of 100 USD
+    self.usd_billet_200 = self.currency_cash_module.newContent(id='usd_billet_100', 
+         portal_type='Banknote', base_price=100, 
+         price_currency_value=self.currency_2, variation_list=('not_defined',), 
+         quantity_unit_value=self.unit)
+    # create document for banknote of 50 USD
+    self.usd_billet_50 = self.currency_cash_module.newContent(id='usd_billet_50', 
+         portal_type='Banknote', base_price=50, 
+         price_currency_value=self.currency_2, variation_list=('not_defined',), 
+         quantity_unit_value=self.unit)
+    # create document for banknote of 20 USD
+    self.usd_billet_20 = self.currency_cash_module.newContent(id='usd_billet_20', 
+         portal_type='Banknote', base_price=20, 
+         price_currency_value=self.currency_2, variation_list=('not_defined',), 
+         quantity_unit_value=self.unit)
 
   def createFunctionGroupSiteCategory(self):
     """
@@ -377,7 +422,7 @@ class TestERP5BankingMixin:
               ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
       # caveau
       caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
-      for s in ['auxiliaire', 'reserve', 'externes', 'serre']:
+      for s in ['auxiliaire', 'reserve', 'externes', 'serre','devises']:
         s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
         if s.getId() == 'serre':
           for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits']:
@@ -390,6 +435,9 @@ class TestERP5BankingMixin:
               for country in ['France', 'Spain']:
                 if country[0] != c.getCodification()[0]:
                   ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+            if 'devises' in ss.getId():
+              for currency in ['eur','usd']:
+                  ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
             #if ss.getId()=='encaisse_des_devises':
             #  for
           if s.getId() == 'auxiliaire':
@@ -635,7 +683,8 @@ class TestERP5BankingMixin:
 
 
   def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
-          variation_base_category_list, variation_category_list, resource_quantity_dict):
+          variation_base_category_list, variation_category_list, resource_quantity_dict,
+          variation_list=None):
     """
     Add a cash line to a delivery
      """
@@ -664,7 +713,9 @@ class TestERP5BankingMixin:
               , force_update                       = 1
               )
     # set quantity on cell to define quantity of bank notes / coins
-    for variation in self.variation_list:
+    if variation_list is None:
+      variation_list = self.variation_list
+    for variation in variation_list:
       v1, v2 = variation_category_list[:2]
       cell = line.getCell(v1, variation, v2)
       if cell is not None:
