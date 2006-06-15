@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -84,7 +86,7 @@ return context.portal_templates.export(context, REQUEST=REQUEST, RESPONSE=RESPON
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -110,6 +112,7 @@ return context.portal_templates.export(context, REQUEST=REQUEST, RESPONSE=RESPON
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>REQUEST</string>

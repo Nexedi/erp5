@@ -97,7 +97,7 @@
                         <string>my_building_state</string>
                         <string>my_installation_state</string>
                         <string>my_description</string>
-                        <string>my_license</string>
+                        <string>my_maintainer_list</string>
                       </list>
                     </value>
                 </item>
@@ -117,6 +117,7 @@
                         <string>my_change_log</string>
                         <string>my_dependency_list</string>
                         <string>my_copyright_list</string>
+                        <string>my_license</string>
                       </list>
                     </value>
                 </item>

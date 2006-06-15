@@ -25,6 +25,21 @@
             </value>
         </item>
         <item>
+            <key> <string>_aliases</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>(Default)</string> </key>
+                    <value> <string>favorite_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>view</string> </key>
+                    <value> <string>favorite_view</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
