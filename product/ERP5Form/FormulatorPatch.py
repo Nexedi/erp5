@@ -654,6 +654,10 @@ class PatchedDateTimeWidget(DateTimeWidget):
             order = [('month', month),
                      ('day', day),
                      ('year', year)]
+        else:
+            order = [('year', year),
+                     ('month', month),
+                     ('day', day)]
         result = []
         for sub_field_name, sub_field_value in order:
             result.append(field.render_sub_field(sub_field_name,
@@ -903,7 +907,7 @@ FloatField.widget = FloatWidgetInstance
 
 ###################################################################
 # New formulator API
-# 
+#
 # render method on Field must change, and have a new parameter:
 #   render_format
 # which is used to call others methods ('html' call render_html)
@@ -918,11 +922,11 @@ FloatField.widget = FloatWidgetInstance
 #   raise KeyError, "Rendering not defined"
 
 # Monkey Patch
-# 
+#
 # Lookup all registered widgets and create render_html
-# XXX This method is not a good way of patching, 
+# XXX This method is not a good way of patching,
 # because it breaks inheritance
-# XXX It's difficult to get all possible widgets, as ERP5 defines 
+# XXX It's difficult to get all possible widgets, as ERP5 defines
 # also his owns.
 # for f in Formulator.widgets():
 #   if not hasattr(f, '__erp5_patched'):
@@ -943,26 +947,26 @@ def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
   render_htmlgrid returns a list of tuple (title, html render)
   """
   # What about CSS ? What about description ? What about error ?
-  return ((self.get_value('title'), 
+  return ((self.get_value('title'),
           self.render_html(value=value, REQUEST=REQUEST, key=key)),)
 Field.render_htmlgrid = Field_render_htmlgrid
 
-# Generic possible renderers                                                                                                                          
+# Generic possible renderers
 #   def render_ext(self, field, key, value, REQUEST):
 #     return getattr(self, '%s_render' % self.__class__.__name__)
-# 
+#
 #   def render_pt(self, field, key, value, REQUEST):
 #     """
 #     Call a page template which contains 1 macro per field
 #     """
 #     return self.field_master(self.__class__.__name__)
-# 
+#
 #   def render_grid(self, field, key, value, REQUEST):
 #     return ((self.get_value('title'), self.get_value('value'),)
 #    # What about CSS ? What about description ? What about error ?
 #    # What about rendering a listbox ?
 #    # Grid is only valid if stucture of grid has some meaning and is
 #    # implemeted by listbox (ex. spreadsheet = grid)
-# 
+#
 #   def render_pdf(self, field, key, value, REQUEST):
 #     return 'whatever for reportlab'
