@@ -63,9 +63,18 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
   def validate(self,field,key,REQUEST):
     """
     main method to solve validation
-    first rebuild the whole structure but do not display it
-    then recover the list of block moved and check the modifications to
-    apply
+    - rebuild the whole planning structure but do not display it.
+      this is needed to be able to get the block positions
+    - apply block movements recovered from the java script
+    - for each block moved, check the modification (over he primary axis in
+      case task association has changed, and also over the secondary axis to
+      check block movement / resizement).
+      Beware : This checking part does not include constraint checking.
+    - build a list with the validated blocks and also with the error blocks
+      (if any).
+    - return a dict of values to update objects in case no errors have been
+      found. Otherwise save in the REQUEST the list of error blocks so that
+      they can be displayed in a special way.
     """
 
     # init params
@@ -102,7 +111,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
                        self.getBlockPositionFromString(block_previous_string)
     # list of previous blocks moved if an error occured during previous
     # validation
-
 
     # updating block_moved_list using block_previous_list.
     # This is very important not to escape processing blocks that have been
@@ -259,7 +267,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         activity_dict[final_block['activity_origin'].name].append(final_block)
       except KeyError:
         activity_dict[final_block['activity_origin'].name] = [final_block]
-
 
     ##################################################
     ############# UPDATING ACTIVITIES ################
@@ -676,8 +683,8 @@ class PlanningBoxWidget(Widget.Widget):
   selection_name = fields.StringField('selection_name',
       title='Selection Name',
       description=("The name of the selection to store selections params"),
-      default='',
-      required=0)
+      default='planning_0',
+      required=1)
 
 
   portal_types = fields.ListTextAreaField('portal_types',
@@ -697,7 +704,7 @@ class PlanningBoxWidget(Widget.Widget):
   list_method = fields.MethodField('list_method',
       title='List Method',
       description=("Method to use to list objects"),
-      default='',
+      default='searchFolder',
       required=0)
 
 
@@ -830,11 +837,14 @@ class PlanningBoxWidget(Widget.Widget):
 
     here = REQUEST['here']
 
+    #import pdb
     #pdb.set_trace()
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
+    # --testing : no pdb available !!! --
+    #pdb.set_trace()
     self.render_structure(field=field, key=key, value=value,
                                     REQUEST=REQUEST, here=here)
 
@@ -884,6 +894,14 @@ class PlanningBoxWidget(Widget.Widget):
         """
     # XXX testing : uncoment to put selection to null => used for debugging
     #here.portal_selections.setSelectionFor(selection_name, None)
+
+    # XXX need to decide how Constraints between task should be defined on
+    # planning.
+    # ideally, an external method should be called for validating all
+    # constraints within the planning. (such a method sould be called from
+    # anywhere in the Project module : listbox, editing form).
+    # this method should return a list of all the objects' urls that does not
+    # fit the constraints.
 
     ####### DATA DEFINITION #######
     self.build_error_list = None
@@ -1079,7 +1097,12 @@ class BasicStructure:
     # When building the body, need to go through all report lines
     # each report line is a tuple of the form :
     #(selection_id, is_summary, depth, object_list, object_list_size, is_open)
-    default_selection_report_path = self.report_root_list[0][0].split('/')[0]
+    try:
+      default_selection_report_path = self.report_root_list[0][0].split('/')[0]
+    except (IndexError):
+      message = 'report path is empty or not valid, please check selection\
+                 report path in Planning properties'
+      return [(Message(domain=None, message=message,mapping=None))]
     if (default_selection_report_path in portal_categories.objectIds()) or \
       (portal_domains is not None and default_selection_report_path in \
        portal_domaind.objectIds()):
@@ -1088,6 +1111,10 @@ class BasicStructure:
       default_selection_root_path = self.report_root_list[0][0]
     selection_report_path = self.selection.getReportPath(default = \
      (default_selection_report_path,))
+    pdb.set_trace()
+    if selection_report_path in (None,()):
+      message = 'report path is empty or not valid'
+      return [(Message(domain=None, message=message,mapping=None))]
 
     # testing report_depth value
     if report_depth is not None:
@@ -1124,11 +1151,8 @@ class BasicStructure:
     self.report_activity_dict = {}
     indic_line=0
     index_line=0
-    blocks_object={}
+    blocks_object={} 
     select_expression = ''
-
-
-
 
     # now iterating through report_tree_list
     for object_tree_line in report_tree_list:
@@ -1181,12 +1205,15 @@ class BasicStructure:
              context=self.here, REQUEST=self.REQUEST)
         else:
           # no list_method found
-          object_list = self.here.portal_selections.getSelectionValueList(
-            self.selection_name, context=self.here, REQUEST=self.REQUEST)
+          # XXX seems to be buggy :
+          #object_list = self.here.portal_selections.getSelectionValueList(
+          #  self.selection_name, context=self.here, REQUEST=self.REQUEST)
+          message = 'No list method found, please check planningBox properties'
+          return [(Message(domain=None, message=message,mapping=None))]
 
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
-        if exception_uid_list not in (None,()):
+        if exception_uid_list is not None:
           # Filter folders if parent tree :
           # build new object_list for current line
           # (list of relative elements)
@@ -1234,7 +1261,7 @@ class BasicStructure:
 
     # reset to original value
     self.selection.edit(report = None)
-    self.selection.edit(report_list=None)
+    #self.selection.edit(report_list=None) # comment to save report_list status
 
     # update report list if report_depth was specified
     if report_depth is not None:
@@ -1247,6 +1274,13 @@ class BasicStructure:
           unfolded_list.append(report_line.getObject().getRelativeUrl())
       self.selection.edit(report_list=unfolded_list)
 
+
+    ##################################################
+    ############## CHECKING CONSTRAINTS ##############
+    ##################################################
+    # XXX Constraints checking chould be called here
+    # and results saved in a list (list of url corresponding to objects not
+    # validated)
 
     ##################################################
     ########### GETTING MAIN AXIS BOUNDS #############
@@ -1264,7 +1298,7 @@ class BasicStructure:
     else:
       # ERROR : self.report_groups = []
       # no group is available so the Y and X axis will be empty...
-      message = 'selection method returned empty list of objects : please check\
+      message= 'selection method returned empty list of objects : please check\
                 your list_method and report_root'
       return [(Message(domain=None, message=message,mapping=None))]
 
@@ -1726,6 +1760,10 @@ class BasicGroup:
             object = stat_context.getObject()
             url = stat_context.getUrl()
 
+            # XXX testing constraint result here.
+            # if current object url in list of error constranint urls, then
+            # colorizing the block.
+
             # XXX should define height of block here
             height = None
 
@@ -1804,6 +1842,10 @@ class BasicGroup:
             if activity_error[0][0] == name:
               error = 'true'
               break
+
+        # XXX testing constraint result here.
+        # if current object url in list of error constranint urls, then
+        # colorizing the block.
 
         # defining name
         name = "Activity_%s" % (self.object.getObject().getTitle())
