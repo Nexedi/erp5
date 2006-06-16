@@ -24,6 +24,12 @@
   <item>Arrow</item>
   <item>Checkbook</item>
  </portal_type>
+ <portal_type id="Container Cell">
+  <item>CashContainer</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>CashContainer</item>
+ </portal_type>
  <portal_type id="Counter Date">
   <item>Task</item>
  </portal_type>

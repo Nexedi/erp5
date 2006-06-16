@@ -1,7 +1,4 @@
 <allowed_content_type_list>
- <portal_type id="Account Module">
-  <item>Account</item>
- </portal_type>
  <portal_type id="Cash Delivery Line">
   <item>Cash Delivery Cell</item>
  </portal_type>

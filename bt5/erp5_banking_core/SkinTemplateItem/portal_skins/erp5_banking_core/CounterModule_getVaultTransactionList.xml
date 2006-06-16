@@ -87,9 +87,8 @@ vault_dict[vault_url] = 1\n
 vault_inventory_dict[vault_url] = {}\n
 inventory_kw = {}\n
 inventory_kw[\'group_by_variation\'] = 1\n
-if vault_report_type==\'inventory\':\n
-  inventory_kw[\'group_by_resource\'] = 1\n
-vault_inventory_list = context.portal_simulation.getInventoryList( node_category=vault\n
+inventory_kw[\'group_by_resource\'] = 1\n
+vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node_category=vault\n
                                                                  #, resource_category=\'currency/\' + context.Baobab_getPortalReferenceCurrencyID()\n
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
@@ -144,6 +143,8 @@ for resource in resource_dict.keys():\n
   resource_value = context.portal_catalog.getObject(resource[0])\n
   tmp_dict[\'base_price\'] = resource_value.getBasePrice()\n
   tmp_dict[\'resource_title\'] = resource_value.getTitle()\n
+  tmp_dict[\'price_currency_title\'] = resource_value.getPriceCurrencyTitle()\n
+  tmp_dict[\'price_currency\'] = resource_value.getPriceCurrency()\n
   tmp_dict[\'resource_portal_type\'] = resource_value.getPortalType()\n
   general_total_price = 0\n
   for vault in vault_dict.keys():\n

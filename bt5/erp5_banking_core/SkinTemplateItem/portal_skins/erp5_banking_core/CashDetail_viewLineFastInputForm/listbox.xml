@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -36,10 +42,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -53,10 +55,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -179,10 +177,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -198,10 +192,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -557,7 +547,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>ListBox_initializeFastInput</string> </value>
+            <value> <unicode>ListBox_initializeFastInput</unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -43,6 +43,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -56,23 +60,32 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>folder_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
+            <value> <string>BAOBAB Cash Container</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string> Holds Account objects</string> </value>
+            <value> <string>A Cash Container Item</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addFolder</string> </value>
+            <value> <string>addCashContainer</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>container</string>
+                <string>delivery_movement</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -82,7 +95,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account Module</string> </value>
+            <value> <string>Cash Container Item</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value> <string>CashContainerItem_init</string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>
@@ -92,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Account Module</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

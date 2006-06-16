@@ -93,15 +93,15 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isMovement</string>
-<string>uid</string>
-<string>getStopDate</string>
-<string>getDestinationUid</string>
-<string>getDestinationSectionUid</string>
-<string>getResourceUid</string>
-<string>getVariationText</string>
-<string>getSimulationState</string>
-<string>getAggregateUidList</string>
+                            <string>isMovement</string>
+                            <string>uid</string>
+                            <string>getStopDate</string>
+                            <string>getDestinationUid</string>
+                            <string>getDestinationSectionUid</string>
+                            <string>getResourceUid</string>
+                            <string>getVariationText</string>
+                            <string>getSimulationState</string>
+                            <string>getAggregateUidList</string>
                           </list>
                         </value>
                     </item>

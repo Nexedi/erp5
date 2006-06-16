@@ -105,6 +105,7 @@ for line in listbox:\n
   for counter in xrange(1, len(column_base_list)+1):\n
     quantity = line["column%s" %(str(counter),)]\n
     if quantity != 0:\n
+      context.log("listboxline", line)\n
       movement = {}\n
       movement[\'quantity\'] = quantity\n
       # get variation for the cell\n
@@ -112,32 +113,45 @@ for line in listbox:\n
         movement[\'cash_status\'] =  "cash_status/%s" %cash_status_list[counter-1]\n
         if line.has_key(\'emission_letter\'):\n
           movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+        elif len(emission_letter_list) == 1:\n
+          movement[\'emission_letter\'] =  "emission_letter/%s" %(emission_letter_list[0].lower(),)\n
         else:\n
           movement[\'emission_letter\'] = "emission_letter/not_defined" %line[\'emission_letter\']\n
         if line.has_key(\'variation\'):\n
           movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+        elif len(variation_list) == 1:\n
+          movement[\'variation\'] = "variation/%s" %(variation_list[0],)\n
         else:\n
           movement[\'variation\'] = "variation/not_defined"\n
       elif column_base_category == \'emission_letter\':\n
         if line.has_key(\'cash_status\'):\n
           movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+        elif len(cash_status_list) == 1:\n
+          movement[\'cash_status\'] =  "cash_status/%s" %(cash_status_list[0],)\n
         else:\n
           movement[\'cash_status\'] =  "cash_status/not_defined"\n
         movement[\'emission_letter\'] = "emission_letter/%s" %emission_letter_list[counter-1]\n
         if line.has_key(\'variation\'):\n
           movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+        elif len(variation_list) == 1:\n
+          movement[\'variation\'] = "variation/%s" %(variation_list[0],)\n
         else:\n
           movement[\'variation\'] = "variation/not_defined"\n
       else:\n
         if line.has_key(\'cash_status\'):\n
           movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+        elif len(cash_status_list) == 1:\n
+          movement[\'cash_status\'] =  "cash_status/%s" %(cash_status_list[0],)\n
         else:\n
           movement[\'cash_status\'] =  "cash_status/not_defined"\n
         if line.has_key(\'emission_letter\'):\n
           movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+        elif len(emission_letter_list) == 1:\n
+          movement[\'emission_letter\'] =  "emission_letter/%s" %(emission_letter_list[0].lower(),)\n
         else:\n
           movement[\'emission_letter\'] = "emission_letter/not_defined"\n
         movement[\'variation\'] = "variation/%s" %variation_list[counter-1]\n
+      context.log("movement", movement)\n
       # generate a key based on variation\n
       # this will allow us to check if there is multiple line for the same resource + variation\n
       movement_key = \'%s_%s_%s\' %(movement[\'cash_status\'], movement[\'emission_letter\'], movement[\'variation\'])\n

@@ -131,14 +131,17 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
       new_exclude_vault_type.append(\'vault_type/\' + v)\n
   exclude_vault_type = new_exclude_vault_type\n
   vault_dict = {}\n
+  is_member_of = context.portal_categories.isMemberOf\n
+  get_cat_value = context.portal_categories.getCategoryValue\n
   for site in site_list:\n
-    site_object = context.portal_categories.getCategoryValue(site, base_category=\'site\')\n
-    for site_member in site_object.getCategoryChildLogicalPathItemList(base=1)[1:]:\n
-      site_member_object = context.portal_categories.getCategoryValue(site_member[1])\n
+    site_object = get_cat_value(site, base_category=\'site\')\n
+    site_member_list = site_object.getCategoryChildLogicalPathItemList(base=1)[1:]\n
+    for site_member in site_member_list:\n
+      site_member_object = get_cat_value(site_member[1])\n
       for vault_type_item in vault_type:\n
-        if context.portal_categories.isMemberOf(site_member_object, vault_type_item, strict=strict_membership):\n
+        if is_member_of(site_member_object, vault_type_item, strict=strict_membership):\n
           for exclude_vault_type_item in exclude_vault_type:\n
-            if context.portal_categories.isMemberOf(site_member_object, exclude_vault_type_item, strict=0) :\n
+            if is_member_of(site_member_object, exclude_vault_type_item, strict=0) :\n
               break\n
           else:\n
             if leaf_node == 1:\n
@@ -146,6 +149,7 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
                 vault_dict[site_member[1]] = site_member\n
             else:\n
               vault_dict[site_member[1]] = site_member\n
+\n
   vault_list = vault_dict.values()\n
 \n
   # Sort the vault list by path\n
@@ -231,7 +235,10 @@ if user_site == 1:\n
       new_site_list.append(site)\n
   site_list = new_site_list\n
 else:\n
-  site_list = [\'site\']\n
+  if base_site is not None:\n
+    site_list = [base_site,]\n
+  else:\n
+    site_list = [\'site\']\n
 \n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
@@ -275,7 +282,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -303,7 +310,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -317,6 +324,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>strict_membership</string>
                             <string>with_base</string>
                             <string>all</string>
+                            <string>base_site</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -355,6 +363,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>0</int>
                 <int>1</int>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>

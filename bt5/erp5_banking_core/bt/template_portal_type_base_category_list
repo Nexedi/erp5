@@ -1,4 +1,11 @@
 Cash Delivery Cell | variation
+Category | vault_type
 Checkbook | check_amount
 Checkbook | resource
+Container Cell | cash_status
+Container Cell | emission_letter
+Container Cell | variation
+Container Line | cash_status
+Container Line | emission_letter
+Container Line | variation
 Counter Date | site

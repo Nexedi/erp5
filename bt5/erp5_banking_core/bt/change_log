@@ -1,12 +1,9 @@
-2006-06-06 aurel
-* fix delete of objects and bug when using currency with not all variation in fast input save script
-
-2006-06-05 aurel
-* complete rewrite of the script that save the fast input for delivery
-
+2006-06-16 seb
+* Added work done by Aurelien on fast input
+* Some minor changes
 
 2006-06-02 aurel
-* finish the rewrite of fast input script
+* add vault type base category to category
 
 2006-05-18 aurel
 * update Delivery_getVaultItemList to take new categories into account and fix   Baobab_getResourceVintageList

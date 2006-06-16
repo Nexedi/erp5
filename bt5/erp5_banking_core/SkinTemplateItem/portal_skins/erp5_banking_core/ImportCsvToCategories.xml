@@ -102,15 +102,18 @@ def l_split(line) :\n
   return new_e_list\n
 \n
 def create_category(cat, vault_type=None) :\n
-  context.log(\'create_category\',cat)\n
   cat_list = lowerCase(cat).split(\'/\')\n
   cat_len = len(cat_list)\n
 \n
   if cat_len == 1 :\n
     # base_category\n
-    return context.portal_categories.newContent(portal_type = \'Base Category\',\n
-        id = lowerCase(cat_list[0]),\n
-        title = upperCase(cat_list[0]))\n
+    base_cat = [x.getObject() for x in context.portal_categories.searchFolder(id=lowerCase(cat_list[0]))]\n
+    if not len(base_cat):\n
+      return context.portal_categories.newContent(portal_type = \'Base Category\',\n
+                                                  id = lowerCase(cat_list[0]),\n
+                                                  title = upperCase(cat_list[0]))\n
+    else:\n
+      return base_cat[0]\n
 \n
   elif cat_len > 1 :\n
     # sub_category\n
@@ -186,6 +189,7 @@ elif import_type == \'assign_codification\' :\n
                         \'guichet_1\':\'G1\',\'guichet_2\':\'G2\',\'guichet_3\':\'G3\'}\n
           context.log(\'category\',category.getPath())\n
           for sub_cat in category.getCategoryChildValueList(sort_id=\'path\'):\n
+            print "    %s" % sub_cat.getRelativeUrl()\n
             if sub_cat.getId() in acquired_vault_code.keys():\n
               parent_code = sub_cat.getParentValue().getCodification()\n
               code = parent_code + acquired_vault_code[sub_cat.getId()]\n
@@ -293,6 +297,7 @@ elif import_type == \'create_subvaults\' :\n
       context.log("c = %s, vault_type = %s" %(c, vault_type), "c.getvaultType = %s" %(c.getVaultType()))\n
       if context.portal_categories.isMemberOf(c, vault_type, strict=1) :\n
         print c.getRelativeUrl(), \'is\', vault_type\n
+        context.log("subvault_data",subvault_dict[vault_type])\n
         for subvault_data in subvault_dict[vault_type] :\n
           subvault_path = subvault_data[0]\n
           subvault_code = subvault_data[1]\n
@@ -317,6 +322,8 @@ elif import_type == \'create_subvaults\' :\n
             print \'  creating\', subvault_path\n
             if \'guichet\' in subvault_path:\n
               subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            #if \'devises\' in subvault_path.lower() and \'devises\' not in vault_type:\n
+            #  subcat_vault_type = \'%s/devises\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             else:\n
               subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])\n
             new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n

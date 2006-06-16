@@ -183,30 +183,30 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>getResourceUid</string>
-<string>getInventoriatedQuantity</string>
-<string>getBaobabSourceUid</string>
-<string>getBaobabDestinationUid</string>
-<string>getBaobabSourceSectionUid</string>
-<string>getBaobabDestinationSectionUid</string>
-<string>isMovement</string>
-<string>getBaobabSourcePaymentUid</string>
-<string>getBaobabDestinationPaymentUid</string>
-<string>getBaobabSourceFunctionUid</string>
-<string>getBaobabDestinationFunctionUid</string>
-<string>getBaobabSourceProjectUid</string>
-<string>getBaobabDestinationProjectUid</string>
-<string>getSimulationState</string>
-<string>getSourceInventoriatedTotalAssetPrice</string>
-<string>getDestinationInventoriatedTotalAssetPrice</string>
-<string>getStartDate</string>
-<string>getStopDate</string>
-<string>isAccountable</string>
-<string>getPortalType</string>
-<string>getBaobabDestinationVariationText</string>
-<string>getBaobabSourceVariationText</string>
-<string>getSubVariationText</string>
+                            <string>uid</string>
+                            <string>getResourceUid</string>
+                            <string>getInventoriatedQuantity</string>
+                            <string>getBaobabSourceUid</string>
+                            <string>getBaobabDestinationUid</string>
+                            <string>getBaobabSourceSectionUid</string>
+                            <string>getBaobabDestinationSectionUid</string>
+                            <string>isMovement</string>
+                            <string>getBaobabSourcePaymentUid</string>
+                            <string>getBaobabDestinationPaymentUid</string>
+                            <string>getBaobabSourceFunctionUid</string>
+                            <string>getBaobabDestinationFunctionUid</string>
+                            <string>getBaobabSourceProjectUid</string>
+                            <string>getBaobabDestinationProjectUid</string>
+                            <string>getSimulationState</string>
+                            <string>getSourceInventoriatedTotalAssetPrice</string>
+                            <string>getDestinationInventoriatedTotalAssetPrice</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>isAccountable</string>
+                            <string>getPortalType</string>
+                            <string>getBaobabDestinationVariationText</string>
+                            <string>getBaobabSourceVariationText</string>
+                            <string>getSubVariationText</string>
                           </list>
                         </value>
                     </item>

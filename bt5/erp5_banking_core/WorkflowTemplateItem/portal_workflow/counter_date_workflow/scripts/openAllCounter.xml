@@ -90,7 +90,7 @@ for line in listbox:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/accounting_date_workflow/scripts/openAllCounter</string> </value>
+            <value> <string>Script (Python):/baobab/portal_workflow/counter_date_workflow/scripts/openAllCounter</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

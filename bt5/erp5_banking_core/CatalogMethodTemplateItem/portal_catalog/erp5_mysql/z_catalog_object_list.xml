@@ -225,37 +225,37 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>security_uid</string>
-<string>getPath</string>
-<string>getRelativeUrl</string>
-<string>getParentUid</string>
-<string>id</string>
-<string>getDescription</string>
-<string>getTitle</string>
-<string>meta_type</string>
-<string>getPortalType</string>
-<string>opportunity_state</string>
-<string>getCorporateRegistrationCode</string>
-<string>getEan13Code</string>
-<string>getSimulationState</string>
-<string>getSimulationStateTitle</string>
-<string>causality_state</string>
-<string>invoice_state</string>
-<string>validation_state</string>
-<string>validation_state_title</string>
-<string>payment_state</string>
-<string>event_state</string>
-<string>getReference</string>
-<string>getGroupingReference</string>
-<string>getSourceReference</string>
-<string>getDestinationReference</string>
-<string>getStringIndex</string>
-<string>getIntIndex</string>
-<string>getFloatIndex</string>
-<string>hasCellContent</string>
-<string>getCreationDate</string>
-<string>getModificationDate</string>
+                            <string>uid</string>
+                            <string>security_uid</string>
+                            <string>getPath</string>
+                            <string>getRelativeUrl</string>
+                            <string>getParentUid</string>
+                            <string>id</string>
+                            <string>getDescription</string>
+                            <string>getTitle</string>
+                            <string>meta_type</string>
+                            <string>getPortalType</string>
+                            <string>opportunity_state</string>
+                            <string>getCorporateRegistrationCode</string>
+                            <string>getEan13Code</string>
+                            <string>getSimulationState</string>
+                            <string>getSimulationStateTitle</string>
+                            <string>causality_state</string>
+                            <string>invoice_state</string>
+                            <string>validation_state</string>
+                            <string>validation_state_title</string>
+                            <string>payment_state</string>
+                            <string>event_state</string>
+                            <string>getReference</string>
+                            <string>getGroupingReference</string>
+                            <string>getSourceReference</string>
+                            <string>getDestinationReference</string>
+                            <string>getStringIndex</string>
+                            <string>getIntIndex</string>
+                            <string>getFloatIndex</string>
+                            <string>hasCellContent</string>
+                            <string>getCreationDate</string>
+                            <string>getModificationDate</string>
                           </list>
                         </value>
                     </item>

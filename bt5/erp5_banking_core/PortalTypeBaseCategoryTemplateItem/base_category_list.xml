@@ -2,9 +2,22 @@
  <portal_type id="Cash Delivery Cell">
   <item>variation</item>
  </portal_type>
+ <portal_type id="Category">
+  <item>vault_type</item>
+ </portal_type>
  <portal_type id="Checkbook">
   <item>resource</item>
   <item>check_amount</item>
+ </portal_type>
+ <portal_type id="Container Cell">
+  <item>cash_status</item>
+  <item>emission_letter</item>
+  <item>variation</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>emission_letter</item>
+  <item>cash_status</item>
+  <item>variation</item>
  </portal_type>
  <portal_type id="Counter Date">
   <item>site</item>

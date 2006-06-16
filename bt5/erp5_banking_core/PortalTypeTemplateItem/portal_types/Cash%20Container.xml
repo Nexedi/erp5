@@ -60,19 +60,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>organisation_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Account</string> </value>
+            <value> <string>BAOBAB Cash Container</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Account defines a legislation independent general ledger account which can hold multiple amounts of currencies. It can be mapped to any number of national accounting nomenclatures and to financial analysis plan. By using indirection, it is possible to generate multiple fiscal reports based on different legislation from a single set of accounting transactions.</string> </value>
+            <value> <string>A Cash Container</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAccount</string> </value>
+            <value> <string>addCashContainer</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -82,7 +82,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>node</string>
+                <string>container</string>
+                <string>delivery_movement</string>
               </tuple>
             </value>
         </item>
@@ -94,7 +95,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account</string> </value>
+            <value> <string>Cash Container</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -108,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Account</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
