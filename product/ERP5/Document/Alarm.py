@@ -88,7 +88,7 @@ class Alarm(Periodicity, XMLObject):
       activity. We don't care about the response, we just want to start
       some calculations. Results should be read with the method 'sense'
       later.
-      
+
       """
       # Set the new date
       LOG('activeSense, self.getPath()',0,self.getPath())
@@ -106,8 +106,8 @@ class Alarm(Periodicity, XMLObject):
     def sense(self):
       """
       This method returns True or False. False for no problem, True for problem.
-      
-      This method should respond quickly.  Basically the response depends on some 
+
+      This method should respond quickly.  Basically the response depends on some
       previous calculation made by activeSense.
       """
       method_id = self.getSenseMethodId()
@@ -131,13 +131,15 @@ class Alarm(Periodicity, XMLObject):
     security.declareProtected(Permissions.View, 'report')
     def report(self,process=None):
       """
-      This methods produces a report (HTML) 
+      This methods produces a report (HTML)
       This generate the output of the results. It can be used to nicely
       explain the problem. We don't do calculation at this time, it should
       be made by activeSense.
       """
-      method_id = self.getReportMethodId()
-      LOG('Alarm.report, method_id',0,method_id)
+      method_id = self.getReportMethodId(None)
+      #LOG('Alarm.report, method_id',0,method_id)
+      if method_id is None:
+          return ''
       method = getattr(self,method_id)
       process = self.getCurrentActiveProcess()
       if process is None:
@@ -150,7 +152,7 @@ class Alarm(Periodicity, XMLObject):
     def solve(self):
       """
       This method tries solves the problem detected by sense.
-      
+
       This solve the problem if there is a problem detected by sense. If
       no problems, then nothing to do here.
       """
@@ -159,9 +161,9 @@ class Alarm(Periodicity, XMLObject):
     security.declareProtected(Permissions.ModifyPortalContent, 'notify')
     def _notify(self):
       """
-      This method is called to notify people that some alarm has 
+      This method is called to notify people that some alarm has
       been sensed.
-      
+
       for example we can send email.
 
       We define nothing here, because we will use an interaction workflow.
