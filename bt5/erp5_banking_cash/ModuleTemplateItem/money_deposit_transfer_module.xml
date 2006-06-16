@@ -300,6 +300,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add Z MySQL Database Deferred Connections</name>
+  </permission>
+  <permission>
    <name>Add ZCatalogs</name>
    <role>Manager</role>
   </permission>
@@ -452,6 +455,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Change user folder</name>
+  </permission>
+  <permission>
    <name>Copy or Move</name>
    <role>Manager</role>
   </permission>
@@ -536,9 +542,6 @@
   <permission>
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Manage Translation Services</name>
   </permission>
   <permission>
    <name>Manage Vocabulary</name>
@@ -663,6 +666,7 @@
   </permission>
   <permission>
    <name>Use external editor</name>
+   <role>Manager</role>
   </permission>
   <permission>
    <name>Use mailhost services</name>
@@ -705,12 +709,6 @@
   <permission>
    <name>WebDAV access</name>
    <role>Manager</role>
-  </permission>
-  <permission>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission>
-   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Money Deposit Transfer Module</portal_type>

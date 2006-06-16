@@ -7,6 +7,10 @@ Classification Survey Module | Classification Survey
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line
 Container Line | Container Cell
+Container | Container
+Container | Container Line
+Foreign Cash Reception Module | Foreign Cash Reception
+Foreign Cash Reception | Cash Delivery Line
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Monetary Issue Container | Container Line

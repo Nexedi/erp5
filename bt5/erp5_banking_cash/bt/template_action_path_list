@@ -26,9 +26,26 @@ Classification Survey | result
 Classification Survey | supply
 Classification Survey | view
 Container Cell | metadata
+Container Cell | print
 Container Cell | view
 Container Line | metadata
+Container Line | print
 Container Line | view
+Container Line | view_history
+Container Line | view_quantity
+Container | history_view
+Container | metadata
+Container | print
+Container | view
+Foreign Cash Reception Module | list_ui
+Foreign Cash Reception Module | print_pdf
+Foreign Cash Reception Module | sort_on
+Foreign Cash Reception Module | view
+Foreign Cash Reception | fastinput
+Foreign Cash Reception | history
+Foreign Cash Reception | metadata
+Foreign Cash Reception | print_pdf
+Foreign Cash Reception | view
 Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
 Incoming Classification Survey Line | metadata

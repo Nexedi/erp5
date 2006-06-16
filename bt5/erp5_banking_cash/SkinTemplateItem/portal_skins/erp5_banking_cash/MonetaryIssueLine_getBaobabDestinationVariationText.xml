@@ -114,7 +114,7 @@ return result\n
                             <string>args</string>
                             <string>kwd</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>variation</string>
                             <string>result</string>
                           </tuple>
