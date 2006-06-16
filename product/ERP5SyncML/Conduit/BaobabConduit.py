@@ -51,7 +51,7 @@ class BaobabConduit(ERP5Conduit):
   - for each properties that comes from sql, we have one ore more
     properties in ERP5
 
-  Most importants method defined here are : 
+  Most importants method defined here are :
   - constructContent : it is used when a new set of data comes from
                        the sql table, then constructContent must decide
                        wich kind of object must be created in ERP5
@@ -72,17 +72,17 @@ class BaobabConduit(ERP5Conduit):
 
   ### This data structure associate a xml property to an ERP5 object property in certain conditions
   property_map = {
-    # For example, in the sql export, we use for the first name of a person the 
+    # For example, in the sql export, we use for the first name of a person the
     # property 'nom', in ERP5 we use the property first_name
     'nom':[{
           'erp5_property': 'first_name'
         , 'conditions'   : {'erp5_portal_type':'Person'}
         }
-      , { 
+      , {
          'erp5_property': 'title'
         , 'conditions'   : {'erp5_portal_type':'Organisation'}
         }],
-    # For example, in the sql export, we use for the name of an organisation the 
+    # For example, in the sql export, we use for the name of an organisation the
     # property 'nom', in ERP5 we use the property title
     'adresse': [{
         'erp5_property': 'default_address_street_address'
@@ -220,7 +220,7 @@ class BaobabConduit(ERP5Conduit):
     def findObjectFromSpecialPortalType(special_portal_type):
       # The first part or portal type, for example "Mandataire"
       source_portal_type = special_portal_type.split('_')[0]
-      # The place where we should build, 
+      # The place where we should build,
       # [1:] is used to takes the full list except the first element
       # [::-1] is used in order to reverse the order
       # construction_location will be for example 40/Z000900001
@@ -234,6 +234,8 @@ class BaobabConduit(ERP5Conduit):
         try:
           # Get the object with the path
           parent_object = object.restrictedTraverse(parent_object_path)
+	  if parent_object is not None:
+	    break
         except ConflictError:
           raise
         except:
@@ -514,6 +516,10 @@ class BaobabConduit(ERP5Conduit):
         if k == 'currency'      : currency_id         = v
         if k == 'account_number': bank_account_number = v
       # try to find the bank account
+      LOG( 'bank_account_number:'
+                 , 200
+                 , bank_account_number
+                 )
       if bank_account_number != None:
         bank_account_object = None
         # We use here the catalog in order to find very quickly
@@ -522,6 +528,10 @@ class BaobabConduit(ERP5Conduit):
         bank_account_list = [x.getObject() for x in object.portal_catalog(
                                portal_type=('Bank Account'),
                                reference='%%%s%%' % bank_account_number)]
+        LOG( 'bank_account_list:'
+                 , 200
+                 , bank_account_list
+                 )
         # Make sure we have found the right bank account
         for bank_account in bank_account_list:
            if bank_account.getBankAccountNumber() == bank_account_number:
@@ -576,7 +586,7 @@ class BaobabConduit(ERP5Conduit):
             # get the method itself
             method = getattr(object, method_id)
             # This call the method, this exactly the same thing
-            # as calling directly : object.setTitle(v) 
+            # as calling directly : object.setTitle(v)
             method(v)
           else:
             LOG( 'BaobabConduit:'
@@ -603,7 +613,7 @@ class BaobabConduit(ERP5Conduit):
             # get the method itself
             method = getattr(self, method_id)
             # This call the method, this exactly the same thing
-            # as calling directly : self.editClientNatureEconomique(object,v) 
+            # as calling directly : self.editClientNatureEconomique(object,v)
             method(object, v)
           else:
             LOG( 'BaobabConduit:'
@@ -683,8 +693,8 @@ class BaobabConduit(ERP5Conduit):
 
   def editClientCode(self, document, value):
     pass
- 
-	
+
+
 
 
   ### BankAccount-related-properties functions
@@ -846,7 +856,7 @@ class BaobabConduit(ERP5Conduit):
     # Get the site path corresponding to the inventory type
     inventory_path = None
     agency_site_object = site_object
-    # Parse the category tree (from the level of the agency) in order to 
+    # Parse the category tree (from the level of the agency) in order to
     # find the category corresponding to the inventory
     for agency_sub_item in agency_site_object.getCategoryChildItemList(base=1)[1:]:
       agency_sub_item_path   = agency_sub_item[1]
@@ -864,9 +874,9 @@ class BaobabConduit(ERP5Conduit):
     # Get the site path corresponding to the vault code
     vault_path = None
     vault_site_object = agency_sub_item_object
-    # Parse the category tree (from the level of the inventory) in order to 
+    # Parse the category tree (from the level of the inventory) in order to
     # find the category corresponding to the vault
-    for vault_sub_item in vault_site_object.getCategoryChildtemList(base=1)[1:]:
+    for vault_sub_item in vault_site_object.getCategoryChildItemList(base=1)[1:]:
       vault_sub_item_path   = vault_sub_item[1]
       vault_sub_item_object = category_tool.resolveCategory(vault_sub_item_path)
       vault_sub_item_code   = vault_sub_item_object.getCodification()
@@ -880,7 +890,7 @@ class BaobabConduit(ERP5Conduit):
     currency_title  = currency_object.getTitle()
     currency_vault_path = None
     vault_object = vault_sub_item_object
-    # Parse the category tree (from the level of the vault) in order to 
+    # Parse the category tree (from the level of the vault) in order to
     # find the category corresponding to the currency
     for currency_vault_item in vault_object.getCategoryChildItemList(base=1)[1:]:
       currency_vault_item_path   = currency_vault_item[1]
