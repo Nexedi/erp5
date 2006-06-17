@@ -1,4 +1,10 @@
 <property_sheet_list>
+ <portal_type id="Cash Balance Regulation">
+  <item>Resource</item>
+  <item>Amount</item>
+  <item>Price</item>
+  <item>Simulation</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
   <item>Price</item>
  </portal_type>
@@ -8,17 +14,36 @@
  <portal_type id="Container Line">
   <item>CashContainer</item>
  </portal_type>
+ <portal_type id="Incoming Cash Balance Regulation Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Monetary Destruction">
+  <item>Amount</item>
+  <item>Account</item>
+  <item>Price</item>
+  <item>Task</item>
+ </portal_type>
  <portal_type id="Monetary Issue">
+  <item>Price</item>
+  <item>Amount</item>
+ </portal_type>
+ <portal_type id="Monetary Issue Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Monetary Recall">
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
- <portal_type id="Monetary Issue Line">
+ <portal_type id="Monetary Recall Cell">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Monetary Recall Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Monetary Reception">
@@ -28,9 +53,16 @@
   <item>Task</item>
   <item>Amount</item>
  </portal_type>
- <portal_type id="Money Deposit Transfer">
+ <portal_type id="Money Deposit Rendering">
   <item>Price</item>
   <item>Amount</item>
+ </portal_type>
+ <portal_type id="Money Deposit Transfer">
+  <item>Amount</item>
+  <item>Price</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Balance Regulation Line">
+  <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>CashDeliveryLine</item>
@@ -44,8 +76,16 @@
  <portal_type id="Outgoing Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Usual Cash Rendering">
+  <item>Price</item>
+  <item>Amount</item>
+ </portal_type>
  <portal_type id="Usual Cash Transfer">
   <item>Price</item>
   <item>Amount</item>
+ </portal_type>
+ <portal_type id="Vault Transfer">
+  <item>Amount</item>
+  <item>Price</item>
  </portal_type>
 </property_sheet_list>

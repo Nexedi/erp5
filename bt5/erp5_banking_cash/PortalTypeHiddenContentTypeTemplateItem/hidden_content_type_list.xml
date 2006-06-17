@@ -1,4 +1,8 @@
 <hidden_content_type_list>
+ <portal_type id="Cash Balance Regulation">
+  <item>Outgoing Cash Balance Regulation Line</item>
+  <item>Incoming Cash Balance Regulation Line</item>
+ </portal_type>
  <portal_type id="Cash Container">
   <item>Container Line</item>
  </portal_type>
@@ -16,8 +20,16 @@
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
+ <portal_type id="Counter Rendering">
+  <item>Amount</item>
+  <item>Price</item>
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Incoming Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
   <item>Cash Delivery Cell</item>
@@ -25,12 +37,21 @@
  <portal_type id="Incoming Classification Survey Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
+ <portal_type id="Monetary Destruction">
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Monetary Issue">
   <item>Monetary Issue Container</item>
   <item>Monetary Issue Line</item>
  </portal_type>
  <portal_type id="Monetary Issue Container">
   <item>Container Line</item>
+ </portal_type>
+ <portal_type id="Monetary Recall">
+  <item>Monetary Recall Line</item>
+ </portal_type>
+ <portal_type id="Monetary Recall Line">
+  <item>Monetary Recall Cell</item>
  </portal_type>
  <portal_type id="Monetary Reception">
   <item>Cash Container</item>
@@ -43,8 +64,14 @@
  <portal_type id="Monetary Survey">
   <item>Cash Delivery Line</item>
  </portal_type>
+ <portal_type id="Money Deposit Rendering">
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Money Deposit Transfer">
   <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
   <item>Outgoing Cash Sorting Cell</item>
@@ -52,7 +79,13 @@
  <portal_type id="Outgoing Classification Survey Line">
   <item>Outgoing Classification Survey Cell</item>
  </portal_type>
+ <portal_type id="Usual Cash Rendering">
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Usual Cash Transfer">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Vault Transfer">
   <item>Cash Delivery Line</item>
  </portal_type>
 </hidden_content_type_list>

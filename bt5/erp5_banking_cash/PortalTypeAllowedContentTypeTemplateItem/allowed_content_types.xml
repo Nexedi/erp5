@@ -1,9 +1,19 @@
 <allowed_content_type_list>
+ <portal_type id="Cash Balance Regulation">
+  <item>Outgoing Cash Balance Regulation Line</item>
+  <item>Incoming Cash Balance Regulation Line</item>
+ </portal_type>
+ <portal_type id="Cash Balance Regulation Module">
+  <item>Cash Balance Regulation</item>
+ </portal_type>
  <portal_type id="Cash Container">
   <item>Container Line</item>
  </portal_type>
  <portal_type id="Cash Container Item">
   <item>Container Line</item>
+ </portal_type>
+ <portal_type id="Cash Delivery Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
@@ -26,17 +36,32 @@
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
+ <portal_type id="Counter Rendering">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Counter Rendering Module">
+  <item>Counter Rendering</item>
+ </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Foreign Cash Reception Module">
   <item>Foreign Cash Reception</item>
  </portal_type>
+ <portal_type id="Incoming Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Classification Survey Line">
   <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Monetary Destruction">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Monetary Destruction Module">
+  <item>Monetary Destruction</item>
  </portal_type>
  <portal_type id="Monetary Issue">
   <item>Monetary Issue Container</item>
@@ -51,6 +76,15 @@
  <portal_type id="Monetary Issue Module">
   <item>Monetary Issue</item>
  </portal_type>
+ <portal_type id="Monetary Recall">
+  <item>Monetary Recall Line</item>
+ </portal_type>
+ <portal_type id="Monetary Recall Line">
+  <item>Monetary Recall Cell</item>
+ </portal_type>
+ <portal_type id="Monetary Recall Module">
+  <item>Monetary Recall</item>
+ </portal_type>
  <portal_type id="Monetary Reception">
   <item>Cash Container Item</item>
   <item>Cash Delivery Line</item>
@@ -64,11 +98,20 @@
  <portal_type id="Monetary Survey Module">
   <item>Monetary Survey</item>
  </portal_type>
+ <portal_type id="Money Deposit Rendering">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Money Deposit Rendering Module">
+  <item>Money Deposit Rendering</item>
+ </portal_type>
  <portal_type id="Money Deposit Transfer">
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Money Deposit Transfer Module">
   <item>Money Deposit Transfer</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
   <item>Outgoing Cash Sorting Cell</item>
@@ -76,10 +119,22 @@
  <portal_type id="Outgoing Classification Survey Line">
   <item>Outgoing Classification Survey Cell</item>
  </portal_type>
+ <portal_type id="Usual Cash Rendering">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Usual Cash Rendering Module">
+  <item>Usual Cash Rendering</item>
+ </portal_type>
  <portal_type id="Usual Cash Transfer">
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Usual Cash Transfer Module">
   <item>Usual Cash Transfer</item>
+ </portal_type>
+ <portal_type id="Vault Transfer">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Vault Transfer Module">
+  <item>Vault Transfer</item>
  </portal_type>
 </allowed_content_type_list>

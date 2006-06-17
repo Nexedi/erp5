@@ -1,34 +1,62 @@
 <workflow_chain>
  <chain>
+  <type>Cash Balance Regulation</type>
+  <workflow>cash_balance_regulation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Cash Sorting</type>
-  <workflow>edit_workflow, cash_sorting_workflow</workflow>
+  <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Classification Survey</type>
-  <workflow>edit_workflow, classification_survey_workflow</workflow>
+  <workflow>classification_survey_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Counter Rendering</type>
+  <workflow>counter_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Foreign Cash Reception</type>
   <workflow>foreign_cash_reception_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Monetary Destruction</type>
+  <workflow>edit_workflow, monetary_destruction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Monetary Issue</type>
-  <workflow>monetary_issue_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, monetary_issue_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Monetary Recall</type>
+  <workflow>edit_workflow, monetary_recall_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Reception</type>
-  <workflow>monetary_reception_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, monetary_reception_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Survey</type>
-  <workflow>edit_workflow, monetary_survey_workflow</workflow>
+  <workflow>monetary_survey_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Money Deposit Rendering</type>
+  <workflow>money_deposit_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Money Deposit Transfer</type>
   <workflow>edit_workflow, money_deposit_transfer_workflow</workflow>
  </chain>
  <chain>
+  <type>Usual Cash Rendering</type>
+  <workflow>edit_workflow, usual_cash_rendering_workflow</workflow>
+ </chain>
+ <chain>
   <type>Usual Cash Transfer</type>
   <workflow>edit_workflow, usual_cash_transfer_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Vault Transfer</type>
+  <workflow>edit_workflow, vault_transfer_workflow</workflow>
  </chain>
 </workflow_chain>

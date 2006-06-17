@@ -1,16 +1,29 @@
+Cash Balance Regulation | cash_balance_regulation_workflow
 Cash Sorting | cash_sorting_workflow
 Cash Sorting | edit_workflow
 Classification Survey | classification_survey_workflow
 Classification Survey | edit_workflow
+Counter Rendering | counter_rendering_workflow
+Counter Rendering | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
+Monetary Destruction | edit_workflow
+Monetary Destruction | monetary_destruction_workflow
 Monetary Issue | edit_workflow
 Monetary Issue | monetary_issue_workflow
+Monetary Recall | edit_workflow
+Monetary Recall | monetary_recall_workflow
 Monetary Reception | edit_workflow
 Monetary Reception | monetary_reception_workflow
 Monetary Survey | edit_workflow
 Monetary Survey | monetary_survey_workflow
+Money Deposit Rendering | edit_workflow
+Money Deposit Rendering | money_deposit_rendering_workflow
 Money Deposit Transfer | edit_workflow
 Money Deposit Transfer | money_deposit_transfer_workflow
+Usual Cash Rendering | edit_workflow
+Usual Cash Rendering | usual_cash_rendering_workflow
 Usual Cash Transfer | edit_workflow
 Usual Cash Transfer | usual_cash_transfer_workflow
+Vault Transfer | edit_workflow
+Vault Transfer | vault_transfer_workflow

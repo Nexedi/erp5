@@ -1,3 +1,15 @@
+Cash Balance Regulation Module | list
+Cash Balance Regulation Module | list_ui
+Cash Balance Regulation Module | sort_on
+Cash Balance Regulation Module | view
+Cash Balance Regulation | final
+Cash Balance Regulation | history
+Cash Balance Regulation | incoming_fastinput
+Cash Balance Regulation | initial
+Cash Balance Regulation | metadata
+Cash Balance Regulation | outgoing_fastinput
+Cash Balance Regulation | print
+Cash Balance Regulation | view
 Cash Container Item | metadata
 Cash Container Item | view
 Cash Container | metadata
@@ -37,6 +49,15 @@ Container | history_view
 Container | metadata
 Container | print
 Container | view
+Counter Rendering Module | list_ui
+Counter Rendering Module | print_pdf
+Counter Rendering Module | sort_on
+Counter Rendering Module | view
+Counter Rendering | fastinput
+Counter Rendering | history
+Counter Rendering | metadata
+Counter Rendering | print_pdf
+Counter Rendering | view
 Foreign Cash Reception Module | list_ui
 Foreign Cash Reception Module | print_pdf
 Foreign Cash Reception Module | sort_on
@@ -46,10 +67,22 @@ Foreign Cash Reception | history
 Foreign Cash Reception | metadata
 Foreign Cash Reception | print_pdf
 Foreign Cash Reception | view
+Incoming Cash Balance Regulation Line | history
+Incoming Cash Balance Regulation Line | metadata
+Incoming Cash Balance Regulation Line | print
+Incoming Cash Balance Regulation Line | view
 Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
+Monetary Destruction Module | list_ui
+Monetary Destruction Module | sort_on
+Monetary Destruction Module | view
+Monetary Destruction | fastinput
+Monetary Destruction | history
+Monetary Destruction | metadata
+Monetary Destruction | print
+Monetary Destruction | view
 Monetary Issue Container | metadata
 Monetary Issue Container | view
 Monetary Issue Line | metadata
@@ -64,6 +97,20 @@ Monetary Issue | fastInput
 Monetary Issue | history
 Monetary Issue | metadata
 Monetary Issue | view
+Monetary Recall Cell | metadata
+Monetary Recall Cell | view
+Monetary Recall Line | metadata
+Monetary Recall Line | print
+Monetary Recall Line | view
+Monetary Recall Module | list
+Monetary Recall Module | list_ui
+Monetary Recall Module | sort_on
+Monetary Recall Module | view
+Monetary Recall | fastinput
+Monetary Recall | history
+Monetary Recall | metadata
+Monetary Recall | print
+Monetary Recall | view
 Monetary Reception Module | import
 Monetary Reception Module | list_ui
 Monetary Reception Module | print_pdf
@@ -84,6 +131,15 @@ Monetary Survey | history
 Monetary Survey | metadata
 Monetary Survey | print
 Monetary Survey | view
+Money Deposit Rendering Module | list_ui
+Money Deposit Rendering Module | print_pdf
+Money Deposit Rendering Module | sort_on
+Money Deposit Rendering Module | view
+Money Deposit Rendering | fastinput
+Money Deposit Rendering | history
+Money Deposit Rendering | metadata
+Money Deposit Rendering | print_pdf
+Money Deposit Rendering | view
 Money Deposit Transfer Module | list
 Money Deposit Transfer Module | list_ui
 Money Deposit Transfer Module | print_pdf
@@ -94,6 +150,10 @@ Money Deposit Transfer | history
 Money Deposit Transfer | metadata
 Money Deposit Transfer | print_pdf
 Money Deposit Transfer | view
+Outgoing Cash Balance Regulation Line | history
+Outgoing Cash Balance Regulation Line | metadata
+Outgoing Cash Balance Regulation Line | print
+Outgoing Cash Balance Regulation Line | view
 Outgoing Cash Sorting Cell | metadata
 Outgoing Cash Sorting Cell | view
 Outgoing Cash Sorting Line | metadata
@@ -102,6 +162,15 @@ Outgoing Classification Survey Cell | metadata
 Outgoing Classification Survey Cell | view
 Outgoing Classification Survey Line | metadata
 Outgoing Classification Survey Line | view
+Usual Cash Rendering Module | list_ui
+Usual Cash Rendering Module | print_pdf
+Usual Cash Rendering Module | sort_on
+Usual Cash Rendering Module | view
+Usual Cash Rendering | fastinput
+Usual Cash Rendering | history
+Usual Cash Rendering | metadata
+Usual Cash Rendering | print_pdf
+Usual Cash Rendering | view
 Usual Cash Transfer Module | list
 Usual Cash Transfer Module | list_ui
 Usual Cash Transfer Module | sort_on
@@ -111,3 +180,13 @@ Usual Cash Transfer | history
 Usual Cash Transfer | metadata
 Usual Cash Transfer | print
 Usual Cash Transfer | view
+Vault Transfer Module | list
+Vault Transfer Module | list_ui
+Vault Transfer Module | print_pdf
+Vault Transfer Module | sort_on
+Vault Transfer Module | view
+Vault Transfer | fastinput
+Vault Transfer | history
+Vault Transfer | metadata
+Vault Transfer | print_pdf
+Vault Transfer | view
