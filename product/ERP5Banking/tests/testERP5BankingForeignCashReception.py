@@ -80,6 +80,8 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
       need to be installed to run the test on.
     """
     return ('erp5_base',
+            'erp5_trade',
+            'erp5_accounting',
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_cash'
