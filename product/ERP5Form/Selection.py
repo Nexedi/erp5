@@ -190,12 +190,11 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if len(sort_on) == 0:
           sort_on = getattr(self, 'default_sort_on', [])
         if len(sort_on) > 0:
-          self.params['sort_on'] = sort_on
-        elif self.params.has_key('sort_on'):
-          del self.params['sort_on']
+          kw['sort_on'] = sort_on
+        elif kw.has_key('sort_on'):
+          del kw.params['sort_on']
         if method is not None:
           if callable(method):
-            #LOG('Selection', 0, "self.params = %s" % repr(self.params))
             if self.domain is not None and self.report is not None:
               result = method(selection_domain = self.domain,
                               selection_report = self.report, selection=self, **kw)
