@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002,2006 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Yoshinori Okuji <yo@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -42,9 +42,11 @@ from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from copy import copy
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
+from Products.ERP5Type.Accessor.Accessor import Accessor as Method
+from Products.ERP5Type.Message import Message
 
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
-from zLOG import LOG
+from Acquisition import aq_base, aq_inner, aq_parent, aq_self, Implicit, aq_chain
+from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 
 from Globals import InitializeClass, Persistent, Acquisition, get_request
@@ -53,6 +55,13 @@ from Products.PythonScripts.Utility import allow_class
 import random
 import md5
 import cgi
+
+# For compatibility with Python 2.3.
+try:
+  set
+except NameError:
+  from sets import Set as set
+
 
 class ObjectValuesWrapper:
   """This class wraps objectValues so that objectValues behaves like portal_catalog.
@@ -71,12 +80,7 @@ class ObjectValuesWrapper:
       brain_list.append(brain)
     return brain_list
 
-def getAsList(a):
-  l = []
-  for e in a:
-    l.append(e)
-  return l
-
+# FIXME: this method should be removed. Probably makeReportTreeList should suffice.
 def makeTreeBody(form = None, root_dict = None, domain_path = '',
                  depth = 0, total_depth = None, unfolded_list = (),
                  form_id = None, selection_name = None,
@@ -175,101 +179,36 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
 
   return tree_body
 
-_parent_domain_mark = '__parent'
-
-def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1, sort_on = (('id', 'ASC'),)):
+class ReportTree:
+  """This class describes a report tree.
   """
-    (object, is_pure_summary, depth, is_open, select_domain_dict)
+  def __init__(self, obj = None, is_pure_summary = False, depth = 0, is_open = False,
+               domain_selection = None, exception_uid_list = None):
+    self.obj = obj
+    self.is_pure_summary = is_pure_summary
+    self.depth = depth
+    self.is_open = is_open
+    self.domain_selection = domain_selection
+    self.exception_uid_list = exception_uid_list
+    if exception_uid_list is None:
+      self.exception_uid_set = None
+    else:
+      self.exception_uid_set = set(exception_uid_list)
 
-    select_domain_dict is a dictionary of  associative list of (id, domain)
+class ReportSection:
+  """This class describes a report section.
   """
-  if type(report_path) is type('a'): report_path = report_path.split('/')
-
-  portal_categories = getattr(form, 'portal_categories', None)
-  portal_domains = getattr(form, 'portal_domains', None)
-  portal_object = form.portal_url.getPortalObject()
-
-  if len(report_path):
-    base_category = report_path[0]
-
-  if root_dict is None:
-    root_dict = {}
-
-  is_empty_level = 1
-  while is_empty_level:
-    if not root_dict.has_key(base_category):
-      root = None
-      if portal_categories is not None:
-        if base_category in portal_categories.objectIds():
-          if base_category == 'parent':
-            # parent has a special treatment
-            root = root_dict[base_category] = root_dict[None] = here
-            report_path = report_path[1:]
-          else:
-            root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
-            report_path = report_path[1:]
-      if root is None and portal_domains is not None:
-
-        if base_category in portal_domains.objectIds():
-          root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
-          report_path = report_path[1:]
-      if root is None:
-        try:
-          root = root_dict[None] = portal_object.unrestrictedTraverse(report_path)
-        except KeyError:
-          root = None
-        report_path = ()
-    else:
-      root = root_dict[None] = root_dict[base_category]
-      report_path = report_path[1:]
-    is_empty_level = (root is None or root.objectCount() == 0) and (len(report_path) != 0)
-    if is_empty_level: base_category = report_path[0]
-
-  tree_list = []
-  if root is None: return tree_list
-
-  if base_category == 'parent':
-    if hasattr(aq_base(root), 'objectValues'):
-      # If this is a folder, try to browse the hierarchy
-      for zo in root.searchFolder(sort_on=sort_on):
-        o = zo.getObject()
-        if o is not None:
-          new_root_dict = root_dict.copy()
-          new_root_dict[None] = new_root_dict[base_category] = o
-          selection_domain = DomainSelection(domain_dict = new_root_dict)
-          if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
-            exception_uid_list = [] # Object we do not want to display
-            for sub_zo in o.searchFolder(sort_on=sort_on):
-              sub_o = sub_zo.getObject()
-              if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
-                exception_uid_list.append(sub_o.getUid())
-            tree_list += [(o, 1, depth, 1, selection_domain, exception_uid_list)] # Summary (open)
-            if is_report_opened :
-              tree_list += [(o, 0, depth, 0, selection_domain, exception_uid_list)] # List (contents, closed, must be strict selection)
-            tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened, sort_on=sort_on)
-          else:
-            tree_list += [(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
-  else:
-    if hasattr(root, 'getChildDomainValueList'):
-      oblist = root.getChildDomainValueList(root,depth=depth)
-    else:
-      oblist = root.objectValues()
-    for o in oblist:
-      new_root_dict = root_dict.copy()
-      new_root_dict[None] = new_root_dict[base_category] = o
-      selection_domain = DomainSelection(domain_dict = new_root_dict)
-      if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
-        tree_list += [(o, 1, depth, 1, selection_domain, None)] # Summary (open)
-        if is_report_opened :
-          tree_list += [(o, 0, depth, 0, selection_domain, None)] # List (contents, closed, must be strict selection)
-        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1,
-            unfolded_list, form_id, selection_name, report_depth,
-            is_report_opened=is_report_opened, sort_on=sort_on)
-      else:
-        tree_list += [(o, 1, depth, 0, selection_domain, None)] # Summary (closed)
-
-  return tree_list
-
+  def __init__(self, is_summary = False, object_list = (), object_list_len = 0,
+               is_open = False, domain_selection = None, context = None, offset = 0,
+               depth = 0):
+    self.is_summary = is_summary
+    self.object_list = object_list
+    self.object_list_len = object_list_len
+    self.is_open = is_open
+    self.domain_selection = domain_selection
+    self.context = context
+    self.offset = offset
+    self.depth = depth
 
 class ListBoxWidget(Widget.Widget):
     """
@@ -496,7 +435,7 @@ class ListBoxWidget(Widget.Widget):
 
     def render_view(self, field, value, REQUEST=None, render_format='html', key='listbox'):
         """
-          Returns
+          Render a ListBox in read-only.
         """
         if REQUEST is None: REQUEST=get_request()
         return self.render(field, key, value, REQUEST, render_format=render_format)
@@ -524,759 +463,1645 @@ class ListBoxWidget(Widget.Widget):
 
           which is intended to simplify operation with a spreadsheet or a pagetemplate
         """
-        ###############################################################
-        #
-        # First, grasp and intialize the variables we may need later
-        #
-        ###############################################################
-        #render_start = DateTime()
-        here = REQUEST['here']
-        reset = REQUEST.get('reset', 0)
-        form = field.aq_parent
-        field_errors = REQUEST.get('field_errors',{});
-        field_title = field.get_value('title')
-        lines = field.get_value('lines')
-        meta_types = field.get_value('meta_types')
-        portal_types= field.get_value('portal_types')
-        columns = field.get_value('columns')
-        all_columns = field.get_value('all_columns')
-        default_params = field.get_value('default_params')
-        search = field.get_value('search')
-        select = field.get_value('select')
-        sort = field.get_value('sort')
-        editable_columns = field.get_value('editable_columns')
-        stat_columns = field.get_value('stat_columns')
-        url_columns = field.get_value('url_columns')
-        search_columns = field.get_value('search_columns')
-        sort_columns = field.get_value('sort_columns')
-        domain_tree = field.get_value('domain_tree')
-        report_tree = field.get_value('report_tree')
-        domain_root_list = field.get_value('domain_root_list')
-        report_root_list = field.get_value('report_root_list')
-        list_method = field.get_value('list_method')
-        count_method = field.get_value('count_method')
-        stat_method = field.get_value('stat_method')
-        selection_index = REQUEST.get('selection_index')
-        selection_name = field.get_value('selection_name')
-        portal_url_string = getToolByName(here, 'portal_url')()
-        portal_categories = getattr(form, 'portal_categories', None)
-        portal_domains = getattr(form, 'portal_domains', None)
-        portal_object = form.portal_url.getPortalObject()
-        #selection_name = REQUEST.get('selection_name',None)
-        #if selection_name is None:
-        #  selection_name = str(random.randrange(1,2147483600))
-        current_selection_name = REQUEST.get('selection_name','default')
-        current_selection_index = REQUEST.get('selection_index', 0)
-        report_depth = REQUEST.get('report_depth', None)
-        list_action = here.absolute_url() + '/' + field.get_value('list_action')
-        if list_action.find('?') < 0:
-          list_action += '?reset=1'
-        else:
-          list_action += '&reset=1'
-        object_list = []
-
-        # Get translation methods
-        translate = portal_object.Localizer.translate
-
-        # Make sure list_result_item is defined
-        list_result_item = []
-
         if render_format == 'list':
-          # initialize the result
-          listboxline_list = []
-
-        # Make sure that the title is not UTF-8.
-        field_title = unicode(field_title, 'utf-8')
-
-        # Make sure that columns are not UTF-8.
-        columns = [(str(cname[0]), unicode(cname[1], 'utf-8')) for cname in columns]
-
-        # Make sure that columns are not UTF-8.
-        domain_root_list = [(str(cname[0]), unicode(cname[1], 'utf-8')) for cname in domain_root_list]
-
-        #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
-        if search_columns == [] or search_columns is None or search_columns == '':
-          # We will set it as the schema
-          search_columns = map(lambda x: [x,x],here.portal_catalog.schema())
-          #LOG('Listbox',0,'search_columns2: %s' % str(search_columns))
-        search_columns_id_list = map(lambda x: x[0], search_columns)
-
-        if sort_columns == [] or sort_columns is None or sort_columns == '':
-          sort_columns = search_columns
-        sort_columns_id_list = map(lambda x: x[0], sort_columns)
-
-        # Display statistics if the button Parameter exists or stat columns are defined explicitly.
-        filtered_actions = here.portal_actions.listFilteredActionsFor(here);
-        object_ui = filtered_actions.has_key('object_ui')
-        show_stat = (object_ui or stat_columns)
-
-        # If nothing is specified to stat_columns, assume that all columns are available.
-        # For compatibility, because there was no stat_columns before.
-        if not stat_columns:
-          stat_columns = []
-          for column in all_columns:
-            stat_columns.append((column[0], column[0]))
-          for column in columns: # Sometimes, all_columns is not defined
-            stat_columns.append((column[0], column[0]))
-
-        if not url_columns:
-          url_columns = []
-
-        has_catalog_path = None
-        for (k, v) in all_columns:
-          if k == 'catalog.path' or k == 'path':
-            has_catalog_path = k
-            break
-
-        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        # Create selection if needed, with default sort order
-        if selection is None:
-          selection = Selection(params=default_params, default_sort_on = sort)
-        # Or make sure all sort arguments are valid
+          renderer = ListBoxListRenderer(self, field, REQUEST)
         else:
-          # Reset Selection is needed
-          if reset is not 0 and reset is not '0':
-            here.portal_selections.setSelectionToAll(selection_name)
-            here.portal_selections.setSelectionSortOrder(selection_name, sort_on = [])
+          renderer = ListBoxHTMLRenderer(self, field, REQUEST)
 
-          # Modify the default sort index every time, because it may change immediately.
-          selection.edit(default_sort_on = sort)
+        return renderer()
 
-          # Filter non searchable items
-          sort_list = []
-          fix_sort = 0
-          for (k , v) in selection.sort_on: # XXX Access to selection - bad
-            if k in sort_columns_id_list:
-              sort_list.append((k,v))
-            else:
-              fix_sort = 1
-          if fix_sort: selection.sort_on = sort_list # XXX Access to selection - bad
+ListBoxWidgetInstance = ListBoxWidget()
 
-        if not hasattr(selection, 'flat_list_mode'):
-          # initialisation of render mode. Choose flat_list_mode by default
-          selection.edit(flat_list_mode=1,domain_tree_mode=0,report_tree_mode=0)
-          #selection.edit(flat_list_mode=(not (domain_tree or
-          # report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
+class VolatileCachingMethod(Method):
+  """This class caches the result of a callable object, and behaves like a method.
+     Unlike ERP5Type's CachingMethod, this cache is volatile, namely, the cached
+     data is removed immediately when an object which stores the cached data is deleted.
+     Naturally, the object (self) should not be a persistent object.
+  """
+  # Some magic to omit an instance argument.
+  class func_code: pass
+  func_code = func_code()
+  func_code.co_varnames = ('self',)
+  func_code.co_argcount = 1
+  func_defaults = ()
+  _need__name__=1
+  index_html = None
+  validate = None
 
-        #LOG('ListBox', 0, 'sort = %s, selection.selection_sort_on = %s' % (repr(sort), repr(selection.selection_sort_on)))
-        # Selection
-        #LOG("Selection",0,str(selection.__dict__))
+  def __init__(self, callable_object):
+    """Generate the key for the cache.
+    """
+    self.method = callable_object
+    self.key = '_cache_' + str(id(callable_object))
 
-        # Display choosen by the user
+  def __call__(self, instance):
+    """Call the callable object passed to __init__, if the result is not cached.
 
-        if selection.flat_list_mode is not None:
-          if selection.flat_list_mode == 1:
-            domain_tree = 0
-            report_tree = 0
-          elif selection.domain_tree_mode == 1:
-            # Only display domain if domain is defined
-            if len(domain_root_list):
-              domain_tree = 1
-              report_tree = 0
-            else:
-              domain_tree = 0
-              report_tree = 0
-          elif selection.report_tree_mode == 1:
-            # Only display report if report is defined
-            if len(report_root_list):
-              domain_tree = 0
-              report_tree = 1
-            else:
-              domain_tree = 0
-              report_tree = 0
+    For now, this does not take any extra argument, because it is not necessary
+    at the moment.
+    """
+    try:
+      return getattr(instance, self.key)
+    except AttributeError:
+      result = self.method(instance)
+      setattr(instance, self.key, result)
+      return result
 
-        # In report tree mode, we want to remember if the items have to be displayed
-        is_report_opened = REQUEST.get('is_report_opened', selection.isReportOpened())
-        selection.edit(report_opened=is_report_opened)
+class ListBoxRenderer(Implicit):
+  """This class deals with rendering of a ListBox field.
 
-        checked_uids = selection.getCheckedUids()
-        columns = here.portal_selections.getSelectionColumns(selection_name,
-                                                columns=columns, REQUEST=REQUEST)
+  In ListBox, rendering is not only viewing but also setting parameters in a selection
+  and a request object.
+  """
 
+  def __init__(self, widget = None, field = None, REQUEST = None, **kw):
+    """Store the parameters for later use.
+    """
+    self.widget = widget
+    self.field = field
+    self.request = REQUEST
 
-        editable_column_ids = map(lambda x: x[0], editable_columns)
+  def getLineClass(self):
+    """Return a class object for a line. This must be overridden.
+    """
+    raise NotImplementedError, "getLineClass must be overridden in a subclass"
 
-        url = REQUEST.URL
+  # Here, define many getters which cache the results for better performance.
 
-        # Build the list of meta_types
-        filtered_meta_types = map(lambda x: x[0], meta_types)
-        if len(filtered_meta_types) == 0:
-          filtered_meta_types = None
+  def getContext(self):
+    """Return the context of rendering this ListBox.
+    """
+    return self.request['here']
 
-        # Build the list of meta_types
-        filtered_portal_types = map(lambda x: x[0], portal_types)
-        if len(filtered_portal_types) == 0:
-            filtered_portal_types = None
+  getContext = VolatileCachingMethod(getContext)
 
-        # Combine default values, selection values and REQUEST
-        params = selection.getParams()
-        if list_method not in (None, ''):
-          # Only update params if list_method is defined
-          # (ie. do not update params in listboxed intended to show a previously defined selection
-          params.update(REQUEST.form)
-          for (k,v) in default_params:
-            if REQUEST.form.has_key(k):
-              params[k] = REQUEST.form[k]
-            params.setdefault(k, v)
+  def getForm(self):
+    """Return the form which contains the ListBox.
+    """
+    return aq_inner(self.field).aq_parent
 
-        # Allow overriding list_method, count_method and stat_method by params
-        if params.has_key('list_method_id'):
-          #try:
-          list_method = getattr(here.portal_skins.local_list_method , params['list_method_id']) # Coramy specific
-          #except:
-          #  list_method = list_method
-        if params.has_key('count_method_id'):
-          #try:
-          count_method = getattr(here.portal_skins.local_list_method , params['count_method_id']) # Coramy specific
-          #except:
-          #  list_method = list_method
-        if params.has_key('stat_method_id'):
-          #try:
-          list_method = getattr(here.portal_skins.local_list_method , params['stat_method_id']) # Coramy specific
-          #except:
-          #  list_method = list_method
+  getForm = VolatileCachingMethod(getForm)
 
-        # Set the params spec (this should change in the future)
-        if list_method not in (None, ''):
-          # Only update params if list_method is defined
-          # (ie. do not update params in listboxed intended to show a previously defined selection
-          if filtered_meta_types:
-            params['meta_type'] = filtered_meta_types
-          if filtered_portal_types:
-            params['portal_type'] = filtered_portal_types
+  def getEncoding(self):
+    """Retutn the encoding of strings in the fields. Default to UTF-8.
+    """
+    return self.getPortalObject().getProperty('management_page_charset', 'utf-8')
 
-        ###############################################################
-        #
-        # Build the columns selections
-        #
-        # The idea is: instead of selecting *, listbox is able to
-        # provide what should be selected. This should allow to reduce
-        # the quantity of data transfered between MySQL and Zope
-        #
-        ###############################################################
-        extended_columns = []
-        sql_columns = []
-        for (sql, title) in columns:
-          # original SQL id, Title, alias
-          alias = string.split(sql,'.')
-          alias = string.join(alias, '_')
-          extended_columns += [(sql, title, alias)]
-          if alias != sql:
-            sql_columns += ['%s AS %s' % (sql, alias)]
-          else:
-            sql_columns += [alias]
-        if has_catalog_path:
-          alias = string.split(has_catalog_path,'.')
-          alias = string.join(alias, '_')
-          if alias != has_catalog_path:
-            sql_columns += ['%s AS %s' % (has_catalog_path, alias)]
-          else:
-            sql_columns += [alias]
-        sql_columns_string = string.join(sql_columns,' , ')
-        params['select_columns'] = sql_columns_string
+  getEncoding = VolatileCachingMethod(getEncoding)
 
-        ###############################################################
-        #
-        # Execute the query
-        #
-        ###############################################################
+  def isReset(self):
+    """Determine if the ListBox should be reset.
+    """
+    reset = self.request.get('reset', 0)
+    return (reset not in (0, '0'))
 
-        kw = params
+  isReset = VolatileCachingMethod(isReset)
 
-        # XXX Remove selection_expression if present.
-        # This is necessary for now, because the actual selection expression in
-        # search catalog does not take the requested columns into account. If
-        # select_expression is passed, this can raise an exception, because stat
-        # method sets select_expression, and this might cause duplicated column
-        # names.
-        #
-        # In the future, this must be addressed in a clean way. selection_expression
-        # should be used for search catalog, and search catalog should not use
-        # catalog.* but only selection_expression. But this is a bit difficult,
-        # because there is no simple way to distinguish queried columns from callable
-        # objects in the current ListBox configuration.
-        if 'select_expression' in kw:
-          del kw['select_expression']
+  def getFieldErrorDict(self):
+    """Return a dictionary of errors.
+    """
+    return self.request.get('field_errors', {})
 
-        if hasattr(list_method, 'method_name'):
-          if list_method.method_name == 'objectValues':
-            list_method = ObjectValuesWrapper(here)
-            kw = copy(params)
-            kw['spec'] = filtered_meta_types
-          else:
-            # The Catalog Builds a Complex Query
-            # So we should not pass too many variables
-            kw = {}
-            if REQUEST.form.has_key('portal_type'):
-              kw['portal_type'] = REQUEST.form['portal_type']
-            elif REQUEST.has_key('portal_type'):
-              kw['portal_type'] = REQUEST['portal_type']
-            elif filtered_portal_types is not None:
-              kw['portal_type'] = filtered_portal_types
-            elif filtered_meta_types is not None:
-              kw['meta_type'] = filtered_meta_types
-            elif kw.has_key('portal_type'):
-              if kw['portal_type'] == '':
-                del kw['portal_type']
+  getFieldErrorDict = VolatileCachingMethod(getFieldErrorDict)
 
-            # Remove useless matter
-            for cname in params.keys():
-              if params[cname] != '' and params[cname]!=None:
-                kw.setdefault(cname, params[cname])
+  def getUrl(self):
+    """Return a requested URL.
+    """
+    return self.request.URL
 
-            # Try to get the method through acquisition
-            try:
-              list_method = getattr(here, list_method.method_name)
-            except (AttributeError, KeyError):
-              pass
-        elif list_method in (None, ''): # Use current selection
-          # Use previously used list method
-          list_method = None
+  getUrl = VolatileCachingMethod(getUrl)
 
+  def getRequestedSelectionName(self):
+    """Return a selection name which may be passed by a request.
+    If not present, return "default". This selection can be different from the selection
+    defined in the ListBox.
+    """
+    selection_name = self.request.get('selection_name', 'default')
 
-        # Lookup the count_method
-        if hasattr(count_method, 'method_name'):
-          if count_method.method_name == 'portal_catalog':
-            # We use the catalog count results
-            count_method = here.portal_catalog.countResults
-          else:
-            # Try to get the method through acquisition
-            try:
-              count_method = getattr(here, count_method.method_name)
-            except (AttributeError, KeyError):
-              count_method = None
+    # This is a workaround, as selection_name becomes a list or tuple sometimes.
+    # XXX really? why?
+    if not isinstance(selection_name, str):
+      selection_name = selection_name[0]
+
+    return selection_name
+
+  getRequestedSelectionName = VolatileCachingMethod(getRequestedSelectionName)
+
+  def getSelectionIndex(self):
+    """Return the index of a requested selection, or None if not specified.
+    """
+    return self.request.get('selection_index', None)
+
+  getSelectionIndex = VolatileCachingMethod(getSelectionIndex)
+
+  def getReportDepth(self):
+    """Return the depth of reports, or None if not specified.
+    """
+    return self.request.get('report_depth', None)
+
+  getReportDepth = VolatileCachingMethod(getReportDepth)
+
+  def getPortalObject(self):
+    """Return the portal object.
+    """
+    return self.getContext().getPortalObject()
+
+  getPortalObject = VolatileCachingMethod(getPortalObject)
+
+  def getPortalUrlString(self):
+    """Return the URL of the portal as a string.
+    """
+    return self.getPortalObject().portal_url()
+
+  getPortalUrlString = VolatileCachingMethod(getPortalUrlString)
+
+  def getCategoryTool(self):
+    """Return the Category Tool.
+    """
+    return self.getPortalObject().portal_categories
+
+  getCategoryTool = VolatileCachingMethod(getCategoryTool)
+
+  def getDomainTool(self):
+    """Return the Domain Tool.
+    """
+    return self.getPortalObject().portal_domains
+
+  getDomainTool = VolatileCachingMethod(getDomainTool)
+
+  def getCatalogTool(self):
+    """Return the Catalog Tool.
+    """
+    return self.getPortalObject().portal_catalog
+
+  getCatalogTool = VolatileCachingMethod(getCatalogTool)
+
+  def getSelectionTool(self):
+    """Return the Selection Tool.
+    """
+    return self.getPortalObject().portal_selections
+
+  getSelectionTool = VolatileCachingMethod(getSelectionTool)
+
+  def getId(self):
+    """Return the id of the field. Usually, "listbox".
+    """
+    return self.field.id
+
+  getId = VolatileCachingMethod(getId)
+
+  def getTitle(self):
+    """Return the title. Make sure that it is in unicode.
+    """
+    return unicode(self.field.get_value('title'), self.getEncoding())
+
+  getTitle = VolatileCachingMethod(getTitle)
+
+  def getMaxLineNumber(self):
+    """Return the maximum number of lines shown in a page.
+    This must be overridden in subclasses.
+    """
+    raise NotImplementedError, "getMaxLineNumber must be overridden in a subclass"
+
+  def showSearchLine(self):
+    """Return a boolean that represents whether a search line is displayed or not.
+    """
+    return self.field.get_value('search')
+
+  showSearchLine = VolatileCachingMethod(showSearchLine)
+
+  def showSelectColumn(self):
+    """Return a boolean that represents whether a select column is displayed or not.
+    """
+    return self.field.get_value('select')
+
+  showSelectColumn = VolatileCachingMethod(showSelectColumn)
+
+  def showStat(self):
+    """Return a boolean that represents whether a stat line is displayed or not.
+
+    FIXME: This is not very correct, because stat columns may define their own
+    stat method independently.
+    """
+    return (self.getStatMethod() is not None) and (len(self.getStatColumnList()) > 0)
+
+  showStat = VolatileCachingMethod(showStat)
+
+  def isDomainTreeSupported(self):
+    """Return a boolean that represents whether a domain tree is supported or not.
+    """
+    return (self.field.get_value('domain_tree') and len(self.getDomainRootList()) > 0)
+
+  isDomainTreeSupported = VolatileCachingMethod(isDomainTreeSupported)
+
+  def isReportTreeSupported(self):
+    """Return a boolean that represents whether a report tree is supported or not.
+    """
+    return (self.field.get_value('report_tree') and len(self.getReportRootList()) > 0)
+
+  isReportTreeSupported = VolatileCachingMethod(isReportTreeSupported)
+
+  def isDomainTreeMode(self):
+    """Return whether the current mode is domain tree mode or not.
+    """
+    return self.isDomainTreeSupported() and self.getSelection().domain_tree_mode
+
+  isDomainTreeMode = VolatileCachingMethod(isDomainTreeMode)
+
+  def isReportTreeMode(self):
+    """Return whether the current mode is report tree mode or not.
+    """
+    return self.isReportTreeSupported() and self.getSelection().report_tree_mode
+
+  isReportTreeMode = VolatileCachingMethod(isReportTreeMode)
+
+  def getDefaultParamList(self):
+    """Return the list of default parameters.
+    """
+    return self.field.get_value('default_params')
+
+  getDefaultParamList = VolatileCachingMethod(getDefaultParamList)
+
+  def getListMethodName(self):
+    """Return the name of the list method. If not defined, return None.
+    """
+    list_method = self.field.get_value('list_method')
+    try:
+      name = getattr(list_method, 'method_name')
+    except AttributeError:
+      name = list_method
+    return name or None
+
+  getListMethodName = VolatileCachingMethod(getListMethodName)
+
+  def getCountMethodName(self):
+    """Return the name of the count method. If not defined, return None.
+    """
+    count_method = self.field.get_value('count_method')
+    try:
+      name = getattr(count_method, 'method_name')
+    except AttributeError:
+      name = count_method
+    return name or None
+
+  getCountMethodName = VolatileCachingMethod(getCountMethodName)
+
+  def getStatMethodName(self):
+    """Return the name of the stat method. If not defined, return None.
+    """
+    stat_method = self.field.get_value('stat_method')
+    try:
+      name = getattr(stat_method, 'method_name')
+    except AttributeError:
+      name = stat_method
+    return name or None
+
+  getStatMethodName = VolatileCachingMethod(getStatMethodName)
+
+  def getSelectionName(self):
+    """Return the selection name.
+    """
+    return self.field.get_value('selection_name')
+
+  getSelectionName = VolatileCachingMethod(getSelectionName)
+
+  def getMetaTypeList(self):
+    """Return the list of meta types for filtering. Return None when empty.
+    """
+    meta_types = [c[0] for c in self.field.get_value('meta_types')]
+    return meta_types or None
+
+  getMetaTypeList = VolatileCachingMethod(getMetaTypeList)
+
+  def getPortalTypeList(self):
+    """Return the list of portal types for filtering. Return None when empty.
+    """
+    portal_types = [c[0] for c in self.field.get_value('portal_types')]
+    return portal_types or None
+
+  getPortalTypeList = VolatileCachingMethod(getPortalTypeList)
+
+  def getColumnList(self):
+    """Return the columns. Make sure that the titles are in unicode.
+    """
+    columns = self.field.get_value('columns')
+    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in columns]
+
+  getColumnList = VolatileCachingMethod(getColumnList)
+
+  def getAllColumnList(self):
+    """Return the all columns. Make sure that the titles are in unicode.
+    """
+    all_column_list = list(self.getColumnList())
+    all_column_id_set = set([c[0] for c in all_column_list])
+    all_column_list.extend([(str(c[0]), unicode(c[1], self.getEncoding())) \
+                              for c in self.field.get_value('all_columns') \
+                              if c[0] not in all_column_id_set])
+    return all_column_list
+
+  getAllColumnList = VolatileCachingMethod(getAllColumnList)
+
+  def getStatColumnList(self):
+    """Return the stat columns. Fall back to all the columns if empty.
+    """
+    stat_columns = self.field.get_value('stat_columns')
+    if stat_columns:
+      stat_column_list = [(str(c[0]), unicode(c[1], self.getEncoding())) for c in stat_columns]
+    else:
+      stat_column_list = [(c[0], c[0]) for c in self.getAllColumnList()]
+    return stat_column_list
+
+  getStatColumnList = VolatileCachingMethod(getStatColumnList)
+
+  def getUrlColumnList(self):
+    """Return the url columns. Make sure that it is an empty list, when not defined.
+    """
+    url_columns = self.field.get_value('url_columns')
+    return url_columns or []
+
+  getUrlColumnList = VolatileCachingMethod(getUrlColumnList)
+
+  def getDefaultSortColumnList(self):
+    """Return the default sort columns.
+    """
+    return self.field.get_value('sort')
+
+  getDefaultSortColumnList = VolatileCachingMethod(getDefaultSortColumnList)
+
+  def getDomainRootList(self):
+    """Return the domain root list. Make sure that the titles are in unicode.
+    """
+    domain_root_list = self.field.get_value('domain_root_list')
+    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in domain_root_list]
+
+  getDomainRootList = VolatileCachingMethod(getDomainRootList)
+
+  def getReportRootList(self):
+    """Return the report root list. Make sure that the titles are in unicode.
+    """
+    report_root_list = self.field.get_value('report_root_list')
+    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
+
+  getReportRootList = VolatileCachingMethod(getReportRootList)
+
+  def getSearchColumnIdSet(self):
+    """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
+    """
+    search_columns = self.field.get_value('search_columns')
+    if search_columns:
+      search_column_id_list = [c[0] for c in search_columns]
+    else:
+      search_column_id_list = self.getCatalogTool().schema()
+    return set(search_column_id_list)
+
+  getSearchColumnIdSet = VolatileCachingMethod(getSearchColumnIdSet)
+
+  def getSortColumnIdSet(self):
+    """Return the set of the ids of the sort columns. Fall back to search column ids, if not defined.
+    """
+    sort_columns = self.field.get_value('sort_columns')
+    if sort_columns:
+      sort_column_id_set = set([c[0] for c in sort_columns])
+    else:
+      sort_column_id_set = self.getSearchColumnIdSet()
+    return sort_column_id_set
+
+  getSortColumnIdSet = VolatileCachingMethod(getSortColumnIdSet)
+
+  def getEditableColumnIdSet(self):
+    """Return the set of the ids of the editable columns.
+    """
+    editable_columns = self.field.get_value('editable_columns')
+    return set([c[0] for c in editable_columns])
+
+  getEditableColumnIdSet = VolatileCachingMethod(getEditableColumnIdSet)
+
+  def getListActionUrl(self):
+    """Return the URL of the list action.
+    """
+    list_action_part_list = [self.getContext().getUrl(), '/', self.field.get_value('list_action')]
+    if '?' in list_action_part_list[-1]:
+      list_action_part_list.append('&reset=1')
+    else:
+      list_action_part_list.append('?reset=1')
+    return ''.join(list_action_part_list)
+
+  getListActionUrl = VolatileCachingMethod(getListActionUrl)
+
+  # Whether the selection object is initialized.
+  is_selection_initialized = False
+
+  def getSelection(self):
+    """FIXME: Tweak a selection and return the selection object.
+    This code depends on the implementation of Selection too much.
+    In the future, the API of SelectionTool should be refactored and
+    ListBox should not use Selection directly.
+    """
+    selection_tool = self.getSelectionTool()
+    selection_name = self.getSelectionName()
+    selection = selection_tool.getSelectionFor(selection_name, REQUEST = self.request)
+
+    if self.is_selection_initialized:
+      return selection
+
+    # Create a selection, if not present, with the default sort order.
+    if selection is None:
+      selection = Selection(params = self.getDefaultParamList(), default_sort_on = self.getDefaultSortColumnList())
+    # Or make sure all sort arguments are valid.
+    else:
+      # Reset the selection, if specified.
+      if self.isReset():
+        selection_tool.setSelectionToAll(selection_name)
+        selection_tool.setSelectionSortOrder(selection_name, sort_on = [])
+
+      # Modify the default sort index every time, because it may change immediately.
+      selection.edit(default_sort_on = self.getDefaultSortColumnList())
+
+      # Filter out non-sortable items.
+      sort_column_id_set = self.getSortColumnIdSet()
+      sort_list = [c for c in selection.sort_on if c[0] in sort_column_id_set]
+      if len(selection.sort_on) != len(sort_list):
+        selection.sort_on = sort_list
+
+    if getattr(selection, 'flat_list_mode', None) is None:
+      # Initialize the render mode. Choose flat list mode by default.
+      selection.edit(flat_list_mode = 1, domain_tree_mode = 0, report_tree_mode = 0)
+
+    # Remember if the items have to be displayed for report tree mode.
+    is_report_opened = self.request.get('is_report_opened', selection.isReportOpened())
+    selection.edit(report_opened = is_report_opened)
+
+    self.is_selection_initialized = True
+
+    return selection
+
+  getSelection = VolatileCachingMethod(getSelection)
+
+  def getCheckedUidList(self):
+    """Return the list of checked uids.
+    """
+    return self.getSelection().getCheckedUids()
+
+  getCheckedUidList = VolatileCachingMethod(getCheckedUidList)
+
+  def getSelectedColumnList(self):
+    """Return the list of selected columns.
+    """
+    return self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
+                                                       columns = self.getColumnList(),
+                                                       REQUEST = self.request)
+
+  getSelectedColumnList = VolatileCachingMethod(getSelectedColumnList)
+
+  def getColumnAliasList(self):
+    """Return the list of column aliases for SQL, because SQL does not allow a symbol to contain dots.
+    """
+    alias_list = []
+    for sql, title in self.getSelectedColumnList():
+      alias_list.append(sql.replace('.', '_'))
+    return alias_list
+
+  getColumnAliasList = VolatileCachingMethod(getColumnAliasList)
+
+  def getParamDict(self):
+    """Return a dictionary of parameters.
+    """
+    params = self.getSelection().getParams()
+    if self.getListMethodName():
+      # Update parameters, only if list_method is defined.
+      # (i.e. do not update parameters in listboxes intended to show a previously defined selection.
+      params.update(self.request.form)
+      for k, v in self.getDefaultParamList():
+        params.setdefault(k, v)
+
+      # Set parameters, depending on the list method.
+      list_method_name = self.getListMethodName()
+      meta_type_list = self.getMetaTypeList()
+      portal_type_list = self.getPortalTypeList()
+      if list_method_name == 'objectValues':
+        if meta_type_list is not None:
+          params.setdefault('spec', meta_type_list)
+      else:
+        if portal_type_list is not None:
+          params.setdefault('portal_type', portal_type_list)
+        elif meta_type_list is not None:
+          params.setdefaul('meta_type', meta_type_list)
+
+        # Remove useless parameters.
+        for k, v in params.items():
+          if v in (None, ''):
+            del params[k]
+
+    # Set the columns. The idea behind this is that, instead of selecting all columns,
+    # ListBox can specify only required columns, in order to reduce the data transferred
+    # from a SQL Server to Zope.
+    sql_column_list = []
+    for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
+      if sql != alias:
+        sql_column_list.append('%s AS %s' % (sql, alias))
+      else:
+        sql_column_list.append(alias)
+
+    # XXX why is this necessary? For compatibility?
+    for sql, title in self.getAllColumnList():
+      if sql in ('catalog.path', 'path'):
+        alias = sql.replace('.', '_')
+        if sql != alias:
+          sql_column_list.append('%s AS %s' % (sql, alias))
         else:
-          # No count method defined means that all objects must be retrieved.
-          count_method = None
+          sql_column_list.append(alias)
+        break
 
+    params['select_columns'] = ', '.join(sql_column_list)
 
-        # Lookup the stat_method
-        if hasattr(stat_method, 'method_name'):
-          if stat_method.method_name == 'objectValues':
-            stat_method = None # Nothing to do in this case
-            show_stat = 0
-          elif stat_method.method_name == 'portal_catalog':
-            # We use the catalog count results
-            stat_method = here.portal_catalog.countResults
-            show_stat = 1
-          else:
-            # Try to get the method through acquisition
-            try:
-              stat_method = getattr(here, stat_method.method_name)
-              show_stat = 1
-            except (AttributeError, KeyError):
-              show_stat = 0
-              pass
-        else:
-          # No stat method defined means no statistics displayed
-          stat_method = None
-          show_stat = 0
+    # XXX Remove selection_expression if present.
+    # This is necessary for now, because the actual selection expression in
+    # search catalog does not take the requested columns into account. If
+    # select_expression is passed, this can raise an exception, because stat
+    # method sets select_expression, and this might cause duplicated column
+    # names.
+    #
+    # In the future, this must be addressed in a clean way. selection_expression
+    # should be used for search catalog, and search catalog should not use
+    # catalog.* but only selection_expression. But this is a bit difficult,
+    # because there is no simple way to distinguish queried columns from callable
+    # objects in the current ListBox configuration.
+    if 'select_expression' in params:
+      del params['select_expression']
 
-          #LOG('ListBox', 0, 'domain_tree = %s, selection.getDomainPath() = %s, selection.getDomainList() = %s' % (repr(domain_tree), repr(selection.getDomainPath()), repr(selection.getDomainList())))
-        if domain_tree:
-          selection_domain_path = selection.getDomainPath()
-          selection_domain_current = selection.getDomainList()
-          if len(selection_domain_current) > 0:
-            root_dict = {}
-            for domain in selection_domain_current:
-              if type(domain) != type(''): continue # XXX workaround for a past bug in Selection
-              root = None
-              base_category = domain.split('/')[0]
-              if portal_categories is not None:
-                if base_category in portal_categories.objectIds():
-                  root = portal_categories.restrictedTraverse(domain, None)
-                  if root is not None :
-                    root_dict[base_category] = root
-              if root is None and portal_domains is not None:
-                if base_category in portal_domains.objectIds():
-                  base_domain = portal_domains.getDomainByPath(domain)
-                  root = base_domain
-                  root_dict[base_category] = base_domain.getRelativeUrl()
-              if root is None:
-                try:
-                  root_dict[None] = portal_object.restrictedTraverse(domain)
-                except KeyError:
-                  root = None
-              #LOG('domain_tree root aq_parent', 0, str(root_dict[base_category].aq_parent))
-            selection.edit(domain = DomainSelection(domain_dict = root_dict).__of__(here))
-            # LOG('selection.domain', 0, str(selection.domain.__dict__))
-        else:
-          selection.edit(domain = None)
+    return params
 
-        #LOG('ListBox', 0, 'list_method = %s, list_method.__dict__ = %s' % (repr(list_method), repr((list_method.__dict__))))
+  getParamDict = VolatileCachingMethod(getParamDict)
 
-        ###############################################################
-        #
-        # Prepare the stat select_expression
-        #
-        ###############################################################
-        select_expression = ''
-        if show_stat:
-          stats = here.portal_selections.getSelectionStats(
-                                             selection_name,
-                                             REQUEST=REQUEST)
-          index = 0
+  def getListMethod(self):
+    """Return the list method object.
+    """
+    list_method_name = self.getListMethodName()
 
-          for (sql,title,alias) in extended_columns:
-            # XXX This might be slow.
-            for column in stat_columns:
-              if column[0] == sql:
-                break
-            else:
-              column = None
-            if (column is not None) and (column[0] == column[1]):
-              try:
-                if stats[index] != ' ':
-                  select_expression += '%s(%s) AS %s,' % (stats[index], sql,
-                                                          alias)
-                else:
-                  select_expression += '\'&nbsp;\' AS %s,' % alias
-              except IndexError:
-                select_expression += '\'&nbsp;\' AS %s,' % alias
-            index = index + 1
+    if list_method_name == 'objectValues':
+      list_method = ObjectValuesWrapper(self.getContext())
+    elif list_method_name is not None:
+      try:
+        list_method = getattr(self.getContext(), list_method_name)
+      except AttributeError, KeyError:
+        list_method = None
+    else:
+      list_method = None
 
-          select_expression = select_expression[:len(select_expression) - 1]
+    return list_method
 
-        ###############################################################
-        #
-        # Calculate list start temporarily
-        #
-        ###############################################################
-        if render_format == 'list':
-          start = 0
-        else:
+  getListMethod = VolatileCachingMethod(getListMethod)
+
+  def getCountMethod(self):
+    """Return the count method object.
+    """
+    count_method_name = self.getCountMethodName()
+
+    if count_method_name == 'objectValues':
+      # Get all objects anyway in this case.
+      count_method = None
+    if count_method_name == 'portal_catalog':
+      count_method = self.getCatalogTool().countResults
+    elif count_method_name is not None:
+      try:
+        count_method = getattr(self.getContext(), count_method_name)
+      except AttributeError, KeyError:
+        count_method = None
+    else:
+      count_method = None
+
+    return count_method
+
+  getCountMethod = VolatileCachingMethod(getCountMethod)
+
+  def getStatMethod(self):
+    """Return the stat method object.
+    """
+    stat_method_name = self.getStatMethodName()
+
+    if stat_method_name == 'objectValues':
+      # Nothing to do in this case.
+      stat_method = None
+    if stat_method_name == 'portal_catalog':
+      stat_method = self.getCatalogTool().countResults
+    elif stat_method_name is not None:
+      try:
+        stat_method = getattr(self.getContext(), stat_method_name)
+      except AttributeError, KeyError:
+        stat_method = None
+    else:
+      stat_method = None
+
+    return stat_method
+
+  getStatMethod = VolatileCachingMethod(getStatMethod)
+
+  def getDomainSelection(self):
+    """Return a DomainSelection object wrapped with the context.
+    """
+    selection = self.getSelection()
+    domain_list = selection.getDomainList()
+
+    if len(domain_list) > 0:
+      category_tool = self.getCategoryTool()
+      domain_tool = self.getDomainTool()
+      root_dict = {}
+
+      for domain in domain_list:
+        # XXX workaround for a past bug in Selection
+        if not isinstance(domain, str):
+          continue
+
+        root = None
+        base_domain = domain.split('/', 1)[0]
+        if category_tool is not None:
+          root = category_tool.restrictedTraverse(domain, None)
+          if root is not None :
+            root_dict[base_domain] = root
+          elif domain_tool is not None:
+            root = domain_tool.getDomainByPath(domain)
+            if root is not None:
+              # FIXME: this is a bad hack. DomainSelection should use
+              # portal_type to determine the type of the object instead
+              # of whether it is a string or not.
+              root_dict[base_domain] = root.getRelativeUrl()
+        if root is None:
           try:
-            start = REQUEST.get('list_start')
-            start = int(start)
-          except (TypeError, KeyError):
-            start = params.get('list_start',0)
-            if type(start) is type([]):
-              start = start[0]
-            start = int(start)
-          start = max(start, 0)
-
-        ###############################################################
-        #
-        # Build the report tree
-        #
-        # When we build the body, we have to go through all report lines
-        #
-        # Each report line is a tuple of the form:
-        #
-        # (section_id, is_summary, depth, object_list, object_list_size, is_open)
-        #
-        ###############################################################
-        if report_tree:
-          default_selection_report_path = report_root_list[0][0].split('/')[0]
-          if default_selection_report_path in portal_categories.objectIds() or \
-            (portal_domains is not None and default_selection_report_path in portal_domains.objectIds()):
+            root_dict[None] = portal_object.restrictedTraverse(domain)
+          except KeyError:
             pass
-          else:
-            default_selection_report_path = report_root_list[0][0]
-          selection_report_path = selection.getReportPath(default = default_selection_report_path)
-          if report_depth is not None:
-            selection_report_current = ()
-          else:
-            selection_report_current = selection.getReportList()
-          report_tree_list = makeTreeList(here, form, None, selection_report_path, None,
-                                          0, selection_report_current, form.id, selection_name, report_depth,
-                                          is_report_opened, sort_on=selection.sort_on)
 
-          # Update report list if report_depth was specified
-          if report_depth is not None:
-            report_list = map(lambda s:s[0].getRelativeUrl(), report_tree_list)
-            selection.edit(report_list=report_list)
+      return DomainSelection(domain_dict = root_dict).__of__(self.getContext())
 
-          report_sections = []
-          #LOG("Report Tree",0,str(report_tree_list))
-          for s in report_tree_list:
-            # Prepare query by defining selection report object
-            #if s[4] is not _parent_domain_mark:
-            selection.edit(report = s[4])
-            if s[1]:
-              # Push new select_expression
-              original_select_expression = kw.get('select_expression')
-              kw['select_expression'] = select_expression
-              selection.edit( params = kw )
-              #LOG('ListBox 569', 0, str((selection_name, selection.__dict__)))
-              stat_temp = selection(method = stat_method, context=here, REQUEST=REQUEST)
-              # Pop new select_expression
-              if original_select_expression is None:
-                del kw['select_expression']
-              else:
-                kw['select_expression'] = original_select_expression
+  getDomainSelection = VolatileCachingMethod(getDomainSelection)
 
-            if s[1] and show_stat:
-              # stat_result is a list
-              # we want now to make it a dictionnary
-              # Is this a report line
-              # object_stat = ....
-              stat_result = {}
-              index = 1
+  def getStatSelectExpression(self):
+    """Return a string which expresses the information retrieved by SELECT for
+    the statistics.
+    """
+    select_expression_list = []
+    if self.showStat():
+      stats = self.getSelectionTool().getSelectionStats(self.getSelectionName(), REQUEST = self.request)
+      stat_column_list = self.getStatColumnList()
 
-              for (k,v) in columns:
-                try:
-                  stat_result[k] = str(stat_temp[0][index])
-                except IndexError:
-                  stat_result[k] = ''
-                index = index + 1
-
-              stat_context = s[0].asContext(**stat_result)
-              absolute_url_txt = s[0].absolute_url()
-              stat_context.absolute_url = lambda: absolute_url_txt
-              stat_context.domain_url = s[0].getRelativeUrl()
-              section_title = s[0].getTitleOrId()
-              section_title = translate('erp5_content', section_title, default=section_title.decode('utf-8'))
-              if type(section_title) == type(u''):
-                section_title = section_title.encode('utf-8')
-              report_sections += [(s[0].getTitleOrId(), 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
-              #                 report id, is_summary, depth, object_list, object_list_len, XX, XX, report_object, start, stop
-            else:
-              # Prepare query
-              selection.edit( params = kw )
-              if list_method not in (None, ''):
-                #if s[4] is not _parent_domain_mark:
-                object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
-                #else:
-                #  object_list = [s[0]]
-              else:
-                # If list_method is None, use already selected values.
-                #if s[4] is not _parent_domain_mark:
-                object_list = here.portal_selections.getSelectionValueList(selection_name,
-                                                                context=here, REQUEST=REQUEST)
-                #else:
-                #  object_list = [s[0]]
-#               # PERFORMANCE ? is len(object_list) fast enough ?
-              exception_uid_list = s[5]
-              if exception_uid_list is not None:
-                # Filter folders if this is a parent tree
-                new_object_list = []
-                for o in object_list:
-                  #LOG('exception_uid_list', 0, '%s %s' % (o.getUid(), exception_uid_list))
-                  if o.getUid() not in exception_uid_list:
-                    new_object_list.append(o)
-                object_list = new_object_list
-              object_list_len = len(object_list)
-              if not s[1]:
-                if show_stat:
-                  report_sections += [ (None, 0, s[2], object_list, object_list_len, s[3], s[4], None, 0) ]
-              else:
-                stat_context = s[0].asContext()
-                absolute_url_txt = s[0].absolute_url()
-                stat_context.absolute_url = lambda : absolute_url_txt
-                stat_context.domain_url = s[0].getRelativeUrl()
-                if object_list_len and s[3]:
-                  # Display object data at same level as category selector
-                  # If this domain is open
-                  report_sections += [ (s[0].getTitleOrId(), 0, s[2], [object_list[0]], 1, s[3], s[4], stat_context, 0) ]
-                  report_sections += [ (None, 0, s[2], object_list, object_list_len - 1, s[3], s[4], None, 1) ]
-                else:
-                  if exception_uid_list is not None:
-                    # Display current parent domain
-                    report_sections += [ (s[0].getTitleOrId(), 0, s[2], [s[0]], 1, s[3], s[4], stat_context, 0) ]
-                  else:
-                    # No data to display
-                    report_sections += [ (s[0].getTitleOrId(), 0, s[2], [None], 1, s[3], s[4], stat_context, 0) ]
-
-          # Reset original value
-          selection.edit(report = None)
+      for index, ((sql, title), alias) in enumerate(zip(self.getSelectedColumnList(), self.getColumnAliasList())):
+        # XXX This might be slow.
+        for column in stat_column_list:
+          if column[0] == sql:
+            break
         else:
-          #LOG('ListBox 1054', 0, str((selection_name, selection.__dict__, selection)))
-          if list_method is not None:
-            if count_method is not None and not selection.invert_mode and render_format == 'html':
-              #LOG('ListBox', 0, 'use count_method %r' % count_method)
-              # If the count method is available, get only required objects.
-              selection.edit( params = kw, report = None )
-              count = selection(method = count_method, context=here, REQUEST=REQUEST)
-              object_list_len = int(count[0][0])
-              if start > object_list_len:
-                start = object_list_len
-              start -= (start % lines)
-              kw['limit'] = (start, lines)
-              selection.edit( params = kw, report = None )
-              object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
-              del kw['limit']
-              selection.edit( params = kw, report = None ) # XXX Necessary?
-              # For convenience, add padding into the list of objects with None.
-              object_list = [None] * start + list(object_list) + [None] * (object_list_len - len(object_list) - start)
-            else:
-              selection.edit( params = kw, report = None )
-              object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
-              object_list_len = len(object_list)
-          else:
-            selection.edit( params = kw, report = None )
-            # If list_method is None, use already selected values.
-            object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
-            # PERFORMANCE PROBLEM ? is len(object_list) fast enough ?
-            object_list_len = len(object_list)
-          report_sections = ( (None, 0, 0, object_list, object_list_len, 0, None, None, 0),  )
-
-
-        ###############################################################
-        #
-        # Build an md5 signature of the selection
-        #
-        # It is calculated based on the selection uid list
-        # It is used in order to do some checks in scripts.
-        # For example, if we do delete objects, then we do have a list of
-        # objects to delete, but it is possible that on another tab the selection
-        # change, and then when we confirm the deletion, we don't delete what
-        # we want, so this is really dangerous. with this md5 we can check if the
-        # selection is the same
-        #
-        ###############################################################
-
-        # XXX To avoid the difference of the string representations of int and long,
-        # convert each element to a string.
-        object_uid_list = [str(getattr(x, 'uid', None)) for x in object_list]
-        object_uid_list.sort()
-        md5_string = md5.new(str(object_uid_list)).hexdigest()
-
-        ###############################################################
-        #
-        # Calculate list start and stop
-        #
-        # Build the real list by slicing it
-        # PERFORMANCE ANALYSIS: the result of the query should be
-        # if possible a lazy sequence
-        #
-        ###############################################################
-
-        #LOG("Selection", 0, str(selection.__dict__))
-        total_size = 0
-        for s in report_sections:
-          total_size += s[4]
-        if render_format == 'list' or lines == 0:
-          end = total_size
-          total_pages = 1
-          current_page = 0
-        else:
-          end = min(start + lines, total_size)
-          #object_list = object_list[start:end]
-          total_pages = int(max(total_size-1,0) / lines) + 1
-          current_page = int(start / lines)
-          start = min(start, max(0, total_pages * lines - lines) )
-          kw['list_start'] = start
-          kw['list_lines'] = lines
-
-        ###############################################################
-        #
-        # Store new selection values
-        #
-        # Store the resulting selection if list_method is not None and render_format is not list
-        #
-        ###############################################################
-        if list_method is not None and render_format != 'list':
+          column = None
+        if (column is not None) and (column[0] == column[1]):
           try:
-            method_path = getPath(here) + '/' + list_method.method_name
-            #LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.method_name = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.method_name)))
-          except AttributeError:
-            method_path = getPath(here) + '/' + list_method.__name__
-            #LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.__name__ = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.__name__)))
-          # Sometimes the seltion name is a list ??? Why ????
-          if type(current_selection_name) in (type(()),type([])):
-            current_selection_name = current_selection_name[0]
-          list_url =  url+'?selection_name='+current_selection_name+'&selection_index='+str(selection_index)
-          selection.edit( method_path= method_path, params = kw, list_url = list_url)
-          #LOG("Selection kw", 0, str(selection.selection_params))
-          here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
+            if stats[index] != ' ':
+              select_expression_list.append('%s(%s) AS %s' % (stats[index], sql, alias))
+            else:
+              select_expression_list.append("'' AS %s" % alias)
+          except IndexError:
+            select_expression_list.append("'' AS %s" % alias)
 
-        ###############################################################
-        #
-        # Build HTML header and footer
-        #
-        ###############################################################
+    return ', '.join(select_expression_list)
 
-        # Provide the selection name
-        selection_line = """\
-<input type="hidden" name="list_selection_name" value="%s" />
-""" % selection_name
-        selection_line +="""\
-<input type="hidden" name="md5_object_uid_list" value="%s" />
-""" % md5_string
+  def makeReportTreeList(self, root_dict = None, report_path = None, base_category = None, depth = 0,
+                         unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),)):
+    """Return a list of report trees.
+    """
+    if isinstance(report_path, str):
+      report_path = report_path.split('/')
+    if len(report_path):
+      base_category = report_path[0]
 
-        # Create the Page Selector
-        pages_list = []
-        pages_list_append = pages_list.append
-        if start == 0:
-          pages_list_append("""\
-   <td nowrap valign="middle" align="center">
-   </td>
-   <td nowrap valign="middle" align="center">
-    <select id="listbox_page_selection" name="list_start" title="%s" size="1"
-      onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (translate('erp5_ui', 'Change Page'), REQUEST.URL1))
+    category_tool = self.getCategoryTool()
+    domain_tool = self.getDomainTool()
+    portal_object = self.getPortalObject()
+    report_depth = self.getReportDepth()
+
+    if root_dict is None:
+      root_dict = {}
+
+    # Find the root object.
+    is_empty_level = 1
+    while is_empty_level:
+      if not root_dict.has_key(base_category):
+        root = None
+        if category_tool is not None:
+          try:
+            obj = category_tool[base_category]
+            if base_category == 'parent':
+              # parent has a special treatment
+              root = root_dict[base_category] = root_dict[None] = self.getContext()
+              report_path = report_path[1:]
+            else:
+              root = root_dict[base_category] = root_dict[None] = obj
+              report_path = report_path[1:]
+          except KeyError:
+            pass
+        if root is None and domain_tool is not None:
+          try:
+            obj = domain_tool[base_category]
+            root = root_dict[base_category] = root_dict[None] = obj
+            report_path = report_path[1:]
+          except KeyError:
+            pass
+        if root is None:
+          try:
+            root = root_dict[None] = portal_object.unrestrictedTraverse(report_path)
+          except KeyError:
+            pass
+          report_path = ()
+      else:
+        root = root_dict[None] = root_dict[base_category]
+        report_path = report_path[1:]
+      is_empty_level = (root is None or root.objectCount() == 0) and (len(report_path) != 0)
+      if is_empty_level:
+        base_category = report_path[0]
+
+    tree_list = []
+    if root is None: return tree_list
+
+    # Get the list of objects in the root. Use getChildDomainValueList, if defined,
+    # to generate child domains dynamically.
+    getChildDomainValueList = getattr(aq_base(root), 'getChildDomainValueList', None)
+    contentValues = getattr(aq_base(root), 'contentValues', None)
+    if getChildDomainValueList is not None and base_category != 'parent':
+      obj_list = root.getChildDomainValueList(root, depth = depth)
+    elif contentValues is not None:
+      obj_list = root.contentValues(sort_on = sort_on)
+    else:
+      obj_list = ()
+
+    for obj in obj_list:
+      new_root_dict = root_dict.copy()
+      new_root_dict[None] = new_root_dict[base_category] = obj
+      domain_selection = DomainSelection(domain_dict = new_root_dict)
+
+      if base_category == 'parent':
+        exception_uid_list = []
+      else:
+        exception_uid_list = None
+
+      #LOG('ListBox', 0, 'depth = %r, report_depth = %r, unfolded_list = %r, obj.getRelativeUrl() = %r' % (depth, report_depth, unfolded_list, obj.getRelativeUrl()))
+      if (report_depth is not None and depth <= (report_depth - 1)) or obj.getRelativeUrl() in unfolded_list:
+        # If the base category is parent, do not display sub-objects
+        # which can be used as a part of the report tree. Otherwise,
+        # sub-objects are displayed twice unnecessarily.
+        if base_category == 'parent':
+          for sub_obj in obj.contentValues(sort_on = sort_on):
+            if getattr(aq_base(sub_obj), 'objectValues', None) is not None:
+              exception_uid_list.append(sub_o.getUid())
+
+        # Summary (open)
+        tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
+                                    is_open = True, domain_selection = domain_selection,
+                                    exception_uid_list = exception_uid_list))
+        if is_report_opened:
+          # List (contents, closed, must be strict selection)
+          tree_list.append(ReportTree(obj = obj, is_pure_summary = False, depth = depth,
+                                      is_open = False, domain_selection = domain_selection,
+                                      exception_uid_list = exception_uid_list))
+        tree_list.extend(self.makeReportTreeList(root_dict = new_root_dict,
+                                                 report_path = report_path,
+                                                 base_category = base_category,
+                                                 depth = depth + 1,
+                                                 unfolded_list = unfolded_list,
+                                                 is_report_opened = is_report_opened,
+                                                 sort_on = sort_on))
+      else:
+        # Summary (closed)
+        tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
+                                    is_open = False, domain_selection = domain_selection,
+                                    exception_uid_list = exception_uid_list))
+
+    return tree_list
+
+  def getLineStart(self):
+    """Return where the first line should start from. Note that this is simply a requested value,
+    so the real value can be different from this. For example, if the value exceeds the total number
+    of lines, the start number is forced to fit into somewhere. This must be overridden in subclasses.
+    """
+    raise NotImplementedError, "getLineStart must be overridden in a subclass"
+
+  def getSelectedReportPath(self):
+    """Return a selected report path.
+    """
+    category_tool = self.getCategoryTool()
+    domain_tool = self.getDomainTool()
+    report_root_list = self.getReportRootList()
+    selection = self.getSelection()
+
+    default_selection_report_path = report_root_list[0][0].split('/', 1)[0]
+    if (category_tool is None or category_tool._getOb(default_selection_report_path, None) is None) \
+        and (domain_tool is None or domain_tool._getOb(default_selection_report_path, None) is None):
+      default_selection_report_path = report_root_list[0][0]
+
+    return selection.getReportPath(default = default_selection_report_path)
+
+  getSelectedReportPath = VolatileCachingMethod(getSelectedReportPath)
+
+  def getStatValueList(self):
+    """Return a list of values, where each value is a tuple consisting of an original value and a processed value.
+    A processed value is always an unicode object, and it may differ from the original value, for instance,
+    a processed value may describe an error, when an original value is None.
+    """
+    # First, get the statitics by the global stat method.
+    param_dict = self.getParamDict()
+    new_param_dict = param_dict.copy()
+    new_param_dict['select_expression'] = self.getStatSelectExpression()
+    selection = self.getSelection()
+    selection.edit(params = new_param_dict)
+    result = selection(method = self.getStatMethod(), context = self.getContext(), REQUEST = self.request)
+
+    # For each column, check the presense of a specific stat method. If not present,
+    # use the result obtained above.
+    value_list = []
+    stat_column_dict = dict(self.getStatColumnList())
+    for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
+      original_value = None
+      processed_value = None
+
+      # Get a specific stat method, if any.
+      stat_method_id = stat_column_dict.get(sql)
+      if stat_method_id is not None and stat_method_id != sql:
+        stat_method = getattr(self.getContext(), stat_method_id)
+      else:
+        stat_method = None
+
+      if stat_method is None:
+        try:
+          original_value = getattr(result[0], alias)
+          processed_value = original_value
+        except (IndexError, AttributeError, KeyError, ValueError):
+          original_value = None
+          processed_value = u''
+      else:
+        if callable(stat_method):
+          try:
+            original_value = stat_method(selection = selection)
+            processed_value = original_value
+          except (ConflictError, RuntimeError):
+            raise
+          except:
+            LOG('ListBox', WARNING, 'could not call %r with %r' % (stat_method, self.getContext()),
+                error = sys.exc_info())
+            original_value = None
+            processed_value = u''
         else:
-          pages_list_append("""\
-   <td nowrap valign="middle" align="center">
-    <input id="listbox_previous_page" type="image" src="%s/images/1leftarrowv.png"
-      title="%s" name="portal_selections/previousPage:method" border="0" />
-   </td>
-   <td nowrap valign="middle" align="center">
-    <select id="listbox_page_selection" name="list_start" title="%s" size="1"
-      onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (portal_url_string, translate('erp5_ui', 'Previous Page'),
-       translate('erp5_ui', 'Change Page'), REQUEST.URL1))
-        for p in range(0, total_pages):
-          if p == current_page:
-            selected = 'selected'
+          original_value = stat_method
+          processed_value = original_value
+
+      if not isinstance(processed_value, unicode):
+        processed_value = unicode(str(processed_value), self.getEncoding())
+
+      value_list.append((original_value, processed_value))
+
+    return value_list
+
+  def getReportSectionList(self):
+    """Return a list of report sections.
+    """
+    param_dict = self.getParamDict()
+    category_tool = self.getCategoryTool()
+    domain_tool = self.getDomainTool()
+    report_depth = self.getReportDepth()
+    selection = self.getSelection()
+    report_list = selection.getReportList()
+    stat_selection_expression = self.getStatSelectExpression()
+    stat_method = self.getStatMethod()
+    count_method = self.getCountMethod()
+    list_method = self.getListMethod()
+    context = self.getContext()
+    selection_name = self.getSelectionName()
+    start = self.getLineStart()
+    max_lines = self.getMaxLineNumber()
+
+    report_section_list = []
+
+    if self.isReportTreeMode():
+      # In report tree mode, there are three types of lines:
+      #
+      #   - summary line with statistics
+      #   - summary line with the first object in a domain
+      #   - object line
+      #
+      # These lines are compiled into report sections for convenience.
+
+      selection_report_path = self.getSelectedReportPath()
+
+      #LOG('ListBox', 0, 'report_depth = %r' % (report_depth,))
+      if report_depth is not None:
+        selection_report_current = ()
+      else:
+        selection_report_current = report_list
+
+      report_tree_list = self.makeReportTreeList(report_path = selection_report_path,
+                                                 unfolded_list = selection_report_current,
+                                                 is_report_opened = selection.isReportOpened(),
+                                                 sort_on = selection.sort_on)
+
+      # Update report list if report_depth was specified
+      # XXXXXXXXXXXXX why????
+      if report_depth is not None:
+        report_list = [t.obj.getRelativeUrl() for t in report_tree_list if t.is_open]
+        selection.edit(report_list = report_list)
+
+      for report_tree in report_tree_list:
+        # Prepare query by defining selection report object.
+
+        # FIXME: this code needs optimization. The query should be delayed
+        # as late as possible, because this code queries all data, even if
+        # it is not displayed.
+        selection.edit(report = report_tree.domain_selection)
+
+        if report_tree.is_pure_summary and self.showStat():
+          # Push a new select_expression.
+          new_param_dict = param_dict.copy()
+          new_param_dict['select_expression'] = stat_select_expression
+          selection.edit(params = new_param_dict)
+
+          # Query the stat.
+          stat_brain = selection(method = stat_method, context=here, REQUEST=REQUEST)
+
+          stat_result = {}
+          for index, (k, v) in enumerate(self.getSelectedColumnList()):
+            try:
+              stat_result[k] = str(stat_brain[0][index + 1])
+            except IndexError:
+              stat_result[k] = ''
+
+          stat_context = report_tree.obj.asContext(**stat_result)
+          # XXX yo thinks that this code below is useless, so disabled.
+          #absolute_url_txt = report_tree.obj.absolute_url()
+          #stat_context.absolute_url = lambda: absolute_url_txt
+          stat_context.domain_url = report_tree.obj.getRelativeUrl()
+          report_section_list.append(ReportSection(is_summary = True, object_list = [stat_context],
+                                                   object_list_len = 1, is_open = report_tree.is_open,
+                                                   domain_selection = report_tree.domain_selection,
+                                                   context = stat_context, depth = report_tree.depth))
+        else:
+          selection.edit(params = param_dict)
+
+          if list_method is not None:
+            # FIXME: this should use a count method, if present, and obtain objects, only if necessary.
+            object_list = selection(method = list_method, context = context, REQUEST = self.request)
           else:
-            selected = ''
-          pages_list_append( '<option %s value="%s">%s</option>\n' \
-                             % ( selected
-                               , p * lines
-                               , translate( 'erp5_ui'
-                                          , '${page} of ${total_pages}'
-                                          , mapping = { 'page'       : p+1
-                                                      , 'total_pages': total_pages
-                                                      }
-                                          )
-                               )
-                           )
-        if current_page == total_pages - 1:
-          pages_list_append("""\
-    </select>
-   </td>
-   <td nowrap valign="middle" align="center">
-   </td>
-""")
+            # If list_method is None, use already selected values.
+            object_list = self.getSelectionTool().getSelectionValueList(selection_name,
+                                                                        context = context,
+                                                                        REQUEST = self.request)
+
+          if report_tree.exception_uid_set is not None:
+            # Filter folders if this is a parent tree.
+            new_object_list = []
+            for o in object_list:
+              if o.getUid() not in report_tree.exception_uid_set:
+                new_object_list.append(o)
+            object_list = new_object_list
+
+          object_list_len = len(object_list)
+          #LOG('ListBox', 0, 'report_tree.__dict__ = %r, object_list = %r, object_list_len = %r' % (report_tree.__dict__, object_list, object_list_len))
+          if not report_tree.is_pure_summary:
+            if not self.showStat():
+              report_section_list.append(ReportSection(is_summary = False, object_list = object_list,
+                                                       object_list_len = object_list_len,
+                                                       is_open = report_tree.is_open,
+                                                       domain_selection = report_tree.domain_selection))
+          else:
+            stat_context = report_tree.obj.asContext()
+            #absolute_url_txt = s[0].absolute_url()
+            #stat_context.absolute_url = lambda : absolute_url_txt
+            stat_context.domain_url = report_tree.obj.getRelativeUrl()
+            if object_list_len and report_tree.is_open:
+              # Display the first object at the same level as a category selector,
+              # if this selector is open.
+              report_section_list.append(ReportSection(is_summary = False,
+                                                       object_list = [object_list[0]],
+                                                       object_list_len = 1,
+                                                       is_open = True,
+                                                       domain_selection = report_tree.domain_selection,
+                                                       context = stat_context))
+              report_section_list.append(ReportSection(is_summary = False,
+                                                       object_list = object_list,
+                                                       object_list_len = object_list_len - 1,
+                                                       is_open = True,
+                                                       domain_selection = report_tree.domain_selection,
+                                                       offset = 1))
+            else:
+              if report_tree.exception_uid_list is not None:
+                # Display current parent domain.
+                report_section_list.append(ReportSection(is_summary = False,
+                                                         object_list = [report_tree.obj],
+                                                         object_list_len = 1,
+                                                         is_open = report_tree.is_open,
+                                                         domain_selection = report_tree.domain_selection,
+                                                         context = stat_context))
+              else:
+                # No data to display
+                report_section_list.append(ReportSection(is_summary = False,
+                                                         object_list = [None],
+                                                         object_list_len = 1,
+                                                         is_open = report_tree.is_open,
+                                                         domain_selection = report_tree.domain_selection,
+                                                         context = stat_context))
+
+      # Reset the report parameter.
+      selection.edit(report = None)
+    else:
+      # Flat list mode or domain tree mode.
+      selection.edit(params = param_dict, report = None)
+
+      if self.isDomainTreeMode():
+        selection.edit(domain = self.getDomainSelection())
+
+      if list_method is not None:
+        if count_method is not None and not selection.invert_mode and max_lines > 0:
+          # If the count method is available, get only required objects.
+          count = selection(method = count_method, context = context, REQUEST = self.request)
+          object_list_len = int(count[0][0])
+
+          # Tweak the line start.
+          if start >= object_list_len:
+            start = object_list_len - 1
+          start -= (start % max_lines)
+
+          # Obtain only required objects.
+          new_param_dict = param_dict.copy()
+          new_param_dict['limit'] = (start, max_lines)
+          selection.edit(params = new_param_dict)
+          object_list = selection(method = list_method, context = context, REQUEST = self.request)
+          selection.edit(params = param_dict) # XXX Necessary?
+
+          # Add padding for convenience.
+          report_section_list.append(ReportSection(is_summary = False,
+                                                   object_list_len = start))
+          report_section_list.append(ReportSection(is_summary = False,
+                                                   object_list = object_list,
+                                                   object_list_len = len(object_list)))
+          report_section_list.append(ReportSection(is_summary = False,
+                                                   object_list_len = object_list_len - len(object_list) - start))
         else:
-          pages_list_append("""\
+          object_list = selection(method = list_method, context = context, REQUEST = self.request)
+          object_list_len = len(object_list)
+          report_section_list.append(ReportSection(is_summary = False,
+                                                   object_list = object_list,
+                                                   object_list_len = object_list_len))
+      else:
+        # If list_method is None, use already selected values.
+        object_list = here.portal_selections.getSelectionValueList(selection_name,
+                                                                   context = context, REQUEST = self.request)
+        report_section_list.append(ReportSection(is_summary = False,
+                                                 object_list = object_list,
+                                                 object_list_len = object_list_len))
+
+    return report_section_list
+
+  def query(self):
+    """Get report sections and construct a list of lines. Note that this method has a side
+    effect in the selection, and the renderer object itself.
+    """
+    start = self.getLineStart()
+    max_lines = self.getMaxLineNumber()
+    report_section_list = self.getReportSectionList()
+    param_dict = self.getParamDict()
+
+    # Set the total number of objects.
+    self.total_size = sum([s.object_list_len for s in report_section_list])
+
+    # Calculuate the start and the end offsets, and set the page numbers.
+    if max_lines == 0:
+      end = self.total_size
+      self.total_pages = 1
+      self.current_page = 0
+    else:
+      self.total_pages = int(max(self.total_size - 1, 0) / max_lines) + 1
+      start = min(start, max(0, self.total_pages * max_lines - max_lines))
+      self.current_page = int(start / max_lines)
+      end = min(start + max_lines, self.total_size)
+      param_dict['list_start'] = start
+      param_dict['list_lines'] = max_lines
+      selection = self.getSelection()
+      selection.edit(params = param_dict)
+
+    # Make a list of lines.
+    line_class = self.getLineClass()
+    line_list = []
+    section_index = 0
+    current_section_base_index = 0
+    current_section = report_section_list[0]
+    current_section_size = current_section.object_list_len
+    for i in range(start, end):
+      # Make sure we go to the right section.
+      while current_section_base_index + current_section_size <= i:
+        current_section_base_index += current_section_size
+        section_index += 1
+        current_section = report_section_list[section_index]
+        current_section_size = current_section.object_list_len
+
+      offset = i - current_section_base_index + current_section.offset
+      if current_section.is_summary:
+        index = None
+      elif self.isReportTreeMode():
+        index = offset
+      else:
+        index = i
+      #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
+      line = line_class(renderer = self, obj = current_section.object_list[offset],
+                        index = index, is_summary = current_section.is_summary,
+                        context = current_section.context, is_open = current_section.is_open,
+                        domain_selection = current_section.domain_selection,
+                        depth = current_section.depth)
+      line_list.append(line)
+
+    return line_list
+
+  def render(self, **kw):
+    """Render the data. This must be overridden.
+    """
+    raise NotImplementedError, "render must be overridden in a subclass"
+
+  def __call__(self, **kw):
+    """Render the ListBox. The real rendering must be done the method "render" which should
+    be defined in subclasses.
+    """
+    return self.render(**kw)
+
+class ListBoxRendererLine(Implicit):
+  """This class describes a line in a ListBox to assist ListBoxRenderer.
+  """
+  def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
+               is_open = False, domain_selection = None, depth = 0):
+    """In reality, the object is a brain or a brain-like object.
+    """
+    self.renderer = renderer
+    self.obj = obj
+    self.index = index
+    self.is_summary = is_summary
+    self.context = context
+    self.is_open = is_open
+    self.domain_selection = domain_selection
+    self.depth = depth
+
+  def getBrain(self):
+    """Return the brain. This can be identical to a real object.
+    """
+    return self.obj
+
+  def getObject(self):
+    """Return a real object.
+    """
+    portal_object = self.renderer.getPortalObject()
+    base = aq_base(self.obj)
+    if base is None:
+      return None
+
+    #LOG('ListBox', 0, 'base = %r' % (base,))
+    try:
+      return base.__of__(portal_object).getObject()
+    except AttributeError:
+      return base.__of__(portal_object)
+
+  getObject = VolatileCachingMethod(getObject)
+
+  def getUid(self):
+    """Return the uid of the object.
+    """
+    return getattr(aq_base(self.obj), 'uid', None)
+
+  getUid = VolatileCachingMethod(getUid)
+
+  def isSummary(self):
+    """Return whether this line is a summary or not.
+    """
+    return self.is_summary
+
+  def getContext(self):
+    """Return the context of a line. This is used only for a summary line.
+    """
+    return self.context
+
+  def isOpen(self):
+    """Return whether this line is open or not. This is used only for a summary line.
+    """
+    return self.is_open
+
+  def getDomainUrl(self):
+    """Return the URL of a domain. Used only for a summary line.
+    """
+    return getattr(self.getContext(), 'domain_url', '')
+
+  def getDepth(self):
+    """Return the depth of a domain. Used only for a summary line.
+    """
+    return self.depth
+
+  def getDomainSelection(self):
+    """Return the domain selection. Used only for a summary line.
+    """
+    return self.domain_selection
+
+  def getValueList(self):
+    """Return the list of values corresponding to selected columns.
+
+    The format of a return value is [(original_value, processed_value), ...],
+    where the original value means a raw result, while the processed value stands for
+    a value more comprehensive for human, such as an error message.
+
+    Every processed value is guaranteed to be encoded in unicode.
+    """
+    # If this is a report line without statistics, just return an empty result.
+    if self.getObject() is None:
+      return [(None, '')] * len(self.renderer.getSelectedColumnList())
+
+    # Otherwise, evaluate each column.
+    stat_column_dict = dict(self.renderer.getStatColumnList())
+    _marker = []
+    value_list = []
+    selection = self.renderer.getSelection()
+
+    # Embed the selection index.
+    selection.edit(index = self.index)
+
+    for (sql, title), alias in zip(self.renderer.getSelectedColumnList(), self.renderer.getColumnAliasList()):
+      editable_field = None
+      original_value = None
+      processed_value = None
+
+      if self.isSummary():
+        # Use a stat method for a summary.
+        stat_method_id = stat_column_dict.get(sql)
+        if stat_method_id == sql:
+          stat_method_id = None
+
+        context = self.getContext()
+        if getattr(aq_base(context), alias, _marker) is not _marker and stat_method_id is None:
+          # If a stat method is not specified, use the result in the context itself.
+          original_value = getattr(context, alias)
+          processed_value = original_value
+        else:
+          stat_method = getattr(context, stat_method_id)
+          if callable(stat_method):
+            try:
+              new_param_dict = param_dict.copy()
+              new_param_dict['closed_summary'] = not self.isOpen()
+              selection.edit(params = new_param_dict, report = self.getDomainSelection())
+              try:
+                original_value = stat_method(selection = selection)
+                processed_value = original_value
+              except (ConflictError, RuntimeError):
+                raise
+              except:
+                LOG('ListBox', WARNING, 'could not call %r with %r' % (stat_method, new_param_dict),
+                    error = sys.exc_info())
+                processed_value = 'Could not evaluate %s' % (stat_method_id,)
+            finally:
+              selection.edit(params = param_dict, report = None)
+          else:
+            original_value = stat_method
+            processed_value = original_value
+      else:
+        # This is an usual line.
+        obj = aq_inner(self.getObject())
+
+        # Use a widget, if any.
+        editable_field_id = '%s_%s' % (self.renderer.getId(), alias)
+        tales = False
+        form = self.renderer.getForm()
+        if form.has_field(editable_field_id):
+          editable_field = form.get_field(editable_field_id)
+          tales = editable_field.tales.get('default', '')
+          if tales:
+            original_value = editable_field.__of__(obj).get_value('default', cell = obj)
+            processed_value = original_value
+
+        # If a tales expression is not defined, get a skin, an accessor or a property.
+        if not tales:
+          if obj is not None:
+            try:
+              # Get the trailing part.
+              try:
+                property_id = sql[sql.rindex('.') + 1:]
+              except ValueError:
+                property_id = sql
+
+              original_value = getattr(obj, property_id, None)
+              processed_value = original_value
+              if not callable(original_value):
+                original_value = obj.getProperty(property_id)
+                processed_value = original_value
+            except (AttributeError, KeyError):
+              original_value = None
+              processed_value = 'Could not evaluate %s' % property_id
+          else:
+            original_value = None
+            processed_value = 'Object does not exist'
+
+      # If the value is callable, evaluate it.
+      if callable(original_value):
+        try:
+          try:
+            original_value = original_value(brain = self.getBrain(), selection = selection)
+            processed_value = original_value
+          except TypeError:
+            original_value = original_value()
+            processed_value = original_value
+        except (ConflictError, RuntimeError):
+          raise
+        except:
+          processed_value = 'Could not evaluate %s' % (original_value,)
+          LOG('ListBox', WARNING, 'could not evaluate %r' % (original_value,),
+              error = sys.exc_info())
+          original_value = None
+
+      # Process the value.
+      if processed_value is None:
+        processed_value = u''
+      else:
+        processed_value = unicode(str(processed_value), self.renderer.getEncoding())
+
+      value_list.append((original_value, processed_value))
+
+    return value_list
+
+class ListBoxHTMLRendererLine(ListBoxRendererLine):
+  """This class is specialized to the HTML renderer.
+  """
+  def render(self):
+    """Render the values obtained by getValueList. The result is a list of tuples,
+    where each tuple consists of a piece of HTML, the original value and a boolean value which represents
+    an error status. If the status is true, an error is detected.
+    """
+    editable_column_id_set = self.renderer.getEditableColumnIdSet()
+    field_id = self.renderer.getId()
+    form = self.renderer.getForm()
+    error_dict = self.renderer.getFieldErrorDict()
+    brain = self.getBrain()
+    encoding = self.renderer.getEncoding()
+    url_column_dict = dict(self.renderer.getUrlColumnList())
+    selection = self.renderer.getSelection()
+    selection_name = self.renderer.getSelectionName()
+
+    html_list = []
+
+    for (original_value, processed_value), (sql, title), alias \
+      in zip(self.getValueList(), self.renderer.getSelectedColumnList(), self.renderer.getColumnAliasList()):
+      # By default, no error.
+      error = False
+
+      # Embed the selection index.
+      selection.edit(index = self.index)
+
+      # If a field is editable, generate an input form.
+      # XXX why don't we generate an input form when a widget is not defined?
+      editable_field_id = '%s_%s' % (field_id, alias)
+      if not self.isSummary() and form.has_field(editable_field_id):
+        editable_field = form.get_field(editable_field_id)
+      else:
+        editable_field = None
+
+      if editable_field is not None and sql in editable_column_id_set:
+        # XXX what if the object does not have uid?
+        key = '%s_%s' % (editable_field_id, self.getUid())
+        if error_dict.has_key(key):
+          error = True
+          error_text = error_dict[key].error_text
+          error_text = cgi.escape(error_text)
+          if isinstance(error_text, str):
+            error_text = unicode(error_text, encoding)
+          error_message = u'<br />' + error_text
+          processed_value = self.request.get('field_%s' % key, processed_value)
+        else:
+          error_message = u''
+
+        # XXX Formulator should be able to accept unicode.
+        if isinstance(processed_value, unicode):
+          display_value = processed_value.encode(encoding)
+        else:
+          display_value = processed_value
+
+        # XXX this is a horrible hack.
+        if editable_field.meta_type in ('DateTimeField', 'ProxyField', ):
+          # XXX Some fields prefer None to ''.
+          cell_html = editable_field.render(value = original_value,
+                                            REQUEST = brain.asContext(REQUEST = self.request, form = self.request.form),
+                                            key = key)
+        else:
+          # We use REQUEST which is not so good here.
+          # This prevents from using standard display process.
+          # XXX what does the above comment mean exactly? why don't we fix Formulator?
+          cell_html = editable_field.render(value = display_value, REQUEST = brain, key = key)
+
+        if isinstance(cell_html, str):
+          cell_html = unicode(cell_html, encoding)
+
+        html = cell_html + error_message
+      else:
+        # If not editable, show a static text with a link, if enabled.
+        no_link = False
+        url_method = None
+        url = None
+
+        # Find an URL method.
+        if url_column_dict.has_key(sql):
+          url_method_id = url_column_dict.get(sql)
+          if url_method_id != sql:
+            if url_method_id is not None:
+              url_method = getattr(brain, url_method_id, None)
+              if url_method is None:
+                LOG('ListBox', WARNING, 'could not find the url method %s' % (url_method_id,))
+                no_link = True
+            else:
+              # If the value is None, generate no link.
+              no_link = True
+
+        if url_method is not None:
+          try:
+            url = url_method(brain = brain, selection = selection)
+          except (ConflictError, RuntimeError):
+            raise
+          except:
+            LOG('ListBox', WARNING, 'could not evaluate the url method %r with %r' % (url_method, brain),
+                error = sys.exc_info())
+        elif not no_link:
+          # XXX For compatibility?
+          # Check if this object provides a specific URL method.
+          if getattr(brain, 'getListItemUrl', None) is not None:
+            try:
+              url = brain.getListItemUrl(alias, self.index, selection_name)
+            except (ConflictError, RuntimeError):
+              raise
+            except:
+              LOG('ListBox', WARNING, 'could not evaluate the url method getListItemUrl with %r' % (brain,),
+                  error = sys.exc_info())
+          else:
+            try:
+              url = '%s/view?selection_index=%s&selection_name=%s&reset:int=1' % (brain.getPath(), self.index, selection_name)
+            except AttributeError:
+              pass
+
+        processed_value = cgi.escape(processed_value)
+        if url is None:
+          html = processed_value
+        else:
+          html = u'<a href="%s">%s</a>' % (url, processed_value)
+
+      html_list.append((html, original_value, error))
+
+    return html_list
+
+
+class ListBoxHTMLRenderer(ListBoxRenderer):
+  """This class implements HTML rendering for ListBox.
+  """
+  def getLineClass(self):
+    """Return the line class.
+    """
+    return ListBoxHTMLRendererLine
+
+  def getLineStart(self):
+    """Return a requested start number.
+    """
+    try:
+      start = self.request.get('list_start')
+      start = int(start)
+    except TypeError, KeyError:
+      param_dict = self.getParamDict()
+      start = param_dict.get('list_start', 0)
+      if isinstance(start, list):
+        start = start[0]
+      start = int(start)
+    start = max(start, 0)
+
+    return start
+
+  getLineStart = VolatileCachingMethod(getLineStart)
+
+  def getMaxLineNumber(self):
+    """Return the maximum number of lines shown in a page.
+    """
+    return self.field.get_value('lines')
+
+  getMaxLineNumber = VolatileCachingMethod(getMaxLineNumber)
+
+  def render(self, **kw):
+    """Render the data in HTML.
+    """
+    # Make it sure to store the current selection, only if a list method is defined.
+    list_method = self.getListMethod()
+    selection = self.getSelection()
+    if list_method is not None:
+      method_path = getPath(self.getContext()) + '/' + self.getListMethodName()
+      list_url = '%s?selection_name=%s&selection_index=%s' % \
+                   (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex())
+      selection.edit(method_path = method_path, list_url = list_url)
+      self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
+
+    # Obtain the list of lines.
+    line_list = self.query()
+
+    # Generate a MD5 checksum against checked uids. This is used to confirm
+    # that selected values do not change between a display of a dialog and an execution.
+    # FIXME: this should only use getCheckedUidList, but Folder_deleteObjectList does not use
+    # the feature that checked uids are used when no list method is specified.
+    checked_uid_list = self.request.get('uids')
+    if checked_uid_list is None:
+      checked_uid_list = self.getCheckedUidList()
+    #LOG('ListBox', 0, 'checked_uid_list = %r' % (checked_uid_list,))
+    if checked_uid_list is not None:
+      checked_uid_list = [str(uid) for uid in checked_uid_list]
+      checked_uid_list.sort()
+      md5_string = md5.new(str(checked_uid_list)).hexdigest()
+    else:
+      md5_string = None
+
+    # Start rendering.
+    # FIXME: This part should be replaced with Page Templates.
+    html_list = []
+    ui_domain = 'erp5_ui'
+    context_domain = 'erp5_context'
+    param_dict = self.getParamDict()
+
+    # Prepare format parameters.
+    format_dict = dict(portal_url_string = self.getPortalUrlString(),
+                       list_action = self.getListActionUrl(),
+                       selection_name = self.getSelectionName(),
+                       field_id = self.getId(),
+                       field_title = Message(domain = ui_domain, message = self.getTitle()),
+                       record_number = Message(domain = ui_domain, message = '${number} record(s)',
+                                               mapping = dict(number = str(self.total_size))),
+                       item_number = Message(domain = ui_domain, message = '${number} item(s) selected',
+                                             mapping = dict(number = str(len(self.getCheckedUidList())))),
+                       flat_list_title = Message(domain = ui_domain, message = 'Flat List'),
+                       report_tree_title = Message(domain = ui_domain, message = 'Report Tree'),
+                       domain_tree_title = Message(domain = ui_domain, message = 'Domain Tree'),
+                       change_page_title = Message(domain = ui_domain, message = 'Change Page'),
+                       previous_page_title = Message(domain = ui_domain, message = 'Previous Page'),
+                       next_page_title = Message(domain = ui_domain, message = 'Next Page'),
+                       check_all_title = Message(domain = ui_domain, message = 'Check All'),
+                       uncheck_all_title = Message(domain = ui_domain, message = 'Uncheck All'),
+                       ascending_display_title = Message(domain = ui_domain, message = 'Ascending Display'),
+                       descending_display_title = Message(domain = ui_domain, message = 'Descending Display'),
+                       action_title = Message(domain = ui_domain, message = 'Action'),
+                       context_url = self.getContext().getUrl())
+
+    # This is the start of HTML. Embed a selection name.
+    html_list.append("""\
+<!-- ListBox %(field_id)s starts here. -->
+<input type="hidden" name="list_selection_name" value="%(selection_name)s" />
+""" % format_dict)
+
+    # If the MD5 checksum is valid, embed it.
+    if md5_string is not None:
+      html_list.append("""
+<input type="hidden" name="md5_object_uid_list" value="%s" />
+""" % md5_string)
+
+    # Create a domain tree selector. Note that this creates one more table, so
+    # the table must be terminated at the end.
+    if self.isDomainTreeMode():
+      html_list.append("""\
+ <table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+   <td valign="top">
+    <select name="domain_root_url" onChange="submitAction(this.form, '%(context_url)s/portal_selections/setDomainRoot')">
+""" % format_dict)
+
+      selected_domain_path = selection.getDomainPath()
+      for c in self.getDomainRootList():
+        if c[0] == selected_domain_path:
+          selected = 'selected'
+        else:
+          selected = ''
+
+        html_list.append("""\
+     <option %s value="%s">%s</option>
+""" % (selected, c[0], Message(domain = ui_domain, message = c[1])))
+
+      html_list.append("""\
     </select>
+    <table id="%(field_id)s_domain_tree_table" cellpadding="0" border="0">
+""" % format_dict)
+
+      # Render a tree.
+      try:
+        # Default to the first domain.
+        if selected_domain_path == ('portal_categories',):
+          selected_domain_path = self.getDomainRootList()[0][0]
+
+        # FIXME: rendering should be removed from makeTreeBody.
+        domain_tree = makeTreeBody(form = self.getForm(), domain_path = selected_domain_path,
+                                   unfolded_list = selection.getDomainList(),
+                                   selection_name = self.getSelectionName())
+        html_list.append(domain_tree)
+      except KeyError:
+        pass
+
+      html_list.append("""\
+    </table>
    </td>
-   <td nowrap valign="middle" align="center">
-    <input id="listbox_next_page" type="image" src="%s/images/1rightarrowv.png"
-      title="%s" name="portal_selections/nextPage:method" border="0" />
-   </td>
-""" % (portal_url_string, translate('erp5_ui', 'Next Page')))
-        # Create the header of the table - this should probably become DTML
-        # Create also View Selector which enables to switch from a view mode
-        # to another directly from the listbox
-        #LOG('ListBox', 0, 'field_title = %s, translate(\'ui\', field_title) + %s' % (repr(field_title), repr(translate('ui', field_title))))
-        pages = ''.join(pages_list)
-        format_dict = { 'portal_url_string': portal_url_string
-                      , 'list_action'      : list_action
-                      , 'selection_name'   : selection_name
-                      , 'field_title'      : translate('erp5_ui', field_title)
-                      , 'pages'            : pages
-                      , 'record_number'    : translate( 'erp5_ui'
-                                                      , '${number} record(s)'
-                                                      , default='%s record(s)' % total_size
-                                                      , mapping={'number': str(total_size)}
-                                                      )
-                      , 'item_number'      : translate( 'erp5_ui'
-                                                      , '${number} item(s) selected'
-                                                      , default='%s item(s) selected' % len(checked_uids)
-                                                      , mapping={'number': str(len(checked_uids))}
-                                                      )
-                      , 'flat_list_title'  : translate('erp5_ui', 'Flat List')
-                      , 'report_tree_title': translate('erp5_ui', 'Report Tree')
-                      , 'domain_tree_title': translate('erp5_ui', 'Domain Tree')
-                      }
-        header_list = []
-        header_list_append = header_list.append
-        header_list_append("""\
-<!-- List Summary -->
+   <td valign="top">
+""")
+
+    # Create the title line.
+    html_list.append("""
 <div class="ListSummary">
  <table border="0" cellpadding="0" cellspacing="0">
   <tr height="10">
@@ -1289,765 +2114,483 @@ class ListBoxWidget(Widget.Widget):
       alt="spacer"/>
    </td>
   </tr>
-  <tr id="listbox_title_line">
+  <tr id="%(field_id)s_title_line">
    <td class="Left" width="17">
     <img src="%(portal_url_string)s/images/spacer.png" width="5" height="5" border="0"
         alt="spacer"/>
    </td>
    <td valign="middle" nowrap>
 """ % format_dict)
-        if len(report_root_list) or len(domain_root_list):
-          header_list_append("""
-    <input type="image" src="%(portal_url_string)s/images/text_block.png" id="listbox_flat_list_mode"
-       title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
+
+    # Embed icons for flat list mode, report tree mode and domain tree mode, only if applicable.
+    if self.isReportTreeSupported() or self.isDomainTreeSupported():
+      html_list.append("""
+    <input type="image" src="%(portal_url_string)s/images/text_block.png" id="%(field_id)s_flat_list_mode"
+      title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img" />
 """ % format_dict)
-        if len(report_root_list):
-          header_list_append("""
-    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="listbox_report_tree_mode"
-       title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
+
+    if self.isReportTreeSupported():
+      html_list.append("""
+    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="%(field_id)s_report_tree_mode"
+      title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img" />
 """ % format_dict)
-        if len(domain_root_list):
-          header_list_append("""
-        <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="listbox_domain_tree_mode"
-       title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/">
+
+    if self.isDomainTreeSupported():
+      html_list.append("""
+    <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="%(field_id)s_domain_tree_mode"
+      title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img" />
 """ % format_dict)
-        header_list_append("""
-       </td>
+
+    # Add information about simple statistics.
+    html_list.append("""
+   </td>
    <td width="100%%" valign="middle">&nbsp; <a id="listbox_title" href="%(list_action)s">%(field_title)s</a>:
         <span id="listbox_record_number">%(record_number)s</span>
         - <span id="listbox_item_number">%(item_number)s</span>
    </td>
-   %(pages)s
+   <td nowrap valign="middle" align="center">
+""" % format_dict)
+
+    # Embed a previous page button, only if applicable.
+    if self.current_page > 0:
+      html_list.append("""
+    <input id="%(field_id)s_previous_page" type="image" src="%(portal_url_string)s/images/1leftarrowv.png"
+      title="%(previous_page_title)s" name="portal_selections/previousPage:method" border="0" />
+""" % format_dict)
+
+    # Make page selectors.
+    html_list.append("""
+   </td>
+   <td nowrap valign="middle" align="center">
+    <select id="%(field_id)s_page_selection" name="list_start" title="%(change_page_title)s" size="1"
+      onChange="submitAction(this.form, '%(context_url)s/portal_selections/setPage')">
+""" % format_dict)
+
+    for p in xrange(0, self.total_pages):
+      if p == self.current_page:
+        selected = 'selected'
+      else:
+        selected = ''
+
+      html_list.append("""\
+      <option %s value="%d">%s</option>
+""" % (selected, p * self.getMaxLineNumber(),
+       Message(domain = ui_domain, message = '${page} of ${total_pages}',
+               mapping = dict(page = p + 1, total_pages = self.total_pages))))
+
+    html_list.append("""\
+    </select>
+   </td>
+   <td nowrap valign="middle" align="center">
+""")
+
+    # Embed a next page button, only if applicable.
+    if self.current_page < self.total_pages - 1:
+      html_list.append("""\
+    <input id="%(field_id)s_next_page" type="image" src="%(portal_url_string)s/images/1rightarrowv.png"
+      title="%(next_page_title)s" name="portal_selections/nextPage:method" border="0" />
+""" % format_dict)
+
+    # Create the label line.
+    html_list.append("""\
+   </td>
   </tr>
  </table>
 </div>
 <!-- List Content -->
 <div class="ListContent">
  <table cellpadding="0" cellspacing="0" border="0">
+  <tr id="%(field_id)s_label_line">
 """ % format_dict)
 
-        # pages
-
-        # Create the footer. This should be replaced by DTML
-        # And work as some kind of parameter
-
-        footer = """\
-   <tr >
-    <td colspan="%s" width="50" align="center" valign="middle"
-        class="DataA">
-    </td>
-   </tr>
-  </table>
- </div>
-""" % (len(columns))
-
-        header = ''.join(header_list)
-        # Create the header of the table with the name of the columns
-        # Create also Report Tree Column if needed
-        if report_tree:
-          report_tree_options = ''
-          for c in report_root_list:
-            if c[0] == selection_report_path:
-              report_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], c[1])
-            else:
-              report_tree_options += """<option value="%s">%s</option>\n""" % (c[0], c[1])
-          report_popup = """<select name="report_root_url"
-onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
-        %s</select>""" % (here.getUrl(),report_tree_options)
-          report_popup = """
-  <td class="Data" width="50" align="left" valign="middle">
-  %s
-  </td>
-""" % report_popup
-        else:
-          report_popup = ''
-
-        list_header_list = []
-        list_header_list_append = list_header_list.append
-        if select:
-          format_dict = { 'portal_url_string': portal_url_string
-                        , 'report_popup'     : report_popup
-                        , 'check_all_title'  : translate('erp5_ui', 'Check All')
-                        , 'uncheck_all_title': translate('erp5_ui', 'Uncheck All')
-                        }
-          list_header_list_append("""\
-<tr id="listbox_label_line">%(report_popup)s
-  <td class="Data" width="50" align="center" valign="middle">
-    <input id="listbox_check_all" type="image" name="portal_selections/checkAll:method" value="1"
-      src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title="%(check_all_title)s" />
-    <input id="listbox_uncheck_all" type="image" name="portal_selections/uncheckAll:method" value="1"
-      src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title="%(uncheck_all_title)s" />
-  </td>
+    # Make a report tree selection, if applicable.
+    if self.isReportTreeMode():
+      html_list.append("""\
+   <td class="Data" width="50" align="left" valign="middle">
+    <select name="report_root_url" onChange="submitAction(this.form, '%(context_url)s/portal_selections/setReportRoot')">
 """ % format_dict)
+
+      for c in self.getReportRootList():
+        if c[0] == self.getSelectedReportPath():
+          selected = 'selected'
         else:
-          list_header_list_append("""\
-<tr id="listbox_label_line">%s
-""" % report_popup)
+          selected = ''
 
-        # csort is a list of couples
-        # we should convert it into a dict because a list of couples would need
-        # a loop in each loop
-        sort_dict = {}
-        csort = here.portal_selections.getSelectionSortOrder(selection_name)
-        for index in csort:
-          sort_dict[index[0]] = index[1]
+        html_list.append("""\
+     <option %s value="%s">%s</option>
+""" % (selected, c[0], c[1]))
 
-        for cname in columns:
-          if sort_dict.has_key(cname[0]):
-            if sort_dict[cname[0]] == 'ascending':
-              img = '<img src="%s/images/1bottomarrow.png" alt="Ascending display"/>' % portal_url_string
-            elif sort_dict[cname[0]] == 'descending':
-              img = '<img src="%s/images/1toparrow.png" alt="Descending display"/>' % portal_url_string
-            else:
-              img = ''
-          else:
-            img = ''
-          #LOG('ListBox', 0, 'cname = %r' % (cname,))
-          if cname[0] in sort_columns_id_list:
-            #LOG('ListBox', 0, 'str(cname[1]) = %s, translate(\'ui\',str(cname[1])) = %s' % (repr(str(cname[1])), repr(translate('ui',str(cname[1])))))
-            list_header_list_append("<td class=\"Data\"><a href=\"%s/portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
-                (here.absolute_url(), str(selection_name), cname[0], translate('erp5_ui', cname[1]), img))
-          else:
-            list_header_list_append("<td class=\"Data\">%s</td>\n" % translate('erp5_ui', cname[1]))
-        list_header_list_append("</tr>")
-        list_header = ''.join(list_header_list)
-
-        # Create report depth_selector
-        if report_tree:
-          depth_selector_list = []
-          depth_selector_list_append = depth_selector_list.append
-          for i in range(0,6):
-            # XXX We may lose previous list information
-            depth_selector_list_append("""&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
-                                      (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i))
-          # In report mode, we may want to hide items, and only display stat lines.
-          depth_selector_list_append("""&nbsp;-&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&is_report_opened:int=%s">%s</a>""" % \
-                                    (here.absolute_url(), form.id, current_selection_name, current_selection_index , 1 - is_report_opened, is_report_opened and 'Hide' or 'Show'))
-
-          depth_selector = ''.join(depth_selector_list)
-        # Create the search row of the table with the name of the columns
-        list_search_list = []
-        list_search_append = list_search_list.append
-        if search:
-          if report_tree:
-            # Add empty column for report
-            report_search = """<td class="Data" width="50" align="left" valign="middle">%s</td>""" % depth_selector
-          else:
-            report_search = ""
-
-          if select:
-            list_search_append("""\
-  <tr id="listbox_search_line">
-   %s
-   <td class="Data" width="50" align="center" valign="middle">
-     <input id="listbox_select" type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
+      html_list.append("""\
+    </select>
    </td>
-""" % (report_search,portal_url_string,translate('erp5_ui', 'Action'))) # XXX Action? Is this word appropriate here?
-          else:
-            list_search_append("""\
-  <tr id="listbox_search_line">
-  %s
-""" % report_search)
+""")
 
-          for cname in extended_columns:
-            if cname[0] in search_columns_id_list:
-              alias = str(cname[0])
-              if type(alias) == type(''):
-                alias = unicode(alias, 'utf-8')
-              param = params.get(alias,'')
-              if type(param) == type(''):
-                param = unicode(param, 'utf-8')
-              search_field_id = 'search_%s_%s' % (field.id, alias)
-              if form.has_field(search_field_id):
-                # First look for a search field
-                search_field = form.get_field(search_field_id)
-                search_field_html = search_field.render(value = param, key=alias)
-              else:
-                # Then create default rendering
-                search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, param)
-              list_search_append("""\
-     <td class="DataB">
-       <font size="-3">%s</font>
-     </td>
+    # Show check and uncheck icons, if applicable.
+    if self.showSelectColumn():
+      html_list.append("""\
+   <td class="Data" width="50" align="center" valign="middle">
+    <input id="%(field_id)s_check_all" type="image" name="portal_selections/checkAll:method" value="1"
+      src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title="%(check_all_title)s" />\
+&nbsp;<input id="%(field_id)s_uncheck_all" type="image" name="portal_selections/uncheckAll:method" value="1"
+      src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title="%(uncheck_all_title)s" />
+   </td>
+""" % format_dict)
+
+    # Show labels with quick sort links when appropriate.
+    # FIXME: this logic should be move to somewhere else.
+    sort_list = self.getSelectionTool().getSelectionSortOrder(self.getSelectionName())
+    sort_dict = dict(sort_list)
+    sort_column_id_set = self.getSortColumnIdSet()
+
+    for c in self.getSelectedColumnList():
+      html_list.append("""\
+   <td class="Data">\
+""")
+      if c[0] in sort_column_id_set:
+        html_list.append("""\
+<a href="portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s">%s</a>\
+""" % (self.getSelectionName(), c[0], Message(domain = ui_domain, message = c[1])))
+
+        try:
+          if sort_dict[c[0]] == 'ascending':
+            html_list.append("""\
+ <img src="%(portal_url_string)s/images/1bottomarrow.png" alt="Ascending Display" title="%(ascending_display_title)s" />\
+""" % format_dict)
+          elif sort_dict[c[0]] == 'descending':
+            html_list.append("""\
+ <img src="%(portal_url_string)s/images/1toparrow.png" alt="Descending Display" title="%(descending_display_title)s" />\
+""" % format_dict)
+        except KeyError:
+          pass
+      else:
+        html_list.append('%s' % (Message(domain = ui_domain, message = c[1]),))
+
+      html_list.append("""\
+   </td>
+""")
+
+    html_list.append("""\
+  </tr>
+""")
+
+    # Make the search line, if enabled. Or, make a report depth selector only in report tree mode.
+    if self.showSearchLine() or self.isReportTreeMode():
+      if self.showSearchLine():
+        html_list.append("""\
+  <tr id="%(field_id)s_search_line">
+""" % format_dict)
+      else:
+        html_list.append("""\
+  <tr id="%(field_id)s_report_depth_line">
+""" % format_dict)
+
+      # Make a report depth selector, if applicable.
+      if self.isReportTreeMode():
+        if self.showSearchLine():
+          colspan = 1
+        else:
+          colspan = len(self.getSelectedColumnList()) + self.showSelectColumn() + 1
+
+        html_list.append("""\
+   <td class="Data" width="50" align="left" valign="middle" colspan="%d">\
+""" % colspan)
+
+        # XXX isn't it better to make this configurable?
+        for i in xrange(0, 6):
+          html_list.append("""\
+&nbsp;<a href="%s?selection_name=%s&selection_index=%s&report_depth:int=%d">%d</a>\
+""" % (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex(), i, i))
+
+        is_report_opened = self.getSelection().isReportOpened()
+        html_list.append("""\
+&nbsp;-&nbsp;<a href="%s?selection_name=%s&selection_index=%s&is_report_opened:int=%d">%s</a>\
+""" % (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex(),
+       not is_report_opened,
+       Message(domain = ui_domain, message = is_report_opened and 'Hide' or 'Show')))
+
+        html_list.append("""\
+   </td>
+""")
+
+      # Put a select icon, if enabled.
+      if self.showSelectColumn() and self.showSearchLine():
+        html_list.append("""\
+   <td class="Data" width="50" align="center" valign="middle">
+     <input id="%(field_id)s_select" type="image" src="%(portal_url_string)s/images/exec16.png" title="%(action_title)s" alt="Action" name="Base_doSelect:method" />
+   </td>
+""" % format_dict)
+
+      # Add search fields.
+      if self.showSearchLine():
+        search_column_id_set = self.getSearchColumnIdSet()
+        for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
+          html_list.append("""\
+   <td class="DataB">
+""")
+
+          # If searchable, add an input field.
+          if sql in search_column_id_set:
+            # Get the current value and encode it in unicode.
+            param = param_dict.get(alias, u'')
+            if isinstance(param, str):
+              param = unicode(param, self.getEncoding())
+
+            # Render the search field by a widget, if any.
+            search_field_id = 'search_%s_%s' % (self.getId(), alias)
+            if self.getForm().has_field(search_field_id):
+              search_field = self.getForm().get_field(search_field_id)
+              search_field_html = search_field.render(value = param, key = alias)
+            else:
+              search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, param)
+
+            # FIXME: The font size should be defined in the CSS.
+            html_list.append("""\
+    <font size="-3">%s</font>
 """ % search_field_html)
-            else:
-              list_search_append("<td class=\"DataB\"></td> ")
 
-          list_search_append("</tr>")
+          html_list.append("""\
+   </td>
+""")
+
+      # Terminate the search line.
+      html_list.append("""\
+  </tr>
+""")
+
+    # Add data lines.
+    selection = self.getSelection()
+    checked_uid_set = set(self.getCheckedUidList())
+
+    for i, line in enumerate(line_list):
+      # Change the appearance of each line for visibility.
+      if (i % 2) == 0:
+        tr_css = 'DataA'
+      else:
+        tr_css = 'DataB'
+
+      # For now, use the same class name for td as well.
+      td_css = tr_css
+
+      html_list.append("""\
+  <tr id="%s_data_line_%d" class="%s">
+""" % (self.getId(), i, tr_css))
+
+      # Embed the uid of the object.
+      html_list.append("""\
+   <input type="hidden" value="%s" name="%s_uid:list" />
+""" % (line.getUid() or '', self.getId()))
+
+      # Show a report section column in report tree mode.
+      if self.isReportTreeMode():
+        # Get the title or the id of the context.
+        if line.getContext() is not None:
+          section_name = str(Message(domain = context_domain, message = line.getContext().getTitleOrId()))
         else:
-          if report_tree:
-            list_search_append( """<td class="Data" width="50" align="left" valign="middle" colspan="%s">%s</td>""" % \
-                              (len(extended_columns) + select + 1, depth_selector))
+          section_name = ''
+
+        # Select the prefix for the section name.
+        if len(section_name):
+          if line.isOpen():
+            section_char = '- '
           else:
-            list_search_append('')
-        list_search = ''.join(list_search_list)
-
-        # Build the tuple of columns
-        if render_format == 'list':
-          c_name_list = []
-          c_property_id_list = []
-          for cname in columns:
-            c_name_list.append(cname[1])
-            c_property_id_list.append(cname[0])
-
-        ###############################################################
-        #
-        # Build lines
-        #
-        ###############################################################
-
-
-        # Build Lines
-        list_body_list = []
-        list_body_append = list_body_list.append
-
-        if render_format == 'list':
-          # initialize the title line
-          title_listboxline = ListBoxLine()
-          title_listboxline.markTitleLine()
-          for cname in columns:
-            title_listboxline.addColumn( cname[0], cname[1].encode('utf-8'))
-          listboxline_list.append(title_listboxline)
-
-        section_index = 0
-        current_section_base_index = 0
-        if len(report_sections) > section_index:
-          current_section = report_sections[section_index]
-        elif len(report_sections):
-          current_section = report_sections[0]
+            section_char = '+ '
         else:
-          current_section = None
-        if current_section is not None:
-          current_section_size = current_section[4]
-          object_list = current_section[3]
-          stat_context = current_section[7]
-          index_shift = current_section[8]
-          #if current_section is not None:
-          for i in range(start,end):
+          section_char = ''
 
-            if render_format == 'list':
-              # Create a ListBoxLine object
-              current_listboxline = ListBoxLine()
-              current_listboxline.markDataLine()
+        if line.isOpen():
+          method_id = 'foldReport'
+        else:
+          method_id = 'unfoldReport'
 
+        domain_url = line.getDomainUrl()
 
-            # Set the selection index.
-            selection.edit(index = i)
+        html_list.append("""\
+   <td class="%s" align="left" valign="middle">
+     <a href="portal_selections/%s?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a>
+   </td>
+""" % (td_css, method_id, domain_url, self.getForm().id, self.getSelectionName(),
+       '&nbsp;&nbsp;' * line.getDepth(), section_char, section_name))
 
-            # Make sure we go to the right section
-            while current_section_base_index + current_section_size <= i:
-              current_section_base_index += current_section[4]
-              section_index += 1
-              current_section = report_sections[section_index]
-              current_section_size = current_section[4]
-              object_list = current_section[3]
-              stat_context = current_section[7]
-              index_shift = current_section[8]
+      # Show a select column, if enabled.
+      if self.showSelectColumn():
+        html_list.append("""\
+   <td class="%s" width="50" align="center" valign="middle">
+""" % td_css)
 
+        if not line.isSummary() and line.getObject() is not None:
+          if line.getUid() in checked_uid_set:
+            selected = 'checked'
+          else:
+            selected = ''
 
-            is_summary = current_section[1] # Update summary type
+          html_list.append("""\
+     <input type="checkbox" %s value="%s" id="%s_cb_%s" name="uids:list" />
+""" % (selected, line.getUid(), self.getId(), line.getUid()))
+        else:
+          html_list.append('&nbsp;')
 
-            # Define the CSS
-            if not (i - start) % 2:
-              td_css = 'DataA'
-            else:
-              td_css = 'DataB'
+        html_list.append("""\
+   </td>
+""")
 
-            list_body_append('<tr id="listbox_data_line_%d" class="%s">' % (i - start, td_css))
-            o = object_list[i - current_section_base_index + index_shift] # FASTER PERFORMANCE
-            real_o = None
+      # Add data columns.
+      for html, original_value, error in line.render():
+        # Depending on the type of the original value, determine an alignment.
+        # FIXME: should use a CSS class instead of "align".
+        if isinstance(original_value, (float, int, long)):
+          td_align = 'right'
+        else:
+          td_align = 'left'
 
-            list_body_append(\
-  """<input type="hidden" value="%s" name="%s_uid:list"/>
-  """ % ( getattr(o, 'uid', '') , field.id )) # What happens if we list instances which are not instances of Base XXX
+        if error:
+          td_css = td_css + 'Error'
 
-            section_char = ''
-            if report_tree:
-              if is_summary or current_section[0] is not None:
-                # This is a summary
-                section_name = current_section[0]
-              else:
-                section_name = ''
+        html_list.append("""\
+   <td class="%s" align="%s">%s</td>
+""" % (td_css, td_align, html))
 
-              if current_section[5]:
-                if section_name != '':
-                  section_char = '-'
-                list_body_append(
-  """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s %s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('erp5_content', section_name, default=section_name.decode('utf-8'))))
+      # Terminate the line.
+      html_list.append("""\
+  </tr>
+""")
 
-                if render_format == 'list':
+    # Show a stat line, if enabled.
+    if self.showStat():
+      html_list.append("""\
+  <tr id="%(field_id)s_stat_line">
+""" % format_dict)
 
-                  if is_summary:
-                    current_listboxline.markSummaryLine()
-                  # XXX temporary correction (I dont some '' which havent signification)
-                  if section_name == '':
-                    section_name = None
+      if self.isReportTreeMode():
+        html_list.append("""\
+   <td class="Data">&nbsp;</td>
+""")
 
-                  current_listboxline.setSectionDepth( current_section[2]+1 )
-                  current_listboxline.setSectionName( section_name )
-                  current_listboxline.setSectionFolded( 0 )
+      if self.showSelectColumn():
+        html_list.append("""\
+   <td class="Data">&nbsp;</td>
+""")
 
-              else:
-                if section_name != '':
-                  section_char = '+'
-                list_body_append(
-  """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s %s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('erp5_content', section_name, default=section_name.decode('utf-8'))))
+      for original_value, processed_value in self.getStatValueList():
+        # XXX Determine the alignment.
+        if isinstance(original_value, (float, int, long)):
+          td_align = 'right'
+        else:
+          td_align = 'left'
 
-                if render_format == 'list':
+        processed_value = cgi.escape(processed_value)
 
-                  if is_summary:
-                    current_listboxline.markSummaryLine()
-                  # XXX temporary correction (I dont some '' which havent signification)
-                  if section_name == '':
-                    section_name = None
+        html_list.append("""\
+   <td class="Data" align="%s">%s</td>
+""" % (td_align, processed_value))
 
-                  current_listboxline.setSectionDepth( current_section[2]+1 )
-                  current_listboxline.setSectionName( section_name )
-                  current_listboxline.setSectionFolded( 1 )
+      html_list.append("""\
+  </tr>
+""")
 
-            if select:
-              if o is not None:
-                if o.uid in checked_uids:
-                  selected = 'checked'
-                else:
-                  selected = ''
-                if is_summary:
-                  list_body_append(
-    """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
-    """ % (td_css, ))
-                else:
-                  list_body_append(
-    """<td class="%s" width="50" align="center" valign="middle">
-    <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
-    """ % (td_css, selected, o.uid , o.uid))
-              else:
-                list_body_append(
-    """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
-    """ % td_css)
+    html_list.append("""\
+ </table>
+</div>
+""")
 
-            error_list = []
+    # In domain tree mode, an extra table is used, so terminate the table here.
+    if self.isDomainTreeMode():
+      html_list.append("""\
+   </td>
+  </tr>
+ </table>
+""")
 
+    html_list.append("""\
+<!-- ListBox %(field_id)s ends here. -->
+""" % format_dict)
 
-            if render_format == 'list':
-              if o is not None:
-                if selected == '':
-                  current_listboxline.setObjectUid( o.uid )
-                  current_listboxline.checkLine( 0 )
-                else:
-                  current_listboxline.setObjectUid( o.uid )
-                  current_listboxline.checkLine( 1 )
+    return ''.join(html_list)
 
-            if o is None:
-              # This line is an empty line used by reports without statistics
-              list_body_append(('<td class=\"%s\">&nbsp;</td>' % td_css) * len(extended_columns))
-            else:
-              for cname in extended_columns:
-                # add attribute_original_value, because I need to know the type of the attribute
-                attribute_original_value = None
+class ListBoxListRenderer(ListBoxRenderer):
+  """This class implements list rendering for ListBox.
+  """
+  def getLineClass(self):
+    """Return the line class. For now, ListBoxListRenderer uses the generic class.
+    """
+    return ListBoxRendererLine
 
-                sql = cname[0] # (sql, title, alias)
-                alias = cname[2] # (sql, title, alias)
-                if '.' in sql:
-                  property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
-                else:
-                  property_id = alias
-    #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
-                my_field = None
-                tales_expr = None
-                if form.has_field('%s_%s' % (field.id, alias) ) and not is_summary:
-                  my_field_id = '%s_%s' % (field.id, alias)
-                  my_field = form.get_field(my_field_id)
-                  tales_expr = my_field.tales.get('default', "")
-                if tales_expr:
-                  #
-                  real_o = o
-                  if hasattr(aq_base(o),'getObject'): # we have a line of sql result
-                    real_o = o.getObject()
-                  field_kw = {'cell':real_o}
-                  attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
-                  attribute_original_value = attribute_value
-                else:
-                  # Prepare stat_column is this is a summary
-                  if is_summary:
-                    # Use stat method to find value
-                    for stat_column in stat_columns:
-                      if stat_column[0] == sql:
-                        break
-                    else:
-                      stat_column = None
-                  if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
-                    # First take the indexed value
-                    attribute_value = getattr(o,alias) # We may need acquisition in case of method call
-                    attribute_original_value = attribute_value
-                  elif is_summary:
-                    attribute_value = getattr(here, stat_column[1])
-                    attribute_original_value = attribute_value
-                    #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
-                    if callable(attribute_value):
-                      try:
-                        # set report and closed_summary
-                        if report_tree == 1 :
-                          selection.edit(report=current_section[6])
-                          kw['closed_summary'] = 1 - current_section[5]
-                          params = dict(kw)
-                          selection.edit(params=params)
-                        attribute_value=attribute_value(selection=selection)
-                        attribute_original_value = attribute_value
-                        # reset report and closed_summary
-                        if report_tree == 1 :
-                          selection.edit(report=None)
-                          del kw['closed_summary']
-                          params = dict(kw)
-                          selection.edit(params=params)
-                      except (ConflictError, RuntimeError):
-                        raise
-                      except:
-                        LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
-                        pass
-                  else:
-      #             MUST IMPROVE FOR PERFORMANCE REASON
-      #             attribute_value = 'Does not exist'
-                    if real_o is None:
-                      try:
-                        real_o = o.getObject()
-                      except AttributeError:
-                        pass
-                    if real_o is not None:
-                      try:
-                        try:
-                          attribute_value = getattr(real_o,property_id, None)
-                          attribute_original_value = attribute_value
-                          #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
-                          if not callable(attribute_value):
-                            #LOG('Look up accessor %s' % cname_id,0,'')
-                            attribute_value = real_o.getProperty(property_id)
-                            attribute_original_value = attribute_value
+  def getLineStart(self):
+    """Return always 0.
+    """
+    return 0
 
-                            #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
-                        except AttributeError:
-                          attribute_value = getattr(real_o,property_id)
-                          attribute_original_value = attribute_value
-                          #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
-                      except AttributeError:
-                        attribute_value = 'Can not evaluate attribute: %s' % sql
-                        attribute_original_value = None
-                    else:
-                      attribute_value = 'Object does not exist'
-                      attribute_original_value = None
-                if callable(attribute_value):
-                  try:
-                    try:
-                      attribute_value = attribute_value(brain = o, selection = selection)
-                      attribute_original_value = attribute_value
-                    except TypeError:
-                      attribute_value = attribute_value()
-                      attribute_original_value = attribute_value
-                  except (ConflictError, RuntimeError):
-                    raise
-                  except:
-                    LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
-                    attribute_value = "Could not evaluate"
-                    attribute_original_value = None
-                #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
-                if isinstance(attribute_value, float) :
-                  attribute_original_value = attribute_value
-                  if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
-                    # Do not truncate if editable
-                    pass
-                  else:
-                    #attribute_original_value = attribute_value
-                    attribute_value = float("%f" % attribute_value)
-                  td_align = "right"
-                elif isinstance(attribute_value, (int, long)):
-                  attribute_original_value = attribute_value
-                  td_align = "right"
-                else:
-                  td_align = "left"
-                  if attribute_value is None:
-                    attribute_original_value = None
-                    attribute_value = ''
-                  elif isinstance(attribute_value, str) :
-                    attribute_original_value = attribute_value
-                    attribute_value = unicode(str(attribute_value), 'utf-8')
-                if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
-                  key = my_field.id + '_%s' % o.uid
-                  if field_errors.has_key(key):
-                    error_css = 'Error'
-                    error_message = "<br/>%s" % translate('erp5_ui', field_errors[key].error_text)
-                    # Display previous value (in case of error
-                    error_list.append(field_errors.get(key))
-                    display_value = REQUEST.get('field_%s' % key, attribute_value)
-                  else:
-                    error_css = ''
-                    error_message = ''
-                    display_value = attribute_value # XXX Make sure this is ok
-                  if type(display_value) == type(u''):
-                    display_value = display_value.encode('utf-8')
-                  if my_field.meta_type not in ('DateTimeField', 'ProxyField',):
-                    cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
-                                                                # We use REQUEST which is not so good here
-                                                                # This prevents from using standard display process
-                  else: # Some fields prefer a None value to a ''
-                    cell_body = my_field.render(value = attribute_original_value, REQUEST = o.asContext(REQUEST=REQUEST, form=REQUEST.form), key = key)
-                  # It is safer to convert cell_body to an unicode string, because
-                  # it might be utf-8.
-                  if type(cell_body) == type(''):
-                    cell_body = unicode(cell_body, 'utf-8')
-                  if type(attribute_value) == type(u''):
-                    attribute_value = cgi.escape(attribute_value)
-                  #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
-                  list_body_append('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+  def getMaxLineNumber(self):
+    """Return always 0 (infinite).
+    """
+    return 0
 
+  def render(self, **kw):
+    """Render the data in a list of ListBoxLine objects.
+    """
+    listboxline_list = []
 
-                  # Add item to list_result_item for list render format
-  #                if render_format == 'list':
-  #                  column_value = my_field._get_default(my_field.generate_field_key(), attribute_original_value, o)
-  #                  if type(column_value) is type(u''):
-  #                    #column_value = unicode(column_value, 'utf-8')
-  #                    column_value = column_value.encode('utf-8')
-  #                  current_listboxline.addColumn(property_id , column_value)
-                  if render_format == 'list':
-                    subfield = getattr(form,
-                                       "%s_%s" % (field.id, alias),
-                                       None)
-                    # If we have a listfield, then display the same
-                    # value that would be displayed in html
-                    if subfield is not None and subfield.has_value("items") :
-                      field_kw = {'cell': real_o}
-                      items = subfield.get_value('items', **field_kw)
-                      for display, value in items:
-                        if value == attribute_original_value :
-                          attribute_original_value = display
-                          break
-                    # Make sure that attribute value is UTF-8
-                    attribute_value_tmp  = attribute_original_value
-                    if type(attribute_value_tmp) == type(u''):
-                      attribute_value_tmp = attribute_original_value.encode('utf-8')
+    # Make a title line.
+    title_listboxline = ListBoxLine()
+    title_listboxline.markTitleLine()
+    for c in self.getSelectedColumnList():
+      title_listboxline.addColumn(c[0], c[1].encode(self.getEncoding()))
+    listboxline_list.append(title_listboxline)
 
-                    # XXX this is horrible, but it would be better without those &nbsp; ....
-                    if type(attribute_value_tmp) == type(''):
-                      if '&nbsp;' in attribute_value_tmp:
-                        attribute_value_tmp = attribute_value_tmp.replace('&nbsp;', ' ')
+    # Obtain the list of lines.
+    checked_uid_set = set(self.getCheckedUidList())
+    for line in self.query():
+      listboxline = ListBoxLine()
+      listboxline.markDataLine()
 
-                    current_listboxline.addColumn( cname[0] , attribute_value_tmp)
+      if line.isSummary():
+        listboxline.markSummaryLine()
+        # XXX What is this "+ 1"?
+        listboxline.setSectionDepth(line.getDepth() + 1)
+        context = line.getContext()
+        if context is not None:
+          section_name = context.getTitleOrId() or None
+        else:
+          section_name = None
+        listboxline.setSectionName(section_name)
+        listboxline.setSectionFolded(not line.isOpen())
 
-                else:
-                  #########################################################################
-                  # Link generation
-                  #########################################################################
-                  object_url = None
-                  # Try to get a link
-                  # Check if url_columns defines a method
-                  # to retrieve the URL.
-                  url_method = None
-                  for column in url_columns:
-                    if sql == column[0]:
-                      url_method = getattr(o, column[1], '')
-                      break
-                  if url_method:
-                    # Call the requested method
-                    try:
-                      object_url = url_method(brain=o, selection=selection)
-                    except (ConflictError, RuntimeError):
-                      raise
-                    except:
-                      LOG('ListBox', 0,
-                          'Could not evaluate url_method %s' % \
-                              column[1], error=sys.exc_info())
-                      pass
-                  elif url_method is None:
-                    # Check if this object provides a specific URL method
-                    url_method = getattr(o, 'getListItemUrl', None)
-                    if url_method is None:
-                      try:
-                        object_url = o.absolute_url() + \
-                          '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
-                      except AttributeError:
-                        pass
-                    else:
-                      try:
-                        object_url = url_method(alias, i, selection_name)
-                      except (ConflictError, RuntimeError):
-                        raise
-                      except:
-                        pass
-                  # Generate appropriate HTML
-                  if type(attribute_value) == type(u''):
-                    attribute_value = cgi.escape(attribute_value)
-                  if object_url is None:
-                    list_body_append(
-                      "<td class=\"%s\" align=\"%s\">%s</td>" % \
-                                  (td_css, td_align, attribute_value))
-                  else:
-                    list_body_append(
-                      "<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                        (td_css, td_align, object_url, attribute_value))
+      if line.getBrain() is not None:
+        uid = line.getUid()
+        listboxline.setObjectUid(uid)
+        listboxline.checkLine(uid in checked_uid_set)
 
-                  if render_format == 'list':
-                    # Make sure that attribute value is UTF-8
-                    attribute_value_tmp  = attribute_original_value
-                    if type(attribute_value_tmp) == type(u''):
-                      attribute_value_tmp = attribute_original_value.encode('utf-8')
+      for (original_value, processed_value), (sql, title) in zip(line.getValueList(), self.getSelectedColumnList()):
+        if isinstance(original_value, unicode):
+          value = original_value.encode(self.getEncoding())
+        else:
+          value = original_value
 
-                    # XXX this is horrible, but it would be better without those &nbsp; ....
-                    if type(attribute_value_tmp) == type(''):
-                      if '&nbsp;' in attribute_value_tmp:
-                        attribute_value_tmp = attribute_value_tmp.replace('&nbsp;', ' ')
+        if isinstance(value, str):
+          value = value.replace('&nbsp;', ' ')
 
-                    current_listboxline.addColumn( cname[0] , attribute_value_tmp)
+        listboxline.addColumn(sql, value)
 
-            list_body_append('</tr>')
+      listboxline_list.append(listboxline)
 
+    # Make a stat line, if enabled.
+    if self.showStat():
+      stat_listboxline = ListBoxLine()
+      stat_listboxline.markStatLine()
 
-            if render_format == 'list':
-              listboxline_list.append(current_listboxline)
+      for (original_value, processed_value), (sql, title) in zip(self.getStatValueList(), self.getSelectedColumnList()):
+        if isinstance(original_value, unicode):
+          value = original_value.encode(self.getEncoding())
+        else:
+          value = original_value
 
-        ###############################################################
-        #
-        # Build statistics
-        #
-        ###############################################################
+        if isinstance(value, str):
+          value = value.replace('&nbsp;', ' ')
 
-        # Call the stat method
-        if show_stat:
+        listboxline.addColumn(sql, value)
 
-          if render_format == 'list':
-            # Create a ListBoxLine object
-            current_listboxline = ListBoxLine()
-            current_listboxline.markStatLine()
+      listboxline_list.append(stat_listboxline)
 
-          kw['select_expression'] = select_expression
-          selection.edit( params = kw )
-          count_results = selection(method = stat_method,
-                          context=here, REQUEST=REQUEST)
-          list_body_append('<tr id="listbox_stat_line">')
-
-
-          if report_tree:
-            list_body_append('<td class="Data">&nbsp;</td>')
-          if select:
-            list_body_append('<td class="Data">&nbsp;</td>')
-          for n in range((len(extended_columns))):
-            try:
-              sql = extended_columns[n][0]
-              for column in stat_columns:
-                if column[0] == sql:
-                  break
-              else:
-                column = None
-              #LOG('ListBox', 0, 'n = %s, extended_columns = %s, stat_columns = %s, column = %s' % (repr(n), repr(extended_columns), repr(stat_columns), repr(column)))
-              if column is not None:
-                if column[0] == column[1]:
-                  alias = extended_columns[n][2]
-                  if len(count_results):
-                    value = getattr(count_results[0],alias,'')
-                else:
-                  value = getattr(here, column[1])
-                  #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
-                  if callable(value):
-                    try:
-                      #params = dict(kw)
-                      #params['operator'] = stats[n]
-                      #value=value(**params)
-                      value=value(selection=selection)
-                    except (ConflictError, RuntimeError):
-                      raise
-                    except:
-                      LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(value), repr(params)), error=sys.exc_info())
-                      pass
-                if type(value) is type(1.0):
-                  list_body_append('<td class="Data" align="right">%.2f</td>' % value)
-                elif type(value) is type(1) :
-                  list_body_append('<td class="Data" align="right">%s</td>' % value)
-                else:
-                  list_body_append('<td class="Data">' + str(value) + '</td>')
-
-
-                if render_format == 'list':
-                  # Make sure that attribute value is UTF-8
-                  value_tmp  = value
-                  if type(value) == type(u''):
-                    value_tmp = value.encode('utf-8')
-
-                  # XXX this is horrible, but it would be better without those &nbsp; ....
-                  if type(value_tmp) == type(''):
-                    if '&nbsp;' in value_tmp:
-                      value_tmp = value_tmp.replace('&nbsp;', ' ')
-
-                  current_listboxline.addColumn( column[0] , value_tmp )
-
-              else:
-                list_body_append('<td class="Data">&nbsp;</td>')
-                if render_format == 'list':
-                  current_listboxline.addColumn( extended_columns[n][0], None)
-            except KeyError:
-              list_body_append('<td class="Data">&nbsp;</td>')
-              #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
-              if render_format == 'list': current_listboxline.addColumn( extended_columns[n][0] , None)
-          list_body_append('</tr>')
-
-          if render_format == 'list':
-            listboxline_list.append(current_listboxline)
-
-        #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, list_body = %r, footer = %r' % (header, selection_line, list_header, list_search, list_body, footer))
-        #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, footer = %r' % (header, selection_line, list_header, list_search, footer))
-        list_body = ''.join(list_body_list)
-        list_html = header + selection_line + list_header + list_search + list_body + footer
-
-
-        if render_format == 'list':
-          #listboxline_list.append(current_listboxline)
-          #LOG('ListBox', 0, 'listboxline_list: %s' % str(listboxline_list) )
-
-          return listboxline_list
-
-        #Create DomainTree Selector and DomainTree box
-        if domain_tree:
-          select_tree_options = ''
-          default_selected = ''
-          for c in domain_root_list:
-            if c[0] == selection_domain_path:
-              select_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], translate('erp5_ui', c[1]))
-            else:
-              select_tree_options += """<option value="%s">%s</option>\n""" % (c[0], translate('erp5_ui', c[1]))
-              if default_selected == '':
-                default_selected = c[0] #the first is selected
-          select_tree_header = """<select name="domain_root_url"
-onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
-        %s</select>""" % (here.getUrl(),select_tree_options)
-
-          try:
-              if selection_domain_path == ('portal_categories',):
-                selection_domain_path = default_selected
-              select_tree_body = makeTreeBody(form = form, domain_path = selection_domain_path,
-                                              unfolded_list = selection_domain_current,
-                                              selection_name = selection_name)
-          except KeyError:
-              select_tree_body = ''
-          select_tree_html = """<!-- Select Tree -->
-%s
-<table id="%s_domain_tree_table" cellpadding="0" border="0">
-%s
-</table>
-"""  % (select_tree_header, field.id, select_tree_body )
-
-          return """<!-- Table Wrapping for Select Tree -->
-<table border="0" cellpadding="0" cellspacing="0" width="100%%">
-<tr><td valign="top">
-%s
-</td><td valign="top">
-%s
-<!-- End of Table Wrapping for Select Tree -->
-</td></tr>
-</table>""" % (select_tree_html, list_html)
-        #render_end = DateTime()
-        #result = (render_end-render_start) * 86400
-        #LOG('Listbox render end call', 0, result)
-        return list_html
-
-ListBoxWidgetInstance = ListBoxWidget()
+    return listboxline_list
 
 class ListBoxValidator(Validator.Validator):
     property_names = Validator.Validator.property_names
@@ -2234,19 +2777,13 @@ class ListBox(ZMIField):
     def get_value(self, id, **kw):
       if (id == 'default'):
         if (kw.get('render_format') in ('list', )):
-          return self.widget.render(self, self.generate_field_key(), None,
-                                    kw.get('REQUEST'),
+          return self.widget.render(self, self.generate_field_key(), None, 
+                                    kw.get('REQUEST'), 
                                     render_format=kw.get('render_format'))
         else:
           return None
       else:
-        # Try an ERP5-style accessor, if available.
-        method_id = 'get' + convertToUpperCase(id)
-        method = getattr(self.widget, method_id, None)
-        if method is not None:
-          return method(**kw)
-        else:
-          return ZMIField.get_value(self, id, **kw)
+        return ZMIField.get_value(self, id, **kw)
 
 
 
