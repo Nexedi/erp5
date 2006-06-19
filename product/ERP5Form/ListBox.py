@@ -45,7 +45,8 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Message import Message
 
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self, Implicit, aq_chain
+from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+import ExtensionClass
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 
@@ -507,7 +508,7 @@ class VolatileCachingMethod(Method):
       setattr(instance, self.key, result)
       return result
 
-class ListBoxRenderer(Implicit):
+class ListBoxRenderer(ExtensionClass.Base):
   """This class deals with rendering of a ListBox field.
 
   In ListBox, rendering is not only viewing but also setting parameters in a selection
@@ -1624,7 +1625,7 @@ class ListBoxRenderer(Implicit):
     """
     return self.render(**kw)
 
-class ListBoxRendererLine(Implicit):
+class ListBoxRendererLine(ExtensionClass.Base):
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
   def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
@@ -1962,7 +1963,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     try:
       start = self.request.get('list_start')
       start = int(start)
-    except TypeError, KeyError:
+    except (TypeError, KeyError):
       param_dict = self.getParamDict()
       start = param_dict.get('list_start', 0)
       if isinstance(start, list):
