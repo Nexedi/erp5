@@ -176,10 +176,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         #LOG("Selection", 0, str((self.__dict__))
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
-        if self.invert_mode is 0:
-          kw = self.params
-        else:
-          kw = self.params.copy()
+        kw = self.params.copy()
+        if self.invert_mode is not 0:
           kw['uid'] = self.uids
         if method is None or type(method) is type('a'):
           method_path = method or self.method_path
