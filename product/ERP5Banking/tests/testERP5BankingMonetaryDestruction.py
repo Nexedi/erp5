@@ -105,7 +105,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
            , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-           , 'erp5_banking_monetary_destruction' # erp5_banking_monetary_destruction contains all method for monetary destruction
+           , 'erp5_banking_cash'
            )
 
   def getMonetaryDestructionModule(self):
@@ -695,7 +695,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.monetary_destruction.setSourceTotalAssetPrice('52400.0')
     # do the Workflow action
-    import pdb;pdb.set_trace()
     self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow')
     # execute tic
     self.stepTic()
