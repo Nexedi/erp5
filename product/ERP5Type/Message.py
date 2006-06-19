@@ -97,12 +97,13 @@ class Message(Persistent):
     if self.domain is None or request is None or translation_service is None :
       # Map the translated string with given parameters
       if type(self.mapping) is type({}):
-        if isinstance(self.message, unicode) :
-          self.message = self.message.encode('utf8')
-        self.message = Template(self.message).substitute(mapping)
-        if not isinstance(self.message, unicode):
-          self.message = self.message.decode('utf8')
-      return self.message
+        message = self.message
+        if isinstance(message, unicode) :
+          message = message.encode('utf8')
+        message = Template(message).substitute(self.mapping)
+        if not isinstance(message, unicode):
+          message = message.decode('utf8')
+      return message
     else:
       translated_message = translation_service.translate(
                                              self.domain,
