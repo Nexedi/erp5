@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Vincent Pelletier <vincent@nexedi.com>\n
+                   Christophe Dumez <christophe@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+\n
+XXX: each case must be handled separatelly in this precise representation :\n
+ - both top fields must be in the same div, so they must be identified\n
+   strictly by their name.\n
+ - the middle field is rendered like the two top ones, but outside of the\n
+   top block.\n
+ - the bottom block is rendered in another way (without its group name) so it\n
+   must be rendered separatelly.\n
+This leads to minor code duplication, but it\'s still code duplication.\n
+\n
+Breaks strict compatibility:\n
+Groups must be named one of "left", "right", "center", "bottom" otherwise they will not be rendered.\n
+Group order doesn\'t matter. Case is sensitive.\n
+Groups names becomes "left_group", "right_group", "left1_group", "right1_group", "bottom_group" for quad_form_view macro.\n
+-->\n
+</tal:block>\n
+<tal:block metal:define-macro="master">\n
+  <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                         dummy python: request.set(\'here\', here);\n
+                         left_group python: form.get_fields_in_group(\'left\');\n
+                         right_group python: form.get_fields_in_group(\'right\');\n
+                         center_group python: form.get_fields_in_group(\'center\');\n
+                         bottom_group python: form.get_fields_in_group(\'bottom\');">\n
+    <tal:block metal:use-macro="here/developper_shortcuts/macros/form" />\n
+    <div tal:condition="python: len(left_group) > 0 or len(right_group) > 0"\n
+         class="top_group">\n
+      <div tal:condition="python: len(left_group) > 0"\n
+           class="left">\n
+        <tal:block tal:repeat="field left_group">\n
+          <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+        </tal:block>\n
+      </div>\n
+      <div tal:condition="python: len(right_group) > 0"\n
+           class="right">\n
+        <tal:block tal:repeat="field right_group">\n
+          <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+        </tal:block>\n
+      </div>\n
+      <hr class="clear" />\n
+    </div>\n
+    <div tal:condition="python: len(center_group) > 0"\n
+         class="center">\n
+      <tal:block tal:repeat="field center_group">\n
+        <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+      </tal:block>\n
+    </div>\n
+    <div tal:condition="python: len(bottom_group) > 0"\n
+         class="bottom">\n
+      <tal:block tal:repeat="field bottom_group">\n
+        <tal:block metal:use-macro="here/developper_shortcuts/macros/field" />\n
+        <tal:block tal:define="value python:request.get(field.id, None)"\n
+                   tal:replace="structure python:field.render(value, request)" />\n
+      </tal:block>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block metal:define-macro="quad_form">\n
+  <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                         dummy python: request.set(\'here\', here);\n
+                         left_group python: form.get_fields_in_group(\'left\');\n
+                         right_group python: form.get_fields_in_group(\'right\');\n
+                         left1_group python: form.get_fields_in_group(\'left 1\');\n
+                         right1_group python: form.get_fields_in_group(\'right 1\');\n
+                         bottom_group python: form.get_fields_in_group(\'bottom\');">\n
+    <tal:block metal:use-macro="here/developper_shortcuts/macros/form" />\n
+    <div tal:condition="python: len(left_group) > 0 or len(right_group) > 0"\n
+         class="top_group">\n
+      <div tal:condition="python: len(left_group) > 0"\n
+           class="left">\n
+        <tal:block tal:repeat="field left_group">\n
+          <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+        </tal:block>\n
+      </div>\n
+      <div tal:condition="python: len(right_group) > 0"\n
+           class="right">\n
+        <tal:block tal:repeat="field right_group">\n
+          <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+        </tal:block>\n
+      </div>\n
+      <hr class="clear" />\n
+    </div>\n
+    <div tal:condition="python: len(left1_group) > 0 or len(right1_group) > 0"\n
+         class="top_group">\n
+      <div tal:condition="python: len(left1_group) > 0"\n
+           class="left">\n
+        <tal:block tal:repeat="field left1_group">\n
+          <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+        </tal:block>\n
+      </div>\n
+      <div tal:condition="python: len(right1_group) > 0"\n
+           class="right">\n
+        <tal:block tal:repeat="field right1_group">\n
+          <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+        </tal:block>\n
+      </div>\n
+      <hr class="clear" />\n
+    </div>\n
+    <div tal:condition="python: len(bottom_group) > 0"\n
+         class="bottom">\n
+      <tal:block tal:repeat="field python: form.get_fields_in_group(\'bottom\')">\n
+        <tal:block metal:use-macro="here/developper_shortcuts/macros/field" />\n
+        <tal:block tal:define="value python:request.get(field.id, None)"\n
+                   tal:replace="structure python:field.render(value, request)" />\n
+      </tal:block>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
