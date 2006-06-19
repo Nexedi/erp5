@@ -163,7 +163,7 @@ class SimulationMovement(Movement):
     try:
       parent_state = self.aq_parent.getSimulationState()
       return parent_to_movement_simulation_state[parent_state]
-    except KeyError, AttributeError:
+    except (KeyError, AttributeError):
       LOG('ERP5 WARNING:',100, 'Could not acquire getSimulationState on %s'
                                 % self.getRelativeUrl())
       return None
