@@ -91,6 +91,8 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_periodicity_minute_frequency</string>
+                        <string>my_periodicity_minute_list</string>
                         <string>my_periodicity_hour_frequency</string>
                         <string>my_periodicity_hour_list</string>
                         <string>my_periodicity_day_frequency</string>
