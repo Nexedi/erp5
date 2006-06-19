@@ -134,7 +134,7 @@ if context.getTitle() in (\'\', None):\n
                         )\n
   if context.getStartDate() not in (\'\', None):\n
     payroll_date = context.getStartDate()\n
-    new_title += \' %s %s\' % ( N_(months[payroll_date.month()])\n
+    new_title += \' %s %s\' % ( N_(months[payroll_date.month() - 1])\n
                             , payroll_date.year()\n
                             )\n
   context.setTitle(new_title)\n
