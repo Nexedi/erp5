@@ -42,11 +42,9 @@ from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from copy import copy
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
-from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Message import Message
 
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
-import ExtensionClass
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 
@@ -473,22 +471,12 @@ class ListBoxWidget(Widget.Widget):
 
 ListBoxWidgetInstance = ListBoxWidget()
 
-class VolatileCachingMethod(Method):
+class VolatileCachingMethod:
   """This class caches the result of a callable object, and behaves like a method.
      Unlike ERP5Type's CachingMethod, this cache is volatile, namely, the cached
      data is removed immediately when an object which stores the cached data is deleted.
      Naturally, the object (self) should not be a persistent object.
   """
-  # Some magic to omit an instance argument.
-  class func_code: pass
-  func_code = func_code()
-  func_code.co_varnames = ('self',)
-  func_code.co_argcount = 1
-  func_defaults = ()
-  _need__name__=1
-  index_html = None
-  validate = None
-
   def __init__(self, callable_object):
     """Generate the key for the cache.
     """
@@ -508,7 +496,17 @@ class VolatileCachingMethod(Method):
       setattr(instance, self.key, result)
       return result
 
-class ListBoxRenderer(ExtensionClass.Base):
+class InstanceMethod:
+  """This class makes it possible to pass an instance object implicitly to a method.
+  """
+  def __init__(self, instance, method):
+    self.instance = instance
+    self.method = method
+
+  def __call__(self):
+    return self.method(self.instance)
+
+class ListBoxRenderer:
   """This class deals with rendering of a ListBox field.
 
   In ListBox, rendering is not only viewing but also setting parameters in a selection
@@ -521,6 +519,13 @@ class ListBoxRenderer(ExtensionClass.Base):
     self.widget = widget
     self.field = field
     self.request = REQUEST
+
+    # Because it is not easy to pass an instance object implicitly to a method
+    # with no side effect, tweak VolatileCachingMethod objects here for this instance.
+    for k in dir(self):
+      v = getattr(self, k)
+      if isinstance(v, VolatileCachingMethod):
+        setattr(self, k, InstanceMethod(self, v))
 
   def getLineClass(self):
     """Return a class object for a line. This must be overridden.
@@ -539,7 +544,7 @@ class ListBoxRenderer(ExtensionClass.Base):
   def getForm(self):
     """Return the form which contains the ListBox.
     """
-    return aq_inner(self.field).aq_parent
+    return self.field.aq_parent
 
   getForm = VolatileCachingMethod(getForm)
 
@@ -1521,7 +1526,7 @@ class ListBoxRenderer(ExtensionClass.Base):
 
           # Tweak the line start.
           if start >= object_list_len:
-            start = object_list_len - 1
+            start = max(object_list_len - 1, 0)
           start -= (start % max_lines)
 
           # Obtain only required objects.
@@ -1574,7 +1579,9 @@ class ListBoxRenderer(ExtensionClass.Base):
       self.current_page = 0
     else:
       self.total_pages = int(max(self.total_size - 1, 0) / max_lines) + 1
-      start = min(start, max(0, self.total_pages * max_lines - max_lines))
+      if start >= self.total_size:
+        start = max(self.total_size - 1, 0)
+      start -= (start % max_lines)
       self.current_page = int(start / max_lines)
       end = min(start + max_lines, self.total_size)
       param_dict['list_start'] = start
@@ -1625,7 +1632,7 @@ class ListBoxRenderer(ExtensionClass.Base):
     """
     return self.render(**kw)
 
-class ListBoxRendererLine(ExtensionClass.Base):
+class ListBoxRendererLine:
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
   def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
@@ -1641,6 +1648,13 @@ class ListBoxRendererLine(ExtensionClass.Base):
     self.domain_selection = domain_selection
     self.depth = depth
 
+    # Because it is not easy to pass an instance object implicitly to a method
+    # with no side effect, tweak VolatileCachingMethod objects here for this instance.
+    for k in dir(self):
+      v = getattr(self, k)
+      if isinstance(v, VolatileCachingMethod):
+        setattr(self, k, InstanceMethod(self, v))
+
   def getBrain(self):
     """Return the brain. This can be identical to a real object.
     """
@@ -1649,16 +1663,10 @@ class ListBoxRendererLine(ExtensionClass.Base):
   def getObject(self):
     """Return a real object.
     """
-    portal_object = self.renderer.getPortalObject()
-    base = aq_base(self.obj)
-    if base is None:
-      return None
-
-    #LOG('ListBox', 0, 'base = %r' % (base,))
     try:
-      return base.__of__(portal_object).getObject()
+      return self.obj.getObject()
     except AttributeError:
-      return base.__of__(portal_object)
+      return self.obj
 
   getObject = VolatileCachingMethod(getObject)
 
@@ -1760,7 +1768,7 @@ class ListBoxRendererLine(ExtensionClass.Base):
             processed_value = original_value
       else:
         # This is an usual line.
-        obj = aq_inner(self.getObject())
+        obj = self.getObject()
 
         # Use a widget, if any.
         editable_field_id = '%s_%s' % (self.renderer.getId(), alias)
