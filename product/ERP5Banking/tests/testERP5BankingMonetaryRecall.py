@@ -105,8 +105,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
            , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-	   , 'erp5_banking_monetary_recall'
-           #, 'erp5_banking_monetary_recall-0.1.bt5' # erp5_banking_cash contains all method for monetary recall
+	         , 'erp5_banking_cash'
            )
 
   def getMonetaryRecallModule(self):

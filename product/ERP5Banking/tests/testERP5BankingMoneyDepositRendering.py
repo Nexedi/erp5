@@ -106,7 +106,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
            , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-           , 'erp5_banking_money_deposit_rendering-0.1.bt5' # erp5_banking_cash contains all method for money deposit rendering
+           , 'erp5_banking_cash'
            )
 
   def getMoneyDepositRenderingModule(self):
