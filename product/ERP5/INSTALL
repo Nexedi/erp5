@@ -1,4 +1,5 @@
 This file will give you a quick help on how to get ERP5 running on a computer.
+http://wiki.erp5.org/ might contain more accurate information.
 
 Pre-requirements
 ================
@@ -12,21 +13,20 @@ The Requirements
 The following components are required in order to use ERP5:
 
 Third-party components:
-+ Zope                                                              www.zope.org
-* Zope CMF (default, topicsi, workflow)                             cmf.zope.org
+* Zope                                                              www.zope.org
+* Zope CMF                                                          cmf.zope.org
 * MySQL                                                            www.mysql.org
-* Localizer                                                        www.ikaaro.org
-* CMFWiki                                                           www.zope.org
-* Base18                                                                ERP5 CVS
+* Localizer                                                       www.ikaaro.org
 * BTreeFolder2                http://hathaway.freezope.org/Software/BTreeFolder2
-* Refresh
-* CmfPhoto       http://www.nexedi.org/static/Mandrake/SOURCES/CMFPhoto-1.2.3.tar.bz2
+* CMFhoto
+* CMFReportTool
+* PluggableAuthService
 
 Some of those components can be downloaded as RPMs from nexedi repository :
-urpmi.addmedia nexedi http://www.nexedi.org/static/Mandrake/10.1/RPMS/
-(also available for 9.1, 9.2, 10.0, 10.2)
+urpmi.addmedia nexedi http://www.nexedi.org/static/Mandrake/2006.0/RPMS/
 
-From ERP5 CVS:                          :pserver:anonymous@openbrick.org/cvsroot
+From ERP5 subversion repository:
+      svn co https://svn.erp5.org/repos/public/erp5/trunk/products/
 * CMFActivity
 * CMFCategory
 * ERP5
@@ -55,13 +55,7 @@ Select "ERP5 Site" from the dropdown box in the workspace.
 What to do if something goes wrong
 ==================================
 
-Check that you have the latest versions from CVS.
+Check that you have the latest versions from subversion.
 Check that you have all the required components in a working state.
 Restart Zope.
 
-Known Bugs (outdated)
-==========
-
-It is necessary to refresh the ERP5 product in order
-to use it because it is based on Formulator and Formulator
-is loaded after ERP5 by Zope at startup
