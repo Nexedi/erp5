@@ -80,18 +80,31 @@ class Periodicity(Base):
       - if the periodicity start date is in the past and we never starts
         this periodic event, then return the periodicity start date.
       - if the periodicity start date is in the past but we already
-        have started the periodic event, then see 
+        have started the periodic event, then see
       """
 
       if self.getPeriodicityStartDate() is None:
         return
       next_start_date = self.getAlarmDate()
-      if current_date is None: 
+      if current_date is None:
         # This is usefull to set the current date as parameter for
         # unit testing, by default it should be now
         current_date = DateTime()
       if next_start_date > current_date:
         return
+
+      def validateMinute(self,date, previous_date):
+        periodicity_minute_frequency = self.getPeriodicityMinuteFrequency()
+        periodicity_minute_list = self.getPeriodicityMinuteList()
+        if periodicity_minute_frequency is None and periodicity_minute_list in ([],None,()):
+          # in this case, we may want to have an periodicity every hour based on the start date
+          # without defining anything about minutes periodicity, so we compare with
+          # minutes with the one defined in the previous alarm date
+          return (date.minute() == previous_date.minute())
+        if periodicity_minute_frequency not in ('',None):
+          return (date.minute() % periodicity_minute_frequency) == 0
+        elif len(periodicity_minute_list)>0:
+          return date.minute() in periodicity_minute_list
 
       def validateHour(self,date):
         periodicity_hour_frequency = self.getPeriodicityHourFrequency()
@@ -141,14 +154,15 @@ class Periodicity(Base):
         elif len(periodicity_month_list)>0:
           return date.month() in periodicity_month_list
 
-      next_start_date = addToDate(next_start_date,hour=1)
-      while not( next_start_date >= current_date \
-                 and validateHour(self,next_start_date) \
-                 and validateDay(self,next_start_date) \
-                 and validateWeek(self,next_start_date) \
-                 and validateMonth(self,next_start_date)):
-        next_start_date = addToDate(next_start_date,hour=1)
-
+      previous_date = next_start_date
+      next_start_date = addToDate(next_start_date,minute=1)
+      while not(next_start_date >= current_date \
+                and validateMinute(self,next_start_date, previous_date) \
+                and validateHour(self,next_start_date) \
+                and validateDay(self,next_start_date) \
+                and validateWeek(self,next_start_date) \
+                and validateMonth(self,next_start_date)):
+        next_start_date = addToDate(next_start_date,minute=1)
       self.setAlarmDate(next_start_date)
 
 
