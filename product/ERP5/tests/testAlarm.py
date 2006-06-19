@@ -58,7 +58,7 @@ class TestAlarm(ERP5TypeTestCase):
   """
   This is the list of test
 
-  test setNextStartDate : 
+  test setNextStartDate :
   - every hour
   - at 6, 10, 15, 21 every day
   - every day at 10
@@ -147,16 +147,16 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now,day=2)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityHourFrequency(1)
-    alarm.setNextAlarmDate(current_date=now) 
+    alarm.setNextAlarmDate(current_date=now)
     self.assertEquals(alarm.getAlarmDate(),date)
     LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
     LOG(message + ' now :',0,now)
-    alarm.setNextAlarmDate(current_date=now) 
+    alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,hour=1)
     self.assertEquals(alarm.getAlarmDate(),next_date)
     now = addToDate(now,hour=1,minute=5)
-    alarm.setNextAlarmDate(current_date=now) 
+    alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(next_date,hour=1)
     self.assertEquals(alarm.getAlarmDate(),next_date)
 
@@ -173,16 +173,16 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now,day=2)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityHourFrequency(3)
-    alarm.setNextAlarmDate(current_date=now) 
+    alarm.setNextAlarmDate(current_date=now)
     self.assertEquals(alarm.getAlarmDate(),date)
     LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
     LOG(message + ' now :',0,now)
-    alarm.setNextAlarmDate(current_date=now) 
+    alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,hour=3)
     self.assertEquals(alarm.getAlarmDate(),next_date)
     now = addToDate(now,hour=3,minute=7,second=4)
-    alarm.setNextAlarmDate(current_date=now) 
+    alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(next_date,hour=3)
     self.assertEquals(alarm.getAlarmDate(),next_date)
 
@@ -203,11 +203,11 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityHourList(hour_list)
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date) 
+    alarm.setNextAlarmDate(current_date=right_first_date)
     self.assertEquals(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date) 
+    alarm.setNextAlarmDate(current_date=right_second_date)
     self.assertEquals(alarm.getAlarmDate(),right_third_date)
-    alarm.setNextAlarmDate(current_date=right_third_date) 
+    alarm.setNextAlarmDate(current_date=right_third_date)
     self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
 
   def test_06_EveryDayOnce(self, quiet=0, run=run_all_test):
@@ -226,9 +226,9 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityDayFrequency(1)
     alarm.setPeriodicityHourList((10,))
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date) 
+    alarm.setNextAlarmDate(current_date=right_first_date)
     self.assertEquals(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date) 
+    alarm.setNextAlarmDate(current_date=right_second_date)
     self.assertEquals(alarm.getAlarmDate(),right_third_date)
 
   def test_07_Every3DaysSomeHours(self, quiet=0, run=run_all_test):
@@ -248,11 +248,11 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityDayFrequency(3)
     alarm.setPeriodicityHourList((14,15,17))
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date) 
+    alarm.setNextAlarmDate(current_date=right_first_date)
     self.assertEquals(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date) 
+    alarm.setNextAlarmDate(current_date=right_second_date)
     self.assertEquals(alarm.getAlarmDate(),right_third_date)
-    alarm.setNextAlarmDate(current_date=right_third_date) 
+    alarm.setNextAlarmDate(current_date=right_third_date)
     self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
 
   def test_08_SomeWeekDaysSomeHours(self, quiet=0, run=run_all_test):
@@ -273,11 +273,11 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityHourList((6,15))
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
     #self.assertEquals(alarm.getAlarmDate(),right_first_date)
-    #alarm.setNextAlarmDate(current_date=right_first_date) 
+    #alarm.setNextAlarmDate(current_date=right_first_date)
     #self.assertEquals(alarm.getAlarmDate(),right_second_date)
-    #alarm.setNextAlarmDate(current_date=right_second_date) 
+    #alarm.setNextAlarmDate(current_date=right_second_date)
     #self.assertEquals(alarm.getAlarmDate(),right_third_date)
-    #alarm.setNextAlarmDate(current_date=right_third_date) 
+    #alarm.setNextAlarmDate(current_date=right_third_date)
     #self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
 
 
@@ -288,7 +288,7 @@ class TestAlarm(ERP5TypeTestCase):
     for date in args[:-1]:
       LOG('checkDate, checking date...:',0,date)
       self.assertEquals(alarm.getAlarmDate(),date)
-      alarm.setNextAlarmDate(current_date=date) 
+      alarm.setNextAlarmDate(current_date=date)
     self.assertEquals(alarm.getAlarmDate(),args[-1])
 
   def test_09_SomeMonthDaysSomeHours(self, quiet=0, run=run_all_test):
@@ -344,9 +344,31 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityWeekList((41,43))
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
 
-
-
-
+  def test_12_Every5Minutes(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Every 5 Minutes'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    alarm = self.newAlarm()
+    now = DateTime()
+    minute_to_remove = now.minute() % 5
+    now = addToDate(now,minute=-minute_to_remove)
+    date = addToDate(now,day=2)
+    alarm.setPeriodicityStartDate(date)
+    alarm.setPeriodicityMinuteFrequency(5)
+    alarm.setNextAlarmDate(current_date=now)
+    self.assertEquals(alarm.getAlarmDate(),date)
+    LOG(message + ' now :',0,now)
+    now = addToDate(now,day=2)
+    LOG(message + ' now :',0,now)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(date,minute=5)
+    self.assertEquals(alarm.getAlarmDate(),next_date)
+    now = addToDate(now,minute=5,second=14)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(next_date,minute=5)
+    self.assertEquals(alarm.getAlarmDate(),next_date)
 
 if __name__ == '__main__':
     framework()
