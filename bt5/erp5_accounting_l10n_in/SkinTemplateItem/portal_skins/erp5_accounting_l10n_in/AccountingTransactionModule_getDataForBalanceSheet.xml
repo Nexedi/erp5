@@ -1,0 +1,461 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#context = self\n
+# vim: ts=2 sw=2 et\n
+\n
+STRIP_IF_EMPTY = True\n
+\n
+"""\n
+(13:13:27) jerome@jabber.nexedi.com: >\n
+>  Comment faire un getInventory pour un compte (Account)  sur un script de\n
+> la ZMI avec un compte???\n
+\n
+Avec la ligne comme context, quelque chose du genre:\n
+\n
+context.portal_simulation.getInventory( \n
+  simulation_state=[\'stopped\', \'delivered\'], # \xc3\xa0 toi de voir les \xc3\xa9tats que tu \n
+veux\n
+  section_uid=context.getSourceSectionUid(),\n
+  node_uid=context.getSourceUid(),\n
+  payment_uid=context.getSourcePaymentUid(),\n
+)\n
+donc ca te donne le solde de ton compte comptable (node_uid), pour \n
+l\'organisation concern\xc3\xa9e (section_uid) et pour le compte en banque concern\xc3\xa9 \n
+(payment_uid), pour les \xc3\xa9critures qui sont dans l\'\xc3\xa9tat de simulation que tu \n
+donnes (simulation_state). Tu peux aussi donner at_date si tu veux voir le \n
+solde \xc3\xa0 une date donn\xc3\xa9e. \n
+Tu te d\xc3\xa9brouilleras pour savoir si tu attends une valeur positive ou n\xc3\xa9gative, \n
+ca je n\'arrive jamais \xc3\xa0 le retenir ;)\n
+(13:13:43) jerome@jabber.nexedi.com: context est une accounting transaction line dans son cas\n
+(13:13:49) jerome@jabber.nexedi.com: mais en gros c\'est ca\n
+(13:14:13) jerome@jabber.nexedi.com: s/getInventory/getInventoryAssetPrice si tu veux la valeur dans ta devise locale\n
+(13:15:22) fabien@jabber.nexedi.com/Gaim: t\'as coll\xc3\xa9 ca d\'ou ?\n
+(13:15:36) jerome@jabber.nexedi.com: d\'une question qu\'on m\'avais pos\xc3\xa9\n
+(13:15:41) jerome@jabber.nexedi.com: tu veux la question ?\n
+(13:15:53) fabien@jabber.nexedi.com/Gaim: la ligne = la transaction ? ou l\'account ?\n
+(13:16:00) jerome@jabber.nexedi.com:  En fait j\'ai un probl\xc3\xa8me avec la validation de la comptabilit\xc3\xa9 quand on met une transaction comptable de montant par exemple 500 000F (d\xc3\xa9bit et cr\xc3\xa9dit). Au niveau de la ligne de transaction de paiement corespondant je veux valider pour que le montant soit inf\xc3\xa9rieur a 500 000F.\n
+ \n
+ L\'id\xc3\xa9e est de d\xc3\xa9terminer l\'inventaire du compte d\xc3\xa9biter au niveau du paiement pour voir es ce qu\'il est cr\xc3\xa9diteur de x avant de le d\xc3\xa9biter de x?\n
+ \n
+(13:16:08) jerome@jabber.nexedi.com: la ligne = accounting transaction line\n
+(13:16:23) jerome@jabber.nexedi.com: en fait il t efaut passer le bon node_uid et le bon section_uid\n
+(13:16:29) jerome@jabber.nexedi.com: et les bons simulation_state\n
+(13:17:52) fabien@jabber.nexedi.com/Gaim: bon, bah du coup j\'ai une autre question\n
+(13:18:17) fabien@jabber.nexedi.com/Gaim: comment tu choppes les transactions li\xc3\xa9es \xc3\xa0 un account ?  :D\n
+(13:19:19) jerome@jabber.nexedi.com: tu as deux mani\xc3\xa8res\n
+(13:19:21) jerome@jabber.nexedi.com: la pourrie:\n
+(13:19:47) jerome@jabber.nexedi.com: getSourceRelatedValueList() + getDestinationRelatedValueList()\n
+(13:19:48) jerome@jabber.nexedi.com: la bonne\n
+(13:20:03) jerome@jabber.nexedi.com: getInventoryList(node_uid = , section_uid=,  ....)\n
+(13:20:31) jerome@jabber.nexedi.com: getInventoryList te donnes les mouvements qui t\'am\xc3\xa8ne au solde du compte que tu obtient avec getInventory\n
+"""\n
+request = context.REQUEST\n
+result = []\n
+GAP = context.portal_categories.restrictedTraverse(request[\'gap_base\'])\n
+organisation_id = context.restrictedTraverse(request[\'organisation\']).getUid()\n
+\n
+# OOo specific variables\n
+ooo_struct = dict (\n
+\t\tline = 8,\n
+\t\trows = (\'C\',\'D\'),\n
+\t\t)\n
+\n
+def getAccountsForGap(gap_id):\n
+  return GAP.restrictedTraverse(gap_id).getGapRelatedValueList(portal_type=\'Account\')\n
+\n
+def getUniqueGapList(accounts_list):\n
+\treturn dict([ (x.getGap(),True) for x in accounts_list]).keys()\n
+\n
+def getCell(row_number=1):\n
+\treturn \'%s%d\'%(ooo_struct[\'rows\'][row_number-1], ooo_struct[\'line\'])\n
+\n
+def addLine(n_type, text, level, value=None, formula=None, value2=None, formula2=None, schedule=\'X\'):\n
+#    if value == 0.0:\n
+#        return\n
+\tif formula == \'=\':\n
+\t\tformula = \'N/A\'\n
+\tif formula2 == \'=\':\n
+\t\tformula2 = \'N/A\'\n
+\tresult.append( dict(\n
+\t\tt=n_type,\n
+\t\ttext=\'    \'*level+(text),\n
+\t\tlevel=level,\n
+\t\tformula=formula,\n
+\t\tformula2=formula2,\n
+\t\tvalue=value,\n
+\t\tvalue2=value2,\n
+\t\tschedule=schedule\n
+\t\t)\n
+\t\t)\n
+\tooo_struct[\'line\'] = ooo_struct[\'line\'] + 1\n
+\n
+def addScheduleForAccounts(accounts_list, less_accounts_list, minus, detail_mode=False):\n
+\ttmp_list = []\n
+\tif detail_mode:\n
+\t\tgetInventoryList = context.portal_simulation.getInventoryList\n
+\t\tfor acc in accounts_list:\n
+\t\t\ttransactions = getInventoryList(node_uid = acc.getUid(),\n
+\t\t\t\t\tsection_uid= organisation_id,\n
+\t\t\t\t\tsimulation_state=request[\'simulation_state\'],\n
+\t\t\t\t\tat_date=request[\'at_date\'],\n
+\t\t\t\t\tfrom_date=request[\'from_date\'])\n
+\t\t\tfor trans in transactions:\n
+\t\t\t\ttrans = trans.getObject()\n
+\t\t\t\tparent = trans.getExplanationValue()\n
+\t\t\t\ttmp_list.append(\n
+\t\t\t\t\t\tdict(description=parent.getDescription() or \'No description given\',\n
+\t\t\t\t\t\t\ttitle = parent.getTitle(),\n
+\t\t\t\t\t\t\tquantity =  trans.getQuantity()\n
+\t\t\t\t\t\t\t)\n
+\t\t\t\t\t\t)\n
+\t\tsort_tmp_list = [(x[\'description\'],x) for x in tmp_list]\n
+\t\tsort_tmp_list.sort()\n
+\t\ttmp_list = [x[1] for x in sort_tmp_list]\n
+\telse:\n
+\t\tgetInventory = context.portal_simulation.getInventory\n
+\n
+\t\tsign_fn = lambda x: x\n
+\t\tif minus:\n
+\t\t\tsign_fn = lambda x: -x\n
+\n
+\t\tfor acc in accounts_list:\n
+\t\t\tinventory = getInventory(node_uid = acc.getUid(),\n
+\t\t\t\t\tsection_uid= organisation_id,\n
+\t\t\t\t\tsimulation_state=request[\'simulation_state\'],\n
+\t\t\t\t\tat_date=request[\'at_date\'],\n
+\t\t\t\t\tfrom_date=request[\'from_date\'])\n
+\t\t\ttmp_list.append(\n
+\t\t\t\t\tdict(\n
+\t\t\t\t\t\tdescription=acc.getTitle(),\n
+\t\t\t\t\t\ttitle = \'\',\n
+\t\t\t\t\t\tquantity = sign_fn(inventory)\n
+\t\t\t\t\t)\n
+\t\t\t\t\t)\n
+\n
+\t\tfor acc in less_accounts_list:\n
+\t\t\tinventory = getInventory(node_uid = acc.getUid(),\n
+\t\t\t\t\tsection_uid= organisation_id,\n
+\t\t\t\t\tsimulation_state=request[\'simulation_state\'],\n
+\t\t\t\t\tat_date=request[\'at_date\'],\n
+\t\t\t\t\tfrom_date=request[\'from_date\'])\n
+\t\t\ttmp_list.append(\n
+\t\t\t\t\tdict(\n
+\t\t\t\t\t\tdescription="LESS: "+acc.getTitle(),\n
+\t\t\t\t\t\ttitle = \'\',\n
+\t\t\t\t\t\tquantity = inventory\n
+\t\t\t\t\t)\n
+\t\t\t\t\t)\n
+\t\t\t# for every mode:\n
+\tloop_dict[\'schedules\'][loop_dict[\'schedule_index\']] = tmp_list\n
+\n
+# Don\'t break lines, it makes things unreadable\n
+# Parameters:\n
+#  t        : type of the node (section, sub or end)\n
+#  gap      : list of concerned gap entries (summed up)\n
+#  less_gap : list of gap to be substracted from the inventory (applied AFTER the minus flag interpretation)\n
+#  sections : list of sub-nodes (only for section and sub)\n
+# Flags:\n
+#  minus : revert the sign\n
+#  less  : substract from total\n
+# detailed_schedule : list transactions instead of accounts balance\n
+structure = (\n
+    dict(title=\'SOURCE OF FUNDS\',t=\'section\',\n
+      sections=(\n
+        dict(title=\'Shareholders Funds\',t=\'sub\',\n
+          sections=(\n
+            dict(title=\'Capital\',t=\'end\', gap=[\'liability/capital\'], less_gap=[\'asset/current/drawings\'], minus=True, detailed_schedule=True),\n
+            dict(title=\'Reserves and Surplus\',t=\'end\', gap=[\'liability/reserves_and_surplus\'], minus=True),\n
+            )\n
+          ),\n
+\t\tdict(title=\'Deferred Tax Liability\',t=\'end\', gap=[\'liability/deferred_tax\']),\n
+          dict(title=\'Loan Funds\',t=\'sub\',\n
+            sections=(\n
+              dict(title=\'Secured Loans\',t=\'end\', gap=[\'liability/loans/secured_loans\'], minus=True, detailed_schedule=True ),\n
+              dict(title=\'Unsecured Loans\',t=\'end\', gap=[\'liability/loans/unsecured_loans\'], minus=True),\n
+              )\n
+            )\n
+          )\n
+        ),\n
+    dict(title=\'APPLICATION OF FUNDS\',t=\'section\',\n
+      sections=(\n
+        dict(title=\'Fixed Assets\',t=\'sub\',\n
+          sections=(\n
+            dict(title=\'Gross Block\',t=\'end\', gap=[\'asset/fixed/gross_block\']),\n
+#            dict(title=\'Depreciation\',t=\'end\', gap=[\'asset/fixed/depreciation\'], less=True),\n
+#            dict(title=\'Net Block\',t=\'end\', gap=[\'asset/fixed/net_block\']),\n
+            dict(title=\'Capital Work-in-Progress\',t=\'end\', gap=[\'asset/fixed/capital_work_in_progress\']),\n
+            )\n
+          ),\n
+        dict(title=\'Investments\',t=\'end\', gap=[\'asset/investment\']),\n
+        dict(title=\'Current Assets, Loans and Advances\',t=\'sub\',\n
+          sections=(\n
+            dict(title=\'Cash and Bank Balances\',t=\'end\',gap=[\'asset/current/bank_account\',\'asset/current/cash_in_hand\']),\n
+            dict(title=\'Loans and Advances\',t=\'end\', gap=[\'asset/current/loans_and_advances\',\'asset/current/deposits\']),\n
+            dict(title=\'Provisions\',t=\'end\', gap=[\'asset/current/provisions\']),\n
+            dict(title=\'Stock in Trade\',t=\'end\', gap=[\'asset/current/stock_in_trade\']),\n
+            dict(title=\'Sundry Debtors\',t=\'end\', gap=[\'asset/current/sundry_debtors\']),\n
+            dict(title=\'Current Liabilities\',t=\'end\', gap=[\'liability/current\'],less=True, minus=True),\n
+            dict(title=\'Current Provisions\',t=\'end\', gap=[\'liability/provisions\'],less=True, minus=True),\n
+            )\n
+          ),\n
+        dict(title=\'Miscellaneous Expenditure (To the extent not written off or adjusted)\',t=\'sub\',\n
+          sections=(\n
+            dict(title=\'Preliminary Expenses\',t=\'end\',gap=[\'asset/misc/preliminary\']),\n
+            dict(title=\'Profit and Loss\',t=\'end\',gap=[\'asset/misc/profit_and_loss\']),\n
+            )\n
+          )\n
+        )\n
+      )\n
+    )\n
+\n
+loop_dict = dict(\n
+\t\tsection_prefix = \'I\',\n
+\t\tsub_prefix = 1,\n
+\t\tend_prefix = \'a\',\n
+\t\tschedule_index = \'A\',\n
+\t\tschedules = dict()\n
+\t\t)\n
+\n
+def do_section(item):\n
+\taddLine(item[\'t\'],"%s. %s"%(loop_dict[\'section_prefix\'],item[\'title\']),loop_dict[\'level\'])\n
+\tloop_dict[\'section_prefix\'] = loop_dict[\'section_prefix\'] + \'I\'\n
+\tloop_dict[\'sub_prefix\'] = 1\n
+\tloop_dict[\'bigtotal\'] = []\n
+\tloop_dict[\'bigtotal2\'] = []\n
+\tloop_dict[\'level\'] =  loop_dict[\'level\'] + 1\n
+\tfor subitem in item[\'sections\']:\n
+\t\tparse_structure(subitem)\n
+\taddLine(\'total\',\'Total\',loop_dict[\'level\'],formula=\'=\'+(\'\'.join(loop_dict[\'bigtotal\'])), formula2=\'=\'+(\'\'.join(loop_dict[\'bigtotal2\'])))\n
+\tloop_dict[\'level\'] =  loop_dict[\'level\'] - 1\n
+\n
+def do_end(item):\n
+\tlocal_accounts = []\n
+\tless_local_accounts = []\n
+\tfor gap_id in item[\'gap\']:\n
+\t\tlocal_accounts.extend( getAccountsForGap(gap_id) )\n
+\tinventory = context.FiscalReportCell_doGetInventory( getUniqueGapList(local_accounts),\n
+\t\t\tfrom_date=request[\'from_date\'],at_date=request[\'at_date\'],simulation_state=request[\'simulation_state\'])\n
+\tinventory2 = context.FiscalReportCell_doGetInventory( getUniqueGapList(local_accounts),\n
+\t\t\tfrom_date=request[\'from_date2\'],at_date=request[\'at_date2\'],simulation_state=request[\'simulation_state\'])\n
+\t# reverse the sign\n
+\tif \'minus\' in item and inventory != 0.0:\n
+\t\tinventory = - inventory\n
+\t\tinventory2 = - inventory2\n
+\t# substract the sum of a list of gaps from the inventory\n
+\tif \'less_gap\' in item:\n
+\t\tfor gap_id in item[\'less_gap\']:\n
+\t\t\tless_local_accounts.extend( getAccountsForGap(gap_id) )\n
+\t\tless_inventory = context.FiscalReportCell_doGetInventory( getUniqueGapList(less_local_accounts),\n
+\t\t\tfrom_date=request[\'from_date\'],at_date=request[\'at_date\'],simulation_state=request[\'simulation_state\'])\n
+\t\tless_inventory2 = context.FiscalReportCell_doGetInventory( getUniqueGapList(less_local_accounts),\n
+\t\t\tfrom_date=request[\'from_date2\'],at_date=request[\'at_date2\'],simulation_state=request[\'simulation_state\'])\n
+\t\tinventory = inventory - less_inventory\n
+\t\tinventory2 = inventory2 - less_inventory2\n
+\tif STRIP_IF_EMPTY and not local_accounts and not less_local_accounts:\n
+\t\treturn\n
+\tif loop_dict[\'level\'] == 1:\n
+\t\tend_title = "%d. %s"%(loop_dict[\'sub_prefix\'], item[\'title\'])\n
+\t\tloop_dict[\'sub_prefix\'] = loop_dict[\'sub_prefix\'] + 1\n
+\telse:\n
+\t\tend_title = "(%s) %s"%(loop_dict[\'end_prefix\'],item[\'title\'])\n
+\t\tloop_dict[\'end_prefix\'] = chr(ord(loop_dict[\'end_prefix\'])+1)\n
+\t# update the total\n
+\tif \'less\' in item:\n
+\t\tloop_dict[\'total\'].append( \'-\'+getCell() )\n
+\t\tloop_dict[\'total2\'].append( \'-\'+getCell(2) )\n
+\t\tend_title = \'LESS: \'+end_title\n
+\telse:\n
+\t\tloop_dict[\'total\'].append( \'+\'+getCell() )\n
+\t\tloop_dict[\'total2\'].append( \'+\'+getCell(2) )\n
+\taddLine(item[\'t\'], end_title, loop_dict[\'level\'], inventory, value2 = inventory2, schedule = loop_dict[\'schedule_index\'])\n
+\taddScheduleForAccounts(local_accounts, less_local_accounts, \'minus\' in item, \'detailed_schedule\' in item)\n
+\tloop_dict[\'schedule_index\'] = chr(ord(loop_dict[\'schedule_index\'])+1)\n
+\n
+def do_sub(item):\n
+\taddLine(item[\'t\'],"%d. %s"%(loop_dict[\'sub_prefix\'],item[\'title\']),loop_dict[\'level\'])\n
+\tloop_dict[\'sub_prefix\'] = loop_dict[\'sub_prefix\'] + 1\n
+\tloop_dict[\'end_prefix\'] = \'a\'\n
+\tloop_dict[\'total\'] =  []\n
+\tloop_dict[\'total2\'] =  []\n
+\tloop_dict[\'level\'] =  loop_dict[\'level\'] + 1\n
+\tfor subitem in item[\'sections\']:\n
+\t\tparse_structure(subitem)\n
+\taddLine(\'minitotal\',\'\',loop_dict[\'level\'],formula=\'=\'+(\'\'.join(loop_dict[\'total\'])), formula2=\'=\'+(\'\'.join(loop_dict[\'total2\'])))\n
+\tloop_dict[\'bigtotal\'].extend(loop_dict[\'total\'])\n
+\tloop_dict[\'bigtotal2\'].extend(loop_dict[\'total2\'])\n
+\tloop_dict[\'level\'] =  loop_dict[\'level\'] - 1\n
+\n
+handlers = dict(sub = do_sub, section = do_section, end = do_end)\n
+\n
+def parse_structure(item):\n
+\thandlers[item[\'t\']](item)\n
+\n
+for item in structure:\n
+\tloop_dict[\'level\'] = 0\n
+\tparse_structure(item)\n
+#return \'\\n\'.join(result)\n
+return (result, loop_dict[\'schedules\'])\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_in/AccountingTransactionModule_getDataForBalanceSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>True</string>
+                            <string>STRIP_IF_EMPTY</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>result</string>
+                            <string>_getitem_</string>
+                            <string>GAP</string>
+                            <string>organisation_id</string>
+                            <string>dict</string>
+                            <string>ooo_struct</string>
+                            <string>getAccountsForGap</string>
+                            <string>getUniqueGapList</string>
+                            <string>getCell</string>
+                            <string>None</string>
+                            <string>addLine</string>
+                            <string>False</string>
+                            <string>loop_dict</string>
+                            <string>addScheduleForAccounts</string>
+                            <string>structure</string>
+                            <string>parse_structure</string>
+                            <string>do_section</string>
+                            <string>do_end</string>
+                            <string>do_sub</string>
+                            <string>handlers</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getDataForBalanceSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
