@@ -1998,8 +1998,10 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     selection = self.getSelection()
     if list_method is not None:
       method_path = getPath(self.getContext()) + '/' + self.getListMethodName()
-      list_url = '%s?selection_name=%s&selection_index=%s' % \
-                   (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex())
+      list_url = '%s?selection_name=%s' % (self.getUrl(), self.getRequestedSelectionName())
+      selection_index = self.getSelectionIndex()
+      if selection_index is not None:
+        list_url += '&selection_index=%s' % selection_index
       selection.edit(method_path = method_path, list_url = list_url)
       self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
 
