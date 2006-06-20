@@ -74,10 +74,12 @@ from ZODB.POSException import ConflictError\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
-uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+selected_uids = portal.portal_selections.updateSelectionCheckedUidList(\n
+                            selection_name,listbox_uid,uids)\n
+uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
-error = context.portal_selections.selectionHasChanged(md5_object_uid_list,uids)\n
+error = context.portal_selections.selectionHasChanged(md5_object_uid_list,\n
+                                                      uids)\n
 \n
 REQUEST=context.REQUEST\n
 qs = \'\'\n
@@ -118,12 +120,15 @@ elif uids is not None:\n
         qs = \'?portal_status_message=%s\' % message  \n
   else:\n
     try : \n
-      object_ids = \', \'.join([ x.getObject().getId() for x in context.portal_catalog(uid=uids)])\n
+      object_ids = \', \'.join([x.getObject().getId()\n
+                              for x in context.portal_catalog(uid=uids)])\n
       context.manage_delObjects(uids=uids, REQUEST=REQUEST)\n
       comment = N_(\'Deleted objects: ${object_ids}\',\n
                    mapping={\'object_ids\': object_ids})\n
-      # record object deletion in workflow history\n
-      context.getPortalObject().portal_workflow.doActionFor(\n
+      if \'edit_action\' in [x.get(\'id\', \'\') for x in\n
+                           context.portal_workflow.getActionsFor(context)] :\n
+        # record object deletion in workflow history\n
+        context.getPortalObject().portal_workflow.doActionFor(\n
                       context,\n
                       \'edit_action\',\n
                       comment=comment)\n
