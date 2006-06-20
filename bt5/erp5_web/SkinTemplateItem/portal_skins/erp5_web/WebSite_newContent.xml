@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+form_data = context.REQUEST.form\n
+context.log(\'WebSite_clone received REQUEST:\', form_data)\n
+\n
+# Here is the list of field name to ignore as property\n
+IGNORED_FORM_ID_LIST = [ # don\'t change id, else it would paste & setid in the same transaction.\n
+                         \'id\'\n
+                         # type of creation method\n
+                       , \'document_action_mode\'\n
+                         # input button pointer coordinates\n
+                       , \'x\', \'y\'\n
+                         # custom forms field ids\n
+                       , \'new_portal_type\', \'destination_section\'\n
+                       ]\n
+\n
+directory     = context.getParent()\n
+creation_mode = form_data[\'document_action_mode\']\n
+\n
+\n
+\n
+# Standard cloning method\n
+if creation_mode == \'clone\':\n
+  # TODO?\n
+  # if the document language hasn\'t changed and the version wasn\'t increased, change the copied document reference to "copy-of-%s"\n
+  # To avoid confusion (invisible published cloned document due to duplicate document references in a given section), always modify the document\n
+\n
+  # Copy and paste the object\n
+  directory    = context.getParent()\n
+  clipboard    = directory.manage_copyObjects(ids=[context.getId()])\n
+  paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
+  new_object   = directory[paste_result[0][\'new_id\']]\n
+\n
+  redirect_url = \'%s/%s/WebPage_view?editable_mode=1\' % (directory.WebSite_getUrl(), new_object.getId())\n
+\n
+\n
+# Kevin\'s easy clone & edit method\n
+elif creation_mode == \'clone_to\':\n
+  # Copy and paste the object\n
+  clipboard    = directory.manage_copyObjects(ids=[context.getId()])\n
+  paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
+  new_object   = directory[paste_result[0][\'new_id\']]\n
+\n
+  dest_section_url = form_data[\'destination_section\']\n
+\n
+  # Put the cloned document in the right section.\n
+  # Because there is no direct relationship between a web page and its\n
+  #   publication place, we need to randomly determine web page property\n
+  #   value that will match the publishing predicate of the destination\n
+  #   section.\n
+  website_id               = context.WebSite_getSiteValue().getRelativeUrl()\n
+  dest_section_absolut_url = \'%s/%s\' % (website_id, dest_section_url)\n
+  dest_section_object      = context.restrictedTraverse(dest_section_absolut_url)\n
+  criterion_list           = dest_section_object.getMembershipCriterionCategoryList()\n
+\n
+  # Choose a random criterion based on publication_section category\n
+  for criterion in criterion_list:\n
+    if criterion.startswith(\'publication_section/\'):\n
+      new_object.setPublicationSection(criterion[len(\'publication_section/\'):])\n
+      break\n
+\n
+  # Redirect to the edit page of the cloned document in the context of the destination section\n
+  redirect_url = \'%s/%s/%s/WebPage_view?editable_mode=1\' % ( directory.WebSite_getUrl()\n
+                                                           , dest_section_url\n
+                                                           , new_object.getId()\n
+                                                           )\n
+\n
+\n
+# Create a new object here\n
+else:\n
+  # Get the new object portal type\n
+  new_portal_type = context.REQUEST.form[\'new_portal_type\']\n
+  # Guess the new document module\n
+  portal       = context.getPortalObject()\n
+  module       = portal.getDefaultModule(portal_type=new_portal_type)\n
+  new_object   = module.newContent(portal_type = new_portal_type)\n
+  redirect_url = \'%s/%s/%s/view?editable_mode=1\' % (directory.WebSite_getUrl(), module.getId(), new_object.getId())\n
+\n
+\n
+# Clone properties to the new object\n
+for (key, val) in form_data.items():\n
+  if key not in IGNORED_FORM_ID_LIST and new_object.hasProperty(key):\n
+    context.log(\'WebSite_clone\', \'overwriting attribute "%s" to value "%s"\' % (key, val))\n
+    new_object.setProperty(key, val)\n
+\n
+\n
+return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_newContent</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>form_data</string>
+                            <string>IGNORED_FORM_ID_LIST</string>
+                            <string>directory</string>
+                            <string>_getitem_</string>
+                            <string>creation_mode</string>
+                            <string>clipboard</string>
+                            <string>paste_result</string>
+                            <string>new_object</string>
+                            <string>redirect_url</string>
+                            <string>dest_section_url</string>
+                            <string>website_id</string>
+                            <string>dest_section_absolut_url</string>
+                            <string>dest_section_object</string>
+                            <string>criterion_list</string>
+                            <string>_getiter_</string>
+                            <string>criterion</string>
+                            <string>len</string>
+                            <string>new_portal_type</string>
+                            <string>portal</string>
+                            <string>module</string>
+                            <string>key</string>
+                            <string>val</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_newContent</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Create New Content by Cloning or Other Methods (replace old WebSite_clone)</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
