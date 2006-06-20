@@ -44,7 +44,7 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
-    Membership source 
+    Membership source
     </div>
     </td>
     <td align="left" valign="top">
@@ -111,7 +111,7 @@
     </td>
     <td align="left" valign="top">
     <div class="form-element">
-    <input class="form-element" type="submit" name="submit" 
+    <input class="form-element" type="submit" name="submit"
      value=" Add " />
     </div>
     </td>
