@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if ref in (\'\', None):\n
+  return \'\'\n
+\n
+### Main function that compute the increased id\n
+def getCopyId(id):\n
+  # User ask a second copy of a copied object, so add a number in the prefix\n
+  if id.startswith(\'copy-of-\'):\n
+    return \'copy2-of-\' + id[8:]\n
+\n
+  # Return an increased "copyXXX-of-" prefix\n
+  if id.startswith(\'copy\'):\n
+    tmp_id = id[4:]\n
+    digit_prefix = 0\n
+    for i in range(len(tmp_id)):\n
+      if tmp_id[i].isdigit():\n
+        digit_prefix = (digit_prefix *10) + int(tmp_id[i])\n
+      else:\n
+        break\n
+    tmp_id = tmp_id[len(str(digit_prefix)):]\n
+    if tmp_id.startswith(\'-of-\'):\n
+      return \'copy%s-of-%s\' % (digit_prefix+1, tmp_id[4:])\n
+\n
+  # Add simple "copy-of" prefix\n
+  return \'copy-of-\' + id\n
+\n
+\n
+\n
+# Get a list of all references in webpage_module\n
+portal_object = context.getPortalObject()\n
+webpage_module = portal_object[\'web_page_module\']\n
+ref_list = map(lambda x: x.getReference(), webpage_module.objectValues())\n
+\n
+# Get an original and somehow unique reference\n
+new_ref = getCopyId(ref)\n
+while (new_ref in ref_list):\n
+  new_ref = getCopyId(new_ref)\n
+\n
+return new_ref\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getCopyOfReference</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>ref = None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>ref</string>
+                            <string>None</string>
+                            <string>getCopyId</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_object</string>
+                            <string>_getitem_</string>
+                            <string>webpage_module</string>
+                            <string>map</string>
+                            <string>ref_list</string>
+                            <string>new_ref</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_getCopyOfReference</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
