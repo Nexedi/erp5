@@ -96,8 +96,8 @@ class Message(Persistent):
       translation_service = getGlobalTranslationService()
     if self.domain is None or request is None or translation_service is None :
       # Map the translated string with given parameters
+      message = self.message
       if type(self.mapping) is type({}):
-        message = self.message
         if isinstance(message, unicode) :
           message = message.encode('utf8')
         message = Template(message).substitute(self.mapping)
