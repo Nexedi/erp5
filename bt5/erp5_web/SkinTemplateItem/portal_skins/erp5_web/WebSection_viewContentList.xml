@@ -83,16 +83,14 @@
                     <key> <string>content bottom</string> </key>
                     <value>
                       <list>
-                        <string>physical_subcontent_listbox</string>
+                        <string>dynamic_subcontent_listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>content center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -104,21 +102,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_id</string>
-                        <string>my_int_index</string>
-                        <string>my_visible</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_layout</string>
-                        <string>my_source_title_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -126,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_view</string> </value>
+            <value> <string>WebSection_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
