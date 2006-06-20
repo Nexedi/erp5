@@ -2035,22 +2035,22 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
                        list_action = self.getListActionUrl(),
                        selection_name = self.getSelectionName(),
                        field_id = self.getId(),
-                       field_title = Message(domain = ui_domain, message = self.getTitle()),
-                       record_number = Message(domain = ui_domain, message = '${number} record(s)',
-                                               mapping = dict(number = str(self.total_size))),
-                       item_number = Message(domain = ui_domain, message = '${number} item(s) selected',
-                                             mapping = dict(number = str(len(self.getCheckedUidList())))),
-                       flat_list_title = Message(domain = ui_domain, message = 'Flat List'),
-                       report_tree_title = Message(domain = ui_domain, message = 'Report Tree'),
-                       domain_tree_title = Message(domain = ui_domain, message = 'Domain Tree'),
-                       change_page_title = Message(domain = ui_domain, message = 'Change Page'),
-                       previous_page_title = Message(domain = ui_domain, message = 'Previous Page'),
-                       next_page_title = Message(domain = ui_domain, message = 'Next Page'),
-                       check_all_title = Message(domain = ui_domain, message = 'Check All'),
-                       uncheck_all_title = Message(domain = ui_domain, message = 'Uncheck All'),
-                       ascending_display_title = Message(domain = ui_domain, message = 'Ascending Display'),
-                       descending_display_title = Message(domain = ui_domain, message = 'Descending Display'),
-                       action_title = Message(domain = ui_domain, message = 'Action'),
+                       field_title = unicode(Message(domain = ui_domain, message = self.getTitle())),
+                       record_number = unicode(Message(domain = ui_domain, message = '${number} record(s)',
+                                                       mapping = dict(number = str(self.total_size)))),
+                       item_number = unicode(Message(domain = ui_domain, message = '${number} item(s) selected',
+                                                     mapping = dict(number = str(len(self.getCheckedUidList()))))),
+                       flat_list_title = unicode(Message(domain = ui_domain, message = 'Flat List')),
+                       report_tree_title = unicode(Message(domain = ui_domain, message = 'Report Tree')),
+                       domain_tree_title = unicode(Message(domain = ui_domain, message = 'Domain Tree')),
+                       change_page_title = unicode(Message(domain = ui_domain, message = 'Change Page')),
+                       previous_page_title = unicode(Message(domain = ui_domain, message = 'Previous Page')),
+                       next_page_title = unicode(Message(domain = ui_domain, message = 'Next Page')),
+                       check_all_title = unicode(Message(domain = ui_domain, message = 'Check All')),
+                       uncheck_all_title = unicode(Message(domain = ui_domain, message = 'Uncheck All')),
+                       ascending_display_title = unicode(Message(domain = ui_domain, message = 'Ascending Display')),
+                       descending_display_title = unicode(Message(domain = ui_domain, message = 'Descending Display')),
+                       action_title = unicode(Message(domain = ui_domain, message = 'Action')),
                        context_url = self.getContext().getUrl())
 
     # This is the start of HTML. Embed a selection name.
@@ -2084,7 +2084,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
         html_list.append("""\
      <option %s value="%s">%s</option>
-""" % (selected, c[0], Message(domain = ui_domain, message = c[1])))
+""" % (selected, c[0], unicode(Message(domain = ui_domain, message = c[1]))))
 
       html_list.append("""\
     </select>
@@ -2186,8 +2186,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       html_list.append("""\
       <option %s value="%d">%s</option>
 """ % (selected, p * self.getMaxLineNumber(),
-       Message(domain = ui_domain, message = '${page} of ${total_pages}',
-               mapping = dict(page = p + 1, total_pages = self.total_pages))))
+       unicode(Message(domain = ui_domain, message = '${page} of ${total_pages}',
+                       mapping = dict(page = p + 1, total_pages = self.total_pages)))))
 
     html_list.append("""\
     </select>
@@ -2260,7 +2260,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       if c[0] in sort_column_id_set:
         html_list.append("""\
 <a href="portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s">%s</a>\
-""" % (self.getSelectionName(), c[0], Message(domain = ui_domain, message = c[1])))
+""" % (self.getSelectionName(), c[0], unicode(Message(domain = ui_domain, message = c[1]))))
 
         try:
           if sort_dict[c[0]] == 'ascending':
@@ -2274,7 +2274,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
         except KeyError:
           pass
       else:
-        html_list.append('%s' % (Message(domain = ui_domain, message = c[1]),))
+        html_list.append('%s' % (unicode(Message(domain = ui_domain, message = c[1]),)))
 
       html_list.append("""\
    </td>
@@ -2317,7 +2317,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 &nbsp;-&nbsp;<a href="%s?selection_name=%s&selection_index=%s&is_report_opened:int=%d">%s</a>\
 """ % (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex(),
        not is_report_opened,
-       Message(domain = ui_domain, message = is_report_opened and 'Hide' or 'Show')))
+       unicode(Message(domain = ui_domain, message = is_report_opened and 'Hide' or 'Show'))))
 
         html_list.append("""\
    </td>
@@ -2395,7 +2395,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       if self.isReportTreeMode():
         # Get the title or the id of the context.
         if line.getContext() is not None:
-          section_name = str(Message(domain = context_domain, message = line.getContext().getTitleOrId()))
+          section_name = unicode(Message(domain = context_domain, message = line.getContext().getTitleOrId()))
         else:
           section_name = ''
 
