@@ -90,6 +90,7 @@ ZopeTestCase.installProduct('ERP5Form') # Not required by ERP5Type but required 
 ZopeTestCase.installProduct('ERP5SyncML')
 ZopeTestCase.installProduct('CMFCategory')
 ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
+ZopeTestCase.installProduct('ZMySQLDDA')
 
 # Install everything else which looks like related to ERP5
 from OFS.Application import get_products
