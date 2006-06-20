@@ -86,24 +86,24 @@ class Message(Persistent):
     self.mapping = o.mapping
     self.default = o.default
 
-  def __str__(self):
+  def translate(self):
     """
-    Return the translated message
+    Return the translated message. If the original is a string object,
+    the return value is a string object. If it is a unicode object,
+    the return value is a unicode object.
     """
     request = get_request()
     if request is not None:
       context = request['PARENTS'][0]
       translation_service = getGlobalTranslationService()
+
+    message = self.message
     if self.domain is None or request is None or translation_service is None :
       # Map the translated string with given parameters
-      message = self.message
       if type(self.mapping) is type({}):
         if isinstance(message, unicode) :
-          message = message.encode('utf8')
+          message = message.encode('utf-8')
         message = Template(message).substitute(self.mapping)
-        if not isinstance(message, unicode):
-          message = message.decode('utf8')
-      return message
     else:
       translated_message = translation_service.translate(
                                              self.domain,
@@ -112,9 +112,32 @@ class Message(Persistent):
                                              context=context,
                                              default=self.default)
       if translated_message is not None:
-        return translated_message.encode('utf8')
-      else:
-        return self.message
+        message = translated_message
+
+    if isinstance(self.message, str) and isinstance(message, unicode):
+      message = message.encode('utf-8')
+    elif isinstance(self.message, unicode) and isinstance(message, str):
+      message = message.decode('utf-8')
+
+    return message
+
+  def __str__(self):
+    """
+    Return the translated message as a string object.
+    """
+    message = self.translate()
+    if isinstance(message, unicode):
+      message = message.encode('utf-8')
+    return message
+
+  def __unicode__(self):
+    """
+    Return the translated message as a unicode object.
+    """
+    message = self.translate()
+    if isinstance(message, str):
+      message = message.decode('utf-8')
+    return message
 
 InitializeClass(Message)
 allow_class(Message)
