@@ -36,7 +36,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
-from zLOG import LOG
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -106,7 +105,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
            , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-           , 'erp5_banking_cash'
+           , 'erp5_banking_cash' # erp5_banking_cash contains all method for money deposit rendering
            )
 
   def getMoneyDepositRenderingModule(self):
@@ -138,13 +137,13 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+                             'variation_value': ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
                              'quantity': self.quantity_10000}
 
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.piece_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+                             'variation_value': ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
                              'quantity': self.quantity_200}
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
@@ -204,13 +203,18 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
+  def stepCheckBaobabDestination(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check destination vault equal site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies
+    """
+    self.assertEqual(self.money_deposit_rendering.getBaobabDestination(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
+
   def stepCreateMoneyDepositRendering(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a money deposit rendering document and check it
     """
     # Money deposit rendering has auxiliaire for source, gros_versement for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
 
-    LOG('money_deposit_rendering_module.showDict()',0,self.money_deposit_rendering_module.showDict())
     self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(id='money_deposit_rendering_1', portal_type='Money Deposit Rendering', source_value=self.gros_versement, source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
@@ -233,7 +237,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     """
     # create the money deposit rendering line
     self.addCashLineToDelivery(self.money_deposit_rendering, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_10000)
     # execute tic
     self.stepTic()
@@ -254,7 +258,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # now check for each variation (years 1992 and 2003)
     for variation in self.variation_list:
       # get the delivery cell
-      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/valid')
+      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/not_defined')
       # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       # check the banknote of the cell is banknote of 10000
@@ -291,7 +295,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     """
     # create the line
     self.addCashLineToDelivery(self.money_deposit_rendering, 'valid_line_2', 'Cash Delivery Line', self.piece_200,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_200)
     # execute tic
     self.stepTic()
@@ -311,7 +315,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/valid')
+      cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/not_defined')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       if cell.getId() == 'movement_0_0_0':
@@ -332,7 +336,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
     # here create a line with 24 (11+13) banknotes of 500 although the vault auxiliaire has no banknote of 5000
     self.addCashLineToDelivery(self.money_deposit_rendering, 'invalid_line', 'Cash Delivery Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_5000)
     # execute tic
     self.stepTic()
@@ -536,6 +540,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckSource CheckDestination ' \
                     + 'CreateMoneyDepositRendering ' \
+                    + 'Tic CheckBaobabDestination ' \
                     + 'CreateValidLine1 CheckSubTotal ' \
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckSource CheckDestination ' \

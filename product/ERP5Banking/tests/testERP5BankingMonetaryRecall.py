@@ -105,7 +105,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
            , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-	         , 'erp5_banking_cash'
+	         , 'erp5_banking_cash' # erp5_banking_cash contains all method for monetary recall
            )
 
   def getMonetaryRecallModule(self):
@@ -236,7 +236,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the monetary recall line 1 with banknotes of 10000 and check it has been well created
     """
     # create the monetary recall line
-    self.addCashLineToDelivery(self.monetary_recall, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
+    self.addCashLineToDelivery(self.monetary_recall, 'valid_line_1', 'Monetary Recall Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_10000)
     # execute tic
@@ -246,7 +246,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the monetary recall line
     self.valid_line_1 = getattr(self.monetary_recall, 'valid_line_1')
     # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Monetary Recall Line')
     # check the resource is banknotes of 10000
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     # chek the value of the banknote
@@ -260,7 +260,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
       # get the delivery cell
       cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/cancelled')
       # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Monetary Recall Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is cash
@@ -294,7 +294,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the monetary recall line 2 wiht coins of 200 and check it has been well created
     """
     # create the line
-    self.addCashLineToDelivery(self.monetary_recall, 'valid_line_2', 'Cash Delivery Line', self.piece_200,
+    self.addCashLineToDelivery(self.monetary_recall, 'valid_line_2', 'Monetary Recall Line', self.piece_200,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_200)
     # execute tic
@@ -304,7 +304,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the second monetary recall line
     self.valid_line_2 = getattr(self.monetary_recall, 'valid_line_2')
     # check portal types
-    self.assertEqual(self.valid_line_2.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_2.getPortalType(), 'Monetary Recall Line')
     # check the resource is coin of 200
     self.assertEqual(self.valid_line_2.getResourceValue(), self.piece_200)
     # check the value of coin
@@ -317,7 +317,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
       # get the delivery  cell
       cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/cancelled')
       # check the portal type
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Monetary Recall Cell')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)
@@ -335,7 +335,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
     # here create a line with 24 (11+13) banknotes of 500 although the vault cash has no banknote of 5000
-    self.addCashLineToDelivery(self.monetary_recall, 'invalid_line', 'Cash Delivery Line', self.billet_5000,
+    self.addCashLineToDelivery(self.monetary_recall, 'invalid_line', 'Monetary Recall Line', self.billet_5000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_5000)
     # execute tic
@@ -369,6 +369,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
+    #import pdb;pdb.set_trace()
     self.assertEqual('Insufficient Balance.', "%s" %(msg,))
 
 
@@ -484,6 +485,18 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
+  def stepCheckCashDeliveryLine(self, sequence=None, sequence_list=None):
+    """
+    Check the cash delivery line
+    """
+    variation = 'variation/2003'
+    # get the delivery cell
+    cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/cancelled')
+    # check the destination variation text is redefine on destination
+    #import pdb;pdb.set_trace()
+    self.assertEqual(cell.getBaobabDestinationVariationText(), 'cash_status/retired\nemission_letter/p\nvariation/2003')
+
+
   ##################################
   ##  Tests
   ##################################
@@ -507,7 +520,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'DeliverMonetaryRecall ' \
-                    + 'CheckSourceDebit CheckDestinationCredit '
+                    + 'CheckSourceDebit CheckDestinationCredit CheckCashDeliveryLine '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
