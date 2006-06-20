@@ -93,6 +93,12 @@ return filter(lambda x: x.isVisible(), section_list)\n
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getMainSectionList</string> </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
