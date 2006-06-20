@@ -1,0 +1,420 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>OFS.Image</string>
+          <string>File</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>FckHTTPCache</string> </value>
+        </item>
+        <item>
+            <key> <string>_Change_cache_settings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_permissions_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts47966145.85</string> </value>
+        </item>
+        <item>
+            <key> <string>_FTP_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_WebDAV_Locks_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_properties_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Take_ownership_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Undo_changes_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_management_screens_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Lock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Unlock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckconfig.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2005 Frederico Caldeira Knabben\n
+ *\n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ *    http://www.opensource.org/licenses/lgpl-license.php\n
+ *\n
+ * For further information visit:\n
+ *    http://www.fckeditor.net/\n
+ *\n
+ * "Support Open Source software. What about a donation today?"\n
+ *\n
+ * File Name: fckconfig.js\n
+ *  Editor configuration settings.\n
+ *  See the documentation for more info.\n
+ *\n
+ * File Authors:\n
+ *    Frederico Caldeira Knabben (fredck@fckeditor.net)\n
+ *\n
+ *  Zope + Plone2 adaptation : Jean-mat Grimaldi - jean-mat@macadames.com\n
+ */\n
+\n
+\n
+\n
+// basepath example for other Zope Implementation\n
+// FCKConfig.BasePath = document.location.protocol + \'//\' + document.location.host + document.location.pathname.substring(0,document.location.pathname.lastIndexOf(\'/\')+1) ;\n
+\n
+FCKConfig.CustomConfigurationsPath = \'\' ;\n
+\n
+// Style File to be used in the editable area for Plone (plone.css or ploneCustom.css ...)\n
+// FCKConfig.EditorAreaCSS = FCKConfig.BasePath + \'css/fck_editorarea.css\' ;\n
+FCKConfig.EditorAreaCSS = FCKConfig.BasePath + \'plone.css\' ;\n
+\n
+FCKConfig.DocType = \'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\' ;\n
+\n
+FCKConfig.BaseHref = \'\' ;\n
+\n
+// don\'t use true with plone\n
+FCKConfig.FullPage = false ;\n
+\n
+FCKConfig.Debug = false ;\n
+FCKConfig.AllowQueryStringDebug = true ;\n
+\n
+// Set the path for the skin files to use.\n
+// Change for Zope CMF because \'skins\'is a folder name reserved\n
+FCKConfig.SkinPath = FCKConfig.BasePath + \'fck_skins/default/\' ;\n
+\n
+FCKConfig.PluginsPath = FCKConfig.BasePath + \'plugins/\' ;\n
+\n
+// FCKConfig.Plugins.Add( \'placeholder\', \'en,it\' ) ;\n
+\n
+// You can protect specific tags in source like script tags\n
+// using a reg exp\n
+FCKConfig.ProtectedSource.Add( /<script[\\s\\S]*?\\/script>/gi ) ; // <SCRIPT> tags.\n
+// FCKConfig.ProtectedSource.Add( /<\\?[\\s\\S]*?\\?>/g ) ; // PHP style server side code <?...?>\n
+\n
+FCKConfig.AutoDetectLanguage  = true ;\n
+FCKConfig.DefaultLanguage   = \'en\' ;\n
+FCKConfig.ContentLangDirection  = \'ltr\' ;\n
+\n
+FCKConfig.EnableXHTML   = true ;  // Unsupported: Do not change.\n
+FCKConfig.EnableSourceXHTML = true ;  // Unsupported: Do not change.\n
+\n
+FCKConfig.ProcessHTMLEntities = true ;\n
+FCKConfig.IncludeLatinEntities  = false ;\n
+FCKConfig.IncludeGreekEntities  = true ;\n
+\n
+FCKConfig.FillEmptyBlocks = true ;\n
+\n
+FCKConfig.FormatSource    = true ;\n
+FCKConfig.FormatOutput    = true ;\n
+FCKConfig.FormatIndentator  = \'    \' ;\n
+\n
+FCKConfig.ForceStrongEm = true ;\n
+FCKConfig.GeckoUseSPAN  = true ;\n
+FCKConfig.StartupFocus  = false ;\n
+FCKConfig.ForcePasteAsPlainText = false ;\n
+FCKConfig.AutoDetectPasteFromWord = true ;  // IE only.\n
+FCKConfig.ForceSimpleAmpersand  = false ;\n
+FCKConfig.TabSpaces   = 0 ;\n
+FCKConfig.ShowBorders = true ;\n
+FCKConfig.UseBROnCarriageReturn = false ;\n
+FCKConfig.ToolbarStartExpanded  = true ;\n
+FCKConfig.ToolbarCanCollapse  = true ;\n
+FCKConfig.IEForceVScroll = false ;\n
+FCKConfig.IgnoreEmptyParagraphValue = true ;\n
+FCKConfig.PreserveSessionOnFileBrowser = false ;\n
+FCKConfig.FloatingPanelsZIndex = 10000 ;\n
+\n
+FCKConfig.ToolbarSets["Default"] = [\n
+  [\'Source\',\'DocProps\',\'-\',\'Save\',\'NewPage\',\'Preview\',\'-\',\'Templates\'],\n
+  [\'Cut\',\'Copy\',\'Paste\',\'PasteText\',\'PasteWord\',\'-\',\'Print\',\'SpellCheck\'],\n
+  [\'Undo\',\'Redo\',\'-\',\'Find\',\'Replace\',\'-\',\'SelectAll\',\'RemoveFormat\'],\n
+  [\'Bold\',\'Italic\',\'Underline\',\'StrikeThrough\',\'-\',\'Subscript\',\'Superscript\'],\n
+  [\'OrderedList\',\'UnorderedList\',\'-\',\'Outdent\',\'Indent\'],\n
+  [\'JustifyLeft\',\'JustifyCenter\',\'JustifyRight\',\'JustifyFull\'],\n
+  [\'Link\',\'Unlink\',\'Anchor\'],\n
+  [\'Image\',\'Flash\',\'Table\',\'Rule\',\'Smiley\',\'SpecialChar\',\'PageBreak\',\'UniversalKey\'],\n
+  [\'Form\',\'Checkbox\',\'Radio\',\'TextField\',\'Textarea\',\'Select\',\'Button\',\'ImageButton\',\'HiddenField\'],\n
+  \'/\',\n
+  [\'Style\',\'FontFormat\',\'FontName\',\'FontSize\'],\n
+  [\'TextColor\',\'BGColor\'],\n
+  [\'About\']\n
+] ;\n
+\n
+\n
+// toolbars for plone\n
+// use SmallZopeCmf for small textarea form input (example : a rich description)\n
+\n
+FCKConfig.ToolbarSets["ZopeCmf"] = [\n
+  [\'Source\',\'DocProps\',\'-\',\'Preview\',\'-\',\'Templates\'],\n
+  [\'Cut\',\'Copy\',\'Paste\',\'PasteText\',\'PasteWord\',\'-\',\'Print\',\'SpellCheck\'],\n
+  [\'Undo\',\'Redo\',\'-\',\'Find\',\'Replace\',\'-\',\'SelectAll\',\'RemoveFormat\'],\n
+  [\'Bold\',\'Italic\',\'Underline\',\'StrikeThrough\',\'-\',\'Subscript\',\'Superscript\'],\n
+  [\'OrderedList\',\'UnorderedList\',\'-\',\'Outdent\',\'Indent\'],\n
+  [\'JustifyLeft\',\'JustifyCenter\',\'JustifyRight\',\'JustifyFull\'],\n
+  [\'Link\',\'Unlink\',\'Anchor\'],\n
+  [\'Image\',\'Flash\',\'Table\',\'Rule\',\'SpecialChar\',\'PageBreak\',\'Smiley\',\'UniversalKey\'],\n
+  [\'Form\',\'Checkbox\',\'Radio\',\'TextField\',\'Textarea\',\'Select\',\'Button\',\'ImageButton\',\'HiddenField\'],\n
+  \'/\',\n
+  [\'Style\',\'FontFormat\',\'FontName\',\'FontSize\'],\n
+  [\'TextColor\',\'BGColor\'],\n
+  [\'About\']\n
+] ;\n
+\n
+FCKConfig.ToolbarSets["SmallZopeCmf"] = [\n
+  [\'Source\',\'-\',\'Preview\'],\n
+  [\'Cut\',\'Copy\',\'Paste\',\'PasteText\',\'PasteWord\'],\n
+  [\'Undo\',\'Redo\',\'SelectAll\',\'RemoveFormat\'],\n
+  [\'Bold\',\'Italic\',\'Underline\',\'StrikeThrough\',\'-\',\'Subscript\',\'Superscript\'],\n
+  [\'OrderedList\',\'UnorderedList\',\'-\',\'Outdent\',\'Indent\'],\n
+  [\'JustifyLeft\',\'JustifyCenter\',\'JustifyRight\',\'JustifyFull\'],\n
+  [\'Link\',\'Unlink\'],\n
+  [\'Image\',\'Flash\',\'Table\',\'Rule\',\'SpecialChar\',\'Smiley\',\'UniversalKey\'],\n
+  [\'Style\',\'FontFormat\',\'FontName\',\'FontSize\'],\n
+  [\'TextColor\',\'BGColor\'],\n
+  [\'About\']\n
+] ;\n
+\n
+\n
+\n
+FCKConfig.ToolbarSets["Basic"] = [\n
+  [\'Bold\',\'Italic\',\'-\',\'OrderedList\',\'UnorderedList\',\'-\',\'Link\',\'Unlink\',\'-\',\'About\']\n
+] ;\n
+\n
+FCKConfig.ToolbarSets["ERP5WebZopeCmf"] = [\n
+  [\'Source\',\'-\',\'Templates\'],\n
+  [\'Cut\',\'Copy\',\'Paste\',\'PasteText\',\'PasteWord\',\'-\',\'SpellCheck\'],\n
+  [\'Undo\',\'Redo\',\'-\',\'Find\',\'Replace\',\'-\',\'SelectAll\',\'RemoveFormat\'],\n
+  [\'Bold\',\'Italic\',\'Underline\',\'StrikeThrough\',\'-\',\'Subscript\',\'Superscript\'],\n
+  [\'OrderedList\',\'UnorderedList\',\'-\',\'Outdent\',\'Indent\'],\n
+  [\'JustifyLeft\',\'JustifyCenter\',\'JustifyRight\',\'JustifyFull\'],\n
+  [\'Link\',\'Unlink\',\'Anchor\'],\n
+  [\'Image\',\'Table\',\'Rule\',\'SpecialChar\',\'UniversalKey\'],\n
+  [\'TextColor\',\'BGColor\'],\n
+  \'/\',\n
+  [\'Style\',\'FontFormat\',\'FontName\',\'FontSize\'],\n
+];\n
+\n
+\n
+FCKConfig.ContextMenu = [\'Generic\',\'Link\',\'Anchor\',\'Image\',\'Flash\',\'Select\',\'Textarea\',\'Checkbox\',\'Radio\',\'TextField\',\'HiddenField\',\'ImageButton\',\'Button\',\'BulletedList\',\'NumberedList\',\'TableCell\',\'Table\',\'Form\'] ;\n
+\n
+FCKConfig.FontColors = \'000000,993300,333300,003300,003366,000080,333399,333333,800000,FF6600,808000,808080,008080,0000FF,666699,808080,FF0000,FF9900,99CC00,339966,33CCCC,3366FF,800080,999999,FF00FF,FFCC00,FFFF00,00FF00,00FFFF,00CCFF,993366,C0C0C0,FF99CC,FFCC99,FFFF99,CCFFCC,CCFFFF,99CCFF,CC99FF,FFFFFF\' ;\n
+\n
+FCKConfig.FontNames   = \'Arial, Geneva, Helvetica, Helv, sans-serif;Verdana, Arial, Helvetica, sans-serif;Tahoma, Arial, Helvetica, sans-serif;Trebuchet MS, Arial, Helvetica, sans-serif;Comic Sans MS, Arial, Helvetica, sans-serif;Garamond, Times New Roman, Times, Serif;Times New Roman, Times, Roman, Serif;Courier New, Courier;Letter Gothic, LetterGothic, Courier New, Courier;Lucida Console, Courier New, Courier\' ;\n
+FCKConfig.FontSizes   = \'1/xx-small;2/x-small;3/small;4/medium;5/large;6/x-large;7/xx-large\' ;\n
+FCKConfig.FontFormats = \'p;div;pre;address;h1;h2;h3;h4;h5;h6\' ;\n
+\n
+FCKConfig.StylesXmlPath   = FCKConfig.EditorPath + \'fckstyles.xml\' ;\n
+FCKConfig.TemplatesXmlPath  = FCKConfig.EditorPath + \'fcktemplates.xml\' ;\n
+\n
+FCKConfig.SpellChecker      = \'ieSpell\' ; // \'ieSpell\' | \'SpellerPages\'\n
+FCKConfig.IeSpellDownloadUrl  = \'http://www.iespell.com/rel/ieSpellSetup211325.exe\' ;\n
+\n
+FCKConfig.MaxUndoLevels = 15 ;\n
+\n
+FCKConfig.DisableImageHandles = false ;\n
+FCKConfig.DisableTableHandles = false ;\n
+\n
+FCKConfig.LinkDlgHideTarget   = false ;\n
+FCKConfig.LinkDlgHideAdvanced = false ;\n
+\n
+FCKConfig.ImageDlgHideLink    = false ;\n
+FCKConfig.ImageDlgHideAdvanced  = false ;\n
+\n
+FCKConfig.FlashDlgHideAdvanced  = false ;\n
+\n
+FCKConfig.LinkBrowser = true ;\n
+// simple dtml-tree browser compatible with all zope cms\n
+// Advanced browser capabilities for Plone is set through plone control panel\n
+// or you can change it here (example : uncomment 3rd next line for CPS connector)\n
+FCKConfig.LinkBrowserURL = FCKConfig.BasePath + "fck_browse_files.html" ;\n
+//FCKConfig.LinkBrowserURL = "/editor/filemanager/browser/zope/browser.html?Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=" + FCKConfig.BasePath ;\n
+//FCKConfig.LinkBrowserURL = "/editor/filemanager/browser/zope/browser.html?Connector=connectors/connectorCPS&ServerPath=/&CurrentPath=" + FCKConfig.BasePath ;\n
+FCKConfig.LinkBrowserWindowWidth  = FCKConfig.ScreenWidth * 0.7 ; // 70%\n
+FCKConfig.LinkBrowserWindowHeight = FCKConfig.ScreenHeight * 0.7 ;// 70%\n
+\n
+FCKConfig.ImageBrowser = true ;\n
+FCKConfig.ImageBrowserURL = FCKConfig.BasePath + "fck_browse_images.html" ;\n
+//FCKConfig.ImageBrowserURL = "/editor/filemanager/browser/zope/browser.html?Type=Image&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=" + FCKConfig.BasePath ;\n
+//FCKConfig.ImageBrowserURL = "/editor/filemanager/browser/zope/browser.html?Type=Image&Connector=connectors/connectorCPS&ServerPath=/&CurrentPath=" + FCKConfig.BasePath ;\n
+FCKConfig.ImageBrowserWindowWidth  = FCKConfig.ScreenWidth * 0.7 ;  // 70% ;\n
+FCKConfig.ImageBrowserWindowHeight = FCKConfig.ScreenHeight * 0.7 ; // 70% ;\n
+\n
+FCKConfig.FlashBrowser = true ;\n
+FCKConfig.FlashBrowserURL = FCKConfig.BasePath + "fck_browse_files.html" ;\n
+// FCKConfig.FlashBrowserURL = "/editor/filemanager/browser/zope/browser.html?Type=Flash&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=" + FCKConfig.BasePath ;\n
+// FCKConfig.FlashBrowserURL = "/editor/filemanager/browser/zope/browser.html?Type=Flash&Connector=connectors/connectorCPS&ServerPath=/&CurrentPath=" + FCKConfig.BasePath ;\n
+FCKConfig.FlashBrowserWindowWidth  = FCKConfig.ScreenWidth * 0.7 ;  //70% ;\n
+FCKConfig.FlashBrowserWindowHeight = FCKConfig.ScreenHeight * 0.7 ; //70% ;\n
+\n
+// rapid upload activation\n
+// called by fckeditor_wysiwyg_support for Plone\n
+\n
+FCKConfig.LinkUpload = false ;\n
+FCKConfig.LinkUploadAllowedExtensions = "" ;      // empty for all\n
+FCKConfig.LinkUploadDeniedExtensions  = ".(php|php3|php5|phtml|asp|aspx|ascx|jsp|cfm|cfc|pl|bat|exe|dll|reg|cgi)$" ;  // empty for no one\n
+\n
+FCKConfig.ImageUpload = false ;\n
+FCKConfig.ImageUploadAllowedExtensions  = ".(jpg|gif|jpeg|png)$" ;    // empty for all\n
+FCKConfig.ImageUploadDeniedExtensions = "" ;              // empty for no one\n
+\n
+FCKConfig.FlashUpload = false ;\n
+FCKConfig.FlashUploadAllowedExtensions  = ".(swf|fla)$" ;   // empty for all\n
+FCKConfig.FlashUploadDeniedExtensions = "" ;          // empty for no one\n
+\n
+FCKConfig.SmileyPath  = FCKConfig.BasePath + \'images/smiley/msn/\' ;\n
+FCKConfig.SmileyImages  = [\'regular_smile.gif\',\'sad_smile.gif\',\'wink_smile.gif\',\'teeth_smile.gif\',\'confused_smile.gif\',\'tounge_smile.gif\',\'embaressed_smile.gif\',\'omg_smile.gif\',\'whatchutalkingabout_smile.gif\',\'angry_smile.gif\',\'angel_smile.gif\',\'shades_smile.gif\',\'devil_smile.gif\',\'cry_smile.gif\',\'lightbulb.gif\',\'thumbs_down.gif\',\'thumbs_up.gif\',\'heart.gif\',\'broken_heart.gif\',\'kiss.gif\',\'envelope.gif\'] ;\n
+FCKConfig.SmileyColumns = 8 ;\n
+FCKConfig.SmileyWindowWidth   = 320 ;\n
+FCKConfig.SmileyWindowHeight  = 240 ;\n
+\n
+if( window.console ) window.console.log( \'Config is loaded!\' ) ;  // @Packager.Compactor.RemoveLine\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>11102</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
