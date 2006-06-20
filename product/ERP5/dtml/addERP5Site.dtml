@@ -9,178 +9,88 @@
 </dtml-if>
 </dtml-let>
 
+<style type="text/css">
+input, select, textarea {
+ margin-left: .5em;
+}
+fieldset {
+ margin: 1em 0;
+ padding: .3em 1em;
+ border: 1px solid;
+}
+legend {
+ padding: .2em .5em;
+}
+fieldset div {
+ clear: both;
+ margin: .1em 0;
+ position: relative;
+}
+label {
+ margin: 0;
+ display: block;
+ width: 13em;
+ text-align: right;
+ float: left;
+}
+</style>
+
 <form action="manage_addERP5Site" method="POST">
-<table cellspacing="0" cellpadding="2" border="0">
-  <tr>
-    <td align="left" valign="top" colspan="2">
-    <div class="form-help">
-    Enter an ID and click the button below to create a new ERP5 site.
-    </div>
-    </td>
-  </tr>
 
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Id
+  <fieldset>
+    <legend class="form-title">ERP5 Site Properties</legend>
+    <div>
+      <label class="form-label" for="id">ID</label>
+      <input class="form-element" type="text" name="id" id="id" size="40" value="erp5"/>
     </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="id" size="40" value="erp5" />
-    </td>
-  </tr>
+    <div>
+      <label class="form-label" for="title">Title</label>
+      <input class="form-element" type="text" id="title" name="title" size="40" value="ERP5"/>
+    </div>
+    <div>
+      <label class="form-label" for="description">Description</label>
+      <textarea class="form-element" name="description" id="description" cols="60" rows="4"></textarea>
+    </div>
+    <br/>
+  </fieldset>
 
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Title
-    </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="title" size="40" value="ERP5" />
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Membership source
-    </div>
-    </td>
-    <td align="left" valign="top">
-      <select name="create_userfolder" size="1" >
-        <option value="1">Create a new user folder in the portal</option>
+  <fieldset>
+    <legend class="form-title">User Management</legend>
+    <div>
+      <label class="form-label" for="create_userfolder">Membership source</label>
+      <select class="form-element" id="create_userfolder" name="create_userfolder" size="1">
+        <option value="1">Create a new user folder in the portal (default)</option>
         <option value="0">I have an existing user folder and want to use it instead</option>
-      </selection>
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Enable Portal Activities
-    </div>
-    </td>
-    <td align="left" valign="top">
-      <select name="create_activities" size="1" >
-        <option selected="selected" value="1">I know how to use it, and I want it</option>
-        <option value="0">I'm new to ERP5, so I should use it later</option>
       </select>
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Description
     </div>
-    </td>
-    <td align="left" valign="top">
-    <textarea name="description" cols="60" rows="10"
-     style="width: 100%"></textarea>
-    </td>
-  </tr>
+    <br/>
+  </fieldset>
 
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    ERP5 Database Connection Type
+  <fieldset>
+    <legend class="form-title">ERP5/MySQL connectivity (connection strings)</legend>
+    <div>
+      <label class="form-label" for="erp5_sql_connection_string">ERP5 Database</label>
+      <input class="form-element" name="erp5_sql_connection_string" id="erp5_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
-    </td>
-    <td align="left" valign="top">
-    <select name="erp5_sql_connection_type">
-      <option value="Z MySQL Database Connection" selected>Z MySQL Database Connection</option>
-    </select>
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    ERP5 Database Connection String
+    <div>
+      <label class="form-label" for="erp5_sql_deferred_connection_string">ERP5 Deferred Database</label>
+      <input class="form-element" name="erp5_sql_deferred_connection_string" id="erp5_sql_deferred_connection_string" type="text" size="40" value="test test"/>
     </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="erp5_sql_connection_string" size="40" value="test test" />
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    CMF Activity Database Connection Type
+    <div>
+      <label class="form-label" for="cmf_activity_sql_connection_string">CMF Activity Database</label>
+      <input class="form-element" name="cmf_activity_sql_connection_string" id="cmf_activity_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
-    </td>
-    <td align="left" valign="top">
-    <select name="cmf_activity_sql_connection_type">
-      <option value="Z MySQL Database Connection" selected>Z MySQL Database Connection</option>
-    </select>
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    CMF Activity Database Connection String
+    <div>
+      <p>The connection string used for Z MySQL Database Connection are of the form:</p>
+      <blockquote><code>database[@host[:port]] [user [password [unix_socket]]]</code></blockquote>
     </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="cmf_activity_sql_connection_string" size="40" value="test test" />
-    </td>
-  </tr>
+    <br/>
+  </fieldset>
 
-<!-- This may be used in the future.
+  <input style="float:right" class="form-element" type="submit" name="submit" value="Create a new ERP5 Site instance"/>
 
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Portal administrator name
-    </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="email_from_name" size="40"
-     value="Portal Administrator" />
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Portal administrator e-mail address
-    </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="email_from_address" size="40"
-     value="postmaster@localhost"/>
-    </td>
-  </tr>
-
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label"><label for="cb_valemail">
-    Validate e-mail addresses
-    </label></div>
-    </td>
-    <td align="left" valign="top">
-    <input type="checkbox" name="validate_email" value="1" id="cb_valemail" />
-    </td>
-  </tr>
-
--->
-
-  <tr>
-    <td align="left" valign="top">
-    </td>
-    <td align="left" valign="top">
-    <div class="form-element">
-    <input class="form-element" type="submit" name="submit"
-     value=" Add " />
-    </div>
-    </td>
-  </tr>
-</table>
 </form>
-Connection String syntax: <code>database[@host] user passwd</code>
+<br/><br/>
 
 <dtml-if manage_page_footer>
   <dtml-var manage_page_footer>
