@@ -55,12 +55,13 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="global_definition">\n
-  <tal:block tal:define="document context/WebSite_getDocumentValue">\n
-    <tal:block tal:define="global object_actions python: None;\n
-                           global workflow_actions python: None;\n
-                           global jump_actions python: None;\n
-                           global view_actions python: None;\n
-    "/>\n
+  <tal:block tal:define="global portal_url       python:here.portal_url();\n
+                         document                context/WebSite_getDocumentValue;\n
+                         global object_actions   python: None;\n
+                         global workflow_actions python: None;\n
+                         global jump_actions     python: None;\n
+                         global view_actions     python: None;        \n
+                         dummy                   python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
     <tal:block tal:condition="python: document is not None">\n
       <tal:block tal:define="filtered_actions python:document.portal_actions.listFilteredActionsFor(document);\n
                              object_actions filtered_actions/object_action | nothing;\n
