@@ -60,6 +60,7 @@ def manage_addERP5Site( self
                       , erp5_sql_deferred_connection_string = 'test test'
                       , cmf_activity_sql_connection_type    = 'Z MySQL Database Connection'
                       , cmf_activity_sql_connection_string  = 'test test'
+                      , light_install                       = 0
                       , reindex                             = 1
                       , RESPONSE                            = None
                       ):
@@ -78,7 +79,8 @@ def manage_addERP5Site( self
                 , cmf_activity_sql_connection_type
                 , cmf_activity_sql_connection_string
                 , create_activities
-                , reindex
+                , light_install = light_install
+                , reindex       = reindex
                 )
   gen.setupDefaultProperties( p
                             , title
