@@ -73,7 +73,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block tal:define="dialog_type string:View">\n
+  <tal:block tal:define="dialog_type dialog_type | string:">\n
     <tal:block metal:use-macro="here/list_dialog_master/macros/master">\n
       <tal:block metal:fill-slot="main">\n
         <div class="dialog_box">\n

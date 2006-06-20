@@ -99,7 +99,7 @@ IDEAS:\n
                        global selection_index request/selection_index | nothing;\n
                        global selection_url python: selection_name and here.portal_selections.getSelectionListUrlFor(selection_name,REQUEST=request) or None;\n
 \n
-                       global current_url python: dialog_id and url + \'/\' + dialog_id or None;\n
+                       current_url python: dialog_id and \'%s/%s\' % (url, dialog_id) or None;\n
                        global current_action python: current_url and here.ERP5Site_getCurrentAction(current_url, actions) or None;\n
                        form_pickle request/form_pickle | nothing;\n
                        form_signature request/form_signature | nothing;\n
