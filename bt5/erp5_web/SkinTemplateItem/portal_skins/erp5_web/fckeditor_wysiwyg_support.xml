@@ -54,53 +54,64 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="baseHrefUrl here/absolute_url;\n
-                       cleaninput python:inputvalue;\n
-                       cleaninput python:cleaninput.replace(\'\\x27\',\'\\x5C\\x27\');\n
-                       cleaninput python:cleaninput.replace(\'\\r\',\'\\x5C\\x72\');\n
-                       cleaninput python:cleaninput.replace(\'\\n\',\'\\x5C\\x6E\');\n
-                       portal_url here/portal_url;\n
-                       server_url  request/BASE0;\n
-                       portal_path python:portal_url.replace(server_url, \'\')+\'/\';\n
-                       isInFactory python:test(\'/portal_factory\'in request.URLPATH0, 1, 0);\n
-                       isRegisteredFolder python:test(here.Title() and here.isPrincipiaFolderish, 1,0);\n
-                       isRegisteredPA python:test(here.Title() and here.meta_type==\'PloneArticle\', 1,0);\n
-                       path_user python:test(isInFactory or isRegisteredFolder or isRegisteredPA,request.URLPATH1,request.URLPATH2);\n
-                       cols cols | python:40;\n
-                       rows rows | python:25;\n
-                       editor_width width | python:int(cols * 19.5);\n
-                       editor_height height | python:int(rows * 24);\n
-                       editor_width python:str(editor_width).replace(\'px\',\'\');\n
-                       editor_height python:str(editor_height).replace(\'px\',\'\');\n
-                       editor_width python: test(\'\\x25\' in editor_width, str(int(int(editor_width.replace(\'\\x25\',\'\'))*780/100)), editor_width);\n
-                       editor_height python: test(\'\\x25\' in editor_height, str(int(int(editor_height.replace(\'\\x25\',\'\'))*780/100)), editor_height);">\n
+<tal:block tal:define="baseHrefUrl        here/absolute_url;\n
+                       cleaninput         python: inputvalue;\n
+                       cleaninput         python: cleaninput.replace(\'\\x27\',\'\\x5C\\x27\');\n
+                       cleaninput         python: cleaninput.replace(\'\\r\',\'\\x5C\\x72\');\n
+                       cleaninput         python: cleaninput.replace(\'\\n\',\'\\x5C\\x6E\');\n
+                       portal_url         here/portal_url;\n
+                       server_url         request/BASE0;\n
+                       portal_path        python: portal_url.replace(server_url, \'\')+\'/\';\n
+                       isInFactory        python: test(\'/portal_factory\'in request.URLPATH0, 1, 0);\n
+                       isRegisteredFolder python: test(here.Title() and here.isPrincipiaFolderish, 1,0);\n
+                       isRegisteredPA     python: test(here.Title() and here.meta_type==\'PloneArticle\', 1,0);\n
+                       path_user          python: test(isInFactory or isRegisteredFolder or isRegisteredPA,request.URLPATH1,request.URLPATH2);\n
+                       cols               cols | python: 40;\n
+                       rows               rows | python: 20;\n
+                       editor_width       width | python: int(cols * 19.5);\n
+                       editor_height      height | python: int(rows * 24);\n
+                       editor_width       python: str(editor_width).replace(\'px\',\'\');\n
+                       editor_height      python: str(editor_height).replace(\'px\',\'\');\n
+                       editor_width       python: test(\'\\x25\' in editor_width, str(int(int(editor_width.replace(\'\\x25\',\'\'))*780/100)), editor_width);\n
+                       editor_height      python: test(\'\\x25\' in editor_height, str(int(int(editor_height.replace(\'\\x25\',\'\'))*780/100)), editor_height);">\n
   <script type="text/javascript" tal:attributes="src string:${portal_url}/fckeditor.js"></script>\n
   <script type="text/javascript" tal:content="structure string:\n
 &lt;!--\n
-var oFCKeditor=new FCKeditor(\'${inputname}\');\n
-var pathUser = \'${path_user}/\';\n
-oFCKeditor.BasePath=\'${portal_path}\';\n
-oFCKeditor.Value=\'${cleaninput}\';\n
-// browsing for links\n
-oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
-// rapid upload activation for links\n
-oFCKeditor.Config[\'LinkUpload\'] = true ;\n
-oFCKeditor.Config[\'LinkUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
-// browsing for images\n
-oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Image&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
-// rapid upload activation for images\n
-oFCKeditor.Config[\'ImageUpload\'] = true ;\n
-oFCKeditor.Config[\'ImageUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
-// browsing for flash\n
-oFCKeditor.Config[\'FlashBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Flash&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
-// rapid upload activation for flash\n
-oFCKeditor.Config[\'FlashUpload\'] = true ;\n
-oFCKeditor.Config[\'FlashUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
+var oFCKeditor      = new FCKeditor(\'${inputname}\');\n
+var pathUser        = \'${path_user}/\';\n
+oFCKeditor.BasePath = \'${portal_path}\';\n
+oFCKeditor.Value    = \'${cleaninput}\';\n
+\n
 // set the css for editor area\n
-oFCKeditor.Config[\'EditorAreaCSS\']=\'${portal_path}plone.css\';\n
-oFCKeditor.ToolbarSet=\'ZopeCmf\';\n
-oFCKeditor.Width=${editor_width};\n
-oFCKeditor.Height=${editor_height};\n
+oFCKeditor.Config[\'EditorAreaCSS\'] = \'${portal_path}css/medicentre.css\';\n
+\n
+// editor appearance\n
+oFCKeditor.ToolbarSet = \'ERP5WebZopeCmf\';\n
+oFCKeditor.Width      = \'100%\';\n
+oFCKeditor.Height     = ${editor_height};\n
+\n
+// browsing for links\n
+oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
+\n
+// rapid upload activation for links\n
+//oFCKeditor.Config[\'LinkUpload\'] = true ;\n
+//oFCKeditor.Config[\'LinkUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
+//oFCKeditor.Config[\'LinkUploadURL\'] = \'${portal_url}/\' + pathUser ;\n
+\n
+// browsing for images\n
+oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Image&Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
+\n
+// rapid upload activation for images\n
+//oFCKeditor.Config[\'ImageUpload\'] = true ;\n
+//oFCKeditor.Config[\'ImageUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
+\n
+// browsing for flash\n
+//oFCKeditor.Config[\'FlashBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Flash&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
+\n
+// rapid upload activation for flash\n
+//oFCKeditor.Config[\'FlashUpload\'] = true ;\n
+//oFCKeditor.Config[\'FlashUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
+\n
 oFCKeditor.Create();\n
 --&gt;"></script>\n
 </tal:block>\n
