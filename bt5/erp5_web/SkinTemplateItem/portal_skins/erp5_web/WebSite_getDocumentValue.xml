@@ -72,7 +72,11 @@
 if portal_type == \'Web Site\':\n
   return None\n
 if portal_type == \'Web Section\' and not getattr(context.REQUEST, \'editable_mode\', None):\n
-  return context.WebSite_getDefaultDocumentValue()\n
+  document_value = context.WebSite_getDefaultDocumentValue()\n
+  if document_value == None:\n
+    # No default document is defined, return context as document value\n
+    return context\n
+  return document_value\n
 return context\n
 </string> </value>
         </item>
@@ -125,6 +129,7 @@ return context\n
                             <string>portal_type</string>
                             <string>None</string>
                             <string>getattr</string>
+                            <string>document_value</string>
                           </tuple>
                         </value>
                     </item>
