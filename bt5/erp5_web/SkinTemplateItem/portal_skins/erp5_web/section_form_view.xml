@@ -51,26 +51,41 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="default_content here/WebSite_getDefaultDocumentValue | nothing;\n
-                       layout_form_id here/getApplicableLayout | nothing;\n
-                       ignore_layout request/ignore_layout | nothing;\n
-                       editable_mode request/editable_mode | nothing;\n
-                       layout_form python:not(layout_form_id) or ignore_layout or getattr(here, layout_form_id, None);\n
-                       default_layout string:view_master;\n
-                       layout_id layout_form/pt | default_layout;">\n
-  <tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
+<tal:block tal:define="default_layout  string:view_master;\n
+                       default_content here/WebSite_getDefaultDocumentValue | nothing;\n
+                       ignore_layout   request/ignore_layout | nothing;\n
+                       editable_mode   request/editable_mode | nothing;\n
+                       layout_form_id  here/getApplicableLayout | nothing;\n
+                       layout_form     python:not(layout_form_id) or ignore_layout or getattr(here, layout_form_id, None);\n
+                       layout_id       layout_form/pt | default_layout;">\n
+\n
+  <tal:block metal:use-macro="python: getattr(here, layout_id).macros[\'master\']">\n
     <tal:block metal:fill-slot="main">\n
-      <tal:block tal:condition="python:(not editable_mode) and (not ignore_layout) and (default_content is not None)">\n
-        <tal:block tal:define="global here python:default_content;\n
-                               global form python:here.WebPage_view;\n
-                               global default_content_title python:here.getTitle()"/>\n
+      <tal:block tal:condition="python: (not editable_mode) and (not ignore_layout) and (default_content is not None)">\n
+        <tal:block tal:define="global here                  python: default_content;\n
+                               global form                  python: here.WebPage_view;\n
+                               global default_content_title python: here.getTitle()"/>\n
       </tal:block>\n
-      <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+\n
+      <tal:block tal:condition="python: not(default_content is None and not editable_mode)">\n
+        <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+      </tal:block>\n
+\n
+      <tal:block tal:condition="python: default_content is None and not editable_mode">\n
+        No default page defined.\n
+      </tal:block>\n
     </tal:block>\n
   </tal:block>\n
+\n
 </tal:block>
 
 ]]></string> </value>
