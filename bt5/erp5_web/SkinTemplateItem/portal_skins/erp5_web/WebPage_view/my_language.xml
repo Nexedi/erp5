@@ -13,12 +13,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>my_language</string> </value>
         </item>
@@ -213,11 +207,11 @@
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -249,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Language</string> </value>
+                    <value> <string>Language Code</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
