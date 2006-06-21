@@ -43,6 +43,7 @@ from xml.sax.saxutils import escape, quoteattr
 import os
 import md5
 import threading
+import types
 
 try:
   from Products.PageTemplates.Expressions import SecureModuleImporter
@@ -918,12 +919,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                         'manage_tabs_message=Catalog%%20Cleared' % URL1)
 
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
-    """ clears the whole enchilada """
+    """ clears reserved uids """
     self.clearReserved()
 
     if RESPONSE and URL1:
       RESPONSE.redirect('%s/manage_catalogAdvanced?' \
-                        'manage_tabs_message=Catalog%20Cleared' % URL1)
+                        'manage_tabs_message=Catalog%%20Cleared' % URL1)
 
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
                  obj_metatypes=None,
@@ -1189,7 +1190,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     for method_name in methods:
       method = getattr(self, method_name)
       try:
-        #if 1:
         method(uid = uid)
       except ConflictError:
         raise
@@ -1296,8 +1296,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   def getMetadataForPath(self, path):
     """ Accesses a single record for a given path """
     try:
-      if uid is None:
-        return None
       # Get the appropriate SQL Method
       method = getattr(self, self.sql_getitem_by_path)
       brain = method(path = path)[0]
@@ -1310,7 +1308,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
-      LOG('SQLCatalog', WARNING, "could not find uid from path %s" % (path,))
+      LOG('SQLCatalog', WARNING,
+          "could not find metadata from path %s" % (path,))
       return None
 
   def getIndexDataForPath(self, path):
