@@ -249,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>8</int> </value>
+                    <value> <int>4</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -283,8 +283,7 @@
                     <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<br />\n
-
+<br />
 
 ]]></string> </value>
                 </item>

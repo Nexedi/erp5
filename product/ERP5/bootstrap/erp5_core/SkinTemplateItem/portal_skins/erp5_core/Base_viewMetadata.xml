@@ -92,12 +92,11 @@
                       <list>
                         <string>my_id</string>
                         <string>my_title</string>
-                        <string>my_language</string>
+                        <string>my_description</string>
+                        <string>my_creation_date</string>
+                        <string>my_modification_date</string>
                         <string>my_effective_date</string>
                         <string>my_expiration_date</string>
-                        <string>my_format</string>
-                        <string>my_rights</string>
-                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -105,8 +104,11 @@
                     <key>                 <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_category_list</string>
+                        <string>my_language</string>
+                        <string>my_format</string>
+                        <string>my_rights</string>
                         <string>my_contributor_list</string>
+                        <string>my_category_list</string>
                       </list>
                     </value>
                 </item>
