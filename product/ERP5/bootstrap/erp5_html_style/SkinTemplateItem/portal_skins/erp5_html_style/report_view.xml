@@ -78,15 +78,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 \n
 <tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
-                       ignore_layout request/ignore_layout | nothing;\n
-                       editable_mode request/editable_mode | nothing;\n
-                       global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
+                       ignore_layout  request/ignore_layout | nothing;\n
+                       editable_mode  request/editable_mode | nothing;\n
+                       global         layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
                        default_layout string:view_master;\n
-                       layout_id layout_form/pt | default_layout;">\n
+                       layout_id      layout_form/pt | default_layout;">\n
 \n
 <tal:block metal:use-macro="python: getattr(here,layout_id).macros[\'master\']">\n
   <tal:block metal:fill-slot="main">\n
-    <div class="Main">\n
+    <div tal:attributes="class python: editable_mode and \'fieldgroup\' or \'Main\'">\n
       <tal:block tal:define="groups       python: form.get_groups(include_empty=1);\n
                              field_errors python: request.get(\'field_errors\',{});\n
                              dummy        python: request.set(\'here\',here)">\n

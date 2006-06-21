@@ -1,3 +1,6 @@
+2006-06-21 Kevin
+* In editable mode, enclose main content in a div to act as a fieldgroup.
+
 2006-06-15 Thomas
 * Added support for PlanningBox : including scripts to generate data, and page template to display XHTML.
 
