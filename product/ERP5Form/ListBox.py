@@ -79,110 +79,11 @@ class ObjectValuesWrapper:
       brain_list.append(brain)
     return brain_list
 
-# FIXME: this method should be removed. Probably makeReportTreeList should suffice.
-def makeTreeBody(form = None, root_dict = None, domain_path = '',
-                 depth = 0, total_depth = None, unfolded_list = (),
-                 form_id = None, selection_name = None,
-                 base_category = None):
-  """
-    This method builds a report tree
-
-    domain_path  --    ('region', 'skill', 'group', 'group', 'region')
-
-    root -- {'region': <instance>, 'group'; instance}
-
-  """
-  #LOG('makeTreeBody root_dict', 0, str(root_dict))
-  #LOG('makeTreeBody domain_path', 0, str(domain_path))
-  #LOG('makeTreeBody unfolded_list', 0, str(unfolded_list))
-
-  #LOG('makeTreeBody', 0, 'form = %r, root_dict = %r, domain_path = %r, depth = %r, total_depth = %r, unfolded_list = %r, form_id = %r, selection_name = %r, base_category = %r' % (form, root_dict, domain_path, depth, total_depth, unfolded_list, form_id, selection_name, base_category))
-  if total_depth is None:
-    total_depth = max(1, len(unfolded_list))
-
-  if isinstance(domain_path, str):
-    domain_path = domain_path.split('/')
-
-  if form_id is None:
-    form_id = form.id
-
-  portal_categories = getattr(form, 'portal_categories', None)
-  portal_domains = getattr(form, 'portal_domains', None)
-  portal_object = form.portal_url.getPortalObject()
-
-  if base_category is None and len(domain_path):
-    base_category = domain_path[0]
-
-  if root_dict is None:
-    root_dict = {}
-
-  #LOG('makeTreeBody', 0, 'domain_path = %r, base_category = %r' % (domain_path, base_category))
-
-  is_empty_level = 1
-  category = base_category
-  while is_empty_level:
-    if category not in root_dict:
-      root = None
-      if portal_categories is not None:
-        if category in portal_categories.objectIds():
-          root = root_dict[category] = root_dict[None] = portal_categories[category]
-          domain_path = domain_path[1:]
-      if root is None and portal_domains is not None:
-        if category in portal_domains.objectIds():
-          root = root_dict[category] = root_dict[None] = portal_domains[category]
-          domain_path = domain_path[1:]
-      if root is None:
-        try:
-          root = root_dict[None] = portal_object.unrestrictedTraverse(domain_path)
-        except KeyError:
-          root = None
-        domain_path = ()
-    else:
-      root = root_dict[None] = root_dict[category]
-      if len(domain_path) >= 1:
-        domain_path = domain_path[1:]
-      else:
-        domain_path = ()
-    is_empty_level = root is not None and (root.objectCount() == 0) and (len(domain_path) != 0)
-    if is_empty_level:
-      category = domain_path[0]
-
-  #LOG('makeTreeBody', 0, 'root = %r, depth = %r, category = %r' % (root, depth, category))
-  tree_body = ''
-  if root is None: return tree_body
-  if hasattr(root, 'getChildDomainValueList'):
-    oblist = root.getChildDomainValueList(root,depth=depth)
-  else:
-    oblist = root.objectValues()
-  for o in oblist:
-    tree_body += '<tr>' + '<td width="16" nowrap>' * depth
-    relative_url = o.getRelativeUrl()
-    if base_category is not None and not relative_url.startswith(base_category + '/'):
-      url = '%s/%s' % (base_category, relative_url)
-    else:
-      url = relative_url
-    if url in unfolded_list:
-      tree_body += """<td nowrap valign="top" align="left" colspan="%s">
-<a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s" >- <b>%s</b></a>
-</td>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
-      new_root_dict = root_dict.copy()
-      new_root_dict[None] = new_root_dict[base_category] = o
-      tree_body += makeTreeBody(form = form, root_dict = new_root_dict, domain_path = domain_path,
-                                depth = depth + 1, total_depth = total_depth, unfolded_list = unfolded_list,
-                                selection_name = selection_name, base_category = base_category)
-    else:
-      tree_body += """<td nowrap valign="top" align="left" colspan="%s">
-<a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s">+ %s</a>
-</td>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
-    tree_body += '</td>' * depth + '</tr>'
-
-  return tree_body
-
 class ReportTree:
   """This class describes a report tree.
   """
   def __init__(self, obj = None, is_pure_summary = False, depth = 0, is_open = False,
-               domain_selection = None, exception_uid_list = None):
+               domain_selection = None, exception_uid_list = None, base_category = None):
     self.obj = obj
     self.is_pure_summary = is_pure_summary
     self.depth = depth
@@ -193,6 +94,7 @@ class ReportTree:
       self.exception_uid_set = None
     else:
       self.exception_uid_set = set(exception_uid_list)
+    self.base_category = base_category
 
 class ReportSection:
   """This class describes a report section.
@@ -1168,13 +1070,15 @@ class ListBoxRenderer:
 
     return ', '.join(select_expression_list)
 
+  getStatSelectExpression = VolatileCachingMethod(getStatSelectExpression)
+
   def makeReportTreeList(self, root_dict = None, report_path = None, base_category = None, depth = 0,
                          unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),)):
     """Return a list of report trees.
     """
     if isinstance(report_path, str):
       report_path = report_path.split('/')
-    if len(report_path):
+    if base_category is None and len(report_path):
       base_category = report_path[0]
 
     category_tool = self.getCategoryTool()
@@ -1187,25 +1091,26 @@ class ListBoxRenderer:
 
     # Find the root object.
     is_empty_level = 1
+    category = base_category
     while is_empty_level:
-      if not root_dict.has_key(base_category):
+      if not root_dict.has_key(category):
         root = None
         if category_tool is not None:
           try:
-            obj = category_tool[base_category]
-            if base_category == 'parent':
+            obj = category_tool[category]
+            if category == 'parent':
               # parent has a special treatment
-              root = root_dict[base_category] = root_dict[None] = self.getContext()
+              root = root_dict[category] = root_dict[None] = self.getContext()
               report_path = report_path[1:]
             else:
-              root = root_dict[base_category] = root_dict[None] = obj
+              root = root_dict[category] = root_dict[None] = obj
               report_path = report_path[1:]
           except KeyError:
             pass
         if root is None and domain_tool is not None:
           try:
-            obj = domain_tool[base_category]
-            root = root_dict[base_category] = root_dict[None] = obj
+            obj = domain_tool[category]
+            root = root_dict[category] = root_dict[None] = obj
             report_path = report_path[1:]
           except KeyError:
             pass
@@ -1216,11 +1121,11 @@ class ListBoxRenderer:
             pass
           report_path = ()
       else:
-        root = root_dict[None] = root_dict[base_category]
+        root = root_dict[None] = root_dict[category]
         report_path = report_path[1:]
       is_empty_level = (root is None or root.objectCount() == 0) and (len(report_path) != 0)
       if is_empty_level:
-        base_category = report_path[0]
+        category = report_path[0]
 
     tree_list = []
     if root is None: return tree_list
@@ -1258,11 +1163,13 @@ class ListBoxRenderer:
 
         # Summary (open)
         tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
+                                    base_category = base_category,
                                     is_open = True, domain_selection = domain_selection,
                                     exception_uid_list = exception_uid_list))
         if is_report_opened:
           # List (contents, closed, must be strict selection)
           tree_list.append(ReportTree(obj = obj, is_pure_summary = False, depth = depth,
+                                      base_category = base_category,
                                       is_open = False, domain_selection = domain_selection,
                                       exception_uid_list = exception_uid_list))
         tree_list.extend(self.makeReportTreeList(root_dict = new_root_dict,
@@ -1275,6 +1182,7 @@ class ListBoxRenderer:
       else:
         # Summary (closed)
         tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
+                                    base_category = base_category,
                                     is_open = False, domain_selection = domain_selection,
                                     exception_uid_list = exception_uid_list))
 
@@ -1404,8 +1312,8 @@ class ListBoxRenderer:
                                                  is_report_opened = selection.isReportOpened(),
                                                  sort_on = selection.sort_on)
 
-      # Update report list if report_depth was specified
-      # XXXXXXXXXXXXX why????
+      # Update report list if report_depth was specified. This information is used
+      # to store what domains are unfolded by clicking on a depth.
       if report_depth is not None:
         report_list = [t.obj.getRelativeUrl() for t in report_tree_list if t.is_open]
         selection.edit(report_list = report_list)
@@ -2091,17 +1999,45 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     <table id="%(field_id)s_domain_tree_table" cellpadding="0" border="0">
 """ % format_dict)
 
-      # Render a tree.
+      # Render a domain tree.
       try:
         # Default to the first domain.
         if selected_domain_path == ('portal_categories',):
           selected_domain_path = self.getDomainRootList()[0][0]
 
-        # FIXME: rendering should be removed from makeTreeBody.
-        domain_tree = makeTreeBody(form = self.getForm(), domain_path = selected_domain_path,
-                                   unfolded_list = selection.getDomainList(),
-                                   selection_name = self.getSelectionName())
-        html_list.append(domain_tree)
+        report_tree_list = self.makeReportTreeList(report_path = selected_domain_path,
+                                                   unfolded_list = selection.getDomainList(),
+                                                   is_report_opened = False)
+
+        total_depth = max([report_tree.depth for report_tree in report_tree_list] + [-1])
+        for report_tree in report_tree_list:
+          html_list.append("""\
+     <tr>
+""")
+          html_list.append("""\
+      <td width="16" nowrap>&nbsp;</td>
+""" * report_tree.depth)
+
+          relative_url = report_tree.obj.getRelativeUrl()
+          if report_tree.base_category is not None and not relative_url.startswith(report_tree.base_category + '/'):
+            domain_url = '%s/%s' % (report_tree.base_category, relative_url)
+          else:
+            domain_url = relative_url
+
+          if report_tree.is_open:
+            method_id = 'foldDomain'
+            content = u'-&nbsp;<b>%s</b>' % unicode(Message(domain = ui_domain, message = report_tree.obj.getTitleOrId()))
+          else:
+            method_id = 'unfoldDomain'
+            content = u'+&nbsp;%s' % unicode(Message(domain = ui_domain, message = report_tree.obj.getTitleOrId()))
+
+          html_list.append("""\
+      <td nowrap valign="top" align="left" colspan="%d">
+       <a href="portal_selections/%s?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%d">%s</a>
+      </td>
+     </tr>
+""" % (total_depth - report_tree.depth + 1, method_id, domain_url, self.getForm().id, self.getSelectionName(),
+       report_tree.depth, content))
       except KeyError:
         pass
 
