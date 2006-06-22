@@ -47,6 +47,8 @@ from dircache import listdir
 from OFS.Traversable import NotFound
 from Products.ERP5Type.patches.copyTree import copytree, Error
 from Products.ERP5Type.patches.cacheWalk import cacheWalk
+from time import ctime
+from zLOG import LOG
 
 try:
   import pysvn
@@ -232,20 +234,20 @@ class DiffFile:
     
     html_list = []
     html_list.append('''
-    <table style="text-align: left; width: 100%%;" border="0" cellpadding="0" cellspacing="0">
+    <table style="text-align: left; width: 100%%; border: 0;" cellpadding="0" cellspacing="0">
   <tbody>
-    <tr height="18px">
-      <td style="background-color: grey"><b><center>%s</center></b></td>
-      <td style="background-color: black;" width="2"></td>
-      <td style="background-color: grey"><b><center>%s</center></b></td>
+    <tr>
+      <td style="background-color: grey; text-align: center; font-weight: bold;">%s</td>
+      <td style="background-color: black; width: 2px;"></td>
+      <td style="background-color: grey; text-align: center; font-weight: bold;">%s</td>
     </tr>''' % (self.old_revision, self.new_revision))
     header_color = 'grey'
-    child_html_text = '''<tr height="18px"><td style="background-color: %(headcolor)s">
-    &nbsp;</td><td style="background-color: black;" width="2"></td>
-    <td style="background-color: %(headcolor)s">&nbsp;</td></tr><tr height="18px">
-    <td style="background-color: rgb(68, 132, 255);"><b>Line %(oldline)s</b></td>
-    <td style="background-color: black;" width="2"></td>
-    <td style="background-color: rgb(68, 132, 255);"><b>Line %(newline)s</b></td>
+    child_html_text = '''<tr><td style="background-color: %(headcolor)s">
+    &nbsp;</td><td style="background-color: black; width: 2px;"></td>
+    <td style="background-color: %(headcolor)s">&nbsp;</td></tr><tr>
+    <td style="background-color: rgb(68, 132, 255);font-weight: bold;">Line %(oldline)s</td>
+    <td style="background-color: black; width: 2px;"></td>
+    <td style="background-color: rgb(68, 132, 255);font-weight: bold;">Line %(newline)s</td>
     </tr>'''
     for child in self.children:
       # Adding line number of the modification
@@ -260,9 +262,9 @@ class DiffFile:
         new_line = new_line_tuple[0] or ' '
         old_line = old_line_tuple[0] or ' '
         i += 1
-        html_list.append( '''<tr height="18px">
+        html_list.append( '''<tr>
         <td style="background-color: %s">%s</td>
-        <td style="background-color: black;" width="2"></td>
+        <td style="background-color: black; width: 2px;"></td>
         <td style="background-color: %s">%s</td>
         </tr>'''%(old_line_tuple[1],
         escape(old_line).replace(' ', NBSP).replace('\t', NBSP_TAB),
@@ -1029,6 +1031,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """ Return tree of files returned by svn status
     """
     # Get subversion path without business template name at the end
+    LOG('Debut getModifiedTree: ', 1, ctime())
     bt_path = self._getWorkingPath(self.getSubversionPath(business_template, \
     False))
     if bt_path[-1] != '/':
@@ -1036,10 +1039,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # Business template root directory is the root of the tree
     root = Dir(business_template.getTitle(), "normal")
     something_modified = False
-    
+    LOG('Debut svn Status: ', 1, ctime())
+    statusObj_list = self.status(os.path.join(bt_path, \
+    business_template.getTitle()))
+    LOG('Fin svn Status: ', 1, ctime())
     # We browse the files returned by svn status
-    for status_obj in self.status(os.path.join(bt_path, \
-    business_template.getTitle())) :
+    for status_obj in statusObj_list :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
       status = str(status_obj.getTextStatus())
       if (show_unmodified or status != "normal") and status != "unversioned":
@@ -1075,6 +1080,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         else :
           # add new file to the tree
           parent.sub_files.append(File(filename, str(status)))
+    LOG('fin getModifiedTree: ', 1, ctime())
     return something_modified and root
   
   def extractBT(self, business_template):
@@ -1083,18 +1089,24 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
      and do svn add/del stuff comparing it
      to local working copy
     """
+    LOG('Debut extractBT: ', 1, ctime())
     business_template.build()
+    LOG('-> Fin BuildBT: ', 1, ctime())
     svn_path = self._getWorkingPath(self.getSubversionPath(business_template) \
     + os.sep)
     path = mktemp() + os.sep
     try:
       # XXX: Big hack to make export work as expected.
       get_transaction().commit()
+      LOG('-> deb exportBT: ', 1, ctime())
       business_template.export(path=path, local=1)
+      LOG('-> Fin exportBT: ', 1, ctime())
+      LOG('-> Deb comparaison + cp -rf: ', 1, ctime())
       # svn del deleted files
       self.deleteOldFiles(svn_path, path)
       # add new files and copy
       self.addNewFiles(svn_path, path)
+      LOG('-> Fin comparaison + cp -rf: ', 1, ctime())
       self.goToWorkingCopy(business_template)
     except (pysvn.ClientError, NotFound, AttributeError, \
     Error), error:
@@ -1103,6 +1115,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       raise error
     # Clean up
     self.activate().removeAllInList([path, ])
+    LOG('End extractBT: ', 1, ctime())
     
   def importBT(self, business_template):
     """
@@ -1209,10 +1222,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def treeToXML(self, item, business_template) :
     """ Convert tree in memory to XML
     """
+    LOG('Debut treeToXML: ', 1, ctime())
     output = '<?xml version="1.0" encoding="UTF-8"?>'+ os.linesep
     output += "<tree id='0'>" + os.linesep
     output = self._treeToXML(item, output, business_template.getTitle(), True)
     output += '</tree>' + os.linesep
+    LOG('Fin treeToXML: ', 1, ctime())
     return output
   
   def _treeToXML(self, item, output, relative_path, first) :
