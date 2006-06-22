@@ -72,11 +72,6 @@
 
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
-if "changelog" in context.REQUEST.keys() and context.REQUEST["changelog"].strip()!=\'\':\n
-  changelog=context.REQUEST["changelog"]\n
-else:\n
-  changelog=None\n
-\n
 commit_non_recurs = added\n
 if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
   if modified != \'\' and modified != \'none\':\n
@@ -92,12 +87,12 @@ if removed != \'\' and removed != \'none\':\n
 else:\n
   commit_recurs = removed\n
 \n
-if \'changelog\' not in context.REQUEST.keys() :\n
+if not changelog :\n
   context.REQUEST.set(\'portal_status_message\', \'Please set a changelog message...\')\n
   context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
-if not changelog :\n
+if changelog.strip() == \'\' :\n
   context.REQUEST.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty.")\n
   context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
@@ -110,11 +105,11 @@ try:\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(added=added, modified=modified, removed=removed, trust_dict = error.getTrustDict(), caller=\'commit\', changelog=changelog).BusinessTemplate_viewSvnSSLTrust()\n
+  return context.asContext(added=added, modified=modified, removed=removed, changelog=changelog, trust_dict = error.getTrustDict(), caller=\'commit\').BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
   context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(added=added, modified=modified, removed=removed, caller=\'commit\', realm = error1.getRealm(), changelog=changelog, username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(added=added, modified=modified, removed=removed, changelog=changelog, caller=\'commit\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Files commited successfully.\')\n
 context.REQUEST.set(\'do_extract\', \'False\')\n
@@ -135,7 +130,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>added=\'\',modified=\'\',removed=\'\',**kw</string> </value>
+            <value> <string>added=\'\',modified=\'\',removed=\'\', changelog=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,7 +150,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -164,16 +159,15 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>added</string>
                             <string>modified</string>
                             <string>removed</string>
+                            <string>changelog</string>
                             <string>kw</string>
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>_getitem_</string>
-                            <string>changelog</string>
-                            <string>None</string>
                             <string>commit_non_recurs</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>context</string>
                             <string>commit_recurs</string>
                             <string>False</string>
                             <string>True</string>
@@ -194,6 +188,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
                 <string></string>
                 <string></string>
                 <string></string>
+                <none/>
               </tuple>
             </value>
         </item>

@@ -1,3 +1,7 @@
+2006-06-22 chris
+* erp5Subversion is now XHTML Strict compliant
+* erp5Subversion works with erp5_xhtml_style
+
 2006-06-12 chris
 * added Shorted/Taller buttons to adjust tree height
 

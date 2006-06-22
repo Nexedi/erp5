@@ -48,160 +48,123 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
-<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
-<tal:block tal:define="layout_form_id here/getApplicableLayout |  nothing;\n
-                       editable_mode request/editable_mode | nothing;\n
-                       global ignore_layout request/ignore_layout | nothing;\n
-                       global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
-                       default_layout string:view_master;\n
-                       layout_id layout_form/pt | default_layout;">\n
-<tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
-<tal:block metal:fill-slot="main">\n
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Christophe Dumez <christophe@nexedi.com>\n
 \n
-<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">\n
-<link rel="STYLESHEET" type="text/css" href="css/movableMenu.css">\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
 \n
-<script  src="js/dhtmlXCommon.js"></script>\n
-<script  src="js/dhtmlXTree.js"></script>\n
-<script  src="js/menuico.js"></script>\n
-<script  src="js/movableMenu.js"></script>\n
-<noscript>\n
-<font color="red">Please activate javascript in your web browser or this module won\'t work.</font>\n
-</noscript>\n
-<!-- Form Hidden : Selected files -->\n
-<input type="hidden" name="removed" value=""/>\n
-<input type="hidden" name="added" value=""/>\n
-<input type="hidden" name="modified" value=""/>\n
-<input type="hidden" name="files" value=""/>\n
-<!-- End Hidden -->\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
 \n
-<div id="menudiv" style="position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
-<table width="82px" cellspacing="1" cellpadding="0" bgcolor="lightgray">\n
-  <tr><td>\n
-    <table width="80" cellspacing="0" cellpadding="0">\n
-      <tr>\n
-        <td id="item1" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="ls()"><center>Infos</center></td>\n
-      </tr>\n
-      <tr>\n
-        <td id="item2" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="viewDiff(1,document.main_form)"><center>Diff</center></td>\n
-      </tr>\n
-      <tr>\n
-        <td id="item3" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="log()">  <center>History</center></td>\n
-      </tr>\n
-      <tr>\n
-        <td id="item4" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="commit(1,document.main_form)">  <center>Commit</center></td>\n
-      </tr>\n
-      <tr>\n
-        <td id="item5" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="revert(1,document.main_form)">  <center>Revert</center></td>\n
-      </tr>\n
-    </table>\n
-  </td></tr>\n
-</table>\n
-</div>\n
-\n
-<tal:js replace="structure \n
-here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br/>\n
-<span tal:define="repos_url python:context.getPortalObject()[\'portal_subversion\'].info(context)[\'url\']">\n
-  <font color="black"><b>Repository URL :</b> <a tal:attributes="href repos_url"><b tal:content="repos_url">repository url</b>\n
-  </a></font>\n
-</span><br/><br/>\n
-<button type="BUTTON" onclick="treeTaller()">Taller</button>\n
-<button type="BUTTON" onclick="treeShorter()">Shorter</button>\n
-<center><table width="100%">\n
-\t<tr>\n
-\t\t<td id="MainTreeTD" height="300px">\n
-                <div id="splashScreen" style="position:absolute;z-index:5;top:40%;left:35%;">\n
-\t\t\t<table bgcolor="#000000" border="1" bordercolor="#000000" cellpadding="0" cellspacing="0" height="200" width="300">\n
-\t\t\t\t<tr>\n
-\t\t\t\t\t<td width="100%" height="100%" bgcolor="#cccccc" align="center" valign="middle">\n
-\t\t\t\t\t\t<font face="Helvetica,Verdana,Arial" size="3" color="#000066"><b><center>Checking for changes.</center><br/> <center>Please wait...</center></b></font> \n
-\t\t\t\t\t\t&nbsp; &nbsp; <br/> \n
-\t\t\t\t\t</td>\n
-\t\t\t\t</tr>\n
-\t\t\t</table>\n
-\t\t</div>\n
-\t\t<div \n
-\t\t\tid="treebox1" \n
-\t\t\tstyle="width:98%; height:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">\n
-\t\t</div>\n
-\t\t</td>\n
-\t</tr>\n
-</table>\n
-<div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
-  <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
-    <span class="titleBarText">Legend -- SVN</span>\n
-    <img class="titleBarButtons" alt="" src="imgs/altbuttons.gif" longdesc="imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
-    <map id="sampleMap3" name="sampleMap3">\n
-      <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />\n
-      <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />\n
-      <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />\n
-    </map>\n
-  </div>\n
-  <div class="clientArea" style="height:100px; background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;">\n
-  <b><font color="black"><center>Legend</center></font></b><hr/>\n
-  <p><font color="green">Added files</font><br/>\n
-  <font color="orange">Modified files</font><br/>\n
-  <font color="red">Removed files</font><br/>\n
-  <font color="grey">Conflicted files</font><br/>\n
-  <font color=\'black\'>Unmodified files</font><br/>\n
-  </p>\n
-  </div>\n
-</div>\n
-\n
-<script>\n
-  winInit();\n
-  if (winList[\'captionWindow\']){\n
-    winList[\'captionWindow\'].open();\n
-  }\n
-</script>\n
-</center>\n
-<input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"/> <font color="black">Show unmodified files</font>\n
-<center>\n
-<script>\n
-  // Menu Customization\n
-  var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
-  MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
-  MenuToolBar.Add("imgs/expandoff.png", "imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
-  MenuToolBar.Add("imgs/diffoff.png", "imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.main_form);");\n
-  MenuToolBar.Add("imgs/execoff.png", "imgs/execon.png", "Commit Changes", "#", "commit(0,document.main_form);");\n
-  MenuToolBar.Add("imgs/revertoff.png", "imgs/reverton.png", "Revert Changes", "#", "revert(0,document.main_form);");\n
-  // Menu Display\n
-  MenuToolBar.Display();\n
-</script>\n
-\n
-</center>\n
-<script>\n
-        if(upLevel) {\n
-          var splash = document.getElementById("splashScreen");\n
-        } else if(ns4) {\n
-          var splash = document.splashScreen;\n
-        } else if(ie4) {\n
-          var splash = document.all.splashScreen;\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
+</tal:block>\n
+<tal:block tal:define="css_list python: [\'css/dhtmlXTree.css\', \'css/movableMenu.css\'];\n
+                       js_list python: [\'js/dhtmlXCommon.js\', \'js/dhtmlXTree.js\', \'js/menuico.js\', \'js/movableMenu.js\', \'js/BusinessTemplate_doCreateJavaScriptStatus\']">\n
+  <tal:block metal:use-macro="here/document/macros/master">\n
+    <tal:block metal:fill-slot="main">\n
+      <noscript>\n
+        <h3 class="error">Please activate javascript in your web browser or this module won\'t work.</h3>\n
+      </noscript>\n
+      <!-- Form Hidden : Selected files -->\n
+      <input type="hidden" name="removed" value="" />\n
+      <input type="hidden" name="added" value="" />\n
+      <input type="hidden" name="modified" value="" />\n
+      <input type="hidden" name="files" value="" />\n
+      <!-- End Hidden -->\n
+      \n
+      <div id="menudiv" style="opacity: 0.85; position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
+        <table cellspacing="1" cellpadding="0" style="width:82px;background-color:#ffffff; border-style: solid; border-width: 1px;">\n
+        <tr><td>\n
+          <table style="width: 80px;" cellspacing="0" cellpadding="0">\n
+            <tr>\n
+              <td id="item1" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="ls()">Infos</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item2" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="viewDiff(1,document.getElementById(\'main_form\'))">Diff</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item3" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="log()">  History</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item4" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="commit(1,document.getElementById(\'main_form\'))">Commit</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item5" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="revert(1,document.getElementById(\'main_form\')">Revert</td>\n
+            </tr>\n
+          </table>\n
+        </td></tr>\n
+      </table>\n
+      </div>\n
+      \n
+      <br/>\n
+      <div style="color: black; font-weight: bold;" tal:define="repos_url python:context.getPortalObject()[\'portal_subversion\'].info(context)[\'url\']">\n
+        Repository URL: <a tal:attributes="href repos_url" tal:content="repos_url"></a>\n
+      </div><br/>\n
+      <button type="button" onclick="treeTaller()">Taller</button>\n
+      <button type="button" onclick="treeShorter()">Shorter</button>\n
+      <div id="splashScreen" style="position:absolute;z-index:5;top:40%;left:35%; width: 300px; background-color: #cccccc; opacity: 0.6; border-style: solid; vertical-align: middle; text-align: center; color: #000066; font-weight: bold; border-width: 1px;">\n
+            <br/><br/><br/>\n
+            Checking for changes.<br/><br/>\n
+            Please wait...<br/><br/><br/><br/>\n
+      </div>\n
+      <div \n
+        id="treebox1" \n
+        style="width:98%; height: 300px;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">\n
+      </div>\n
+      <div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
+        <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
+          <span class="titleBarText">Legend -- SVN</span>\n
+          <img class="titleBarButtons" alt="" src="imgs/altbuttons.gif" longdesc="imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
+          <map id="sampleMap3" name="sampleMap3">\n
+            <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />\n
+            <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />\n
+            <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />\n
+          </map>\n
+        </div>\n
+        <div class="clientArea" style="background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;text-align:center;">\n
+          <div style="font-weight: bold; color: black; text-align: center;">Legend</div><hr/>\n
+            <div style="color: green">Added files</div>\n
+            <div style="color: orange">Modified files</div>\n
+            <div style="color: red">Removed files</div>\n
+            <div style="color: grey">Conflicted files</div>\n
+            <div style="color: black">Unmodified files</div>\n
+        </div>\n
+      </div>\n
+      \n
+      <script type="text/javascript">\n
+        winInit();\n
+        if (winList[\'captionWindow\']){\n
+          winList[\'captionWindow\'].open();\n
         }\n
-\n
-        function showObject() {\n
-\t  if (ns4) {\n
-\t    splash.visibility = "visible";\n
-\t  }\n
-\t  if (ie4 || upLevel) {\n
-\t    splash.style.visibility = "visible";\n
-          }\n
-        }\n
-\n
-        function hideObject() {\n
-\t  if (ns4) {\n
-\t    splash.visibility = "hide";\n
-\t  }\n
-\t  if (ie4 || upLevel) {\n
-\t    splash.style.visibility = "hidden";\n
-          }\n
-\t}\n
-\n
+      </script>\n
+      <input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"/> <span style="color: black;">Show unmodified files</span>\n
+      <script type="text/javascript">\n
+        // Menu Customization\n
+        var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
+        MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
+        MenuToolBar.Add("imgs/expandoff.png", "imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
+        MenuToolBar.Add("imgs/diffoff.png", "imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("imgs/execoff.png", "imgs/execon.png", "Commit Changes", "#", "commit(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("imgs/revertoff.png", "imgs/reverton.png", "Revert Changes", "#", "revert(0,document.getElementById(\'main_form\'));");\n
+        // Menu Display\n
+        MenuToolBar.Display();\n
         doOnLoad();\n
-</script>\n
-</tal:block>\n
-</tal:block>\n
+      </script>\n
+    </tal:block>\n
+  </tal:block>\n
 </tal:block>
 
 ]]></string> </value>

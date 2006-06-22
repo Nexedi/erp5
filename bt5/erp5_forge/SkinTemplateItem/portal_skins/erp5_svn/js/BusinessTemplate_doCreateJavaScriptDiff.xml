@@ -68,21 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-return \'\'\'<script>\n
-\n
-  function doCommit(form){\n
-      submitAction(form,\'%(absURL)s/BusinessTemplate_doSvnCommit\');\n
+            <value> <string>return \'\'\'function doCommit(form){\n
+      submitAction(form,\'BusinessTemplate_doSvnCommit\');\n
   }\n
 \n
   function goBack(){\n
-    open(\'%(absURL)s/BusinessTemplate_viewSvnStatus?do_extract=False\', \'_self\');\n
-  }  \n
-</script>\'\'\'% {\'absURL\' : context.absolute_url(), }\n
-
-
-]]></string> </value>
+    open(\'BusinessTemplate_viewSvnStatus?do_extract=False\', \'_self\');\n
+  }\'\'\'\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -92,7 +85,7 @@ return \'\'\'<script>\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doCreateJavaScriptDiff</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_svn/js/BusinessTemplate_doCreateJavaScriptDiff</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -121,10 +114,7 @@ return \'\'\'<script>\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>

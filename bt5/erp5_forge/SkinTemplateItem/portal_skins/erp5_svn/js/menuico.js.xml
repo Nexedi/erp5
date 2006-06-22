@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45550322.52</string> </value>
+            <value> <string>ts50974111.7</string> </value>
         </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
@@ -62,15 +62,15 @@
   \n
   function DisplayToolBarMenu() {\n
           if (document.getElementById || document.all) {\n
-                  var Z="<TABLE border=0 cellpadding=1 cellspacing=1><TR>";\n
+                  var Z="<div style=\'text:align: center;\'><table cellpadding=\'1\' cellspacing=\'1\' style=\'border:0;margin-left:auto; margin-right:auto;\'><tr>";\n
                   for (var i=0; i<this.nb; i++) {\n
-                          Z+="<TD onMouseOver=\'DisplayToolBarMenuOver(this,"+i+")\' onMouseOut=\'DisplayToolBarMenuOut(this,"+i+")\' onMouseDown=\'DisplayToolBarMenuDown(this,"+i+")\' onClick=\'DisplayToolBarMenuClick(this,"+i+")\' style=\'border-style:solid;border-width:1px;border-color:"+this.colBackground+";"+this.style+";cursor:pointer\'><IMG name=\'MenuToolBarIMG"+i+"\' src=\'"+this[i].imgOff+"\' border=0 width="+this.width+" height="+this.height+" align=top>&nbsp;"+this[i].text+"</TD>";\n
+                          Z+="<td onMouseOver=\'DisplayToolBarMenuOver(this,"+i+")\' onMouseOut=\'DisplayToolBarMenuOut(this,"+i+")\' onMouseDown=\'DisplayToolBarMenuDown(this,"+i+")\' onClick=\'DisplayToolBarMenuClick(this,"+i+")\' style=\'border-style:solid;border-width:1px;border-color:"+this.colBackground+";"+this.style+";cursor:pointer\'><img name=\'MenuToolBarIMG"+i+"\' src=\'"+this[i].imgOff+"\' border=0 width="+this.width+" height="+this.height+" align=top>&nbsp;"+this[i].text+"</TD>";\n
                   }\n
-                  Z+="</TR></TABLE>";\n
+                  Z+="</tr></table></div";\n
           } else {\n
                   var Z="| &nbsp;";\n
                   for (var i=0; i<this.nb; i++) {\n
-                          Z+="<A href=\'"+this[i].url+"\' style=\'"+this.style+"\'><IMG name=\'MenuToolBarIMG"+i+"\' src=\\""+this[i].imgOff+"\\" border=0 width="+this.width+" height="+this.height+" align=top>&nbsp;"+this[i].text+"</A>&nbsp;|&nbsp;";\n
+                          Z+="<a href=\'"+this[i].url+"\' style=\'"+this.style+"\'><img name=\'MenuToolBarIMG"+i+"\' src=\\""+this[i].imgOff+"\\" border=0 width="+this.width+" height="+this.height+" align=top>&nbsp;"+this[i].text+"</a>&nbsp;|&nbsp;";\n
                   }\n
           }\n
           document.write(Z);\n
@@ -131,7 +131,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3561</int> </value>
+            <value> <int>3648</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
