@@ -515,6 +515,10 @@ div.index_html table {\n
   top: 100%;\n
 }\n
 \n
+.content .field .figure {\n
+  text-align: right;\n
+}\n
+\n
 .content .left,\n
 .content .right {\n
   width: 50%;\n

@@ -93,7 +93,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                       i18n:translate="" i18n:domain="ui">Save</span>\n
               </button>\n
             </tal:block>\n
-            <ul tal:condition="python: len(actions) > 1">\n
+            <ul tal:condition="python: len(actions)">\n
               <tal:block tal:repeat="action actions">\n
                 <li tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
                   <a tal:attributes="href python: here.ERP5Site_renderLink(action[\'url\'], http_parameters)"\n
@@ -112,8 +112,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>document</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

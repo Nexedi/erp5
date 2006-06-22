@@ -139,7 +139,7 @@ Groups names becomes "left_group", "right_group", "left1_group", "right1_group",
                          right_group python: form.get_fields_in_group(\'right\');\n
                          left1_group python: form.get_fields_in_group(\'left 1\');\n
                          right1_group python: form.get_fields_in_group(\'right 1\');\n
-                         bottom_group python: form.get_fields_in_group(\'bottom\');">\n
+                         center_group python: form.get_fields_in_group(\'center\');">\n
     <tal:block metal:use-macro="here/developper_shortcuts/macros/form" />\n
     <div tal:condition="python: len(left_group) > 0 or len(right_group) > 0"\n
          class="top_group">\n
@@ -173,12 +173,10 @@ Groups names becomes "left_group", "right_group", "left1_group", "right1_group",
       </div>\n
       <hr class="clear" />\n
     </div>\n
-    <div tal:condition="python: len(bottom_group) > 0"\n
+    <div tal:condition="python: len(center_group) > 0"\n
          class="bottom">\n
-      <tal:block tal:repeat="field python: form.get_fields_in_group(\'bottom\')">\n
-        <tal:block metal:use-macro="here/developper_shortcuts/macros/field" />\n
-        <tal:block tal:define="value python:request.get(field.id, None)"\n
-                   tal:replace="structure python:field.render(value, request)" />\n
+      <tal:block tal:repeat="field center_group">\n
+        <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
       </tal:block>\n
     </div>\n
   </tal:block>\n

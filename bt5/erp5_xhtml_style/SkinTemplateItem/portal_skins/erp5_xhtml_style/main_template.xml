@@ -85,7 +85,7 @@ IDEAS:\n
 </tal:block>\n
 <tal:block tal:define="global actions python:here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
                        global form_id request/form_id | form/id | nothing;\n
-                       global dialog_id form/id | nothing;\n
+                       global dialog_id form/id | template/id;\n
                        global field_errors python: request.get(\'field_errors\',{});\n
 \n
                        global cancel_url request/cancel_url | request/HTTP_REFERER;\n
