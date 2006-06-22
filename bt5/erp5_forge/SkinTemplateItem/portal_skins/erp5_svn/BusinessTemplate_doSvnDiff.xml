@@ -74,7 +74,7 @@ modified=context.REQUEST["modified"]\n
 added=context.REQUEST["added"]\n
 removed=context.REQUEST["removed"]\n
 \n
-print \'<br/><font color="black">\'\n
+print \'<div style="color: black">\'\n
 tab_Modified=modified.split(\',\')\n
 tab_Added=added.split(\',\')\n
 tab_Removed=removed.split(\',\')\n
@@ -82,34 +82,34 @@ tab_Removed=removed.split(\',\')\n
 if modified != \'none\':\n
   for f in tab_Modified:\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)    \n
-    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"\n
-    print \'</font></b><br/><hr/>\'\n
+      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+    print \'</span><br/><hr/>\'\n
     print context.getPortalObject()["portal_subversion"].diffHTML(f, context)\n
 \n
 if added != \'none\':\n
   for f in tab_Added:\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
-    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"\n
-    print \'</font></b><br/><hr/>\'\n
-    print \'<font color="green">File Added</font><br/><br/>\'\n
+      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+    print \'</span><br/><hr/>\'\n
+    print "<span style=\'color: green;\'><File Added</span><br/><br/>"\n
 \n
 if removed != \'none\':\n
   for f in tab_Removed:\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
-    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"\n
-    print \'</font></b><br/><hr/>\'\n
-    print "<font color=\'red\'>File Removed</font><br/><br/>"\n
+      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+    print \'</span><br/><hr/>\'\n
+    print "<span style=\'color: red;\'>File Removed</span><br/><br/>"\n
 \n
-print \'</font>\'\n
+print \'</div>\'\n
 return printed\n
 
 
