@@ -96,6 +96,12 @@ class ReportTree:
       self.exception_uid_set = set(exception_uid_list)
     self.base_category = base_category
 
+    relative_url = obj.getRelativeUrl()
+    if base_category is not None and not relative_url.startswith(base_category + '/'):
+      self.domain_url = '%s/%s' % (base_category, relative_url)
+    else:
+      self.domain_url = relative_url
+
 class ReportSection:
   """This class describes a report section.
   """
@@ -1195,6 +1201,20 @@ class ListBoxRenderer:
     """
     raise NotImplementedError, "getLineStart must be overridden in a subclass"
 
+  def getSelectedDomainPath(self):
+    """Return a selected domain path.
+    """
+    domain_path = self.getSelection().getDomainPath()
+    if domain_path == ('portal_categories',):
+      try:
+        # Default to the first domain.
+        domain_path = self.getDomainRootList()[0][0]
+      except IndexError:
+        domain_path = None
+    return domain_path
+
+  getSelectedDomainPath = VolatileCachingMethod(getSelectedDomainPath)
+
   def getSelectedReportPath(self):
     """Return a selected report path.
     """
@@ -1211,6 +1231,52 @@ class ListBoxRenderer:
     return selection.getReportPath(default = default_selection_report_path)
 
   getSelectedReportPath = VolatileCachingMethod(getSelectedReportPath)
+
+  def getLabelValueList(self):
+    """Return a list of values, where each value is a tuple consisting of an property id, a title and a string which
+    describes the current sorting order, one of ascending, descending and None. If a value is not sortable, the id is
+    set to None, otherwise to a string.
+    """
+    sort_list = self.getSelectionTool().getSelectionSortOrder(self.getSelectionName())
+    sort_dict = dict(sort_list)
+    sort_column_id_set = self.getSortColumnIdSet()
+
+    value_list = []
+    for c in self.getSelectedColumnList():
+      if c[0] in sort_column_id_set:
+        value_list.append((c[0], c[1], sort_dict.get(c[0])))
+      else:
+        value_list.append((None, c[1], None))
+
+    return value_list
+
+  def getSearchValueList(self):
+    """Return a list of values, where each value is a tuple consisting of an alias, a current value and a search field.
+    If a column is not searchable, the alias is set to None, otherwise to a string. If a search field is not present,
+    it is set to None.
+    """
+    search_column_id_set = self.getSearchColumnIdSet()
+    param_dict = self.getParamDict()
+    value_list = []
+    for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
+      if sql in search_column_id_set:
+        # Get the current value and encode it in unicode.
+        param = param_dict.get(alias, u'')
+        if isinstance(param, str):
+          param = unicode(param, self.getEncoding())
+
+        # Obtain a search field, if any.
+        search_field_id = 'search_%s_%s' % (self.getId(), alias)
+        if self.getForm().has_field(search_field_id):
+          search_field = self.getForm().get_field(search_field_id)
+        else:
+          search_field = None
+
+        value_list.append((alias, param, search_field))
+      else:
+        value_list.append((None, None, None))
+
+    return value_list
 
   def getStatValueList(self):
     """Return a list of values, where each value is a tuple consisting of an original value and a processed value.
@@ -1346,7 +1412,7 @@ class ListBoxRenderer:
           # XXX yo thinks that this code below is useless, so disabled.
           #absolute_url_txt = report_tree.obj.absolute_url()
           #stat_context.absolute_url = lambda: absolute_url_txt
-          stat_context.domain_url = report_tree.obj.getRelativeUrl()
+          stat_context.domain_url = report_tree.domain_url
           report_section_list.append(ReportSection(is_summary = True, object_list = [stat_context],
                                                    object_list_len = 1, is_open = report_tree.is_open,
                                                    domain_selection = report_tree.domain_selection,
@@ -1383,7 +1449,7 @@ class ListBoxRenderer:
             stat_context = report_tree.obj.asContext()
             #absolute_url_txt = s[0].absolute_url()
             #stat_context.absolute_url = lambda : absolute_url_txt
-            stat_context.domain_url = report_tree.obj.getRelativeUrl()
+            stat_context.domain_url = report_tree.domain_url
             if object_list_len and report_tree.is_open:
               # Display the first object at the same level as a category selector,
               # if this selector is open.
@@ -1898,6 +1964,25 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
   getMaxLineNumber = VolatileCachingMethod(getMaxLineNumber)
 
+  def getMD5Checksum(self):
+    """Generate a MD5 checksum against checked uids. This is used to confirm
+    that selected values do not change between a display of a dialog and an execution.
+
+    FIXME: this should only use getCheckedUidList, but Folder_deleteObjectList does not use
+    the feature that checked uids are used when no list method is specified.
+    """
+    checked_uid_list = self.request.get('uids')
+    if checked_uid_list is None:
+      checked_uid_list = self.getCheckedUidList()
+    if checked_uid_list is not None:
+      checked_uid_list = [str(uid) for uid in checked_uid_list]
+      checked_uid_list.sort()
+      md5_string = md5.new(str(checked_uid_list)).hexdigest()
+    else:
+      md5_string = None
+
+    return md5_string
+
   def render(self, **kw):
     """Render the data in HTML.
     """
@@ -1915,21 +2000,6 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
     # Obtain the list of lines.
     line_list = self.query()
-
-    # Generate a MD5 checksum against checked uids. This is used to confirm
-    # that selected values do not change between a display of a dialog and an execution.
-    # FIXME: this should only use getCheckedUidList, but Folder_deleteObjectList does not use
-    # the feature that checked uids are used when no list method is specified.
-    checked_uid_list = self.request.get('uids')
-    if checked_uid_list is None:
-      checked_uid_list = self.getCheckedUidList()
-    #LOG('ListBox', 0, 'checked_uid_list = %r' % (checked_uid_list,))
-    if checked_uid_list is not None:
-      checked_uid_list = [str(uid) for uid in checked_uid_list]
-      checked_uid_list.sort()
-      md5_string = md5.new(str(checked_uid_list)).hexdigest()
-    else:
-      md5_string = None
 
     # Start rendering.
     # FIXME: This part should be replaced with Page Templates.
@@ -1968,6 +2038,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 """ % format_dict)
 
     # If the MD5 checksum is valid, embed it.
+    md5_string = self.getMD5Checksum()
     if md5_string is not None:
       html_list.append("""
 <input type="hidden" name="md5_object_uid_list" value="%s" />
@@ -1983,7 +2054,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     <select name="domain_root_url" onChange="submitAction(this.form, '%(context_url)s/portal_selections/setDomainRoot')">
 """ % format_dict)
 
-      selected_domain_path = selection.getDomainPath()
+      selected_domain_path = self.getSelectedDomainPath()
       for c in self.getDomainRootList():
         if c[0] == selected_domain_path:
           selected = 'selected'
@@ -2001,10 +2072,6 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
       # Render a domain tree.
       try:
-        # Default to the first domain.
-        if selected_domain_path == ('portal_categories',):
-          selected_domain_path = self.getDomainRootList()[0][0]
-
         report_tree_list = self.makeReportTreeList(report_path = selected_domain_path,
                                                    unfolded_list = selection.getDomainList(),
                                                    is_report_opened = False)
@@ -2184,33 +2251,25 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 """ % format_dict)
 
     # Show labels with quick sort links when appropriate.
-    # FIXME: this logic should be move to somewhere else.
-    sort_list = self.getSelectionTool().getSelectionSortOrder(self.getSelectionName())
-    sort_dict = dict(sort_list)
-    sort_column_id_set = self.getSortColumnIdSet()
-
-    for c in self.getSelectedColumnList():
+    for sql, title, sort_order in self.getLabelValueList():
       html_list.append("""\
    <td class="Data">\
 """)
-      if c[0] in sort_column_id_set:
+      if sql is not None:
         html_list.append("""\
 <a href="portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s">%s</a>\
-""" % (self.getSelectionName(), c[0], unicode(Message(domain = ui_domain, message = c[1]))))
+""" % (self.getSelectionName(), sql, unicode(Message(domain = ui_domain, message = title))))
 
-        try:
-          if sort_dict[c[0]] == 'ascending':
-            html_list.append("""\
+        if sort_order == 'ascending':
+          html_list.append("""\
  <img src="%(portal_url_string)s/images/1bottomarrow.png" alt="Ascending Display" title="%(ascending_display_title)s" />\
 """ % format_dict)
-          elif sort_dict[c[0]] == 'descending':
-            html_list.append("""\
+        elif sort_order == 'descending':
+          html_list.append("""\
  <img src="%(portal_url_string)s/images/1toparrow.png" alt="Descending Display" title="%(descending_display_title)s" />\
 """ % format_dict)
-        except KeyError:
-          pass
       else:
-        html_list.append('%s' % (unicode(Message(domain = ui_domain, message = c[1]),)))
+        html_list.append('%s' % (unicode(Message(domain = ui_domain, message = title),)))
 
       html_list.append("""\
    </td>
@@ -2269,26 +2328,17 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
       # Add search fields.
       if self.showSearchLine():
-        search_column_id_set = self.getSearchColumnIdSet()
-        for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
+        for alias, param, search_field in self.getSearchValueList():
           html_list.append("""\
    <td class="DataB">
 """)
 
-          # If searchable, add an input field.
-          if sql in search_column_id_set:
-            # Get the current value and encode it in unicode.
-            param = param_dict.get(alias, u'')
-            if isinstance(param, str):
-              param = unicode(param, self.getEncoding())
-
+          if alias is not None:
             # Render the search field by a widget, if any.
-            search_field_id = 'search_%s_%s' % (self.getId(), alias)
-            if self.getForm().has_field(search_field_id):
-              search_field = self.getForm().get_field(search_field_id)
+            if search_field:
               search_field_html = search_field.render(value = param, key = alias)
             else:
-              search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, param)
+              search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, cgi.escape(param))
 
             # FIXME: The font size should be defined in the CSS.
             html_list.append("""\
