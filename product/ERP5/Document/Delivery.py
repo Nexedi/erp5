@@ -63,6 +63,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
                       , PropertySheet.Reference
+                      , PropertySheet.Price
                       )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
