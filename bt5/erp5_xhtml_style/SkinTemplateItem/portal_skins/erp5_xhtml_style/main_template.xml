@@ -144,10 +144,7 @@ IDEAS:\n
     </tal:block>\n
   </head>\n
   <body>\n
-<!--    <tal:block tal:replace="structure here/REQUEST" />\n
-    <tal:block tal:replace="http_parameter_list" />\n
-    <tal:block tal:replace="http_parameters" />-->\n
-    <form id="body"\n
+    <form id="main_form"\n
           tal:attributes="enctype form/enctype | nothing;\n
                           action url;\n
                           method form/method | string:post">\n
