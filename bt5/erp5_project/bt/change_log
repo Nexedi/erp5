@@ -1,3 +1,7 @@
+2006-06-22 Jerome
+* Add missing TaskOrder propertysheet.
+* improve Task_view
+
 2006-06-15 Thomas
 * Added form to display PlanningBox within a project tab.
 
