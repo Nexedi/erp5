@@ -535,7 +535,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Task Reports</string> </value>
+                    <value> <string>Tasks</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
