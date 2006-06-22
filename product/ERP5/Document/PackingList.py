@@ -27,10 +27,8 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5.Document.Delivery import Delivery
 from zLOG import LOG
@@ -89,7 +87,7 @@ class PackingList(Delivery):
       if self.getSimulationState() not in self.getPortalDraftOrderStateList():
         if not self.isSimulated():
           return 1
-      return Delivery.isDivergent(self,**kw)
+      return Delivery.isDivergent(self, **kw)
 
     #######################################################
     # Container computation
@@ -113,9 +111,9 @@ class PackingList(Delivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id="default_delivery_rule",**kw):
+    def updateAppliedRule(self, rule_id="default_delivery_rule", **kw):
       """
         XXX FIXME: Kept for compatibility
         updateAppliedRule must be call with the rule_id in workflow script
       """
-      Delivery.updateAppliedRule(self, rule_id,**kw)
+      Delivery.updateAppliedRule(self, rule_id, **kw)
