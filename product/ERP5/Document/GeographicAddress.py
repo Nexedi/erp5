@@ -66,50 +66,6 @@ class GeographicAddress(Coordinate, Base):
     # Declarative interfaces
     __implements__ = ( Interface.Coordinate )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-A geographic address holds a complete set of
-geographic coordinates including street, number,
-city, zip code, region."""
-         , 'icon'           : 'geographic_address_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addGeographicAddress'
-         , 'immediate_view' : 'geographic_address_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'geographic_address_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'geographic_address_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_edit'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declareProtected(Permissions.View, 'asText')
     def asText(self, country=''):
         """

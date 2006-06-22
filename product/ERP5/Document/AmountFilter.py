@@ -74,60 +74,6 @@ class AmountFilter(MappedValue, Amount):
                       , PropertySheet.MappedValue
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addAmountFilter'
-         , 'immediate_view' : 'amount_filter_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'amount_filter_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'amount_filter_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declareProtected(Permissions.AccessContentsInformation, 'update')
     def update(self, amount_line):
       context = self.aq_parent.asContext(**amount_line)
@@ -141,4 +87,5 @@ Une ligne tarifaire."""
         if self.getResource():
           amount_line['resource'] = self.getResource()
         if self.getVariationCategoryList():
-          amount_line['variation_category_list'] = self.getVariationCategoryList()
+          amount_line['variation_category_list'] = \
+                      self.getVariationCategoryList()

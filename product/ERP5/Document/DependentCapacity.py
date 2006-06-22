@@ -56,51 +56,10 @@ class DependentCapacity(Capacity):
                       , PropertySheet.Amount
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Items in ERP5 are intended to provide a way to track objects."""
-         , 'icon'           : 'item_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addDependentCapacity'
-         , 'immediate_view' : 'dependent_capacity_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'dependent_capacity_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'dependent_capacity_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_edit'
-          , 'action'        : 'metadata_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declareProtected(Permissions.View, 'asCapacityItemList')
     def asCapacityItemList(self):
       """
         Returns an association list of points and capacity values
       """
-      return map(lambda capacity: ((capacity, self.getQuantity())), self.getResourceList())
+      return map(lambda capacity:((capacity, self.getQuantity())),
+                self.getResourceList())

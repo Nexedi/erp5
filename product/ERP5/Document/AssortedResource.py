@@ -149,50 +149,6 @@ class AssortedResource(TransformedResource):
         'mode'        : 'w' },
     )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-A bank account number holds a collection of numbers
-and codes (ex. SWIFT, RIB, etc.) which may be used to
-identify a bank account."""
-         , 'icon'           : 'assorted_resource_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addAssortedResource'
-         , 'immediate_view' : 'assorted_resource_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'assorted_resource_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'assorted_resource_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationCategoryList')
     def getAssortedVariationCategoryList(self, cell_index):
       """
