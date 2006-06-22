@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -31,15 +31,16 @@ class TaskOrder:
     """
 
     _properties = (
-    {
-      'id'                  : 'task_line'
-    , 'storage_id'          : 'default_task_line'
-    , 'description'         : 'The default task line for a task.'
-    , 'type'                : 'content'
-    , 'portal_type'         : ( 'Task Line', )
-    , 'acquired_property_id': ( 'quantity', 'quantity_unit', 'price')
-    , 'mode'                : 'w'
-    },
+      { 'id'                  : 'task_line',
+        'storage_id'          : 'default_task_line',
+        'description'         : 'The default task line for a task.',
+        'type'                : 'content',
+        'portal_type'         : ( 'Task Line', ),
+        'acquired_property_id': ( 'quantity', 'quantity_unit', 'price',
+                                  'quantity_unit_title',
+                                  'quantity_unit_logical_path'),
+        'mode'                : 'w',
+      },
 
     )
   

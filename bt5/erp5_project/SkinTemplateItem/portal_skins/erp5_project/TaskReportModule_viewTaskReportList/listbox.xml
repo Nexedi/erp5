@@ -362,7 +362,7 @@
                           <string>Total</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
@@ -535,7 +535,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Project Reports</string> </value>
+                    <value> <string>Task Reports</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

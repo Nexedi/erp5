@@ -105,7 +105,7 @@
                         <string>my_destination_section</string>
                         <string>my_destination_project_title</string>
                         <string>my_trade_condition_title</string>
-                        <string>state</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>

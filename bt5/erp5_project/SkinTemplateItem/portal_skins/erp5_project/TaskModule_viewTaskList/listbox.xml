@@ -362,11 +362,11 @@
                           <string>Total</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>task_line_quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
