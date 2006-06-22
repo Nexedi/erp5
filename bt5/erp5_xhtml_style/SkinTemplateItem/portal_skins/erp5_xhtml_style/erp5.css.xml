@@ -393,7 +393,7 @@ body {\n
   background-color: <dtml-var background_color>;\n
 }\n
 \n
-#body {\n
+#main_form {\n
   background-color: inherit;\n
   color: inherit;\n
 }\n
