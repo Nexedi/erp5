@@ -188,50 +188,50 @@ class Queue:
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []  
-  
+
   # Transaction Management
   def prepareQueueMessage(self, activity_tool, m):
     # Called to prepare transaction commit for queued messages
     pass
-  
-  def finishQueueMessage(self, activity_tool, m):
+
+  def finishQueueMessage(self, activity_tool_path, m):
     # Called to commit queued messages
     pass
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Called to prepare transaction commit for deleted messages
     pass
-  
-  def finishDeleteMessage(self, activity_tool, m):
+
+  def finishDeleteMessage(self, activity_tool_path, m):
     # Called to commit deleted messages
     pass
-  
+
   # Registration Management
   def registerActivityBuffer(self, activity_buffer):
     class_name = self.__class__.__name__
     setattr(activity_buffer, '_%s_message_list' % class_name, [])  
-            
+
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
     return m in getattr(activity_buffer, '_%s_message_list' % class_name)
-                                   
+
   def registerMessage(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
     getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
     m.is_registered = 1
-          
+
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 0
-          
+
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
     class_name = self.__class__.__name__
     if hasattr(activity_buffer, '_%s_message_list' % class_name):
-      return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))      
+      return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))
     else:
-      return ()        
-    
-  # Required for tests (time shift)        
-  def timeShift(self, activity_tool, delay):    
+      return ()
+
+  # Required for tests (time shift)
+  def timeShift(self, activity_tool, delay):
     """
       delay is provided in fractions of day
     """

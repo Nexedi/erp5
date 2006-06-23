@@ -50,20 +50,17 @@ class RAMDict(Queue):
     Queue.__init__(self)
     self.queue_dict = {}
 
-  def getDict(self, activity_tool):
-    path = activity_tool.getPhysicalPath()
-    if not self.queue_dict.has_key(path):
-      self.queue_dict[path] = {}
-    return self.queue_dict[path]
-    
-  def finishQueueMessage(self, activity_tool, m):
-    if m.is_registered:
-      self.getDict(activity_tool)[(tuple(m.object_path), m.method_id)] = m
+  def getDict(self, activity_tool_path):
+    return self.queue_dict.setdefault(activity_tool_path, {})
 
-  def finishDeleteMessage(self, activity_tool, message):
-    for key, m in self.getDict(activity_tool).items():
+  def finishQueueMessage(self, activity_tool_path, m):
+    if m.is_registered:
+      self.getDict(activity_tool_path)[(tuple(m.object_path), m.method_id)] = m
+
+  def finishDeleteMessage(self, activity_tool_path, message):
+    for key, m in self.getDict(activity_tool_path).items():
       if m.object_path == message.object_path and m.method_id == message.method_id:
-          del self.getDict(activity_tool)[(tuple(m.object_path), m.method_id)]
+        del self.getDict(activity_tool_path)[(tuple(m.object_path), m.method_id)]
 
   def registerActivityBuffer(self, activity_buffer):
     class_name = self.__class__.__name__
@@ -81,13 +78,14 @@ class RAMDict(Queue):
     m.is_registered = 1
 
   def dequeueMessage(self, activity_tool, processing_node):
-    if len(self.getDict(activity_tool).keys()) is 0:
+    path = activity_tool.getPhysicalPath()
+    if len(self.getDict(path).keys()) is 0:
       return 1  # Go to sleep
-    for key, m in self.getDict(activity_tool).items():
+    for key, m in self.getDict(path).items():
       if m.validate(self, activity_tool) is VALID:
         activity_tool.invoke(m)
         if m.is_executed:
-          del self.getDict(activity_tool)[key]
+          del self.getDict(path)[key]
           get_transaction().commit()
           return 0
         else:
@@ -99,9 +97,10 @@ class RAMDict(Queue):
     if object is not None:
       object_path = object.getPhysicalPath()
     else:
-      object_path = None     
-    active_process = kw.get('active_process', None)      
-    for m in self.getDict(activity_tool).values():
+      object_path = None
+    active_process = kw.get('active_process', None)
+    path = activity_tool.getPhysicalPath()
+    for m in self.getDict(path).values():
       # Filter active process and path if defined
       if active_process is None or m.active_process == active_process:
         if object_path is None or m.object_path == object_path:
@@ -133,16 +132,17 @@ class RAMDict(Queue):
                   'The document %s does not exist' % path) 
           else:
             method_dict[m.method_id] = 1
-            activity_tool.unregisterMessage(self, m)                             
-        else:                                
+            activity_tool.unregisterMessage(self, m)
+        else:
           method_dict[m.method_id] = 1
           activity_tool.unregisterMessage(self, m)
     # Parse each message in RAM dict
-    for key, m in self.getDict(activity_tool).items():
+    path = activity_tool.getPhysicalPath()
+    for key, m in self.getDict(path).items():
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if not method_dict.has_key(m.method_id):
           LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
-          if invoke:           
+          if invoke:
             activity_tool.invoke(m)
             if m.is_executed:
               method_dict[m.method_id] = 1
@@ -150,15 +150,16 @@ class RAMDict(Queue):
           else:
             method_dict[m.method_id] = 1
             self.deleteMessage(activity_tool, m)
-        else:            
+        else:
           self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     new_queue = []
-    for m in self.getDict(activity_tool).values():
+    path = activity_tool.getPhysicalPath()
+    for m in self.getDict(path).values():
       m.processing_node = 1
       m.priority = 0
       new_queue.append(m)
     return new_queue
-    
+
 registerActivity(RAMDict)

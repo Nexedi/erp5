@@ -43,23 +43,20 @@ class RAMQueue(Queue):
     Queue.__init__(self)
     self.queue_dict = {}
     self.last_uid = 0
-    
-  def getQueue(self, activity_tool):
-    path = activity_tool.getPhysicalPath()
-    if not self.queue_dict.has_key(path):
-      self.queue_dict[path] = []
-    return self.queue_dict[path]
-    
-  def finishQueueMessage(self, activity_tool, m):
+
+  def getQueue(self, activity_tool_path):
+    return self.queue_dict.setdefault(activity_tool_path, [])
+
+  def finishQueueMessage(self, activity_tool_path, m):
     if m.is_registered:
       # XXX - Some lock is required on this section
       self.last_uid = self.last_uid + 1
       m.uid = self.last_uid
-      self.getQueue(activity_tool).append(m)
+      self.getQueue(activity_tool_path).append(m)
 
-  def finishDeleteMessage(self, activity_tool, m):
+  def finishDeleteMessage(self, activity_tool_path, m):
     i = 0
-    queue = self.getQueue(activity_tool)
+    queue = self.getQueue(activity_tool_path)
     for my_message in queue:
       if my_message.uid == m.uid:
         del queue[i]
@@ -67,7 +64,8 @@ class RAMQueue(Queue):
       i = i + 1
 
   def dequeueMessage(self, activity_tool, processing_node):
-    for m in self.getQueue(activity_tool):
+    path = activity_tool.getPhysicalPath()
+    for m in self.getQueue(path):
       if m.validate(self, activity_tool) is not VALID:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
         get_transaction().commit() # Start a new transaction
@@ -76,7 +74,7 @@ class RAMQueue(Queue):
       if m.is_executed:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
         get_transaction().commit() # Start a new transaction
-        return 0    # Keep on ticking         
+        return 0    # Keep on ticking
       else:
         # Start a new transaction and keep on to next message
         get_transaction().commit()
@@ -88,8 +86,9 @@ class RAMQueue(Queue):
       object_path = object.getPhysicalPath()
     else:
       object_path = None  
-    active_process = kw.get('active_process', None)           
-    for m in self.getQueue(activity_tool):
+    active_process = kw.get('active_process', None)
+    path = activity_tool.getPhysicalPath()
+    for m in self.getQueue(path):
       # Filter active process and path if defined
       if active_process is None or m.active_process == active_process:
         if object_path is None or m.object_path == object_path:
@@ -102,29 +101,31 @@ class RAMQueue(Queue):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if m.validate(self, activity_tool) is not VALID: 
           activity_tool.unregisterMessage(self, m) # Trash messages which are not validated (no error handling)
-        else:            
+        else:
           if invoke:
             activity_tool.invoke(m)
             if m.is_executed:
               activity_tool.unregisterMessage(self, m)
-          else:              
+          else:
             activity_tool.unregisterMessage(self, m)
     # Parse each message in queue
-    for m in self.getQueue(activity_tool):
+    path = activity_tool.getPhysicalPath()
+    for m in self.getQueue(path):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if m.validate(self, activity_tool) is not VALID:
           self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
-        else:            
+        else:
           if invoke:
             activity_tool.invoke(m)
             if m.is_executed:
               self.deleteMessage(activity_tool, m) # Only delete if no error happens
-          else:              
+          else:
             self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     new_queue = []
-    for m in self.getQueue(activity_tool):
+    path = activity_tool.getPhysicalPath()
+    for m in self.getQueue(path):
       m.processing_node = 1
       m.priority = 0
       new_queue.append(m)
