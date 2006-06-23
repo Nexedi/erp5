@@ -47,8 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>ERP5 OOo Template   \t\r\n
-AccountingTransactionModule_viewBalanceSheetAsSxc</string> </value>
+            <value> <string>AccountingTransactionModule_viewBalanceSheetAsSxc</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
