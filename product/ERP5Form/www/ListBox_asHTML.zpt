@@ -272,8 +272,6 @@
                 <td tal:condition="is_report_tree_mode" class="DataA" align="left" valign="middle"
                   tal:attributes="class css"
                   tal:define="section_name python: line.getContext() is not None and line.getContext().getTitleOrId() or ''">
-                  <input type="hidden" value="1" name="listbox_uid:list"
-                    tal:attributes="value python: line.getUid() or ''; name string:${field_id}_uid:list" />
                   <a tal:condition="section_name"
                     href="portal_selections/foldReport?report_url=base_domain&amp;form_id=form&amp;list_selection_name=default"
                     tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
@@ -296,8 +294,13 @@
                                   error python: value[2]"
                     class="DataA" align="left"
                     tal:attributes="class python: error and (css + 'Error') or css;
-                                    align python: isinstance(original_value, (float, int, long)) and 'right' or 'left'"
-                    tal:content="structure html" />
+                                    align python: isinstance(original_value, (float, int, long)) and 'right' or 'left'">
+                    <input tal:condition="not: repeat/value/index"
+                      type="hidden" value="1" name="listbox_uid:list"
+                      tal:attributes="value python: line.getUid() or '';
+                                      name string:${field_id}_uid:list" />
+                    <span tal:replace="structure html">value</span>
+                  </td>
                 </tal:block>
               </tr>
             </tal:block>
