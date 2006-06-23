@@ -869,7 +869,7 @@ class ERP5Generator(PortalGenerator):
     p._setProperty('cmf_activity_sql_connection_type', cmf_activity_sql_connection_type, 'string')
     p._setProperty('cmf_activity_sql_connection_string', cmf_activity_sql_connection_string, 'string')
     p._setProperty('management_page_charset', 'UTF-8', 'string')
-    self.setup(p, create_userfolder, **kw)
+    self.setup(p, create_userfolder, create_activities=create_activities, **kw)
     return p
 
 
@@ -880,7 +880,7 @@ class ERP5Generator(PortalGenerator):
       make sure that we do not put un the queue the full reindexation
     """
     # Add Activity Tool
-    if kw.has_key('create_activities') and int(kw['create_activities'])==1:
+    if kw.get('create_activities', 0):
       if not p.hasObject('portal_activities'):
         addTool = p.manage_addProduct['CMFActivity'].manage_addTool
         addTool('CMF Activity Tool', None) # Allow user to select active/passive
