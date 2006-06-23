@@ -50,6 +50,7 @@ from ZODB.POSException import ConflictError
 
 from Globals import InitializeClass, Persistent, Acquisition, get_request
 from Products.PythonScripts.Utility import allow_class
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 import random
 import md5
@@ -101,6 +102,8 @@ class ReportTree:
       self.domain_url = '%s/%s' % (base_category, relative_url)
     else:
       self.domain_url = relative_url
+
+allow_class(ReportTree)
 
 class ReportSection:
   """This class describes a report section.
@@ -335,10 +338,18 @@ class ListBoxWidget(Widget.Widget):
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
-                                              'to display the current list'),
+                                              ' to display the current list'),
                                  default='list',
                                  required=1)
     property_names.append('list_action')
+
+    page_template = fields.StringField('page_template',
+                                 title='Page Template',
+                                 description=('The id of a Page Template'
+                                              ' to render the ListBox'),
+                                 default='',
+                                 required=0)
+    property_names.append('page_template')
 
     def render_view(self, field, value, REQUEST=None, render_format='html', key='listbox'):
         """
@@ -857,6 +868,13 @@ class ListBoxRenderer:
     return self.getSelection().getCheckedUids()
 
   getCheckedUidList = VolatileCachingMethod(getCheckedUidList)
+
+  def getCheckedUidSet(self):
+    """Return the set of checked uids.
+    """
+    return set(self.getCheckedUidList())
+
+  getCheckedUidSet = VolatileCachingMethod(getCheckedUidSet)
 
   def getSelectedColumnList(self):
     """Return the list of selected columns.
@@ -1916,7 +1934,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                   error = sys.exc_info())
           else:
             try:
-              url = '%s/view?selection_index=%s&selection_name=%s&reset:int=1' % (brain.getPath(), self.index, selection_name)
+              url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;reset:int=1' % (brain.getPath(), self.index, selection_name)
             except AttributeError:
               pass
 
@@ -1930,6 +1948,19 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
     return html_list
 
+allow_class(ListBoxHTMLRendererLine)
+
+class ListBoxRendererContext(Acquisition.Explicit):
+  """This class helps making a context for a Page Template,
+  because Page Template requires an acquisition context.
+  """
+  def __init__(self, renderer):
+    self.renderer = renderer
+    # XXX this is a workaround for GlobalTranslationService.
+    self.Localizer = renderer.getContext().Localizer
+
+  def __getattr__(self, name):
+    return getattr(self.renderer, name)
 
 class ListBoxHTMLRenderer(ListBoxRenderer):
   """This class implements HTML rendering for ListBox.
@@ -1983,8 +2014,47 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
     return md5_string
 
+  def getPhysicalRoot(self):
+    """Return the physical root (an Application object). This method is required for
+    Page Template to make a context.
+    """
+    return self.getContext().getPhysicalRoot()
+
+  asHTML = PageTemplateFile('www/ListBox_asHTML', globals())
+
+  def getPageTemplate(self):
+    """Return a Page Template to render.
+    """
+    context = ListBoxRendererContext(self)
+
+    # If a specific template is specified, use it.
+    method_id = self.field.get_value('page_template')
+    if method_id:
+      return getattr(context, method_id)
+
+    # Otherwise, use the default one.
+    return context.asHTML
+
   def render(self, **kw):
     """Render the data in HTML.
+    """
+    # Make it sure to store the current selection, only if a list method is defined.
+    list_method = self.getListMethod()
+    selection = self.getSelection()
+    if list_method is not None:
+      method_path = getPath(self.getContext()) + '/' + self.getListMethodName()
+      list_url = '%s?selection_name=%s' % (self.getUrl(), self.getRequestedSelectionName())
+      selection_index = self.getSelectionIndex()
+      if selection_index is not None:
+        list_url += '&selection_index=%s' % selection_index
+      selection.edit(method_path = method_path, list_url = list_url)
+      self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
+
+    pt = self.getPageTemplate()
+    return pt()
+
+  def original_render(self, **kw):
+    """This is just a reference. Not used any longer.
     """
     # Make it sure to store the current selection, only if a list method is defined.
     list_method = self.getListMethod()
@@ -2335,7 +2405,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
           if alias is not None:
             # Render the search field by a widget, if any.
-            if search_field:
+            if search_field is not None:
               search_field_html = search_field.render(value = param, key = alias)
             else:
               search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, cgi.escape(param))
@@ -2356,7 +2426,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
     # Add data lines.
     selection = self.getSelection()
-    checked_uid_set = set(self.getCheckedUidList())
+    checked_uid_set = self.getCheckedUidSet()
 
     for i, line in enumerate(line_list):
       # Change the appearance of each line for visibility.
@@ -2502,6 +2572,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 """ % format_dict)
 
     return ''.join(html_list)
+
+allow_class(ListBoxHTMLRenderer)
 
 class ListBoxListRenderer(ListBoxRenderer):
   """This class implements list rendering for ListBox.
@@ -3047,7 +3119,7 @@ allow_class(ListBoxLine)
 
 # Psyco
 import psyco
-psyco.bind(ListBoxWidget.render)
+#psyco.bind(ListBoxWidget.render)
 psyco.bind(ListBoxValidator.validate)
 
 
