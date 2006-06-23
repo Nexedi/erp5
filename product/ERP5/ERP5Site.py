@@ -880,17 +880,18 @@ class ERP5Generator(PortalGenerator):
       make sure that we do not put un the queue the full reindexation
     """
     # Add Activity Tool
-    if not p.hasObject('portal_activities'):
-      addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-      addTool('CMF Activity Tool', None) # Allow user to select active/passive
-    # Initialize Activities
-    portal_activities = getToolByName(p, 'portal_activities', None)
-    if portal_activities is not None:
-      if kw.get('update', 0):
-        keep = 1
-      else:
-        keep = 0
-      portal_activities.manageClearActivities(keep=keep)
+    if kw.has_key('create_activities') and int(kw['create_activities'])==1:
+      if not p.hasObject('portal_activities'):
+        addTool = p.manage_addProduct['CMFActivity'].manage_addTool
+        addTool('CMF Activity Tool', None) # Allow user to select active/passive
+      # Initialize Activities
+      portal_activities = getToolByName(p, 'portal_activities', None)
+      if portal_activities is not None:
+        if kw.get('update', 0):
+          keep = 1
+        else:
+          keep = 0
+        portal_activities.manageClearActivities(keep=keep)
 
 
   def setupTemplateTool(self, p, **kw):
@@ -971,7 +972,7 @@ class ERP5Generator(PortalGenerator):
     # Add Default SQL connection
     if p.erp5_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('erp5_sql_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+        addSQLConnection = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
         addSQLConnection('erp5_sql_connection', 'ERP5 SQL Server Connection', p.erp5_sql_connection_string)
     elif p.erp5_sql_connection_type == 'Z Gadfly':
       pass
@@ -979,7 +980,7 @@ class ERP5Generator(PortalGenerator):
     # Add Deferred SQL Connections
     if p.erp5_sql_deferred_connection_type == 'Z MySQL Deferred Database Connection':
       if not p.hasObject('erp5_sql_deferred_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDDA'].manage_addZMySQLDeferredConnection
+        addSQLConnection = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLDeferredConnection
         addSQLConnection('erp5_sql_deferred_connection', 'ERP5 SQL Server Deferred Connection', p.erp5_sql_deferred_connection_string)
     elif p.erp5_sql_deferred_connection_type == 'Z Gadfly':
       pass
@@ -987,7 +988,7 @@ class ERP5Generator(PortalGenerator):
     # Add Activity SQL Connections
     if p.cmf_activity_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('cmf_activity_sql_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+        addSQLConnection = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
         addSQLConnection('cmf_activity_sql_connection', 'CMF Activity SQL Server Connection', p.cmf_activity_sql_connection_string)
     elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
       pass
