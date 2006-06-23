@@ -39,13 +39,14 @@
           <tr>
             <td valign="top">
               <select name="domain_root_url" onChange="submitAction(this.form, 'context/portal_selections/setDomainRoot')"
-                tal:attributes="onChange string:submitAction(this.form, '${context_url}/portal_selections/setDomainRoot')"
-                tal:repeat="c here/getDomainRootList">
-                <option value="base_domain"
-                  tal:define="path python: c[0]; title python: c[1]"
-                  tal:attributes="selected python: path == selected_domain_path; value path"
-                  tal:content="title"
-                  i18n:translate="" i18n:domain="ui">Base Domain</option>
+                tal:attributes="onChange string:submitAction(this.form, '${context_url}/portal_selections/setDomainRoot')">
+                <tal:block tal:repeat="c here/getDomainRootList">
+                  <option value="base_domain"
+                    tal:define="path python: c[0]; title python: c[1]"
+                    tal:attributes="selected python: path == selected_domain_path; value path"
+                    tal:content="title"
+                    i18n:translate="" i18n:domain="ui">Base Domain</option>
+                </tal:block>
               </select>
               <table id="listbox_domain_tree_table" cellpadding="0" border="0"
                 tal:attributes="id string:${field_id}_domain_tree_table"
