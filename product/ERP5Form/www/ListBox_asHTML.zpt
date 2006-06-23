@@ -307,8 +307,8 @@
 
             <tr tal:condition="here/showStat" id="listbox_stat_line"
               tal:attributes="id string:${field_id}_stat_line">
-              <td tal:condition="is_report_tree_mode" class="Data">&nsbp;</td>
-              <td tal:condition="show_select_column" class="Data">&nsbp;</td>
+              <td tal:condition="is_report_tree_mode" class="Data">&nbsp;</td>
+              <td tal:condition="show_select_column" class="Data">&nbsp;</td>
               <tal:block tal:repeat="value here/getStatValueList">
                 <td class="Data" align="left"
                   tal:define="original_value python: value[0]; processed_value python: value[1]"
