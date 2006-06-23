@@ -1324,7 +1324,10 @@ class ListBoxRenderer:
       else:
         stat_method = None
 
-      if stat_method is None:
+      if stat_method_id is None:
+        original_value = None
+        processed_value = u''
+      elif stat_method is None:
         try:
           original_value = getattr(result[0], alias)
           processed_value = original_value
