@@ -120,6 +120,8 @@ import traceback
 import sys
 import os
 from cStringIO import StringIO
+from urllib import urlretrieve
+from glob import glob
 
 from Products.ERP5.ERP5Site import ERP5Site
 
@@ -207,19 +209,29 @@ class ERP5TypeTestCase(PortalTestCase):
         for template in template_list:
           id = template
           try :
-            from urllib import urlretrieve
             file, headers = urlretrieve(template)
           except IOError :
-            from glob import glob
-            template_list = glob(os.path.join(INSTANCE_HOME, 'bt5', '*', '%s' % template))
-            if len(template_list) == 0:
-              template_list = glob(os.path.join(INSTANCE_HOME, 'bt5', '*', '%s.bt5' % template))
-            if not (len(template_list) and template_list[0]):
-              template = '%s' % id
-              if not os.path.exists(template):
-                template = '%s.bt5' % id
+            # First, try the bt5 directory itself.
+            path = os.path.join(INSTANCE_HOME, 'bt5', template)
+            if os.path.exists(path):
+              template = path
             else:
-              template = template_list[0]
+              path = '%s.bt5' % path
+              if os.path.exists(path):
+                template = path
+              else:
+                # Otherwise, look at sub-directories. This is for backward-compatibility.
+                path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
+                template_list = glob(path)
+                if len(template_list) == 0:
+                  template_list = glob('%s.bt5' % path)
+                if len(template_list) and template_list[0]:
+                  template = template_list[0]
+                else:
+                  # The last resort is current directory.
+                  template = '%s' % id
+                  if not os.path.exists(template):
+                    template = '%s.bt5' % id
           else:
             template = '%s' % template
             if not os.path.exists(template):
