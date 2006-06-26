@@ -9,6 +9,13 @@
 </dtml-if>
 </dtml-let>
 
+<!--
+  Form style based on Aleksandar Vacić's work,
+  ditributed under Creative Commons Paternity Licence:
+    * http://creativecommons.org/licenses/by/2.0/
+    * http://www.aplus.co.yu/css/forms/?css=1
+-->
+
 <style type="text/css">
 input, select, textarea {
  margin-left: .5em;
