@@ -119,13 +119,20 @@ class SQLQueue(RAMQueue):
                                                 priority = line.priority)
             get_transaction().commit() # Release locks before starting a potentially long calculation
           return 0
-      except:
-        # If any exception occurs, catch it and delay the operation.
+      except ConflictError:
+        # If a conflict occurs, catch it and delay the operation.
         get_transaction().abort()
         activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
                                            priority = line.priority)
         get_transaction().commit()
         return 0
+      except:
+        # For the other exceptions, put it into an error state.
+        get_transaction().abort()
+        activity_tool.SQLQueue_assignMessage(uid = line.uid, processing_node = INVOKE_ERROR_STATE)
+        get_transaction().commit()
+        return 0
+
 
       # Try to invoke
       activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?

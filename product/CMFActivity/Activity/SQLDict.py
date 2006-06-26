@@ -291,13 +291,20 @@ class SQLDict(RAMDict):
 
           # Release locks before starting a potentially long calculation
           get_transaction().commit()
-      except:
-        # If an exception occurs, abort the transaction to minimize the impact,
+      except ConflictError:
+        # If a conflict occurs, abort the transaction to minimize the impact,
         # then simply delay the operations.
         get_transaction().abort()
         for uid_list in uid_list_list:
           activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
                                             retry = 1)
+        get_transaction().commit()
+        return 0
+      except:
+        # For other exceptions, put the messages to an invalid state immediately.
+        get_transaction().abort()
+        for uid_list in uid_list_list:
+          activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
         get_transaction().commit()
         return 0
 
