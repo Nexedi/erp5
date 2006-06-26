@@ -71,7 +71,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -93,12 +92,6 @@
                       <list>
                         <string>my_description</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
