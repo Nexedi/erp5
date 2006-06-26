@@ -51,7 +51,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
 \n
-<tal:block metal:use-macro="here/view_master/macros/master">\n
+<tal:block metal:use-macro="here/view_main/macros/master">\n
 <tal:block metal:fill-slot="main">\n
 \n
 <tal:block tal:define="path context/file; infos_dict context/infos_dict">\n
