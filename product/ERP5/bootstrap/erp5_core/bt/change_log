@@ -1,3 +1,6 @@
+2006-06-26 vincent
+* Remove Base_call[View|List]DialogMethod. Everything has been merged & cleaned in Base_callDialogMethod.
+
 2006-06-22 Vincent
 * Add xhtml-style-related scripts.
 

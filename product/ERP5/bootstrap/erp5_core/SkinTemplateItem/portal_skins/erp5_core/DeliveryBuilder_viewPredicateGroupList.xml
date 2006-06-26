@@ -63,7 +63,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -78,12 +77,6 @@
                       <list>
                         <string>listbox</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>

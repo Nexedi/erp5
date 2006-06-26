@@ -62,7 +62,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>rigtht</string>
+                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
               </list>
@@ -101,7 +101,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>rigtht</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_report_method_id</string>

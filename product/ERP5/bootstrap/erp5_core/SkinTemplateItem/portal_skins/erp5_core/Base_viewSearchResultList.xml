@@ -61,7 +61,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -70,7 +70,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -94,7 +94,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>list_main</string> </value>
         </item>
         <item>
             <key> <string>rid</string> </key>
