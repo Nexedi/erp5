@@ -1,6 +1,14 @@
+2006-06-26 vincent
+* Rename page templates to follow a consistent naming scheme.
+* Add another layer to unify web mode handling.
+
+2006-06-23 yo
+* Put id on each div in form_sort. Otherwise, functional testing is too difficult.
+* Likewise, put id on each tr in form_list_ui.
+
 2006-06-20 Vincent
-Correct form button values when in a dialog.
+* Correct form button values when in a dialog.
 
 2006-06-15 Vincent
-Initial commit.
-Valid XHTML1.0 Strict + CSS 2.0.
+* Initial commit.
+* Valid XHTML1.0 Strict + CSS 2.0.

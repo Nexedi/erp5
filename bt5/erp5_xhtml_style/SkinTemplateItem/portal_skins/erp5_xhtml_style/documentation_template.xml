@@ -393,7 +393,7 @@ div.listbox_dataline:hover {\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>documentation_view</string> </value>
+            <value> <string>documentation_template</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

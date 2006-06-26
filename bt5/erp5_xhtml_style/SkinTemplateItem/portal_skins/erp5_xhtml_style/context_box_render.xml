@@ -86,12 +86,12 @@ XXX: Folder_filter accesses selection directly\n
       </tal:block>\n
       <tal:block tal:condition="python: here.getPortalType() in here.portal_types.objectIds() and here.portal_types[here.getPortalType()].Base_getSourceVisibility()">\n
         <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types[here.getPortalType()].absolute_url(),)"\n
-                tal:content="python: \'Edit Portal Type \\\'%s\\\'\' % (context.getPortalType(),)"\n
+                tal:content="python: \'Edit Portal Type \\\'%s\\\'\' % (here.getPortalType(),)"\n
                 i18n:translate="" i18n:domain="ui"></option>\n
       </tal:block>\n
-      <tal:block tal:condition="context/portal_workflow/Base_getSourceVisibility">\n
+      <tal:block tal:condition="here/portal_workflow/Base_getSourceVisibility">\n
         <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
-        <tal:block tal:repeat="workflow python: context.portal_workflow.getWorkflowsFor(context)">\n
+        <tal:block tal:repeat="workflow python: here.portal_workflow.getWorkflowsFor(here)">\n
           <option tal:attributes="value python: \'%s/manage_properties\' % (workflow.absolute_url(), )" tal:content="workflow/title"></option>\n
         </tal:block>\n
       </tal:block>\n
@@ -287,7 +287,7 @@ XXX: Folder_filter accesses selection directly\n
       </a>\n
       <a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
          title="Activity Pending"\n
-         tal:attributes="href python: context.portal_membership.checkPermission(\'View management screens\', context.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],here.portal_activities.getUrl(), ) or \'#\'">\n
+         tal:attributes="href python: here.portal_membership.checkPermission(\'View management screens\', here.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],here.portal_activities.getUrl(), ) or \'#\'">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
       </a>\n
@@ -308,7 +308,7 @@ XXX: Folder_filter accesses selection directly\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>context_bar</string> </value>
+            <value> <string>context_box_render</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

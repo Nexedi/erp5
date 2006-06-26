@@ -81,11 +81,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                                 1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()]">\n
             <tal:block tal:content="structure python: html_tuple[0]"\n
                        i18n:translate="" i18n:domain="ui" />\n
-            <tal:block metal:use-macro="context/developper_shortcuts/macros/field" />\n
+            <tal:block tal:define="template python: here.developper_shortcut_render">\n
+              <tal:block metal:use-macro="template/macros/field" />\n
+            </tal:block>\n
           </label>\n
           <div class="input"\n
                tal:content="structure python: html_tuple[1]"></div>\n
-          <tal:block tal:define="tooltip python:context.Localizer.translate(\'erp5_ui\', context.Base_getFieldDescription(field))">\n
+          <tal:block tal:define="tooltip python: here.Localizer.translate(\'erp5_ui\', here.Base_getFieldDescription(field))">\n
             <span tal:condition="tooltip"\n
                   tal:content="tooltip"\n
                   class="description"\n

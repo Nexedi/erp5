@@ -72,38 +72,56 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block metal:define-macro="master">\n
-  <tal:block tal:define="ignore_layout request/ignore_layout | nothing;\n
-                         layout_form_id here/getApplicableLayout | nothing;\n
-                         layout_form python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
-                         page_template python:(layout_form and not(ignore_layout)) and getattr(layout_form, \'pt\', None) or \'main_template\';">\n
-    <tal:block metal:use-macro="python: getattr(here, page_template).macros[\'master\']">\n
-      <tal:block metal:fill-slot="context_bar">\n
-        <tal:block metal:use-macro="here/context_bar/macros/master" />\n
-      </tal:block>\n
-      <tal:block metal:fill-slot="main">\n
-        <div class="document"\n
-              tal:define="actions actions/object_view | python: []">\n
-          <div class="actions">\n
-            <tal:block tal:condition="editable_mode | python: 1">\n
-              <button tal:condition="python: here.portal_membership.checkPermission(\'Modify portal content\', here)"\n
-                      type="submit" name="Base_edit:method" class="save">\n
-                <span class="image"></span>\n
-                <span class="description"\n
-                      i18n:translate="" i18n:domain="ui">Save</span>\n
-              </button>\n
-            </tal:block>\n
-            <ul tal:condition="python: len(actions)">\n
-              <tal:block tal:repeat="action actions">\n
-                <li tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
-                  <a tal:attributes="href python: here.ERP5Site_renderLink(action[\'url\'], http_parameters)"\n
-                     tal:content="action/name"></a>\n
-                </li>\n
-              </tal:block>\n
-            </ul>\n
-          </div>\n
-          <div class="content"><tal:block metal:define-slot="main" /></div>\n
-        </div>\n
+<tal:block metal:define-macro="edit_link">\n
+  <a tal:condition="python: hasattr(object, \'meta_type\') and object.Base_getSourceVisibility()"\n
+     tal:attributes="href python: \'%s/%s\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):]), manage) # XXX: quick hack to get path;\n
+                     title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
+                                                       alt info;"/></a>\n
+</tal:block>\n
+<tal:block metal:define-macro="translate_link" tal:define="image image | python: \'translate.png\'">\n
+  <a tal:condition="python: here.Base_getTranslationVisibility()"\n
+     tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, here.Localizer.get_selected_language());\n
+                     title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
+                                                       alt info;"/></a>\n
+</tal:block>\n
+<tal:block metal:define-macro="form">\n
+  <tal:block tal:define="image python: \'editform.png\';\n
+                         info python: \'Edit this form\';\n
+                         object python: form;\n
+                         manage python: \'manage\'">\n
+    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="image python: \'editformrenderer.png\';\n
+                         info python: \'Edit this form\\\'s renderer\';\n
+                         object python: getattr(here, form.pt, None);\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="image python: \'editformaction.png\';\n
+                         info python: \'Edit this form\\\'s action\';\n
+                         object python: getattr(here, form.action, None);\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block metal:define-macro="field">\n
+  <tal:block tal:define="image python: \'editfield.png\';\n
+                         info python: \'Edit this field\';\n
+                         object python: field;\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="info python: \'Translate this field title\';\n
+                         message python: field[\'title\'];\n
+                         image python: \'translate.png\'">\n
+    <tal:block metal:use-macro="template/macros/translate_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="desc python: here.Base_getFieldDescription(field)">\n
+    <tal:block tal:condition="python: desc not in (None, \'\')">\n
+      <tal:block tal:define="info python: \'Translate this field description\';\n
+                             message desc;\n
+                             image python: \'translate_tooltip.png\'">\n
+        <tal:block metal:use-macro="template/macros/translate_link"/>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
@@ -121,7 +139,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>document</string> </value>
+            <value> <string>developper_shortcut_render</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

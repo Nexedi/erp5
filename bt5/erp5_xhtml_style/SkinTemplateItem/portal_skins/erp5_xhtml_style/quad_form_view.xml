@@ -72,9 +72,9 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block metal:use-macro="here/document/macros/master">\n
+<tal:block metal:use-macro="here/view_main/macros/master">\n
   <tal:block metal:fill-slot="main">\n
-    <tal:block metal:use-macro="here/form/macros/quad_form" />\n
+    <tal:block metal:use-macro="here/form_render/macros/quad_form" />\n
   </tal:block>\n
 </tal:block>
 

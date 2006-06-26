@@ -70,14 +70,37 @@ GNU General Public License for more details.\n
 You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
-\n
-Breaks strict compatibility :\n
-Rename groups in forms, remove empty groups, move items not in first group to hidden group.\n
 -->\n
 </tal:block>\n
-<tal:block metal:use-macro="here/list_dialog_master/macros/master">\n
-  <tal:block metal:fill-slot="main">\n
-    <tal:block metal:use-macro="here/form/macros/master" />\n
+<tal:block metal:define-macro="master">\n
+  <tal:block metal:use-macro="here/main_template/macros/master">\n
+    <tal:block metal:fill-slot="context_bar">\n
+      <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
+    </tal:block>\n
+    <tal:block metal:fill-slot="main">\n
+      <div class="document"\n
+            tal:define="actions actions/object_view | python: []">\n
+        <div class="actions">\n
+          <tal:block tal:condition="editable_mode | python: 1">\n
+            <button tal:condition="python: here.portal_membership.checkPermission(\'Modify portal content\', here)"\n
+                    type="submit" name="Base_edit:method" class="save">\n
+              <span class="image"></span>\n
+              <span class="description"\n
+                    i18n:translate="" i18n:domain="ui">Save</span>\n
+            </button>\n
+          </tal:block>\n
+          <ul tal:condition="python: len(actions)">\n
+            <tal:block tal:repeat="action actions">\n
+              <li tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
+                <a tal:attributes="href python: here.ERP5Site_renderLink(action[\'url\'], http_parameters)"\n
+                    tal:content="action/name"></a>\n
+              </li>\n
+            </tal:block>\n
+          </ul>\n
+        </div>\n
+        <div class="content"><tal:block metal:define-slot="main" /></div>\n
+      </div>\n
+    </tal:block>\n
   </tal:block>\n
 </tal:block>\n
 
@@ -94,7 +117,7 @@ Rename groups in forms, remove empty groups, move items not in first group to hi
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>form_folder_delete</string> </value>
+            <value> <string>view_main</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

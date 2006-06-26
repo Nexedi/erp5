@@ -78,12 +78,9 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block tal:define="global form_action string:index_html;\n
-                       ignore_layout request/ignore_layout | nothing;\n
-                       layout_form_id here/getApplicableLayout | nothing;\n
-                       layout_form python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
-                       page_template python:(layout_form_id and not(ignore_layout)) and getattr(layout_form, \'pt\', None) or \'main_template\';">\n
-<tal:block metal:use-macro="python: getattr(here, page_template).macros[\'master\']">\n
+<tal:block tal:define="form_action string:index_html;\n
+                       js_list python: [\'%s/login_form.js\' % (here.portal_url.getPortalPath(), )]">\n
+<tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
     <div class="login">\n
       <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
@@ -130,6 +127,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </div>\n
         </div>\n
       </div>\n
+      <script type="text/javascript">setFocus()</script>\n
       <hr class="clear" />\n
       <input type="submit" name="submit" value="Login" class="submit"\n
              i18n:attributes="value" i18n:domain="ui" />\n

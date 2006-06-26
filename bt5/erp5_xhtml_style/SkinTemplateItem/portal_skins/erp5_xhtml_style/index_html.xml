@@ -75,7 +75,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 <tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
     <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-      <tal:block tal:define="dummy python: request.RESPONSE.redirect(\'%s/login_form\' % url)" />\n
+        <tal:block tal:define="dummy python: request.RESPONSE.redirect(\'%s/login_form\' % url)" />\n
     </tal:block>\n
     <div tal:condition="python: not here.portal_membership.isAnonymousUser()"\n
          class="index_html">\n

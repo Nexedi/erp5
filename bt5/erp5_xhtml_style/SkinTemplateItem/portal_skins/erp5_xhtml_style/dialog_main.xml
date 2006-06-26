@@ -73,45 +73,66 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block tal:define="dialog_type dialog_type | string:">\n
-    <tal:block metal:use-macro="here/list_dialog_master/macros/master">\n
+  <tal:block tal:define="form_action string:Base_callDialogMethod">\n
+    <tal:block metal:use-macro="here/main_template/macros/master">\n
       <tal:block metal:fill-slot="main">\n
-        <div class="dialog_box">\n
-          <tal:block tal:define="actions python: actions.get(dialog_category, [])">\n
-            <div tal:condition="python: len(actions) > 1"\n
-                class="dialog_selector">\n
-              <label for="dialog_selector"\n
-                    tal:content="python:{\'object_exchange\':\'Exchange Select:\',\n
-                                          \'object_print\':\'Print Select:\',\n
-                                          \'object_search\':\'Search Select:\',\n
-                                          \'object_report\':\'Report Select:\',\n
-                                        }.get(dialog_category, \'Select:\')"\n
-                    i18n:translate="" i18n:domain="ui"></label>\n
-              <select name="dialog_select" id="dialog_selector"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doDialog\')">\n
-                <tal:block tal:repeat="action actions">\n
-                  <option tal:attributes="value action/url;\n
-                                          selected python: action is current_action and \'selected\' or None"\n
-                          tal:content="action/name"\n
-                          i18n:translate="" i18n:domain="ui"></option>\n
-                </tal:block>\n
-              </select>\n
-              <button type="submit" name="Base_doDialog:method">\n
-                <span class="image"></span>\n
-                <span class="description"\n
-                      i18n:translate="" i18n:domain="ui">Go</span>\n
-              </button>\n
+        <div class="list_dialog">\n
+          <div class="dialog_box">\n
+            <tal:block tal:define="actions python: actions.get(dialog_category, [])">\n
+              <div tal:condition="python: len(actions) > 1"\n
+                  class="dialog_selector">\n
+                <label for="dialog_selector"\n
+                      tal:content="python:{\'object_exchange\':\'Exchange Select:\',\n
+                                            \'object_print\':\'Print Select:\',\n
+                                            \'object_search\':\'Search Select:\',\n
+                                            \'object_report\':\'Report Select:\',\n
+                                          }.get(dialog_category, \'Select:\')"\n
+                      i18n:translate="" i18n:domain="ui"></label>\n
+                <select name="dialog_select" id="dialog_selector"\n
+                        tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doDialog\')">\n
+                  <tal:block tal:repeat="action actions">\n
+                    <option tal:attributes="value action/url;\n
+                                            selected python: action is current_action and \'selected\' or None"\n
+                            tal:content="action/name"\n
+                            i18n:translate="" i18n:domain="ui"></option>\n
+                  </tal:block>\n
+                </select>\n
+                <button type="submit" name="Base_doDialog:method">\n
+                  <span class="image"></span>\n
+                  <span class="description"\n
+                        i18n:translate="" i18n:domain="ui">Go</span>\n
+                </button>\n
+              </div>\n
+            </tal:block>\n
+            <div class="content">\n
+              <tal:block metal:define-slot="main" />\n
+              <hr class="clear" />\n
             </div>\n
-          </tal:block>\n
-          <div class="content">\n
-            <tal:block metal:define-slot="main" />\n
-            <hr class="clear" />\n
           </div>\n
         </div>\n
+        <button type="submit" name="Base_cancel:method">\n
+          <span class="image"></span>\n
+          <span class="description"\n
+                i18n:translate="" i18n:domain="ui">Cancel</span>\n
+        </button>\n
+        <button tal:condition="python: form.update_action!=\'\'"\n
+                type="submit" name="Base_showUpdateDialog:method">\n
+          <span class="image"></span>\n
+          <span class="description"\n
+                i18n:translate="" i18n:domain="ui">Update</span>\n
+        </button>\n
+        <button type="submit"\n
+                tal:attributes="name python: \'%s:method\' % (form_action, )">\n
+          <span class="image"></span>\n
+          <span class="description"\n
+                tal:content="python: here.Base_getFormViewDialogActionButtonTitle(form)"\n
+                i18n:translate="" i18n:domain="ui"></span>\n
+        </button>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
@@ -125,7 +146,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>dialog</string> </value>
+            <value> <string>dialog_main</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>OFS.DTMLMethod</string>
-          <string>DTMLMethod</string>
+          <string>OFS.DTMLDocument</string>
+          <string>DTMLDocument</string>
         </tuple>
         <none/>
       </tuple>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>erp5.js</string> </value>
+            <value> <string>login_form.js</string> </value>
         </item>
         <item>
             <key> <string>_vars</string> </key>
@@ -53,11 +53,15 @@ You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
-function submitAction(form,act) {\n
-  form.action = act;\n
-  form.submit();\n
-}\n
-</string> </value>
+\n
+function setFocus() {\n
+  login = document.getElementById(\'name\');\n
+  password = document.getElementById(\'password\');\n
+  if (login.value != \'\')\n
+    password.focus();\n
+  else\n
+    login.focus();\n
+}</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

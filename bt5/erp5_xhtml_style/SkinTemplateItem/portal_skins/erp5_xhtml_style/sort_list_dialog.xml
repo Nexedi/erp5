@@ -72,14 +72,62 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/document/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block metal:define-slot="main">\n
-      </tal:block>\n
+<tal:block metal:use-macro="here/dialog_main/macros/master">\n
+  <tal:block metal:fill-slot="main">\n
+    <tal:block tal:define="template python: here.developper_shortcut_render">\n
+      <tal:block metal:use-macro="template/macros/form" />\n
     </tal:block>\n
+    <div class="content"\n
+         tal:define="items python:here.portal_selections.getSelectionSortOrder(selection_name, REQUEST=request);\n
+                     base_form python:getattr(here,form_id);\n
+                     groups base_form/get_groups;\n
+                     columns python:base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\');\n
+                     global row_index python:0;\n
+                     global row_keys python:[\'None\'];\n
+                     all_columns python: [(\'None\',\'None\')] + columns;">\n
+      <div tal:repeat="item items"\n
+           class="field">\n
+        <label>\n
+          <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
+          <tal:block tal:replace="row_index" />\n
+        </label>\n
+        <div class="input" tal:attributes="id string:sort_${row_index}">\n
+          <select name="field_sort_on">\n
+            <tal:block tal:repeat="option all_columns">\n
+              <option tal:content="python:option[1]"\n
+                      tal:attributes="value python:option[0];\n
+                                      selected python:option[0]==item[0] and \'selected\' or nothing"\n
+                      i18n:translate="" i18n:domain="ui"></option>\n
+            </tal:block>\n
+          </select>\n
+          <tal:block tal:replace="structure python:form.sort_order.render(item[1], request)" />\n
+        </div>\n
+        <hr class="clear" />\n
+      </div>\n
+      <div tal:repeat="item columns"\n
+           class="field">\n
+        <tal:block tal:condition="python: item[0] not in row_keys">\n
+          <label tal:define="global row_index python:row_index+1">\n
+            <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
+            <tal:block tal:replace="row_index" />\n
+          </label>\n
+          <div class="input" tal:attributes="id string:sort_${row_index}">\n
+            <select name="field_sort_on">\n
+              <option selected="selected" value="None">None</option>\n
+              <option tal:repeat="option columns"\n
+                      tal:content="python:option[1]"\n
+                      tal:attributes="value python:option[0]"\n
+                      i18n:translate="" i18n:domain="ui"></option>\n
+            </select>\n
+            <span tal:replace="structure python:form.sort_order.render(\'\', request)" />\n
+          </div>\n
+        </tal:block>\n
+        <hr class="clear" />\n
+      </div>\n
+    </div>\n
   </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
@@ -93,7 +141,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_master</string> </value>
+            <value> <string>sort_list_dialog</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

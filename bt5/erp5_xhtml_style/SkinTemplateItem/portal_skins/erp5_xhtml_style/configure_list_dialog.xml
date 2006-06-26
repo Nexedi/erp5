@@ -75,9 +75,11 @@ XXX: uses hardcoded indices values to access fields\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/dialog/macros/master">\n
+  <tal:block metal:use-macro="here/dialog_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
-      <tal:block metal:use-macro="here/developper_shortcuts/macros/form" />\n
+      <tal:block tal:define="template python: here.developper_shortcut_render">\n
+        <tal:block metal:use-macro="template/macros/form" />\n
+      </tal:block>\n
       <table tal:define="base_form python: getattr(here,form_id);\n
                          groups base_form/get_groups;\n
                          default_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'columns\');\n
@@ -87,9 +89,10 @@ XXX: uses hardcoded indices values to access fields\n
                          global row_keys python: [\'None\'];\n
                          global stats python: [\' \',\'count\',\'sum\',\'max\',\'min\',\'avg\'];\n
                          all_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\')">\n
-        <tr tal:repeat="item columns">\n
-          <tal:block tal:define="global row_index python:row_index+1;\n
-                                 dummy python:row_keys.append(item[0])">\n
+        <tal:block tal:repeat="item columns">\n
+          <tr tal:define="global row_index python:row_index+1;\n
+                          dummy python:row_keys.append(item[0])"\n
+              tal:attributes="id string:column_${row_index}">\n
             <td>\n
               <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
               <tal:block tal:replace="row_index" />\n
@@ -114,11 +117,12 @@ XXX: uses hardcoded indices values to access fields\n
                 </tal:block>\n
               </select>\n
             </td>\n
-          </tal:block>\n
-        </tr>\n
-        <tr tal:repeat="item all_columns">\n
+          </tr>\n
+        </tal:block>\n
+        <tal:block tal:repeat="item all_columns">\n
           <tal:block tal:condition="python: item[0] not in row_keys">\n
-            <tal:block tal:define="global row_index python:row_index+1">\n
+            <tr tal:define="global row_index python:row_index+1"\n
+                tal:attributes="id string:column_${row_index}">\n
               <td>\n
                 <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
                 <tal:block tal:replace="row_index" />\n
@@ -146,9 +150,9 @@ XXX: uses hardcoded indices values to access fields\n
                   </tal:block>\n
                 </select>\n
               </td>\n
-            </tal:block>\n
+            </tr>\n
           </tal:block>\n
-        </tr>\n
+        </tal:block>\n
       </table>\n
     </tal:block>\n
   </tal:block>\n
@@ -166,7 +170,7 @@ XXX: uses hardcoded indices values to access fields\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>form_list_ui</string> </value>
+            <value> <string>configure_list_dialog</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
