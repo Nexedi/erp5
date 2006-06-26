@@ -161,7 +161,7 @@ def colorizeTag(tag):
     color = '#0c4f0c'#dark green
   else:
     color = 'blue'
-  return "<font color='%s'>%s</font>" % (color, text, )
+  return "<div style='color: %s'>%s</div>" % (color, text, )
     
 def colorize(text):
   """Return HTML Code with syntax hightlighting
@@ -568,12 +568,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       
   def getHeader(self, business_template, file_path):
     file_path = self.relativeToAbsolute(file_path, business_template)
-    header = '<b><a href="BusinessTemplate_viewSvnShowFile?file=' + \
-    file_path + '">' + file_path + '</a></b>'
+    header = '<a style="font-weight: bold" href="BusinessTemplate_viewSvnShowFile?file=' + \
+    file_path + '">' + file_path + '</a>'
     edit_path = self.editPath(business_template, file_path)
     if edit_path != '#':
       header += '&nbsp;&nbsp;<a href="'+self.editPath(business_template, \
-      file_path) + '"><img src="imgs/edit.png" border="0"></a>'
+      file_path) + '"><img src="imgs/edit.png" style="border: 0"></a>'
     return header
 
   def _encodeSSLTrust(self, trust_dict, permanent=False):
@@ -611,13 +611,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     file_path = self.relativeToAbsolute(file_path, business_template)
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
-        text = "<b>"+file_path+"</b><hr/>"
+        text = "<span style='font-weight: bold'>"+file_path+"</span><hr/>"
         text += file_path +" is a folder!"
       else:
         input_file = open(file_path, 'r')
-        head = '<b>'+file_path+'</b>  <a href="' + \
+        head = "<span style='font-weight: bold'>"+file_path+'</span>  <a href="' + \
         self.editPath(business_template, file_path) + \
-        '"><img src="imgs/edit.png" border="0"></a><hr/>'
+        '"><img src="imgs/edit.png" style="border: 0"></a><hr/>'
         text = head + colorize(input_file.read())
         input_file.close()
     else:
@@ -630,11 +630,11 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       filename+'.svn-base')
       if os.path.exists(tmp_path):
         input_file = open(tmp_path, 'r')
-        head = "<b>"+tmp_path+"</b> (svn temporary file)<hr/>"
+        head = "<span style='font-weight: bold'>"+tmp_path+"</span> (svn temporary file)<hr/>"
         text = head + colorize(input_file.read())
         input_file.close()
       else : # does not exist
-        text = "<b>"+file_path+"</b><hr/>"
+        text = "<span style='font-weight: bold'>"+file_path+"</span><hr/>"
         text += file_path +" does not exist!"
     return text
       
