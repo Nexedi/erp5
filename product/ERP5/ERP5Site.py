@@ -1247,7 +1247,7 @@ class ERP5Generator(PortalGenerator):
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       bootstrap_dir = self.getBootstrapDirectory()
-      for bt in ('erp5_core', 'erp5_html_style'):
+      for bt in ('erp5_core', 'erp5_xhtml_style'):
         template = os.path.join(bootstrap_dir, bt)
         if not os.path.exists(template):
           template = os.path.join(bootstrap_dir, '%s.bt5' % bt)
