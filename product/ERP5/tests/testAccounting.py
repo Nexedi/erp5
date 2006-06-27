@@ -42,7 +42,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-from testPackingList import TestPackingListMixin
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from DateTime import DateTime
 
@@ -712,23 +711,15 @@ class TestAccounting(ERP5TypeTestCase):
       receivable = receivable
     )
     
-  def stepValidateNoStartDate(self, sequence, sequence_list=None, **kw) :
-    """When no start date is defined, validation should be impossible
-    because of the source_section side."""
-    transaction = sequence.get('transaction')
-    old_date = transaction.getStartDate()
-    transaction.setStartDate(None)
-    self.assertRaises(ValidationFailed,
-        self.getWorkflowTool().doActionFor,
-        transaction,
-        'stop_action')
-    transaction.setStartDate(old_date)
-    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-    self.assertEquals(transaction.getSimulationState(), 'stopped')
-
-  def stepValidateNoStopDate(self, sequence, sequence_list=None, **kw) :
-    """When no stop date is defined, validation should be impossible
-    because of the destination_section side."""
+  def stepValidateNoDate(self, sequence, sequence_list=None, **kw) :
+    """When no date is defined, validation should be impossible.
+    
+    Actually, we could say that if we have source_section, we need start_date,
+    and if we have destination section, we need stop_date only, but we decided
+    to update a date (of start_date / stop_date) using the other one if one is
+    missing. (ie. stop_date defaults automatically to start_date if not set and
+    start_date is set to stop_date in the workflow script if not set.
+    """
     transaction = sequence.get('transaction')
     old_stop_date = transaction.getStopDate()
     old_start_date = transaction.getStartDate()
@@ -786,7 +777,10 @@ class TestAccounting(ERP5TypeTestCase):
     
     # if we do not use any payable / receivable account, then we can
     # validate the transaction without setting the mirror section.
-    for side in (SOURCE, DESTINATION) :
+    for side in (SOURCE, ): # DESTINATION) :
+      # TODO: for now, we only test for source, as it makes no sense to use for
+      # destination section only. We could theoritically support it.
+
       # get a new valid transaction
       self.stepCreateValidAccountingTransaction(sequence)
       transaction = sequence.get('transaction')
@@ -952,16 +946,22 @@ class TestAccounting(ERP5TypeTestCase):
     `payment node` portal type group. It can be defined on transaction
     or line.
     """
+    def useBankAccount(transaction):
+      """Modify the transaction, so that a line will use an account member of
+      account_type/cash/bank , which requires to use a payment category.
+      """
+      # get the default and replace income account by bank
+      income_account_found = 0
+      for line in transaction.getMovementList() :
+        source_account = line.getSourceValue()
+        if source_account.isMemberOf('account_type/income') :
+          income_account_found = 1
+          line.edit( source_value = sequence.get('bank_account'),
+                     destination_value = sequence.get('bank_account') )
+      self.failUnless(income_account_found)
+    
     transaction = sequence.get('transaction')
-    # get the default and replace income account by bank
-    income_account_found = 0
-    for line in transaction.getMovementList() :
-      source_account = line.getSourceValue()
-      if source_account.isMemberOf('account_type/income') :
-        income_account_found = 1
-        line.edit( source_value = sequence.get('bank_account'),
-                   destination_value = sequence.get('bank_account') )
-    self.failUnless(income_account_found)
+    useBankAccount(transaction)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
         transaction,
@@ -976,6 +976,8 @@ class TestAccounting(ERP5TypeTestCase):
                                   portal_type = ptype, )
       self.stepCreateValidAccountingTransaction(sequence)
       transaction = sequence.get('transaction')
+      useBankAccount(transaction)
+
       # payment node have to be set on both sides
       transaction.setSourcePaymentValue(source_payment_value)
       transaction.setDestinationPaymentValue(None)
@@ -1155,9 +1157,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateAccounts
       stepCreateValidAccountingTransaction
-      stepValidateNoStartDate
-      stepCreateValidAccountingTransaction
-      stepValidateNoStopDate""")
+      stepValidateNoDate""")
 
   def test_AccountingTransactionValidationSection(self, quiet=0,
                                              run=RUN_ALL_TESTS):
