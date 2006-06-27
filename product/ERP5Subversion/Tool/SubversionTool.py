@@ -611,11 +611,11 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     file_path = self.relativeToAbsolute(file_path, business_template)
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
-        text = "<span style='font-weight: bold'>"+file_path+"</span><hr/>"
+        text = "<span style='font-weight: bold; color: black;'>"+file_path+"</span><hr/>"
         text += file_path +" is a folder!"
       else:
         input_file = open(file_path, 'r')
-        head = "<span style='font-weight: bold'>"+file_path+'</span>  <a href="' + \
+        head = "<span style='font-weight: bold; color: black;'>"+file_path+'</span>  <a href="' + \
         self.editPath(business_template, file_path) + \
         '"><img src="imgs/edit.png" style="border: 0" alt="edit" /></a><hr/>'
         text = head + colorize(input_file.read())
