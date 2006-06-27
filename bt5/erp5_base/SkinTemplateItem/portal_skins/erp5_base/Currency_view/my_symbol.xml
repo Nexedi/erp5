@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_last_name</string> </value>
+            <value> <string>my_symbol</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -22,7 +28,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>Another currency already exists for this currency code.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -203,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="base64">JCwgwqUsIOKCrCwgwqMuLi4=</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -211,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>6</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -239,11 +245,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Last Name</string> </value>
+                    <value> <string>Currency Symbol</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
