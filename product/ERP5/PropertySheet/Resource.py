@@ -136,6 +136,10 @@ class Resource:
             'description' : 'time of the resource',
             'type'        : 'float',
             'mode'        : 'w' },
+        {   'id'          : 'symbol',
+            'description' : 'Symbol to use to print a quantity on PDF reports, etc... Currently used to define currency symbol only.',
+            'type'        : 'string',
+            'mode'        : 'w' },
         # Definition of the variation domain
         {   'id'          : 'variation_base_category',
             'storage_id'  : 'variation_base_category_list', # Coramy Compatibility
