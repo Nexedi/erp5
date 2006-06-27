@@ -74,9 +74,10 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>realm</string>
+                        <string>realm_txt</string>
                         <string>your_user</string>
                         <string>your_password</string>
+                        <string>your_auth</string>
                       </list>
                     </value>
                 </item>
@@ -85,7 +86,6 @@
                     <value>
                       <list>
                         <string>your_removed</string>
-                        <string>your_realm</string>
                         <string>your_modified</string>
                         <string>your_changelog</string>
                         <string>your_caller</string>

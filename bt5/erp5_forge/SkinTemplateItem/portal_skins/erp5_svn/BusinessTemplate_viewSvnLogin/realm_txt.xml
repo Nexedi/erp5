@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_user</string> </value>
+            <value> <string>realm_txt</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -217,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -245,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>User name</string> </value>
+                    <value> <string>Realm Server</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +279,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/username</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: here.realm.replace(">", "&gt;").replace("<", "&lt;")
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

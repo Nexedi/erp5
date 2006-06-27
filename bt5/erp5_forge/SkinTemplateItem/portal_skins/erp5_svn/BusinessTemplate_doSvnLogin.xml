@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject()["portal_subversion"].setLogin(realm, user, password)\n
-return realm_hidden\n
+            <value> <string>context.getPortalObject()["portal_subversion"].setLogin(auth, user, password)\n
 if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
 elif caller == \'updatewc\':\n
@@ -96,7 +95,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user,password,realm,added,modified,removed,caller,changelog,**kw</string> </value>
+            <value> <string>user,password,auth,added,modified,removed,caller,changelog,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,7 +123,7 @@ else:\n
                           <tuple>
                             <string>user</string>
                             <string>password</string>
-                            <string>realm</string>
+                            <string>auth</string>
                             <string>added</string>
                             <string>modified</string>
                             <string>removed</string>
@@ -134,7 +133,6 @@ else:\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>context</string>
-                            <string>realm_hidden</string>
                           </tuple>
                         </value>
                     </item>
