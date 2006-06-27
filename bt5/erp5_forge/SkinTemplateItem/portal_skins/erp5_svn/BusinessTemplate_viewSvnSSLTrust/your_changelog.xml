@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_removed</string> </value>
+            <value> <string>your_changelog</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/REQUEST/removed</string> </value>
+            <value> <string>here/REQUEST/changelog</string> </value>
         </item>
       </dictionary>
     </pickle>

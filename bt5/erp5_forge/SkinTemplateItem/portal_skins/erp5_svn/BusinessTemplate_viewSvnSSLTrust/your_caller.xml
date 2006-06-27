@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_valid_until_hidden</string> </value>
+            <value> <string>your_caller</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.trust_dict["valid_until"]</string> </value>
+            <value> <string>here/caller</string> </value>
         </item>
       </dictionary>
     </pickle>

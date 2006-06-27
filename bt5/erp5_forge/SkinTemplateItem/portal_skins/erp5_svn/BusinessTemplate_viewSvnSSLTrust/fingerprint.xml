@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_issuer_name</string> </value>
+            <value> <string>fingerprint</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -247,7 +247,7 @@
                     <key> <string>title</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<b>Issuer name</b>
+<b>Fingerprint</b>
 
 ]]></string> </value>
                 </item>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.trust_dict["issuer_dname"]</string> </value>
+            <value> <string>python: here.trust_dict["finger_print"]</string> </value>
         </item>
       </dictionary>
     </pickle>

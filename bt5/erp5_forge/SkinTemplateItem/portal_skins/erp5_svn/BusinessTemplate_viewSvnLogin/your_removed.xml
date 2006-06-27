@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_hostname_hidden</string> </value>
+            <value> <string>your_removed</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>50</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.trust_dict["hostname"]</string> </value>
+            <value> <string>here/REQUEST/removed</string> </value>
         </item>
       </dictionary>
     </pickle>

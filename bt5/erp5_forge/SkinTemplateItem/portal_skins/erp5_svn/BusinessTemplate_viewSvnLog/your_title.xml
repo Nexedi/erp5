@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_realm</string> </value>
+            <value> <string>your_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>50</int> </value>
+                    <value> <int>100</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -233,7 +233,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -245,11 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-&nbsp;
-
-]]></string> </value>
+                    <value> <string>File</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -283,11 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: here.realm.replace(">", "&gt;").replace("<", "&lt;")
-
-]]></string> </value>
+            <value> <string>python: here.getPortalObject()["portal_subversion"].getHeader(here, here.REQUEST[\'added\'])</string> </value>
         </item>
       </dictionary>
     </pickle>

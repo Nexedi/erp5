@@ -74,13 +74,13 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_valid_until</string>
-                        <string>my_hostname</string>
-                        <string>my_realm</string>
-                        <string>my_fingerprint</string>
-                        <string>my_valid_from</string>
-                        <string>my_issuer_name</string>
-                        <string>my_failures</string>
+                        <string>realm</string>
+                        <string>hostname</string>
+                        <string>issuer_name</string>
+                        <string>valid_from</string>
+                        <string>valid_until</string>
+                        <string>fingerprint</string>
+                        <string>failures</string>
                       </list>
                     </value>
                 </item>
@@ -88,18 +88,18 @@
                     <key>                 <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_caller</string>
-                        <string>my_added</string>
-                        <string>my_modified</string>
-                        <string>my_removed</string>
-                        <string>my_valid_until_hidden</string>
-                        <string>my_valid_from_hidden</string>
-                        <string>my_realm_hidden</string>
-                        <string>my_hostname_hidden</string>
-                        <string>my_failures_hidden</string>
-                        <string>my_finger_print_hidden</string>
-                        <string>my_issuer_dname_hidden</string>
-                        <string>my_changelog</string>
+                        <string>your_modified</string>
+                        <string>your_removed</string>
+                        <string>your_changelog</string>
+                        <string>your_caller</string>
+                        <string>your_valid_until</string>
+                        <string>your_valid_from</string>
+                        <string>your_realm</string>
+                        <string>your_issuer_dname</string>
+                        <string>your_hostname</string>
+                        <string>your_finger_print</string>
+                        <string>your_failures</string>
+                        <string>your_added</string>
                       </list>
                     </value>
                 </item>

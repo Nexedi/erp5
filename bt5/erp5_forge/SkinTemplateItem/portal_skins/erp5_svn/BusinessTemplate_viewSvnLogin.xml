@@ -74,9 +74,9 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_realm</string>
-                        <string>my_user</string>
-                        <string>my_password</string>
+                        <string>realm</string>
+                        <string>your_user</string>
+                        <string>your_password</string>
                       </list>
                     </value>
                 </item>
@@ -84,12 +84,12 @@
                     <key>                 <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_added</string>
-                        <string>my_modified</string>
-                        <string>my_removed</string>
-                        <string>my_caller</string>
-                        <string>my_changelog</string>
-                        <string>my_realm_hidden</string>
+                        <string>your_removed</string>
+                        <string>your_realm</string>
+                        <string>your_modified</string>
+                        <string>your_changelog</string>
+                        <string>your_caller</string>
+                        <string>your_added</string>
                       </list>
                     </value>
                 </item>

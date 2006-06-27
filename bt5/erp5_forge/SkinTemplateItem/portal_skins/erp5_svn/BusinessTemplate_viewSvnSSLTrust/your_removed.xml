@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_realm</string> </value>
+            <value> <string>your_removed</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,11 +213,11 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>50</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -283,11 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: here.realm.replace(">", "&gt;").replace("<", "&lt;")
-
-]]></string> </value>
+            <value> <string>here/REQUEST/removed</string> </value>
         </item>
       </dictionary>
     </pickle>

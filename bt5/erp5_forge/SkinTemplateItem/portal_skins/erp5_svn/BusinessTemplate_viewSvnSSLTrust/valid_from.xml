@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_hostname</string> </value>
+            <value> <string>valid_from</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -247,7 +247,7 @@
                     <key> <string>title</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<b>Host name</b>
+<b>Valid from</b>
 
 ]]></string> </value>
                 </item>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.trust_dict["hostname"]</string> </value>
+            <value> <string>python: here.trust_dict["valid_from"]</string> </value>
         </item>
       </dictionary>
     </pickle>

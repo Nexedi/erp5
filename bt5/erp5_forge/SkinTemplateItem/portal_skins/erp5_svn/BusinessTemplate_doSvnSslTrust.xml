@@ -68,16 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>added = context.REQUEST["added"]\n
-modified = context.REQUEST["modified"]\n
-removed = context.REQUEST["removed"]\n
-caller = context.REQUEST["caller"]\n
-changelog = context.REQUEST["changelog"]\n
-\n
-dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
+            <value> <string>dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
 trust_dict={}\n
 for key in dict_keys:\n
-  trust_dict[key]=context.REQUEST[key+\'_hidden\']\n
+  trust_dict[key]=context.REQUEST[key]\n
 \n
 context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)\n
 \n
@@ -111,7 +105,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>added, modified, removed, caller, changelog, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,25 +125,25 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>added</string>
                             <string>modified</string>
                             <string>removed</string>
                             <string>caller</string>
                             <string>changelog</string>
+                            <string>kw</string>
                             <string>dict_keys</string>
                             <string>trust_dict</string>
                             <string>_getiter_</string>
                             <string>key</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>_write_</string>
                             <string>True</string>
                           </tuple>

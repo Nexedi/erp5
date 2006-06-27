@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_valid_until</string> </value>
+            <value> <string>valid_until</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

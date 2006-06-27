@@ -68,17 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>svn_user = context.REQUEST["user"]\n
-svn_password = context.REQUEST["password"]\n
-svn_realm = context.REQUEST["realm_hidden"]\n
-added = context.REQUEST["added"]\n
-modified = context.REQUEST["modified"]\n
-removed = context.REQUEST["removed"]\n
-caller = context.REQUEST["caller"]\n
-changelog = context.REQUEST["changelog"]\n
-\n
-context.getPortalObject()["portal_subversion"].setLogin(svn_realm, svn_user, svn_password)\n
-\n
+            <value> <string>context.getPortalObject()["portal_subversion"].setLogin(realm, user, password)\n
+return realm_hidden\n
 if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
 elif caller == \'updatewc\':\n
@@ -105,7 +96,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>user,password,realm,added,modified,removed,caller,changelog,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,24 +116,25 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>svn_user</string>
-                            <string>svn_password</string>
-                            <string>svn_realm</string>
+                            <string>user</string>
+                            <string>password</string>
+                            <string>realm</string>
                             <string>added</string>
                             <string>modified</string>
                             <string>removed</string>
                             <string>caller</string>
                             <string>changelog</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>context</string>
+                            <string>realm_hidden</string>
                           </tuple>
                         </value>
                     </item>
