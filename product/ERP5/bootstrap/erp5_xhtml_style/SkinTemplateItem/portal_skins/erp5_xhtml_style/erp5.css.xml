@@ -895,14 +895,6 @@ div.index_html table {\n
   height: 22px;\n
 }\n
 \n
-.ListSummary #listbox_next_page {\n
-  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/next_page.png\') top left no-repeat;\n
-}\n
-\n
-.ListSummary #listbox_previous_page {\n
-  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/previous_page.png\') top left no-repeat;\n
-}\n
-\n
 .ListContent {\n
   border: 1px solid;\n
 }\n
