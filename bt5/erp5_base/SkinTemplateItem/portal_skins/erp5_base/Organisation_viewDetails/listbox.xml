@@ -453,6 +453,10 @@ Folder_viewContentList?reset=1&portal_type=Payment Receipt
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -562,7 +566,7 @@ Folder_viewContentList?reset=1&portal_type=Payment Receipt
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

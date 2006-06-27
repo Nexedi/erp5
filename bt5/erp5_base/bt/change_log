@@ -1,5 +1,6 @@
 2006-06-27 Kevin
 * Add symbol on Currencies.
+* Use searchFolder on Organisation details view.
 
 2006-06-09 Kevin
 * Remove financial_year_stop_date field since Accounting Period Objects replace it.
