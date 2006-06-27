@@ -573,7 +573,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     edit_path = self.editPath(business_template, file_path)
     if edit_path != '#':
       header += '&nbsp;&nbsp;<a href="'+self.editPath(business_template, \
-      file_path) + '"><img src="imgs/edit.png" style="border: 0"></a>'
+      file_path) + '"><img src="imgs/edit.png" style="border: 0" alt="edit" /></a>'
     return header
 
   def _encodeSSLTrust(self, trust_dict, permanent=False):
@@ -617,7 +617,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         input_file = open(file_path, 'r')
         head = "<span style='font-weight: bold'>"+file_path+'</span>  <a href="' + \
         self.editPath(business_template, file_path) + \
-        '"><img src="imgs/edit.png" style="border: 0"></a><hr/>'
+        '"><img src="imgs/edit.png" style="border: 0" alt="edit" /></a><hr/>'
         text = head + colorize(input_file.read())
         input_file.close()
     else:
