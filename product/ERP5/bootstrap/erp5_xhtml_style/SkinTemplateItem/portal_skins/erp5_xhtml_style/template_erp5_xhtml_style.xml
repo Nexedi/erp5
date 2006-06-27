@@ -76,9 +76,6 @@ IDEAS:\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-<tal:block tal:condition="python: \'login_form\' not in request.get(\'URL\') and request.has_key(\'came_from\')">\n
-  <tal:block tal:define="dummy python: request.RESPONSE.redirect(request.get(\'came_from\'))" />\n
-</tal:block>\n
 <tal:block tal:condition="form/pt | nothing">\n
   <tal:block tal:define="global list_mode python: form[\'pt\'] == \'list_main\';\n
                          global listmode_default_listbox python: here.ERP5Site_getListbox(form=form)" />\n
@@ -108,7 +105,7 @@ IDEAS:\n
                        object_path here/getPath | nothing;\n
                        dummy python: request.set(\'here\',here);\n
 \n
-                       global http_parameter_list python: here.ERP5Site_getHTTPParameterList(request=request, form_id=form_id, dialog_id=dialog_id, selection_name=selection_name, selection_index=selection_index, selection_url=selection_url, cancel_url=cancel_url, form_action=form_action, dialog_method=dialog_method, dialog_category=dialog_category, form_pickle=form_pickle, form_signature=form_signature, field_id=field_id, object_uid=object_uid, object_path=object_path);\n
+                       global http_parameter_list python: here.ERP5Site_getHTTPParameterList(request_form=request.form, form_id=form_id, dialog_id=dialog_id, selection_name=selection_name, selection_index=selection_index, selection_url=selection_url, cancel_url=cancel_url, form_action=form_action, dialog_method=dialog_method, dialog_category=dialog_category, form_pickle=form_pickle, form_signature=form_signature, field_id=field_id, object_uid=object_uid, object_path=object_path);\n
                        global http_parameters python: here.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
 \n
                        global css_list css_list | python: [];\n
@@ -140,7 +137,6 @@ IDEAS:\n
     </tal:block>\n
   </head>\n
   <body>\n
-<!--     <tal:block tal:replace="structure request" /> -->\n
     <form id="main_form"\n
           tal:attributes="enctype form/enctype | nothing;\n
                           action url;\n
@@ -242,7 +238,7 @@ IDEAS:\n
               </button>\n
             </span>\n
           </span>\n
-          <hr class="clear" />\n
+          <h6 class="clear">&nbsp;</h6>\n
         </div>\n
         <div id="context_bar">\n
           <tal:block metal:define-slot="context_bar" />\n
@@ -269,7 +265,7 @@ IDEAS:\n
             <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
           </tal:block>\n
         </div>\n
-        <hr class="clear" />\n
+        <h6 class="clear">&nbsp;</h6>\n
         <div tal:content="structure here/REQUEST/portal_status_message | nothing"\n
              id="transition_message"></div>\n
       </div>\n

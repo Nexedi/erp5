@@ -78,7 +78,7 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block tal:define="form_action string:index_html;\n
+<tal:block tal:define="form_action string:logged_in;\n
                        js_list python: [\'%s/login_form.js\' % (here.portal_url.getPortalPath(), )]">\n
 <tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
@@ -106,7 +106,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 <input type="text" name="__ac_name" id="name"\n
                        tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
               </div>\n
-              <hr class="clear" />\n
+              <h6 class="clear">&nbsp;</h6>\n
             </div>\n
             <div class="field">\n
               <label for="password"\n
@@ -114,7 +114,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <div class="input">\n
                 <input type="password" name="__ac_password" id="password" />\n
               </div>\n
-              <hr class="clear" />\n
+              <h6 class="clear">&nbsp;</h6>\n
             </div>\n
             <div class="field">\n
               <label for="cb_remember"\n
@@ -122,14 +122,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <div class="input">\n
                 <input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember" />\n
               </div>\n
-              <hr class="clear" />\n
+              <h6 class="clear">&nbsp;</h6>\n
             </div>\n
           </div>\n
         </div>\n
       </div>\n
       <script type="text/javascript">setFocus()</script>\n
-      <hr class="clear" />\n
-      <input type="submit" name="submit" value="Login" class="submit"\n
+      <h6 class="clear">&nbsp;</h6>\n
+      <input type="submit" value="Login" class="submit"\n
+             tal:attributes="name python: \'%s:method\' % (form_action, )"\n
              i18n:attributes="value" i18n:domain="ui" />\n
       <div>\n
         <a tal:attributes="href string:${here/portal_url}/mail_password_form"\n

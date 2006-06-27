@@ -102,7 +102,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </select>\n
           <tal:block tal:replace="structure python:form.sort_order.render(item[1], request)" />\n
         </div>\n
-        <hr class="clear" />\n
+        <h6 class="clear">&nbsp;</h6>\n
       </div>\n
       <div tal:repeat="item columns"\n
            class="field">\n
@@ -122,7 +122,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <span tal:replace="structure python:form.sort_order.render(\'\', request)" />\n
           </div>\n
         </tal:block>\n
-        <hr class="clear" />\n
+        <h6 class="clear">&nbsp;</h6>\n
       </div>\n
     </div>\n
   </tal:block>\n

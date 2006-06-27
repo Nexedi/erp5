@@ -418,8 +418,8 @@ a:hover {\n
   text-decoration: underline;\n
 }\n
 \n
-hr.clear {\n
-  border: 0;\n
+h6.clear {\n
+  height: 0;\n
   margin: 0;\n
   padding: 0;\n
   clear: both;\n
@@ -481,13 +481,6 @@ div.index_html table {\n
   height: 16px;\n
 }\n
 \n
-\n
-/*#main_bar button .description,\n
-#context_bar button .description,\n
-.document .actions button.save .description {\n
-  top: 1em;\n
-}*/\n
-\n
 .content .field {\n
   position: relative;\n
 }\n
@@ -535,11 +528,10 @@ div.index_html table {\n
 \n
 .content .field {\n
   padding-bottom: 0.2em;\n
-/*   clear: left; */\n
 }\n
 \n
 .content .field label {\n
-  width: 12em;\n
+  width: 30%;\n
 }\n
 \n
 .content .field label,\n
@@ -559,7 +551,7 @@ div.index_html table {\n
 }\n
 \n
 .login .submit {\n
-  margin-left: 12em;\n
+  margin-left: 15%;\n
 }\n
 \n
 /*.login label {\n
@@ -794,6 +786,17 @@ div.index_html table {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/exec16.png\');\n
 }\n
 \n
+.document .actions {\n
+  position: relative;\n
+  float: left;\n
+  width: 100%;\n
+  margin: 0;\n
+  padding: 0;\n
+  border-bottom-width: 1px;\n
+  border-bottom-style: solid;\n
+  border-bottom-color: <dtml-var document_border_color>;\n
+}\n
+\n
 .document .actions button.save {\n
   float: right;\n
 }\n
@@ -807,24 +810,26 @@ div.index_html table {\n
 .document .actions ul {\n
   float: left;\n
   list-style: none;\n
-  margin-top: 16px;\n
-  margin-bottom: -1px;\n
   padding: 0;\n
+  margin: 0;\n
+  position: absolute;\n
+  bottom: -1px;\n
 }\n
 \n
 .document .actions li {\n
   float: left;\n
   color: inherit;\n
-  background-color: <dtml-var document_background_color>;\n
-  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/tab_right.png\') top right no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/tab_left.png\') top left no-repeat;\n
+  margin: 0;\n
+  padding: 0 0 0 10px;\n
 }\n
 \n
 .document .actions li a {\n
   display: block;\n
-  padding: 3px 15px 4px;\n
+  padding: 5px 15px 4px 5px;\n
   color: inherit;\n
   background-color: inherit;\n
-  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/tab_left.png\') top left no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/tab_right.png\') top right no-repeat;\n
 }\n
 \n
 .document .actions li.selected a {\n
@@ -841,6 +846,7 @@ div.index_html table {\n
   border-width: 1px;\n
   border-style: solid;\n
   border-color: <dtml-var document_border_color>;\n
+  border-top: 0px none;\n
   color: inherit;\n
   background-color: <dtml-var document_background_color>;\n
   padding: 5px;\n
@@ -867,6 +873,7 @@ div.index_html table {\n
 }\n
 \n
 .ListSummary table {\n
+  border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 1px;\n
   border-right-width: 1px;\n

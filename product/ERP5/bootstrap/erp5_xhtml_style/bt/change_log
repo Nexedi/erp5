@@ -1,3 +1,10 @@
+2006-06-27 vincent
+* Add an error message when login fails.
+* Fix various compatibility bugs with old browsers.
+
+2006-06-27 chris
+* Replaced hr.clear by h6.clear to fix a problem with firefox 1.0.6
+
 2006-06-26 vincent
 * Rename page templates to follow a consistent naming scheme.
 * Add another layer to unify web mode handling.
