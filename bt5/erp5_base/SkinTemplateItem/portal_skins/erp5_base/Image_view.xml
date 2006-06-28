@@ -69,7 +69,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
+                <string>description</string>
               </list>
             </value>
         </item>
@@ -78,7 +78,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key>                 <string>description</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
