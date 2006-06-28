@@ -1788,9 +1788,13 @@ class ListBoxRendererLine:
 
               original_value = getattr(obj, property_id, None)
               processed_value = original_value
-              if not callable(original_value):
-                original_value = obj.getProperty(property_id)
-                processed_value = original_value
+              if not callable(original_value) and obj.hasProperty(property_id):
+                try:
+                  original_value = obj.getProperty(property_id)
+                  processed_value = original_value
+                except AttributeError:
+                  original_value = getattr(obj, property_id)
+                  processed_value = original_value
             except (AttributeError, KeyError):
               original_value = None
               processed_value = 'Could not evaluate %s' % property_id
@@ -2330,8 +2334,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 """)
       if sql is not None:
         html_list.append("""\
-<a href="portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s">%s</a>\
-""" % (self.getSelectionName(), sql, unicode(Message(domain = ui_domain, message = title))))
+<a href="portal_selections/setSelectionQuickSortOrder?selection_name=%s&amp;sort_on=%s&amp;form_id=%s">%s</a>\
+""" % (self.getSelectionName(), sql, self.getForm().id, unicode(Message(domain = ui_domain, message = title))))
 
         if sort_order == 'ascending':
           html_list.append("""\

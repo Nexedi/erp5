@@ -206,8 +206,8 @@
                                        title python: value[1];
                                        sort_order python: value[2]">
                   <td tal:condition="sql" class="Data">
-                    <a href="portal_selections/setSelectionQuickSortOrder?selection_name=default&amp;sort_on=id"
-                      tal:attributes="href string:portal_selections/setSelectionQuickSortOrder?selection_name=${selection_name}&amp;sort_on=${sql}"
+                    <a href="portal_selections/setSelectionQuickSortOrder?selection_name=default&amp;sort_on=id&amp;form_id=view"
+                      tal:attributes="href string:portal_selections/setSelectionQuickSortOrder?selection_name=${selection_name}&amp;sort_on=${sql}&amp;form_id=${form_id}"
                       tal:content="title" i18n:domain="ui" i18n:translate="">ID</a>
                     <img tal:condition="python: sort_order == 'ascending'"
                       src="1bottomarrow.png" alt="Ascending Display" title="Ascending Display"
