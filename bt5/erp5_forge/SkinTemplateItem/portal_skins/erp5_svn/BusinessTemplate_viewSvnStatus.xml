@@ -73,7 +73,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 <tal:block tal:define="css_list python: [\'css/dhtmlXTree.css\', \'css/movableMenu.css\'];\n
                        js_list python: [\'js/dhtmlXCommon.js\', \'js/dhtmlXTree.js\', \'js/menuico.js\', \'js/movableMenu.js\', \'js/BusinessTemplate_doCreateJavaScriptStatus\']">\n
-  <tal:block metal:use-macro="here/view_main/macros/master">\n
+  <tal:block metal:use-macro="here/view_master/macros/master">\n
     <tal:block metal:fill-slot="main">\n
       <noscript>\n
         <h3 class="error">Please activate javascript in your web browser or this module won\'t work.</h3>\n
