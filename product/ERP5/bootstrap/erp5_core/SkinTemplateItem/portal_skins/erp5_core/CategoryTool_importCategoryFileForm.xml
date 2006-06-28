@@ -61,7 +61,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>Default</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,12 +71,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list>
                         <string>my_import_file</string>
                         <string>category_file_template</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

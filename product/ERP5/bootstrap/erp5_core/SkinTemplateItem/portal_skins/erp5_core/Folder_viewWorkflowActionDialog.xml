@@ -67,7 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>Default</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -77,18 +77,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key>                 <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>my_workflow_action</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_workflow_action</string>
                       </list>
                     </value>
                 </item>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

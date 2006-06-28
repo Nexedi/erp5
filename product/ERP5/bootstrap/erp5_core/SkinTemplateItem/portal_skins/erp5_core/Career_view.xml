@@ -61,9 +61,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
+                <string>Left</string>
+                <string>Right</string>
+                <string>Middle</string>
+                <string>List</string>
               </list>
             </value>
         </item>
@@ -72,15 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>left</string> </key>
+                    <key>                 <string>Left</string> </key>
                     <value>
                       <list>
                         <string>my_id</string>
@@ -96,7 +89,21 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key>                 <string>List</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>Middle</string> </key>
+                    <value>
+                      <list>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>Right</string> </key>
                     <value>
                       <list>
                         <string>my_collective_agreement_title</string>

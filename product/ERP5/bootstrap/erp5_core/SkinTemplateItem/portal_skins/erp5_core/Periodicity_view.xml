@@ -62,8 +62,9 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
+                <string>rifght</string>
                 <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -71,6 +72,12 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
                 <item>
                     <key>                 <string>center</string> </key>
                     <value>
@@ -94,7 +101,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key>                 <string>rifght</string> </key>
                     <value>
                       <list>
                         <string>my_periodicity_week_frequency</string>

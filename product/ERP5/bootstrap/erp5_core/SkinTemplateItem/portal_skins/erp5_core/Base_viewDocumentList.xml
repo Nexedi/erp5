@@ -61,7 +61,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
+                <string>Left</string>
+                <string>Right</string>
+                <string>Center</string>
+                <string>Bottom</string>
+                <string>Hidden</string>
               </list>
             </value>
         </item>
@@ -70,11 +74,35 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key>                 <string>Bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>Center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>Hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>Left</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>Right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
