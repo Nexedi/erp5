@@ -481,6 +481,12 @@ div.index_html table {\n
   height: 16px;\n
 }\n
 \n
+/* XXX: Bug fix when no logged\n
+   by <chritophe@nexedi.com> */\n
+.document .actions {\n
+  min-height: 2.5em;\n
+}\n
+\n
 .content .field {\n
   position: relative;\n
 }\n
