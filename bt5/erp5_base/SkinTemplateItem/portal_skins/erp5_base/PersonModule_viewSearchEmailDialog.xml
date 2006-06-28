@@ -68,7 +68,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
               </list>
             </value>
         </item>
@@ -84,12 +83,6 @@
                         <string>my_region</string>
                         <string>my_skill</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
