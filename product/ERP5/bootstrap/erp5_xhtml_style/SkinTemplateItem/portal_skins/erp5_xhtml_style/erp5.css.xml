@@ -434,6 +434,14 @@ div.index_html table {\n
   text-align: left;\n
 }\n
 \n
+#main_bar button .description,\n
+#context_bar button .description,\n
+.content .field .description,\n
+.document .actions button.save .description,\n
+#context_bar .tool_buttons a .description {\n
+  display: none;\n
+}\n
+\n
 /* Main bar */\n
 \n
 #main_bar {\n
@@ -481,7 +489,7 @@ div.index_html table {\n
   height: 16px;\n
 }\n
 \n
-/* XXX: Bug fix when no logged\n
+/* XXX: Bug fix when not logged\n
    by <chritophe@nexedi.com> */\n
 .document .actions {\n
   min-height: 2.5em;\n
@@ -489,29 +497,6 @@ div.index_html table {\n
 \n
 .content .field {\n
   position: relative;\n
-}\n
-\n
-#main_bar button .description,\n
-#context_bar button .description,\n
-.content .field .description,\n
-.document .actions button.save .description {\n
-  display: none;\n
-  position: absolute;\n
-  white-space: pre;\n
-  z-index: 50;\n
-  border-width: 1px;\n
-  border-style: solid;\n
-  border-color: <dtml-var tooltip_border_color>;\n
-  background-color: <dtml-var tooltip_background_color>;\n
-  color: <dtml-var tooltip_color>;\n
-}\n
-\n
-.content .field .description {\n
-  /*  \\*/\n
-  margin-left: 16em;\n
-  /*  */\n
-  margin-top: -0.5em;\n
-  top: 100%;\n
 }\n
 \n
 .content .field .figure {\n
@@ -563,23 +548,6 @@ div.index_html table {\n
 /*.login label {\n
   text-align: right;\n
 }*/\n
-\n
-#main_bar .first button .description,\n
-#context_bar button .description {\n
-  left: 0;\n
-}\n
-\n
-#main_bar .second button .description,\n
-.document .actions button.save .description {\n
-  right: 0;\n
-}\n
-\n
-#main_bar button:hover .description,\n
-.document .actions button.save:hover .description,\n
-.content .field:hover .description,\n
-#context_bar button:hover .description {\n
-  display: block;\n
-}\n
 \n
 #favourites button .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/favourite.png\');\n
@@ -650,10 +618,6 @@ div.index_html table {\n
   margin: 0;\n
   padding: 0;\n
   display: block;\n
-}\n
-\n
-#context_bar .tool_buttons a .description {\n
-  display: none;\n
 }\n
 \n
 #context_bar #jump button .image {\n
