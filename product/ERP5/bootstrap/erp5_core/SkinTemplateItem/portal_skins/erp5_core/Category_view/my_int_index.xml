@@ -199,7 +199,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Integer which define the category position when the category is in a sorted list.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Int Index</string> </value>
+                    <value> <string>Sort Index</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

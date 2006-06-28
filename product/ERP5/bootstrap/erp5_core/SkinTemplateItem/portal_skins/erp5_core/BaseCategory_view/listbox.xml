@@ -347,7 +347,7 @@
                         </tuple>
                         <tuple>
                           <string>int_index</string>
-                          <string>Int Index</string>
+                          <string>Sort Index</string>
                         </tuple>
                       </list>
                     </value>
@@ -448,6 +448,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

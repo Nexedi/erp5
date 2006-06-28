@@ -1,3 +1,6 @@
+2006-06-28 Kevin
+* Change Categories' int_index property label to 'Sort Index'.
+
 2006-06-26 vincent
 * Remove Base_call[View|List]DialogMethod. Everything has been merged & cleaned in Base_callDialogMethod.
 
