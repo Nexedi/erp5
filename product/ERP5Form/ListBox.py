@@ -1875,7 +1875,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           if isinstance(error_text, str):
             error_text = unicode(error_text, encoding)
           error_message = u'<br />' + error_text
-          processed_value = self.request.get('field_%s' % key, processed_value)
+          processed_value = self.renderer.request.get('field_%s' % key, processed_value)
         else:
           error_message = u''
 
@@ -1889,7 +1889,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if editable_field.meta_type in ('DateTimeField', 'ProxyField', ):
           # XXX Some fields prefer None to ''.
           cell_html = editable_field.render(value = original_value,
-                                            REQUEST = brain.asContext(REQUEST = self.request, form = self.request.form),
+                                            REQUEST = brain.asContext(REQUEST = self.renderer.request, form = self.renderer.request.form),
                                             key = key)
         else:
           # We use REQUEST which is not so good here.
