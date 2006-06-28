@@ -1,3 +1,6 @@
+2006-06-28 Kevin
+* Fix default string.
+
 2006-06-21 Kevin
 * In editable mode, enclose main content in a div to act as a fieldgroup.
 

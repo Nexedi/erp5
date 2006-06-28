@@ -93,11 +93,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <tr tal:condition="request/dialog_category | nothing"\n
               tal:define="dialog_category request/dialog_category | nothing">\n
             <td i18n:translate="" i18n:domain="ui" \n
-                tal:content="python:{\'object_exchange\':\'Exchange Select:\',\n
-                                     \'object_print\':\'Print Select:\',\n
-                                     \'object_search\':\'Search Select:\',\n
-                                     \'object_report\':\'Report Select:\',\n
-                                    }.get(dialog_category, \'Select:\')">Search Type:</td>\n
+                tal:content="python:{ \'object_exchange\': \'Select Exchange\'\n
+                                    , \'object_print\'   : \'Select Print\'\n
+                                    , \'object_search\'  : \'Select Search\'\n
+                                    , \'object_report\'  : \'Select Report\'\n
+                                    }.get(dialog_category, \'Select\')">Search Type</td>\n
             <td valign="middle" align="right" nowrap\n
                 tal:define="actions python:filtered_actions[dialog_category]">\n
               <input type="hidden" name="dialog_category" value="dialog_category"\n

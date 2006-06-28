@@ -82,11 +82,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <div tal:condition="python: len(dialog_actions) > 1"\n
                   class="dialog_selector">\n
                 <label for="dialog_selector"\n
-                      tal:content="python:{\'object_exchange\':\'Exchange Select:\',\n
-                                            \'object_print\':\'Print Select:\',\n
-                                            \'object_search\':\'Search Select:\',\n
-                                            \'object_report\':\'Report Select:\',\n
-                                          }.get(dialog_category, \'Select:\')"\n
+                      tal:content="python: { \'object_exchange\': \'Select Exchange\'\n
+                                           , \'object_print\'   : \'Select Print\'\n
+                                           , \'object_search\'  : \'Select Search\'\n
+                                           , \'object_report\'  : \'Select Report\'\n
+                                           }.get(dialog_category, \'Select\')"\n
                       i18n:translate="" i18n:domain="ui"></label>\n
                 <select name="dialog_select" id="dialog_selector"\n
                         tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doDialog\')">\n
