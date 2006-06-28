@@ -77,7 +77,7 @@ IDEAS:\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
 <tal:block tal:condition="form/pt | nothing">\n
-  <tal:block tal:define="global list_mode python: form[\'pt\'] == \'list_main\';\n
+  <tal:block tal:define="global list_mode python: form[\'pt\'] == \'form_list\';\n
                          global listmode_default_listbox python: here.ERP5Site_getListbox(form=form)" />\n
 </tal:block>\n
 <tal:block tal:define="global actions python:here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n

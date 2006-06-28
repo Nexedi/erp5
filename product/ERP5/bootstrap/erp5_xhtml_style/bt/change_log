@@ -1,3 +1,6 @@
+2006-06-28 vincent
+* Add compatibility layer to support forms designed for html_style.
+
 2006-06-27 vincent
 * Add an error message when login fails.
 * Fix various compatibility bugs with old browsers.
