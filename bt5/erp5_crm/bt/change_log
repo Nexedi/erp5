@@ -1,3 +1,6 @@
+2006-05-18 Romain
+* Fix naming conventions.
+
 2006-04-25 Romain
 * Remove News Item
 * Again, change state variable to simulation_state for event_workflow and sale_opportunity_workflow.
