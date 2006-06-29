@@ -77,7 +77,6 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>mapped_value_property_list</string>
                         <string>matrixbox</string>
                       </list>
                     </value>
@@ -92,9 +91,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>membership_criterion_base_category_list</string>
-                        <string>matrixbox_membership_criterion_category_list</string>
                         <string>matrixbox_quantity</string>
+                        <string>matrixbox_price</string>
                       </list>
                     </value>
                 </item>
