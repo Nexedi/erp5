@@ -47,7 +47,7 @@ class TestTool (BaseTool):
   id = 'portal_tests'
   meta_type = 'ERP5 Test Tool'
   portal_type = 'Test Tool'
-  allowed_types = ( 'ERP5 Portal Test',)
+  allowed_types = ('Zuite', )
 
   # Declarative Security
   security = ClassSecurityInfo()
