@@ -49,6 +49,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       for id, qdef in self.worklists.items():
           if qdef.actbox_name:
               guard = qdef.guard
+              dict = {}
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
               searchres_len = 0
@@ -56,7 +57,6 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               if var_match_keys:
                   # Check the catalog for items in the worklist.
                   catalog = getToolByName(self, 'portal_catalog')
-                  dict = {}
                   for k in var_match_keys:
                       v = qdef.getVarMatch(k)
                       v_fmt = map(lambda x, info=info: x%info, v)
@@ -107,14 +107,14 @@ class ValidationFailed(Exception):
         """
         Exception.__init__(self, message_instance)
         self.msg = message_instance
-    
+
 DCWorkflow.ValidationFailed = ValidationFailed
 
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
 
 
- 
-# Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed 
+
+# Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed
 # error messages in workflow history.
 def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     '''
@@ -263,7 +263,7 @@ def updateRoleMappingsFor(self, ob):
       if other_sdef is not None and other_sdef.permission_roles is not None:
         other_data_list.append((other_workflow,other_sdef))
     # Be carefull, permissions_roles should not change
-    # from list to tuple or vice-versa. (in modifyRolesForPermission, 
+    # from list to tuple or vice-versa. (in modifyRolesForPermission,
     # list means acquire roles, tuple means do not acquire)
     if sdef is not None and self.permissions:
         for p in self.permissions:
@@ -305,7 +305,7 @@ class ERP5TransitionDefinition (TransitionDefinition):
   """
     This class is only for backward compatibility.
   """
-  pass  
+  pass
 
 def getAvailableScriptIds(self):
   return self.getWorkflow().scripts.keys() + \
@@ -363,7 +363,7 @@ def setupERP5Workflow(wf):
   vdef.setProperties(description='Time of the last transition',
                      default_expr="state_change/getDateTime",
                      for_status=1, update_always=1)
-  
+
   vdef = wf.variables['error_message']
   vdef.setProperties(description='Error message if validation failed',
                      for_status=1, update_always=1)
