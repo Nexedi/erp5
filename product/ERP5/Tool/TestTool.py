@@ -53,6 +53,6 @@ class TestTool (BaseTool):
   security = ClassSecurityInfo()
 
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
+  manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
 
 InitializeClass(TestTool)
