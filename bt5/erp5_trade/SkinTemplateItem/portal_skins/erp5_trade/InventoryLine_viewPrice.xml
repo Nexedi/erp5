@@ -61,9 +61,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
-                <string>right</string>
-                <string>center</string>
+                <string>left</string>
                 <string>bottom</string>
                 <string>hidden</string>
               </list>
@@ -74,26 +72,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
-                    <value>
-                      <list>
-                        <string>my_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>matrixbox</string>
                         <string>mapped_value_property_list</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -107,9 +91,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

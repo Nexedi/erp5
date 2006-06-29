@@ -328,11 +328,11 @@
                     <value>
                       <list>
                         <tuple>
-<string>id</string>
+                          <string>id</string>
                           <string>ID</string>
                         </tuple>
                         <tuple>
-<string>title</string>
+                          <string>title</string>
                           <string>Internal Packing List Line</string>
                         </tuple>
                         <tuple>
@@ -373,11 +373,11 @@
                     <value>
                       <list>
                         <tuple>
-<string>id</string>
+                          <string>id</string>
                           <string>ID</string>
                         </tuple>
                         <tuple>
-<string>title</string>
+                          <string>title</string>
                           <string>Internal Packing List Line</string>
                         </tuple>
                         <tuple>
@@ -527,8 +527,8 @@
                     <value>
                       <list>
                         <tuple>
-<string>id</string>
-<string>id</string>
+                          <string>id</string>
+                          <string>id</string>
                         </tuple>
                       </list>
                     </value>
@@ -579,7 +579,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>searchFolder</unicode> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
