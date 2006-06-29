@@ -96,9 +96,11 @@ XXX: Folder_filter accesses selection directly\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
-    <button type="submit" name="Base_doJump:method">\n
+    <button type="submit" name="Base_doJump:method" title="Jump"\n
+            i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
-      <span class="description">Jump</span>\n
+      <span class="description"\n
+            i18n:translate="" i18n:domain="ui">Jump</span>\n
     </button>\n
   </span>\n
   <span id="action">\n
@@ -148,7 +150,8 @@ XXX: Folder_filter accesses selection directly\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
-    <button type="submit" name="Base_doAction:method">\n
+    <button type="submit" name="Base_doAction:method" title="Action"\n
+            i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description">Action</span>\n
     </button>\n
@@ -165,15 +168,18 @@ XXX: Folder_filter accesses selection directly\n
                       print_actions actions/object_print | nothing">\n
       <span class="separator"></span>\n
       <tal:block tal:condition="list_mode | nothing">\n
-        <button class="cut" type="submit" name="Folder_cut:method">\n
+        <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
+                i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
         </button>\n
-        <button class="copy" type="submit" name="Folder_copy:method">\n
+        <button class="copy" type="submit" name="Folder_copy:method" title="Copy"\n
+                i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
         </button>\n
-        <button class="paste" type="submit" name="Folder_paste:method">\n
+        <button class="paste" type="submit" name="Folder_paste:method" title="Paste"\n
+                i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>\n
         </button>\n
@@ -183,16 +189,19 @@ XXX: Folder_filter accesses selection directly\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
       </a>\n
-      <button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method">\n
+      <button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method" title="Print"\n
+              i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Print</span>\n
       </button>\n
-      <button class="new" type="submit"\n
-              tal:attributes="name python: hasattr(here.getParent(), \'getLastId\') and \'Base_createNewDocument:method\' or \'Folder_create:method\'">\n
+      <button class="new" type="submit" title="New"\n
+              tal:attributes="name python: hasattr(here.getParent(), \'getLastId\') and \'Base_createNewDocument:method\' or \'Folder_create:method\'"\n
+              i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
       </button>\n
-      <button tal:condition="list_mode | nothing" class="delete" type="submit" name="Folder_deleteObjectList:method">\n
+      <button tal:condition="list_mode | nothing" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
+              i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
       </button>\n
@@ -226,12 +235,14 @@ XXX: Folder_filter accesses selection directly\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Find</span>\n
         </a>\n
-        <button class="show_all" type="submit" name="Folder_show:method">\n
+        <button class="show_all" type="submit" name="Folder_show:method" title="Show All"\n
+                i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>\n
         </button>\n
-        <button type="submit" name="Folder_filter:method"\n
-                tal:attributes="class python:(here.portal_selections.getSelectionFor(selection_name) is not None and here.portal_selections.getSelectionFor(selection_name).isInvertMode()) and \'filter_on\' or \'filter\';">\n
+        <button type="submit" name="Folder_filter:method" title="Filter"\n
+                tal:attributes="class python:(here.portal_selections.getSelectionFor(selection_name) is not None and here.portal_selections.getSelectionFor(selection_name).isInvertMode()) and \'filter_on\' or \'filter\';"\n
+                i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
         </button>\n
@@ -275,7 +286,7 @@ XXX: Folder_filter accesses selection directly\n
     </span>\n
     <span class="second">\n
       <a class="jump_help" title="Help"\n
-         tal:attributes="href python: here.Base_getHelpUrl(form_id=form_id)">\n
+         tal:attributes="href python: here.Base_getHelpUrl(current_action=current_action, dialog_id=dialog_id, workflow_action=request.get(\'workflow_action\'))">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Help</span>\n
       </a>\n

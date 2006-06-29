@@ -186,7 +186,8 @@ IDEAS:\n
                           i18n:translate="" i18n:domain="ui"></option>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="Base_doFavorite:method">\n
+              <button type="submit" name="Base_doFavorite:method" title="Select Favorite"\n
+                      i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
                       i18n:translate="" i18n:domain="ui">Select Favorite</span>\n
@@ -204,10 +205,11 @@ IDEAS:\n
                           tal:content="python: module[0]" />\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="Base_doModule:method">\n
+              <button type="submit" name="Base_doModule:method" title="Select Module"\n
+                      i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
-                      i18n:translate="" i18n:domain="ui">Select module</span>\n
+                      i18n:translate="" i18n:domain="ui">Select Module</span>\n
               </button>\n
             </span>\n
           </span>\n
@@ -223,15 +225,17 @@ IDEAS:\n
                           tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])"></option>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="Base_doLanguage:method">\n
+              <button type="submit" name="Base_doLanguage:method" title="Select Language"\n
+                      i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
-                      i18n:translate="" i18n:domain="ui">Select language</span>\n
+                      i18n:translate="" i18n:domain="ui">Select Language</span>\n
               </button>\n
             </span>\n
             <span id="search">\n
               <input type="text" name="SearchableText" />\n
-              <button type="submit" name="Base_viewSearchResultList:method">\n
+              <button type="submit" name="Base_viewSearchResultList:method" title="Search"\n
+                      i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
                       i18n:translate="" i18n:domain="ui">Search</span>\n
