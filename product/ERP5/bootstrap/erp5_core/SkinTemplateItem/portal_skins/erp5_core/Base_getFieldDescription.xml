@@ -71,11 +71,11 @@
             <value> <string>desc = field.get_value(\'description\')\n
 \n
 if desc in (\'\', None):\n
-  if field.getId().startswith(\'my_\'):\n
+  id = field.getId().split(\'_\', 1)\n
+  if id[0] == \'my\':\n
     properties = context.propertyMap()\n
-    id = \'%s_\' % field.getId() # To avoid matching a subword\n
     for property in properties:\n
-      if \'_%s_\' % property[\'id\'] in id: # To avoid matching "my_"\n
+      if id[1] == property[\'id\']:\n
         return property.get(\'description\', \'\')\n
 \n
 return desc\n
@@ -129,12 +129,12 @@ return desc\n
                             <string>_getattr_</string>
                             <string>desc</string>
                             <string>None</string>
+                            <string>id</string>
+                            <string>_getitem_</string>
                             <string>context</string>
                             <string>properties</string>
-                            <string>id</string>
                             <string>_getiter_</string>
                             <string>property</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
