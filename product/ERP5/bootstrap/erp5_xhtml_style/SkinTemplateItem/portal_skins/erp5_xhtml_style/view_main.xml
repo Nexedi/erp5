@@ -83,7 +83,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <div class="actions">\n
           <tal:block tal:condition="editable_mode | python: 1">\n
             <button tal:condition="python: here.portal_membership.checkPermission(\'Modify portal content\', here)"\n
-                    type="submit" name="Base_edit:method" class="save">\n
+                    type="submit" name="Base_edit:method" class="save" title="Save"\n
+                    i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description"\n
                     i18n:translate="" i18n:domain="ui">Save</span>\n
