@@ -68,17 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>line = [\'tax_category/\' + x[0] for x in context.getTaxCategoryItemList()]\n
-column = [\'salary_range/\' + x[0] for x in context.getSalaryRangeItemList()]\n
-tab = []\n
+            <value> <string>cell_range = [\n
+  [\'tax_category/\' + x[0] for x in context.getTaxCategoryItemList()], # line\n
+  [\'salary_range/\' + x[0] for x in context.getSalaryRangeItemList()], # column \n
+  [] # tab\n
+]\n
 \n
-return [line, column, tab]\n
 \n
-#### J\xc3\xa9rome: original was : (why ?)\n
-if len(tab) :\n
-  cell_range = [line, column, tab]\n
-else :\n
-  cell_range = [line, column]\n
+cell_range = filter(lambda x: x != [], cell_range)\n
+\n
+if matrixbox :\n
+  ctool = context.getPortalObject().portal_categories\n
+  cell_range_item_list = []\n
+  for range in cell_range :\n
+    new_range = [  (x, ctool.resolveCategory(x).getTitleOrId()) for x in range]\n
+    cell_range_item_list.append(new_range)\n
+  return cell_range_item_list \n
 \n
 return cell_range\n
 </string> </value>
@@ -95,7 +100,7 @@ return cell_range\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>cellRangeAxe=None, matrixbox=0, **kw</string> </value>
+            <value> <string>matrixbox=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,13 +120,12 @@ return cell_range\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>cellRangeAxe</string>
                             <string>matrixbox</string>
                             <string>kw</string>
                             <string>append</string>
@@ -131,11 +135,12 @@ return cell_range\n
                             <string>context</string>
                             <string>x</string>
                             <string>_getitem_</string>
-                            <string>line</string>
-                            <string>column</string>
-                            <string>tab</string>
-                            <string>len</string>
                             <string>cell_range</string>
+                            <string>filter</string>
+                            <string>ctool</string>
+                            <string>cell_range_item_list</string>
+                            <string>range</string>
+                            <string>new_range</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,7 +153,6 @@ return cell_range\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
                 <int>0</int>
               </tuple>
             </value>
