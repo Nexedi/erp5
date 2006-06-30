@@ -1,3 +1,6 @@
+2006-06-30 aurel
+* use specific class for cash inventory
+
 2006-05-24 aurel
 * add a minimal workflow for inventory
 
