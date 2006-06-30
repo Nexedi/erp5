@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -96,23 +98,25 @@ for workflow_item in workflow_item_list:\n
         key = key[len(compatibility_name):]\n
     if key.endswith(\'state\'): \n
       key = \'state\'\n
-      value = wf_states[value].title\n
+      if display:\n
+        value = wf_states[value].title\n
+      else:\n
+        value = wf_states[value].id\n
     if key == \'action\':\n
       if value != \'\' and value is not None:\n
         if value == "\'edit\'":\n
           value = "edit"\n
-        value = wf_transitions[value].title or wf_transitions[value].actbox_name or value\n
-    if key == \'error_message\' and not same_type(value, \'\'):\n
-      # use of Message class\n
-      value = \'%s\' %value    \n
-    elif key == \'error_message\' and same_type(value, \'\'):\n
-      # old message way\n
-      value = context.Localizer.erp5_ui.gettext(value)\n
-    if same_type(value, \'\') and key != \'error_message\':\n
-      value = context.Localizer.erp5_ui.gettext(value)\n
-\n
-    if same_type(value, \'\'):\n
-      value = context.Localizer.erp5_ui.gettext(value)\n
+        if display:\n
+          value = wf_transitions[value].title or wf_transitions[value].actbox_name or value\n
+        else:\n
+          value = wf_transitions[value].id or wf_transitions[value].actbox_name or value\n
+    if display:\n
+      if key == \'error_message\' and not same_type(value, \'\'):\n
+        value = \'%s\' %value\n
+      elif key == \'error_message\' and same_type(value, \'\'):\n
+        value = context.Localizer.erp5_ui.gettext(value)\n
+      if same_type(value, \'\') and key != \'error_message\':\n
+        value = context.Localizer.erp5_ui.gettext(value)\n
     o.setProperty(key, value)\n
   result.append(o)\n
 \n
@@ -137,7 +141,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>workflow_id, **kw</string> </value>
+            <value> <string>workflow_id,display=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -175,13 +179,14 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>workflow_id</string>
+                            <string>display</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -218,7 +223,9 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>
