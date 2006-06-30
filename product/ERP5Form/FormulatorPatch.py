@@ -180,7 +180,12 @@ SelectionValidator.validate = SelectionValidator_validate
 from Products.Formulator.Validator import MultiSelectionValidator
 
 def MultiSelectionValidator_validate(self, field, key, REQUEST):
-    values = REQUEST.get(key, [])
+    values = REQUEST.get(key)
+    if values is None:
+        if field.get_value('required'):
+          raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
+        else:
+          raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
     # NOTE: a hack to deal with single item selections
     if type(values) is not type([]):
         # put whatever we got in a list
@@ -237,13 +242,55 @@ MultiSelectionValidator.validate = MultiSelectionValidator_validate
 from Products.Formulator.Validator import BooleanValidator
 
 def BooleanValidator_validate(self, field, key, REQUEST):
-    result = not not REQUEST.get(key, 0)
-    if result==True:
+    result = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
+    if result is None:
+       if field.get_value('required'):
+         raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
+       else:
+         raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
+    if (not not result)==True:
        return 1
     else:
        return 0
 
 BooleanValidator.validate = BooleanValidator_validate
+
+from Products.Formulator.Widget import CheckBoxWidget
+def CheckBoxWidget_render(self, field, key, value, REQUEST):
+  """Render checkbox.
+  """
+  rendered = [render_element("input",
+                             type="hidden",
+                             name="default_%s:int" % (key, ),
+                             value="0")
+             ]
+  if value:
+    rendered.append(render_element("input",
+                                   type="checkbox",
+                                   name=key,
+                                   css_class=field.get_value('css_class'),
+                                   checked=None,
+                                   extra=field.get_value('extra'))
+                   )
+  else:
+    rendered.append(render_element("input",
+                                   type="checkbox",
+                                   name=key,
+                                   css_class=field.get_value('css_class'),
+                                   extra=field.get_value('extra'))
+                   )
+  return "".join(rendered)
+
+CheckBoxWidget.render = CheckBoxWidget_render
+
+if 'required' not in CheckBoxWidget.property_names:
+  CheckBoxWidget.property_names = CheckBoxWidget.property_names + ['required']
+  CheckBoxWidget.required = fields.CheckBoxField('required',
+                                                   title='Required',
+                                                   description=(
+        "Enforces the need for the field to be rendered."),
+                                                   default=0)
+
 
 # Patch the render_view of a TextAreaWidget so that
 # it is rendered as a nice box, it is using the tag
@@ -348,7 +395,12 @@ IntegerValidator.validate = IntegerValidator_validate
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
   # We had to add this patch for hidden fields of type "list"
-  value = REQUEST.get(key, "")
+  value = REQUEST.get(key)
+  if value is None:
+    if field.get_value('required'):
+      raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
+    else:
+      raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
   if type(value) is type('a'):
     value = string.strip(value)
   if field.get_value('required') and value == "":
