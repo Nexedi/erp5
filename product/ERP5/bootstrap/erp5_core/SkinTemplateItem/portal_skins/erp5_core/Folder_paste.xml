@@ -87,17 +87,17 @@ if context.cb_dataValid and error_message==\'\':\n
   try:\n
     new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
   except KeyError:\n
-    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Nothing+To+Paste.\')\n
+    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + dialog_id + \'?portal_status_message=Nothing+To+Paste.\')\n
   else:\n
     new_id_list = [i[\'new_id\'] for i in new_item_list]\n
     for my_id in new_id_list:\n
       context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
       context[my_id].recursiveImmediateReindexObject()\n
-    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Pasted.\')\n
+    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + dialog_id + \'?portal_status_message=Item(s)+Pasted.\')\n
 elif context.cb_dataValid and error_message!=\'\':\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + dialog_id + \'?portal_status_message=%s\' % error_message)\n
 else:\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Copy+or+cut+one+or+more+items+to+paste+first.\')\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + dialog_id + \'?portal_status_message=Copy+or+cut+one+or+more+items+to+paste+first.\')\n
 </string> </value>
         </item>
         <item>
@@ -112,7 +112,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id</string> </value>
+            <value> <string>dialog_id</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -138,7 +138,7 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
+                            <string>dialog_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>REQUEST</string>

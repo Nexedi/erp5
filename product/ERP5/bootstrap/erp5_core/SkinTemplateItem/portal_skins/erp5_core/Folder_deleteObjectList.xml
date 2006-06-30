@@ -78,7 +78,7 @@ uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 if uids == []:\n
   message = N_("Please+select+one+or+more+items+to+delete+first.")\n
   qs = \'?portal_status_message=%s\' % message\n
-  return context.REQUEST.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
+  return request.RESPONSE.redirect( context.absolute_url() + \'/\' + dialog_id + qs )\n
 \n
 kw = {\'uid\': uids}\n
 request.set(\'object_uid\', context.getUid())\n
@@ -99,7 +99,7 @@ return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection_index=None,form_id=\'\',uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
+            <value> <string>selection_index=None,dialog_id=\'\',uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,7 +126,7 @@ return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
                         <value>
                           <tuple>
                             <string>selection_index</string>
-                            <string>form_id</string>
+                            <string>dialog_id</string>
                             <string>uids</string>
                             <string>listbox_uid</string>
                             <string>selection_name</string>

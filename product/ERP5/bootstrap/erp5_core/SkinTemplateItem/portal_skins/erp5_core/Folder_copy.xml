@@ -76,20 +76,14 @@ uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 # make sure nothing is checked after\n
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
 \n
+request=context.REQUEST\n
 \n
-REQUEST=context.REQUEST\n
-# Do we still needs ids ???\n
-#if REQUEST.has_key(\'ids\'):\n
-#  context.manage_copyObjects(ids=REQUEST[\'ids\'], REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
-#  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Copied.\')\n
-#elif REQUEST.has_key(\'uids\'):\n
 if uids != []:\n
-  #context.manage_copyObjects(uids=REQUEST[\'uids\'], REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
-  context.manage_copyObjects(uids=uids, REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
+  context.manage_copyObjects(uids=uids, REQUEST=request, RESPONSE=request.RESPONSE)\n
   message = N_("Item(s)+Copied.")\n
 else:\n
   message = N_("Please+select+one+or+more+items+to+copy+first.")\n
-return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
+return request.RESPONSE.redirect(context.absolute_url() + \'/\' + dialog_id + \'?portal_status_message=%s\' % message)\n
 </string> </value>
         </item>
         <item>
@@ -104,7 +98,7 @@ return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
+            <value> <string>dialog_id, uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -136,7 +130,7 @@ return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
+                            <string>dialog_id</string>
                             <string>uids</string>
                             <string>listbox_uid</string>
                             <string>selection_name</string>
@@ -145,7 +139,7 @@ return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
                             <string>portal</string>
                             <string>N_</string>
                             <string>selected_uids</string>
-                            <string>REQUEST</string>
+                            <string>request</string>
                             <string>message</string>
                           </tuple>
                         </value>
