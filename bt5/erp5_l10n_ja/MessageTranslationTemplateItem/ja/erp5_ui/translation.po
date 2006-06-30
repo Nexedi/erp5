@@ -1,0 +1,9661 @@
+msgid ""
+msgstr "Project-Id-Version: ERP5 User Interface\n"
+"POT-Creation-Date: 2006-06-30 10:06+CET\n"
+"PO-Revision-Date: 2006-06-30 10:06+CET\n"
+"Last-Translator:  <>\n"
+"Language-Team: ja <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "${delivery_portal_type} ${delivery_title}"
+msgstr ""
+
+msgid "${form_title} - ${object_title}"
+msgstr ""
+
+msgid "${number} item(s) selected"
+msgstr "${number} 個のアイテムが選択されています"
+
+msgid "${number} record(s)"
+msgstr "${number} レコード"
+
+msgid "${page} of ${total_pages}"
+msgstr "${page} / ${total_pages}"
+
+msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
+msgstr ""
+
+msgid "${transaction_title} (Transaction Reference = ${transaction_source_reference},\n Creation Date = ${creation_date} \n Currency = ${currency_title})"
+msgstr ""
+
+msgid "%s item(s) selected"
+msgstr ""
+
+msgid "%s of %s"
+msgstr ""
+
+msgid "%s record(s)"
+msgstr ""
+
+msgid "&nbsp;"
+msgstr ""
+
+msgid "'edit'"
+msgstr ""
+
+msgid "(re)Calculation of the Pay Sheet Transaction"
+msgstr ""
+
+msgid "(re)Generate all Pay Sheet Accounting Lines"
+msgstr ""
+
+msgid "* Add a \"my_id\" field on Bug_view form"
+msgstr ""
+
+msgid "-"
+msgstr ""
+
+msgid "-- Incoming Events --"
+msgstr ""
+
+msgid "-- Object --"
+msgstr "-- オブジェクト --"
+
+msgid "-- Order --"
+msgstr ""
+
+msgid "-- Other --"
+msgstr ""
+
+msgid "-- Others --"
+msgstr "-- その他 --"
+
+msgid "-- Packing Lists --"
+msgstr ""
+
+msgid "-- Production Order --"
+msgstr ""
+
+msgid "-- Sale Opportunities --"
+msgstr ""
+
+msgid "-- User --"
+msgstr "-- ユーザ --"
+
+msgid "-- Workflows --"
+msgstr ""
+
+msgid "--Incoming Events--"
+msgstr ""
+
+msgid "--Others--"
+msgstr ""
+
+msgid "--Sale Opportunities--"
+msgstr ""
+
+msgid "."
+msgstr ""
+
+msgid "1 container(s) created."
+msgstr ""
+
+msgid "2271.0.openoffice_category_file_template.sxc successfully imported"
+msgstr ""
+
+msgid "2nd Interface"
+msgstr ""
+
+msgid "3rd Interface"
+msgstr ""
+
+msgid "<b>Fingerprint</b>"
+msgstr ""
+
+msgid "<b>Host name</b>"
+msgstr ""
+
+msgid "<b>Issuer name</b>"
+msgstr ""
+
+msgid "<b>Nb failures</b>"
+msgstr ""
+
+msgid "<b>Realm Server</b>"
+msgstr ""
+
+msgid "<b>Valid Until</b>"
+msgstr ""
+
+msgid "<b>Valid from</b>"
+msgstr ""
+
+msgid "<title>Bug - use this draft ... it was not a bug </title>"
+msgstr ""
+
+msgid "<ztitle>Bug - use this draft ... it was not a bug </ztitle>"
+msgstr ""
+
+msgid "> The most strange thing is that it works on a site, but not in the unit test.\nProbably due to the fact you create an object and change it's id in the same transaction, which is not supported in Zope 2.7"
+msgstr ""
+
+msgid "A change log"
+msgstr ""
+
+msgid "A description text of the outcome of a task, project, test, etc."
+msgstr ""
+
+msgid "A discount ratio"
+msgstr ""
+
+msgid "A flag indicating if we have to update business template workflows"
+msgstr ""
+
+msgid "A flag indicating if we have to update tools"
+msgstr ""
+
+msgid "A list of ERP5Types for which we want to add the roles in the template"
+msgstr ""
+
+msgid "A list of allowed content types for portal types"
+msgstr ""
+
+msgid "A list of base categories for portal types"
+msgstr ""
+
+msgid "A list of base categories which define possible discrete variations. Variation ranges are stored as category membership. (prev. variation_category_list)."
+msgstr ""
+
+msgid "A list of copyright holders"
+msgstr ""
+
+msgid "A list of hidden content types for portal types"
+msgstr ""
+
+msgid "A list of ids of actions used by this template"
+msgstr ""
+
+msgid "A list of ids of base categories used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog keyword keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog methods used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog related keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog result keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog result tables used by this template"
+msgstr ""
+
+msgid "A list of ids of constraints used by this template"
+msgstr ""
+
+msgid "A list of ids of documents used by this template"
+msgstr ""
+
+msgid "A list of ids of extensions used by this template"
+msgstr ""
+
+msgid "A list of ids of modules used by this template"
+msgstr ""
+
+msgid "A list of ids of portal types used by this template"
+msgstr ""
+
+msgid "A list of ids of products used by this template"
+msgstr ""
+
+msgid "A list of ids of property sheets used by this template"
+msgstr ""
+
+msgid "A list of ids of roles used by this template"
+msgstr ""
+
+msgid "A list of ids of site properties used by this template"
+msgstr ""
+
+msgid "A list of ids of skins used by this template"
+msgstr ""
+
+msgid "A list of ids of tests used by this template"
+msgstr ""
+
+msgid "A list of local roles used by this template"
+msgstr ""
+
+msgid "A list of maintainers"
+msgstr ""
+
+msgid "A list of message translations used by this template"
+msgstr ""
+
+msgid "A list of object paths used by this template"
+msgstr ""
+
+msgid "A list of property sheet for portal types"
+msgstr ""
+
+msgid "A list of workflow chains of portal types used by this template"
+msgstr ""
+
+msgid "A surcharge ratio"
+msgstr ""
+
+msgid "A typical per unit base price"
+msgstr ""
+
+msgid "A typical per unit height of the resource"
+msgstr ""
+
+msgid "A typical per unit length of the resource"
+msgstr ""
+
+msgid "A typical per unit price"
+msgstr ""
+
+msgid "A typical per unit weight of the resource"
+msgstr ""
+
+msgid "A typical per unit width of the resource"
+msgstr ""
+
+msgid "A version identifier"
+msgstr ""
+
+msgid "Absolute Payment Date"
+msgstr ""
+
+msgid "Acc Type"
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Accept decision"
+msgstr ""
+
+msgid "Accepted"
+msgstr ""
+
+msgid "Access Path"
+msgstr ""
+
+msgid "Accessor"
+msgstr ""
+
+msgid "Account"
+msgstr "勘定"
+
+msgid "Account List"
+msgstr ""
+
+msgid "Account Listbox"
+msgstr ""
+
+msgid "Account Module"
+msgstr ""
+
+msgid "Account Statement"
+msgstr ""
+
+msgid "Account Type"
+msgstr ""
+
+msgid "Account Workflow"
+msgstr ""
+
+msgid "Account type"
+msgstr ""
+
+msgid "Accounting"
+msgstr "会計"
+
+msgid "Accounting Date"
+msgstr ""
+
+msgid "Accounting Date Module"
+msgstr ""
+
+msgid "Accounting Dates"
+msgstr ""
+
+msgid "Accounting Line Created"
+msgstr ""
+
+msgid "Accounting Lines"
+msgstr "会計の行"
+
+msgid "Accounting Operation Date"
+msgstr ""
+
+msgid "Accounting Period"
+msgstr ""
+
+msgid "Accounting Period Delimiter"
+msgstr ""
+
+msgid "Accounting Period Module"
+msgstr ""
+
+msgid "Accounting Periods"
+msgstr ""
+
+msgid "Accounting Plan"
+msgstr ""
+
+msgid "Accounting Preference"
+msgstr ""
+
+msgid "Accounting Preferences"
+msgstr ""
+
+msgid "Accounting Report"
+msgstr ""
+
+msgid "Accounting Rule Cell"
+msgstr ""
+
+msgid "Accounting Transaction"
+msgstr "会計取引"
+
+msgid "Accounting Transaction Line"
+msgstr "会計取引の行"
+
+msgid "Accounting Transaction Lines"
+msgstr "会計取引の行"
+
+msgid "Accounting Transaction List"
+msgstr ""
+
+msgid "Accounting Transaction Module"
+msgstr ""
+
+msgid "Accounting Transaction can only be deleted in draft or cancelled states."
+msgstr ""
+
+msgid "Accounting Transaction in confirmed state"
+msgstr ""
+
+msgid "Accounting Transaction in planned state"
+msgstr ""
+
+msgid "Accounting Transactions"
+msgstr "会計取引"
+
+msgid "Accounting Transactions Templates"
+msgstr ""
+
+msgid "Accounting View"
+msgstr "会計閲覧"
+
+msgid "Accounting Workflow"
+msgstr ""
+
+msgid "AccountingPeriodDelimiter_view"
+msgstr ""
+
+msgid "AccountingTransactionModule_viewAccountingTransactionList"
+msgstr ""
+
+msgid "Accounts"
+msgstr ""
+
+msgid "Accounts are part of ERP5 content, so for now, there's no way to provide some default accounts from erp5_accounting. This configuration can be done using templates from preferences or hacking init scripts.\r\n\r\n> Moreover, it is probably a bad idea to allow \"no selection of account\" in accounting transaction lines.\r\n\r\nYou will not always use all lines in the template (eg. no VAT). If you set a quantity without specifiying an account as source/destination, validation will be refused (testAccounting.test_AccountingTransactionValidationAccounts)"
+msgstr ""
+
+msgid "Acquisition Append Value"
+msgstr ""
+
+msgid "Acquisition Base Categories"
+msgstr ""
+
+msgid "Acquisition Copy Value"
+msgstr ""
+
+msgid "Acquisition Mask Value"
+msgstr ""
+
+msgid "Acquisition Object IDs"
+msgstr ""
+
+msgid "Acquisition Portal Types"
+msgstr ""
+
+msgid "Acquisition Sync Value"
+msgstr ""
+
+msgid "Acquisition append value"
+msgstr ""
+
+msgid "Acquisition base category list"
+msgstr ""
+
+msgid "Acquisition copy value"
+msgstr ""
+
+msgid "Acquisition mask value"
+msgstr ""
+
+msgid "Acquisition object id list"
+msgstr ""
+
+msgid "Acquisition portal type list"
+msgstr ""
+
+msgid "Acquisition sync value"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Action Impossible: date is not defined"
+msgstr ""
+
+msgid "Action Request"
+msgstr ""
+
+msgid "Action failed: region is required."
+msgstr ""
+
+msgid "Action impossible : Account ${account_title} is ${state}"
+msgstr ""
+
+msgid "Action impossible : Account Dette fournisseur is Draft"
+msgstr ""
+
+msgid "Action impossible : Date is not in an openned Accounting Period"
+msgstr ""
+
+msgid "Action impossible : Destination Section is not Defined."
+msgstr ""
+
+msgid "Action impossible : Source Section is not defined"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 1150.00"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 1900.00"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 266.00"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 3.00"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 4000.00"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 53.00"
+msgstr ""
+
+msgid "Action impossible : credit is greater than debit: sum = 6640.00"
+msgstr ""
+
+msgid "Action impossible : credit is smaller than debit"
+msgstr ""
+
+msgid "Action impossible : credit is smaller than debit: sum = -1000.00"
+msgstr ""
+
+msgid "Action impossible : credit is smaller than debit: sum = -100628.00"
+msgstr ""
+
+msgid "Action impossible : credit is smaller than debit: sum = -20.00"
+msgstr ""
+
+msgid "Action impossible : credit is smaller than debit: sum = -41800.00"
+msgstr ""
+
+msgid "Action impossible : currency is not defined"
+msgstr ""
+
+msgid "Action impossible : date is in a closed period"
+msgstr ""
+
+msgid "Action impossible : destination_section is not defined"
+msgstr ""
+
+msgid "Action impossible : no source payment defined for line 2 where account type is \"cash\""
+msgstr ""
+
+msgid "Action impossible : no source payment defined when account type is \"cash\""
+msgstr ""
+
+msgid "Action impossible : no source payment defined when account type is bank"
+msgstr ""
+
+msgid "Action impossible : source_section is not defined"
+msgstr ""
+
+msgid "Action impossible : the quantity of the transaction is greater than the transferable maximum quantity (TMQ): TMQ = 50000.00"
+msgstr ""
+
+msgid "Action..."
+msgstr "実行..."
+
+msgid "Actions"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Active Preference"
+msgstr ""
+
+msgid "Active Processes"
+msgstr ""
+
+msgid "Active Sense Method"
+msgstr ""
+
+msgid "Activity"
+msgstr "活動"
+
+msgid "Activity Code"
+msgstr ""
+
+msgid "Activity Pending"
+msgstr "アクティヴィティが保留中"
+
+msgid "Activity code"
+msgstr ""
+
+msgid "Actor"
+msgstr ""
+
+msgid "Actor Count"
+msgstr ""
+
+msgid "Actor Description"
+msgstr ""
+
+msgid "Actor ID"
+msgstr ""
+
+msgid "Actor Role"
+msgstr ""
+
+msgid "Actor Title"
+msgstr ""
+
+msgid "Actor View"
+msgstr ""
+
+msgid "Actor title"
+msgstr ""
+
+msgid "Actors"
+msgstr ""
+
+msgid "Add ${portal_type}"
+msgstr "${portal_type} を追加"
+
+msgid "Add Apparel Fabric Colour Variation"
+msgstr ""
+
+msgid "Add Document Analysis Document Decision Items"
+msgstr ""
+
+msgid "Add Document Analysis Document Items"
+msgstr ""
+
+msgid "Add Document Analysis Documents"
+msgstr ""
+
+msgid "Add Document Analysis Lexicon Items"
+msgstr ""
+
+msgid "Add Document Analysis Lexicons"
+msgstr ""
+
+msgid "Add Document With Features"
+msgstr ""
+
+msgid "Add Document With Requirements"
+msgstr ""
+
+msgid "Add Features"
+msgstr ""
+
+msgid "Add Use Case Actors"
+msgstr ""
+
+msgid "Add Use Case Roles"
+msgstr ""
+
+msgid "Add Use Case Scenarii"
+msgstr ""
+
+msgid "Add document with features"
+msgstr ""
+
+msgid "Add features"
+msgstr ""
+
+msgid "Added files"
+msgstr ""
+
+msgid "Additional Payments"
+msgstr ""
+
+msgid "Additional Price"
+msgstr ""
+
+msgid "Additional Price Quantity Step"
+msgstr ""
+
+msgid "Additional payment"
+msgstr ""
+
+msgid "Address"
+msgstr "住所"
+
+msgid "Addresses"
+msgstr ""
+
+msgid "Adopt prevision"
+msgstr ""
+
+msgid "Advantage in nature"
+msgstr ""
+
+msgid "Africa"
+msgstr ""
+
+msgid "Agent"
+msgstr ""
+
+msgid "Agent Privilege"
+msgstr ""
+
+msgid "Agent_OLD"
+msgstr ""
+
+msgid "Agents"
+msgstr ""
+
+msgid "Aggregated BOM"
+msgstr ""
+
+msgid "Aggregated Industrial Process"
+msgstr ""
+
+msgid "Aggregated Transformed Resource"
+msgstr ""
+
+msgid "Aggregated View"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Alarm List"
+msgstr ""
+
+msgid "Alarm Tool"
+msgstr ""
+
+msgid "Alarm View"
+msgstr ""
+
+msgid "Alarms"
+msgstr ""
+
+msgid "Allow to disable this periodic event"
+msgstr ""
+
+msgid "Allowed Content Types"
+msgstr ""
+
+msgid "Americas"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid "Amount (in euros)"
+msgstr ""
+
+msgid "Amount Limit"
+msgstr ""
+
+msgid "An absolute payment date"
+msgstr ""
+
+msgid "Analyse"
+msgstr ""
+
+msgid "Analysed"
+msgstr ""
+
+msgid "Another currency already exists for this currency code."
+msgstr ""
+
+msgid "Apparal Baths"
+msgstr ""
+
+msgid "Apparel Assortment"
+msgstr ""
+
+msgid "Apparel Assortment Colour Variation"
+msgstr ""
+
+msgid "Apparel Assortment List"
+msgstr ""
+
+msgid "Apparel Assortment Module"
+msgstr ""
+
+msgid "Apparel Assortment to validate"
+msgstr ""
+
+msgid "Apparel Assortments"
+msgstr ""
+
+msgid "Apparel Bath"
+msgstr ""
+
+msgid "Apparel Bath Module"
+msgstr ""
+
+msgid "Apparel Baths"
+msgstr ""
+
+msgid "Apparel Cloth"
+msgstr ""
+
+msgid "Apparel Cloth List"
+msgstr ""
+
+msgid "Apparel Cloth Module"
+msgstr ""
+
+msgid "Apparel Cloth Workflow"
+msgstr ""
+
+msgid "Apparel Cloth to analyse"
+msgstr ""
+
+msgid "Apparel Cloth to design"
+msgstr ""
+
+msgid "Apparel Cloth to develop"
+msgstr ""
+
+msgid "Apparel Cloth to validate"
+msgstr ""
+
+msgid "Apparel Clothes"
+msgstr ""
+
+msgid "Apparel Cloths"
+msgstr ""
+
+msgid "Apparel Colour Range"
+msgstr ""
+
+msgid "Apparel Colour Range Colour Variation"
+msgstr ""
+
+msgid "Apparel Colour Range List"
+msgstr ""
+
+msgid "Apparel Colour Range Module"
+msgstr ""
+
+msgid "Apparel Colour Range Title"
+msgstr ""
+
+msgid "Apparel Colour Range Variation"
+msgstr ""
+
+msgid "Apparel Colour Ranges"
+msgstr ""
+
+msgid "Apparel Component"
+msgstr ""
+
+msgid "Apparel Component Module"
+msgstr ""
+
+msgid "Apparel Component Variation"
+msgstr ""
+
+msgid "Apparel Component to validate"
+msgstr ""
+
+msgid "Apparel Components"
+msgstr ""
+
+msgid "Apparel Consumption"
+msgstr ""
+
+msgid "Apparel Consumption List"
+msgstr ""
+
+msgid "Apparel Consumption Module"
+msgstr ""
+
+msgid "Apparel Consumptions"
+msgstr ""
+
+msgid "Apparel Fabric"
+msgstr ""
+
+msgid "Apparel Fabric Colour"
+msgstr ""
+
+msgid "Apparel Fabric Colour Variation"
+msgstr ""
+
+msgid "Apparel Fabric Item"
+msgstr ""
+
+msgid "Apparel Fabric Item List"
+msgstr ""
+
+msgid "Apparel Fabric Item Module"
+msgstr ""
+
+msgid "Apparel Fabric Items"
+msgstr ""
+
+msgid "Apparel Fabric List"
+msgstr ""
+
+msgid "Apparel Fabric Module"
+msgstr ""
+
+msgid "Apparel Fabric Title"
+msgstr ""
+
+msgid "Apparel Fabric to validate"
+msgstr ""
+
+msgid "Apparel Fabrics"
+msgstr ""
+
+msgid "Apparel Measurement"
+msgstr ""
+
+msgid "Apparel Measurement List"
+msgstr ""
+
+msgid "Apparel Measurement Module"
+msgstr ""
+
+msgid "Apparel Measurements"
+msgstr ""
+
+msgid "Apparel Model"
+msgstr ""
+
+msgid "Apparel Model Colour Variation"
+msgstr ""
+
+msgid "Apparel Model Colour Variation already exists with                                   this price. Check your line."
+msgstr ""
+
+msgid "Apparel Model Industrial Description"
+msgstr ""
+
+msgid "Apparel Model List"
+msgstr ""
+
+msgid "Apparel Model Module"
+msgstr ""
+
+msgid "Apparel Model Morphology Variation"
+msgstr ""
+
+msgid "Apparel Model Template"
+msgstr ""
+
+msgid "Apparel Models"
+msgstr ""
+
+msgid "Apparel Shape"
+msgstr ""
+
+msgid "Apparel Shape Industrial Description"
+msgstr ""
+
+msgid "Apparel Shape List"
+msgstr ""
+
+msgid "Apparel Shape Module"
+msgstr ""
+
+msgid "Apparel Shape Owner"
+msgstr ""
+
+msgid "Apparel Shape Reference"
+msgstr ""
+
+msgid "Apparel Shape Taken"
+msgstr ""
+
+msgid "Apparel Shape Workflow"
+msgstr ""
+
+msgid "Apparel Shape to analyse"
+msgstr ""
+
+msgid "Apparel Shape to design"
+msgstr ""
+
+msgid "Apparel Shape to develop"
+msgstr ""
+
+msgid "Apparel Shape to validate"
+msgstr ""
+
+msgid "Apparel Shapes"
+msgstr ""
+
+msgid "Apparel Size"
+msgstr ""
+
+msgid "Apparel Size List"
+msgstr ""
+
+msgid "Apparel Size Module"
+msgstr ""
+
+msgid "Apparel Sizes"
+msgstr ""
+
+msgid "Apparel Technical Drawing"
+msgstr ""
+
+msgid "Apparel Tint Item"
+msgstr ""
+
+msgid "Apparel Tint Items"
+msgstr ""
+
+msgid "Apparel Transformation"
+msgstr ""
+
+msgid "Apparel Transformation Assorted Resource"
+msgstr ""
+
+msgid "Apparel Transformation List"
+msgstr ""
+
+msgid "Apparel Transformation Module"
+msgstr ""
+
+msgid "Apparel Transformation Operation"
+msgstr ""
+
+msgid "Apparel Transformation Operation List"
+msgstr ""
+
+msgid "Apparel Transformation State"
+msgstr ""
+
+msgid "Apparel Transformation Template"
+msgstr ""
+
+msgid "Apparel Transformation Title"
+msgstr ""
+
+msgid "Apparel Transformation Transformed Resource"
+msgstr ""
+
+msgid "Apparel Transformation Updated."
+msgstr ""
+
+msgid "Apparel Transformation related to Apparel Model: 256VF432."
+msgstr ""
+
+msgid "Apparel Transformation to validate"
+msgstr ""
+
+msgid "Apparel Transformations"
+msgstr ""
+
+msgid "Apparel Validation Workflow"
+msgstr ""
+
+msgid "Apparel fabric"
+msgstr ""
+
+msgid "Apparel shape"
+msgstr ""
+
+msgid "Applied Rule"
+msgstr ""
+
+msgid "Apply Purchase Trade Condition"
+msgstr ""
+
+msgid "Apply Sale Trade Condition"
+msgstr ""
+
+msgid "Apres avoir ajoute get_transaction().commit() dans les sequences, le probleme reste le meme.\nUne autre idee ?"
+msgstr ""
+
+msgid "Area"
+msgstr ""
+
+msgid "Articles"
+msgstr ""
+
+msgid "Ascending Display"
+msgstr ""
+
+msgid "Asia"
+msgstr ""
+
+msgid "Ask for more details"
+msgstr ""
+
+msgid "Ask survey"
+msgstr ""
+
+msgid "Asset Credit"
+msgstr ""
+
+msgid "Asset Debit"
+msgstr ""
+
+msgid "Assign"
+msgstr ""
+
+msgid "Assigned"
+msgstr ""
+
+msgid "Assigned Tasks"
+msgstr ""
+
+msgid "Assigned to"
+msgstr ""
+
+msgid "Assignee"
+msgstr ""
+
+msgid "Assignment"
+msgstr "職"
+
+msgid "Assignments"
+msgstr ""
+
+msgid "At Date"
+msgstr ""
+
+msgid "At Date (or Stop Date)"
+msgstr ""
+
+msgid "At Date Balance"
+msgstr ""
+
+msgid "Attachments"
+msgstr "添付"
+
+msgid "August"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Auto Planned"
+msgstr ""
+
+msgid "Available"
+msgstr ""
+
+msgid "Available Budget"
+msgstr ""
+
+msgid "Axes variation"
+msgstr ""
+
+msgid "BBAN"
+msgstr ""
+
+msgid "BBAN Key"
+msgstr ""
+
+msgid "BBAN as Text Format"
+msgstr ""
+
+msgid "BIC (Bank Identifier Code)"
+msgstr ""
+
+msgid "BT Title"
+msgstr ""
+
+msgid "Balance"
+msgstr ""
+
+msgid "Balance Transaction"
+msgstr ""
+
+msgid "Balance Transaction Line"
+msgstr ""
+
+msgid "Balance Transaction Lines"
+msgstr ""
+
+msgid "Balance Transaction in confirmed state"
+msgstr ""
+
+msgid "Balance Transaction in planned state"
+msgstr ""
+
+msgid "Balance at Start Date"
+msgstr ""
+
+msgid "Balance at Stop Date"
+msgstr ""
+
+msgid "Balance at Stop Date (${date})"
+msgstr ""
+
+msgid "Balance at Stop Date (2003/02/02)"
+msgstr ""
+
+msgid "Balance at Stop Date (2009/02/02)"
+msgstr ""
+
+msgid "Balance of income and expense account"
+msgstr ""
+
+msgid "Balance of the Period"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Bank Account"
+msgstr "銀行口座"
+
+msgid "Bank Account - Kev TEST TEMP"
+msgstr ""
+
+msgid "Bank Account Key"
+msgstr ""
+
+msgid "Bank Account Number"
+msgstr ""
+
+msgid "Bank Account Title"
+msgstr ""
+
+msgid "Bank Accounts"
+msgstr ""
+
+msgid "Bank Branch"
+msgstr ""
+
+msgid "Bank Code"
+msgstr ""
+
+msgid "Bank Country Code"
+msgstr ""
+
+msgid "Bank accounts"
+msgstr ""
+
+msgid "BankAccount_view"
+msgstr ""
+
+msgid "Banking and Finance"
+msgstr ""
+
+msgid "Base Apparel Shape"
+msgstr ""
+
+msgid "Base Categories"
+msgstr ""
+
+msgid "Base Category"
+msgstr ""
+
+msgid "Base Domain"
+msgstr ""
+
+msgid "Base Price"
+msgstr ""
+
+msgid "Base Price Quantity Step"
+msgstr ""
+
+msgid "Base Price Variation Axes"
+msgstr ""
+
+msgid "Base Segment"
+msgstr ""
+
+msgid "Base Size"
+msgstr ""
+
+msgid "Base category range of matrix"
+msgstr ""
+
+msgid "Base name"
+msgstr ""
+
+msgid "Base size"
+msgstr ""
+
+msgid "Base value"
+msgstr ""
+
+msgid "Base_viewHistory"
+msgstr ""
+
+msgid "Begin"
+msgstr ""
+
+msgid "Beginning Date"
+msgstr ""
+
+msgid "Beginning of Project"
+msgstr ""
+
+msgid "Beginning of this career step"
+msgstr ""
+
+msgid "Being Closed"
+msgstr ""
+
+msgid "Being Modified"
+msgstr ""
+
+msgid "Bill Of Material Description"
+msgstr ""
+
+msgid "Bill of material description"
+msgstr ""
+
+msgid "Billable Entity"
+msgstr ""
+
+msgid "Billable Project"
+msgstr ""
+
+msgid "Billiable Expense"
+msgstr ""
+
+msgid "Bind Records"
+msgstr ""
+
+msgid "Bind Reverse Records"
+msgstr ""
+
+msgid "Bind Shared Key"
+msgstr ""
+
+msgid "Bind Zone"
+msgstr ""
+
+msgid "Birth Name"
+msgstr ""
+
+msgid "Birthday"
+msgstr ""
+
+msgid "Block Account"
+msgstr ""
+
+msgid "Body"
+msgstr ""
+
+msgid "BookKeeped"
+msgstr ""
+
+msgid "Bookeeped"
+msgstr ""
+
+msgid "Branch"
+msgstr ""
+
+msgid "Brand"
+msgstr ""
+
+msgid "Bridge Device"
+msgstr ""
+
+msgid "Broadcast Address"
+msgstr ""
+
+msgid "Budget"
+msgstr ""
+
+msgid "Budget Account"
+msgstr ""
+
+msgid "Budget Account Module"
+msgstr ""
+
+msgid "Budget Accounts"
+msgstr ""
+
+msgid "Budget Cell"
+msgstr ""
+
+msgid "Budget Line"
+msgstr ""
+
+msgid "Budget Lines"
+msgstr ""
+
+msgid "Budget Module"
+msgstr ""
+
+msgid "Budget Start Date"
+msgstr ""
+
+msgid "Budget Stop Date"
+msgstr ""
+
+msgid "Budget Transaction"
+msgstr ""
+
+msgid "Budget Transaction Module"
+msgstr ""
+
+msgid "Budget Transactions"
+msgstr ""
+
+msgid "Budget Transfer"
+msgstr ""
+
+msgid "Budget Transfer Line"
+msgstr ""
+
+msgid "Budget Transfert"
+msgstr ""
+
+msgid "Budget Transfert Line"
+msgstr ""
+
+msgid "Budget title"
+msgstr ""
+
+msgid "Budget transactions"
+msgstr ""
+
+msgid "BudgetCell_view"
+msgstr ""
+
+msgid "Budgets"
+msgstr ""
+
+msgid "Bug"
+msgstr ""
+
+msgid "Bug - Listbox editable fields are reseted when an relation_field asks the user to choose in a list"
+msgstr ""
+
+msgid "Bug - use this draft ... it was not a bug"
+msgstr ""
+
+msgid "Bug Group"
+msgstr ""
+
+msgid "Bug Module"
+msgstr ""
+
+msgid "Bug Priority"
+msgstr ""
+
+msgid "Bug Report Emission"
+msgstr ""
+
+msgid "Bug Severity"
+msgstr ""
+
+msgid "Bug Tracking"
+msgstr ""
+
+msgid "Bug Type"
+msgstr ""
+
+msgid "Bug_viewSubmit"
+msgstr ""
+
+msgid "Bugs"
+msgstr ""
+
+msgid "Bugs - DO NOT USE"
+msgstr ""
+
+msgid "Build"
+msgstr ""
+
+msgid "Build ?"
+msgstr ""
+
+msgid "Build Business Template"
+msgstr ""
+
+msgid "Building"
+msgstr ""
+
+msgid "Building State"
+msgstr ""
+
+msgid "Built"
+msgstr ""
+
+msgid "Built ?"
+msgstr ""
+
+msgid "Built."
+msgstr ""
+
+msgid "Business Template"
+msgstr ""
+
+msgid "Business Template Building Workflow"
+msgstr ""
+
+msgid "Business Template Definition"
+msgstr ""
+
+msgid "Business Template Downloaded Successfully"
+msgstr ""
+
+msgid "Business Template File"
+msgstr ""
+
+msgid "Business Template ID"
+msgstr ""
+
+msgid "Business Template Id"
+msgstr ""
+
+msgid "Business Template Imported Successfully"
+msgstr ""
+
+msgid "Business Template Installation Workflow"
+msgstr ""
+
+msgid "Business Template Title"
+msgstr ""
+
+msgid "Business Template URL"
+msgstr ""
+
+msgid "Business Templates"
+msgstr ""
+
+msgid "Business+Templates+Imported+Successfully"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnDiff"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnInfos"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnInfosFile"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnMultiDiff"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnShowFile"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnStatus"
+msgstr ""
+
+msgid "Buyer"
+msgstr ""
+
+msgid "CAD Library"
+msgstr ""
+
+msgid "CMF Activity"
+msgstr ""
+
+msgid "Cache"
+msgstr ""
+
+msgid "Calculate the Pay Sheet Transaction"
+msgstr ""
+
+msgid "Calculated Price"
+msgstr ""
+
+msgid "Calculating"
+msgstr ""
+
+msgid "Call"
+msgstr ""
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Cancel Accounting Period"
+msgstr ""
+
+msgid "Cancel Assignment"
+msgstr ""
+
+msgid "Cancel Bug"
+msgstr ""
+
+msgid "Cancel Career Step"
+msgstr ""
+
+msgid "Cancel Closing Period"
+msgstr ""
+
+msgid "Cancel Delivery"
+msgstr ""
+
+msgid "Cancel Transaction"
+msgstr ""
+
+msgid "Cancel Transactions"
+msgstr ""
+
+msgid "Canceled"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Cardholder Name"
+msgstr ""
+
+msgid "Career"
+msgstr "経歴"
+
+msgid "Career Comments"
+msgstr ""
+
+msgid "Career End"
+msgstr ""
+
+msgid "Career Function"
+msgstr ""
+
+msgid "Career Start"
+msgstr ""
+
+msgid "Career Step"
+msgstr ""
+
+msgid "Career Steps"
+msgstr ""
+
+msgid "Career Title"
+msgstr ""
+
+msgid "Career comments"
+msgstr ""
+
+msgid "Career end"
+msgstr ""
+
+msgid "Career function"
+msgstr ""
+
+msgid "Career start"
+msgstr ""
+
+msgid "Career step end"
+msgstr ""
+
+msgid "Career step list"
+msgstr ""
+
+msgid "Career step start"
+msgstr ""
+
+msgid "Career title"
+msgstr ""
+
+msgid "Cash Classification"
+msgstr ""
+
+msgid "Cash Exchange"
+msgstr ""
+
+msgid "Cash Extraction"
+msgstr ""
+
+msgid "Cash Extraction Line"
+msgstr ""
+
+msgid "Cash Extraction Module"
+msgstr ""
+
+msgid "Cash Register"
+msgstr ""
+
+msgid "Cash Status"
+msgstr ""
+
+msgid "Cash To Currency Purchase"
+msgstr ""
+
+msgid "Cash To Currency Sale"
+msgstr ""
+
+msgid "Cash Transfer"
+msgstr ""
+
+msgid "Cash Transfer Line"
+msgstr ""
+
+msgid "Cash Transfers"
+msgstr ""
+
+msgid "Catalog"
+msgstr ""
+
+msgid "Catalog Methods"
+msgstr ""
+
+msgid "Catalog Related Keys"
+msgstr ""
+
+msgid "Catalog Result Keys"
+msgstr ""
+
+msgid "Catalog Result Tables"
+msgstr ""
+
+msgid "Categories"
+msgstr "分類"
+
+msgid "Category"
+msgstr "分類"
+
+msgid "Category Definition File"
+msgstr ""
+
+msgid "Category Fast Input"
+msgstr ""
+
+msgid "Category File"
+msgstr ""
+
+msgid "Category File :"
+msgstr ""
+
+msgid "Category Tool"
+msgstr ""
+
+msgid "Category Types"
+msgstr ""
+
+msgid "Category types to group categories for portal methods"
+msgstr ""
+
+msgid "Causality"
+msgstr ""
+
+msgid "Causality (Invoices ...)"
+msgstr ""
+
+msgid "Causality State"
+msgstr ""
+
+msgid "Causality workflow"
+msgstr ""
+
+msgid "Change Language"
+msgstr ""
+
+msgid "Change Log"
+msgstr ""
+
+msgid "Change Page"
+msgstr "ページ変更"
+
+msgid "Change Password"
+msgstr ""
+
+msgid "Changelog"
+msgstr ""
+
+msgid "Chat Address"
+msgstr ""
+
+msgid "ChatAddress"
+msgstr ""
+
+msgid "Check All"
+msgstr "全選択"
+
+msgid "Check Deposits"
+msgstr ""
+
+msgid "Checkbook"
+msgstr ""
+
+msgid "Checkbook Deliveries"
+msgstr ""
+
+msgid "Checkbook Delivery"
+msgstr ""
+
+msgid "Checkbook Delivery Module"
+msgstr ""
+
+msgid "Checkbook Reception"
+msgstr ""
+
+msgid "Checkbook Reception Module"
+msgstr ""
+
+msgid "Checkbook Request"
+msgstr ""
+
+msgid "Checkbook Request Module"
+msgstr ""
+
+msgid "Checkbook Requests"
+msgstr ""
+
+msgid "Checkbook Type"
+msgstr ""
+
+msgid "Checkbook Type Module"
+msgstr ""
+
+msgid "Checkbooks"
+msgstr ""
+
+msgid "Children"
+msgstr ""
+
+msgid "Children's number"
+msgstr ""
+
+msgid "Choice"
+msgstr ""
+
+msgid "Choose Solve Actions"
+msgstr ""
+
+msgid "City"
+msgstr "都市名 (日本では不要)"
+
+msgid "Class"
+msgstr ""
+
+msgid "Class / Property"
+msgstr ""
+
+msgid "Clean Business Template"
+msgstr ""
+
+msgid "Clean SVN unversioned files"
+msgstr ""
+
+msgid "Clean Up SVN Locks"
+msgstr ""
+
+msgid "Cleaning Code"
+msgstr ""
+
+msgid "Cleaning code"
+msgstr ""
+
+msgid "Client"
+msgstr "顧客"
+
+msgid "Client Organisations"
+msgstr ""
+
+msgid "Client Persons"
+msgstr ""
+
+msgid "Client organisations"
+msgstr ""
+
+msgid "Client persons"
+msgstr ""
+
+msgid "Close Accounting Period"
+msgstr ""
+
+msgid "Close Assignment"
+msgstr ""
+
+msgid "Close Bug"
+msgstr ""
+
+msgid "Close Transaction"
+msgstr ""
+
+msgid "Close Transactions"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "Closed Account"
+msgstr ""
+
+msgid "Closed Accounting Period"
+msgstr ""
+
+msgid "Closed Date"
+msgstr ""
+
+msgid "Closed Period"
+msgstr ""
+
+msgid "Closing"
+msgstr ""
+
+msgid "Closing Balance"
+msgstr ""
+
+msgid "Closing Date"
+msgstr ""
+
+msgid "Closing Transaction"
+msgstr ""
+
+msgid "Closing Transaction Created."
+msgstr ""
+
+msgid "Closing period ${period_title}"
+msgstr ""
+
+msgid "Cloth"
+msgstr ""
+
+msgid "Codification"
+msgstr ""
+
+msgid "Collaborateur"
+msgstr ""
+
+msgid "Collaborator"
+msgstr ""
+
+msgid "Collaborators"
+msgstr ""
+
+msgid "Colleague"
+msgstr ""
+
+msgid "Collection"
+msgstr ""
+
+msgid "Collection Net width (cm)"
+msgstr ""
+
+msgid "Collection Order Date"
+msgstr ""
+
+msgid "Collection Order Quantity"
+msgstr ""
+
+msgid "Collection Path"
+msgstr ""
+
+msgid "Collection Received Quantity"
+msgstr ""
+
+msgid "Collection Reception Date"
+msgstr ""
+
+msgid "Collective Agreement"
+msgstr ""
+
+msgid "Collective Agreement Title"
+msgstr ""
+
+msgid "Collective agreement"
+msgstr ""
+
+msgid "Collective agreement title"
+msgstr ""
+
+msgid "Color Count"
+msgstr ""
+
+msgid "Color Range"
+msgstr ""
+
+msgid "Color Reference"
+msgstr ""
+
+msgid "Color count"
+msgstr ""
+
+msgid "Colour"
+msgstr ""
+
+msgid "Colour List"
+msgstr ""
+
+msgid "Colour Range Created."
+msgstr ""
+
+msgid "Colour Title"
+msgstr ""
+
+msgid "Colour Variation"
+msgstr ""
+
+msgid "Colour Variations"
+msgstr ""
+
+msgid "Colour referential"
+msgstr ""
+
+msgid "Colours"
+msgstr ""
+
+msgid "Column"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Commentaires"
+msgstr ""
+
+msgid "Comments"
+msgstr "注釈"
+
+msgid "Commit"
+msgstr ""
+
+msgid "Company Region"
+msgstr ""
+
+msgid "Complete quantity matrix"
+msgstr ""
+
+msgid "Complete variation matrix"
+msgstr ""
+
+msgid "Component"
+msgstr ""
+
+msgid "Component List"
+msgstr ""
+
+msgid "Component Module"
+msgstr ""
+
+msgid "Component Variation"
+msgstr ""
+
+msgid "Components"
+msgstr ""
+
+msgid "Composition"
+msgstr ""
+
+msgid "Conditions of payment"
+msgstr ""
+
+msgid "Confection Survey"
+msgstr ""
+
+msgid "Configure"
+msgstr "設定"
+
+msgid "Configure Categories"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Confirm Transaction"
+msgstr ""
+
+msgid "Confirm Transaction and Create Accounting Lines"
+msgstr ""
+
+msgid "Confirm Transactions"
+msgstr ""
+
+msgid "Confirmed"
+msgstr ""
+
+msgid "Conflicted Files"
+msgstr ""
+
+msgid "Connection Type"
+msgstr ""
+
+msgid "Constraints"
+msgstr ""
+
+msgid "Consumed Budget"
+msgstr ""
+
+msgid "Consumer Unit Quantity"
+msgstr ""
+
+msgid "Consumer unit quantity"
+msgstr ""
+
+msgid "Consumption"
+msgstr ""
+
+msgid "Consumption Quantity"
+msgstr ""
+
+msgid "Consumption Table"
+msgstr ""
+
+msgid "Consumption Total Quantity"
+msgstr ""
+
+msgid "Consumption applied."
+msgstr ""
+
+msgid "Contact"
+msgstr "連絡先"
+
+msgid "Contact Type"
+msgstr ""
+
+msgid "Contacted"
+msgstr ""
+
+msgid "Contacts"
+msgstr "連絡先"
+
+msgid "Contained Quantity"
+msgstr ""
+
+msgid "Contained Total Quantity"
+msgstr ""
+
+msgid "Container"
+msgstr ""
+
+msgid "Container Cell"
+msgstr ""
+
+msgid "Container Content"
+msgstr ""
+
+msgid "Container Fast Input"
+msgstr ""
+
+msgid "Container Line"
+msgstr ""
+
+msgid "Container Quantity"
+msgstr ""
+
+msgid "Container State"
+msgstr ""
+
+msgid "Container content"
+msgstr ""
+
+msgid "Container count"
+msgstr ""
+
+msgid "Container type"
+msgstr ""
+
+msgid "Containers"
+msgstr ""
+
+msgid "Contents"
+msgstr ""
+
+msgid "Contextual help"
+msgstr ""
+
+msgid "Contributors"
+msgstr ""
+
+msgid "Converted Credit"
+msgstr ""
+
+msgid "Converted Debit"
+msgstr ""
+
+msgid "Converted quantity"
+msgstr ""
+
+msgid "Coordinate"
+msgstr ""
+
+msgid "Coordinated Apparel Fabric"
+msgstr ""
+
+msgid "Coordinates"
+msgstr ""
+
+msgid "Copy"
+msgstr "コピー"
+
+msgid "Copy Apparel Colour Range Variation"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "Corporate Name"
+msgstr "社名"
+
+msgid "Corporate Registration Code"
+msgstr ""
+
+msgid "Corporate registration code"
+msgstr ""
+
+msgid "Count"
+msgstr ""
+
+msgid "Counter"
+msgstr ""
+
+msgid "Counters"
+msgstr ""
+
+msgid "Country"
+msgstr "国"
+
+msgid "Country of origin"
+msgstr ""
+
+msgid "Country prefix"
+msgstr ""
+
+msgid "Create Closing Transaction"
+msgstr ""
+
+msgid "Create Module"
+msgstr ""
+
+msgid "Create New Document(s)"
+msgstr "新しい文書を作成"
+
+msgid "Create New Module"
+msgstr ""
+
+msgid "Create New Module from Scribus file"
+msgstr ""
+
+msgid "Create Related Payment"
+msgstr ""
+
+msgid "Create Reversal Transaction"
+msgstr ""
+
+msgid "Create Sale Opportunity"
+msgstr ""
+
+msgid "Create Support Request"
+msgstr ""
+
+msgid "Created After"
+msgstr ""
+
+msgid "Created Before"
+msgstr ""
+
+msgid "Created by"
+msgstr "作成者"
+
+msgid "Creating 1 Apparel Colour Range Variation."
+msgstr ""
+
+msgid "Creating 1 Apparel Model Colour Variation."
+msgstr ""
+
+msgid "Creating 2 Apparel Colour Range Variation."
+msgstr ""
+
+msgid "Creating 2 Apparel Model Colour Variation."
+msgstr ""
+
+msgid "Creation Date"
+msgstr ""
+
+msgid "Creation date"
+msgstr ""
+
+msgid "Credit"
+msgstr "貸方"
+
+msgid "Credit Account"
+msgstr ""
+
+msgid "Credit Balance"
+msgstr ""
+
+msgid "Credit Card"
+msgstr ""
+
+msgid "Credit Card Number"
+msgstr ""
+
+msgid "Credit Card Type"
+msgstr ""
+
+msgid "Credit Cards"
+msgstr ""
+
+msgid "Credit Movements"
+msgstr ""
+
+msgid "Criterion Properties"
+msgstr ""
+
+msgid "Critical"
+msgstr ""
+
+msgid "Currencies"
+msgstr "通貨"
+
+msgid "Currency"
+msgstr "通貨"
+
+msgid "Currency Code"
+msgstr ""
+
+msgid "Currency Exchange Cell"
+msgstr ""
+
+msgid "Currency Exchange Cells"
+msgstr ""
+
+msgid "Currency Exchange Line"
+msgstr ""
+
+msgid "Currency Exchange Lines"
+msgstr ""
+
+msgid "Currency List"
+msgstr ""
+
+msgid "Currency Listbox"
+msgstr ""
+
+msgid "Currency Module"
+msgstr ""
+
+msgid "Currency Purchase"
+msgstr ""
+
+msgid "Currency Sale"
+msgstr ""
+
+msgid "Currency Symbol"
+msgstr ""
+
+msgid "Current"
+msgstr ""
+
+msgid "Current Activities"
+msgstr ""
+
+msgid "Current Budget"
+msgstr ""
+
+msgid "Current Collective Agreement"
+msgstr ""
+
+msgid "Current Functions"
+msgstr ""
+
+msgid "Current Skills"
+msgstr ""
+
+msgid "Current State"
+msgstr ""
+
+msgid "Current career comments"
+msgstr ""
+
+msgid "Current career must exist."
+msgstr ""
+
+msgid "Current collective agreement"
+msgstr ""
+
+msgid "Current function"
+msgstr ""
+
+msgid "Current grade"
+msgstr ""
+
+msgid "Current organisation"
+msgstr "現在の組織"
+
+msgid "Current role"
+msgstr ""
+
+msgid "Current salary coefficient"
+msgstr ""
+
+msgid "Current salary level"
+msgstr ""
+
+msgid "Current skills"
+msgstr ""
+
+msgid "Customer"
+msgstr "顧客"
+
+msgid "Customer Account"
+msgstr ""
+
+msgid "Customer Colour"
+msgstr ""
+
+msgid "Customer Measure"
+msgstr ""
+
+msgid "Customer Reference"
+msgstr ""
+
+msgid "Customer Size"
+msgstr ""
+
+msgid "Customer Summary"
+msgstr ""
+
+msgid "Customer Transaction Reference"
+msgstr ""
+
+msgid "Customer reference"
+msgstr ""
+
+msgid "Cut"
+msgstr "切り取り"
+
+msgid "DEPRECATED"
+msgstr ""
+
+msgid "DHCP Extra Config of 2nd Int"
+msgstr ""
+
+msgid "DHCP Extra Config of 3rd Int"
+msgstr ""
+
+msgid "DHCP Range End of 2nd Int"
+msgstr ""
+
+msgid "DHCP Range End of 3rd Int"
+msgstr ""
+
+msgid "DHCP Range Start of 2nd Int"
+msgstr ""
+
+msgid "DHCP Range Start of 3rd Int"
+msgstr ""
+
+msgid "DHCP WLAN Port of 2nd Int"
+msgstr ""
+
+msgid "DLS"
+msgstr ""
+
+msgid "DNS Server IP Address"
+msgstr ""
+
+msgid "Data Updatbvhncncved."
+msgstr ""
+
+msgid "Data Updated."
+msgstr "データを更新しました。"
+
+msgid "Data Updated.GETgROUP"
+msgstr ""
+
+msgid "Data+Updated."
+msgstr ""
+
+msgid "Date"
+msgstr "日付"
+
+msgid "Date Order"
+msgstr ""
+
+msgid "Date when the bank account was closed"
+msgstr ""
+
+msgid "Date when the bank account was open"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Days Of Month"
+msgstr ""
+
+msgid "Days Of Week"
+msgstr ""
+
+msgid "Days of month"
+msgstr ""
+
+msgid "Days of week"
+msgstr ""
+
+msgid "Debit"
+msgstr "借方"
+
+msgid "Debit Balance"
+msgstr ""
+
+msgid "Debit Movements"
+msgstr ""
+
+msgid "Decided"
+msgstr ""
+
+msgid "Decision"
+msgstr ""
+
+msgid "Decision Item Count"
+msgstr ""
+
+msgid "Decision Item Description"
+msgstr ""
+
+msgid "Decision Item ID"
+msgstr ""
+
+msgid "Decision Item Title"
+msgstr ""
+
+msgid "Decision Item View"
+msgstr ""
+
+msgid "Decision Items"
+msgstr ""
+
+msgid "Default Address"
+msgstr ""
+
+msgid "Default Price"
+msgstr ""
+
+msgid "Default Quantity"
+msgstr ""
+
+msgid "Default Service"
+msgstr ""
+
+msgid "Default Transformed Resource"
+msgstr ""
+
+msgid "Default Variation"
+msgstr ""
+
+msgid "Default price"
+msgstr ""
+
+msgid "Default quantity"
+msgstr ""
+
+msgid "Default variation"
+msgstr ""
+
+msgid "Define Account Balance"
+msgstr ""
+
+msgid "Define Sort Order"
+msgstr ""
+
+msgid "Define advantages"
+msgstr ""
+
+msgid "Define the module name where to create the delivery."
+msgstr ""
+
+msgid "Define the portal type of the delivery cell."
+msgstr ""
+
+msgid "Define the portal type of the delivery line."
+msgstr ""
+
+msgid "Define the portal type of the delivery."
+msgstr ""
+
+msgid "Defines the base URL where portal type action documentation will be searched for."
+msgstr ""
+
+msgid "Delete"
+msgstr "削除"
+
+msgid "Delete The Objects"
+msgstr ""
+
+msgid "Delete the objects"
+msgstr "オブジェクトを削除"
+
+msgid "Deleted objects: ${object_ids}"
+msgstr ""
+
+msgid "Deleted objects: 4, 3"
+msgstr ""
+
+msgid "Deleted."
+msgstr "削除しました。"
+
+msgid "Deliver"
+msgstr ""
+
+msgid "Deliver To"
+msgstr ""
+
+msgid "Deliver before"
+msgstr ""
+
+msgid "Deliver from"
+msgstr ""
+
+msgid "Deliver to"
+msgstr ""
+
+msgid "Deliverable to"
+msgstr ""
+
+msgid "Delivered"
+msgstr ""
+
+msgid "Delivered Quantity"
+msgstr ""
+
+msgid "Delivered by"
+msgstr ""
+
+msgid "Delivery After Generation Script"
+msgstr ""
+
+msgid "Delivery Builder"
+msgstr ""
+
+msgid "Delivery Cell"
+msgstr ""
+
+msgid "Delivery Cell Collect Order Groups"
+msgstr ""
+
+msgid "Delivery Cell Collect Order List"
+msgstr ""
+
+msgid "Delivery Cell Portal Type"
+msgstr ""
+
+msgid "Delivery Cell Separate Order List"
+msgstr ""
+
+msgid "Delivery Cell Separate Order Methods"
+msgstr ""
+
+msgid "Delivery Collect Order Groups"
+msgstr ""
+
+msgid "Delivery Collect Order List"
+msgstr ""
+
+msgid "Delivery Date"
+msgstr ""
+
+msgid "Delivery Line"
+msgstr ""
+
+msgid "Delivery Line Collect Order Groups"
+msgstr ""
+
+msgid "Delivery Line Collect Order List"
+msgstr ""
+
+msgid "Delivery Line Portal Type"
+msgstr ""
+
+msgid "Delivery Mode"
+msgstr ""
+
+msgid "Delivery Module"
+msgstr ""
+
+msgid "Delivery Module Before Building Script"
+msgstr ""
+
+msgid "Delivery Ordered"
+msgstr ""
+
+msgid "Delivery Patch"
+msgstr ""
+
+msgid "Delivery Patch Cell"
+msgstr ""
+
+msgid "Delivery Patch Line"
+msgstr ""
+
+msgid "Delivery Patch Module"
+msgstr ""
+
+msgid "Delivery Patchs"
+msgstr ""
+
+msgid "Delivery Portal Type"
+msgstr ""
+
+msgid "Delivery Rule"
+msgstr ""
+
+msgid "Delivery Select Method"
+msgstr ""
+
+msgid "Delivery State"
+msgstr ""
+
+msgid "Delivery Tool"
+msgstr ""
+
+msgid "Delivery date"
+msgstr ""
+
+msgid "Delivery in Draft State"
+msgstr ""
+
+msgid "Delivery mode"
+msgstr ""
+
+msgid "Delivery to Deliver"
+msgstr ""
+
+msgid "Dependencies"
+msgstr ""
+
+msgid "Descending Display"
+msgstr ""
+
+msgid "Description"
+msgstr "説明"
+
+msgid "Design"
+msgstr ""
+
+msgid "Designed"
+msgstr ""
+
+msgid "Dest. Conversion"
+msgstr ""
+
+msgid "Destination"
+msgstr "到着点"
+
+msgid "Destination Account"
+msgstr ""
+
+msgid "Destination Activity"
+msgstr ""
+
+msgid "Destination Address"
+msgstr ""
+
+msgid "Destination Administration"
+msgstr ""
+
+msgid "Destination Administration Organisation"
+msgstr ""
+
+msgid "Destination Administration Person"
+msgstr ""
+
+msgid "Destination Budget"
+msgstr ""
+
+msgid "Destination Decision"
+msgstr ""
+
+msgid "Destination Decision Organisation"
+msgstr ""
+
+msgid "Destination Decision Person"
+msgstr ""
+
+msgid "Destination Function"
+msgstr ""
+
+msgid "Destination Owner"
+msgstr ""
+
+msgid "Destination Payment"
+msgstr ""
+
+msgid "Destination Project"
+msgstr ""
+
+msgid "Destination Reference"
+msgstr "到着側の参照番号"
+
+msgid "Destination Section"
+msgstr ""
+
+msgid "Destination Vault"
+msgstr ""
+
+msgid "Destination administration"
+msgstr ""
+
+msgid "Destination administration organisation"
+msgstr ""
+
+msgid "Destination administration person"
+msgstr ""
+
+msgid "Destination decision"
+msgstr ""
+
+msgid "Destination decision organisation"
+msgstr ""
+
+msgid "Destination decision person"
+msgstr ""
+
+msgid "Destination payment"
+msgstr ""
+
+msgid "Destination reference"
+msgstr ""
+
+msgid "Destination section"
+msgstr ""
+
+msgid "Destination site"
+msgstr ""
+
+msgid "Destinations"
+msgstr ""
+
+msgid "Detail"
+msgstr ""
+
+msgid "Detailed Report"
+msgstr ""
+
+msgid "Details"
+msgstr "詳細"
+
+msgid "Determines if acquired value should be copied"
+msgstr ""
+
+msgid "Determines if the acquired value should be appended"
+msgstr ""
+
+msgid "Determines if the acquired value should be synced"
+msgstr ""
+
+msgid "Determines if the local value have priority"
+msgstr ""
+
+msgid "Develop"
+msgstr ""
+
+msgid "Developed"
+msgstr ""
+
+msgid "Developper mode"
+msgstr ""
+
+msgid "Diff"
+msgstr ""
+
+msgid "Diff 2 Business Template"
+msgstr ""
+
+msgid "Diff Business Template"
+msgstr ""
+
+msgid "Diff BusinessTemplate"
+msgstr ""
+
+msgid "Difficulty"
+msgstr ""
+
+msgid "Dimension"
+msgstr ""
+
+msgid "Disable Preference"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Discount"
+msgstr "割引"
+
+msgid "Discount Ratio"
+msgstr ""
+
+msgid "Discount Ratio Quantity Step"
+msgstr ""
+
+msgid "Discount Ratio Variation Axes"
+msgstr ""
+
+msgid "Discount Type"
+msgstr ""
+
+msgid "Discounts"
+msgstr "割引"
+
+msgid "Distribution"
+msgstr ""
+
+msgid "Diverged"
+msgstr ""
+
+msgid "Document"
+msgstr ""
+
+msgid "Document Analysis"
+msgstr ""
+
+msgid "Document Analysis : Decision Item"
+msgstr ""
+
+msgid "Document Analysis : Document : Decision Items"
+msgstr ""
+
+msgid "Document Analysis : Document Item"
+msgstr ""
+
+msgid "Document Analysis : Document Items"
+msgstr ""
+
+msgid "Document Analysis : Documents"
+msgstr ""
+
+msgid "Document Analysis : Lexicon"
+msgstr ""
+
+msgid "Document Analysis : Lexicon Item"
+msgstr ""
+
+msgid "Document Analysis : Lexicons"
+msgstr ""
+
+msgid "Document Analysis Decision Item"
+msgstr ""
+
+msgid "Document Analysis Description"
+msgstr ""
+
+msgid "Document Analysis Document"
+msgstr ""
+
+msgid "Document Analysis Document : Decision Items"
+msgstr ""
+
+msgid "Document Analysis Document Decision Item"
+msgstr ""
+
+msgid "Document Analysis Document Decision Item Fast Input"
+msgstr ""
+
+msgid "Document Analysis Document Decision Items"
+msgstr ""
+
+msgid "Document Analysis Document Fast Input"
+msgstr ""
+
+msgid "Document Analysis Document Item"
+msgstr ""
+
+msgid "Document Analysis Document Item Fast Input"
+msgstr ""
+
+msgid "Document Analysis Document Item(s) added."
+msgstr ""
+
+msgid "Document Analysis Document Items"
+msgstr ""
+
+msgid "Document Analysis Document(s) added."
+msgstr ""
+
+msgid "Document Analysis Documents"
+msgstr ""
+
+msgid "Document Analysis Documents with Items"
+msgstr ""
+
+msgid "Document Analysis ID"
+msgstr ""
+
+msgid "Document Analysis Items"
+msgstr ""
+
+msgid "Document Analysis Lexicon"
+msgstr ""
+
+msgid "Document Analysis Lexicon Fast Input"
+msgstr ""
+
+msgid "Document Analysis Lexicon Item"
+msgstr ""
+
+msgid "Document Analysis Lexicon Item Fast Input"
+msgstr ""
+
+msgid "Document Analysis Lexicon Item(s) added."
+msgstr ""
+
+msgid "Document Analysis Lexicon Items"
+msgstr ""
+
+msgid "Document Analysis Lexicon(s) added."
+msgstr ""
+
+msgid "Document Analysis Lexicons"
+msgstr ""
+
+msgid "Document Analysis Lexicons with Items"
+msgstr ""
+
+msgid "Document Analysis Module"
+msgstr ""
+
+msgid "Document Analysis Title"
+msgstr ""
+
+msgid "Document Analysis item"
+msgstr ""
+
+msgid "Document Classes"
+msgstr ""
+
+msgid "Document Count"
+msgstr ""
+
+msgid "Document Decision Items"
+msgstr ""
+
+msgid "Document Description"
+msgstr ""
+
+msgid "Document ID"
+msgstr ""
+
+msgid "Document Item Count"
+msgstr ""
+
+msgid "Document Item View"
+msgstr ""
+
+msgid "Document Items"
+msgstr ""
+
+msgid "Document Reference"
+msgstr ""
+
+msgid "Document Title"
+msgstr ""
+
+msgid "Document Type"
+msgstr ""
+
+msgid "Document_view"
+msgstr ""
+
+msgid "Documentation Error"
+msgstr ""
+
+msgid "Documentation URL"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Documents with Items"
+msgstr ""
+
+msgid "Domain"
+msgstr ""
+
+msgid "Domain Tool"
+msgstr ""
+
+msgid "Domain Tree"
+msgstr "ドメイン・ツリー"
+
+msgid "Domains"
+msgstr ""
+
+msgid "Don't forget to logout or exit your browser when you're done."
+msgstr ""
+
+msgid "Done."
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download Business Template"
+msgstr ""
+
+msgid "Download Business Template From URL"
+msgstr ""
+
+msgid "Download Business Templates From Repositories"
+msgstr ""
+
+msgid "Download Original Signature Image"
+msgstr ""
+
+msgid "Download Signature"
+msgstr ""
+
+msgid "Download Signature Image"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Drafts of purchase orders"
+msgstr ""
+
+msgid "Drafts of sale orders"
+msgstr ""
+
+msgid "Drafts to Publish"
+msgstr ""
+
+msgid "Drafts to Validate"
+msgstr "確認すべき草案"
+
+msgid "Drawing"
+msgstr ""
+
+msgid "Drawing Reference"
+msgstr ""
+
+msgid "Drawing reference"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
+msgid "Due Date"
+msgstr ""
+
+msgid "Duration"
+msgstr ""
+
+msgid "EAN 13 Code"
+msgstr ""
+
+msgid "EAN 13 code"
+msgstr ""
+
+msgid "ERP5"
+msgstr ""
+
+msgid "ERP5 Modules"
+msgstr "ERP5モジュール"
+
+msgid "ERP5Site_checkFormGroupIds does this"
+msgstr ""
+
+msgid "ERP5Site_viewCreateModule"
+msgstr ""
+
+msgid "ERP5Site_viewCreateModuleDialog"
+msgstr ""
+
+msgid "Eastern Africa"
+msgstr ""
+
+msgid "Economical Class"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit Portal Type 'Account Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Account'"
+msgstr ""
+
+msgid "Edit Portal Type 'Accounting Transaction Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Apparel Assortment Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Apparel Bath Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Apparel Cloth Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Apparel Cloth'"
+msgstr ""
+
+msgid "Edit Portal Type 'Apparel Transformation Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Bank Account'"
+msgstr ""
+
+msgid "Edit Portal Type 'Base Category'"
+msgstr ""
+
+msgid "Edit Portal Type 'Bug Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Bug'"
+msgstr ""
+
+msgid "Edit Portal Type 'Business Template'"
+msgstr ""
+
+msgid "Edit Portal Type 'Category Tool'"
+msgstr ""
+
+msgid "Edit Portal Type 'Category'"
+msgstr ""
+
+msgid "Edit Portal Type 'Component Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Currency Exchange Line'"
+msgstr ""
+
+msgid "Edit Portal Type 'Currency Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Currency'"
+msgstr ""
+
+msgid "Edit Portal Type 'Event Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Feature Document'"
+msgstr ""
+
+msgid "Edit Portal Type 'Feature Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Feature'"
+msgstr ""
+
+msgid "Edit Portal Type 'File'"
+msgstr ""
+
+msgid "Edit Portal Type 'Invoice Transaction Rule'"
+msgstr ""
+
+msgid "Edit Portal Type 'Mail Message'"
+msgstr ""
+
+msgid "Edit Portal Type 'Organisation Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Organisation'"
+msgstr ""
+
+msgid "Edit Portal Type 'Person Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Person'"
+msgstr ""
+
+msgid "Edit Portal Type 'Preference Tool'"
+msgstr ""
+
+msgid "Edit Portal Type 'Preference'"
+msgstr ""
+
+msgid "Edit Portal Type 'Product'"
+msgstr ""
+
+msgid "Edit Portal Type 'Project Line'"
+msgstr ""
+
+msgid "Edit Portal Type 'Project Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Publication Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Publication'"
+msgstr ""
+
+msgid "Edit Portal Type 'Purchase Supply Line'"
+msgstr ""
+
+msgid "Edit Portal Type 'Purchase Supply'"
+msgstr ""
+
+msgid "Edit Portal Type 'Sale Order Line'"
+msgstr ""
+
+msgid "Edit Portal Type 'Sale Order'"
+msgstr ""
+
+msgid "Edit Portal Type 'Sale Supply Line'"
+msgstr ""
+
+msgid "Edit Portal Type 'Task Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Task'"
+msgstr ""
+
+msgid "Edit Portal Type 'Template Tool'"
+msgstr ""
+
+msgid "Edit Portal Type 'Test Case Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Test Case'"
+msgstr ""
+
+msgid "Edit Portal Type 'Use Case Module'"
+msgstr ""
+
+msgid "Edit Workflow"
+msgstr ""
+
+msgid "Effective Date"
+msgstr ""
+
+msgid "Effective date"
+msgstr ""
+
+msgid "Efficiency"
+msgstr ""
+
+msgid "Efficiency (%)"
+msgstr ""
+
+msgid "Efficiency (coef.)"
+msgstr ""
+
+msgid "Eip"
+msgstr ""
+
+msgid "Elements contenus"
+msgstr ""
+
+msgid "Email"
+msgstr "Eメール"
+
+msgid "Email Report"
+msgstr ""
+
+msgid "Email_view"
+msgstr ""
+
+msgid "Emission Letter"
+msgstr ""
+
+msgid "Emit Date"
+msgstr ""
+
+msgid "Emit date"
+msgstr ""
+
+msgid "Employee"
+msgstr ""
+
+msgid "Employee Name"
+msgstr ""
+
+msgid "Employee share rate"
+msgstr ""
+
+msgid "Employee share rate (%)"
+msgstr ""
+
+msgid "Employer"
+msgstr ""
+
+msgid "Employer share rate"
+msgstr ""
+
+msgid "Employer share rate (%)"
+msgstr ""
+
+msgid "Enable Preference"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "End Date"
+msgstr ""
+
+msgid "End of Project"
+msgstr ""
+
+msgid "End of current career step"
+msgstr ""
+
+msgid "End of this current career step"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Enquired"
+msgstr ""
+
+msgid "Enter Closing Period Dates"
+msgstr ""
+
+msgid "Entity"
+msgstr ""
+
+msgid "Entity Role"
+msgstr ""
+
+msgid "Errand Ratio"
+msgstr ""
+
+msgid "Errand ratio"
+msgstr ""
+
+msgid "Error : current active career ('qdqsdsdqds') must be inactive"
+msgstr ""
+
+msgid "Error Message"
+msgstr ""
+
+msgid "Error: 'function' property is required in order to update person security group"
+msgstr ""
+
+msgid "Error: 'function' property is required to update person security group"
+msgstr ""
+
+msgid "Error: bad context."
+msgstr ""
+
+msgid "Estimated Billiable Time"
+msgstr ""
+
+msgid "Estimated Time"
+msgstr ""
+
+msgid "Europe"
+msgstr ""
+
+msgid "Event"
+msgstr "イベント"
+
+msgid "Event List"
+msgstr ""
+
+msgid "Event Module"
+msgstr ""
+
+msgid "Events"
+msgstr "イベント"
+
+msgid "Exchange"
+msgstr ""
+
+msgid "Exchange Select:"
+msgstr ""
+
+msgid "Exchange Type"
+msgstr ""
+
+msgid "Exchange Type:"
+msgstr ""
+
+msgid "Exclusive Discount Ratio"
+msgstr ""
+
+msgid "Exclusive Discount Ratio Quantity Step"
+msgstr ""
+
+msgid "Exclusive Discount Ratio Variation Axes"
+msgstr ""
+
+msgid "Expand Other Parties Accounts"
+msgstr ""
+
+msgid "Expanded transformation"
+msgstr ""
+
+msgid "Expanded view"
+msgstr ""
+
+msgid "Expiration Date"
+msgstr ""
+
+msgid "Expiration date"
+msgstr ""
+
+msgid "Expire"
+msgstr ""
+
+msgid "Expired"
+msgstr ""
+
+msgid "Expiry Date"
+msgstr ""
+
+msgid "Explanation"
+msgstr ""
+
+msgid "Export Business Template"
+msgstr ""
+
+msgid "Export CSV File"
+msgstr ""
+
+msgid "Export CSV file"
+msgstr ""
+
+msgid "Export Csv File"
+msgstr ""
+
+msgid "Extension"
+msgstr ""
+
+msgid "Extensions"
+msgstr ""
+
+msgid "External Folder"
+msgstr ""
+
+msgid "External IP Address"
+msgstr ""
+
+msgid "FAX"
+msgstr ""
+
+msgid "Fabric Items"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Fallback Base Categories"
+msgstr ""
+
+msgid "Fallback Base Category List"
+msgstr ""
+
+msgid "Family"
+msgstr ""
+
+msgid "Fast Input"
+msgstr ""
+
+msgid "Favorite"
+msgstr ""
+
+msgid "Fax"
+msgstr "ファックス"
+
+msgid "Feature"
+msgstr ""
+
+msgid "Feature Count"
+msgstr ""
+
+msgid "Feature Description"
+msgstr ""
+
+msgid "Feature Document"
+msgstr ""
+
+msgid "Feature Document Description"
+msgstr ""
+
+msgid "Feature Document Fast Input"
+msgstr ""
+
+msgid "Feature Document Title"
+msgstr ""
+
+msgid "Feature Documents"
+msgstr ""
+
+msgid "Feature Group"
+msgstr ""
+
+msgid "Feature Module"
+msgstr ""
+
+msgid "Feature Request"
+msgstr ""
+
+msgid "Feature State"
+msgstr ""
+
+msgid "Feature Title"
+msgstr ""
+
+msgid "Feature document added."
+msgstr ""
+
+msgid "Feature title"
+msgstr ""
+
+msgid "Feature(s) added."
+msgstr ""
+
+msgid "Features"
+msgstr ""
+
+msgid "Features (Free Form)"
+msgstr ""
+
+msgid "Features Fast Input"
+msgstr ""
+
+msgid "Features With Sub-Features"
+msgstr ""
+
+msgid "File"
+msgstr "ファイル"
+
+msgid "File Contents"
+msgstr ""
+
+msgid "File History"
+msgstr ""
+
+msgid "File Name"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Files And Images"
+msgstr ""
+
+msgid "Files and Images"
+msgstr ""
+
+msgid "Filter"
+msgstr "フィルター"
+
+msgid "Financial Information"
+msgstr ""
+
+msgid "Financial Informations"
+msgstr ""
+
+msgid "Financial Section"
+msgstr ""
+
+msgid "Financial Year Stop Date"
+msgstr ""
+
+msgid "Find"
+msgstr "検索"
+
+msgid "Finish"
+msgstr ""
+
+msgid "Finish the work"
+msgstr ""
+
+msgid "Finished Tasks"
+msgstr ""
+
+msgid "First"
+msgstr "最初"
+
+msgid "First Name"
+msgstr ""
+
+msgid "First name."
+msgstr ""
+
+msgid "Fiscal Report"
+msgstr ""
+
+msgid "Fixing Price"
+msgstr ""
+
+msgid "Flat List"
+msgstr "フラット・リスト"
+
+msgid "Flow capacity"
+msgstr ""
+
+msgid "Folder"
+msgstr "フォルダー"
+
+msgid "Folder Contents"
+msgstr "フォルダーの内容"
+
+msgid "Folder View"
+msgstr ""
+
+msgid "Follow Bug"
+msgstr ""
+
+msgid "Follow Up"
+msgstr ""
+
+msgid "Follow-Ups"
+msgstr ""
+
+msgid "Follow-ups"
+msgstr ""
+
+msgid "For the account of"
+msgstr ""
+
+msgid "Format"
+msgstr ""
+
+msgid "Forward"
+msgstr ""
+
+msgid "Forwarded"
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "Frequency In Days"
+msgstr ""
+
+msgid "Frequency In Hours"
+msgstr ""
+
+msgid "Frequency In Minutes"
+msgstr ""
+
+msgid "Frequency In Months"
+msgstr ""
+
+msgid "Frequency In Weeks"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "From Date"
+msgstr ""
+
+msgid "From Date Balance"
+msgstr ""
+
+msgid "From Date N-1"
+msgstr ""
+
+msgid "Full Sized Image"
+msgstr ""
+
+msgid "Full Text Keys"
+msgstr ""
+
+msgid "Full sized Image"
+msgstr ""
+
+msgid "Full, long name of the currency"
+msgstr ""
+
+msgid "Function"
+msgstr "職務"
+
+msgid "Futur"
+msgstr ""
+
+msgid "Future"
+msgstr ""
+
+msgid "GAP"
+msgstr ""
+
+msgid "GAP ID"
+msgstr ""
+
+msgid "GAP No"
+msgstr ""
+
+msgid "GAP Root"
+msgstr ""
+
+msgid "GSM"
+msgstr ""
+
+msgid "Gap"
+msgstr ""
+
+msgid "Gap No"
+msgstr ""
+
+msgid "Gap Root"
+msgstr ""
+
+msgid "Gateway IP Address"
+msgstr ""
+
+msgid "Gencod"
+msgstr ""
+
+msgid "Gender"
+msgstr "性別"
+
+msgid "General Ledger"
+msgstr ""
+
+msgid "Generate a Test Report"
+msgstr ""
+
+msgid "Generate graphic interface instead of ERP5 From"
+msgstr ""
+
+msgid "Geographic Address"
+msgstr ""
+
+msgid "Geographic Incorporate Code"
+msgstr ""
+
+msgid "Geographic incorporate code"
+msgstr ""
+
+msgid "GeographicAddress_view"
+msgstr ""
+
+msgid "German"
+msgstr ""
+
+msgid "Get Portal Types Properties"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "Gradation_quantity"
+msgstr ""
+
+msgid "Grade"
+msgstr ""
+
+msgid "Gross Salary"
+msgstr ""
+
+msgid "Gross Salary (Euros)"
+msgstr ""
+
+msgid "Gross Weight"
+msgstr ""
+
+msgid "Gross salary is required"
+msgstr ""
+
+msgid "Gross weight (kg)"
+msgstr ""
+
+msgid "Group"
+msgstr "グループ"
+
+msgid "Group Free Text"
+msgstr ""
+
+msgid "Group In Free Text"
+msgstr ""
+
+msgid "Grouping"
+msgstr ""
+
+msgid "Guess Portal Types From Modules"
+msgstr ""
+
+msgid "Guess Properties Of Portal Types"
+msgstr ""
+
+msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
+msgstr ""
+
+msgid "Height (cm)"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Here is why we get the error, but we didn't investigate it completely yet.\n\nthe all_meta_types() called on portal_skins does not return the same thing on a realsite and on a test site."
+msgstr ""
+
+msgid "Hidden Content Types"
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "History"
+msgstr "履歴"
+
+msgid "Hostname"
+msgstr ""
+
+msgid "Hourly Or Daily Rate"
+msgstr ""
+
+msgid "Hourly or Daily Rate"
+msgstr ""
+
+msgid "Hours"
+msgstr ""
+
+msgid "Html Style"
+msgstr ""
+
+msgid "I forgot my password!"
+msgstr ""
+
+msgid "I had set up a localc role for bugs reporters."
+msgstr ""
+
+msgid "I just added `error_message` variable to bug_worflow"
+msgstr ""
+
+msgid "IBAN"
+msgstr ""
+
+msgid "IBAN Key"
+msgstr ""
+
+msgid "IBAN as Text Format"
+msgstr ""
+
+msgid "ID"
+msgstr "識別子"
+
+msgid "IP Address"
+msgstr ""
+
+msgid "IPSec Extra Config"
+msgstr ""
+
+msgid "ISO code of the currency or something similar"
+msgstr ""
+
+msgid "Iban Number"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Id of a project report"
+msgstr ""
+
+msgid "Id of the project"
+msgstr ""
+
+msgid "Identity"
+msgstr ""
+
+msgid "Identity Criteria"
+msgstr ""
+
+msgid "Identity Criterion"
+msgstr ""
+
+msgid "Image"
+msgstr "画像"
+
+msgid "Image View"
+msgstr ""
+
+msgid "Image_view"
+msgstr ""
+
+msgid "Immediate"
+msgstr ""
+
+msgid "Immediate discount"
+msgstr ""
+
+msgid "Implementation State"
+msgstr ""
+
+msgid "Import / Export"
+msgstr "インポート/エクスポート"
+
+msgid "Import Business Template"
+msgstr ""
+
+msgid "Import CSV File"
+msgstr ""
+
+msgid "Import CSV file"
+msgstr ""
+
+msgid "Import Categories"
+msgstr ""
+
+msgid "Import Csv File"
+msgstr ""
+
+msgid "Import OpenOffice Data"
+msgstr ""
+
+msgid "Import OpenOffice Document"
+msgstr ""
+
+msgid "Import Persons from OpenOffice Calc"
+msgstr ""
+
+msgid "Import category file"
+msgstr ""
+
+msgid "Incoming Events"
+msgstr ""
+
+msgid "Incoming FAX"
+msgstr ""
+
+msgid "Incoming Fax"
+msgstr ""
+
+msgid "Incoming Letter"
+msgstr ""
+
+msgid "Incoterm"
+msgstr ""
+
+msgid "Index"
+msgstr ""
+
+msgid "Indexing"
+msgstr ""
+
+msgid "Industrial Description"
+msgstr ""
+
+msgid "Industrial Phase"
+msgstr ""
+
+msgid "Industrial Process Description"
+msgstr ""
+
+msgid "Industrial description"
+msgstr ""
+
+msgid "Industrial phase"
+msgstr ""
+
+msgid "Industrial process description"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Information Systems"
+msgstr ""
+
+msgid "Initial Contacts"
+msgstr ""
+
+msgid "Initial build."
+msgstr ""
+
+msgid "Input is required but no input given."
+msgstr ""
+
+msgid "Inspect object"
+msgstr ""
+
+msgid "Install ?"
+msgstr ""
+
+msgid "Install Business Template"
+msgstr ""
+
+msgid "Install Business Templates From Repositories"
+msgstr ""
+
+msgid "Installation Choice"
+msgstr ""
+
+msgid "Installation State"
+msgstr ""
+
+msgid "Installed"
+msgstr ""
+
+msgid "Installed ?"
+msgstr ""
+
+msgid "Instructions"
+msgstr ""
+
+msgid "Int Index"
+msgstr ""
+
+msgid "Integration"
+msgstr ""
+
+msgid "Internal Money Deposit"
+msgstr ""
+
+msgid "Internal Money Deposit Module"
+msgstr ""
+
+msgid "Internal Packing List"
+msgstr "内部用梱包明細書"
+
+msgid "Internal Packing List Cell"
+msgstr ""
+
+msgid "Internal Packing List Line"
+msgstr ""
+
+msgid "Internal Packing List Lines"
+msgstr ""
+
+msgid "Internal Packing List List"
+msgstr ""
+
+msgid "Internal Packing List Module"
+msgstr ""
+
+msgid "Internal Packing Lists"
+msgstr "内部用梱包明細書"
+
+msgid "Internationalization"
+msgstr ""
+
+msgid "Invalid integer value for &lt;em&gt;uid&lt;/em&gt;"
+msgstr ""
+
+msgid "Invalidate"
+msgstr ""
+
+msgid "Invalidated"
+msgstr ""
+
+msgid "Inventories"
+msgstr "在庫目録"
+
+msgid "Inventory"
+msgstr "在庫目録"
+
+msgid "Inventory Cell"
+msgstr ""
+
+msgid "Inventory Date"
+msgstr ""
+
+msgid "Inventory Line"
+msgstr ""
+
+msgid "Inventory Lines"
+msgstr ""
+
+msgid "Inventory List"
+msgstr ""
+
+msgid "Inventory Module"
+msgstr ""
+
+msgid "Invoice Cell"
+msgstr ""
+
+msgid "Invoice Date"
+msgstr ""
+
+msgid "Invoice Line"
+msgstr ""
+
+msgid "Invoice Lines"
+msgstr ""
+
+msgid "Invoice No"
+msgstr ""
+
+msgid "Invoice Number"
+msgstr "請求番号"
+
+msgid "Invoice Quantity : -1900.00"
+msgstr ""
+
+msgid "Invoice Quantity : -2000.00"
+msgstr ""
+
+msgid "Invoice Quantity : -4000.00"
+msgstr ""
+
+msgid "Invoice Quantity : -4864.00"
+msgstr ""
+
+msgid "Invoice Quantity : -4952.00"
+msgstr ""
+
+msgid "Invoice Quantity : -6000.00"
+msgstr ""
+
+msgid "Invoice Quantity : 0.00"
+msgstr ""
+
+msgid "Invoice Quantity : 2000.00"
+msgstr ""
+
+msgid "Invoice Reference"
+msgstr ""
+
+msgid "Invoice Rule"
+msgstr ""
+
+msgid "Invoice To"
+msgstr ""
+
+msgid "Invoice Transaction Line"
+msgstr ""
+
+msgid "Invoice Transaction Rule"
+msgstr ""
+
+msgid "Invoice View"
+msgstr "請求閲覧"
+
+msgid "Invoice for"
+msgstr ""
+
+msgid "Invoice to"
+msgstr ""
+
+msgid "InvoiceTransactionRule_view"
+msgstr ""
+
+msgid "Invoiced Client"
+msgstr "請求先の顧客"
+
+msgid "Invoiced Customer"
+msgstr ""
+
+msgid "Invoiced Quantity"
+msgstr ""
+
+msgid "Invoicing Rule"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Item Class / Property"
+msgstr ""
+
+msgid "Item Description"
+msgstr ""
+
+msgid "Item ID"
+msgstr ""
+
+msgid "Item Module"
+msgstr ""
+
+msgid "Item PropertySheet"
+msgstr ""
+
+msgid "Item PropertySheets"
+msgstr ""
+
+msgid "Item Propertysheet"
+msgstr ""
+
+msgid "Item Propertysheets"
+msgstr ""
+
+msgid "Item Title"
+msgstr ""
+
+msgid "Item Type"
+msgstr ""
+
+msgid "Item UBM / Type"
+msgstr ""
+
+msgid "Item(s) Copied."
+msgstr ""
+
+msgid "Item(s) Cut."
+msgstr ""
+
+msgid "Item(s) Pasted."
+msgstr ""
+
+msgid "Item(s)+Copied."
+msgstr ""
+
+msgid "Item(s)+Cut."
+msgstr ""
+
+msgid "Items"
+msgstr ""
+
+msgid "Japanese"
+msgstr "日本語"
+
+msgid "Jerome TEST !!!!"
+msgstr ""
+
+msgid "Journal"
+msgstr ""
+
+msgid "Journal Type"
+msgstr ""
+
+msgid "Journal type"
+msgstr ""
+
+msgid "Jump"
+msgstr "ジャンプ"
+
+msgid "Jump Relation"
+msgstr ""
+
+msgid "Jump to Accounting Preference"
+msgstr ""
+
+msgid "Jump to Active Preference"
+msgstr ""
+
+msgid "Jump to Active User Preference"
+msgstr ""
+
+msgid "Jump to Bank Accounts"
+msgstr ""
+
+msgid "Jump to Related Payment"
+msgstr ""
+
+msgid "Jump..."
+msgstr "ジャンプ..."
+
+msgid "KEV test"
+msgstr ""
+
+msgid "Kev Test"
+msgstr ""
+
+msgid "Kevin test"
+msgstr ""
+
+msgid "Kevin's blog"
+msgstr ""
+
+msgid "Kevtest Module"
+msgstr ""
+
+msgid "Kevtest Object"
+msgstr ""
+
+msgid "Key"
+msgstr ""
+
+msgid "Keyword Keys"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Language"
+msgstr "言語"
+
+msgid "Last"
+msgstr "最後"
+
+msgid "Last Name"
+msgstr ""
+
+msgid "Last Report"
+msgstr ""
+
+msgid "Last career step terminated. New career step added."
+msgstr ""
+
+msgid "Last name."
+msgstr ""
+
+msgid "Later"
+msgstr ""
+
+msgid "Length (cm)"
+msgstr ""
+
+msgid "Length Quantity"
+msgstr ""
+
+msgid "Length quantity"
+msgstr ""
+
+msgid "Letter"
+msgstr ""
+
+msgid "Level"
+msgstr ""
+
+msgid "Level (debug)"
+msgstr ""
+
+msgid "Lexicon Count"
+msgstr ""
+
+msgid "Lexicon Description"
+msgstr ""
+
+msgid "Lexicon ID"
+msgstr ""
+
+msgid "Lexicon Item Count"
+msgstr ""
+
+msgid "Lexicon Item View"
+msgstr ""
+
+msgid "Lexicon Items"
+msgstr ""
+
+msgid "Lexicon Source Name"
+msgstr ""
+
+msgid "Lexicon Source Type"
+msgstr ""
+
+msgid "Lexicon Title"
+msgstr ""
+
+msgid "Lexicon View"
+msgstr ""
+
+msgid "Lexicons"
+msgstr ""
+
+msgid "Lexicons With Items"
+msgstr ""
+
+msgid "Lexicons with Items"
+msgstr ""
+
+msgid "License"
+msgstr ""
+
+msgid "Lieu"
+msgstr ""
+
+msgid "Line Number"
+msgstr ""
+
+msgid "Lines created."
+msgstr ""
+
+msgid "Link"
+msgstr "リンク"
+
+msgid "List"
+msgstr ""
+
+msgid "List Coordinates"
+msgstr ""
+
+msgid "List Emails"
+msgstr ""
+
+msgid "List Mode"
+msgstr "一覧モード"
+
+msgid "List Report"
+msgstr ""
+
+msgid "List Trash Bin"
+msgstr ""
+
+msgid "List of Active Process"
+msgstr ""
+
+msgid "ListBox"
+msgstr ""
+
+msgid "Listbox"
+msgstr ""
+
+msgid "Live CD"
+msgstr ""
+
+msgid "Local ID of the object in its enclosing container"
+msgstr ""
+
+msgid "Local Roles"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Location Free Text"
+msgstr ""
+
+msgid "Log in"
+msgstr ""
+
+msgid "Log out"
+msgstr "ログアウト"
+
+msgid "Logged In as"
+msgstr ""
+
+msgid "Logged In as :"
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+msgid "Login failure"
+msgstr ""
+
+msgid "Login success"
+msgstr ""
+
+msgid "Login+and/or+password+is+incorrect."
+msgstr ""
+
+msgid "Logistics"
+msgstr ""
+
+msgid "Louis Richard"
+msgstr ""
+
+msgid "Low"
+msgstr ""
+
+msgid "Mail Message"
+msgstr ""
+
+msgid "Main Apparel Fabric"
+msgstr ""
+
+msgid "Main Apparel Fabric Supplier"
+msgstr ""
+
+msgid "Main Resource"
+msgstr ""
+
+msgid "Main resource"
+msgstr ""
+
+msgid "Maintainers"
+msgstr ""
+
+msgid "Major"
+msgstr ""
+
+msgid "Manage Business Templates"
+msgstr ""
+
+msgid "Manage Coordinates"
+msgstr ""
+
+msgid "Manage members"
+msgstr ""
+
+msgid "Managed by"
+msgstr ""
+
+msgid "Manual Price"
+msgstr ""
+
+msgid "Mapped Value"
+msgstr ""
+
+msgid "Marital Status"
+msgstr ""
+
+msgid "Mark Responded"
+msgstr ""
+
+msgid "Max Amount"
+msgstr ""
+
+msgid "Max Criterion"
+msgstr ""
+
+msgid "Max. Delay (Day)"
+msgstr ""
+
+msgid "Max. delay (day)"
+msgstr ""
+
+msgid "Measure"
+msgstr ""
+
+msgid "Measure Drawing"
+msgstr ""
+
+msgid "Measure drawing"
+msgstr ""
+
+msgid "Measure type"
+msgstr ""
+
+msgid "Media"
+msgstr ""
+
+msgid "Membership Criteria"
+msgstr ""
+
+msgid "Membership Values"
+msgstr ""
+
+msgid "Membership criteria"
+msgstr ""
+
+msgid "Membership value"
+msgstr ""
+
+msgid "Menus"
+msgstr "メニュー"
+
+msgid "Message Translations"
+msgstr ""
+
+msgid "Metadata"
+msgstr "メタデータ"
+
+msgid "Middle Africa"
+msgstr ""
+
+msgid "Middle Name"
+msgstr ""
+
+msgid "Min Amount"
+msgstr ""
+
+msgid "Min Criterion"
+msgstr ""
+
+msgid "Min. Delay (Day)"
+msgstr ""
+
+msgid "Min. delay (day)"
+msgstr ""
+
+msgid "Min. flow"
+msgstr ""
+
+msgid "Minor"
+msgstr ""
+
+msgid "Minutes"
+msgstr ""
+
+msgid "Mirror"
+msgstr ""
+
+msgid "Mirror Account"
+msgstr ""
+
+msgid "Mirror account"
+msgstr ""
+
+msgid "Missing"
+msgstr ""
+
+msgid "Model Problem"
+msgstr ""
+
+msgid "Model Survey"
+msgstr ""
+
+msgid "Modem Type"
+msgstr ""
+
+msgid "Modification Date"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Modified files"
+msgstr ""
+
+msgid "Module Created."
+msgstr ""
+
+msgid "Module ID"
+msgstr ""
+
+msgid "Module Id"
+msgstr ""
+
+msgid "Module Portal Type"
+msgstr ""
+
+msgid "Module Title"
+msgstr ""
+
+msgid "Modules"
+msgstr "モジュール"
+
+msgid "Monetary Destruction"
+msgstr ""
+
+msgid "Monetary Issue"
+msgstr ""
+
+msgid "Monetary Recall"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+msgid "Morphologie"
+msgstr ""
+
+msgid "Morphology"
+msgstr ""
+
+msgid "Morphology Variation"
+msgstr ""
+
+msgid "Morphology Variations"
+msgstr ""
+
+msgid "Motive"
+msgstr ""
+
+msgid "Movement"
+msgstr ""
+
+msgid "Movement Date"
+msgstr ""
+
+msgid "Movement List"
+msgstr ""
+
+msgid "Multivalue Keys"
+msgstr ""
+
+msgid "Multivalued Membership Criteria"
+msgstr ""
+
+msgid "My favourites"
+msgstr "お気に入り"
+
+msgid "My language"
+msgstr "言語"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "Nationality"
+msgstr "国籍"
+
+msgid "Net"
+msgstr ""
+
+msgid "Net Price to pay"
+msgstr ""
+
+msgid "Net Width"
+msgstr ""
+
+msgid "Net Width (cm)"
+msgstr ""
+
+msgid "Net width"
+msgstr ""
+
+msgid "Net width (cm)"
+msgstr ""
+
+msgid "Netmask"
+msgstr ""
+
+msgid "Netmask Bits"
+msgstr ""
+
+msgid "Netmask Bits of 2nd Int"
+msgstr ""
+
+msgid "Netmask Bits of 3rd Int"
+msgstr ""
+
+msgid "Network Address"
+msgstr ""
+
+msgid "Network Address of 2nd Int"
+msgstr ""
+
+msgid "Network Address of 3rd Int"
+msgstr ""
+
+msgid "Network Type"
+msgstr ""
+
+msgid "Network Type of 2nd Int"
+msgstr ""
+
+msgid "Network Type of 3rd Int"
+msgstr ""
+
+msgid "New"
+msgstr "新規"
+
+msgid "New ${portal_type}"
+msgstr ""
+
+msgid "New %s"
+msgstr ""
+
+msgid "New Event"
+msgstr ""
+
+msgid "New career step added"
+msgstr ""
+
+msgid "News Item"
+msgstr ""
+
+msgid "Nexedi Price"
+msgstr ""
+
+msgid "Nexedi VPN"
+msgstr ""
+
+msgid "Nexedi VPNs"
+msgstr ""
+
+msgid "Next"
+msgstr "次"
+
+msgid "Next Alarm Date"
+msgstr ""
+
+msgid "Next Page"
+msgstr "次のページ"
+
+msgid "Next id"
+msgstr ""
+
+msgid "No ${portal_type} Related."
+msgstr ""
+
+msgid "No PCG"
+msgstr ""
+
+msgid "No Payment Transaction related."
+msgstr ""
+
+msgid "No Purchase Packing List Related"
+msgstr ""
+
+msgid "No Purchase Packing List related."
+msgstr ""
+
+msgid "No Sale Invoice Transaction related."
+msgstr ""
+
+msgid "No Sale Packing List Related"
+msgstr ""
+
+msgid "No Sale Packing List related."
+msgstr ""
+
+msgid "No Trade Condition."
+msgstr ""
+
+msgid "No new Apparel Colour Range Variation defined."
+msgstr ""
+
+msgid "No new Apparel Component defined."
+msgstr ""
+
+msgid "No quantity is defined on this line."
+msgstr ""
+
+msgid "No such document was found."
+msgstr ""
+
+msgid "No tooltip are rendered as a hidden <div> that becomes visible when hoverring a field"
+msgstr ""
+
+msgid "No. Related Objects"
+msgstr ""
+
+msgid "Node"
+msgstr ""
+
+msgid "Nomenclature Validated"
+msgstr ""
+
+msgid "Non Billiable Expense"
+msgstr ""
+
+msgid "Non Discountable Additional Price"
+msgstr ""
+
+msgid "Non-Billiable Expense"
+msgstr ""
+
+msgid "Non-profit"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Normal Balance"
+msgstr ""
+
+msgid "Northern Africa"
+msgstr ""
+
+msgid "Not Installed"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "Number"
+msgstr ""
+
+msgid "Number of units involved in base prices"
+msgstr ""
+
+msgid "OS Version"
+msgstr ""
+
+msgid "Object"
+msgstr ""
+
+msgid "Object Contents"
+msgstr ""
+
+msgid "Object Created"
+msgstr ""
+
+msgid "Object Created."
+msgstr ""
+
+msgid "Object Portal Type"
+msgstr ""
+
+msgid "Object Title"
+msgstr ""
+
+msgid "Object copied from /nexedi/portal_templates/erp5_mrp_import"
+msgstr ""
+
+msgid "Object copied from /nexedi/portal_templates/erp5_trade"
+msgstr ""
+
+msgid "Object copied from /nexedi/portal_templates/import_erp5_apparel"
+msgstr ""
+
+msgid "Object+Created."
+msgstr ""
+
+msgid "Oceania"
+msgstr ""
+
+msgid "Offer"
+msgstr ""
+
+msgid "Offer by Email"
+msgstr ""
+
+msgid "Offered"
+msgstr ""
+
+msgid "Omit \"Grouped References\""
+msgstr ""
+
+msgid "Omit \"grouped references\""
+msgstr ""
+
+msgid "Omit 0.0 amount transactions"
+msgstr ""
+
+msgid "Omit Balanced Account"
+msgstr ""
+
+msgid "Omit Empty Accounts"
+msgstr ""
+
+msgid "Omit balanced accounts"
+msgstr ""
+
+msgid "Omit empty accounts"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Open Account"
+msgstr ""
+
+msgid "Open Accounting Period"
+msgstr ""
+
+msgid "Open Assignment"
+msgstr ""
+
+msgid "Open Bug"
+msgstr ""
+
+msgid "Open bugs"
+msgstr ""
+
+msgid "Open in File Explorer"
+msgstr ""
+
+msgid "OpenOffice Source File"
+msgstr ""
+
+msgid "OpenOffice Source File Example"
+msgstr ""
+
+msgid "Opening Balance"
+msgstr ""
+
+msgid "Opening Date"
+msgstr ""
+
+msgid "Openned"
+msgstr ""
+
+msgid "Openned Account"
+msgstr ""
+
+msgid "Operation"
+msgstr ""
+
+msgid "Operation Date"
+msgstr ""
+
+msgid "Operation List"
+msgstr ""
+
+msgid "Operation Resource"
+msgstr ""
+
+msgid "Operation Title"
+msgstr ""
+
+msgid "Operation Upper Limit"
+msgstr ""
+
+msgid "Option"
+msgstr ""
+
+msgid "Optional Resource"
+msgstr ""
+
+msgid "Optional Resource List"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Order Builder"
+msgstr ""
+
+msgid "Order Rule"
+msgstr ""
+
+msgid "Order Tool"
+msgstr ""
+
+msgid "Order Type"
+msgstr ""
+
+msgid "Order date"
+msgstr ""
+
+msgid "Order reference"
+msgstr ""
+
+msgid "Order type"
+msgstr ""
+
+msgid "Order updated."
+msgstr ""
+
+msgid "Ordered"
+msgstr ""
+
+msgid "Ordered Quantity"
+msgstr ""
+
+msgid "Ordered by"
+msgstr ""
+
+msgid "Ordered for"
+msgstr ""
+
+msgid "Ordinary"
+msgstr ""
+
+msgid "Organisation"
+msgstr "組織"
+
+msgid "Organisation List"
+msgstr ""
+
+msgid "Organisation Module"
+msgstr ""
+
+msgid "Organisation_viewCoordinateList"
+msgstr ""
+
+msgid "Organisations"
+msgstr ""
+
+msgid "Origin"
+msgstr ""
+
+msgid "Origin Reference"
+msgstr ""
+
+msgid "Orphaned Requirements"
+msgstr ""
+
+msgid "Other Parties"
+msgstr ""
+
+msgid "Others"
+msgstr ""
+
+msgid "Outcome"
+msgstr ""
+
+msgid "Outsourcing Sort"
+msgstr ""
+
+msgid "Outsourcing Sort Line In"
+msgstr ""
+
+msgid "Outsourcing Sort Line Out"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Owner (debug)"
+msgstr ""
+
+msgid "PCG"
+msgstr ""
+
+msgid "PPP User Login"
+msgstr ""
+
+msgid "PPP User Password"
+msgstr ""
+
+msgid "Packaging"
+msgstr ""
+
+msgid "Packed"
+msgstr ""
+
+msgid "Packing List"
+msgstr ""
+
+msgid "Packing List Line"
+msgstr ""
+
+msgid "Packing List No"
+msgstr ""
+
+msgid "Paid by"
+msgstr ""
+
+msgid "Paid for"
+msgstr ""
+
+msgid "Partner's number"
+msgstr ""
+
+msgid "Partners"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Paste"
+msgstr "貼り付け"
+
+msgid "Path"
+msgstr ""
+
+msgid "Path List"
+msgstr ""
+
+msgid "Paths"
+msgstr ""
+
+msgid "Pay Sheet Cell"
+msgstr ""
+
+msgid "Pay Sheet Cell_btsave_1"
+msgstr ""
+
+msgid "Pay Sheet Cells"
+msgstr ""
+
+msgid "Pay Sheet Details"
+msgstr ""
+
+msgid "Pay Sheet Line"
+msgstr ""
+
+msgid "Pay Sheet Line View"
+msgstr ""
+
+msgid "Pay Sheet Line_btsave_1"
+msgstr ""
+
+msgid "Pay Sheet Lines"
+msgstr ""
+
+msgid "Pay Sheet Transaction"
+msgstr ""
+
+msgid "Pay Sheet Transaction Line"
+msgstr ""
+
+msgid "Pay Sheet Transaction Line_btsave_1"
+msgstr ""
+
+msgid "Pay Sheet Transaction Lines"
+msgstr ""
+
+msgid "Pay Sheet Transaction Lines created."
+msgstr ""
+
+msgid "Pay Sheet Transaction in confirmed state"
+msgstr ""
+
+msgid "Pay Sheet Transaction in planned state"
+msgstr ""
+
+msgid "Pay Sheet Transaction_btsave_1"
+msgstr ""
+
+msgid "Pay Sheet View"
+msgstr ""
+
+msgid "Pay sheet calculation done."
+msgstr ""
+
+msgid "PaySheetLine_quantityView"
+msgstr ""
+
+msgid "PaySheetLine_viewQuantity"
+msgstr ""
+
+msgid "Payment"
+msgstr "支払"
+
+msgid "Payment Additional Term (Day)"
+msgstr ""
+
+msgid "Payment At The End Of Month"
+msgstr ""
+
+msgid "Payment Condition"
+msgstr ""
+
+msgid "Payment Date"
+msgstr ""
+
+msgid "Payment Delay (Days)"
+msgstr ""
+
+msgid "Payment Delay (days)"
+msgstr ""
+
+msgid "Payment End Of Month"
+msgstr ""
+
+msgid "Payment Mode"
+msgstr ""
+
+msgid "Payment Rule"
+msgstr ""
+
+msgid "Payment Term (Day)"
+msgstr ""
+
+msgid "Payment Transaction"
+msgstr ""
+
+msgid "Payment Transaction Lines"
+msgstr ""
+
+msgid "Payment Transaction in confirmed state"
+msgstr ""
+
+msgid "Payment Transaction in planned state"
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: DEmo payment."
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: Facture automatique."
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: avant dernier test et ca marche !."
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: demo."
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: facture test."
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: final test."
+msgstr ""
+
+msgid "Payment Transaction related to Sale Invoice Transaction: test."
+msgstr ""
+
+msgid "Payment additional term (day)"
+msgstr ""
+
+msgid "Payment at the end of month"
+msgstr ""
+
+msgid "Payment condition"
+msgstr ""
+
+msgid "Payment date"
+msgstr ""
+
+msgid "Payment end of month"
+msgstr ""
+
+msgid "Payment mode"
+msgstr ""
+
+msgid "Payment term (day)"
+msgstr ""
+
+msgid "Pdf Form"
+msgstr ""
+
+msgid "People"
+msgstr "個人"
+
+msgid "Percentage Of Total"
+msgstr ""
+
+msgid "Percentage of total"
+msgstr ""
+
+msgid "Period Stop Date"
+msgstr ""
+
+msgid "Periodicity"
+msgstr ""
+
+msgid "Periodicity Start Date"
+msgstr ""
+
+msgid "Periodicity Stop Date"
+msgstr ""
+
+msgid "Permanent Delivered quantity"
+msgstr ""
+
+msgid "Permanent price"
+msgstr ""
+
+msgid "Permanent quantity"
+msgstr ""
+
+msgid "Permanent variation"
+msgstr ""
+
+msgid "Person"
+msgstr "個人"
+
+msgid "Person Assignment View"
+msgstr ""
+
+msgid "Person Career"
+msgstr ""
+
+msgid "Person Career View"
+msgstr ""
+
+msgid "Person Default View Form"
+msgstr ""
+
+msgid "Person List"
+msgstr ""
+
+msgid "Person Module"
+msgstr ""
+
+msgid "Person Profile"
+msgstr ""
+
+msgid "Person Report"
+msgstr ""
+
+msgid "Person_viewReport"
+msgstr ""
+
+msgid "Personal Name"
+msgstr "名前"
+
+msgid "Persons"
+msgstr ""
+
+msgid "Phone"
+msgstr "電話"
+
+msgid "Phone Call"
+msgstr ""
+
+msgid "Place"
+msgstr ""
+
+msgid "Plan"
+msgstr ""
+
+msgid "Plan Delivery"
+msgstr ""
+
+msgid "Plan Transaction"
+msgstr ""
+
+msgid "Plan Transactions"
+msgstr ""
+
+msgid "Planned"
+msgstr ""
+
+msgid "Planning"
+msgstr ""
+
+msgid "PlanningView"
+msgstr ""
+
+msgid "Plans of purchase orders"
+msgstr ""
+
+msgid "Plans of sale orders"
+msgstr ""
+
+msgid "Please select one (or more) object."
+msgstr ""
+
+msgid "Please select one object."
+msgstr ""
+
+msgid "Please select one or more items to copy first."
+msgstr ""
+
+msgid "Please+select+one+or+more+items+to+copy+first."
+msgstr ""
+
+msgid "Please+select+one+or+more+items+to+cut+first."
+msgstr ""
+
+msgid "Please+select+one+or+more+items+to+delete+first."
+msgstr ""
+
+msgid "Portal Skins Folder"
+msgstr ""
+
+msgid "Portal Templates"
+msgstr ""
+
+msgid "Portal Type"
+msgstr ""
+
+msgid "Portal Type Data Updated"
+msgstr ""
+
+msgid "Portal Type Property"
+msgstr ""
+
+msgid "Portal Type Roles"
+msgstr ""
+
+msgid "Portal Types"
+msgstr ""
+
+msgid "Portal Types Properties Updated"
+msgstr ""
+
+msgid "Possible Variations"
+msgstr ""
+
+msgid "Post Code"
+msgstr "郵便番号"
+
+msgid "Postal Code"
+msgstr ""
+
+msgid "Preceding Tasks"
+msgstr ""
+
+msgid "Precision"
+msgstr ""
+
+msgid "Predicate"
+msgstr ""
+
+msgid "Predicate Group"
+msgstr ""
+
+msgid "Predicate Groups"
+msgstr ""
+
+msgid "Predicate_view"
+msgstr ""
+
+msgid "Predicates"
+msgstr ""
+
+msgid "Preference"
+msgstr ""
+
+msgid "Preference Tool"
+msgstr ""
+
+msgid "Preference_view"
+msgstr ""
+
+msgid "Preferences"
+msgstr "設定"
+
+msgid "Prefix"
+msgstr ""
+
+msgid "Previous"
+msgstr "前"
+
+msgid "Previous Balance"
+msgstr ""
+
+msgid "Previous Call"
+msgstr ""
+
+msgid "Previous Page"
+msgstr "前のページ"
+
+msgid "Price"
+msgstr ""
+
+msgid "Price Currency"
+msgstr ""
+
+msgid "Price Survey"
+msgstr ""
+
+msgid "Price Valid Until"
+msgstr ""
+
+msgid "Price Validity"
+msgstr ""
+
+msgid "Price Variation Axes"
+msgstr ""
+
+msgid "Price Variation axes"
+msgstr ""
+
+msgid "Price by default"
+msgstr ""
+
+msgid "Price of Invoice Line"
+msgstr ""
+
+msgid "Price validity"
+msgstr ""
+
+msgid "Priced Quantity"
+msgstr ""
+
+msgid "Priced quantity"
+msgstr ""
+
+msgid "Print"
+msgstr "印刷"
+
+msgid "Printed by %(user)s at %(date)s"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Privilege"
+msgstr ""
+
+msgid "Privileges"
+msgstr ""
+
+msgid "Problem"
+msgstr ""
+
+msgid "Problem Detected"
+msgstr ""
+
+msgid "Problem detected"
+msgstr ""
+
+msgid "Procedure Validated"
+msgstr ""
+
+msgid "Product"
+msgstr "製品"
+
+msgid "Product Interest"
+msgstr ""
+
+msgid "Product Items"
+msgstr ""
+
+msgid "Product Line"
+msgstr ""
+
+msgid "Product List"
+msgstr ""
+
+msgid "Product Module"
+msgstr ""
+
+msgid "Product or Service"
+msgstr ""
+
+msgid "Production Order"
+msgstr ""
+
+msgid "Production Order Cell"
+msgstr ""
+
+msgid "Production Order Line"
+msgstr ""
+
+msgid "Production Order Module"
+msgstr ""
+
+msgid "Production Order Rule"
+msgstr ""
+
+msgid "Production Orders"
+msgstr ""
+
+msgid "Production Packing List"
+msgstr ""
+
+msgid "Production Packing List Cell"
+msgstr ""
+
+msgid "Production Packing List Line"
+msgstr ""
+
+msgid "Production Packing List Module"
+msgstr ""
+
+msgid "Production Packing Lists"
+msgstr ""
+
+msgid "Production Quantity"
+msgstr ""
+
+msgid "Production Report"
+msgstr ""
+
+msgid "Production Report Cell"
+msgstr ""
+
+msgid "Production Report Line"
+msgstr ""
+
+msgid "Production Report Module"
+msgstr ""
+
+msgid "Production Reports"
+msgstr ""
+
+msgid "Production Total Quantity"
+msgstr ""
+
+msgid "Products"
+msgstr "製品"
+
+msgid "Produit"
+msgstr ""
+
+msgid "Profile"
+msgstr "プロフィール"
+
+msgid "Profile of Trade"
+msgstr ""
+
+msgid "Project"
+msgstr "プロジェクト"
+
+msgid "Project Cell"
+msgstr ""
+
+msgid "Project Constraints"
+msgstr ""
+
+msgid "Project Line"
+msgstr "プロジェクトの行"
+
+msgid "Project Lines"
+msgstr ""
+
+msgid "Project List"
+msgstr ""
+
+msgid "Project Location"
+msgstr ""
+
+msgid "Project Milestone"
+msgstr ""
+
+msgid "Project Module"
+msgstr ""
+
+msgid "Project Planning"
+msgstr ""
+
+msgid "Project Report"
+msgstr "プロジェクト報告"
+
+msgid "Project Report Line"
+msgstr ""
+
+msgid "Project Report Lines"
+msgstr ""
+
+msgid "Project Report List"
+msgstr ""
+
+msgid "Project Report Module"
+msgstr ""
+
+msgid "Project Report State"
+msgstr ""
+
+msgid "Project Reports"
+msgstr "プロジェクト報告"
+
+msgid "Project Task"
+msgstr ""
+
+msgid "Project Title"
+msgstr ""
+
+msgid "Project Work List"
+msgstr ""
+
+msgid "ProjectLine_viewReport"
+msgstr ""
+
+msgid "Project_viewPlanning"
+msgstr ""
+
+msgid "Projects"
+msgstr "プロジェクト"
+
+msgid "Projet"
+msgstr ""
+
+msgid "Property"
+msgstr ""
+
+msgid "Property Criteria"
+msgstr ""
+
+msgid "Property Sheets"
+msgstr ""
+
+msgid "Property criteria"
+msgstr ""
+
+msgid "PropertySheet"
+msgstr ""
+
+msgid "PropertySheets"
+msgstr ""
+
+msgid "Propertysheet"
+msgstr ""
+
+msgid "Propertysheets"
+msgstr ""
+
+msgid "Propose"
+msgstr ""
+
+msgid "Proposed"
+msgstr ""
+
+msgid "Prototype"
+msgstr ""
+
+msgid "Prototype Creation"
+msgstr ""
+
+msgid "Provider Code"
+msgstr ""
+
+msgid "Publication"
+msgstr ""
+
+msgid "Publication Decision"
+msgstr ""
+
+msgid "Publication Line"
+msgstr ""
+
+msgid "Publication Module"
+msgstr ""
+
+msgid "Publication Targets"
+msgstr ""
+
+msgid "Publication Workflow"
+msgstr ""
+
+msgid "Publications"
+msgstr ""
+
+msgid "Published"
+msgstr ""
+
+msgid "Purchase Invoice Transaction"
+msgstr ""
+
+msgid "Purchase Invoice Transaction Line"
+msgstr ""
+
+msgid "Purchase Invoice Transaction Lines"
+msgstr ""
+
+msgid "Purchase Invoice Transaction in confirmed state"
+msgstr ""
+
+msgid "Purchase Invoice Transaction in planned state"
+msgstr ""
+
+msgid "Purchase Order"
+msgstr "購入の注文"
+
+msgid "Purchase Order Cell"
+msgstr ""
+
+msgid "Purchase Order Line"
+msgstr ""
+
+msgid "Purchase Order Lines"
+msgstr ""
+
+msgid "Purchase Order List"
+msgstr ""
+
+msgid "Purchase Order Module"
+msgstr ""
+
+msgid "Purchase Order related to Purchase Packing List."
+msgstr ""
+
+msgid "Purchase Orders"
+msgstr "購入の注文"
+
+msgid "Purchase Packing List"
+msgstr "購入用梱包明細書"
+
+msgid "Purchase Packing List Cell"
+msgstr ""
+
+msgid "Purchase Packing List Line"
+msgstr ""
+
+msgid "Purchase Packing List Lines"
+msgstr ""
+
+msgid "Purchase Packing List List"
+msgstr ""
+
+msgid "Purchase Packing List Module"
+msgstr ""
+
+msgid "Purchase Packing List related to Purchase Order."
+msgstr ""
+
+msgid "Purchase Packing Lists"
+msgstr "購入用梱包明細書"
+
+msgid "Purchase Supplies"
+msgstr ""
+
+msgid "Purchase Supply"
+msgstr ""
+
+msgid "Purchase Supply Cell"
+msgstr ""
+
+msgid "Purchase Supply Line"
+msgstr ""
+
+msgid "Purchase Supply Lines"
+msgstr ""
+
+msgid "Purchase Supply Module"
+msgstr ""
+
+msgid "Purchase Trade Condition"
+msgstr ""
+
+msgid "Purchase Trade Condition List"
+msgstr ""
+
+msgid "Purchase Trade Condition Module"
+msgstr ""
+
+msgid "Purchase Trade Conditions"
+msgstr ""
+
+msgid "Purchase orders not confirmed"
+msgstr ""
+
+msgid "Purchase trade condition"
+msgstr ""
+
+msgid "Purchases Order"
+msgstr ""
+
+msgid "Purchases Price"
+msgstr ""
+
+msgid "Quality"
+msgstr ""
+
+msgid "Quality Reference"
+msgstr ""
+
+msgid "Quality reference"
+msgstr ""
+
+msgid "Quantities"
+msgstr ""
+
+msgid "Quantity"
+msgstr ""
+
+msgid "Quantity Axes"
+msgstr ""
+
+msgid "Quantity Report"
+msgstr ""
+
+msgid "Quantity Reports"
+msgstr ""
+
+msgid "Quantity Step"
+msgstr ""
+
+msgid "Quantity Unit"
+msgstr ""
+
+msgid "Quantity axes"
+msgstr ""
+
+msgid "Quantity by default"
+msgstr ""
+
+msgid "Quantity of Invoice Line"
+msgstr ""
+
+msgid "Quantity ratio"
+msgstr ""
+
+msgid "Quantity step"
+msgstr ""
+
+msgid "Quantity unit"
+msgstr ""
+
+msgid "Rate"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
+msgid "Raw width (cm)"
+msgstr ""
+
+msgid "Re-install Business Template"
+msgstr ""
+
+msgid "Reaction description"
+msgstr ""
+
+msgid "Ready"
+msgstr ""
+
+msgid "Real Client"
+msgstr "本当の顧客"
+
+msgid "Realm Server"
+msgstr ""
+
+msgid "Rebuild Business Template"
+msgstr ""
+
+msgid "Receive Enquiry"
+msgstr ""
+
+msgid "Received Date"
+msgstr ""
+
+msgid "Received date"
+msgstr ""
+
+msgid "Reconfigure Portal"
+msgstr "ポータルの再設定"
+
+msgid "Recur every periodicity days (ex every 2 days)"
+msgstr ""
+
+msgid "Recur every periodicity hours (ex every 2 hours)"
+msgstr ""
+
+msgid "Recur every periodicity hours (ex, at 10 and at 16 )"
+msgstr ""
+
+msgid "Recur every periodicity month (ex every 4 months)"
+msgstr ""
+
+msgid "Recur every periodicity week (ex, week 41 and 43)"
+msgstr ""
+
+msgid "Recur every periodicity weeks (ex every 3 weeks)"
+msgstr ""
+
+msgid "Recur on some days of the month (ex 5th, and 14th)"
+msgstr ""
+
+msgid "Recur on some days of the week (ex monday and sunday)"
+msgstr ""
+
+msgid "Recur on some months of the year (ex 5th, and 10th)"
+msgstr ""
+
+msgid "Recury every x days"
+msgstr ""
+
+msgid "Recury every x hours"
+msgstr ""
+
+msgid "Recury every x months"
+msgstr ""
+
+msgid "Recury every x weeks"
+msgstr ""
+
+msgid "Redirect"
+msgstr ""
+
+msgid "Reference"
+msgstr ""
+
+msgid "Reference Currency"
+msgstr ""
+
+msgid "Reference Date"
+msgstr ""
+
+msgid "Reference categories"
+msgstr ""
+
+msgid "Reference validity"
+msgstr ""
+
+msgid "References"
+msgstr ""
+
+msgid "Referential"
+msgstr ""
+
+msgid "Region"
+msgstr "地域"
+
+msgid "Register Fabric Items"
+msgstr ""
+
+msgid "Registre du personnel"
+msgstr ""
+
+msgid "Reject"
+msgstr ""
+
+msgid "Reject Offer"
+msgstr ""
+
+msgid "Reject modification"
+msgstr ""
+
+msgid "Rejected"
+msgstr ""
+
+msgid "Rejeter"
+msgstr ""
+
+msgid "Related Agents"
+msgstr ""
+
+msgid "Related Apparel Cloth"
+msgstr ""
+
+msgid "Related Apparel Colour Range Colour Variation"
+msgstr ""
+
+msgid "Related Apparel Colour Range Variation"
+msgstr ""
+
+msgid "Related Apparel Fabrics"
+msgstr ""
+
+msgid "Related Apparel Model"
+msgstr ""
+
+msgid "Related Apparel Model Morphology Variation"
+msgstr ""
+
+msgid "Related Apparel Shape"
+msgstr ""
+
+msgid "Related Apparel Transformation"
+msgstr ""
+
+msgid "Related Apparel Transformations"
+msgstr ""
+
+msgid "Related Colour Range Colour Variation"
+msgstr ""
+
+msgid "Related Components"
+msgstr ""
+
+msgid "Related Invoice(s)"
+msgstr ""
+
+msgid "Related Objects"
+msgstr ""
+
+msgid "Related Objects Qtty"
+msgstr ""
+
+msgid "Related Payment Created"
+msgstr ""
+
+msgid "Related Persons"
+msgstr ""
+
+msgid "Related Purchase Invoice"
+msgstr ""
+
+msgid "Related Purchase Order"
+msgstr ""
+
+msgid "Related Purchase Packing List"
+msgstr ""
+
+msgid "Related Purchase Trade Condition"
+msgstr ""
+
+msgid "Related Sale Invoice Transaction"
+msgstr ""
+
+msgid "Related Sale Packing List"
+msgstr ""
+
+msgid "Related Sale Trade Condition"
+msgstr ""
+
+msgid "Related Transformation"
+msgstr ""
+
+msgid "Relation Results"
+msgstr ""
+
+msgid "Relation Unchanged."
+msgstr ""
+
+msgid "Relative URL"
+msgstr "相対URL"
+
+msgid "Relative Url"
+msgstr ""
+
+msgid "Remainder"
+msgstr ""
+
+msgid "Remember my name."
+msgstr ""
+
+msgid "Removed files"
+msgstr ""
+
+msgid "Reopen Bug"
+msgstr ""
+
+msgid "Replaced"
+msgstr ""
+
+msgid "Report"
+msgstr "報告"
+
+msgid "Report Method"
+msgstr ""
+
+msgid "Report Select:"
+msgstr ""
+
+msgid "Report Tree"
+msgstr "レポート・ツリー"
+
+msgid "Report Use Cases"
+msgstr ""
+
+msgid "Reporter"
+msgstr ""
+
+msgid "Reporting"
+msgstr ""
+
+msgid "Repositories"
+msgstr ""
+
+msgid "Request Keys"
+msgstr ""
+
+msgid "Requested by"
+msgstr ""
+
+msgid "Requirement"
+msgstr ""
+
+msgid "Requirement Count"
+msgstr ""
+
+msgid "Requirement Description"
+msgstr ""
+
+msgid "Requirement Document"
+msgstr ""
+
+msgid "Requirement Document Description"
+msgstr ""
+
+msgid "Requirement Document Fast Input"
+msgstr ""
+
+msgid "Requirement Document Title"
+msgstr ""
+
+msgid "Requirement Documents"
+msgstr ""
+
+msgid "Requirement Module"
+msgstr ""
+
+msgid "Requirement State"
+msgstr ""
+
+msgid "Requirement Title"
+msgstr ""
+
+msgid "Requirements"
+msgstr ""
+
+msgid "Requirements With Sub-Requirements"
+msgstr ""
+
+msgid "Reset Sale Oppotunity"
+msgstr ""
+
+msgid "Resolve SVN conflicted files"
+msgstr ""
+
+msgid "Resource"
+msgstr ""
+
+msgid "Resource List"
+msgstr ""
+
+msgid "Resource Portal Type"
+msgstr ""
+
+msgid "Resource Title"
+msgstr ""
+
+msgid "Resource URL"
+msgstr ""
+
+msgid "Resource Variation"
+msgstr ""
+
+msgid "Resource quantity unit"
+msgstr ""
+
+msgid "Resource_viewInstructions"
+msgstr ""
+
+msgid "Resources"
+msgstr ""
+
+msgid "Respond"
+msgstr ""
+
+msgid "Responded"
+msgstr ""
+
+msgid "Ressource Inventory"
+msgstr ""
+
+msgid "Ressource Variation"
+msgstr ""
+
+msgid "Results"
+msgstr "結果"
+
+msgid "Returned Sale Packing List"
+msgstr ""
+
+msgid "Returned Sale Packing List Cell"
+msgstr ""
+
+msgid "Returned Sale Packing List Line"
+msgstr ""
+
+msgid "Returned Sale Packing List Lines"
+msgstr ""
+
+msgid "Returned Sale Packing List Module"
+msgstr ""
+
+msgid "Returned Sale Packing Lists"
+msgstr ""
+
+msgid "Revenue Of Billiable Time"
+msgstr ""
+
+msgid "Revenue of Billiable Time"
+msgstr ""
+
+msgid "Revision"
+msgstr ""
+
+msgid "Right."
+msgstr ""
+
+msgid "Rights"
+msgstr ""
+
+msgid "Role"
+msgstr "役割"
+
+msgid "Role & Region"
+msgstr ""
+
+msgid "Role Description"
+msgstr ""
+
+msgid "Role ID"
+msgstr ""
+
+msgid "Role Title"
+msgstr ""
+
+msgid "Role Type"
+msgstr ""
+
+msgid "Role View"
+msgstr ""
+
+msgid "Role title"
+msgstr ""
+
+msgid "Roles"
+msgstr "役割"
+
+msgid "Romain Courteaud"
+msgstr ""
+
+msgid "Root Password"
+msgstr ""
+
+msgid "Route Tool"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
+msgid "Run Unit Tests"
+msgstr ""
+
+msgid "Sal Packing List Actions"
+msgstr ""
+
+msgid "Salary Coefficient"
+msgstr ""
+
+msgid "Salary Level"
+msgstr ""
+
+msgid "Salary coeff."
+msgstr ""
+
+msgid "Salary coefficient"
+msgstr ""
+
+msgid "Salary level"
+msgstr ""
+
+msgid "Sale"
+msgstr ""
+
+msgid "Sale Invoice Lines"
+msgstr ""
+
+msgid "Sale Invoice Transaction"
+msgstr ""
+
+msgid "Sale Invoice Transaction Line"
+msgstr ""
+
+msgid "Sale Invoice Transaction Lines"
+msgstr ""
+
+msgid "Sale Invoice Transaction in confirmed state"
+msgstr ""
+
+msgid "Sale Invoice Transaction in planned state"
+msgstr ""
+
+msgid "Sale Invoice Transaction related to Sale Packing List: test v2."
+msgstr ""
+
+msgid "Sale Manager"
+msgstr ""
+
+msgid "Sale Opportunities"
+msgstr "販売の機会"
+
+msgid "Sale Opportunity"
+msgstr "販売の機会"
+
+msgid "Sale Opportunity List"
+msgstr ""
+
+msgid "Sale Opportunity Module"
+msgstr ""
+
+msgid "Sale Order"
+msgstr "販売の注文"
+
+msgid "Sale Order Cell"
+msgstr ""
+
+msgid "Sale Order Line"
+msgstr ""
+
+msgid "Sale Order Lines"
+msgstr ""
+
+msgid "Sale Order List"
+msgstr ""
+
+msgid "Sale Order Module"
+msgstr ""
+
+msgid "Sale Orders"
+msgstr "販売の注文"
+
+msgid "Sale Packing List"
+msgstr "販売用梱包明細書"
+
+msgid "Sale Packing List Cell"
+msgstr ""
+
+msgid "Sale Packing List Line"
+msgstr ""
+
+msgid "Sale Packing List Lines"
+msgstr ""
+
+msgid "Sale Packing List List"
+msgstr ""
+
+msgid "Sale Packing List Module"
+msgstr ""
+
+msgid "Sale Packing List related to Sale Order: 10."
+msgstr ""
+
+msgid "Sale Packing List related to Sale Order: test jerome."
+msgstr ""
+
+msgid "Sale Packing List related to Sale Order: test v2."
+msgstr ""
+
+msgid "Sale Packing List updated."
+msgstr ""
+
+msgid "Sale Packing Lists"
+msgstr "販売用梱包明細書"
+
+msgid "Sale Price"
+msgstr ""
+
+msgid "Sale Supplies"
+msgstr ""
+
+msgid "Sale Supply"
+msgstr ""
+
+msgid "Sale Supply Cell"
+msgstr ""
+
+msgid "Sale Supply Line"
+msgstr ""
+
+msgid "Sale Supply Lines"
+msgstr ""
+
+msgid "Sale Supply Module"
+msgstr ""
+
+msgid "Sale Trade Condition"
+msgstr ""
+
+msgid "Sale Trade Condition List"
+msgstr ""
+
+msgid "Sale Trade Condition Module"
+msgstr ""
+
+msgid "Sale Trade Conditions"
+msgstr ""
+
+msgid "Sale orders not confirmed"
+msgstr ""
+
+msgid "Sale trade condition"
+msgstr ""
+
+msgid "SaleOpportunity_viewSummary"
+msgstr ""
+
+msgid "Sales Enquiries"
+msgstr ""
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Save Business Template"
+msgstr ""
+
+msgid "Saved in /home/erp5/data/erp5_core-0.0.bt5 ."
+msgstr ""
+
+msgid "Saved in /home/erp5/data/erp5_core.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/ERP5 M14 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/ERP5 Publication ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/bug_action_condition-0.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting-1.0rc3.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting-1.0rc4.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting-1.0rc5.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting_l10n_fr ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting_l10n_fr-0.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_accounting_sample_accounts-0.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_apparel ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_consulting ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_core ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_core-1.0rc2.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_core-1.0rc3.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_crm ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_forge-0.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_l10n_fr-0.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_mrp ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_payroll ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_payroll-0.1.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_pdm ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_pdm-1.0rc2.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_project ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_sample_categories-0.1.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_trade ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_trade-1.0rc13.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_trade-1.0rc14.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/erp5_trade-1.0rc9.bt5 ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/nexedi_trade ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/nexedi_vpn ."
+msgstr ""
+
+msgid "Saved in /var/lib/zope/data/test_actions ."
+msgstr ""
+
+msgid "Scenarii"
+msgstr ""
+
+msgid "Scenarii With Steps"
+msgstr ""
+
+msgid "Scenarii with Steps"
+msgstr ""
+
+msgid "Scenario Description"
+msgstr ""
+
+msgid "Scenario ID"
+msgstr ""
+
+msgid "Scenario Steps"
+msgstr ""
+
+msgid "Scenario Title"
+msgstr ""
+
+msgid "Scenario View"
+msgstr ""
+
+msgid "Scribus File"
+msgstr ""
+
+msgid "Search"
+msgstr "検索"
+
+msgid "Search Phones"
+msgstr ""
+
+msgid "Search Results"
+msgstr "検索結果"
+
+msgid "Search Select:"
+msgstr ""
+
+msgid "Search Type:"
+msgstr ""
+
+msgid "Second Network Interface"
+msgstr ""
+
+msgid "Section"
+msgstr ""
+
+msgid "Section Account"
+msgstr ""
+
+msgid "Section Bank Account"
+msgstr ""
+
+msgid "Section Category"
+msgstr ""
+
+msgid "Section Transaction Reference"
+msgstr ""
+
+msgid "Security Key"
+msgstr ""
+
+msgid "Security Management"
+msgstr ""
+
+msgid "See TALES"
+msgstr ""
+
+msgid "See Tales"
+msgstr ""
+
+msgid "Segment"
+msgstr ""
+
+msgid "Segment Module"
+msgstr ""
+
+msgid "Segmentation"
+msgstr ""
+
+msgid "Select Actions"
+msgstr ""
+
+msgid "Select Exchange"
+msgstr ""
+
+msgid "Select Favorite"
+msgstr "お気に入りを選択"
+
+msgid "Select Language"
+msgstr ""
+
+msgid "Select Module"
+msgstr "モジュールを選択"
+
+msgid "Select Variation"
+msgstr ""
+
+msgid "Select appropriate document in the list."
+msgstr ""
+
+msgid "Select language"
+msgstr ""
+
+msgid "Select module"
+msgstr ""
+
+msgid "Select your result account"
+msgstr ""
+
+msgid "Select:"
+msgstr ""
+
+msgid "Sell"
+msgstr ""
+
+msgid "Sense Method"
+msgstr ""
+
+msgid "Sent"
+msgstr ""
+
+msgid "Service"
+msgstr "サービス"
+
+msgid "Service Condition"
+msgstr ""
+
+msgid "Service List"
+msgstr ""
+
+msgid "Service Module"
+msgstr ""
+
+msgid "Services"
+msgstr "サービス"
+
+msgid "Set List Settting"
+msgstr ""
+
+msgid "Set Resolved"
+msgstr ""
+
+msgid "Set ready"
+msgstr ""
+
+msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you."
+msgstr ""
+
+msgid "Severity"
+msgstr ""
+
+msgid "Shape"
+msgstr ""
+
+msgid "Shape Type"
+msgstr ""
+
+msgid "Shape type"
+msgstr ""
+
+msgid "Shipped"
+msgstr ""
+
+msgid "Shipping Date"
+msgstr ""
+
+msgid "Shorewall Rules Extra Config"
+msgstr ""
+
+msgid "Short Title"
+msgstr ""
+
+msgid "Show All"
+msgstr "全表示"
+
+msgid "Signature"
+msgstr ""
+
+msgid "Signature Preview"
+msgstr ""
+
+msgid "Signature Thumbnail"
+msgstr ""
+
+msgid "Signature thumbnail"
+msgstr ""
+
+msgid "Simulation"
+msgstr ""
+
+msgid "Simulation Module"
+msgstr ""
+
+msgid "Simulation Movement"
+msgstr ""
+
+msgid "Simulation Select Method"
+msgstr ""
+
+msgid "Simulation State"
+msgstr ""
+
+msgid "Simulation States"
+msgstr ""
+
+msgid "Simulation Tool"
+msgstr ""
+
+msgid "Simulation state"
+msgstr ""
+
+msgid "Site"
+msgstr ""
+
+msgid "Site In Free Text"
+msgstr ""
+
+msgid "Site Properties"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Skill"
+msgstr ""
+
+msgid "Skills"
+msgstr ""
+
+msgid "Skin Folders"
+msgstr ""
+
+msgid "Skins"
+msgstr ""
+
+msgid "Social Capital"
+msgstr ""
+
+msgid "Social Capital Currency"
+msgstr ""
+
+msgid "Social Code"
+msgstr ""
+
+msgid "Social Form"
+msgstr ""
+
+msgid "Social Name"
+msgstr ""
+
+msgid "Social Organisation"
+msgstr ""
+
+msgid "Social Report"
+msgstr ""
+
+msgid "Social Service"
+msgstr ""
+
+msgid "Social capital"
+msgstr ""
+
+msgid "Social capital currency"
+msgstr ""
+
+msgid "Social code"
+msgstr ""
+
+msgid "Social form"
+msgstr ""
+
+msgid "Social organisation"
+msgstr ""
+
+msgid "Social service"
+msgstr ""
+
+msgid "Software"
+msgstr ""
+
+msgid "Software Error"
+msgstr ""
+
+msgid "Sold"
+msgstr ""
+
+msgid "Sold Price"
+msgstr ""
+
+msgid "Solve Actions"
+msgstr ""
+
+msgid "Solved"
+msgstr ""
+
+msgid "Solving"
+msgstr ""
+
+msgid "Some accounts are"
+msgstr ""
+
+msgid "Sorry to speak french...\n\nI added get_transaction().commit() in the sequence list, and nothing changed.\nAnother ID ?"
+msgstr ""
+
+msgid "Sorry your selection has changed"
+msgstr ""
+
+msgid "Sorry+your+selection+has+changed"
+msgstr ""
+
+msgid "Sorry, 1 Item Is In Use."
+msgstr ""
+
+msgid "Sorry, 14 Items Are In Use."
+msgstr ""
+
+msgid "Sorry, 2 Items Are In Use."
+msgstr ""
+
+msgid "Sorry, 3 Items Are In Use."
+msgstr ""
+
+msgid "Sorry, 4 Items Are In Use."
+msgstr ""
+
+msgid "Sorry, 5 Items Are In Use."
+msgstr ""
+
+msgid "Sorry, 6 Items Are In Use."
+msgstr ""
+
+msgid "Sorry, 8 Items Are In Use."
+msgstr ""
+
+msgid "Sorry,+1+Item+Is+In+Use."
+msgstr ""
+
+msgid "Sort"
+msgstr "整列"
+
+msgid "Sort Index"
+msgstr ""
+
+msgid "Source"
+msgstr "出発点"
+
+msgid "Source Account"
+msgstr ""
+
+msgid "Source Accounting Operation Date"
+msgstr ""
+
+msgid "Source Activity"
+msgstr ""
+
+msgid "Source Address"
+msgstr ""
+
+msgid "Source Administration"
+msgstr ""
+
+msgid "Source Budget"
+msgstr ""
+
+msgid "Source Conversion"
+msgstr ""
+
+msgid "Source Credit"
+msgstr ""
+
+msgid "Source Debit"
+msgstr ""
+
+msgid "Source Decision"
+msgstr ""
+
+msgid "Source Decision Destination"
+msgstr ""
+
+msgid "Source Function"
+msgstr ""
+
+msgid "Source Group"
+msgstr ""
+
+msgid "Source Name"
+msgstr ""
+
+msgid "Source Owner"
+msgstr ""
+
+msgid "Source Payment"
+msgstr ""
+
+msgid "Source Project"
+msgstr ""
+
+msgid "Source Ref"
+msgstr ""
+
+msgid "Source Reference"
+msgstr "出発側の参照番号"
+
+msgid "Source Section"
+msgstr ""
+
+msgid "Source Title"
+msgstr ""
+
+msgid "Source Type"
+msgstr ""
+
+msgid "Source Vault"
+msgstr ""
+
+msgid "Source administration"
+msgstr ""
+
+msgid "Source decision"
+msgstr ""
+
+msgid "Source decision destination"
+msgstr ""
+
+msgid "Source payment"
+msgstr ""
+
+msgid "Source section"
+msgstr ""
+
+msgid "Source section (disabled)"
+msgstr ""
+
+msgid "Southern Africa"
+msgstr ""
+
+msgid "Specific Customer"
+msgstr ""
+
+msgid "Specific Reference"
+msgstr ""
+
+msgid "Specific condition"
+msgstr ""
+
+msgid "Split and Defer"
+msgstr ""
+
+msgid "Split prevision"
+msgstr ""
+
+msgid "Spreadsheet Column"
+msgstr ""
+
+msgid "Spreadsheet Column To Property Mapping"
+msgstr ""
+
+msgid "Spreadsheet Name"
+msgstr ""
+
+msgid "Spreadsheet To Portal Type Mapping"
+msgstr ""
+
+msgid "Standard Price"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start Assignment"
+msgstr ""
+
+msgid "Start Career Step"
+msgstr ""
+
+msgid "Start Date"
+msgstr "開始日"
+
+msgid "Start closing"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "Start modification"
+msgstr ""
+
+msgid "Start the closing"
+msgstr ""
+
+msgid "Start the modification"
+msgstr ""
+
+msgid "Start to work on it"
+msgstr ""
+
+msgid "Started"
+msgstr ""
+
+msgid "Started Tasks"
+msgstr ""
+
+msgid "Starting"
+msgstr ""
+
+msgid "State"
+msgstr "状態"
+
+msgid "State ok"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Status changed."
+msgstr ""
+
+msgid "Status changed......"
+msgstr ""
+
+msgid "Status changed.AAA"
+msgstr ""
+
+msgid "Status+changed."
+msgstr ""
+
+msgid "Step Actor"
+msgstr ""
+
+msgid "Step Count"
+msgstr ""
+
+msgid "Step Description"
+msgstr ""
+
+msgid "Step ID"
+msgstr ""
+
+msgid "Step Number"
+msgstr ""
+
+msgid "Step Role"
+msgstr ""
+
+msgid "Step Title"
+msgstr ""
+
+msgid "Step View"
+msgstr ""
+
+msgid "Step count"
+msgstr ""
+
+msgid "Steps"
+msgstr ""
+
+msgid "Stock"
+msgstr ""
+
+msgid "Stock By Variation"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stop Assignment"
+msgstr ""
+
+msgid "Stop Career Step"
+msgstr ""
+
+msgid "Stop Date"
+msgstr "終了日"
+
+msgid "Stop date"
+msgstr ""
+
+msgid "Stopped"
+msgstr ""
+
+msgid "Stopped (Accounting)"
+msgstr ""
+
+msgid "Street Address"
+msgstr ""
+
+msgid "Sub Categories"
+msgstr ""
+
+msgid "Sub-Feature Count"
+msgstr ""
+
+msgid "Sub-Feature Description"
+msgstr ""
+
+msgid "Sub-Feature Title"
+msgstr ""
+
+msgid "Sub-Features"
+msgstr ""
+
+msgid "Sub-Requirement Count"
+msgstr ""
+
+msgid "Sub-Requirement Description"
+msgstr ""
+
+msgid "Sub-Requirement Title"
+msgstr ""
+
+msgid "Sub-Requirements"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Submit modification"
+msgstr ""
+
+msgid "Submitted Date"
+msgstr ""
+
+msgid "Subpart Group"
+msgstr ""
+
+msgid "Subversion"
+msgstr ""
+
+msgid "Subversion Working Copy List"
+msgstr ""
+
+msgid "Succeeded"
+msgstr ""
+
+msgid "Suffix"
+msgstr ""
+
+msgid "Supplemental Delay (Days)"
+msgstr ""
+
+msgid "Supplemental Delay (days)"
+msgstr ""
+
+msgid "Supplemental Payments"
+msgstr ""
+
+msgid "Supplier"
+msgstr ""
+
+msgid "Supplier Colour"
+msgstr ""
+
+msgid "Supplier Colour Reference"
+msgstr ""
+
+msgid "Supplier Currency"
+msgstr ""
+
+msgid "Supplier Price"
+msgstr ""
+
+msgid "Supplier Ref"
+msgstr ""
+
+msgid "Supplier Reference"
+msgstr ""
+
+msgid "Supplier colour"
+msgstr ""
+
+msgid "Supplier price"
+msgstr ""
+
+msgid "Supplier reference"
+msgstr ""
+
+msgid "Supplies"
+msgstr ""
+
+msgid "Supply"
+msgstr ""
+
+msgid "Supply Cell"
+msgstr ""
+
+msgid "Supply Chain"
+msgstr ""
+
+msgid "Supply Chain Module"
+msgstr ""
+
+msgid "Supply Chains"
+msgstr ""
+
+msgid "Supply Line"
+msgstr ""
+
+msgid "Supply Line_save"
+msgstr ""
+
+msgid "Supply Lines"
+msgstr ""
+
+msgid "Supply Link"
+msgstr ""
+
+msgid "Supply Links"
+msgstr ""
+
+msgid "Supply List"
+msgstr ""
+
+msgid "Supply Module"
+msgstr ""
+
+msgid "Supply Node"
+msgstr ""
+
+msgid "Supply Nodes"
+msgstr ""
+
+msgid "Support Request"
+msgstr "サポートの依頼"
+
+msgid "Support Request List"
+msgstr ""
+
+msgid "Support Request Module"
+msgstr ""
+
+msgid "Support Requests"
+msgstr "サポートの依頼"
+
+msgid "Surcharge Ratio"
+msgstr ""
+
+msgid "Surcharge Ratio Quantity Step"
+msgstr ""
+
+msgid "Surcharge Ratio Variation Axes"
+msgstr ""
+
+msgid "Surname"
+msgstr "姓"
+
+msgid "Survey Asked"
+msgstr ""
+
+msgid "Switch SVN Repository"
+msgstr ""
+
+msgid "Symbol"
+msgstr ""
+
+msgid "Synchnonization"
+msgstr ""
+
+msgid "Syndication"
+msgstr ""
+
+msgid "TVA in use"
+msgstr ""
+
+msgid "Target Budget"
+msgstr ""
+
+msgid "Target Quantity"
+msgstr ""
+
+msgid "Tariff Nomenclature"
+msgstr ""
+
+msgid "Tariff nomenclature"
+msgstr ""
+
+msgid "Task"
+msgstr ""
+
+msgid "Task Line"
+msgstr ""
+
+msgid "Task Module"
+msgstr ""
+
+msgid "Task Report"
+msgstr ""
+
+msgid "Task Report Line"
+msgstr ""
+
+msgid "Task Report Module"
+msgstr ""
+
+msgid "Task Reports"
+msgstr ""
+
+msgid "Task Title"
+msgstr ""
+
+msgid "Task Workflow"
+msgstr ""
+
+msgid "Tasks"
+msgstr ""
+
+msgid "Taux horaire ou journalier"
+msgstr ""
+
+msgid "Tax Title"
+msgstr ""
+
+msgid "Tax title"
+msgstr ""
+
+msgid "Technical Drawing"
+msgstr ""
+
+msgid "Technical Drawing Type"
+msgstr ""
+
+msgid "Technical Drawings"
+msgstr ""
+
+msgid "Technical drawing type"
+msgstr ""
+
+msgid "Telephone"
+msgstr "電話"
+
+msgid "Telephone_view"
+msgstr ""
+
+msgid "Template Tool"
+msgstr ""
+
+msgid "Template Transformation URL"
+msgstr ""
+
+msgid "Temporally Closed Accounting Period"
+msgstr ""
+
+msgid "Term"
+msgstr ""
+
+msgid "Terminate the current career step"
+msgstr ""
+
+msgid "Test Case"
+msgstr ""
+
+msgid "Test Case Actor"
+msgstr ""
+
+msgid "Test Case Module"
+msgstr ""
+
+msgid "Test Case Step"
+msgstr ""
+
+msgid "Test Case Steps"
+msgstr ""
+
+msgid "Test Cases"
+msgstr ""
+
+msgid "Test Method ID"
+msgstr ""
+
+msgid "Test Method Id"
+msgstr ""
+
+msgid "Test Report"
+msgstr ""
+
+msgid "Test Report Actor"
+msgstr ""
+
+msgid "Test Report Module"
+msgstr ""
+
+msgid "Test Report Step"
+msgstr ""
+
+msgid "Test Report Step Workflow"
+msgstr ""
+
+msgid "Test Report Workflow"
+msgstr ""
+
+msgid "Test Reports"
+msgstr ""
+
+msgid "Tested?"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "The Bank Identifier Code is a unique code that identifies individual banking and financial institution offices around the world."
+msgstr ""
+
+msgid "The EAN 13 code of this organisation"
+msgstr ""
+
+msgid "The ISO 3166 2-letters country code of the bank to include in the IBAN."
+msgstr ""
+
+msgid "The Subversion working copies"
+msgstr ""
+
+msgid "The VAT (Value Added Tax) code of this organisation"
+msgstr ""
+
+msgid "The absolute references of the document (our reference)"
+msgstr ""
+
+msgid "The activity code of this organisation"
+msgstr ""
+
+msgid "The bank account key. This is an additionnal part of the BBAN"
+msgstr ""
+
+msgid "The bank account number. This is the last part of the BBAN"
+msgstr ""
+
+msgid "The base categories to browse"
+msgstr ""
+
+msgid "The branch code holding this bank account. This is the middle part of the BBAN."
+msgstr ""
+
+msgid "The code that identify the Bank holding this bank account. It it the first part of the BBAN."
+msgstr ""
+
+msgid "The corporate registration code of this organisation"
+msgstr ""
+
+msgid "The date of the creation of this organisation"
+msgstr ""
+
+msgid "The date which ends the organisation financial year"
+msgstr ""
+
+msgid "The date which the movement starts"
+msgstr ""
+
+msgid "The date which the movement stops"
+msgstr ""
+
+msgid "The default contained object id to look up"
+msgstr ""
+
+msgid "The efficiency."
+msgstr ""
+
+msgid "The employee is required"
+msgstr ""
+
+msgid "The employee must have a career grade"
+msgstr ""
+
+msgid "The employee must have a marital status"
+msgstr ""
+
+msgid "The geographic incorporate code of this organisation, sometimes derivated from corporate code"
+msgstr ""
+
+msgid "The integer you entered was out of range."
+msgstr ""
+
+msgid "The maximal date (inclusive) for transactions"
+msgstr ""
+
+msgid "The minimal date (inclusive) for transactions"
+msgstr ""
+
+msgid "The official name of this organisation"
+msgstr ""
+
+msgid "The order of year, month and day."
+msgstr ""
+
+msgid "The portal types to browse"
+msgstr ""
+
+msgid "The preferred currency."
+msgstr ""
+
+msgid "The preferred gap."
+msgstr ""
+
+msgid "The preferred section organisation."
+msgstr ""
+
+msgid "The quantity of resource."
+msgstr ""
+
+msgid "The references of the document for default destinations"
+msgstr ""
+
+msgid "The references of the document for default sources"
+msgstr ""
+
+msgid "The resource title involved"
+msgstr ""
+
+msgid "The section category for documents; usually something like group/nexedi."
+msgstr ""
+
+msgid "The section category for transactions; usually something like group/nexedi."
+msgstr ""
+
+msgid "The simulation state for transactions"
+msgstr ""
+
+msgid "The social capital of this organisation"
+msgstr ""
+
+msgid "The social code of this organisation"
+msgstr ""
+
+msgid "The title of the destination decision of this movement"
+msgstr ""
+
+msgid "The title of the destination of this movement"
+msgstr ""
+
+msgid "The title of the destination person of this movement"
+msgstr ""
+
+msgid "The title of the destination section of this movement"
+msgstr ""
+
+msgid "The title of the source administration of this movement"
+msgstr ""
+
+msgid "The title of the source decision of this movement"
+msgstr ""
+
+msgid "The title of the source of this movement"
+msgstr ""
+
+msgid "The title of the source person of this movement"
+msgstr ""
+
+msgid "The title of the source section of this movement"
+msgstr ""
+
+msgid "The user name for Subversion"
+msgstr ""
+
+msgid "The values above are the parameters of the transaction list displayed below. Those parameters are portal-wide and can be edited in the <a href='${url}'>preference screen</a>."
+msgstr ""
+
+msgid "There is actually a problem :"
+msgstr ""
+
+msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
+msgstr "データベースにそのような文書がありません。${base_category} の関係に従って、${title} と関連した ${portal_type} 型の新しい文書を作成可能です。新規の文書の ${catalog_index} を以下のフォームを利用してください。"
+
+msgid "Third Network Interface"
+msgstr ""
+
+msgid "Third Parties"
+msgstr ""
+
+msgid "Third Party"
+msgstr ""
+
+msgid "Third Party Account"
+msgstr ""
+
+msgid "Third Party Bank Account"
+msgstr ""
+
+msgid "Third Party Transaction Reference"
+msgstr ""
+
+msgid "This bug is not tested, so you cannot close it"
+msgstr ""
+
+msgid "This come from that Folder disappears from Product.meta_types dict, so we it checks if we can pastea skin folder which have a meta_type \"Folder\", it fails.\n\nThis is due to a bug in ERPType/Utils.py near line 655\nit checks if a meta_type already exists on Products comparing on the class_id, so when add Document Folder, this checks match and the meta_type \"Folder\" is replaced by \"ERP5 Folder\".\n\nI think the check must also be done on the document.meta_type and not only the class_id, but it seems that the code is done to replace Zope object meta_type by the one of ERP5.\n\nCan Jean-Paul or Yoshinori confirm this ?"
+msgstr ""
+
+msgid "This depend of your webbrowser. It's sad to say this, but if you don't like how they behave, I think your only alternative is to change your browser... :("
+msgstr ""
+
+msgid "This field is limited to 6 characters because of float precision:\n>>> 0.0001\n0.0001\n>>> 0.00001\n1.0000000000000001e-05"
+msgstr ""
+
+msgid "This field is limited to 6 characters because of float precision: &gt;&gt;&gt; 0.0001 0.0001 &gt;&gt;&gt; 0.00001 1.0000000000000001e-05"
+msgstr ""
+
+msgid "This field must mimic the behaviour of the \"Preference\" action defined on the portal_membership tool."
+msgstr ""
+
+msgid "This is Spam"
+msgstr ""
+
+msgid "This price is not defined in tariff. Enter a value."
+msgstr ""
+
+msgid "This price is not equal to tariff price. Are you sure of your price ?"
+msgstr ""
+
+msgid "This price is not equal to tariff price. Check your price !"
+msgstr ""
+
+msgid "This size is not possible."
+msgstr ""
+
+msgid "Thumbnail"
+msgstr ""
+
+msgid "Ticket Workflow"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Tint"
+msgstr ""
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Title of the used shapes"
+msgstr ""
+
+msgid "Titles of the compatibles apparel shapes"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "To Date"
+msgstr ""
+
+msgid "To Date N-1"
+msgstr ""
+
+msgid "To do"
+msgstr ""
+
+msgid "To me the bug is not fixed. The problem is that we cannot build and export a business template in the same transaction.\r\nThere's a wiki page ( http://wiki.erp5.org/Discussion/TestingIdeas ) that present a way of build and export in the same script, exported business templates have the problem described by this bug.\r\n\r\nIs it acceptable to add a get_transaction().commit() at the beginning of BusinessTemplate.export ?"
+msgstr ""
+
+msgid "Too many documents were found."
+msgstr ""
+
+msgid "Topic"
+msgstr ""
+
+msgid "Topic Keys"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Total Closing Credit Balance"
+msgstr ""
+
+msgid "Total Closing Debit Balance"
+msgstr ""
+
+msgid "Total Expense"
+msgstr ""
+
+msgid "Total Opening Credit Balance"
+msgstr ""
+
+msgid "Total Opening Debit Balance"
+msgstr ""
+
+msgid "Total Price"
+msgstr ""
+
+msgid "Total Quantity"
+msgstr ""
+
+msgid "Total Taxable"
+msgstr ""
+
+msgid "Total price"
+msgstr ""
+
+msgid "Total quantity"
+msgstr ""
+
+msgid "Total without tax included"
+msgstr ""
+
+msgid "Toto Module"
+msgstr ""
+
+msgid "Trade Date"
+msgstr ""
+
+msgid "Trade Description"
+msgstr ""
+
+msgid "Trade condition Title"
+msgstr ""
+
+msgid "Trade condition title"
+msgstr ""
+
+msgid "Trade date"
+msgstr ""
+
+msgid "Trade description"
+msgstr ""
+
+msgid "Transaction ${transaction_path} is in invalid state (${transaction_translated_state})"
+msgstr ""
+
+msgid "Transaction /nexedi/accounting_module/341 is in invalid state (Confirmed)"
+msgstr ""
+
+msgid "Transaction Count"
+msgstr ""
+
+msgid "Transaction Reference"
+msgstr ""
+
+msgid "Transaction Simulation State"
+msgstr ""
+
+msgid "Transaction Type"
+msgstr ""
+
+msgid "Transaction simulation state"
+msgstr ""
+
+msgid "Transactions"
+msgstr "取引"
+
+msgid "Transactions Related To This Account"
+msgstr ""
+
+msgid "Transactions Related To This Bank Account"
+msgstr ""
+
+msgid "Transactions Related To This Entity"
+msgstr ""
+
+msgid "Transactions Simulation State"
+msgstr ""
+
+msgid "Transactions related to this Bank Account"
+msgstr ""
+
+msgid "Transactions related to this account"
+msgstr ""
+
+msgid "Transactions related to this entity"
+msgstr ""
+
+msgid "Transformation"
+msgstr "変換"
+
+msgid "Transformation List"
+msgstr ""
+
+msgid "Transformation Module"
+msgstr ""
+
+msgid "Transformation Operation"
+msgstr ""
+
+msgid "Transformation Operation List"
+msgstr ""
+
+msgid "Transformation Optional Resource"
+msgstr ""
+
+msgid "Transformation Rule"
+msgstr ""
+
+msgid "Transformation Sourcing Rule"
+msgstr ""
+
+msgid "Transformation State"
+msgstr ""
+
+msgid "Transformation Template"
+msgstr ""
+
+msgid "Transformation Transformed Resource"
+msgstr ""
+
+msgid "Transformation description"
+msgstr ""
+
+msgid "Transformation_view"
+msgstr ""
+
+msgid "Transformations"
+msgstr ""
+
+msgid "Transformed Resource"
+msgstr ""
+
+msgid "Transformed Resource List"
+msgstr ""
+
+msgid "Transformed Resources"
+msgstr ""
+
+msgid "TransformedResource_viewQuantity"
+msgstr ""
+
+msgid "TransformedResource_viewVariation"
+msgstr ""
+
+msgid "Translate"
+msgstr ""
+
+msgid "Translator mode"
+msgstr ""
+
+msgid "Trash Bin"
+msgstr ""
+
+msgid "Trash Bins"
+msgstr ""
+
+msgid "Trash Folder"
+msgstr ""
+
+msgid "Trash Objects"
+msgstr ""
+
+msgid "Trash Tool"
+msgstr ""
+
+msgid "Trashed"
+msgstr ""
+
+msgid "Trial Balance"
+msgstr ""
+
+msgid "Trial Balance Summary"
+msgstr ""
+
+msgid "Tutu"
+msgstr ""
+
+msgid "Type"
+msgstr "型"
+
+msgid "Type Width"
+msgstr ""
+
+msgid "Type Width (cm)"
+msgstr ""
+
+msgid "UBM"
+msgstr ""
+
+msgid "UBM / Type"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Uncheck All"
+msgstr "選択解除"
+
+msgid "Undo"
+msgstr "取り消し"
+
+msgid "Uninstall Business Template"
+msgstr ""
+
+msgid "Unit"
+msgstr "単位"
+
+msgid "Unit Price"
+msgstr ""
+
+msgid "Unit Test Classes"
+msgstr ""
+
+msgid "Unit Testing"
+msgstr ""
+
+msgid "Unit Tests"
+msgstr ""
+
+msgid "Unit tests"
+msgstr ""
+
+msgid "Unversioned Files"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Update Business Template"
+msgstr ""
+
+msgid "Update Business Template Workflows"
+msgstr ""
+
+msgid "Update Business Template from SVN"
+msgstr ""
+
+msgid "Update Matrix"
+msgstr ""
+
+msgid "Update Packing List Line"
+msgstr ""
+
+msgid "Update Relation"
+msgstr ""
+
+msgid "Update Repository Information"
+msgstr ""
+
+msgid "Update Tools"
+msgstr ""
+
+msgid "Update local copy from SVN"
+msgstr ""
+
+msgid "Update local working copy from SVN"
+msgstr ""
+
+msgid "Update quantity from container"
+msgstr ""
+
+msgid "Update variations"
+msgstr ""
+
+msgid "Updated Business Templates"
+msgstr ""
+
+msgid "Upgrade Business Templates From Repositories"
+msgstr ""
+
+msgid "Upkeep Code"
+msgstr ""
+
+msgid "Upkeep code"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Upload Business Template"
+msgstr ""
+
+msgid "Upload Module"
+msgstr ""
+
+msgid "Upload Signature"
+msgstr ""
+
+msgid "Upload signature"
+msgstr ""
+
+msgid "Url"
+msgstr ""
+
+msgid "Use Case"
+msgstr ""
+
+msgid "Use Case : Actors"
+msgstr ""
+
+msgid "Use Case : Roles"
+msgstr ""
+
+msgid "Use Case : Scenarii"
+msgstr ""
+
+msgid "Use Case Actor"
+msgstr ""
+
+msgid "Use Case Actor Fast Input"
+msgstr ""
+
+msgid "Use Case Actor(s) added."
+msgstr ""
+
+msgid "Use Case Actors"
+msgstr ""
+
+msgid "Use Case Actors Added."
+msgstr ""
+
+msgid "Use Case Count"
+msgstr ""
+
+msgid "Use Case Description"
+msgstr ""
+
+msgid "Use Case Document"
+msgstr ""
+
+msgid "Use Case Document Fast Input"
+msgstr ""
+
+msgid "Use Case Document Item"
+msgstr ""
+
+msgid "Use Case Document Item Fast Input"
+msgstr ""
+
+msgid "Use Case Document Items"
+msgstr ""
+
+msgid "Use Case Documents"
+msgstr ""
+
+msgid "Use Case Documents Items"
+msgstr ""
+
+msgid "Use Case Fast Input"
+msgstr ""
+
+msgid "Use Case ID"
+msgstr ""
+
+msgid "Use Case Items"
+msgstr ""
+
+msgid "Use Case Lexicon"
+msgstr ""
+
+msgid "Use Case Lexicon Fast Input"
+msgstr ""
+
+msgid "Use Case Lexicon Item"
+msgstr ""
+
+msgid "Use Case Lexicon Item Fast Input"
+msgstr ""
+
+msgid "Use Case Lexicon Items"
+msgstr ""
+
+msgid "Use Case Lexicons"
+msgstr ""
+
+msgid "Use Case Module"
+msgstr ""
+
+msgid "Use Case Report"
+msgstr ""
+
+msgid "Use Case Role"
+msgstr ""
+
+msgid "Use Case Role Fast Input"
+msgstr ""
+
+msgid "Use Case Role(s) added."
+msgstr ""
+
+msgid "Use Case Roles"
+msgstr ""
+
+msgid "Use Case Roles added."
+msgstr ""
+
+msgid "Use Case Scenarii"
+msgstr ""
+
+msgid "Use Case Scenarii Fast Input"
+msgstr ""
+
+msgid "Use Case Scenarii with Steps"
+msgstr ""
+
+msgid "Use Case Scenario"
+msgstr ""
+
+msgid "Use Case Scenario Fast Input"
+msgstr ""
+
+msgid "Use Case Scenario Step"
+msgstr ""
+
+msgid "Use Case Scenario Step Fast Input"
+msgstr ""
+
+msgid "Use Case Scenario Steps"
+msgstr ""
+
+msgid "Use Case Scenario(s) added."
+msgstr ""
+
+msgid "Use Case Scenarios Added."
+msgstr ""
+
+msgid "Use Case Scenarios added."
+msgstr ""
+
+msgid "Use Case Step"
+msgstr ""
+
+msgid "Use Case Title"
+msgstr ""
+
+msgid "Use Cases"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "User Interface"
+msgstr ""
+
+msgid "User Login"
+msgstr ""
+
+msgid "User Management"
+msgstr ""
+
+msgid "User Name"
+msgstr ""
+
+msgid "User Password"
+msgstr ""
+
+msgid "User Profiles Workflow"
+msgstr ""
+
+msgid "User name"
+msgstr ""
+
+msgid "Usual Name"
+msgstr "通称"
+
+msgid "Usual name"
+msgstr ""
+
+msgid "VAT"
+msgstr ""
+
+msgid "VAT Code"
+msgstr ""
+
+msgid "VAT Ratio"
+msgstr ""
+
+msgid "VAT code"
+msgstr ""
+
+msgid "VAT in use"
+msgstr ""
+
+msgid "VAT ratio"
+msgstr ""
+
+msgid "VPN"
+msgstr ""
+
+msgid "VPN Interface"
+msgstr ""
+
+msgid "VPN Type"
+msgstr ""
+
+msgid "VPN View"
+msgstr ""
+
+msgid "VPN list"
+msgstr ""
+
+msgid "Valid"
+msgstr ""
+
+msgid "Validate"
+msgstr ""
+
+msgid "Validate Installation"
+msgstr ""
+
+msgid "Validate Transaction"
+msgstr ""
+
+msgid "Validate Transactions"
+msgstr ""
+
+msgid "Validate Workflow Action"
+msgstr ""
+
+msgid "Validate modification"
+msgstr ""
+
+msgid "Validated"
+msgstr ""
+
+msgid "Validating Closing"
+msgstr ""
+
+msgid "Validating Modification"
+msgstr ""
+
+msgid "Validation"
+msgstr ""
+
+msgid "Validation Action"
+msgstr ""
+
+msgid "Validation Actor"
+msgstr ""
+
+msgid "Validation Comment"
+msgstr ""
+
+msgid "Validation State"
+msgstr "確認状態"
+
+msgid "Validation Time"
+msgstr ""
+
+msgid "Validation Workflow"
+msgstr ""
+
+msgid "Validity Start Date"
+msgstr ""
+
+msgid "Validity Stop Date"
+msgstr ""
+
+msgid "Value"
+msgstr "値"
+
+msgid "Value Predicate"
+msgstr ""
+
+msgid "Variable Additional Price"
+msgstr ""
+
+msgid "Variantes"
+msgstr ""
+
+msgid "Variated Reference"
+msgstr ""
+
+msgid "Variated Reference List"
+msgstr ""
+
+msgid "Variation"
+msgstr ""
+
+msgid "Variation Axes"
+msgstr ""
+
+msgid "Variation Base"
+msgstr ""
+
+msgid "Variation Base Categories"
+msgstr ""
+
+msgid "Variation Categories"
+msgstr ""
+
+msgid "Variation Column"
+msgstr ""
+
+msgid "Variation Line"
+msgstr ""
+
+msgid "Variation Range"
+msgstr ""
+
+msgid "Variation Tabs"
+msgstr ""
+
+msgid "Variation axes"
+msgstr ""
+
+msgid "Variation axis"
+msgstr ""
+
+msgid "Variation base categories"
+msgstr ""
+
+msgid "Variation base category"
+msgstr ""
+
+msgid "Variation categories"
+msgstr ""
+
+msgid "Variation matrix updated."
+msgstr ""
+
+msgid "Variations"
+msgstr ""
+
+msgid "Variations category"
+msgstr ""
+
+msgid "Vendor"
+msgstr "ベンダ"
+
+msgid "Vendor Account"
+msgstr "ベンダの口座"
+
+msgid "Vendor Credit"
+msgstr "ベンダの貸方"
+
+msgid "Vendor Debit"
+msgstr "ベンダの借方"
+
+msgid "Vendor Price"
+msgstr ""
+
+msgid "Vendor Transaction Reference"
+msgstr "ベンダの取引参照番号"
+
+msgid "Version"
+msgstr ""
+
+msgid "View"
+msgstr "閲覧"
+
+msgid "View Catalog"
+msgstr ""
+
+msgid "View Detail"
+msgstr ""
+
+msgid "View Details"
+msgstr ""
+
+msgid "View Diff"
+msgstr ""
+
+msgid "View Diff between revisions"
+msgstr ""
+
+msgid "View Files And Images"
+msgstr ""
+
+msgid "View Files and Images"
+msgstr ""
+
+msgid "View Portal Types"
+msgstr ""
+
+msgid "View SVN History"
+msgstr ""
+
+msgid "View SVN Repository Infos"
+msgstr ""
+
+msgid "View Trash Bins"
+msgstr ""
+
+msgid "View of a project"
+msgstr ""
+
+msgid "View of a project report"
+msgstr ""
+
+msgid "Visible Modules"
+msgstr ""
+
+msgid "Visual Pattern"
+msgstr ""
+
+msgid "WLAN Channel"
+msgstr ""
+
+msgid "WLAN Channel of 2nd Int"
+msgstr ""
+
+msgid "WLAN EssID"
+msgstr ""
+
+msgid "WLAN EssID of 2nd Int"
+msgstr ""
+
+msgid "WLAN Wep Key"
+msgstr ""
+
+msgid "WLAN Wep Key of 2nd Int"
+msgstr ""
+
+msgid "Wanted Date"
+msgstr ""
+
+msgid "Wanted Quantity"
+msgstr ""
+
+msgid "Warehouse"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "Warning: No Date"
+msgstr ""
+
+msgid "Warning: No Source --- No Date --- No Destination"
+msgstr ""
+
+msgid "We spend our evening with Alex yesterday, and we were unable to correct this bug...\nportal_skins does not allow to rename object with the meta type 'Folder'.\nThe most strange thing is that it works on a site, but not in the unit test."
+msgstr ""
+
+msgid "Web Page"
+msgstr ""
+
+msgid "Web Page Module"
+msgstr ""
+
+msgid "Web Pages"
+msgstr ""
+
+msgid "Web Password"
+msgstr ""
+
+msgid "Web Section"
+msgstr ""
+
+msgid "Web Site"
+msgstr ""
+
+msgid "Web Site Module"
+msgstr ""
+
+msgid "Web Sites"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Weight (g)"
+msgstr ""
+
+msgid "Weight (g/m2)"
+msgstr ""
+
+msgid "Welcome to ERP5"
+msgstr "ERP5へようこそ"
+
+msgid "Welcome to ERP5 <a href=\"Localizer/erp5_ui/manage_messages?regex=^Welcome to ERP5%24&amp;lang=de\" title=\"Translate ERP5 title\"><img src=\"images/translate.png\" alt=\"Translate ERP5 title\" /></a>"
+msgstr ""
+
+msgid "Welcome to ERP5 <a href=\"Localizer/erp5_ui/manage_messages?regex=^Welcome to ERP5%24&amp;lang=en\" title=\"Translate ERP5 title\"><img src=\"images/translate.png\" alt=\"Translate ERP5 title\" /></a>"
+msgstr ""
+
+msgid "Welcome to ERP5 <a href=\"Localizer/erp5_ui/manage_messages?regex=^Welcome to ERP5%24&amp;lang=fr\" title=\"Translate ERP5 title\"><img src=\"images/translate.png\" alt=\"Translate ERP5 title\" /></a>"
+msgstr ""
+
+msgid "Welcome to ERP5 <a href=\"Localizer/erp5_ui/manage_messages?regex=^Welcome to ERP5%24&amp;lang=ja\" title=\"Translate ERP5 title\"><img src=\"images/translate.png\" alt=\"Translate ERP5 title\" /></a>"
+msgstr ""
+
+msgid "Welcome. You are currently logged in."
+msgstr ""
+
+msgid "Western Africa"
+msgstr ""
+
+msgid "When this periodic event will start"
+msgstr ""
+
+msgid "When this periodic event will stop"
+msgstr ""
+
+msgid "When true, links to contextual help will be displayed."
+msgstr ""
+
+msgid "When true, links to translation system will be displayed."
+msgstr ""
+
+msgid "When true, usefull links for developpers are shown in the interface."
+msgstr ""
+
+msgid "When will be the next time when we will start the alarm"
+msgstr ""
+
+msgid "Width"
+msgstr ""
+
+msgid "Width (cm)"
+msgstr ""
+
+msgid "Wiki"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Work List"
+msgstr ""
+
+msgid "Worker"
+msgstr ""
+
+msgid "Worker ID"
+msgstr ""
+
+msgid "Worker Id"
+msgstr ""
+
+msgid "Worker Name"
+msgstr ""
+
+msgid "Worker name"
+msgstr ""
+
+msgid "Workflow Chains"
+msgstr ""
+
+msgid "Workflow Report"
+msgstr ""
+
+msgid "Workflows"
+msgstr "ワークフロー"
+
+msgid "XXX"
+msgstr ""
+
+msgid "YO Test"
+msgstr ""
+
+msgid "YO Test Module View"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Yo Test"
+msgstr ""
+
+msgid "Yo Test Module"
+msgstr ""
+
+msgid "You Don't have the permissions to edit the object."
+msgstr ""
+
+msgid "You are not allowed to add new content in this context."
+msgstr ""
+
+msgid "You are not currently logged in. Your username and or password may be incorrect. Your browser may also not be configured to accept HTTP cookies. If you need help please contact ${admin_email}."
+msgstr ""
+
+msgid "You can log in with another user name or"
+msgstr ""
+
+msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
+msgstr ""
+
+msgid "You did not enter a floating point number."
+msgstr ""
+
+msgid "You did not enter a valid date and time."
+msgstr ""
+
+msgid "You did not enter an email address."
+msgstr ""
+
+msgid "You did not enter an integer."
+msgstr ""
+
+msgid "You don't have enough permissions to access this page"
+msgstr ""
+
+msgid "You don't have the permissions to edit the object."
+msgstr ""
+
+msgid "You selected an item that was not in the list."
+msgstr ""
+
+msgid "You should update ERP5Site_CheckNamingConvention script to inform everybody when something is wrong. I also advise you to update the Naming Convention page on ERP5 Wiki."
+msgstr ""
+
+msgid "Zip Code"
+msgstr ""
+
+msgid "Zope Products"
+msgstr ""
+
+msgid "Zope Roles"
+msgstr ""
+
+msgid "['ACTUAL_URL', 'AUTHENTICATED_USER', 'AUTHENTICATION_PATH', 'AcceptCharset', 'AcceptLanguage', 'BASE1', 'BASE2', 'BASE3', 'BASE4', 'BASE5', 'GATEWAY_INTERFACE', 'HTTP_ACCEPT', 'HTTP_ACCEPT_CHARSET', 'HTTP_ACCEPT_ENCODING', 'HTTP_ACCEPT_LANGUAGE', 'HTTP_COOKIE', 'HTTP_HOST', 'HTTP_KEEP_ALIVE', 'HTTP_REFERER', 'HTTP_USER_AGENT', 'PARENTS', 'PATH_INFO', 'PATH_TRANSLATED', 'PUBLISHED', 'QUERY_STRING', 'REMOTE_ADDR', 'REQUEST_METHOD', 'RESPONSE', 'SCRIPT_NAME', 'SERVER_NAME', 'SERVER_PORT', 'SERVER_PROTOCOL', 'SERVER_SOFTWARE', 'SERVER_URL', 'SESSION', 'TraversalRequestNameStack', 'URL', 'URL1', 'URL2', 'URL3', 'URL4', 'USER_PREF_LANGUAGES', '__ac_name', '_localizer_placeful_mc_cache', '_translation_service_cache', '_ts_domain_cache', 'field_my_workflow_action', 'form_id', 'here', 'selection_index', 'selection_name', 'tree-s']"
+msgstr ""
+
+msgid "a list of template names required by this template"
+msgstr ""
+
+msgid "a string which can be used to identify a category"
+msgstr ""
+
+msgid "aaa"
+msgstr ""
+
+msgid "ac"
+msgstr ""
+
+msgid "accepted"
+msgstr ""
+
+msgid "accounting_closing_period_workflow"
+msgstr ""
+
+msgid "accounting_period_workflow"
+msgstr ""
+
+msgid "accounting_workflow"
+msgstr ""
+
+msgid "accountmodule_viewaccountlist\nAccount_zGetTotalQuantity\nAccountModule_getAccountingTransactionCount\net stat"
+msgstr ""
+
+msgid "action"
+msgstr ""
+
+msgid "actor"
+msgstr ""
+
+msgid "add related keys and sql methods"
+msgstr ""
+
+msgid "additionnal term in a number of days"
+msgstr ""
+
+msgid "ah"
+msgstr ""
+
+msgid "ahha &lt;TransitionDefinition at plan_action&gt;"
+msgstr ""
+
+msgid "alex"
+msgstr ""
+
+msgid "alex_old_Bank Account"
+msgstr ""
+
+msgid "alex_old_Credit Card"
+msgstr ""
+
+msgid "an int which can be used to sort objects in a list"
+msgstr ""
+
+msgid "analysed"
+msgstr ""
+
+msgid "another base category to get if everything else fails"
+msgstr ""
+
+msgid "apparel_cloth_workflow"
+msgstr ""
+
+msgid "apparel_model_workflow"
+msgstr ""
+
+msgid "apparel_validation_workflow"
+msgstr ""
+
+msgid "assign"
+msgstr ""
+
+msgid "assigned"
+msgstr ""
+
+msgid "assignment_workflow"
+msgstr ""
+
+msgid "auto_planned"
+msgstr ""
+
+msgid "automatically disabled when enabling ${preference_title}"
+msgstr ""
+
+msgid "automatically disabled when enabling erp5_devel"
+msgstr ""
+
+msgid "avg"
+msgstr ""
+
+msgid "bank_account_workflow"
+msgstr ""
+
+msgid "being_closed"
+msgstr ""
+
+msgid "being_modified"
+msgstr ""
+
+msgid "budget_account_module"
+msgstr ""
+
+msgid "bug_workflow"
+msgstr ""
+
+msgid "build"
+msgstr ""
+
+msgid "build_action"
+msgstr ""
+
+msgid "building"
+msgstr ""
+
+msgid "building_action"
+msgstr ""
+
+msgid "building_actor"
+msgstr ""
+
+msgid "building_comment"
+msgstr ""
+
+msgid "building_state"
+msgstr ""
+
+msgid "building_time"
+msgstr ""
+
+msgid "built"
+msgstr ""
+
+msgid "business_template_building_workflow"
+msgstr ""
+
+msgid "business_template_installation_workflow"
+msgstr ""
+
+msgid "calculating"
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "canceled"
+msgstr ""
+
+msgid "cancelled"
+msgstr ""
+
+msgid "career_workflow"
+msgstr ""
+
+msgid "cash_status"
+msgstr ""
+
+msgid "category_file_template"
+msgstr ""
+
+msgid "chris"
+msgstr ""
+
+msgid "clean"
+msgstr ""
+
+msgid "close"
+msgstr ""
+
+msgid "closed"
+msgstr ""
+
+msgid "closing"
+msgstr ""
+
+msgid "collection"
+msgstr ""
+
+msgid "comment"
+msgstr ""
+
+msgid "comments"
+msgstr ""
+
+msgid "confection_survey"
+msgstr ""
+
+msgid "confirm"
+msgstr ""
+
+msgid "confirmed"
+msgstr ""
+
+msgid "contacted"
+msgstr ""
+
+msgid "copy_of_Delivery Cell"
+msgstr ""
+
+msgid "count"
+msgstr ""
+
+msgid "current"
+msgstr ""
+
+msgid "date is not Defined"
+msgstr ""
+
+msgid "decided"
+msgstr ""
+
+msgid "decision_workflow"
+msgstr ""
+
+msgid "default_resource"
+msgstr ""
+
+msgid "defines how to group selected movements according                       to gathering rules"
+msgstr ""
+
+msgid "defines what to do with cell which share the same                       properties after being collecting."
+msgstr ""
+
+msgid "delivered"
+msgstr ""
+
+msgid "description"
+msgstr ""
+
+msgid "designed"
+msgstr ""
+
+msgid "destination_title"
+msgstr ""
+
+msgid "developed"
+msgstr ""
+
+msgid "dgfdfhggfhdfh"
+msgstr ""
+
+msgid "dialog_method"
+msgstr ""
+
+msgid "disable"
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "diverged"
+msgstr ""
+
+msgid "download"
+msgstr ""
+
+msgid "draft"
+msgstr ""
+
+msgid "dummy close without setting [x] tested to make sure it's ok"
+msgstr ""
+
+msgid "edit"
+msgstr ""
+
+msgid "edit_workflow"
+msgstr ""
+
+msgid "eee"
+msgstr ""
+
+msgid "enable"
+msgstr ""
+
+msgid "enabled"
+msgstr ""
+
+msgid "enquired"
+msgstr ""
+
+msgid "erp5_devel"
+msgstr ""
+
+msgid "erp5devel"
+msgstr ""
+
+msgid "erp5event"
+msgstr ""
+
+msgid "error_message"
+msgstr ""
+
+msgid "event_state"
+msgstr ""
+
+msgid "event_workflow"
+msgstr ""
+
+msgid "expired"
+msgstr ""
+
+msgid "fab"
+msgstr ""
+
+msgid "failed"
+msgstr ""
+
+msgid "file"
+msgstr ""
+
+msgid "fixed by this commit : http://svn.erp5.org?rev=7532&view=rev"
+msgstr ""
+
+msgid "folder"
+msgstr ""
+
+msgid "folder_contents"
+msgstr ""
+
+msgid "folder_factories"
+msgstr ""
+
+msgid "follow"
+msgstr ""
+
+msgid "forwarded"
+msgstr ""
+
+msgid "gap/fr/pcg/6/60/607/6075"
+msgstr ""
+
+msgid "geographic_address_view"
+msgstr ""
+
+msgid "go back"
+msgstr ""
+
+msgid "go back."
+msgstr ""
+
+msgid "guillaume"
+msgstr ""
+
+msgid "history"
+msgstr ""
+
+msgid "history_view"
+msgstr ""
+
+msgid "id"
+msgstr ""
+
+msgid "if a bug is tested or not"
+msgstr ""
+
+msgid "index_html"
+msgstr ""
+
+msgid "install"
+msgstr ""
+
+msgid "installed"
+msgstr ""
+
+msgid "invalidate"
+msgstr ""
+
+msgid "invalidated"
+msgstr ""
+
+msgid "invoice_causality_workflow"
+msgstr ""
+
+msgid "is the payment required on the end of month"
+msgstr ""
+
+msgid "jerome"
+msgstr ""
+
+msgid "john"
+msgstr ""
+
+msgid "join_form"
+msgstr ""
+
+msgid "jp"
+msgstr ""
+
+msgid "jump_related_sale_invoice"
+msgstr ""
+
+msgid "kevin"
+msgstr ""
+
+msgid "library name containing the lectra files"
+msgstr ""
+
+msgid "listbox"
+msgstr ""
+
+msgid "listbox_class"
+msgstr ""
+
+msgid "listbox_codification"
+msgstr ""
+
+msgid "listbox_decision_item_count"
+msgstr ""
+
+msgid "listbox_description"
+msgstr ""
+
+msgid "listbox_document_item_count"
+msgstr ""
+
+msgid "listbox_feature_count"
+msgstr ""
+
+msgid "listbox_group"
+msgstr ""
+
+msgid "listbox_group_text"
+msgstr ""
+
+msgid "listbox_location"
+msgstr ""
+
+msgid "listbox_location_text"
+msgstr ""
+
+msgid "listbox_propertysheet"
+msgstr ""
+
+msgid "listbox_role"
+msgstr ""
+
+msgid "listbox_roletype"
+msgstr ""
+
+msgid "listbox_source_debit"
+msgstr ""
+
+msgid "listbox_source_section_title"
+msgstr ""
+
+msgid "listbox_sub_feature_count"
+msgstr ""
+
+msgid "listbox_title"
+msgstr ""
+
+msgid "listbox_type"
+msgstr ""
+
+msgid "listbox_ubm"
+msgstr ""
+
+msgid "logged_in"
+msgstr ""
+
+msgid "logged_out"
+msgstr ""
+
+msgid "login_form"
+msgstr ""
+
+msgid "mail_password_form"
+msgstr ""
+
+msgid "main_template"
+msgstr ""
+
+msgid "mapped_value_property_list"
+msgstr ""
+
+msgid "matrixbox"
+msgstr ""
+
+msgid "matrixbox_membership_criterion_category_list"
+msgstr ""
+
+msgid "matrixbox_quantity"
+msgstr ""
+
+msgid "matrixbox_reference"
+msgstr ""
+
+msgid "max"
+msgstr ""
+
+msgid "members_manage_template"
+msgstr ""
+
+msgid "membership_criterion_base_category_list"
+msgstr ""
+
+msgid "metadata_view"
+msgstr ""
+
+msgid "mikael"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "missing"
+msgstr ""
+
+msgid "model_problem"
+msgstr ""
+
+msgid "model_survey"
+msgstr ""
+
+msgid "modified"
+msgstr ""
+
+msgid "my_acquisition_object_id_list"
+msgstr ""
+
+msgid "my_causality"
+msgstr ""
+
+msgid "my_description"
+msgstr ""
+
+msgid "my_destination"
+msgstr ""
+
+msgid "my_efficiency"
+msgstr ""
+
+msgid "my_entre_dans_la_composition"
+msgstr ""
+
+msgid "my_feature_group_title"
+msgstr ""
+
+msgid "my_file"
+msgstr ""
+
+msgid "my_id"
+msgstr ""
+
+msgid "my_option"
+msgstr ""
+
+msgid "my_portal_type"
+msgstr ""
+
+msgid "my_predicate_attribute"
+msgstr ""
+
+msgid "my_predicate_operator"
+msgstr ""
+
+msgid "my_predicate_value"
+msgstr ""
+
+msgid "my_predicate_value_type"
+msgstr ""
+
+msgid "my_preferred_subversion_working_copy_list"
+msgstr ""
+
+msgid "my_quantity"
+msgstr ""
+
+msgid "my_resource_url"
+msgstr ""
+
+msgid "my_source"
+msgstr ""
+
+msgid "my_source_title_list"
+msgstr ""
+
+msgid "my_start_date"
+msgstr ""
+
+msgid "my_state"
+msgstr ""
+
+msgid "my_stop_date"
+msgstr ""
+
+msgid "my_subpart_group"
+msgstr ""
+
+msgid "my_template_transformation_url"
+msgstr ""
+
+msgid "my_title"
+msgstr ""
+
+msgid "my_toto"
+msgstr ""
+
+msgid "my_whatever"
+msgstr ""
+
+msgid "name of the employee"
+msgstr ""
+
+msgid "new"
+msgstr ""
+
+msgid "nomenclature_validated"
+msgstr ""
+
+msgid "not_installed"
+msgstr ""
+
+msgid "numberLineToAdd"
+msgstr ""
+
+msgid "offered"
+msgstr ""
+
+msgid "open"
+msgstr ""
+
+msgid "openoffice_category_file_template.sxc successfully imported"
+msgstr ""
+
+msgid "opportunity_state"
+msgstr ""
+
+msgid "order"
+msgstr ""
+
+msgid "order_workflow"
+msgstr ""
+
+msgid "ordered"
+msgstr ""
+
+msgid "packed"
+msgstr ""
+
+msgid "password_form"
+msgstr ""
+
+msgid "payment term in a number of days"
+msgstr ""
+
+msgid "paysheetline_quantity_matrixbox"
+msgstr ""
+
+msgid "personalize_form"
+msgstr ""
+
+msgid "planned"
+msgstr ""
+
+msgid "portal_alarms"
+msgstr ""
+
+msgid "portal_categories"
+msgstr ""
+
+msgid "portal_deliveries"
+msgstr ""
+
+msgid "portal_domains"
+msgstr ""
+
+msgid "portal_orders"
+msgstr ""
+
+msgid "portal_preferences"
+msgstr ""
+
+msgid "portal_rules"
+msgstr ""
+
+msgid "portal_trash"
+msgstr ""
+
+msgid "portal_type_translated"
+msgstr ""
+
+msgid "posbox"
+msgstr ""
+
+msgid "preference_state"
+msgstr ""
+
+msgid "preference_workflow"
+msgstr ""
+
+msgid "price"
+msgstr ""
+
+msgid "price_survey"
+msgstr ""
+
+msgid "procedure_validated"
+msgstr ""
+
+msgid "proposed"
+msgstr ""
+
+msgid "prototype_creation"
+msgstr ""
+
+msgid "published"
+msgstr ""
+
+msgid "quantity"
+msgstr ""
+
+msgid "ready"
+msgstr ""
+
+msgid "rebuild_action"
+msgstr ""
+
+msgid "reconfig_form"
+msgstr ""
+
+msgid "region.sxc successfully imported"
+msgstr ""
+
+msgid "rejected"
+msgstr ""
+
+msgid "replaced"
+msgstr ""
+
+msgid "responded"
+msgstr ""
+
+msgid "romain"
+msgstr ""
+
+msgid "roster"
+msgstr ""
+
+msgid "sale_opportunity_workflow"
+msgstr ""
+
+msgid "save Transformation"
+msgstr ""
+
+msgid "save Transformation Module"
+msgstr ""
+
+msgid "save Transformed Resource"
+msgstr ""
+
+msgid "search"
+msgstr ""
+
+msgid "seb"
+msgstr ""
+
+msgid "simulation_state"
+msgstr ""
+
+msgid "size by default"
+msgstr ""
+
+msgid "sold"
+msgstr ""
+
+msgid "solved"
+msgstr ""
+
+msgid "solving"
+msgstr ""
+
+msgid "sqd"
+msgstr ""
+
+msgid "start date"
+msgstr ""
+
+msgid "start_date"
+msgstr ""
+
+msgid "started"
+msgstr ""
+
+msgid "state"
+msgstr ""
+
+msgid "status"
+msgstr ""
+
+msgid "stop date"
+msgstr ""
+
+msgid "stop_date"
+msgstr ""
+
+msgid "stopped"
+msgstr ""
+
+msgid "succeeded"
+msgstr ""
+
+msgid "sum"
+msgstr ""
+
+msgid "survey_asked"
+msgstr ""
+
+msgid "synPropertiesForm"
+msgstr ""
+
+msgid "syncml"
+msgstr ""
+
+msgid "target_quantity"
+msgstr ""
+
+msgid "target_start_date"
+msgstr ""
+
+msgid "telephone_view"
+msgstr ""
+
+msgid "template_erp5_xhtml_style"
+msgstr ""
+
+msgid "template_portal_type"
+msgstr ""
+
+msgid "template_title"
+msgstr ""
+
+msgid "test_kev"
+msgstr ""
+
+msgid "the method used to check things"
+msgstr ""
+
+msgid "the method used to display information"
+msgstr ""
+
+msgid "the method used to know if there is a problem"
+msgstr ""
+
+msgid "thomas"
+msgstr ""
+
+msgid "time"
+msgstr ""
+
+msgid "title"
+msgstr "タイトル"
+
+msgid "title (download)"
+msgstr ""
+
+msgid "todo"
+msgstr ""
+
+msgid "total_price"
+msgstr ""
+
+msgid "transaction_list"
+msgstr ""
+
+msgid "transformation_view"
+msgstr ""
+
+msgid "transformed_resource_quantity_view"
+msgstr ""
+
+msgid "transformed_resource_variation_view"
+msgstr ""
+
+msgid "translated_validation_state_title"
+msgstr ""
+
+msgid "trashed"
+msgstr ""
+
+msgid "unable to deliver ${transaction_path} : ${error_message}"
+msgstr ""
+
+msgid "undo_form"
+msgstr ""
+
+msgid "unpack list of wrong size"
+msgstr ""
+
+msgid "valid"
+msgstr ""
+
+msgid "validate"
+msgstr ""
+
+msgid "validated"
+msgstr ""
+
+msgid "validating_closing"
+msgstr ""
+
+msgid "validating_modification"
+msgstr ""
+
+msgid "validation_action"
+msgstr ""
+
+msgid "validation_actor"
+msgstr ""
+
+msgid "validation_comment"
+msgstr ""
+
+msgid "validation_state"
+msgstr ""
+
+msgid "validation_time"
+msgstr ""
+
+msgid "validation_workflow"
+msgstr ""
+
+msgid "variation_text"
+msgstr ""
+
+msgid "view_master"
+msgstr ""
+
+msgid "vincent"
+msgstr ""
+
+msgid "yo"
+msgstr ""
+
+msgid "zope"
+msgstr ""
