@@ -73,6 +73,8 @@
 from Products.Formulator.Errors import FormValidationError\n
 \n
 request=context.REQUEST\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 \n
 # Prevent users who don\'t have rights to edit the object from\n
 # editing it by calling the Base_edit script with correct \n
@@ -240,7 +242,7 @@ context.edit(REQUEST=request,**kw)\n
 for encapsulated_editor in encapsulated_editor_list:\n
   encapsulated_editor.edit(context)\n
 else:\n
-  message = context.getPortalObject().Base_translateString("Data+Updated.")\n
+  message = N_("Data+Updated.")\n
   if not(ignore_layout) and context.getApplicableLayout() :\n
     redirect_url = \'%s/%s?editable_mode=1\' % (context.REQUEST.URL1, form_id)\n
   elif not selection_index:\n
@@ -314,6 +316,8 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>redirect_url</string>
                             <string>_getitem_</string>
                             <string>None</string>
