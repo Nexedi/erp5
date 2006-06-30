@@ -1778,7 +1778,11 @@ class ListBoxRendererLine:
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          if obj is not None:
+          brain = self.getBrain()
+          if hasattr(aq_self(brain), alias):
+            original_value = getattr(brain, alias)
+            processed_value = original_value
+          elif obj is not None:
             try:
               # Get the trailing part.
               try:
