@@ -40,19 +40,52 @@ from Products.ERP5 import _dtmldir
 
 from zLOG import LOG
 
-class TestTool (BaseTool):
-  """
-    Container for fonctionnal tests.
-  """
-  id = 'portal_tests'
-  meta_type = 'ERP5 Test Tool'
-  portal_type = 'Test Tool'
-  allowed_types = ('Zuite', )
+try:
+  from Products.Zelenium.zuite import Zuite
 
-  # Declarative Security
-  security = ClassSecurityInfo()
+  class TestTool (Zuite, BaseTool):
+    """
+      Container for fonctionnal tests.
+    """
+    id = 'portal_tests'
+    meta_type = 'ERP5 Test Tool'
+    portal_type = 'Test Tool'
+    allowed_types = ('Zuite', )
 
-  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
+    # Declarative Security
+    security = ClassSecurityInfo()
+
+    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+    manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
+
+    # Override this method to force Zuite objects are recursed.
+    def _recurseListTestCases( self, result, prefix, ob ):
+        for tcid, test_case in ob.objectItems():
+            if isinstance( test_case, Zuite ):
+                result.extend( test_case.listTestCases(
+                                        prefix=prefix + ( tcid, ) ) )
+
+    # Override this method to produce ERP5-style reports.
+    security.declarePublic('postResults')
+    def postResults(self, REQUEST):
+        """ Record the results of a test run.
+        """
+        return self.TestTool_reportResult(REQUEST)
+
+except ImportError:
+  class TestTool (BaseTool):
+    """
+      This is not functional. You must install Zelenium.
+    """
+    id = 'portal_tests'
+    meta_type = 'ERP5 Test Tool'
+    portal_type = 'Test Tool'
+    allowed_types = ('Zuite', )
+
+    # Declarative Security
+    security = ClassSecurityInfo()
+
+    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+    manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
 
 InitializeClass(TestTool)

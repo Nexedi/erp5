@@ -8,4 +8,8 @@ The purpose of this tool is to help running test suites automatically.
 Typically, Zelenium is used, and Zuite objects are put inside this tool.
 </p>
 
+<p>
+You need to install Zelenium and restart Zope to use this tool.
+</p>
+
 <dtml-var manage_page_footer>
