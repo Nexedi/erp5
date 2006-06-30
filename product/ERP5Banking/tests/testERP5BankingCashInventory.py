@@ -180,6 +180,26 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_inventory.getDestination(), 'site/testsite/paris')
 
 
+  def stepCreateCashInventoryGroup2(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create a second cash inventory document and check it
+    """
+    # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
+    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group_2', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris)
+    # execute tic
+    self.stepTic()
+    # check we have only one cash inventory
+    self.assertEqual(len(self.cash_inventory_module.objectValues()), 2)
+    # get the cash inventory document
+    self.cash_inventory = getattr(self.cash_inventory_module, 'cash_inventory_group_2')
+    # check its portal type
+    self.assertEqual(self.cash_inventory.getPortalType(), 'Cash Inventory Group')
+    # check that its source is caisse_1
+    self.assertEqual(self.cash_inventory.getSource(), None)
+    # check that its destination is caisse_2
+    self.assertEqual(self.cash_inventory.getDestination(), 'site/testsite/paris')
+
+
   def stepCreateCashInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash inventory document and check it
@@ -422,7 +442,13 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateInventoryLine1 CheckSubTotal1 ' \
                     + 'CreateInventoryLine2 CheckSubTotal2 ' \
                     + 'CreateInventoryLine3 CheckTotal ' \
+                    + 'DeliverInventory Tic CheckInventory ' \
+                    + 'CreateCashInventoryGroup2 CreateCashInventory ' \
+                    + 'CreateInventoryLine1 CheckSubTotal1 ' \
+                    + 'CreateInventoryLine2 CheckSubTotal2 ' \
+                    + 'CreateInventoryLine3 CheckTotal ' \
                     + 'DeliverInventory Tic CheckInventory'
+
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
