@@ -70,190 +70,26 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.Formulator.Errors import ValidationError, FormValidationError\n
-portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+from Products.Formulator.Errors import FormValidationError\n
+\n
 request=context.REQUEST\n
 \n
-#### Workaround for bug #21\n
+# Prevent users who don\'t have rights to edit the object from\n
+# editing it by calling the Base_edit script with correct \n
+# parameters directly.\n
 if not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', context) :\n
-  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( context.absolute_url()\n
-     , form_id, selection_index, selection_name, \'portal_status_message=You+don\\\'t+have+the+permissions+to+edit+the+object.\')\n
-  request[ \'RESPONSE\' ].redirect( redirect_url )\n
-  return\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % (context.absolute_url(), form_id, selection_index, selection_name, \'portal_status_message=You+don\\\'t+have+the+permissions+to+edit+the+object.\')\n
+  return request[\'RESPONSE\'].redirect(redirect_url)\n
 \n
-MARKER = []\n
+# Define form\n
+if dialog_id==\'\' or dialog_id is None:\n
+  form = getattr(context,form_id)\n
+else:\n
+  form = getattr(context,dialog_id)\n
 \n
 try:\n
-  # Define form basic fields\n
-  if dialog_id==\'\' or dialog_id is None:\n
-    form = getattr(context,form_id)\n
-  else:\n
-    form = getattr(context,dialog_id)\n
   # Validate\n
   form.validate_all_to_request(request)\n
-  # Basic attributes\n
-  kw = {}\n
-  encapsulated_editor_list = []\n
-  # Parse attributes\n
-  for f in form.get_fields():\n
-    k = f.id\n
-    v = getattr(request, k, MARKER)\n
-    if hasattr(v, \'edit\'):\n
-      # This is an encapsulated editor\n
-      # call it\n
-      encapsulated_editor_list.append(v)\n
-#       v.edit(context)\n
-      pass\n
-    elif v is not MARKER:\n
-      if k[0:3] == \'my_\':\n
-        # We only take into account\n
-        # the object attributes\n
-        k = k[3:]\n
-        # XXXX The formulate is badly designed, no value should be None.\n
-        if v == \'\':\n
-          v = None\n
-        kw[k] = v\n
-\n
-  # Update matrix attributes\n
-  # It is possible to display multiples matrixbox on the same form,\n
-  # if they are named matrixbox, matrixbox1, matrixbox2, ...\n
-#   matrixbox = request.get(\'matrixbox\')\n
-  matrixbox_field_id = \'matrixbox\'\n
-  matrixbox_number = 0\n
-  matrixbox = request.get(matrixbox_field_id)\n
-#   if matrixbox is not None:\n
-  while matrixbox is not None:\n
-    matrixbox_field = form.get_field(matrixbox_field_id)\n
-    cell_base_id = matrixbox_field.get_value(\'cell_base_id\')\n
-    portal_type = matrixbox_field.get_value(\'cell_portal_type\')\n
-    getter_method = matrixbox_field.get_value(\'getter_method\')\n
-    if getter_method not in (None,\'\'):\n
-      matrix_context = getattr(context,getter_method)()\n
-    else:\n
-      matrix_context = context\n
-      \n
-    if matrix_context is not None:\n
-      kd = {}\n
-      kd[\'portal_type\'] = portal_type\n
-      kd[\'base_id\'] = cell_base_id\n
-      gv = {}\n
-      if matrixbox_field.has_value(\'global_attributes\'):\n
-        hidden_attributes = map(lambda x:x[0], matrixbox_field.get_value(\'global_attributes\'))\n
-        for k in hidden_attributes:\n
-          gv[k] = getattr(request, k,None)\n
-\n
-\n
-      if matrixbox_field.get_value(\'update_cell_range\'):\n
-        # Update cell range each time it is modified\n
-        lines = matrixbox_field.get_value(\'lines\')\n
-        columns = matrixbox_field.get_value(\'columns\')\n
-        tabs = matrixbox_field.get_value(\'tabs\')\n
-\n
-        column_ids = map(lambda x: x[0], columns)\n
-        line_ids = map(lambda x: x[0], lines)\n
-        tab_ids = map(lambda x: x[0], tabs)\n
-\n
-        # There are 3 cases\n
-        # Case 1: we do 1 dimensional matrices\n
-        # Case 2: we do 2 dimensional matrices\n
-        # Case 3: we do 2 dimensinal matrices + tabs\n
-\n
-        cell_range = matrix_context.getCellRange(base_id = cell_base_id)\n
-\n
-        if (len(column_ids) == 0) or (column_ids[0] == None):\n
-          matrixbox_cell_range = [line_ids]\n
-          if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, base_id=cell_base_id)\n
-\n
-        elif (len(tab_ids) == 0) or (tab_ids[0] == None):\n
-          matrixbox_cell_range = [line_ids, column_ids]\n
-          if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, column_ids, base_id=cell_base_id)\n
-\n
-        else:\n
-          matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
-          if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, column_ids, tab_ids, base_id=cell_base_id)\n
-\n
-\n
-      for k,v in matrixbox.items():\n
-          # Only update cells which still exist\n
-          if matrix_context.hasInRange(*k, **kd):\n
-            c = matrix_context.newCell(*k, **kd)\n
-            if c is not None:\n
-              c.edit(**gv)  # First update globals which include the def. of property_list\n
-              if v.has_key(\'variated_property\'):\n
-                # For Variated Properties\n
-                value = v[\'variated_property\']\n
-                del v[\'variated_property\']\n
-                if gv.has_key(\'mapped_value_property_list\'):\n
-                  # Change the property which is defined by the\n
-                  # first element of mapped_value_property_list\n
-                  # XXX May require some changes with Sets\n
-                  key = gv[\'mapped_value_property_list\'][0]\n
-                  v[key] = value\n
-              c.edit(**v) # and update the cell specific values\n
-            else:\n
-              return "Could not create cell %s" % str(k)\n
-          else:\n
-            return "Cell %s does not exist" % str(k)\n
-\n
-    matrixbox_number += 1\n
-    matrixbox_field_id = \'matrixbox%s\' % matrixbox_number\n
-    matrixbox = request.get(matrixbox_field_id)\n
-\n
-  # Update listbox attributes\n
-  list_block_error=[]\n
-  planning_box = request.get(\'planning_box\')\n
-  listbox = request.get(\'listbox\')\n
-  request_selection_name = request.get(\'selection_name\')\n
-\n
-  # XXX XXX XXX don t remove. It prevent to delete listbox object property after a selection for a RelationField...\n
-  # must really improve !!!\n
-  #if listbox is not None and request_selection_name==selection_name:\n
-  if listbox is not None:\n
-    listbox_field = form.get_field(\'listbox\')\n
-    gv = {}\n
-    if listbox_field.has_value(\'global_attributes\'):\n
-      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
-      for k in hidden_attributes:\n
-        gv[k] = getattr(request, k,None)\n
-    for url, v in listbox.items():\n
-      o = context.restrictedTraverse(url)\n
-      v.update(gv)\n
-      o.edit(**v)\n
-      # This below was disabled by yo. Do not use flushActivity. It is forbidden.\n
-      # If you want to reactivate this, ask yo before doing.\n
-      #o.flushActivity(method_id="immediateReindexObject",\n
-      #                   invoke = 1) # This is required if we wish to provide immediate display\n
-      #o.flushActivity(method_id="recursiveImmediateReindexObject",\n
-      #                         invoke = 1) # Requires if we want to display indexed subobject data... but long\n
-      # However it seems it reindexed many many times... XXX\n
-      # Maybe we should build a list of objects we need\n
-\n
-  if planning_box is not None:\n
-    planning_box_field = form.get_field(\'planning_box\')\n
-    gv = {}\n
-\n
-    for url, v in planning_box.items():\n
-      o = context.restrictedTraverse(url)\n
-      v.update(gv)\n
-      o.edit(**v)\n
-      # This below was disabled by yo. Do not use flushActivity. It is forbidden.\n
-      # If you want to reactivate this, ask yo before doing.\n
-      #o.flushActivity(method_id="immediateReindexObject",\n
-      #                   invoke = 1) # This is required if we wish to provide immediate display\n
-      #o.flushActivity(method_id="recursiveImmediateReindexObject",\n
-      #                         invoke = 1) # Requires if we want to display indexed subobject data... but long\n
-      # However it seems it reindexed many many times... XXX\n
-    \n
-  # Maybe we should build a list of objects we need\n
-  # Update basic attributes\n
-  context.edit(REQUEST=request,**kw)\n
-  for encapsulated_editor in encapsulated_editor_list:\n
-    encapsulated_editor.edit(context)\n
-\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
@@ -267,28 +103,159 @@ except FormValidationError, validation_errors:\n
         value(request)\n
   return form(request)\n
 \n
+def editListBox(listbox_field, listbox):\n
+  """ Function called to edit a listbox\n
+  """\n
+  if listbox is not None:\n
+    gv = {}\n
+    if listbox_field.has_value(\'global_attributes\'):\n
+      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
+      for k in hidden_attributes:\n
+        gv[k] = getattr(request, k, None)\n
+    for url, v in listbox.items():\n
+      v.update(gv)\n
+      context.restrictedTraverse(url).edit(**v)\n
+\n
+def editPlanningBox(planning_box):\n
+  """ Function called to edit a planning box\n
+  """\n
+  if planning_box is not None:\n
+    for url, v in planning_box.items():\n
+      context.restrictedTraverse(url).edit(**v)\n
+\n
+def editMatrixBox(matrixbox_field, matrixbox):\n
+  """ Function called to edit a Matrix box\n
+  """\n
+  if matrixbox is not None:\n
+    cell_base_id = matrixbox_field.get_value(\'cell_base_id\')\n
+    portal_type = matrixbox_field.get_value(\'cell_portal_type\')\n
+    getter_method = matrixbox_field.get_value(\'getter_method\')\n
+    if getter_method not in (None, \'\'):\n
+      matrix_context = getattr(context,getter_method)()\n
+    else:\n
+      matrix_context = context\n
+    if matrix_context is not None:\n
+      kd = {}\n
+      kd[\'portal_type\'] = portal_type\n
+      kd[\'base_id\'] = cell_base_id\n
+      gv = {}\n
+      if matrixbox_field.has_value(\'global_attributes\'):\n
+        hidden_attributes = map(lambda x:x[0], matrixbox_field.get_value(\'global_attributes\'))\n
+        for k in hidden_attributes:\n
+          gv[k] = getattr(request, k, None)\n
+      if matrixbox_field.get_value(\'update_cell_range\'):\n
+        # Update cell range each time it is modified\n
+        lines = matrixbox_field.get_value(\'lines\')\n
+        columns = matrixbox_field.get_value(\'columns\')\n
+        tabs = matrixbox_field.get_value(\'tabs\')\n
+  \n
+        column_ids = map(lambda x: x[0], columns)\n
+        line_ids = map(lambda x: x[0], lines)\n
+        tab_ids = map(lambda x: x[0], tabs)\n
+  \n
+        # There are 3 cases\n
+        # Case 1: we do 1 dimensional matrix\n
+        # Case 2: we do 2 dimensional matrix\n
+        # Case 3: we do 2 dimensional matrix + tabs\n
+        cell_range = matrix_context.getCellRange(base_id = cell_base_id)\n
+        if (len(column_ids) == 0) or (column_ids[0] is None):\n
+          matrixbox_cell_range = [line_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, base_id=cell_base_id)\n
+  \n
+        elif (len(tab_ids) == 0) or (tab_ids[0] is None):\n
+          matrixbox_cell_range = [line_ids, column_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, column_ids, base_id=cell_base_id)\n
+  \n
+        else:\n
+          matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, column_ids, tab_ids, base_id=cell_base_id)\n
+        \n
+        for k,v in matrixbox.items():\n
+            # Only update cells which still exist\n
+            if matrix_context.hasInRange(*k, **kd):\n
+              c = matrix_context.newCell(*k, **kd)\n
+              if c is not None:\n
+                c.edit(**gv)  # First update globals which include the def. of property_list\n
+                if v.has_key(\'variated_property\'):\n
+                  # For Variated Properties\n
+                  value = v[\'variated_property\']\n
+                  del v[\'variated_property\']\n
+                  if gv.has_key(\'mapped_value_property_list\'):\n
+                    # Change the property which is defined by the\n
+                    # first element of mapped_value_property_list\n
+                    # XXX May require some changes with Sets\n
+                    key = gv[\'mapped_value_property_list\'][0]\n
+                    v[key] = value\n
+                c.edit(**v) # and update the cell specific values\n
+              else:\n
+                return "Could not create cell %s" % str(k)\n
+            else:\n
+              return "Cell %s does not exist" % str(k)\n
+\n
+def parseField(f):\n
+  """\n
+   Parse given form field, to put them in\n
+   kw or in encapsulated_editor_list\n
+  """\n
+  k = f.id\n
+  v = getattr(request, k, MARKER)\n
+  if hasattr(v, \'edit\'):\n
+    # This is an encapsulated editor\n
+    # call it\n
+    encapsulated_editor_list.append(v)\n
+    context.log(\'parseField\', k)\n
+  elif v is not MARKER:\n
+    if k.startswith(\'my_\'):\n
+      # We only take into account\n
+      # the object attributes\n
+      k = k[3:]\n
+      # Form: \'\' -> ERP5: None\n
+      if v == \'\':\n
+        v = None\n
+      kw[k] = v\n
+\n
+# Some initilizations\n
+kw = {}\n
+encapsulated_editor_list = []\n
+MARKER = []\n
+\n
+# We process all the field in form and\n
+# we check if they are in the request,\n
+# then we edit them\n
+for field in form.get_fields():\n
+  parseField(field)\n
+  if(field.meta_type == \'ListBox\'):\n
+    editListBox(field, request.get(field.id))\n
+  elif(field.meta_type == \'MatrixBox\'):\n
+    editMatrixBox(field, request.get(field.id))\n
+  elif(field.meta_type == \'PlanningBox\'):\n
+    editPlanningBox(request.get(field.id))\n
+\n
+# Maybe we should build a list of objects we need\n
+# Update basic attributes\n
+context.edit(REQUEST=request,**kw)\n
+for encapsulated_editor in encapsulated_editor_list:\n
+  encapsulated_editor.edit(context)\n
 else:\n
-  message = N_("Data+Updated.")\n
+  message = context.getPortalObject().Base_translateString("Data+Updated.")\n
   if not(ignore_layout) and context.getApplicableLayout() :\n
     redirect_url = \'%s/%s?editable_mode=1\' % (context.REQUEST.URL1, form_id)\n
   elif not selection_index:\n
-    redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
-                              , form_id\n
-                              , message\n
-                              )\n
+    redirect_url = \'%s/%s?portal_status_message=%s\' % (context.absolute_url(),\n
+                                                       dialog_id,\n
+                                                       message)\n
   else:\n
-    redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % ( \n
-                                context.absolute_url()\n
-                              , form_id\n
-                              , selection_index\n
-                              , selection_name\n
-                              , message\n
-                              )\n
+    redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % (\n
+                                context.absolute_url(),\n
+                                dialog_id,\n
+                                selection_index,\n
+                                selection_name,\n
+                                message)\n
 \n
-\n
-\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
-# vim: syntax=python\n
+return request[\'RESPONSE\'].redirect(redirect_url)\n
 
 
 ]]></string> </value>
@@ -307,7 +274,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_edit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_core/Base_edit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -343,66 +310,32 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>dialog_id</string>
                             <string>ignore_layout</string>
                             <string>Products.Formulator.Errors</string>
-                            <string>ValidationError</string>
                             <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>N_</string>
                             <string>request</string>
                             <string>redirect_url</string>
                             <string>_getitem_</string>
-                            <string>MARKER</string>
                             <string>None</string>
                             <string>getattr</string>
                             <string>form</string>
-                            <string>kw</string>
-                            <string>encapsulated_editor_list</string>
-                            <string>_getiter_</string>
-                            <string>f</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>hasattr</string>
-                            <string>_write_</string>
-                            <string>matrixbox_field_id</string>
-                            <string>matrixbox_number</string>
-                            <string>matrixbox</string>
-                            <string>matrixbox_field</string>
-                            <string>cell_base_id</string>
-                            <string>portal_type</string>
-                            <string>getter_method</string>
-                            <string>matrix_context</string>
-                            <string>kd</string>
-                            <string>gv</string>
-                            <string>map</string>
-                            <string>hidden_attributes</string>
-                            <string>lines</string>
-                            <string>columns</string>
-                            <string>tabs</string>
-                            <string>column_ids</string>
-                            <string>line_ids</string>
-                            <string>tab_ids</string>
-                            <string>cell_range</string>
-                            <string>len</string>
-                            <string>matrixbox_cell_range</string>
-                            <string>_apply_</string>
-                            <string>c</string>
-                            <string>value</string>
-                            <string>key</string>
-                            <string>str</string>
-                            <string>list_block_error</string>
-                            <string>planning_box</string>
-                            <string>listbox</string>
-                            <string>request_selection_name</string>
-                            <string>listbox_field</string>
-                            <string>url</string>
-                            <string>o</string>
-                            <string>planning_box_field</string>
-                            <string>encapsulated_editor</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
                             <string>field_id</string>
+                            <string>value</string>
                             <string>callable</string>
+                            <string>editListBox</string>
+                            <string>editPlanningBox</string>
+                            <string>editMatrixBox</string>
+                            <string>MARKER</string>
+                            <string>kw</string>
+                            <string>encapsulated_editor_list</string>
+                            <string>parseField</string>
+                            <string>field</string>
+                            <string>_apply_</string>
+                            <string>encapsulated_editor</string>
                             <string>message</string>
                           </tuple>
                         </value>
