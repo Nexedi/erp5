@@ -65,7 +65,7 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string>       Bug means a bug report, a feature request or an issue.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

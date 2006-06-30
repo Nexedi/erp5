@@ -90,7 +90,9 @@ return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()\
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnInfo</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
