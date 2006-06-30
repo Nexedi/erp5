@@ -432,10 +432,10 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # calendar mode. for that will need to add special informations about the
     # group itself to know its own bounds.
     delta_start = block_moved['secondary_axis_position'] / \
-                  planning_coordinates['frame']['content'][axis_length]
+                  planning_coordinates['frame']['planning_content'][axis_length]
     delta_stop  = (block_moved['secondary_axis_position'] + \
                   block_moved['secondary_axis_length']) / \
-                  planning_coordinates['frame']['content'][axis_length]
+                  planning_coordinates['frame']['planning_content'][axis_length]
 
     # testing different cases of invalidation
     if delta_stop < 0 or delta_start > 1 :
