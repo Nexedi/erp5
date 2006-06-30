@@ -93,7 +93,9 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_exportAll</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,7 +125,7 @@ return printed\n
                             <string>_print</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>folder</string>
                           </tuple>
                         </value>

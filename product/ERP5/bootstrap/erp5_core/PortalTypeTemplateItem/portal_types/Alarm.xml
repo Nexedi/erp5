@@ -74,7 +74,7 @@
     It should also provide a solution if something wrong happens.\n
 \n
     Some information should be displayed to the user, and also notifications.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -242,16 +242,16 @@
                           <string>None</string>
                         </tuple>
                         <tuple>
-<string>title</string>
+                          <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>Id</string>
-<string>id</string>
+                          <string>id</string>
                         </tuple>
                         <tuple>
-<string>description</string>
-<string>description</string>
+                          <string>description</string>
+                          <string>description</string>
                         </tuple>
                       </list>
                     </value>

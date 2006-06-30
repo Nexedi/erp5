@@ -56,8 +56,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>count</string>
-<string>instance_id</string>
+                            <string>count</string>
+                            <string>instance_id</string>
                           </list>
                         </value>
                     </item>

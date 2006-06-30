@@ -129,21 +129,21 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isMovement</string>
-<string>uid</string>
-<string>getExplanationUid</string>
-<string>getSourceUid</string>
-<string>getDestinationUid</string>
-<string>getResourceUid</string>
-<string>getInventoriatedQuantity</string>
-<string>getStartDate</string>
-<string>getStopDate</string>
-<string>getPrice</string>
-<string>isAccountable</string>
-<string>isOrderable</string>
-<string>isDeliverable</string>
-<string>isDivergent</string>
-<string>getVariationText</string>
+                            <string>isMovement</string>
+                            <string>uid</string>
+                            <string>getExplanationUid</string>
+                            <string>getSourceUid</string>
+                            <string>getDestinationUid</string>
+                            <string>getResourceUid</string>
+                            <string>getInventoriatedQuantity</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>getPrice</string>
+                            <string>isAccountable</string>
+                            <string>isOrderable</string>
+                            <string>isDeliverable</string>
+                            <string>isDivergent</string>
+                            <string>getVariationText</string>
                           </list>
                         </value>
                     </item>

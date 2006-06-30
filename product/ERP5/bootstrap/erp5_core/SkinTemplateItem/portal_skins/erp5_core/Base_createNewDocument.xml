@@ -99,7 +99,9 @@ return REQUEST.RESPONSE\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_createNewDocument</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,7 +128,7 @@ return REQUEST.RESPONSE\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>REQUEST</string>
                             <string>parent</string>
                             <string>new_id</string>

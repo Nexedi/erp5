@@ -113,7 +113,9 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Person_view
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Career_shiftDefault</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -149,7 +151,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Person_view
                             <string>new_start_date</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>object</string>
                             <string>str</string>
                             <string>new_id</string>

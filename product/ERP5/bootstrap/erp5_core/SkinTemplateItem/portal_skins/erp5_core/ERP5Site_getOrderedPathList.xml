@@ -85,7 +85,9 @@ return \'\\n\'.join(path_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Site_getOrderedPathList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -119,7 +121,7 @@ return \'\\n\'.join(path_list)\n
                             <string>path_list</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>folder</string>
                             <string>path</string>
                             <string>id</string>
@@ -138,7 +140,7 @@ return \'\\n\'.join(path_list)\n
             </value>
         </item>
         <item>
-            <key>                             <string>id</string> </key>
+            <key> <string>id</string> </key>
             <value> <string>ERP5Site_getOrderedPathList</string> </value>
         </item>
         <item>

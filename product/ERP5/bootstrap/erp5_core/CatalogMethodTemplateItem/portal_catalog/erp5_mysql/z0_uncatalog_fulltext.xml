@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
+                            <string>uid</string>
                           </list>
                         </value>
                     </item>
@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_sql_deferred_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

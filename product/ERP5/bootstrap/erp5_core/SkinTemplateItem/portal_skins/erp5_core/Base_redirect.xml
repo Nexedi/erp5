@@ -93,7 +93,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_redirect</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -125,7 +127,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                           <tuple>
                             <string>relative_url</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>None</string>
                             <string>redirect_url</string>

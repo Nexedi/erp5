@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>security_uid</string>
-<string>optimised_roles_and_users</string>
+                            <string>security_uid</string>
+                            <string>optimised_roles_and_users</string>
                           </list>
                         </value>
                     </item>

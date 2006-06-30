@@ -82,7 +82,9 @@ return context.portal_templates.save(context, REQUEST=REQUEST)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/BusinessTemplate_save</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

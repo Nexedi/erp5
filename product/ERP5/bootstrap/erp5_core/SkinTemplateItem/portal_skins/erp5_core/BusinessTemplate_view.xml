@@ -80,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>my_template_path_list</string>
@@ -88,7 +88,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center_left</string> </key>
+                    <key> <string>center_left</string> </key>
                     <value>
                       <list>
                         <string>my_template_module_id_list</string>
@@ -97,7 +97,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center_right</string> </key>
+                    <key> <string>center_right</string> </key>
                     <value>
                       <list>
                         <string>my_template_skin_id_list</string>

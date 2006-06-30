@@ -228,7 +228,9 @@ return ("%d problems found :\\n\\n" % len(message_list)) + \'\\n\'.join(message_
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Site_checkNamingConventions</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

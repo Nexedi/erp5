@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>getAcquiredCategoryList</string>
+                            <string>uid</string>
+                            <string>getAcquiredCategoryList</string>
                           </list>
                         </value>
                     </item>

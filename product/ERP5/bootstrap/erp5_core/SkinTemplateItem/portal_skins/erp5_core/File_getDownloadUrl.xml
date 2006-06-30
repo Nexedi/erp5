@@ -94,7 +94,9 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_core/File_getDownloadUrl</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

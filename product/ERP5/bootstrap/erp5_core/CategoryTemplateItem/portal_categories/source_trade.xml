@@ -74,7 +74,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value>                 <string>source_trade</string> </value>
+            <value> <string>source_trade</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

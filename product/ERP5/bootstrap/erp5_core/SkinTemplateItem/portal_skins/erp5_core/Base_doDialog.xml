@@ -95,7 +95,9 @@ return request.RESPONSE.redirect(doAction0 + \'?%s\' % make_query(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doDialog</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

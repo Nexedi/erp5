@@ -110,7 +110,9 @@ return return_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_reindexCategory</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -145,7 +147,7 @@ return return_list\n
                             <string>return_list</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>category</string>
                             <string>nb_types</string>
                             <string>error</string>

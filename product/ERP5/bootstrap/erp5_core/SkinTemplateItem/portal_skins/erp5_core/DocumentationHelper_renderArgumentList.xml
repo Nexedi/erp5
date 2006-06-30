@@ -105,7 +105,9 @@ return {\'mandatory\' : mandatory, \'non_mandatory\' : non_mandatory, \'*\' : ar
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/DocumentationHelper_renderArgumentList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -142,7 +144,7 @@ return {\'mandatory\' : mandatory, \'non_mandatory\' : non_mandatory, \'*\' : ar
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>args</string>
                             <string>None</string>
                             <string>_getitem_</string>

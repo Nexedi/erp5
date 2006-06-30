@@ -108,7 +108,9 @@ return request.RESPONSE.redirect(doAction0)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doFavorite</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -152,7 +154,7 @@ return request.RESPONSE.redirect(doAction0)\n
                             <string>len</string>
                             <string>Base_doAction</string>
                             <string>doAction0</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                           </tuple>
                         </value>

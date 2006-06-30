@@ -80,7 +80,9 @@ return make_query(dict([(k, v) for k, v in http_parameter_list.items() if v is n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Site_renderHTTPParameterList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

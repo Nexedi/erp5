@@ -95,7 +95,9 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/InventoryModule_reindexMovementList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

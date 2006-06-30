@@ -95,7 +95,9 @@ return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Folder_deleteObjectList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

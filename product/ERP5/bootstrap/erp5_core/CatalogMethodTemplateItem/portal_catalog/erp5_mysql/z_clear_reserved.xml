@@ -62,9 +62,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>count</string>
-<string>thread_id</string>
-<string>date</string>
+                            <string>count</string>
+                            <string>thread_id</string>
+                            <string>date</string>
                           </list>
                         </value>
                     </item>

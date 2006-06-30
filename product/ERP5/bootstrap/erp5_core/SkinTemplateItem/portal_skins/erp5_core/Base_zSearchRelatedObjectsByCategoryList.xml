@@ -57,9 +57,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>category_list</string>
-<string>portal_type</string>
-<string>strict_membership</string>
+                            <string>category_list</string>
+                            <string>portal_type</string>
+                            <string>strict_membership</string>
                           </list>
                         </value>
                     </item>

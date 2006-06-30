@@ -1,2 +1,5 @@
 <catalog_method>
+ <item key="sql_clear_catalog" type="int">
+  <value>1</value>
+ </item>
 </catalog_method>

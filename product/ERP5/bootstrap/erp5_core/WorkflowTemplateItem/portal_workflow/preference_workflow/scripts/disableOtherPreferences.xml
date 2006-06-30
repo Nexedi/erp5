@@ -109,7 +109,9 @@ clearCache(method_id="PreferenceTool.CachingMethod.")\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/preference_workflow/scripts/disableOtherPreferences</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

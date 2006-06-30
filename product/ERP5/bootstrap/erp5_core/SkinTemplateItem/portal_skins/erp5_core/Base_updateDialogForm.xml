@@ -100,7 +100,9 @@ for k in kw.keys():\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_updateDialogForm</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -134,7 +136,7 @@ for k in kw.keys():\n
                             <string>string</string>
                             <string>zfill</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>_getiter_</string>
                             <string>k</string>

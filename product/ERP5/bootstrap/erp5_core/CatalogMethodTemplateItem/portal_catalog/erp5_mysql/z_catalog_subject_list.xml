@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>Subject</string>
-<string>uid</string>
+                            <string>Subject</string>
+                            <string>uid</string>
                           </list>
                         </value>
                     </item>

@@ -86,7 +86,9 @@ return [(\'\', \'\')] + [(obj.getTitle(), obj.getRelativeUrl()) for obj in value
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_core/Base_getPreferredSectionItemList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -124,7 +126,7 @@ return [(\'\', \'\')] + [(obj.getTitle(), obj.getRelativeUrl()) for obj in value
                           <tuple>
                             <string>portal_type</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>section</string>
                             <string>section_value</string>
                             <string>value_list</string>

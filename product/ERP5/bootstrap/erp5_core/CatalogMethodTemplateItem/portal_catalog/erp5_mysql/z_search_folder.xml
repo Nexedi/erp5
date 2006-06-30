@@ -57,9 +57,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>sort_on</string>
-<string>query</string>
-<string>parent_uid</string>
+                            <string>sort_on</string>
+                            <string>query</string>
+                            <string>parent_uid</string>
                           </list>
                         </value>
                     </item>

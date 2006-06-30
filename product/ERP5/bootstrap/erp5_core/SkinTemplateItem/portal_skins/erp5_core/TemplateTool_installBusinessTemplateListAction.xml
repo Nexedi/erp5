@@ -102,7 +102,9 @@ return RESPONSE.redirect("%s?portal_status_message=Business+Template+%s+installe
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/TemplateTool_installBusinessTemplateListAction</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

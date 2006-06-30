@@ -174,7 +174,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_createRelation</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -215,7 +217,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>default_module</string>
                             <string>return_url</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>o</string>
                             <string>getattr</string>
@@ -258,7 +260,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             </value>
         </item>
         <item>
-            <key>                             <string>id</string> </key>
+            <key> <string>id</string> </key>
             <value> <string>Base_createRelation</string> </value>
         </item>
         <item>

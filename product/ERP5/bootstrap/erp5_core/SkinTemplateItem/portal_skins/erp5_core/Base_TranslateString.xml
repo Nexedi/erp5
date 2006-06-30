@@ -83,7 +83,9 @@ return context.Base_translateString(msg, catalog=catalog, encoding=encoding, **k
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_core/Base_TranslateString</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

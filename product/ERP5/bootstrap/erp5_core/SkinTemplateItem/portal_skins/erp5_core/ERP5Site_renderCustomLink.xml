@@ -80,7 +80,9 @@ return context.ERP5Site_renderLink(link, context.ERP5Site_renderHTTPParameterLis
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Site_renderCustomLink</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -120,7 +122,7 @@ return context.ERP5Site_renderLink(link, context.ERP5Site_renderHTTPParameterLis
                             <string>http_parameter_list</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

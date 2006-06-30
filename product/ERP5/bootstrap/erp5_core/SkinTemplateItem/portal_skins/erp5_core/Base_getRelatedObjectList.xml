@@ -83,7 +83,9 @@ return category_tool.getRelatedValueList(context, base_category_list, portal_typ
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_getRelatedObjectList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -115,7 +117,7 @@ return category_tool.getRelatedValueList(context, base_category_list, portal_typ
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>category_tool</string>
                             <string>base_category_list</string>
                             <string>portal_type</string>

@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>column</string>
+                            <string>column</string>
                           </list>
                         </value>
                     </item>

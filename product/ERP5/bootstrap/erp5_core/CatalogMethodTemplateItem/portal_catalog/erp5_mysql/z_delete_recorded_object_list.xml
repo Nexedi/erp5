@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid_list</string>
+                            <string>uid_list</string>
                           </list>
                         </value>
                     </item>

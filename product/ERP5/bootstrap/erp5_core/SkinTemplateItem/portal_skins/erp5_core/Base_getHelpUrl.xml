@@ -87,7 +87,9 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getHelpUrl</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -97,7 +99,7 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>current_action, dialog_id, workflow_action</string> </value>
+            <value> <string>form_id=\'\', current_action=\'\', dialog_id=\'\', workflow_action=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,12 +119,13 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>current_action</string>
                             <string>dialog_id</string>
                             <string>workflow_action</string>
@@ -142,7 +145,12 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string></string>
+                <string></string>
+                <string></string>
+                <string></string>
+              </tuple>
             </value>
         </item>
         <item>

@@ -80,7 +80,9 @@ matrix.activate(after_path_and_method_id=([matrix.getPath(),], [\'immediateReind
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/rule_interaction_workflow/scripts/Rule_updateMatrix</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

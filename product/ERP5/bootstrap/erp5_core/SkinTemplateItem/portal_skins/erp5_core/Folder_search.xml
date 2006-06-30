@@ -80,7 +80,9 @@ return getattr(context,form_id)(REQUEST)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_search</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -112,7 +114,7 @@ return getattr(context,form_id)(REQUEST)\n
                           <tuple>
                             <string>form_id</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>REQUEST</string>
                             <string>getattr</string>
                           </tuple>

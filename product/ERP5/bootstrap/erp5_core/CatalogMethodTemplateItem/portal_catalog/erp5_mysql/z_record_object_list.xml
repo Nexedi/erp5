@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>path_list</string>
-<string>catalog</string>
+                            <string>path_list</string>
+                            <string>catalog</string>
                           </list>
                         </value>
                     </item>

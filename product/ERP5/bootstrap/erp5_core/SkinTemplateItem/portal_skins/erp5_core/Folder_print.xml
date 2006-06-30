@@ -91,7 +91,9 @@ request.RESPONSE.redirect(url)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_print</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -126,7 +128,7 @@ request.RESPONSE.redirect(url)\n
                             <string>uids</string>
                             <string>listbox_uid</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>list_actions</string>
                             <string>_getitem_</string>

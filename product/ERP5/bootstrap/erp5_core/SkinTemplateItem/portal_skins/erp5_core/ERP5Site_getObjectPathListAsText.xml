@@ -94,7 +94,9 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_getObjectPathListAsText</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,7 +125,7 @@ return printed\n
                             <string>_print_</string>
                             <string>_print</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>site</string>
                             <string>object_list</string>
                             <string>_getiter_</string>
@@ -147,7 +149,7 @@ return printed\n
             </value>
         </item>
         <item>
-            <key>                             <string>id</string> </key>
+            <key> <string>id</string> </key>
             <value> <string>ERP5Site_getObjectPathListAsText</string> </value>
         </item>
         <item>

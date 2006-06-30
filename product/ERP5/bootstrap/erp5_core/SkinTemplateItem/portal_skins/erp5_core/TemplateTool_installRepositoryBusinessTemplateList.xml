@@ -102,7 +102,9 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/TemplateTool_installRepositoryBusinessTemplateList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

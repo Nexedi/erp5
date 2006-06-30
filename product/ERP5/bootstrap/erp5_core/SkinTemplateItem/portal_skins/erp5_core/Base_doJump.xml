@@ -85,7 +85,9 @@ if jump_select : \n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doJump</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -122,7 +124,7 @@ if jump_select : \n
                             <string>Base_doAction</string>
                             <string>_getitem_</string>
                             <string>doAction0</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                           </tuple>
                         </value>

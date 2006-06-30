@@ -148,7 +148,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Predicate_edit</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -185,7 +187,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>getattr</string>
                             <string>form</string>

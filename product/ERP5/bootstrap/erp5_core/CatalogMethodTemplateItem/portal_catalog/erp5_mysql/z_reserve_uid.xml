@@ -50,7 +50,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
+                            <string>uid</string>
                           </list>
                         </value>
                     </item>

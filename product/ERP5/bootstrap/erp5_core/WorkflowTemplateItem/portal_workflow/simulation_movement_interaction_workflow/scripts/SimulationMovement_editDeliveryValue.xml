@@ -90,7 +90,9 @@ if delivery_value is not None:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/simulation_movement_causality_workflow/scripts/SimulationMovement_editDeliveryValue</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

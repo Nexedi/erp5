@@ -80,7 +80,9 @@ return doc.Documentation_view()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_viewClassInspectionReport</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -118,7 +120,7 @@ return doc.Documentation_view()\n
                           <tuple>
                             <string>class_id</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>doc</string>
                           </tuple>
                         </value>

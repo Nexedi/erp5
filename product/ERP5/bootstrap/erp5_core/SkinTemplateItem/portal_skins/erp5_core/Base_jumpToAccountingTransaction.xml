@@ -106,7 +106,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_jumpToAccountingTransaction</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -139,7 +141,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>from_account</string>
                             <string>from_entity</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>redirect_url</string>
                             <string>separator</string>

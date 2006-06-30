@@ -63,10 +63,10 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>language</string>
-<string>message_context</string>
-<string>original_message</string>
-<string>translated_message</string>
+                            <string>language</string>
+                            <string>message_context</string>
+                            <string>original_message</string>
+                            <string>translated_message</string>
                           </list>
                         </value>
                     </item>

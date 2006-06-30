@@ -57,9 +57,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>isPredicate</string>
-<string>predicate_property_dict</string>
+                            <string>uid</string>
+                            <string>isPredicate</string>
+                            <string>predicate_property_dict</string>
                           </list>
                         </value>
                     </item>

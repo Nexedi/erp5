@@ -13,15 +13,10 @@
  <key>parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
  <key>resourceType | movement,catalog/portal_type/z_related_resource</key>
- <key>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</key>
  <key>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</key>
- <key>stock_node_category_strict_membership_uid | category/category_uid/z_related_strict_membership_node_uid_from_stock</key>
  <key>stock_node_category_uid | category/category_uid/z_related_node_uid_from_stock</key>
- <key>stock_payment_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_uid_from_stock</key>
  <key>stock_payment_category_uid | category/category_uid/z_related_payment_uid_from_stock</key>
- <key>stock_resource_category_strict_membership_uid | category/category_uid/z_related_strict_membership_resource_uid_from_stock</key>
  <key>stock_resource_category_uid | category/category_uid/z_related_resource_uid_from_stock</key>
- <key>stock_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_section_uid_from_stock</key>
  <key>stock_section_category_uid | category/category_uid/z_related_section_uid_from_stock</key>
  <key>translated_opportunity_state | translation/translated_message/z_related_translated_opportunity_state</key>
  <key>translated_opportunity_state_title | translation/translated_message/z_related_translated_opportunity_state</key>

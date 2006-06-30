@@ -79,7 +79,9 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/alarm_notify_workflow/scripts/Alarm_notify</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -111,7 +113,7 @@
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>person</string>
                           </tuple>
                         </value>
