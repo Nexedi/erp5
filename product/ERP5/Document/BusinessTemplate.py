@@ -378,6 +378,8 @@ class BaseTemplateItem(Implicit, Persistent):
         obj._code = None
       if hasattr(aq_base(obj), 'Python_magic'):
         obj.Python_magic = None
+    if hasattr(aq_base(obj), '_filepath'):
+	obj._filepath = None
     elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
       if not obj.getProperty('business_template_include_content', 1) :
         obj.deletePdfContent()
@@ -3652,7 +3654,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Copy existing portal objects to self
       """
       if no_action: return # this is use at import of Business Template to get the status built
-
       # Make sure that everything is sane.
       self.clean()
 
