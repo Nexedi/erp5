@@ -272,138 +272,142 @@ class SimulationTool (BaseTool):
         new_kw[table + '.node_uid'] = node_uid
 
       resource_uid_list = self._generatePropertyUidList(resource)
-      if len(resource_uid_list) :
+      if resource_uid_list:
         new_kw[table + '.resource_uid'] = resource_uid_list
 
       item_uid_list = self._generatePropertyUidList(item)
-      if len(item_uid_list) :
+      if item_uid_list:
         new_kw[table + '.aggregate_uid'] = item_uid_list
 
       node_uid_list = self._generatePropertyUidList(node)
-      if len(node_uid_list) :
+      if node_uid_list:
         new_kw[table + '.node_uid'] = node_uid_list
 
       payment_uid_list = self._generatePropertyUidList(payment)
-      if len(payment_uid_list) :
+      if payment_uid_list:
         new_kw[table + '.payment_uid'] = payment_uid_list
 
       section_uid_list = self._generatePropertyUidList(section)
-      if len(section_uid_list) :
+      if section_uid_list:
         new_kw[table + '.section_uid'] = section_uid_list
 
       mirror_section_uid_list = self._generatePropertyUidList(mirror_section)
-      if len(mirror_section_uid_list) :
+      if mirror_section_uid_list:
         new_kw[table + '.mirror_section_uid'] = mirror_section_uid_list
 
       variation_text_list = self._generatePropertyUidList(variation_text,
                                                           as_text=1)
-      if len(variation_text_list) :
+      if variation_text_list:
         new_kw[table + '.variation_text'] = variation_text_list
 
       sub_variation_text_list = self._generatePropertyUidList(
                                               sub_variation_text, as_text=1)
-      if len(sub_variation_text_list) :
+      if sub_variation_text_list:
         new_kw[table + '.sub_variation_text'] = sub_variation_text_list
 
       # category membership
       resource_category_uid_list = self._generatePropertyUidList(
                                               resource_category)
-      if len(resource_category_uid_list) :
+      if resource_category_uid_list:
         new_kw[table + '_resource_category_uid'] = resource_category_uid_list
 
       node_category_uid_list = self._generatePropertyUidList(node_category)
-      if len(node_category_uid_list) :
+      if node_category_uid_list:
         new_kw[table + '_node_category_uid'] = node_category_uid_list
 
       payment_category_uid_list = self._generatePropertyUidList(payment_category)
-      if len(payment_category_uid_list) :
+      if payment_category_uid_list:
         new_kw[table + '_payment_category_uid'] = payment_category_uid_list
 
       section_category_uid_list = self._generatePropertyUidList(section_category)
-      if len(section_category_uid_list) :
+      if section_category_uid_list:
         new_kw[table + '_section_category_uid'] = section_category_uid_list
 
       mirror_section_category_uid_list = self._generatePropertyUidList(
                                               mirror_section_category)
-      if len(mirror_section_category_uid_list) :
+      if mirror_section_category_uid_list:
         new_kw[table + '_mirror_section_category_uid'] =\
                                               mirror_section_category_uid_list
 
       # category strict membership
       resource_category_strict_membership_uid_list =\
             self._generatePropertyUidList(resource_category_strict_membership)
-      if len(resource_category_strict_membership_uid_list) :
+      if resource_category_strict_membership_uid_list:
         new_kw[table + '_resource_category_strict_membership_uid'] =\
             resource_category_strict_membership_uid_list
 
       node_category_strict_membership_uid_list =\
             self._generatePropertyUidList(node_category_strict_membership)
-      if len(node_category_strict_membership_uid_list) :
+      if node_category_strict_membership_uid_list:
         new_kw[table + '_node_category_strict_membership_uid'] =\
             node_category_strict_membership_uid_list
 
       payment_category_strict_membership_uid_list =\
             self._generatePropertyUidList(payment_category_strict_membership)
-      if len(payment_category_strict_membership_uid_list) :
+      if payment_category_strict_membership_uid_list:
         new_kw[table + '_payment_category_strict_membership_uid'] =\
             payment_category_strict_membership_uid_list
 
       section_category_strict_membership_uid_list =\
             self._generatePropertyUidList(section_category_strict_membership)
-      if len(section_category_strict_membership_uid_list) :
+      if section_category_strict_membership_uid_list:
         new_kw[table + '_section_category_strict_membership_uid'] =\
             section_category_strict_membership_uid_list
 
       mirror_section_category_strict_membership_uid_list =\
             self._generatePropertyUidList(
                                   mirror_section_category_strict_membership)
-      if len(mirror_section_category_strict_membership_uid_list) :
+      if mirror_section_category_strict_membership_uid_list:
         new_kw[table + '_mirror_section_category_strict_membership_uid'] =\
             mirror_section_category_strict_membership_uid_list
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
       #  new_kw['variationCategory'] = variation_category_uid_list
-
+      
+      string_or_list = (str, list, tuple)
       # Simulation States
       # If strict_simulation_state is set, we directly put it into the dictionary
       if strict_simulation_state:
-        if type(simulation_state) in [type(''),type([]),type(())]:
-          if len(simulation_state):
-            new_kw['simulation_state'] = simulation_state
+        if isinstance(simulation_state, string_or_list)\
+                and simulation_state:
+          new_kw['simulation_state'] = simulation_state
       else:
         # first, we evaluate simulation_state
-        if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
-          if len(simulation_state) :
-            sql_kw['input_simulation_state'] = simulation_state
-            sql_kw['output_simulation_state'] = simulation_state
-        # then, if omit_transit == 1, we evaluate (simulation_state - transit_simulation_state) for input_simulation_state
-        if omit_transit == 1 :
-          if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
-            if len(simulation_state) :
-              if (type(transit_simulation_state) is type('')) or (type(transit_simulation_state) is type([])) or (type(transit_simulation_state) is type(())) :
-                if len(transit_simulation_state) :
-                  # when we know both are usable, we try to calculate (simulation_state - transit_simulation_state)
-                  if type(simulation_state) is type('') :
-                    simulation_state = [simulation_state]
-                  if type(transit_simulation_state) is type('') :
-                    transit_simulation_state = [transit_simulation_state]
-                  delivered_simulation_state_list = []
-                  for state in simulation_state :
-                    if state not in transit_simulation_state :
-                      delivered_simulation_state_list.append(state)
-                  sql_kw['input_simulation_state'] = delivered_simulation_state_list
-        # alternatively, the user can directly define input_simulation_state and output_simulation_state
-        if (type(input_simulation_state) is type('')) or (type(input_simulation_state) is type([])) or (type(input_simulation_state) is type(())) :
-          if len(input_simulation_state) :
-            sql_kw['input_simulation_state'] = input_simulation_state
-        if (type(output_simulation_state) is type('')) or (type(output_simulation_state) is type([])) or (type(output_simulation_state) is type(())) :
-          if len(output_simulation_state) :
-            sql_kw['output_simulation_state'] = output_simulation_state
-        if type(sql_kw.get('input_simulation_state')) is type('') :
-          sql_kw['input_simulation_state'] = [sql_kw['input_simulation_state']]
-        if type(sql_kw.get('output_simulation_state')) is type('') :
-          sql_kw['output_simulation_state'] = [sql_kw['output_simulation_state']]
+        if simulation_state and isinstance(simulation_state, string_or_list):
+          sql_kw['input_simulation_state'] = simulation_state
+          sql_kw['output_simulation_state'] = simulation_state
+        # then, if omit_transit == 1, we evaluate (simulation_state -
+        # transit_simulation_state) for input_simulation_state
+        if omit_transit:
+          if isinstance(simulation_state, string_or_list)\
+                and simulation_state:
+            if isinstance(transit_simulation_state, string_or_list)\
+                  and transit_simulation_state:
+              # when we know both are usable, we try to calculate
+              # (simulation_state - transit_simulation_state)
+              if isinstance(simulation_state, str):
+                simulation_state = [simulation_state]
+              if isinstance(transit_simulation_state, str) :
+                transit_simulation_state = [transit_simulation_state]
+              delivered_simulation_state_list = []
+              for state in simulation_state :
+                if state not in transit_simulation_state :
+                  delivered_simulation_state_list.append(state)
+              sql_kw['input_simulation_state'] = delivered_simulation_state_list
+
+        # alternatively, the user can directly define input_simulation_state
+        # and output_simulation_state
+        if input_simulation_state and isinstance(input_simulation_state,
+                                                  string_or_list):
+          if isinstance(input_simulation_state, str):
+            input_simulation_state = [input_simulation_state]
+          sql_kw['input_simulation_state'] = input_simulation_state
+        if output_simulation_state and isinstance(output_simulation_state,
+                                                  string_or_list):
+          if isinstance(output_simulation_state, str):
+            output_simulation_state = [output_simulation_state]
+          sql_kw['output_simulation_state'] = output_simulation_state
 
       # It is necessary to use here another SQL query (or at least a subquery)
       # to get _DISTINCT_ uid from predicate_category table.
@@ -412,7 +416,7 @@ class SimulationTool (BaseTool):
       # inventory is false
       # XXX Perhaps is there a better solution
       add_kw = {}
-      if variation_category is not None and len(variation_category)>0:
+      if variation_category is not None and variation_category:
         where_expression = self.getPortalObject().portal_categories\
           .buildSQLSelector(
             category_list = variation_category,
