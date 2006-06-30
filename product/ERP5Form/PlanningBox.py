@@ -1111,7 +1111,7 @@ class BasicStructure:
       default_selection_root_path = self.report_root_list[0][0]
     selection_report_path = self.selection.getReportPath(default = \
      (default_selection_report_path,))
-    pdb.set_trace()
+    #pdb.set_trace()
     if selection_report_path in (None,()):
       message = 'report path is empty or not valid'
       return [(Message(domain=None, message=message,mapping=None))]
