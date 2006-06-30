@@ -1788,7 +1788,7 @@ class ListBoxRendererLine:
 
               original_value = getattr(obj, property_id, None)
               processed_value = original_value
-              if not callable(original_value) and obj.hasProperty(property_id):
+              if not callable(original_value):
                 try:
                   original_value = obj.getProperty(property_id)
                   processed_value = original_value
