@@ -131,6 +131,18 @@ IDEAS:\n
             type="text/css"\n
             rel="stylesheet" />\n
     </tal:block>\n
+    \n
+    <tal:block tal:condition="form/pt | nothing">\n
+      <tal:block tal:define="planning_box python: here.ERP5Site_getPlanningBox(form)">\n
+        <tal:block tal:condition="python: planning_box">\n
+          <tal:block tal:define="dummy python:js_list.append(\'%s/wz_dragdrop.js\' % (here.portal_url.getPortalPath(), ));" />\n
+          <style tal:content="structure python: planning_box.render_css(None,REQUEST=request)"\n
+                 tal:attributes="type python:\'text/css\'">\n
+          </style>\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js"\n
               type="text/javascript"></script>\n
