@@ -206,18 +206,33 @@ class SimulationTool (BaseTool):
       return property_uid_list
 
     def _generateSQLKeywordDict(self, table='stock',
+        # dates
         from_date=None, to_date=None, at_date=None,
+        # instances
         resource=None, node=None, payment=None,
-        section=None, mirror_section=None,
-        item=None, input=0, output=0,
+        section=None, mirror_section=None, item=None,
+        # used for tracking
+        input=0, output=0,
+        # categories
         resource_category=None, node_category=None, payment_category=None,
         section_category=None, mirror_section_category=None,
+        # categories with strict membership
+        resource_category_strict_membership=None,
+        node_category_strict_membership=None,
+        payment_category_strict_membership=None,
+        section_category_strict_membership=None,
+        mirror_section_category_strict_membership=None,
+        # simulation_state
         strict_simulation_state=0,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
-        input_simulation_state = None, output_simulation_state=None,
+        input_simulation_state=None, output_simulation_state=None,
+        # variations
         variation_text=None, sub_variation_text=None,
-        variation_category=None, resource_uid=None, node_uid=None,
-        section_uid=None,  **kw) :
+        variation_category=None,
+        # uids
+        resource_uid=None, node_uid=None, section_uid=None,
+        # keywords for related keys
+        **kw):
       """
       generates keywords and calls buildSqlQuery
       """
@@ -248,7 +263,7 @@ class SimulationTool (BaseTool):
       if len(date_dict) :
         new_kw[table + '.date'] = date_dict
 
-      # clear ambiguities
+      # Some columns exists on multiple tables, we have to clear ambiguities
       if resource_uid is not None :
         new_kw[table + '.resource_uid'] = resource_uid
       if section_uid is not None :
@@ -280,15 +295,19 @@ class SimulationTool (BaseTool):
       if len(mirror_section_uid_list) :
         new_kw[table + '.mirror_section_uid'] = mirror_section_uid_list
 
-      variation_text_list = self._generatePropertyUidList(variation_text, as_text=1)
+      variation_text_list = self._generatePropertyUidList(variation_text,
+                                                          as_text=1)
       if len(variation_text_list) :
         new_kw[table + '.variation_text'] = variation_text_list
 
-      sub_variation_text_list = self._generatePropertyUidList(sub_variation_text, as_text=1)
+      sub_variation_text_list = self._generatePropertyUidList(
+                                              sub_variation_text, as_text=1)
       if len(sub_variation_text_list) :
         new_kw[table + '.sub_variation_text'] = sub_variation_text_list
 
-      resource_category_uid_list = self._generatePropertyUidList(resource_category)
+      # category membership
+      resource_category_uid_list = self._generatePropertyUidList(
+                                              resource_category)
       if len(resource_category_uid_list) :
         new_kw[table + '_resource_category_uid'] = resource_category_uid_list
 
@@ -304,9 +323,43 @@ class SimulationTool (BaseTool):
       if len(section_category_uid_list) :
         new_kw[table + '_section_category_uid'] = section_category_uid_list
 
-      mirror_section_category_uid_list = self._generatePropertyUidList(mirror_section_category)
+      mirror_section_category_uid_list = self._generatePropertyUidList(
+                                              mirror_section_category)
       if len(mirror_section_category_uid_list) :
-        new_kw[table + '_mirror_section_category_uid'] = mirror_section_category_uid_list
+        new_kw[table + '_mirror_section_category_uid'] =\
+                                              mirror_section_category_uid_list
+
+      # category strict membership
+      resource_category_strict_membership_uid_list =\
+            self._generatePropertyUidList(resource_category_strict_membership)
+      if len(resource_category_strict_membership_uid_list) :
+        new_kw[table + '_resource_category_strict_membership_uid'] =\
+            resource_category_strict_membership_uid_list
+
+      node_category_strict_membership_uid_list =\
+            self._generatePropertyUidList(node_category_strict_membership)
+      if len(node_category_strict_membership_uid_list) :
+        new_kw[table + '_node_category_strict_membership_uid'] =\
+            node_category_strict_membership_uid_list
+
+      payment_category_strict_membership_uid_list =\
+            self._generatePropertyUidList(payment_category_strict_membership)
+      if len(payment_category_strict_membership_uid_list) :
+        new_kw[table + '_payment_category_strict_membership_uid'] =\
+            payment_category_strict_membership_uid_list
+
+      section_category_strict_membership_uid_list =\
+            self._generatePropertyUidList(section_category_strict_membership)
+      if len(section_category_strict_membership_uid_list) :
+        new_kw[table + '_section_category_strict_membership_uid'] =\
+            section_category_strict_membership_uid_list
+
+      mirror_section_category_strict_membership_uid_list =\
+            self._generatePropertyUidList(
+                                  mirror_section_category_strict_membership)
+      if len(mirror_section_category_strict_membership_uid_list) :
+        new_kw[table + '_mirror_section_category_strict_membership_uid'] =\
+            mirror_section_category_strict_membership_uid_list
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
