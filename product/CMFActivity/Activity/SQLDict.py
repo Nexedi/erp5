@@ -291,44 +291,47 @@ class SQLDict(RAMDict):
 
           # Release locks before starting a potentially long calculation
           get_transaction().commit()
+
+        # Try to invoke
+        if group_method_id is not None:
+          LOG('SQLDict', TRACE,
+              'invoking a group method %s with %d objects '\
+              ' (%d objects in expanded form)' % (
+              group_method_id, len(message_list), count))
+          activity_tool.invokeGroup(group_method_id, message_list)
+        else:
+          activity_tool.invoke(message_list[0])
+
+        # Check if messages are executed successfully.
+        # When some of them are executed successfully, it may not be acceptable to
+        # abort the transaction, because these remain pending, only due to other
+        # invalid messages. This means that a group method should not be used if
+        # it has a side effect. For now, only indexing uses a group method, and this
+        # has no side effect.
+        for m in message_list:
+          if m.is_executed:
+            get_transaction().commit()
+            break
+        else:
+          get_transaction().abort()
       except ConflictError:
         # If a conflict occurs, abort the transaction to minimize the impact,
         # then simply delay the operations.
         get_transaction().abort()
         for uid_list in uid_list_list:
-          activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                            retry = 1)
+          if len(uid_list):
+            activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
+                                              retry = 1)
         get_transaction().commit()
         return 0
       except:
         # For other exceptions, put the messages to an invalid state immediately.
         get_transaction().abort()
         for uid_list in uid_list_list:
-          activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
+          if len(uid_list):
+            activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
         get_transaction().commit()
         return 0
-
-      # Try to invoke
-      if group_method_id is not None:
-        LOG('SQLDict', TRACE,
-            'invoking a group method %s with %d objects '\
-            ' (%d objects in expanded form)' % (
-            group_method_id, len(message_list), count))
-        activity_tool.invokeGroup(group_method_id, message_list)
-      else:
-        activity_tool.invoke(message_list[0])
-
-      # Check if messages are executed successfully.
-      # When some of them are executed successfully, it may not be acceptable to
-      # abort the transaction, because these remain pending, only due to other
-      # invalid messages. This means that a group method should not be used if
-      # it has a side effect. For now, only indexing uses a group method, and this
-      # has no side effect.
-      for m in message_list:
-        if m.is_executed:
-          break
-      else:
-        get_transaction().abort()
 
       for i in xrange(len(message_list)):
         m = message_list[i]

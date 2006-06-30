@@ -119,6 +119,11 @@ class SQLQueue(RAMQueue):
                                                 priority = line.priority)
             get_transaction().commit() # Release locks before starting a potentially long calculation
           return 0
+
+        # Try to invoke
+        activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
+        if m.is_executed:                                          # Make sure message could be invoked
+          get_transaction().commit()                                        # If successful, commit
       except ConflictError:
         # If a conflict occurs, catch it and delay the operation.
         get_transaction().abort()
@@ -134,11 +139,8 @@ class SQLQueue(RAMQueue):
         return 0
 
 
-      # Try to invoke
-      activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
-      if m.is_executed:                                          # Make sure message could be invoked
+      if m.is_executed:
         activity_tool.SQLQueue_delMessage(uid=line.uid)  # Delete it
-        get_transaction().commit()                                        # If successful, commit
       else:
         get_transaction().abort()                                         # If not, abort transaction and start a new one
         if line.priority > MAX_PRIORITY:
@@ -146,12 +148,11 @@ class SQLQueue(RAMQueue):
           activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = INVOKE_ERROR_STATE)
                                                                             # Assign message back to 'error' state
           m.notifyUser(activity_tool)                                       # Notify Error
-          get_transaction().commit()                                        # and commit
         else:
           # Lower priority
           activity_tool.SQLQueue_setPriority(uid=line.uid, date = next_processing_date,
                                               priority = line.priority + 1)
-          get_transaction().commit() # Release locks before starting a potentially long calculation
+      get_transaction().commit()
       return 0
     get_transaction().commit() # Release locks before starting a potentially long calculation
     return 1
