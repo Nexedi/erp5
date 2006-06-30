@@ -213,15 +213,15 @@ class TestBusinessTemplate(ERP5TypeTestCase):
         self.failIf('erp5_pdf_style' in selection)
         self.failIf('erp5_csv_style' in selection)
         self.failIf('erp5_core' not in selection)
-        self.failIf('erp5_html_style' not in selection)
+        self.failIf('erp5_xhtml_style' not in selection)
       if skin_name == 'Print':
-        self.failIf('erp5_html_style' in selection)
+        self.failIf('erp5_xhtml_style' in selection)
         self.failIf('erp5_csv_style' in selection)
         self.failIf('erp5_core' not in selection)
         self.failIf('erp5_pdf_style' not in selection)
       if skin_name == 'CSV':
         self.failIf('erp5_pdf_style' in selection)
-        self.failIf('erp5_html_style' in selection)
+        self.failIf('erp5_xhtml_style' in selection)
         self.failIf('erp5_core' not in selection)
         self.failIf('erp5_csv_style' not in selection)
 
