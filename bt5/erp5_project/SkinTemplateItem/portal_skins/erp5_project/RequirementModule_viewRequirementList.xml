@@ -61,9 +61,6 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
               </list>
@@ -74,15 +71,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -91,20 +84,6 @@
                       <list>
                         <string>listbox_requirement_count</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>

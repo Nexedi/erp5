@@ -62,8 +62,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -81,23 +79,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
