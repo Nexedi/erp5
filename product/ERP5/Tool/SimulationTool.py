@@ -375,8 +375,12 @@ class SimulationTool (BaseTool):
       else:
         # first, we evaluate simulation_state
         if simulation_state and isinstance(simulation_state, string_or_list):
-          sql_kw['input_simulation_state'] = simulation_state
-          sql_kw['output_simulation_state'] = simulation_state
+          if isinstance(simulation_state, str):
+            sql_kw['input_simulation_state'] = [simulation_state]
+            sql_kw['output_simulation_state'] = [simulation_state]
+          else:
+            sql_kw['input_simulation_state'] = simulation_state
+            sql_kw['output_simulation_state'] = simulation_state
         # then, if omit_transit == 1, we evaluate (simulation_state -
         # transit_simulation_state) for input_simulation_state
         if omit_transit:
