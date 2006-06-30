@@ -407,6 +407,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         if they occur and raise a FormValidationError in the end if any
         Validation Errors occured.
         """
+#        import pdb; pdb.set_trace()
         result = {}
         errors = []
         for field in self.get_fields():
@@ -430,6 +431,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             except ValidationError, err:
                 #LOG('validate_all', 0, 'ValidationError: field.id = %s, err=%s' % (repr(field.id), repr(err)))
                 errors.append(err)
+            except KeyError, err:
+                LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
         if len(errors) > 0:
             raise FormValidationError(errors, result)
         return result
