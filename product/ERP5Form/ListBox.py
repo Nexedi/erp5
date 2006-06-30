@@ -1786,15 +1786,14 @@ class ListBoxRendererLine:
               except ValueError:
                 property_id = sql
 
-              original_value = getattr(obj, property_id, None)
-              processed_value = original_value
-              if not callable(original_value):
-                try:
-                  original_value = obj.getProperty(property_id)
-                  processed_value = original_value
-                except AttributeError:
-                  original_value = getattr(obj, property_id)
-                  processed_value = original_value
+              try:
+                original_value = obj.getProperty(property_id, _marker)
+                if original_value is _marker:
+                  raise AttributeError, property_id
+                processed_value = original_value
+              except AttributeError:
+                original_value = getattr(obj, property_id, None)
+                processed_value = original_value
             except (AttributeError, KeyError):
               original_value = None
               processed_value = 'Could not evaluate %s' % property_id
