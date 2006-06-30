@@ -68,14 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.REQUEST.has_key(\'workflow_action\'): # We are on a workflow transition\n
-  help = \'%s#%s\' % (getattr(getattr(context, form_id), \'form_action\'),context.REQUEST[\'workflow_action\'])\n
-elif action is not None:\n
-  help = \'%s#%s\' % (context.getPortalType(), action)\n
-elif form_id is not None:\n
-  help = \'%s_%s\' % (context.getPortalType(), form_id)\n
-else:\n
-  help = context.getPortalType()\n
+            <value> <string>help = context.getPortalType()\n
+if workflow_action is not None: # First, the workflow transition case.\n
+  help = \'%s_%s\' % (help, workflow_action)\n
+elif current_action is not None: # Then, we are able to get the action.\n
+  help = \'%s_%s\' % (help, current_action[\'id\'])\n
+elif dialog_id is not None: # Otherwise, get the form we are in.\n
+  help = \'%s_%s\' % (help, dialog_id)\n
+# Otherwise again, just use the portal type as page name.\n
 return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentationBaseUrl(), help)\n
 </string> </value>
         </item>
@@ -99,7 +99,7 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id = None, action = None</string> </value>
+            <value> <string>form_id=\'\', current_action=\'\', dialog_id=\'\', workflow_action=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,20 +119,21 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
-                            <string>action</string>
+                            <string>current_action</string>
+                            <string>dialog_id</string>
+                            <string>workflow_action</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>getattr</string>
-                            <string>_getitem_</string>
                             <string>help</string>
                             <string>None</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,8 +146,10 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
+                <string></string>
+                <string></string>
+                <string></string>
+                <string></string>
               </tuple>
             </value>
         </item>
