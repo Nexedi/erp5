@@ -45,12 +45,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -77,22 +71,24 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block tal:define="ignore_layout request/ignore_layout | nothing;">\n
-  <tal:block tal:condition="ignore_layout">\n
-    <tal:block metal:use-macro="here/form_view/macros/master" />\n
-  </tal:block>\n
-  <tal:block tal:condition="not: ignore_layout">\n
-    <tal:block tal:define="editable_mode request/editable_mode | nothing;">\n
-      <tal:block tal:condition="editable_mode">\n
-        <tal:block metal:use-macro="here/web_form_view/macros/master" />\n
-      </tal:block>\n
-      <tal:block tal:condition="not: editable_mode">\n
-        <tal:block tal:define="default_content here/WebSite_getDefaultDocumentValue | nothing;">\n
-          <tal:block tal:condition="default_content">\n
-            <tal:block tal:define="dummy python: request.RESPONSE.redirect(\'%s/%s\' % (here.WebSite_getUrl(), default_content.getReference()))" />\n
-          </tal:block>\n
-          <tal:block tal:condition="not: default_content">\n
-            No default page defined.\n
+<tal:block metal:define-macro="master">\n
+  <tal:block metal:use-macro="here/document/macros/master">\n
+    <tal:block metal:fill-slot="main">\n
+      <tal:block tal:define="editable_mode request/editable_mode | nothing;\n
+                             dummy python: request.set(\'here\', here);">\n
+        <tal:block tal:condition="editable_mode">\n
+          <tal:block metal:use-macro="here/form/macros/master" />\n
+        </tal:block>\n
+        <tal:block tal:condition="not: editable_mode">\n
+          <tal:block tal:repeat="group python: form.get_groups()">\n
+            <div tal:condition="python: group.find(\'content\') >= 0"\n
+                 tal:attributes="class group/lower">\n
+              <tal:block tal:condition="python: \'hidden\' not in group.lower()">\n
+                <tal:block tal:repeat="field python:form.get_fields_in_group(group)">\n
+                  <tal:block tal:replace="structure python: field.render(None, request)"/>\n
+                </tal:block>\n
+              </tal:block>\n
+            </div>\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n
@@ -113,32 +109,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>section_form_view</string> </value>
+            <value> <string>web_form_view</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>
