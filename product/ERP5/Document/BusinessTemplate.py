@@ -373,13 +373,13 @@ class BaseTemplateItem(Implicit, Persistent):
       obj._owner = None
     if hasattr(aq_base(obj), 'uid'):
       obj.uid = None
+    if hasattr(aq_base(obj), '_filepath'):
+      obj._filepath = None
     if getattr(obj, 'meta_type', None) == 'Script (Python)':
       if hasattr(aq_base(obj), '_code'):
         obj._code = None
       if hasattr(aq_base(obj), 'Python_magic'):
         obj.Python_magic = None
-    if hasattr(aq_base(obj), '_filepath'):
-	obj._filepath = None
     elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
       if not obj.getProperty('business_template_include_content', 1) :
         obj.deletePdfContent()
