@@ -1,5 +1,4 @@
 delivery_edit_workflow
-delivery_patch_workflow
 internal_packing_list_workflow
 inventory_workflow
 order_interaction_workflow

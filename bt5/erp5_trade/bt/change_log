@@ -1,5 +1,6 @@
 2006-07-03 Kevin
 * Merge Seb's delivery_patch business template and erp5_trade.
+* Revert previous action.
 * Add a short basic description.
 
 2006-05-11 Alex
