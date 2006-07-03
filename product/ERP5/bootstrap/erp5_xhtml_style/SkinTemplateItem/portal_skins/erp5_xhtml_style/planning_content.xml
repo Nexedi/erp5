@@ -463,9 +463,12 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
                 tal:attributes="href python:block.info[area].link">\n
               </a>\n
               <a tal:condition="python:block.info[area].info == \'__\'"\n
-                tal:attributes="href python:block.info[area].link">\n
+                tal:attributes="href python:block.info[area].link"\n
+                tal:content="python:\'.\'">\n
+                <!-- not used any more\n
                 <img tal:attributes="src python:basic.here.getUrl() + \'/images/question.png\'"\n
                     height="15" width="15">\n
+                -->\n
               </a>\n
               </div>\n
             </tal:block>\n
