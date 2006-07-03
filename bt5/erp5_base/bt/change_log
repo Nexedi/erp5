@@ -1,3 +1,6 @@
+2006-06-30 aurel
+* add overdraft facility field on bank account
+
 2006-06-27 Kevin
 * Add symbol on Currencies.
 * Use searchFolder on Organisation details view.
