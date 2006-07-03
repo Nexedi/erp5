@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Delivery Patch</type>
+  <workflow>delivery_patch_workflow</workflow>
+ </chain>
+</workflow_chain>
