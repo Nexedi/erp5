@@ -964,6 +964,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       path = self._getWorkingPath(self.relativeToAbsolute(path, \
       business_template))
     client = self._getClient()
+    # Pysvn wants unicode objects
+    if isinstance(log_message, str):
+      log_message = log_message.decode('utf8')
     return client.checkin(path, log_message, recurse)
 
   security.declareProtected('Import/Export objects', 'getLastChangelog')
