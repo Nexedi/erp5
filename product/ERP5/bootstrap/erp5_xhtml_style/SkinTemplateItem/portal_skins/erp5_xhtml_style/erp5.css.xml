@@ -756,6 +756,7 @@ div.index_html table {\n
   border-style: solid;\n
   border-color: <dtml-var dialog_border_color>;\n
   padding: 0.5em;\n
+  margin-bottom: 1em;\n
 }\n
 \n
 .list_dialog {\n
