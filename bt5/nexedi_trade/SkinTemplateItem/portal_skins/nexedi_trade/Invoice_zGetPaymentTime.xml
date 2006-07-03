@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -92,24 +94,9 @@ return result\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAoAAAAJAAAAQwAA
-AHPCAAAAdAAAdAEAdAIAZAEAgwIAZAIAZAMAZAQAZwIAgwABZAUAgwIAfQMAdAEAfAMAZAYAgwIA
-gwAAfQQAdAEAdAIAZAcAgwIAZAgAgwEAfQUAdAEAdAIAZAkAgwIAgwAAfQYAdAEAfAQAZAoAgwIA
-gwAAfQcAZAsAfAUAFn0IAHwHAHQJAGoCAG8jAAF8BgBvDgABfAgAZAwAN30IAHG6AAF8CABkDQA3
-fQgAbg8AAXwIAGQOAHwHABY3fQgAfAgAU2QAAFMoDwAAAE5zFQAAAGdldENhdXNhbGl0eVZhbHVl
-TGlzdHMLAAAAcG9ydGFsX3R5cGVzEQAAAFNhbGUgUGFja2luZyBMaXN0cxIAAABTYWxlcyBQYWNr
-aW5nIExpc3RpAAAAAHMnAAAAU2FsZXNQYWNraW5nTGlzdF9nZXRDYXVzYWxpdHlTYWxlc09yZGVy
-cw4AAABnZXRQYXltZW50VGVybWkeAAAAcxQAAABnZXRQYXltZW50RW5kT2ZNb250aHMYAAAAZ2V0
-UGF5bWVudEFkZGl0aW9uYWxUZXJtcwkAAAAlaSBqb3VycyBzDgAAAGVuIGZpbiBkZSBtb2lzcwMA
-AABuZXRzBQAAAGxlICVpKAoAAABzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250
-ZXh0cwwAAABwYWNraW5nX2xpc3RzBQAAAG9yZGVycwwAAABwYXltZW50X3Rlcm1zFAAAAHBheW1l
-bnRfZW5kX29mX21vbnRocwMAAABwYXRzBgAAAHJlc3VsdHMEAAAATm9uZSgKAAAAcwkAAABfZ2V0
-aXRlbV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMMAAAAcGFja2luZ19saXN0cwUAAABvcmRl
-cnMMAAAAcGF5bWVudF90ZXJtcxQAAABwYXltZW50X2VuZF9vZl9tb250aHMDAAAAcGF0cwYAAABy
-ZXN1bHRzBAAAAE5vbmUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFwAAAEludm9pY2Vf
-ekdldFBheW1lbnRUaW1lAQAAAHMWAAAAJwMSARUCEgISAgoCDQEHAQ4CDgIOAygBAAAAcxcAAABJ
-bnZvaWNlX3pHZXRQYXltZW50VGltZSgBAAAAcxcAAABJbnZvaWNlX3pHZXRQYXltZW50VGltZSgA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

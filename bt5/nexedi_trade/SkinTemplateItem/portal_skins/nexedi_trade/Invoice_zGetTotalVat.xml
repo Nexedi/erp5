@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -82,17 +84,9 @@ return price\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAGAAAAQwAA
-AHNqAAAAdAAAdAEAZAEAgwIAgwAAfQIAdAAAdAEAZAIAgwIAgwAAbzcAAXQAAHQBAGQDAIMCAIMA
-AH0DAHwDAHQEAGoDAG8OAAF8AgB8AwA5fQIAcWIAAWQEAH0CAG4HAAFkBAB9AgB8AgBTZAAAUygF
-AAAATnMZAAAASW52b2ljZV96R2V0VG90YWxOZXRQcmljZXMbAAAAZ2V0VmFsdWVBZGRlZFRheFJl
-Y292ZXJhYmxlcxUAAABnZXRWYWx1ZUFkZGVkVGF4UmF0aW9pAAAAACgFAAAAcwkAAABfZ2V0YXR0
-cl9zBwAAAGNvbnRleHRzBQAAAHByaWNlcwkAAAB2YXRfcmF0aW9zBAAAAE5vbmUoBQAAAHMJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0cwUAAABwcmljZXMJAAAAdmF0X3JhdGlvcwQAAABOb25lKAAA
-AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxQAAABJbnZvaWNlX3pHZXRUb3RhbFZhdAEAAABz
-DgAAABUCEAESAQ0BDgIKAgYCKAEAAABzFAAAAEludm9pY2VfekdldFRvdGFsVmF0KAEAAABzFAAA
-AEludm9pY2VfekdldFRvdGFsVmF0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
-bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
