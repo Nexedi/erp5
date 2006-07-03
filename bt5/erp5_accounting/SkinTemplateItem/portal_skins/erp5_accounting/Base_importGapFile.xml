@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+def convertToUpperCase(key):\n
+    """\n
+      This function turns an attribute name into\n
+      a method name according to the ERP5 naming conventions\n
+    """\n
+    import string\n
+    result = \'\'\n
+    if key != \'\':\n
+      parts = string.split(str(key),\'_\')\n
+      for part in parts:\n
+        letter_list = list(part)\n
+        letter_list[0] = string.upper(letter_list[0])\n
+        result = result + string.join(letter_list,\'\')\n
+    return result\n
+\n
+\n
+\n
+def splitCsvLine(str_line):\n
+  unclean_list = []\n
+  pieces_of_line = str_line.split(\',\')\n
+\n
+  p_stack = \'\'\n
+  for p in pieces_of_line:\n
+    p_stack += p\n
+    if p_stack.count(\'"\')%2 == 0:\n
+      unclean_list.append(p_stack)\n
+      p_stack = \'\'\n
+\n
+  clean_list = []\n
+  for item in unclean_list:\n
+    clean_item = item\n
+    if clean_item.find(\'"\') != -1:\n
+      if len(clean_item) <= 2:\n
+        clean_item = \'\'\n
+      else:\n
+        clean_item = clean_item[1:]\n
+        clean_item = clean_item[:-1]\n
+        clean_item = clean_item.replace(\'""\', \'"\')\n
+    else:\n
+      if len(clean_item) > 0:      \n
+        if clean_item.find(\'.\') != -1:\n
+          clean_item = float(clean_item)\n
+        else:\n
+          clean_item = int(clean_item)\n
+      else:\n
+        clean_item = None\n
+    clean_list.append(clean_item)\n
+\n
+  return clean_list\n
+\n
+\n
+\n
+request  = context.REQUEST\n
+csv_file_line_list = import_file.readlines()\n
+csv_line_list = []\n
+\n
+for csv_line in csv_file_line_list:\n
+  csv_line_list.append( string.replace(csv_line, \'\\n\', \'\').decode(encoding).encode(\'utf-8\') )\n
+\n
+\n
+object_list = []\n
+\n
+csv_property_list = splitCsvLine(csv_line_list[0])\n
+csv_title_list = splitCsvLine(csv_line_list[1])\n
+\n
+\n
+for csv_line in csv_line_list[2:]:\n
+  object = {}\n
+  csv_data_list = splitCsvLine(csv_line)\n
+\n
+  data_n = 0\n
+\n
+  for property in csv_property_list:\n
+    object[property] = csv_data_list[data_n]\n
+    data_n += 1\n
+\n
+  object_list.append(object)\n
+\n
+\n
+\n
+root_path = \'gap/france/m14\'\n
+\n
+for object in object_list: \n
+  description = object.get(\'Description\', None) or None\n
+  gap = object.get(\'Gap\', None) or None\n
+  title = object.get(\'Title\', None) or None\n
+  if gap:\n
+    gap = gap.replace(\'CLASSE \', \'\')\n
+    print \'%s - %s - %s\' % (gap or \'\', title or \'\', description or \'\')\n
+    root = context.getPortalObject()\n
+    root = root.portal_categories.restrictedTraverse(root_path)\n
+    b = \'\'\n
+    for a in gap:\n
+      b = b + a\n
+      if root.has_key(b):\n
+        root = root[b]\n
+      else:    \n
+        root = root.newContent(id=b)\n
+    root.edit(title = title or \'\', description = description or \'\')\n
+\n
+\n
+  #context.activate(priority=4).Base_importCsvLine(object)\n
+\n
+return printed\n
+\n
+redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=Importing+CSV+file.\')\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Base_importGapFile</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>import_file, encoding=\'iso-8859-15\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>import_file</string>
+                            <string>encoding</string>
+                            <string>kw</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>convertToUpperCase</string>
+                            <string>splitCsvLine</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>csv_file_line_list</string>
+                            <string>csv_line_list</string>
+                            <string>_getiter_</string>
+                            <string>csv_line</string>
+                            <string>string</string>
+                            <string>object_list</string>
+                            <string>_getitem_</string>
+                            <string>csv_property_list</string>
+                            <string>csv_title_list</string>
+                            <string>object</string>
+                            <string>csv_data_list</string>
+                            <string>data_n</string>
+                            <string>property</string>
+                            <string>_write_</string>
+                            <string>root_path</string>
+                            <string>None</string>
+                            <string>description</string>
+                            <string>gap</string>
+                            <string>title</string>
+                            <string>root</string>
+                            <string>b</string>
+                            <string>a</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>iso-8859-15</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_importGapFile</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
