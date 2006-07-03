@@ -103,6 +103,7 @@ XXX: Folder_filter accesses selection directly\n
             i18n:translate="" i18n:domain="ui">Jump</span>\n
     </button>\n
   </span>\n
+  <span class="separator"></span>\n
   <span id="action">\n
     <select name="action_select"\n
             tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"\n
@@ -185,10 +186,13 @@ XXX: Folder_filter accesses selection directly\n
         </button>\n
         <span class="separator"></span>\n
       </tal:block>\n
-      <a tal:condition="selection_index | nothing" class="list_mode" title="List Mode" tal:attributes="href selection_url">\n
-        <span class="image"></span>\n
-        <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
-      </a>\n
+      <tal:block tal:condition="selection_index | nothing">\n
+        <a class="list_mode" title="List Mode" tal:attributes="href selection_url">\n
+          <span class="image"></span>\n
+          <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
+        </a>\n
+      <span class="separator"></span>\n
+      </tal:block>\n
       <button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method" title="Print"\n
               i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n

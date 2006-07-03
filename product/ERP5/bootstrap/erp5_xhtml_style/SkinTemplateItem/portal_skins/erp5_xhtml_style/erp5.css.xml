@@ -257,7 +257,7 @@
         </item>
         <item>
             <key> <string>background_color</string> </key>
-            <value> <string>#D3E6DE</string> </value>
+            <value> <string>#DAE6E6</string> </value>
         </item>
         <item>
             <key> <string>button_description_color</string> </key>
@@ -293,7 +293,7 @@
         </item>
         <item>
             <key> <string>font_size</string> </key>
-            <value> <string>12px</string> </value>
+            <value> <string>13px</string> </value>
         </item>
         <item>
             <key> <string>globals</string> </key>
@@ -447,10 +447,10 @@ div.index_html table {\n
 #main_bar {\n
   color: inherit;\n
   background-color: <dtml-var navigation_bar_background_color>;\n
+  padding-top: 2px;\n
+  padding-bottom: 2px;\n
 }\n
 \n
-#context_bar #jump,\n
-#context_bar #action,\n
 #main_bar .first,\n
 #context_bar .first {\n
   float: left;\n
@@ -527,7 +527,11 @@ div.index_html table {\n
 \n
 .content .field label,\n
 .content .field .input {\n
- float: left;\n
+  float: left;\n
+}\n
+\n
+.content .field .input a{\n
+  vertical-align: middle;\n
 }\n
 \n
 .content .field .required,\n
@@ -545,16 +549,17 @@ div.index_html table {\n
   margin-left: 15%;\n
 }\n
 \n
-/*.login label {\n
-  text-align: right;\n
-}*/\n
+#jump,\n
+#action,\n
+#favourites,\n
+#modules,\n
+#language,\n
+#search {\n
+  float: left;\n
+}\n
 \n
 #favourites button .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/favourite.png\');\n
-}\n
-\n
-#favourites {\n
-  margin-right: 1.5em;\n
 }\n
 \n
 #modules button .image {\n
@@ -563,11 +568,6 @@ div.index_html table {\n
 \n
 #language button .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/language.png\');\n
-}\n
-\n
-#search {\n
-  display: none;\n
-  margin-left: 1.5em;\n
 }\n
 \n
 #search button .image {\n
@@ -584,6 +584,7 @@ div.index_html table {\n
 \n
 #context_bar {\n
   padding-top: 2px;\n
+  padding-bottom: 2px;\n
   border-bottom-width: 1px;\n
   border-bottom-style: solid;\n
   border-bottom-color: <dtml-var main_border_color>;\n
@@ -591,23 +592,32 @@ div.index_html table {\n
   color: inherit;\n
 }\n
 \n
-/*#context_bar .tool_buttons {\n
-  display: block;\n
-}*/\n
-\n
 #context_bar .tool_buttons a,\n
-#context_bar .tool_buttons .separator {\n
+#context_bar .separator,\n
+#main_bar .separator {\n
   float: left;\n
   margin-left: 2px;\n
   margin-right: 2px;\n
 }\n
 \n
-#context_bar .tool_buttons .separator {\n
+#context_bar .separator,\n
+#main_bar .separator {\n
   color: inherit;\n
-  background-color: <dtml-var main_border_color>;\n
-  width: 1px;\n
-  height: 22px;\n
+  width: 0;\n
+  height: 24px;\n
   display: block;\n
+  margin-left: 6px;\n
+  margin-right: 6px;\n
+  border-width: 1px;\n
+  border-style: outset;\n
+}\n
+\n
+#main_bar .separator {\n
+  border-color: <dtml-var context_bar_background_color>;\n
+}\n
+\n
+#context_bar .separator {\n
+  border-color: <dtml-var navigation_bar_background_color>;\n
 }\n
 \n
 #context_bar .tool_buttons a .image,\n
@@ -726,6 +736,10 @@ div.index_html table {\n
   float: right;\n
 }\n
 \n
+#logged_in_as .logged_txt{\n
+  color: <dtml-var link_color>;\n
+}\n
+\n
 #transition_message {\n
   margin-left: 1em;\n
   color: #F00;\n
@@ -765,6 +779,7 @@ div.index_html table {\n
   border-bottom-width: 1px;\n
   border-bottom-style: solid;\n
   border-bottom-color: <dtml-var document_border_color>;\n
+  color: <dtml-var link_color>;\n
 }\n
 \n
 .document .actions button.save {\n

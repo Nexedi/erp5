@@ -205,6 +205,7 @@ IDEAS:\n
                       i18n:translate="" i18n:domain="ui">Select Favorite</span>\n
               </button>\n
             </span>\n
+            <span class="separator"></span>\n
             <span id="modules">\n
               <select name="module_select"\n
                       tal:define="module_list here/ERP5Site_getModuleItemList;"\n
@@ -244,6 +245,7 @@ IDEAS:\n
                       i18n:translate="" i18n:domain="ui">Select Language</span>\n
               </button>\n
             </span>\n
+            <span class="separator"></span>\n
             <span id="search">\n
               <input type="text" name="SearchableText" />\n
               <button type="submit" name="Base_viewSearchResultList:method" title="Search"\n
@@ -277,11 +279,11 @@ IDEAS:\n
         </div>\n
         <div id="logged_in_as">\n
           <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
-            <tal:block i18n:translate="" i18n:domain="ui">Logged In as </tal:block> :\n
+\t    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
             <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
           </tal:block>\n
         </div>\n
-        <h6 class="clear">&nbsp;</h6>\n
+        <h6 class="clear" style="height: 10px">&nbsp;</h6>\n
         <div tal:content="structure here/REQUEST/portal_status_message | nothing"\n
              id="transition_message"></div>\n
       </div>\n
