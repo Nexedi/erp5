@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>OFS.Image</string>
+          <string>Image</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>webdav.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+BGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VG
+AAACL0lEQVR42mJkgAKjktv/Gf4zMDAC2f8ZwSRY/FyPKiMDHgAQQGBkWHDt/9fff/9//fkXQUMx
+SA6fXoAAYjHIvfR/e6s6w+dfUBGo5TA36PHeZmDIvfj/PyNIjJEB7Eyo/PnJ+owAAcTC8PcXw+ff
+mCb//wdUxMTAUFPoA+EzQPgMQHEGJgg/7O+Z/wABxPL/zy+GDz/wuBFoVUTZxa1MDMzemJKsDAAB
+xPIf6IJ3UOczA/FfGP0fQicWn7+WEC3jXewuwsDLDvQCyPlAQ888Y2DI6b7NABBALP///YW4AChY
+3XzpFyMjExvM/H9A56YmyWpVuYkwTDrEwAD3KdAQFqA3PgEDDiCAgC74zfD03R+GmdOvMYRF6LE1
+uzOAbYGFJyhwM1YxMLCzwGMWDH7+/MPw/fO3NwABBAyDnwwPX/wEK779ioEhaDbCFpBT/2MGCZj4
+AvT372/fHgEEENgLjx98ZPj3n4Xh+Qeg338gDGBgRLIVKTkxsgJd9vIzw//vX64BBBA4EF89/cDw
+8z8rw9vPQPU/kBT/RzULxmZiZ2D49voT0LJfdwECCBwGD26+YWhKVmKI92EgCjy+eY8hvP4mw7Xv
+fy4DBBATw78/DD8+fmZQleNhIBZ8+vaL4c3r7wz/fn67DxBAQBf8Yfj68CnDjYvXGN48YIbHAD7A
+zcnM8OHtN4bfnz89AgggsNc4ZSf+xwxqpFAEZwS00ARyvz/OZwQIIMb/xFiJBwAEGAAGx/m1zSiI
+fAAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>697</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Webdav Link</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
