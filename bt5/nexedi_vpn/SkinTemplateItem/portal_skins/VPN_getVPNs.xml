@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -76,14 +78,9 @@ else:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAIAAAAJAAAAQwAA
-AHNHAAAAdAAAdAEAZAEAgwIAgwAAZAIAagIAbwsAAXQBAGcBAFNuIAABdAAAdAEAZAMAgwIAZAQA
-aAAABGQFAGQCAAM8gwABU2QAAFMoBgAAAE5zDQAAAGdldFBvcnRhbFR5cGVzCgAAAE5leGVkaSBW
-UE5zDQAAAGNvbnRlbnRWYWx1ZXNzBgAAAGZpbHRlcnMLAAAAcG9ydGFsX3R5cGUoAgAAAHMJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0KAIAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAA
-KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAAVlBOX2dldFZQTnMBAAAAcwYAAAAAAhkBCwIo
-AQAAAHMLAAAAVlBOX2dldFZQTnMoAQAAAHMLAAAAVlBOX2dldFZQTnMoAAAAACgAAAAAcw8AAABT
-Y3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
