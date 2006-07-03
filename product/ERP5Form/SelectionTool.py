@@ -1236,7 +1236,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
             # parent has a special treatment
             root = root_dict[base_category] = root_dict[None] = here
             report_path = report_path[1:]
-          else:          
+          else:
             root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
             report_path = report_path[1:]
       if root is None and portal_domains is not None:
@@ -1266,11 +1266,11 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
         if o is not None:
           new_root_dict = root_dict.copy()
           new_root_dict[None] = new_root_dict[base_category] = o
-          
+
           selection_domain = DomainSelection(domain_dict = new_root_dict)
           if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
             exception_uid_list = [] # Object we do not want to display
-            
+
             for sub_zo in o.searchFolder(sort_on=sort_on):
               sub_o = sub_zo.getObject()
               if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
@@ -1282,7 +1282,12 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
           else:
             tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:
-    for o in root.objectValues():
+    # process to recover objects in case a generation script is used
+    if hasattr(root,'getChildDomainValueList'):
+      oblist = root.getChildDomainValueList(root,depth=depth)
+    else:
+      oblist = root.objectValues()
+    for o in oblist:
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
       selection_domain = DomainSelection(domain_dict = new_root_dict)
