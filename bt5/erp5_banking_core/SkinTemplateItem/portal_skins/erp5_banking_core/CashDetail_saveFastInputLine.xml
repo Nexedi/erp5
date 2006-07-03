@@ -167,6 +167,7 @@ for line in listbox:\n
         per_resource_dict[resource_id] = {movement_key:movement,}\n
 \n
 # create the movement\n
+variation_not_defined = 0\n
 for resource_id in per_resource_dict.keys():\n
   variation_list_dict = per_resource_dict[resource_id].values()\n
   # get the resource\n
@@ -186,7 +187,8 @@ for resource_id in per_resource_dict.keys():\n
     # check if variation exist for the resource\n
     if column_base_category == "variation":\n
       if variation != \'variation/not_defined\' and variation.lstrip(\'variation/\') not in resource_object.getVariationList():\n
-        raise "InputError",  "%s doesn\\\'t  exist for %s" %(resource_object.getTitle(), variation)\n
+        variation_not_defined = 1\n
+        break\n
     if not emission_letter_dict.has_key(letter):\n
       emission_letter_dict[letter] = 1\n
     if not cash_status_dict.has_key(status):\n
@@ -250,12 +252,22 @@ for resource_id in per_resource_dict.keys():\n
       else:\n
         cell.setQuantity(variation_item["quantity"])\n
 \n
-\n
-request  = context.REQUEST\n
-redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                , \'portal_status_message=Lines Created\'\n
+if variation_not_defined:\n
+  old_line = [x.getObject() for x in context.Delivery_getMovementList(portal_type=[line_portal_type,])]\n
+  if len(old_line)>0:\n
+    for object_list in old_line:\n
+      context.deleteContent(object_list.getId())\n
+  request  = context.REQUEST\n
+  redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                , "portal_status_message=%s doesn\\\'t  exist for %s" %(resource_object.getTitle(), variation)\n
                                 )\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
+  request[ \'RESPONSE\' ].redirect( redirect_url )\n
+else:\n
+  request  = context.REQUEST\n
+  redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                  , \'portal_status_message=Lines Created\'\n
+                                  )\n
+  request[ \'RESPONSE\' ].redirect( redirect_url )\n
 
 
 ]]></string> </value>
@@ -354,6 +366,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_write_</string>
                             <string>movement_key</string>
                             <string>resource_id</string>
+                            <string>variation_not_defined</string>
                             <string>variation_list_dict</string>
                             <string>resource_list</string>
                             <string>resource_object</string>

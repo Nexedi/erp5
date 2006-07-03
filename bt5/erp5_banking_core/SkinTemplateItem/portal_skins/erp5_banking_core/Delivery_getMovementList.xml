@@ -86,6 +86,8 @@ if len(line_list) == 0:\n
   invert = 1\n
 if len(line_list) == 0:\n
   return []\n
+if len(portal_type) == 1:\n
+  return line_list\n
 cell_list = []\n
 for line in line_list:\n
   if invert:\n

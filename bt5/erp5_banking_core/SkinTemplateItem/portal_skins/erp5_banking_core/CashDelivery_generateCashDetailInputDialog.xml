@@ -359,7 +359,8 @@ else :\n
     # compute the price for existing line\n
     quantity = 0\n
     for column_nb in xrange(1, len(column_base_list) + 1):\n
-      quantity += line[\'column%s\' %(str(column_nb))]\n
+      if line[\'column%s\' %(str(column_nb))] != \'\' and line[\'column%s\' %(str(column_nb))] is not None:\n
+        quantity += line[\'column%s\' %(str(column_nb))]\n
     line[\'price\'] = resource_price * quantity\n
     total_price += line[\'price\']\n
     # add current line\n
