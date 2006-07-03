@@ -6,6 +6,7 @@ Container Line | trade_matrix_workflow
 Container | edit_workflow
 Delivery Cell | delivery_edit_workflow
 Delivery Cell | packing_list_interaction_workflow
+Delivery Patch | delivery_patch_workflow
 Discount | edit_workflow
 Internal Packing List Cell | delivery_edit_workflow
 Internal Packing List Cell | packing_list_interaction_workflow

@@ -1,3 +1,7 @@
+2006-07-03 Kevin
+* Merge Seb's delivery_patch business template and erp5_trade.
+* Add a short basic description.
+
 2006-05-11 Alex
 * make sure the Container is indexed before checking if the delivery is packed.
 * fixed name of rule used in order_interaction_workflow

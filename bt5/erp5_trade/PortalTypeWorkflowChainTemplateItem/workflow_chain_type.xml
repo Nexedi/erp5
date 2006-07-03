@@ -16,6 +16,10 @@
   <workflow>packing_list_interaction_workflow, delivery_edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Delivery Patch</type>
+  <workflow>delivery_patch_workflow</workflow>
+ </chain>
+ <chain>
   <type>Discount</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -113,7 +117,7 @@
  </chain>
  <chain>
   <type>Sale Supply Line</type>
-  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
+  <workflow>supply_line_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Trade Condition</type>
