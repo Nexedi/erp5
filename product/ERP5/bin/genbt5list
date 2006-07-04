@@ -38,7 +38,7 @@ import tempfile
 import shutil
 import cgi
 
-property_list = ('title', 'version', 'description', 'license', 'dependency_list', 'copyright_list')
+property_list = ('title', 'version', 'revision', 'description', 'license', 'dependency_list', 'copyright_list')
 
 def info(message):
   """Print a message to stdout.
