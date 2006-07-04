@@ -642,14 +642,14 @@ allow_class(VariationPropertyMovementGroup)
 
 class FakeMovement:
   """
-    A fake movement which simulate some methods on a movement needed 
+    A fake movement which simulates some methods on a movement needed
     by DeliveryBuilder.
-    It contents a list a real ERP5 Movement and can modify them.
+    It contains a list of real ERP5 Movements and can modify them.
   """
 
   def __init__(self, movement_list):
     """
-      Create a fake movement and store the list of real movement
+      Create a fake movement and store the list of real movements
     """
     self.__price_method = None
     self.__quantity_method = None
@@ -658,7 +658,7 @@ class FakeMovement:
       self.append(movement)
     # This object must not be use when there is not 2 or more movements
     if len(movement_list) < 2:
-      raise ValueError, "FakeMovement used where it does not."
+      raise ValueError, "FakeMovement used where it should not."
     # All movements must share the same getVariationCategoryList
     # So, verify and raise a error if not
     # But, if DeliveryBuilder is well configured, this can never append ;)
