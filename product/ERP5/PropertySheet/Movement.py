@@ -78,6 +78,21 @@ class Movement:
             'description' : 'A reference which allows to unify multiple objects',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'frozen',
+            'description' : '''a frozen movement cannot be modified by the
+                simulation anylonger''',
+            'type'        : 'int',
+            'acquisition_base_category'     : ('delivery', 'parent'),
+            'acquisition_portal_type'       : Expression('''python:
+                portal.getPortalMovementTypeList() +
+                portal.getPortalOrderTypeList() +
+                portal.getPortalDeliveryTypeList()
+                '''),
+            'acquisition_copy_value'        : 0,
+            'acquisition_mask_value'        : 1,
+            'acquisition_accessor_id'       : 'getFrozen',
+            'acquisition_depends'           : None,
+            'mode'        : 'w' },
     )
 
     _categories = ('order', Expression('python: portal.getPortalVariationBaseCategoryList()'))
