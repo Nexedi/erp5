@@ -1365,6 +1365,7 @@ class ListBoxRenderer:
     domain_tool = self.getDomainTool()
     report_depth = self.getReportDepth()
     selection = self.getSelection()
+    selection_tool = self.getSelectionTool()
     report_list = selection.getReportList()
     stat_selection_expression = self.getStatSelectExpression()
     stat_method = self.getStatMethod()
@@ -1547,8 +1548,9 @@ class ListBoxRenderer:
                                                    object_list_len = object_list_len))
       else:
         # If list_method is None, use already selected values.
-        object_list = here.portal_selections.getSelectionValueList(selection_name,
+        object_list = selection_tool.getSelectionValueList(selection_name,
                                                                    context = context, REQUEST = self.request)
+        object_list_len= len(object_list)
         report_section_list.append(ReportSection(is_summary = False,
                                                  object_list = object_list,
                                                  object_list_len = object_list_len))
