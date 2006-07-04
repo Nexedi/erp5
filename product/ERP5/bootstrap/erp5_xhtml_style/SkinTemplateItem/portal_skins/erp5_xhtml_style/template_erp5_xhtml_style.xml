@@ -131,14 +131,18 @@ IDEAS:\n
             type="text/css"\n
             rel="stylesheet" />\n
     </tal:block>\n
-    \n
+\n
     <tal:block tal:condition="form/pt | nothing">\n
       <tal:block tal:define="planning_box python: here.ERP5Site_getPlanningBox(form)">\n
         <tal:block tal:condition="python: planning_box">\n
-          <tal:block tal:define="dummy python:js_list.append(\'%s/wz_dragdrop.js\' % (here.portal_url.getPortalPath(), ));" />\n
+\n
           <style tal:content="structure python: planning_box.render_css(None,REQUEST=request)"\n
                  tal:attributes="type python:\'text/css\'">\n
           </style>\n
+\n
+          <tal:block tal:condition="python: planning_box.get_value(\'js_enabled\')">\n
+            <tal:block tal:define="dummy python:js_list.append(\'%s/wz_dragdrop.js\' % (here.portal_url.getPortalPath(), ));" />\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
@@ -279,7 +283,7 @@ IDEAS:\n
         </div>\n
         <div id="logged_in_as">\n
           <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
-\t    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
+            <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
             <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
           </tal:block>\n
         </div>\n
