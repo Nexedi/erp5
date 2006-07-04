@@ -198,7 +198,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       block_moved['top']  = block_moved['new_Y'] - deltaY
 
       # abstracting axis representation (for generic processing)
-      if structure.planning.render_format == 'YX':
+      if structure.planning.calendar_view == 0:
         block_moved['main_axis_position']      = block_moved['top']
         block_moved['main_axis_length']        = block_moved['height']
         block_moved['secondary_axis_position'] = block_moved['left']
@@ -525,8 +525,10 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   property_names = Widget.Widget.property_names +\
-  [# kind of display : YX or XY
-   'representation_type',
+  [
+   'js_enabled',
+   # kind of display : YX or XY
+   'calendar_view',
    # number of groups over the main axis
    'main_axis_groups',
    # width properties
@@ -561,27 +563,35 @@ class PlanningBoxWidget(Widget.Widget):
   """
   # Planning properties (accessed through Zope Management Interface)
 
+  # kind of representation to render :
+  # Planning or Calendar
+  js_enabled = fields.CheckBoxField('js_enabled',
+      title='enable on the fly editing (based on java script)',
+      description='define if javascript is enabled or not on the current Planning',
+      default=1,
+      required=1)
 
   # kind of representation to render :
   # Planning or Calendar
-  representation_type = fields.StringField('representation_type',
-      title='representtion Type (YX or XY)',
-      description='YX for horizontal or XY for vertical',
-      default='YX',
+  calendar_view = fields.CheckBoxField('calendar_view',
+      title='calendar view (vertical view)',
+      description='define if need to changes axis order. By default Y axis is'
+                  'main axis, but to displa calendar main axis must be X one.',
+      default=0,
       required=1)
 
   # added especially for new Planning Structure generation
   # is used to split result in pages in a ListBox like rendering
   # (delimitation over the main axis)
   main_axis_groups = fields.IntegerField('main_axis_groups',
-      title='groups per page on main axis:',
+      title='groups per page on main axis',
       description=('number of groups displayed per page on main axis'),
       default=10,
       required=1)
 
   # setting header height
   size_header_height = fields.IntegerField('size_header_height',
-      title='header height:',
+      title='header height',
       desciption=(
       'height of the planning header'),
       default=100,
@@ -597,7 +607,7 @@ class PlanningBoxWidget(Widget.Widget):
 
   # setting the width of the Planning (excl. Y axis : only the block area)
   size_planning_width = fields.IntegerField('size_planning_width',
-      title='Planning width:',
+      title='Planning width',
       desciption=(
       'size of the planning area, excluding axis size'),
       default=1000,
@@ -605,7 +615,7 @@ class PlanningBoxWidget(Widget.Widget):
 
   # setting the with of the Y axis
   size_y_axis_width = fields.IntegerField('size_y_axis_width',
-      title='Y axis width:',
+      title='Y axis width',
       description=(
       'width of the Y axis'),
       default=200,
@@ -613,7 +623,7 @@ class PlanningBoxWidget(Widget.Widget):
 
   # setting the with of the space (between Planning and Y axis)
   size_y_axis_space = fields.IntegerField('size_y_axis_space',
-      title='Y axis space:',
+      title='Y axis space',
       description=(
       'space between Y axis and PLanning content'),
       default=10,
@@ -621,7 +631,7 @@ class PlanningBoxWidget(Widget.Widget):
 
   # setting the height of the Planning (excl. X axis)
   size_planning_height = fields.IntegerField('size_planning_height',
-      title='Planning height:',
+      title='Planning height',
       description=(
       'size of the planning area, excluding axis_size'),
       default=800,
@@ -629,7 +639,7 @@ class PlanningBoxWidget(Widget.Widget):
 
   # setting the height of the X axis
   size_x_axis_height = fields.IntegerField('size_x_axis_height',
-      title='X axis height:',
+      title='X axis height',
       description=(
       'height of the X axis'),
       default=200,
@@ -637,23 +647,26 @@ class PlanningBoxWidget(Widget.Widget):
 
   # setting the height of the space (between Planning and X axis)
   size_x_axis_space = fields.IntegerField('size_x_axis_space',
-      title='X axis space:',
+      title='X axis space',
       description=(
       'space between X axis and Planning content '),
       default=10,
       required=1)
 
 
-  y_axis_position = fields.StringField('y_axis_position',
-      title='Y axis position, (left or right) :',
-      description=('position of Y axis over the planning content'),
-      default = 'left',
+  y_axis_position = fields.CheckBoxField('y_axis_position',
+      title='Force Y axis to the right intead of left',
+      description=('position of Y axis over the planning content.'
+                   'If checked, the Y axis will match the right border'
+                   'of the planning, otherwise default is applied : left'),
+      default = 0,
       required = 1)
 
-  x_axis_position = fields.StringField('x_axis_position',
-      title='X axis position, (top or bottom) :',
-      description=('position or X axis over the planning content'),
-      default = 'bottom',
+  x_axis_position = fields.CheckBoxField('x_axis_position',
+      title='Force X axis to the bottom instead of top',
+      description=('position of X axis over the planning content.'
+                   'default is top, if checked then right apply'),
+      default = 0,
       required = 1)
 
 
@@ -667,7 +680,7 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   delimiter = fields.IntegerField('delimiter',
-      title='min number of delimiters over the secondary axis:',
+      title='min number of delimiters over the secondary axis',
       description=("min number of delimitations over the sec axis, required"),
       default = 5,
       required=1)
@@ -709,7 +722,7 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   title_line = fields.StringField('title_line',
-      title="specific method which fetches the title of each line: ",
+      title="specific method which fetches the title of each line",
       description=("specific method for inserting title in line"),
       default='',
       required=0)
@@ -745,7 +758,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=1)
 
   stat_method = fields.StringField('stat_method',
-      title="name of script generating statistics:",
+      title="name of script generating statistics",
       description=("script for statistics"),
       default='',
       required=0)
@@ -844,12 +857,12 @@ class PlanningBoxWidget(Widget.Widget):
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
     # --testing : no pdb available !!! --
-    #pdb.set_trace()
+    pdb.set_trace()
     self.render_structure(field=field, key=key, value=value,
                                     REQUEST=REQUEST, here=here)
 
 
-    
+
     # getting CSS script generator
     planning_css_method = getattr(REQUEST['here'],'planning_css')
     # recover CSS data buy calling DTML document
@@ -869,6 +882,9 @@ class PlanningBoxWidget(Widget.Widget):
     """
     # need to test if render is HTML (to be implemented in a page template)
     # or list (to generated a PDF output or anything else).
+
+    pdb.set_trace()
+
 
     # recover structure
     structure = REQUEST.get('structure')
@@ -1123,6 +1139,7 @@ class BasicStructure:
       selection_report_current = self.selection.getReportList()
 
     # building report_tree_list
+    pdb.set_trace()
     report_tree_list = makeTreeList(here=self.here, form=self.form,
                                     root_dict=None,
                                     report_path=selection_report_path,
@@ -1179,6 +1196,8 @@ class BasicStructure:
                                 report_tree_list=report_tree_list,
                                 object_tree_line=object_tree_line,
                                 REQUEST=self.REQUEST, field=self.field)
+        if isinstance(stat_list,Message):
+          return [(stat_list)]
 
         if original_select_expression is None:
           del kw['select_expression']
@@ -1925,8 +1944,8 @@ class PlanningStructure:
     output, or any other script to get the Planning result in the format you
     like...
     """
-    # recovering render format ('YX' or 'XY')
-    self.render_format = field.get_value('representation_type')
+    # recovering render format ('1'== calendar view, otherwise '0')
+    self.calendar_view = field.get_value('calendar_view')
 
     # declaring main axis
     self.main_axis = Axis(title='main axis', name='axis',
@@ -1938,7 +1957,7 @@ class PlanningStructure:
 
     # linking axis objects to their corresponding accessor, i.e X or Y
     # this allows the planning to be generic.
-    if self.render_format == 'YX':
+    if self.calendar_view == 0:
       self.Y = self.main_axis
       self.X = self.secondary_axis
     else:
@@ -2116,7 +2135,7 @@ class PlanningStructure:
                             secondary_axis_start= self.secondary_axis.start,
                             secondary_axis_stop= self.secondary_axis.stop,
                             property_dict = basic_group_object.property_dict)
-      if self.render_format == 'YX':
+      if self.calendar_view == 0:
         axis_group.position_y = axis_group.position_main
         axis_group.position_x = axis_group.position_secondary
       else:
@@ -2158,7 +2177,7 @@ class PlanningStructure:
                                           basic_activity_object.absolute_stop,
                               primary_axis_block=self,
                               info=basic_activity_object.info_dict,
-                              render_format=self.render_format,
+                              calendar_view=self.calendar_view,
                               property_dict=basic_group_object.property_dict)
             # adding activity to the current group
             axis_group.addActivity(activity,axis_element_already_present)
@@ -2170,7 +2189,7 @@ class PlanningStructure:
                basic_activity_list=basic_group_object.basic_activity_list,
                axis_group_number=axis_group_number,
                axis_element_already_present=axis_element_already_present,
-               render_format=self.render_format, primary_axis_block=self,
+               calendar_view=self.calendar_view, primary_axis_block=self,
                property_dict=basic_group_object.property_dict)
       else:
         # basic_activity_list is empty : need to add a empty axis_element to
@@ -2245,7 +2264,7 @@ class Activity:
                 color=None, link=None, height=None, secondary_axis_begin=None,
                 secondary_axis_end=None, secondary_axis_start=None,
                 secondary_axis_stop=None, primary_axis_block=None, info=None,
-                render_format='YX', property_dict={} ):
+                calendar_view=0, property_dict={} ):
     self.name = name # internal activity_name
     self.id = self.name
     self.title = title # displayed activity_name
@@ -2264,7 +2283,7 @@ class Activity:
     self.block_bounds = None
     self.info = info
     self.parent_axis_element = None
-    self.render_format= render_format
+    self.calendar_view= calendar_view
     self.property_dict = property_dict
 
 
@@ -2341,7 +2360,7 @@ class Activity:
 
       new_block = Bloc(name= block_name,color=block_color,link=block_link,
                        number = block_number,
-                       render_format=self.render_format, parent_activity=self,
+                       calendar_view=self.calendar_view, parent_activity=self,
                        warning=warning, error=error,
                        error_text=error_text,zone=zone,
                        property_dict=self.property_dict)
@@ -2485,7 +2504,7 @@ class Bloc:
   def __init__ (self, name=None, types=None,
                 color=None, info=None, link=None, number=0,
                 constraints=None, secondary_start=None, secondary_stop=None,
-                render_format='YX', parent_activity = None, warning=0, error=0,
+                calendar_view=0, parent_activity = None, warning=0, error=0,
                 error_text='', zone=1, property_dict ={} ):
     """
     creates a Bloc object
@@ -2512,7 +2531,7 @@ class Bloc:
     self.position_main = Position()
     self.position_secondary = \
           Position(absolute_begin=secondary_start,absolute_end=secondary_stop)
-    if render_format == 'YX':
+    if calendar_view == 0:
       self.position_y = self.position_main
       self.position_x = self.position_secondary
     else:
@@ -2781,7 +2800,7 @@ class AxisGroup:
 
 
   def addStatActivities(self, basic_activity_list=None, axis_group_number=0,
-                        axis_element_already_present= 0, render_format=None,
+                        axis_element_already_present= 0, calendar_view=0,
                         primary_axis_block=None, property_dict={}):
     """
     Permits to add stat block to the current AxisGroup. In this way use the
@@ -2823,7 +2842,7 @@ class AxisGroup:
                           height=basic_activity_object.height,
                           primary_axis_block=primary_axis_block,
                           info=basic_activity_object.info_dict,
-                          render_format=render_format,
+                          calendar_view=calendar_view,
                           property_dict = property_dict)
       activity.parent_axis_element = new_axis_element
 
@@ -2917,6 +2936,7 @@ class PlanningBox(ZMIField):
     widget = PlanningBoxWidgetInstance
     validator = PlanningBoxValidatorInstance
     security = ClassSecurityInfo()
+
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
       if id == 'default' and kw.get('render_format') in ('list', ):
@@ -2924,6 +2944,10 @@ class PlanningBox(ZMIField):
                                   kw.get('REQUEST'),
                                   render_format=kw.get('render_format'))
       else:
+        #pdb.set_trace()
+        #return self.widget.render(self, self.generate_field_key() , None , 
+        #                          kw.get('REQUEST'),
+        #                          render_format=kw.get('render_format'))
         return ZMIField.get_value(self, id, **kw)
 
     def render_css(self, value=None, REQUEST=None):
