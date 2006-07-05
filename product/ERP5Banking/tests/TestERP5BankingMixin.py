@@ -320,7 +320,7 @@ class TestERP5BankingMixin:
     # add the category 2003 in variation
     self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
     # add the category not_defined in variation
-    self.variation_not_defined = self.variation_base_category.newContent(id='not_defined', 
+    self.variation_not_defined = self.variation_base_category.newContent(id='not_defined',
                                       portal_type='Category')
 
     # Create Resources Document (Banknotes & Coins)
@@ -329,46 +329,46 @@ class TestERP5BankingMixin:
     # Create Resources Document (Banknotes & Coins)
     self.currency_1 = self.createCurrency()
     # create document for banknote of 10000 euros from years 1992 and 2003
-    self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000', 
-         portal_type='Banknote', base_price=10000, 
-         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+    self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000',
+         portal_type='Banknote', base_price=10000,
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # create document for banknote of 500 euros from years 1992 and 2003
-    self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000', 
-         portal_type='Banknote', base_price=5000, 
-         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+    self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000',
+         portal_type='Banknote', base_price=5000,
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # create document for coin of 200 euros from years 1992 and 2003
-    self.piece_200 = self.currency_cash_module.newContent(id='piece_200', 
-         portal_type='Coin', base_price=200, 
-         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+    self.piece_200 = self.currency_cash_module.newContent(id='piece_200',
+         portal_type='Coin', base_price=200,
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # create document for coin of 200 euros from years 1992 and 2003
-    self.piece_100 = self.currency_cash_module.newContent(id='piece_100', 
-         portal_type='Coin', base_price=100, 
-         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+    self.piece_100 = self.currency_cash_module.newContent(id='piece_100',
+         portal_type='Coin', base_price=100,
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # create document for banknote of 200 euros from years 1992 and 2003
-    self.billet_200 = self.currency_cash_module.newContent(id='billet_200', 
-         portal_type='Banknote', base_price=200, 
-         price_currency_value=self.currency_1, variation_list=('1992', '2003'), 
+    self.billet_200 = self.currency_cash_module.newContent(id='billet_200',
+         portal_type='Banknote', base_price=200,
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # Create Resources Document (Banknotes & Coins) in USD
     self.currency_2 = self.createCurrency(id='USD',title='US Dollar')
     # create document for banknote of 100 USD
-    self.usd_billet_200 = self.currency_cash_module.newContent(id='usd_billet_100', 
-         portal_type='Banknote', base_price=100, 
-         price_currency_value=self.currency_2, variation_list=('not_defined',), 
+    self.usd_billet_200 = self.currency_cash_module.newContent(id='usd_billet_100',
+         portal_type='Banknote', base_price=100,
+         price_currency_value=self.currency_2, variation_list=('not_defined',),
          quantity_unit_value=self.unit)
     # create document for banknote of 50 USD
-    self.usd_billet_50 = self.currency_cash_module.newContent(id='usd_billet_50', 
-         portal_type='Banknote', base_price=50, 
-         price_currency_value=self.currency_2, variation_list=('not_defined',), 
+    self.usd_billet_50 = self.currency_cash_module.newContent(id='usd_billet_50',
+         portal_type='Banknote', base_price=50,
+         price_currency_value=self.currency_2, variation_list=('not_defined',),
          quantity_unit_value=self.unit)
     # create document for banknote of 20 USD
-    self.usd_billet_20 = self.currency_cash_module.newContent(id='usd_billet_20', 
-         portal_type='Banknote', base_price=20, 
-         price_currency_value=self.currency_2, variation_list=('not_defined',), 
+    self.usd_billet_20 = self.currency_cash_module.newContent(id='usd_billet_20',
+         portal_type='Banknote', base_price=20,
+         price_currency_value=self.currency_2, variation_list=('not_defined',),
          quantity_unit_value=self.unit)
 
   def createFunctionGroupSiteCategory(self):
@@ -661,7 +661,8 @@ class TestERP5BankingMixin:
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
                                                                source=None,
-                                                               destination_value=destination)
+                                                               destination_value=destination,
+                                                               start_date=DateTime())
       setattr(self, inventory_group_id, inventory_group)
     else:
       inventory_group = getattr(self, inventory_group_id)
