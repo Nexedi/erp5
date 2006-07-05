@@ -70,12 +70,19 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+\n
 if do_extract == \'True\':\n
   context.getPortalObject().portal_subversion.extractBT(context)\n
 \n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\')\n
 \n
-root = context.getPortalObject().portal_subversion.getModifiedTree(context, show_unmodified)\n
+try:\n
+  root = context.getPortalObject().portal_subversion.getModifiedTree(context, show_unmodified)\n
+except SubversionSSLTrustError, error:\n
+  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'tree\').BusinessTemplate_viewSvnSSLTrust()\n
+\n
 if not root:\n
   return \'\'\'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
 <tree id=\'0\'></tree>\'\'\'\n
@@ -127,9 +134,13 @@ return context.getPortalObject().portal_subversion.treeToXML(root, context)\n
                           <tuple>
                             <string>show_unmodified</string>
                             <string>do_extract</string>
+                            <string>Products.ERP5Subversion.SubversionClient</string>
+                            <string>SubversionSSLTrustError</string>
+                            <string>SubversionLoginError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>root</string>
+                            <string>error</string>
                           </tuple>
                         </value>
                     </item>

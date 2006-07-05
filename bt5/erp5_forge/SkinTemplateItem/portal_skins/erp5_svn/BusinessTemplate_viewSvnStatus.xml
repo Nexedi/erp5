@@ -139,7 +139,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <div style="color: green">Added files</div>\n
             <div style="color: orange">Modified files</div>\n
             <div style="color: red">Removed files</div>\n
-            <div style="color: grey">Conflicted files</div>\n
+            <div style="color: purple" title="You must update local working copy">Outdated files</div>\n
+            <div style="color: grey" title="Please resolve conflicts manually">Conflicted files</div>\n
             <div style="color: black">Unmodified files</div>\n
         </div>\n
       </div>\n

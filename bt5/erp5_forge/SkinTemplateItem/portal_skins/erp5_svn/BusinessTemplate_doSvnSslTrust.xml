@@ -77,6 +77,8 @@ context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)
 \n
 if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
+if caller == \'tree\':\n
+  return context.BusinessTemplate_viewSvnStatus(do_extract=\'False\')\n
 elif caller == \'updatewc\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdatewc\')\n
 elif caller == \'commit\':\n
