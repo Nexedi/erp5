@@ -27,6 +27,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
+    # XXX need to decide how Constraints between task should be defined on
+    # planning.
+    # ideally, an external method should be called for validating all
+    # constraints within the planning. (such a method sould be called from
+    # anywhere in the Project module : listbox, editing form).
+    # this method should return a list of all the objects' urls that does not
+    # fit the constraints.
+
+
 import pdb
 
 import string, types, sys
@@ -224,6 +234,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # now that block coordinates are recovered as well as planning
       # coordinates, recovering destination group over the main axis to know
       # if the block has been moved from a group to another
+      #pdb.set_trace()
       group_destination = self.getDestinationGroup(structure,
                block_moved,planning_coordinates['main_axis'],
                group_position, group_length)
@@ -239,21 +250,22 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         if final_block['activity_origin'].name not in warning_activity_list:
           warning_activity_list.append(final_block['activity_origin'].name)
 
-
-      # now that all informations about the main axis changes are
-      # known, checking modifications over the secondary axis.
-      secondary_axis_positions = self.getDestinationBounds(structure,
-              block_moved, final_block['block_object'],
-              planning_coordinates, axis_length)
-      if secondary_axis_positions[2] == 1 :
-        # !! Generate an Error !!
-        # block has been moved outside the content area (bounds do not match
-        # current area limits)
-        if block_moved['name'] not in error_block_list:
-          error_block_list.append(block_moved['name'])
-          error_info_dict[block_moved['name']] = 'out of bounds on sec axis'
-          if final_block['activity_origin'].name not in warning_activity_list:
-            warning_activity_list.append(final_block['activity_origin'].name)
+      else:
+        # now that all informations about the main axis changes are
+        # known, checking modifications over the secondary axis.
+        secondary_axis_positions = self.getDestinationBounds(structure,
+                block_moved, final_block['block_object'],
+                planning_coordinates, axis_length,
+                destination_group = group_destination)
+        if secondary_axis_positions[2] == 1 :
+          # !! Generate an Error !!
+          # block has been moved outside the content area (bounds do not match
+          # current area limits)
+          if block_moved['name'] not in error_block_list:
+            error_block_list.append(block_moved['name'])
+            error_info_dict[block_moved['name']] = 'out of bounds on sec axis'
+            if final_block['activity_origin'].name not in warning_activity_list:
+              warning_activity_list.append(final_block['activity_origin'].name)
 
 
       block_moved['secondary_axis_start'] = secondary_axis_positions[0]
@@ -268,10 +280,22 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       except KeyError:
         activity_dict[final_block['activity_origin'].name] = [final_block]
 
+
+
+    ##################################################
+    # getting object_dict to update object properties once activities are up to
+    # date. Activities values will be updated directly on the 
+    object_dict = self.getObjectDict(structure)
+
     ##################################################
     ############# UPDATING ACTIVITIES ################
     ##################################################
-    update_dict = {}
+    # if activity is composed of several blocks, then check if it is needed to
+    # update activity itself depending on blocks moved. Beware this part only
+    # deals with activities (i.e task object) : an object can be represented by
+    # several activities (in case of calendar mode for example).
+    # build a dict
+    update_list = []
     errors_list = []
     # getting start & stop property names
     start_property = structure.basic.field.get_value('x_start_bloc')
@@ -287,7 +311,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # now getting list of blocks related to the activity (moved or not)
       activity_block_list = activity_object.block_list
       if activity_object.name in warning_activity_list:
-        # activity contains a block that has not be validated
+        # activity contains a block that has not been validated
         # The validation update process is canceled, and the error is reported
         err = ValidationError(StandardError,activity_object)
         errors_list.append(err)
@@ -302,9 +326,44 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         if round_script != None:
           start_value = round_script(start_value)
           stop_value = round_script(stop_value)
+        # adding object name to list of objects to update
+        if activity_object.object.getUrl() not in update_list :
+          update_list.append(activity_object.object.getUrl())
         # saving updated informations in the final dict
-        update_dict[activity_object.object.getUrl()] =  \
-        {start_property:start_value, stop_property:stop_value}
+        for activity_desc in object_dict[activity_object.object.getUrl()] :
+          if activity_desc['activity_name'] == activity_object.name:
+            activity_desc['axis_start'] = start_value
+            activity_desc['axis_stop'] = stop_value
+
+
+    ##################################################
+    ############### UPDATING OBJECTS #################
+    ##################################################
+    # using result from updated activities to process update on objects.
+    update_dict = {}
+    # first building a dict with all informations for each object.
+    # now processing activity updates
+    for object_name in update_list:
+      object_info = object_dict[object_name]
+      axis_start = None
+      axis_stop  = None
+      for activity in object_info:
+        if activity['activity_name'] == 'update':
+          # case current activity is in fact 'fake' activity, just data telling
+          # if can update min & max bounds according to global decision toward
+          # objects.
+          can_update_start = activity['axis_start']
+          can_update_stop  = activity['axis_stop']
+        else:
+          if axis_start > activity['axis_start'] or axis_start == None:
+            axis_start = activity['axis_start']
+          if axis_stop  < activity['axis_stop']  or axis_stop  == None:
+            axis_stop = activity['axis_stop']
+      update_dict[object_name] = {}
+      if can_update_start and axis_start != None:
+        update_dict[object_name][start_property] = axis_start
+      if can_update_stop  and axis_stop  != None:
+        update_dict[object_name][stop_property]  = axis_stop
 
 
     # testing if need to raise errors
@@ -420,7 +479,8 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
 
 
   def getDestinationBounds(self, structure, block_moved, block_object,
-                                 planning_coordinates, axis_length):
+                                 planning_coordinates, axis_length,
+                                 destination_group=None):
     """
     check the new bounds of the block over the secondary axis according to its
     new position
@@ -431,6 +491,9 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # implies that all groups have the same bounds, which is not the case in
     # calendar mode. for that will need to add special informations about the
     # group itself to know its own bounds.
+    # => In case of calendar mode, axis_bounds are recovered from the
+    #    destination group instead of the planning itself
+
     delta_start = block_moved['secondary_axis_position'] / \
                   planning_coordinates['frame']['planning_content'][axis_length]
     delta_stop  = (block_moved['secondary_axis_position'] + \
@@ -445,21 +508,25 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     else:
       if delta_start < 0 or delta_stop > 1:
         # part of the block is inside
+        # should handle support for correcting bounds : user should not be able
+        # to define any data out of its group bounds.
         pass
 
-    axis_range = structure.basic.secondary_axis_info['bound_stop'] - \
-                 structure.basic.secondary_axis_info['bound_start']
+    if structure.basic.calendar_mode:
+      axis_range = destination_group.secondary_axis_range
+      new_start = destination_group.secondary_axis_start + \
+                  delta_start * axis_range
+      new_stop = destination_group.secondary_axis_start + \
+                  delta_stop * axis_range
+    else:
+      axis_range = structure.basic.secondary_axis_info['bound_stop'] - \
+                   structure.basic.secondary_axis_info['bound_start']
 
-    # defining new final block bounds
-    new_start = structure.basic.secondary_axis_info['bound_start'] + \
-                delta_start * axis_range
-    new_stop  = structure.basic.secondary_axis_info['bound_start'] + \
-                delta_stop * axis_range 
-
-
-    # update block bounds (round to the closest round day)
-    #new_start = DateTime(new_start.Date())
-    #new_stop = DateTime(new_stop.Date())
+      # defining new final block bounds
+      new_start = structure.basic.secondary_axis_info['bound_start'] + \
+                  delta_start * axis_range
+      new_stop  = structure.basic.secondary_axis_info['bound_start'] + \
+                  delta_stop * axis_range
 
     return [new_start,new_stop, error]
 
@@ -468,6 +535,10 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
   def getActivityBounds(self, activity, activity_block_moved_list,
                               activity_block_list):
     """
+    Recompose Activity from moved blocks.
+    Warning : in case of calendar view, object bounds are not recomposed : only
+              bounds of each activity are calculated, not object bounds !
+
     takes a list with modified blocks and another one with original blocks,
     returning new startactivity_block_moved_list & stop for the activity
     BEWARE : in case an activity bound was cut off to fit planning size, the
@@ -486,8 +557,8 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
           # recovering corresponding moved block
           if temp_block_moved['block_moved']['name'] == activity_block.name:
             # moved block has been found
-            temp_start =temp_block_moved['block_moved']['secondary_axis_start']
-            temp_stop = temp_block_moved['block_moved']['secondary_axis_stop']
+            temp_start = temp_block_moved['block_moved']['secondary_axis_start']
+            temp_stop  = temp_block_moved['block_moved']['secondary_axis_stop']
             break
       else:
         # the block has not been moved
@@ -507,12 +578,63 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
 
     # new start & stop values are known
     # checking weither activity has been cut-off to fit the planning bounds 
-    if activity.secondary_axis_begin != activity.secondary_axis_start:
-      new_start = activity.secondary_axis_begin
-    if activity.secondary_axis_end != activity.secondary_axis_stop:
-      new_stop  = activity.secondary_axis_end
+    #if activity.secondary_axis_begin != activity.secondary_axis_start:
+    #  new_start = activity.secondary_axis_begin
+    #if activity.secondary_axis_end != activity.secondary_axis_stop:
+    #  new_stop  = activity.secondary_axis_end
 
     return [new_start,new_stop]
+
+
+  def getObjectDict(self, structure):
+    """
+    Takes all activities related to a specified object and return
+    """
+    # init dict
+    object_dict = {}
+    # get property_names
+    start_property = structure.basic.field.get_value('x_start_bloc')
+    stop_property = structure.basic.field.get_value('x_stop_bloc')
+    # get full axis length
+    axis_start = structure.basic.secondary_axis_info['bound_start']
+    axis_stop  = structure.basic.secondary_axis_info['bound_stop']
+    for axis_group in structure.planning.main_axis.axis_group:
+      for axis_element in axis_group.axis_element_list:
+        for activity in axis_element.activity_list:
+          # for each activity, saving its properties into a dict
+          if activity.link in object_dict.keys():
+            object_dict[activity.link].append(
+                       { 'activity_name' : activity.name,
+                         'axis_start': activity.secondary_axis_start,
+                         'axis_stop' : activity.secondary_axis_stop
+                       })
+          else:
+            # need to add object start & stop properties
+            object_start = activity.object.getProperty(start_property)
+            object_stop = activity.object.getProperty(stop_property)
+            # check if need to update start and stop.
+            # according to general specifications, this can be done only if the
+            # original object is not cut to fit view bounds :min and max bounds
+            if object_start < axis_start:
+              bound_start = 'no'
+            else:
+              bound_start = 'yes'
+            if object_stop > axis_stop:
+              bound_stop = 'no'
+            else:
+              bound_stop = 'yes'
+            object_dict[activity.link] = \
+                       [{ 'activity_name' : 'update',
+                          'axis_start' : bound_start,
+                          'axis_stop'  : bound_stop
+                         }]
+            # adding activity properties
+            object_dict[activity.link].append(
+                       { 'activity_name' : activity.name,
+                         'axis_start': activity.secondary_axis_start,
+                         'axis_stop' : activity.secondary_axis_stop
+                       })
+    return object_dict
 
 
 class PlanningBoxWidget(Widget.Widget):
@@ -525,9 +647,8 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   property_names = Widget.Widget.property_names +\
-  [
-   'js_enabled',
-   # kind of display : YX or XY
+  ['js_enabled',
+   # kind of display : horizontal or vertical
    'calendar_view',
    # number of groups over the main axis
    'main_axis_groups',
@@ -556,17 +677,12 @@ class PlanningBoxWidget(Widget.Widget):
    'info_backleft','info_backright'
    ]
 
-  """
-  'security_index'
-  # constraint method between block
-  'constraint_method',
-  """
   # Planning properties (accessed through Zope Management Interface)
 
   # kind of representation to render :
   # Planning or Calendar
   js_enabled = fields.CheckBoxField('js_enabled',
-      title='enable on the fly editing (based on java script)',
+      title='enable on the fly edition (based on java script)',
       description='define if javascript is enabled or not on the current Planning',
       default=1,
       required=1)
@@ -856,8 +972,6 @@ class PlanningBoxWidget(Widget.Widget):
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
-    # --testing : no pdb available !!! --
-    pdb.set_trace()
     self.render_structure(field=field, key=key, value=value,
                                     REQUEST=REQUEST, here=here)
 
@@ -882,9 +996,6 @@ class PlanningBoxWidget(Widget.Widget):
     """
     # need to test if render is HTML (to be implemented in a page template)
     # or list (to generated a PDF output or anything else).
-
-    pdb.set_trace()
-
 
     # recover structure
     structure = REQUEST.get('structure')
@@ -911,13 +1022,7 @@ class PlanningBoxWidget(Widget.Widget):
     # XXX testing : uncoment to put selection to null => used for debugging
     #here.portal_selections.setSelectionFor(selection_name, None)
 
-    # XXX need to decide how Constraints between task should be defined on
-    # planning.
-    # ideally, an external method should be called for validating all
-    # constraints within the planning. (such a method sould be called from
-    # anywhere in the Project module : listbox, editing form).
-    # this method should return a list of all the objects' urls that does not
-    # fit the constraints.
+
 
     ####### DATA DEFINITION #######
     self.build_error_list = None
@@ -943,7 +1048,7 @@ class PlanningBoxWidget(Widget.Widget):
     except (AttributeError,KeyError):
       params = {}
 
-
+    #pdb.set_trace()
     ###### CALL CLASS METHODS TO BUILD BASIC STRUCTURE ######
     # creating BasicStructure instance (and initializing its internal values)
     self.basic = BasicStructure(here=here,form=form, field=field,
@@ -1113,6 +1218,7 @@ class BasicStructure:
     # When building the body, need to go through all report lines
     # each report line is a tuple of the form :
     #(selection_id, is_summary, depth, object_list, object_list_size, is_open)
+
     try:
       default_selection_report_path = self.report_root_list[0][0].split('/')[0]
     except (IndexError):
@@ -1125,10 +1231,10 @@ class BasicStructure:
       pass
     else:
       default_selection_root_path = self.report_root_list[0][0]
-    selection_report_path = self.selection.getReportPath(default = \
+    self.selection_report_path = self.selection.getReportPath(default = \
      (default_selection_report_path,))
-    #pdb.set_trace()
-    if selection_report_path in (None,()):
+
+    if self.selection_report_path in (None,()):
       message = 'report path is empty or not valid'
       return [(Message(domain=None, message=message,mapping=None))]
 
@@ -1139,10 +1245,9 @@ class BasicStructure:
       selection_report_current = self.selection.getReportList()
 
     # building report_tree_list
-    pdb.set_trace()
     report_tree_list = makeTreeList(here=self.here, form=self.form,
                                     root_dict=None,
-                                    report_path=selection_report_path,
+                                    report_path=self.selection_report_path,
                                     base_category=None, depth=0,
                                     unfolded_list=selection_report_current,
                                     selection_name=self.selection_name,
@@ -1196,8 +1301,6 @@ class BasicStructure:
                                 report_tree_list=report_tree_list,
                                 object_tree_line=object_tree_line,
                                 REQUEST=self.REQUEST, field=self.field)
-        if isinstance(stat_list,Message):
-          return [(stat_list)]
 
         if original_select_expression is None:
           del kw['select_expression']
@@ -1322,6 +1425,8 @@ class BasicStructure:
       return [(Message(domain=None, message=message,mapping=None))]
 
 
+    #pdb.set_trace()
+
     ##################################################
     ############ GETTING SEC AXIS BOUNDS #############
     ##################################################
@@ -1329,7 +1434,11 @@ class BasicStructure:
     # axis bounds to add only the blocs needed afterwards
     # getting secondary_axis_occurence to define begin and end secondary_axis
     # bounds (getting absolute size)
-    self.secondary_axis_occurence = self.getSecondaryAxisOccurence()
+    self.getSecondaryAxisOccurence()
+    # XXX changing point of view to handle axis occurences : their are now
+    # handled by group, so that it is easy to recover group bounds in case the
+    # current rendering is calendar mode.
+
     # now getting start & stop bounds (getting relative size to the current
     # rendering)
     status = self.getSecondaryAxisInfo(self.secondary_axis_info)
@@ -1374,13 +1483,61 @@ class BasicStructure:
     report_group objects
     """
     secondary_axis_occurence = []
+    #pdb.set_trace()
+
+    # defining the objects requested for calendar mode testing
+    if self.selection_report_path == 'parent':
+      calendar_mode = 0
+    else:
+      calendar_mode = 1 # assuming calendar_mode = 1 by default.
+    calendar_range = 0  # range max on the current calendar mode. used for
+                        # example while dealing with months : 31 is saved as
+                        # the largest range, even if some month have only 28
+                        # to 30 days
 
     # specific start & stop methods name for secondary axis
     start_property_id = self.field.get_value('x_start_bloc')
     stop_property_id= self.field.get_value('x_stop_bloc')
     for (object_tree_group, object_list, info_dict) in self.report_groups:
-      # recover method to get begin and end limits
 
+      # defining empty list for each kind of occurence.
+      group_list = None
+      group_list = []
+      item_list = None
+      item_list = []
+
+      # recovering group_properties
+      if start_property_id != None:
+        group_start = \
+        object_tree_group.object.getObject().getProperty(start_property_id,
+                                                         None)
+        if object_tree_group.object.getObject().hasProperty('start_date'):
+          group_start = \
+          object_tree_group.object.getObject().start_date
+      else:
+        group_start= None
+      if stop_property_id != None:
+        group_stop = \
+        object_tree_group.object.getObject().getProperty(stop_property_id,None)
+        if object_tree_group.object.getObject().hasProperty('stop_date'):
+          group_stop = \
+          object_tree_group.object.getObject().stop_date
+      else:
+        group_stop = None
+
+      group_list = [[group_start, group_stop]]
+
+      # no calendar mode available if group has no valid bounds.
+      if None in [group_start,group_stop]:
+        calendar_mode = 0
+      else:
+        # seems to be a valid calendar mode, checking if need to update
+        # calendar_range
+        if calendar_range < (group_stop - group_start):
+          calendar_range = (group_stop - group_start)
+
+
+      # recovering item properties
       if object_list not in (None, [], {}) :
         for object_request in object_list:
           if start_property_id != None:
@@ -1393,23 +1550,25 @@ class BasicStructure:
             object_request.getObject().getProperty(stop_property_id,None)
           else:
             block_stop = None
-          secondary_axis_occurence.append([block_begin,block_stop])
-      else:
-        if start_property_id != None:
-          block_begin = \
-          object_tree_group.object.getObject().getProperty(start_property_id,
-                                                           None)
-        else:
-          block_begin = None
-        if stop_property_id != None:
-          block_stop = \
-          object_tree_group.object.getObject().getProperty(stop_property_id,
-                                                           None)
-        else:
-          block_stop = None
-        secondary_axis_occurence.append([block_begin,block_stop])
+          item_list.append([block_begin,block_stop])
 
-    return secondary_axis_occurence
+          # testing if current item is compliant with calendar mode
+          # i.e item car be represented within the current group
+          if calendar_mode and (block_stop <= group_start) and \
+                               (block_begin >= group_stop):
+            # invalid conditions : item outside group, so no calendar mode
+            calendar_mode = 0
+
+        # adding list of items to group_list
+        group_list.extend(item_list)
+
+      # adding current group list to list of occurences
+      secondary_axis_occurence.extend(group_list)
+
+    # saving resulting values.
+    self.calendar_mode  = calendar_mode
+    self.calendar_range = calendar_range
+    self.secondary_axis_occurence =  secondary_axis_occurence
 
 
 
@@ -1439,7 +1598,7 @@ class BasicStructure:
     if axis_dict['bound_end']==None or axis_dict['bound_begin']==None:
       # ERROR
       # no bounds over the secondary axis have been defined
-      # can append if bad property has been selected 
+      # can append if bad property has been selected
       message = 'can not find secondary axis bounds for planning view :\
       No object has good start & stop properties, please check your objects \
       and their corresponding properties'
@@ -1563,7 +1722,7 @@ class BasicStructure:
         url=getattr(stat_context,'domain_url','')
         # updating position_informations
         position +=1
-        # recovering usefull informations
+        # recovering usefull informations, basic_structure
         title = report_group_object.getObject().getTitle()
         name = report_group_object.getObject().getTitle()
         depth = report_group_object.getDepth()
@@ -1571,17 +1730,30 @@ class BasicStructure:
         is_pure_summary = report_group_object.getIsPureSummary()
 
         # creating new group_object with all the informations collected
+        group_start = group_stop = None
+        if self.calendar_mode == 1:
+          # recover start and stop of current object to generate good BasicGroup
+          group_start = report_group_object.getObject().start_date
+          group_stop  = report_group_object.getObject().stop_date -1
+          # build dict to fix BasicActivity bounds
+          secondary_axis_bounds = {}
+          secondary_axis_bounds['bound_start'] = group_start
+          secondary_axis_bounds['bound_stop']  = group_stop
+        else:
+          secondary_axis_bounds = self.secondary_axis_info
         child_group = BasicGroup(title=title, name=name, url=url,
                                  constraints=None, depth=depth,
                                  position=position, field =self.field,
                                  object=report_group_object, is_open=is_open,
                                  is_pure_summary=is_pure_summary,
+                                 secondary_axis_start = group_start,
+                                 secondary_axis_stop  = group_stop,
                                  property_dict = property_dict)
 
 
         if object_list != None:
           child_group.setBasicActivities(object_list,self.list_error,
-                                         self.secondary_axis_info)
+                                         secondary_axis_bounds)
 
         try:
           self.basic_group_list.append(child_group)
@@ -1606,7 +1778,8 @@ class BasicGroup:
 
   def __init__ (self, title='', name='',url='', constraints='', depth=0,
                 position=0, field = None, object = None, is_open=0,
-                is_pure_summary=1, property_dict = {}):
+                is_pure_summary=1, secondary_axis_start=None,
+                secondary_axis_stop=None, property_dict = {}):
     self.title = title
     self.name = name
     self.url = url
@@ -1621,8 +1794,8 @@ class BasicGroup:
     self.is_pure_summary = is_pure_summary
     # specific start and stop bound values specifiec to the current group and
     # used in case of calendar mode
-    self.start = None
-    self.stop = None
+    self.secondary_axis_start = secondary_axis_start
+    self.secondary_axis_stop = secondary_axis_stop
     # property_dict holds all information about the current axis_group
     # type of group, stat, etc.
     self.property_dict = property_dict
@@ -1646,26 +1819,26 @@ class BasicGroup:
     info_center = self.field.get_value('info_center')
     info_topleft = self.field.get_value('info_topleft')
     info_topright = self.field.get_value('info_topright')
-    info_backleft = self.field.get_value('info_backleft')
-    info_backright = self.field.get_value('info_backright')
+    info_botleft = self.field.get_value('info_backleft')
+    info_botright = self.field.get_value('info_backright')
     # getting info method from activity itself if exists
     info_center_method = getattr(self.object.getObject(),info_center,None)
     info_topright_method = getattr(self.object.getObject(),info_topright,None)
     info_topleft_method = getattr(self.object.getObject(),info_topleft,None)
-    info_backleft_method = getattr(self.object.getObject(),info_backleft,None)
-    info_backright_method = \
-                  getattr(self.object.getObject(),info_backright,None)
+    info_botleft_method = getattr(self.object.getObject(),info_botleft,None)
+    info_botright_method = \
+                  getattr(self.object.getObject(),info_botright,None)
     # if method recovered is not null, then updating
-    if info_center_method!=None: \
-                  info['info_center'] = str(info_center_method())
-    if info_topright_method!=None: \
-                  info['info_topright'] = str(info_topright_method())
-    if info_topleft_method!=None: \
-                  info['info_topleft'] = str(info_topleft_method())
-    if info_backleft_method!=None: \
-                  info['info_backleft'] = str(info_backleft_method())
-    if info_backright_method!=None: \
-                  info['info_backright'] = str(info_backright_method())
+    if info_center_method!=None: 
+      info['info_center'] = str(info_center_method())
+    if info_topright_method!=None:
+      info['info_topright'] = str(info_topright_method())
+    if info_topleft_method!=None:
+      info['info_topleft'] = str(info_topleft_method())
+    if info_botleft_method!=None:
+      info['info_botleft'] = str(info_botleft_method())
+    if info_botright_method!=None:
+      info['info_botright'] = str(info_botright_method())
 
     if activity_list not in ([],None):
       indic=0
@@ -1723,8 +1896,8 @@ class BasicGroup:
             info['info_center'] = ''
             info['info_topright'] = ''
             info['info_topleft'] = ''
-            info['info_backleft'] = ''
-            info['info_backright'] = ''
+            info['info_botleft'] = ''
+            info['info_botright'] = ''
             title = ''
             object = activity_content
             url=''
@@ -1738,9 +1911,9 @@ class BasicGroup:
             info_center_method = getattr(activity_content,info_center,None)
             info_topright_method = getattr(activity_content,info_topright,None)
             info_topleft_method = getattr(activity_content,info_topleft,None)
-            info_backleft_method = getattr(activity_content,info_backleft,None)
-            info_backright_method = \
-                 getattr(activity_content,info_backright,None)
+            info_botleft_method = getattr(activity_content,info_botleft,None)
+            info_botright_method = \
+                 getattr(activity_content,info_botright,None)
 
             # if value recovered is not null, then updating 
             if info_center_method!=None:
@@ -1749,10 +1922,10 @@ class BasicGroup:
                info['info_topright']=str(info_topright_method())
             if info_topleft_method!=None:
                info['info_topleft']=str(info_topleft_method())
-            if info_backleft_method!=None:
-               info['info_backleft'] =str(info_backleft_method())
-            if info_backright_method!=None:
-               info['info_backright']=str(info_backright_method())
+            if info_botleft_method!=None:
+               info['info_botleft'] =str(info_botleft_method())
+            if info_botright_method!=None:
+               info['info_botright']=str(info_botright_method())
 
             title = info['info_center']
 
@@ -1778,10 +1951,6 @@ class BasicGroup:
                          lambda x: activity_content.getObject().absolute_url()
             object = stat_context.getObject()
             url = stat_context.getUrl()
-
-            # XXX testing constraint result here.
-            # if current object url in list of error constranint urls, then
-            # colorizing the block.
 
             # XXX should define height of block here
             height = None
@@ -1891,8 +2060,6 @@ class BasicGroup:
 
 
 
-
-
 class BasicActivity:
   """ Represents an activity, a task, in the group it belongs to. Beware
       nothing about multitask rendering. """
@@ -1944,8 +2111,8 @@ class PlanningStructure:
     output, or any other script to get the Planning result in the format you
     like...
     """
-    # recovering render format ('1'== calendar view, otherwise '0')
-    self.calendar_view = field.get_value('calendar_view')
+    # recovering render format ('YX' or 'XY')
+    self.calendar_view = field.get_value('representation_type')
 
     # declaring main axis
     self.main_axis = Axis(title='main axis', name='axis',
@@ -1970,6 +2137,7 @@ class PlanningStructure:
 
 
     # recovering secondary_axis_ bounds
+    # Used in case of non calendar mode
     self.secondary_axis.start = \
                       basic_structure.secondary_axis_info['bound_start']
     self.secondary_axis.stop = \
@@ -1978,9 +2146,9 @@ class PlanningStructure:
 
     self.main_axis.size =  self.buildGroups(basic_structure=basic_structure)
 
-
     # call method to build secondary axis structure
     # need start_bound, stop_bound and number of groups to build
+    # used in non calendar mode
     status = self.buildSecondaryAxis(basic_structure,field)
     if status != 1:
       # ERROR while building secondary axis
@@ -1994,7 +2162,7 @@ class PlanningStructure:
     # axis_elements with their activities. Just need to create blocks related
     # to the activities (special process only for Calendar mode) with their
     # BlockPosition
-    status = self.buildBlocs(REQUEST = REQUEST)
+    status = self.buildBlocs(basic_structure=basic_structure, REQUEST = REQUEST)
     if status != 1:
       # ERROR while building blocks
       return status
@@ -2009,8 +2177,12 @@ class PlanningStructure:
 
     # defining min and max delimiter number
     delimiter_min_number = basic_structure.field.get_value('delimiter')
-    axis_stop = (self.secondary_axis.stop)
-    axis_start = (self.secondary_axis.start)
+    if basic_structure.calendar_mode:
+      axis_start = 1
+      axis_stop = basic_structure.calendar_range + 1
+    else:
+      axis_stop = (self.secondary_axis.stop)
+      axis_start = (self.secondary_axis.start)
 
 
     axis_script=getattr(basic_structure.here,
@@ -2069,8 +2241,8 @@ class PlanningStructure:
       self.secondary_axis.axis_group.append(axis_group)
       axis_group_number += 1
 
-
     return 1
+
 
 
   def completeAxis (self):
@@ -2120,10 +2292,13 @@ class PlanningStructure:
     build groups from activities saved in the structure groups.
     """
     axis_group_number = 0
-    #pdb.set_trace()
     axis_element_already_present=0
     for basic_group_object in basic_structure.basic_group_list:
       axis_group_number += 1
+      if basic_structure.calendar_mode == 1:
+        secondary_axis_range = basic_structure.calendar_range
+      else:
+        secondary_axis_range = None
       axis_group= AxisGroup(name='Group_' + str(axis_group_number),
                             title=basic_group_object.title,
                             object=basic_group_object.object,
@@ -2132,8 +2307,9 @@ class PlanningStructure:
                             is_pure_summary=basic_group_object.is_pure_summary,
                             url = basic_group_object.url,
                             depth=basic_group_object.depth,
-                            secondary_axis_start= self.secondary_axis.start,
-                            secondary_axis_stop= self.secondary_axis.stop,
+                            secondary_axis_start = basic_group_object.secondary_axis_start,
+                            secondary_axis_stop  = basic_group_object.secondary_axis_stop,
+                            secondary_axis_range = secondary_axis_range,
                             property_dict = basic_group_object.property_dict)
       if self.calendar_view == 0:
         axis_group.position_y = axis_group.position_main
@@ -2216,7 +2392,7 @@ class PlanningStructure:
     return axis_element_already_present
 
 
-  def buildBlocs(self,REQUEST):
+  def buildBlocs(self,basic_structure=None, REQUEST=None):
     """
     iterate the whole planning structure to get various activities and build
     their related blocs.
@@ -2225,19 +2401,28 @@ class PlanningStructure:
     warning_activity_list = REQUEST.get('warning_activity_list',[])
     error_block_list = REQUEST.get('error_block_list',[])
     error_info_dict = REQUEST.get('error_info_dict',{})
-
+    #pdb.set_trace()
     for axis_group_object in self.main_axis.axis_group:
       for axis_element_object in axis_group_object.axis_element_list:
         for activity in axis_element_object.activity_list:
+          # test if activity in warning_activity_list
           if activity.name in warning_activity_list:
             warning = 1
           else:
             warning = 0
-          # generate activity_info
+          if basic_structure.calendar_mode == 1:
+            axis_range = axis_group_object.secondary_axis_range
+            axis_start = axis_group_object.secondary_axis_start
+            axis_stop  = axis_group_object.secondary_axis_stop
+          else:
+            axis_start = basic_structure.secondary_axis_info['bound_start']
+            axis_stop  = basic_structure.secondary_axis_info['bound_stop']
+            axis_range = axis_stop - axis_start
           status = activity.addBlocs(main_axis_start=0,
                                 main_axis_stop=self.main_axis.size,
-                                secondary_axis_start=self.secondary_axis.start,
-                                secondary_axis_stop=self.secondary_axis.stop,
+                                secondary_axis_start = axis_start,
+                                secondary_axis_stop  = axis_stop,
+                                secondary_axis_range = axis_range,
                                 planning=self, warning=warning,
                                 error_block_list=error_block_list,
                                 error_info_dict=error_info_dict)
@@ -2248,7 +2433,7 @@ class PlanningStructure:
           status = axis_group_object.updateStatBlocks()
           if status !=1: return status
     # no problem during process, returning 'true' flag
-    return 1 
+    return 1
 
 
 class Activity:
@@ -2310,8 +2495,8 @@ class Activity:
 
 
   def addBlocs(self, main_axis_start=None, main_axis_stop=None,
-               secondary_axis_start=None,
-               secondary_axis_stop=None,planning=None, warning=0,
+               secondary_axis_start=None, secondary_axis_stop=None,
+               secondary_axis_range=None, planning=None, warning=0,
                error_block_list=[], error_info_dict={}):
     """
     define list of (begin & stop) values for blocs representing the actual
@@ -2328,8 +2513,8 @@ class Activity:
                                            # self.secondary_axis_stop)
 
     else:
-      secondary_block_bounds = \
-               [[self.secondary_axis_start,self.secondary_axis_stop,1]]
+       secondary_block_bounds = \
+          [[secondary_axis_start, secondary_axis_stop,1]]
 
     block_number = 0
     # iterating resulting list
@@ -2388,6 +2573,19 @@ class Activity:
 
       # now absolute positions are updated, and the axis values are known
       # (as parameters), processing relative values
+      # => but before updating secondary_axis bounds
+      #pdb.set_trace()
+      new_block.position_secondary.relative_begin = (
+          float(new_block.position_secondary.absolute_begin -
+          secondary_axis_start) / float(secondary_axis_range))
+      new_block.position_secondary.relative_end = (
+          float(new_block.position_secondary.absolute_end -
+          secondary_axis_start) / float(secondary_axis_range))
+      new_block.position_secondary.relative_range = (
+          new_block.position_secondary.relative_end -
+          new_block.position_secondary.relative_begin)
+
+      """
       new_block.position_secondary.relative_begin = (
           float(new_block.position_secondary.absolute_begin -
           secondary_axis_start) / float(secondary_axis_stop -
@@ -2399,6 +2597,8 @@ class Activity:
       new_block.position_secondary.relative_range = (
           new_block.position_secondary.relative_end -
           new_block.position_secondary.relative_begin)
+      """
+
       new_block.position_main.relative_begin = (
           float(new_block.position_main.absolute_begin - main_axis_start) /
           float(main_axis_stop - main_axis_start))
@@ -2647,6 +2847,7 @@ class AxisGroup:
                 delimiter_type=0, is_open=0, is_pure_summary=1,depth=0,
                 url=None, axis_element_already_insered= 0,
                 secondary_axis_start=None, secondary_axis_stop=None,
+                secondary_axis_range=None,
                 property_dict={}):
     self.name = name
     self.title = title
@@ -2661,8 +2862,8 @@ class AxisGroup:
     self.axis_element_start = None
     self.axis_element_stop = None
     self.delimiter_type = delimiter_type
-       # define the kind of separator used in graphic rendering
-       # 0 for standard, 1 for bold, 2 for 2x bold
+    # define the kind of separator used in graphic rendering
+    # 0 for standard, 1 for bold, 2 for 2x bold
     # dict containing all class properties with their values
     self.render_dict=None
     self.is_open = is_open
@@ -2674,10 +2875,15 @@ class AxisGroup:
     self.position_secondary = Position()
     self.position_x = None
     self.position_y = None
-    # UPDATE secondary axis_bounds are now linked to each axis_group to support
-    # calendar output( were each axis_group has its own start and stop)
+    # secondary_axis_bounds are specified for each axis_group to handle
+    # calendar view.
     self.secondary_axis_start = secondary_axis_start
     self.secondary_axis_stop = secondary_axis_stop
+    # secondary_axis_range is used in calendar mode to define range of the
+    # largest axis. In case of month calendar, range is 31 so that even
+    # tasks on febuary will be positioned over 31 days (and not 28) so that all
+    # groups matches the same scale.
+    self.secondary_axis_range = secondary_axis_range
     self.property_dict = property_dict
 
 
@@ -2691,7 +2897,6 @@ class AxisGroup:
     using actual AxisGroup properties to define some special comportement that
     the axisGroup should have, especially in case of report-tree
     """
-
     if self.is_open:
       # current report is unfold, action 'fold'
       self.info_title.link = 'portal_selections/foldReport?report_url=' + \
@@ -2936,7 +3141,6 @@ class PlanningBox(ZMIField):
     widget = PlanningBoxWidgetInstance
     validator = PlanningBoxValidatorInstance
     security = ClassSecurityInfo()
-
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
       if id == 'default' and kw.get('render_format') in ('list', ):
@@ -2944,10 +3148,6 @@ class PlanningBox(ZMIField):
                                   kw.get('REQUEST'),
                                   render_format=kw.get('render_format'))
       else:
-        #pdb.set_trace()
-        #return self.widget.render(self, self.generate_field_key() , None , 
-        #                          kw.get('REQUEST'),
-        #                          render_format=kw.get('render_format'))
         return ZMIField.get_value(self, id, **kw)
 
     def render_css(self, value=None, REQUEST=None):
@@ -2978,3 +3178,6 @@ InitializeClass(AxisElement)
 allow_class(AxisElement)
 InitializeClass(Info)
 allow_class(Info)
+
+
+
