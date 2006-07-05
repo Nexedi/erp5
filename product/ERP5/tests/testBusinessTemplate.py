@@ -1531,7 +1531,25 @@ class TestBusinessTemplate(ERP5TypeTestCase):
         'portal_categories/%s' % base_category_id)
     self.failUnless(base_category_obj is not None)
     self.assertEquals(len(base_category_obj.objectIds()), 0)
+    
+  def stepCheckInitialRevision(self, sequence=None, sequence_list=None, **kw):
+    """ Check if revision of a new bt is an empty string
+    """
+    bt = sequence.get('export_bt')
+    self.assertEqual(bt.getRevision(), '')
 
+  def stepCheckFirstRevision(self, sequence=None, sequence_list=None, **kw):
+    """ Check if revision of the bt is 1
+    """
+    bt = sequence.get('export_bt')
+    self.assertEqual(bt.getRevision(), '1')
+    
+  def stepCheckSecondRevision(self, sequence=None, sequence_list=None, **kw):
+    """ Check if revision of the bt is 2
+    """
+    bt = sequence.get('export_bt')
+    self.assertEqual(bt.getRevision(), '2')
+    
   # tests
   def test_01_checkNewSite(self, quiet=0, run=run_all_test):
     if not run: return
@@ -2701,6 +2719,29 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  # test of portal types
+  def test_22_RevisionNumberIsIncremented(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Portal Types'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateNewBusinessTemplate \
+		       UseExportBusinessTemplate \
+		       CheckInitialRevision \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+		       stepCheckFirstRevision \
+		       BuildBusinessTemplate \
+		       stepCheckSecondRevision \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 if __name__ == '__main__':
   framework()
