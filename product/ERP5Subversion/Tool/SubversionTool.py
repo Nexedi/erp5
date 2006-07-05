@@ -879,10 +879,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       added_files = [added_files]
     if not isinstance(other_files, list) :
       other_files = [other_files]
-    
+      
     # Reinstall removed or modified files
     for path in other_files :
-      path_list = self._getWorkingPath(self.relativeToAbsolute(path, business_template)).split(os.sep)
+      # security check
+      self._getWorkingPath(self.relativeToAbsolute(path, business_template))
+      path_list = path.split(os.sep)
       if 'bt' not in path_list:
         if len(path_list) > 2 :
           tmp = os.sep.join(path_list[2:])
@@ -892,7 +894,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     path_added_list = []
     # remove added files
     for path in added_files :
-      path_list = self._getWorkingPath(self.relativeToAbsolute(path, business_template)).split(os.sep)
+      # security check
+      self._getWorkingPath(self.relativeToAbsolute(path, business_template))
+      path_list = path.split(os.sep)
       if 'bt' not in path_list:
         if len(path_list) > 2 :
           tmp = os.sep.join(path_list[2:])
