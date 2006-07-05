@@ -1,3 +1,6 @@
+2006-07-05 aurel
+* fix getBaobabDestination for cash sorting cell
+
 2006-06-17 Seb
 * Added Monetary Destruction
 * Added Cash Balance Regulation
