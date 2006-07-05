@@ -166,7 +166,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash inventory document and check it
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris)
+    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris, start_date = DateTime())
     # execute tic
     self.stepTic()
     # check we have only one cash inventory
@@ -186,7 +186,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a second cash inventory document and check it
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group_2', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris)
+    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group_2', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris, start_date = DateTime())
     # execute tic
     self.stepTic()
     # check we have only one cash inventory
@@ -206,7 +206,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash inventory document and check it
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_inventory = self.cash_inventory_group.newContent(id='cash_inventory', portal_type='Cash Inventory', price_currency='currency_module/EUR', start_date = DateTime())
+    self.cash_inventory = self.cash_inventory_group.newContent(id='cash_inventory', portal_type='Cash Inventory', price_currency='currency_module/EUR')
     # execute tic
     self.stepTic()
     # check we have only one cash inventory
