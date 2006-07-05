@@ -112,6 +112,7 @@
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_version</string>
+                        <string>my_revision</string>
                         <string>my_building_state</string>
                         <string>my_installation_state</string>
                         <string>my_description</string>

@@ -346,6 +346,10 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
+                          <string>revision</string>
+                          <string>Revision</string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -445,6 +449,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -517,6 +525,10 @@
 <string></string>
                         </tuple>
                         <tuple>
+                          <string>revision</string>
+<string></string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
 <string></string>
                         </tuple>
@@ -555,7 +567,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>getRepositoryBusinessTemplateList</unicode> </value>
+            <value> <string>getRepositoryBusinessTemplateList</string> </value>
         </item>
       </dictionary>
     </pickle>
