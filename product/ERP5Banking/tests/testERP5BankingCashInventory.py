@@ -34,6 +34,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from DateTime import DateTime
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -205,7 +206,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash inventory document and check it
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_inventory = self.cash_inventory_group.newContent(id='cash_inventory', portal_type='Cash Inventory', price_currency='currency_module/EUR')
+    self.cash_inventory = self.cash_inventory_group.newContent(id='cash_inventory', portal_type='Cash Inventory', price_currency='currency_module/EUR', start_date = DateTime())
     # execute tic
     self.stepTic()
     # check we have only one cash inventory
