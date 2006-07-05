@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/REQUEST/removed</string> </value>
+            <value> <string>here/REQUEST/removed | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

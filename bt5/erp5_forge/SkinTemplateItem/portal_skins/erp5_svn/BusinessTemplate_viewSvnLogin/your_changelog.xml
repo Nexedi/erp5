@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/REQUEST/changelog</string> </value>
+            <value> <string>here/REQUEST/changelog | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
