@@ -1045,11 +1045,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     root = Dir(business_template.getTitle(), "normal")
     something_modified = False
     statusObj_list = self.status(os.path.join(bt_path, \
-    business_template.getTitle()))
+    business_template.getTitle()), update=True)
     # We browse the files returned by svn status
     for status_obj in statusObj_list :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
       status = str(status_obj.getTextStatus())
+      if str(status_obj.getReposTextStatus()) != 'none':
+	status = "outdated"
       if (show_unmodified or status != "normal") and status != "unversioned":
         something_modified = True
         # Get object path
@@ -1238,6 +1240,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       color = 'red'
     elif status == 'conflicted' :
       color = 'grey'
+    elif status == 'outdated' :
+      color = 'purple'
     else :
       color = 'black'
     if isinstance(item, Dir) :

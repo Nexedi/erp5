@@ -244,7 +244,14 @@ try:
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in 
       # Zope, convert the objects.
-      status_list = [Status(x) for x in self.client.status(path, **kw)]
+      try:
+      	status_list = [Status(x) for x in self.client.status(path=path, **kw)]
+      except pysvn.ClientError, error:
+        excep = self.getException()
+        if excep:
+          raise excep
+        else:
+          raise error
       # XXX: seems that pysvn return a list that is 
       # upside-down, we reverse it...
       status_list.reverse()
