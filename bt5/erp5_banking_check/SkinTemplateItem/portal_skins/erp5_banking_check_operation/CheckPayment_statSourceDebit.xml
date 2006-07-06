@@ -83,7 +83,7 @@ return total\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_payment/CheckPayment_statSourceDebit</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/CheckPayment_statSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -122,7 +122,7 @@ return total\n
                             <string>total</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>line</string>
                           </tuple>
                         </value>

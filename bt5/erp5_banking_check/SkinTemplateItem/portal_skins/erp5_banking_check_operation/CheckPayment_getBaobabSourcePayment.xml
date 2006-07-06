@@ -68,19 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cash_detail_dict = {\'line_portal_type\'          : \'Cash Delivery Line\'\n
-                    , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'          : [\'valid\']\n
-                    , \'emission_letter_list\'      : context.Baobab_getUserEmissionLetterList()\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(coin=1, banknote=1)\n
-                    , \'currency_cash_portal_type\'  :  None\n
-                    , \'read_only\'           : False\n
-                    , \'column_base_category\'               : \'variation\'\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url())\n
+            <value> <string>return \'source_payment/%s\' % context.Baobab_getPortalDefaultPaymentNode()\n
 </string> </value>
         </item>
         <item>
@@ -90,14 +78,8 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/CheckPayment_viewCheckPaymentLineFastInputAction</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/CheckPayment_getBaobabSourcePayment</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -135,9 +117,6 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
-                            <string>False</string>
-                            <string>cash_detail_dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,33 +133,12 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckPayment_viewCheckPaymentLineFastInputAction</string> </value>
+            <value> <string>CheckPayment_getBaobabSourcePayment</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
