@@ -1,3 +1,6 @@
+2006-07-06 Kevin
+* Fix Organisation_getEmployeeList to handle non-defined grade on employees.
+
 2006-06-29 jerome
 * fix matrix box in PaySheetLine_viewQuantity
 
