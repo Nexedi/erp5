@@ -1,10 +1,3 @@
-2006-06-16 seb
-* Added work done by Aurelien on fast input
-* Some minor changes
-
-2006-06-02 aurel
-* add vault type base category to category
-
 2006-05-18 aurel
 * update Delivery_getVaultItemList to take new categories into account and fix   Baobab_getResourceVintageList
 

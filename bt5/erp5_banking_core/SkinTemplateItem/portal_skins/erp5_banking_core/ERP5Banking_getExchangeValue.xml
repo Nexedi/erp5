@@ -75,7 +75,7 @@ rate = None\n
 if len(rate_list) > 0:\n
   rate = rate_list[1]\n
 \n
-price = context.getBasePrice()\n
+price = context.getSourceTotalAssetPrice()\n
 \n
 if None in (rate, price):\n
   return None\n

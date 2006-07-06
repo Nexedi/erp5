@@ -80,6 +80,8 @@
 #                      Delivery_getVaultItemList utilis\xc3\xa9 dans le TALES de my_source dans le formulaire\n
 # user_site = 1 : Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels l\'user est affect\xc3\xa9,\n
 #                 au lieu des encaisses de tous le sites\n
+# owner_site = 1 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels le propri\xc3\xa9taire du document est affect\xc3\xa9,\n
+#                 au lieu des encaisses de tous le sites\n
 # leaf_node = 1 : S\xc3\xa9lectionne uniquement les noeuds qui sont des feuilles de l\'arbre (qui n\'ont pas de sous-cat\xc3\xa9gories)\n
 # strict_membership = 0 : Appartenance stricte. Si vault_type=\'site\', on s\xc3\xa9lectionnera \'site/agence/principale/paris\',\n
 #                         mais pas \'site/agence/principale/paris/caveau\', \'site/agence/principale/paris/surface\' et\n
@@ -223,8 +225,11 @@ if vault_type is None:\n
 else:\n
   assignment_list = None\n
 \n
-if user_site == 1:\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
+if user_site == 1 or owner_site==1:\n
+  if owner_site:\n
+    site_list = context.Baobab_getUserAssignedSiteList(user_id=context.owner_info()[\'id\'])\n
+  elif user_site:\n
+    site_list = context.Baobab_getUserAssignedSiteList()\n
   # even if we are on a counter, we can see every thing in the same agency\n
   new_site_list = []\n
   for site in site_list:\n
@@ -282,7 +287,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -310,7 +315,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -325,6 +330,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>with_base</string>
                             <string>all</string>
                             <string>base_site</string>
+                            <string>owner_site</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -332,6 +338,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>assignment_list</string>
+                            <string>_getitem_</string>
                             <string>site_list</string>
                             <string>new_site_list</string>
                             <string>_getiter_</string>
@@ -341,7 +348,6 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
-                            <string>_getitem_</string>
                             <string>list</string>
                           </tuple>
                         </value>
@@ -364,6 +370,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>1</int>
                 <int>0</int>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

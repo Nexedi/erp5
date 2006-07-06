@@ -88,10 +88,10 @@ elif my_choice == \'cash_status_item\':\n
    if my_list is None:\n
       my_list = getattr(request,\'field_my_cash_status_list\',None)   # Find Emission letter on the REQUEST\n
    if my_list is not None:\n
-      return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()\n
+      return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTranslatedTitleItemList()\n
                   if x[1] in my_list]\n
    else:\n
-      return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()]\n
+      return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTranslatedTitleItemList()]\n
 elif my_choice == \'cash_status_default_value\':\n
    return_value = getattr(request,\'my_cash_status_list\',None)   # Find cash Status on the REQUEST\n
    return_value = return_value[1]\n

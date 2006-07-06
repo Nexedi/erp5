@@ -77,7 +77,7 @@ if len(rate_list) > 0:\n
 if rate is None:\n
   return None\n
 \n
-base_price = context.getBasePrice()\n
+base_price = context.getSourceTotalAssetPrice()\n
 if base_price is None:\n
   return None\n
 \n
@@ -87,8 +87,7 @@ commission_ratio = context.getDiscountRatio()\n
 commission_price = context.getDiscount()\n
 if commission_ratio is not None and commission_ratio !=0 and commission_price is not None and commission_price !=0:\n
   return None\n
-if (commission_ratio is None or commission_ratio == 0) and (commission_price is None or commission_price == 0):\n
-  return None\n
+# Do not return if commission_ratio and comission_price is 0 or Null, sometimes we have no commission\n
 \n
 if commission_ratio is not None:\n
   commission_value = commission_ratio * price\n
