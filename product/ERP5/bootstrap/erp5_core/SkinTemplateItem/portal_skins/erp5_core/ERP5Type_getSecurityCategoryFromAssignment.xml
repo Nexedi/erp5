@@ -83,7 +83,10 @@
 category_list = []\n
 \n
 person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
-person_object_list = person_module.searchFolder(portal_type=\'Person\', reference=user_name)\n
+# It is better to keep getObject(), in this script this\n
+# prevent a very strange bug, sometimes without getObject the\n
+# assignment is not found\n
+person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type=\'Person\', reference=user_name)]\n
 \n
 if len(person_object_list) != 1:\n
   if len(person_object_list) > 1:\n
@@ -168,12 +171,15 @@ return category_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>person_module</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                             <string>person_object_list</string>
                             <string>len</string>
                             <string>ConsistencyError</string>
                             <string>_getitem_</string>
                             <string>person_object</string>
-                            <string>_getiter_</string>
                             <string>assignment</string>
                             <string>category_dict</string>
                             <string>base_category</string>
