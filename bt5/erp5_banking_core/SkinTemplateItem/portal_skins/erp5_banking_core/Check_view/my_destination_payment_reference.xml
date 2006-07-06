@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
+          <string>Products.ERP5Form.RelationField</string>
+          <string>RelationStringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_reference</string> </value>
+            <value> <string>my_destination_payment_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -50,11 +50,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -90,7 +102,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>jump_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -107,6 +131,10 @@
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -121,7 +149,31 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>container_getter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -130,6 +182,12 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -161,7 +219,29 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>jump_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -169,7 +249,35 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_setter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -185,6 +293,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -196,7 +308,33 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>destination_payment</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>reference</string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>container_getter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -206,6 +344,10 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
+                    <value> <string>person</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -236,11 +378,54 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>jump_method</string> </key>
+                    <value> <string>Base_jumpToRelatedDocument</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Bank Account</string>
+                          <string>Bank Account</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -248,8 +433,18 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Number</string> </value>
+                    <value> <string>Bank Account Number</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -260,11 +455,53 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string>Base_validateRelation</string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getDestinationPaymentValue().getReference()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>REQUEST/relation_item_list</string> </value>
         </item>
       </dictionary>
     </pickle>

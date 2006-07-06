@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.checkbook_model_module.objectValues()]</string> </value>
+            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.checkbook_model_module.objectValues(portal_type=\'Checkbook Model\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
