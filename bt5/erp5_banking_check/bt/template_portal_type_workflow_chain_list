@@ -1,7 +1,5 @@
-Check Deposit | accounting_event_interaction_workflow
 Check Deposit | check_deposit_workflow
 Check Deposit | edit_workflow
-Check Payment | accounting_event_interaction_workflow
 Check Payment | check_payment_interaction_workflow
 Check Payment | check_payment_workflow
 Check Payment | edit_workflow
