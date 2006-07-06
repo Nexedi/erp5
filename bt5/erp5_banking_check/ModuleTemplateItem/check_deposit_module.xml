@@ -455,9 +455,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change user folder</name>
-  </permission>
-  <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Manager</role>
   </permission>
@@ -562,6 +559,9 @@
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>

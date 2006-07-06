@@ -17,3 +17,13 @@ Check Payment | metadata
 Check Payment | print
 Check Payment | related_agents
 Check Payment | view
+Checkbook Reception Line | metadata
+Checkbook Reception Line | print
+Checkbook Reception Line | view
+Checkbook Reception Module | list_ui
+Checkbook Reception Module | sort_on
+Checkbook Reception Module | view
+Checkbook Reception | fastInput
+Checkbook Reception | history
+Checkbook Reception | metadata
+Checkbook Reception | view

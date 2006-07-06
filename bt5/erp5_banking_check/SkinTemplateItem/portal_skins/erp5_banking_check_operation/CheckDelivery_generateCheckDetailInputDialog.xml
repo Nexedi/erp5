@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Document import newTempBase\n
+\n
+request = context.REQUEST\n
+resource = request.get(\'resource\',None)\n
+previous_resource = request.get(\'previous_resource\',None)\n
+context.log(\'resource\',resource)\n
+item_model = context.getPortalObject().restrictedTraverse(resource)\n
+context.log(\'item_model\',item_model)\n
+\n
+global error_value\n
+error_value = 0\n
+global field_error_dict\n
+field_error_dict = {}\n
+\n
+def generate_error(listbox_line, column_title, error_message):\n
+  global error_value\n
+  global field_error_dict\n
+  # Generate an error which is displayed by the listbox\n
+  error_id = \'listbox_%s_new_%s\' % (column_title,\\\n
+                                    listbox_line[\'listbox_key\'])\n
+  error = newTempBase(context, error_id)\n
+  error.edit(error_text=error_message)\n
+  field_error_dict[error_id] = error\n
+  error_value = 1\n
+\n
+context.log(\'CheckDelivery_generateCheckDetailInputDialog starting with listbox\',listbox)\n
+\n
+# listbox is not passed at the first time when this script is called.\n
+# when the user clicks on the Update button, listbox is passed, and\n
+# the contents must be preserved in the form.\n
+if listbox in (None,()) or (previous_resource not in(\'\',None) and previous_resource!=resource):\n
+  context.log(\'CheckDelivery_generateCheckDetailInputDialog\',\'WILL RESET THE LISTBOX\')\n
+  listbox = []\n
+  for i in range(0,10):\n
+    #listbox.append({\'quantity\':1,\'uid\':\'new_%03i\' % i})\n
+    listbox.append({\'quantity\':1})\n
+\n
+else:\n
+  for line in listbox:\n
+    destination_payment_reference = line.get(\'destination_payment_reference\',None)\n
+    context.log(\'destination_payment_reference before check\',destination_payment_reference)\n
+    reference_range_min = line.get(\'reference_range_min\',None)\n
+    reference_range_max = line.get(\'reference_range_max\',None)\n
+    check_amount = line.get(\'check_amount\',None)\n
+    quantity = int(line.get(\'quantity\',0))\n
+    if destination_payment_reference not in (None,\'\'):\n
+      account_list = [x.getObject() for x in\n
+                      context.portal_catalog(portal_type=\'Bank Account\',\n
+                      reference=destination_payment_reference)]\n
+      if len(account_list)==0:\n
+        message = \'This account number does not exist\'\n
+        generate_error(line,\'destination_payment_reference\',message)\n
+      elif len(account_list)>1:\n
+        message = \'This account number exist several times\'\n
+        generate_error(line,\'destination_payment_reference\',message)\n
+      else:\n
+        account = account_list[0]\n
+        line[\'destination_payment_relative_url\'] = account.getRelativeUrl()\n
+      if reference_range_min in (None,\'\'):\n
+        message = \'Please set a start number\'\n
+        generate_error(line,\'reference_range_min\',message)\n
+      if reference_range_max in (None,\'\'):\n
+        if quantity!=1:\n
+          message = \'Please set a stop number\'\n
+          generate_error(line,\'reference_range_max\',message)\n
+        else:\n
+          reference_range_max = reference_range_min\n
+          line[\'reference_range_max\'] = reference_range_max\n
+      if reference_range_min not in (None,\'\') and reference_range_max not in (None,\'\'):\n
+        reference_range_min = int(reference_range_min)\n
+        reference_range_max = int(reference_range_max)\n
+        context.log(\'CheckDelivery_generateCheckDetailInputDialog check_amount\',check_amount)\n
+        check_quantity = 1\n
+        if check_amount is not None: # In the case of a check book\n
+          check_amount_relative_url = \'/\'.join(check_amount.split(\'/\')[1:])\n
+          line[\'check_amount_relative_url\'] = check_amount_relative_url\n
+          check_amount_value = context.getPortalObject().restrictedTraverse(check_amount_relative_url)\n
+          check_quantity = int(check_amount_value.getQuantity())\n
+        context.log(\'reference_range_min-reference_range_max\',reference_range_min-reference_range_max+1)\n
+        context.log(\'check_quantity\',check_quantity)\n
+        if (reference_range_max-reference_range_min+1)!=(check_quantity*quantity):\n
+          message = \'The range is not valid\'\n
+          generate_error(line,\'reference_range_min\',message)\n
+          generate_error(line,\'reference_range_max\',message)\n
+\n
+context.log(\'CheckDelivery_generateCheckDetailInputDialog error_value\',error_value)\n
+context.log(\'CheckDelivery_generateCheckDetailInputDialog batch_mode\',batch_mode)\n
+if batch_mode:\n
+  return error_value\n
+else:\n
+  context.log(\'CheckDelivery_generateCheckDetailInputDialog field_error_dict\',field_error_dict)\n
+  context.Base_updateDialogForm(listbox=listbox\n
+                                ,empty_line_number=0 )\n
+  if field_error_dict != {}:\n
+    request.set(\'field_errors\', field_error_dict)\n
+    kw[\'REQUEST\'] = request\n
+  return context.asContext(  context=None\n
+                             , portal_type = context.getPortalType()\n
+                             , resource=resource\n
+                             , previous_resource=resource\n
+                             ).CheckDetail_viewLineFastInputForm(**kw)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/CheckDelivery_generateCheckDetailInputDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None,batch_mode=0,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>batch_mode</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>resource</string>
+                            <string>previous_resource</string>
+                            <string>item_model</string>
+                            <string>error_value</string>
+                            <string>field_error_dict</string>
+                            <string>generate_error</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>line</string>
+                            <string>destination_payment_reference</string>
+                            <string>reference_range_min</string>
+                            <string>reference_range_max</string>
+                            <string>check_amount</string>
+                            <string>int</string>
+                            <string>quantity</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>account_list</string>
+                            <string>len</string>
+                            <string>message</string>
+                            <string>_getitem_</string>
+                            <string>account</string>
+                            <string>_write_</string>
+                            <string>check_quantity</string>
+                            <string>check_amount_relative_url</string>
+                            <string>check_amount_value</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CheckDelivery_generateCheckDetailInputDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,16 @@
+<type_roles>
+  <role id='Assignor'>
+   <property id='title'>Gestionnaire caveau</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/banking/gestionnaire_caveau</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Controleur caveau</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/banking/controleur_caveau</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+  </role>
+</type_roles>

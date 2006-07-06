@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+delivery = state_change.object\n
+portal = context.getPortalObject()\n
+\n
+# We must parse all lines of checkbook reception and then\n
+# generate all items. We do not need to check data\n
+# because everything is already checked in the fast input\n
+line_portal_type = delivery.getPortalType() + \' Line\'\n
+line_list = delivery.objectValues(portal_type=line_portal_type)\n
+for line in line_list:\n
+    quantity = line.getQuantity()\n
+    resource = line.getResourceValue()\n
+    reference_range_min = line.getReferenceRangeMin()\n
+    reference_range_max = line.getReferenceRangeMax()\n
+    check_amount = line.getCheckAmount()\n
+\n
+    # We will look where we should create as many items\n
+    # as necessary and construct by the same time\n
+    # the aggregate list that we will store on the line\n
+    checkbook = 0\n
+    if resource.getPortalType()==\'Checkbook Model\':\n
+      checkbook = 1\n
+      module = portal.checkbook_module\n
+    else:\n
+      module = portal.check_module\n
+    if checkbook:\n
+      check_amount_value = portal.restrictedTraverse(check_amount)\n
+      check_quantity = check_amount_value.getQuantity()\n
+\n
+    aggregate_list = []\n
+    for i in xrange(0,quantity):\n
+      item = module.newContent()\n
+      if checkbook:\n
+        item.setReferenceRangeMin(reference_range_min)\n
+        reference_range_max = str(int(float(reference_range_min)) + int(check_quantity))\n
+        item.setReferenceRangeMax(reference_range_max)\n
+        item.setTitle(\'%s - %s\' % (reference_range_min, reference_range_max))\n
+        reference_range_min = reference_range_max\n
+        item.setCheckAmount(check_amount)\n
+      else:\n
+        item.setReference(reference_range_min)\n
+        item.setTitle(reference_range_min)\n
+        reference_range_min = str(int(float(reference_range_min)) + 1)\n
+      if resource.isQuantityRequired():\n
+        item.setQuantity(line.getPrice())\n
+        item.setPriceCurrency(line.getPriceCurrency())\n
+      item.setDestinationPayment(line.getDestinationPayment())\n
+      item.setResourceValue(resource)\n
+      aggregate_list.append(item)\n
+\n
+    # Finally set the aggregate list on the line\n
+    line.setAggregateValueList(aggregate_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_workflow/checkbook_reception_workflow/scripts/CheckbookReception_generateItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>delivery</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>line_portal_type</string>
+                            <string>line_list</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>quantity</string>
+                            <string>resource</string>
+                            <string>reference_range_min</string>
+                            <string>reference_range_max</string>
+                            <string>check_amount</string>
+                            <string>checkbook</string>
+                            <string>module</string>
+                            <string>check_amount_value</string>
+                            <string>check_quantity</string>
+                            <string>aggregate_list</string>
+                            <string>xrange</string>
+                            <string>i</string>
+                            <string>item</string>
+                            <string>str</string>
+                            <string>int</string>
+                            <string>float</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CheckbookReception_generateItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
