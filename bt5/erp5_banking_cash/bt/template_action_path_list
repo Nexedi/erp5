@@ -37,18 +37,6 @@ Classification Survey | print
 Classification Survey | result
 Classification Survey | supply
 Classification Survey | view
-Container Cell | metadata
-Container Cell | print
-Container Cell | view
-Container Line | metadata
-Container Line | print
-Container Line | view
-Container Line | view_history
-Container Line | view_quantity
-Container | history_view
-Container | metadata
-Container | print
-Container | view
 Counter Rendering Module | list_ui
 Counter Rendering Module | print_pdf
 Counter Rendering Module | sort_on

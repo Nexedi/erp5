@@ -1,3 +1,6 @@
+2006-07-07 aurel
+* fix getBaobabDestination to take the owner of the document inot account instead of the person who is reindexing
+
 2006-07-05 aurel
 * fix getBaobabDestination for cash sorting cell
 

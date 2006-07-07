@@ -29,10 +29,6 @@
  <portal_type id="Classification Survey Module">
   <item>Classification Survey</item>
  </portal_type>
- <portal_type id="Container">
-  <item>Container Line</item>
-  <item>Container</item>
- </portal_type>
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
