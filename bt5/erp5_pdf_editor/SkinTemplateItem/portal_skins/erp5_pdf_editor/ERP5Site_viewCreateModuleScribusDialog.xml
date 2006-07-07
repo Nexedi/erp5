@@ -77,25 +77,25 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_module_id</string>
-                        <string>my_module_portal_type</string>
-                        <string>my_module_title</string>
-                        <string>my_import_scribus_file</string>
-                        <string>my_import_pdf_file</string>
-                        <string>my_option_html</string>
+                        <string>module_id</string>
+                        <string>module_portal_type</string>
+                        <string>module_title</string>
+                        <string>import_pdf_file</string>
+                        <string>import_scribus_file</string>
+                        <string>option_html</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_object_portal_type</string>
-                        <string>my_object_title</string>
-                        <string>my_portal_skins_folder</string>
+                        <string>object_title</string>
+                        <string>object_portal_type</string>
+                        <string>portal_skins_folder</string>
                       </list>
                     </value>
                 </item>
