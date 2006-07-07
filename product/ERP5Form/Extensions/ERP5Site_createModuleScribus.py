@@ -27,8 +27,6 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   ManageCSS = ManageCSS()
   generator = LocalGenerator()
 
-  import pdb
-  pdb.set_trace()
 
   # DECLARING VARIABLES
   def_lineNumberInList = 20
