@@ -314,19 +314,22 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 <div tal:repeat="axis python:(planning.main_axis,planning.secondary_axis)"\n
      tal:attributes="id python:axis.name">\n
  <!-- groups of the current axis-->\n
- <div tal:repeat="axis_group python:axis.axis_group"\n
-      tal:attributes="id python:axis_group.name;\n
+ <tal:block tal:repeat="axis_group python:axis.axis_group">\n
+\n
+   <div tal:attributes="id python:axis_group.name;\n
                       title python:axis_group.tooltip">\n
+    <!-- title of the current group-->\n
+    <a tal:attributes="href python:axis_group.info_title.link;\n
+                        id python:axis_group.name + \'_info\'"\n
+        tal:content="python:axis_group.info_title.info">\n
+    </a>\n
+   </div>\n
+\n
    <!-- depth of the current group -->\n
    <div tal:repeat="depth python:range(axis_group.depth)"\n
         tal:attributes="id python: axis_group.name + \'_depth_\' + str(depth)">\n
    </div>\n
-   <!-- title of the current group-->\n
-   <a tal:attributes="href python:axis_group.info_title.link;\n
-                      id python:axis_group.name + \'_info\'"\n
-      tal:content="python:axis_group.info_title.info">\n
-   </a>\n
- </div>\n
+ </tal:block>\n
 \n
 \n
   <tal:condition tal:condition="python:axis==planning.X">\n

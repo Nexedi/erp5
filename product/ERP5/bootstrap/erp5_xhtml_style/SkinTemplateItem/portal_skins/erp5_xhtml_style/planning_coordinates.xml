@@ -282,8 +282,8 @@ for axis_group in structure.planning.main_axis.axis_group:\n
     # current axis is X axis\n
     axis_group_dict[\'width\'] = float(axis_group.axis_element_number) * main_axis_step\n
     axis_group_dict[\'margin-left\'] = float( axis_group.axis_element_start -1) * main_axis_step\n
-    axis_group_dict[\'height\'] = size_x_axis_height #- axis_group.depth * depth_height * 2\n
-    axis_group_dict[\'margin-top\'] = 0 #axis_group.depth * depth_height * 2\n
+    axis_group_dict[\'height\'] = size_x_axis_height - axis_group.depth * depth_height\n
+    axis_group_dict[\'margin-top\'] = axis_group.depth * depth_height\n
     axis_info_dict[\'margin-top\'] = axis_group.depth * depth_height\n
     axis_info_dict[\'margin-left\'] = 1\n
     # dotted line must be vertical\n
@@ -303,17 +303,18 @@ for axis_group in structure.planning.main_axis.axis_group:\n
       axis_depth_dict = None\n
       axis_depth_dict = {}\n
       axis_depth_dict[\'position\'] = \'absolute\'\n
-      #axis_depth_dict[\'border_style\'] = \'solid\'\n
-      #axis_depth_dict[\'border-color\'] = \'#53676e\'\n
-      #axis_depth_dict[\'border-right-width\']  = 0\n
-      #axis_depth_dict[\'border-left-width\']   = 0\n
+      axis_depth_dict[\'border_style\'] = \'solid\'\n
+      axis_depth_dict[\'border-color\'] = \'#53676e\'\n
+      #axis_depth_dict[\'border-right-width\']  = 1\n
+      #axis_depth_dict[\'border-left-width\']   = 1\n
       #axis_depth_dict[\'border-top-width\']    = 1\n
       #axis_depth_dict[\'border-bottom-width\'] = 0\n
+      axis_depth_dict[\'border-width\'] = 1\n
       axis_depth_dict[\'background\'] = \'#53676e\'\n
-      axis_depth_dict[\'margin-top\']  = (depth +1) * depth_height\n
-      axis_depth_dict[\'margin-left\'] = 0\n
+      axis_depth_dict[\'margin-top\']  = depth * depth_height\n
+      axis_depth_dict[\'margin-left\'] = axis_group_dict[\'margin-left\']\n
       axis_depth_dict[\'width\'] = axis_group_dict[\'width\']\n
-      axis_depth_dict[\'height\'] = 1\n
+      axis_depth_dict[\'height\'] = depth_height\n
 \n
       # adding current depth line info to properties structure\n
       properties_structure[\'info\'][axis_group.name + \'_depth_\' + str(depth)] = axis_depth_dict\n
@@ -357,8 +358,8 @@ for axis_group in structure.planning.main_axis.axis_group:\n
 \n
   else:\n
     # current axis is Y axis\n
-    axis_group_dict[\'margin-left\'] = 0 #axis_group.depth * depth_width * 2\n
-    axis_group_dict[\'width\'] = size_y_axis_width #- axis_group.depth * depth_width * 2\n
+    axis_group_dict[\'margin-left\'] = axis_group.depth * depth_width\n
+    axis_group_dict[\'width\'] = size_y_axis_width - axis_group.depth * depth_width\n
     axis_group_dict[\'margin-top\'] = float( axis_group.axis_element_start - 1) * main_axis_step\n
     axis_group_dict[\'height\'] = float(axis_group.axis_element_number) * main_axis_step\n
     #axis_group_dict[\'text-align\'] = \'center\'\n
@@ -390,17 +391,17 @@ for axis_group in structure.planning.main_axis.axis_group:\n
       axis_depth_dict = None\n
       axis_depth_dict = {}\n
       axis_depth_dict[\'position\'] = \'absolute\'\n
-      #axis_depth_dict[\'border_style\'] = \'solid\'\n
-      #axis_depth_dict[\'border-color\'] = \'#53676e\'\n
+      axis_depth_dict[\'border_style\'] = \'solid\'\n
+      axis_depth_dict[\'border-color\'] = \'#53676e\'\n
       #axis_depth_dict[\'border-right-width\']  = 0\n
       #axis_depth_dict[\'border-left-width\']   = 1\n
       #axis_depth_dict[\'border-top-width\']    = 0\n
       #axis_depth_dict[\'border-bottom-width\'] = 0\n
-      #axis_depth_dict[\'border-width\'] = 2\n
+      axis_depth_dict[\'border-width\'] = 1\n
       axis_depth_dict[\'background\'] = \'#53676e\'\n
-      axis_depth_dict[\'margin-top\']  = 1\n
-      axis_depth_dict[\'margin-left\'] = (depth +1) * depth_width\n
-      axis_depth_dict[\'width\'] = 1\n
+      axis_depth_dict[\'margin-top\']  = axis_group_dict[\'margin-top\']\n
+      axis_depth_dict[\'margin-left\'] = depth * depth_width\n
+      axis_depth_dict[\'width\'] = depth_width\n
       axis_depth_dict[\'height\'] = axis_group_dict[\'height\']\n
 \n
       # adding current depth line info to properties structure\n
