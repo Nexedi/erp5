@@ -96,7 +96,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     block_moved_string = REQUEST.get('block_moved','')
     block_previous_string = REQUEST.get('previous_block_moved','')
 
-    #pdb.set_trace()
 
     ##################################################
     ############## REBUILD STRUCTURE #################
@@ -234,7 +233,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # now that block coordinates are recovered as well as planning
       # coordinates, recovering destination group over the main axis to know
       # if the block has been moved from a group to another
-      #pdb.set_trace()
       group_destination = self.getDestinationGroup(structure,
                block_moved,planning_coordinates['main_axis'],
                group_position, group_length)
@@ -602,6 +600,10 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       for axis_element in axis_group.axis_element_list:
         for activity in axis_element.activity_list:
           # for each activity, saving its properties into a dict
+          if activity.link.startswith('/erp5'):
+            pass
+          else:
+            activity.link = '/erp5/' + activity.link
           if activity.link in object_dict.keys():
             object_dict[activity.link].append(
                        { 'activity_name' : activity.name,
@@ -966,8 +968,6 @@ class PlanningBoxWidget(Widget.Widget):
 
     here = REQUEST['here']
 
-    #import pdb
-    #pdb.set_trace()
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
@@ -999,9 +999,6 @@ class PlanningBoxWidget(Widget.Widget):
 
     # recover structure
     structure = REQUEST.get('structure')
-
-
-    #pdb.set_trace()
 
     # getting HTML rendering Page Template
     planning_html_method = getattr(REQUEST['here'],'planning_content')
@@ -1048,7 +1045,6 @@ class PlanningBoxWidget(Widget.Widget):
     except (AttributeError,KeyError):
       params = {}
 
-    #pdb.set_trace()
     ###### CALL CLASS METHODS TO BUILD BASIC STRUCTURE ######
     # creating BasicStructure instance (and initializing its internal values)
     self.basic = BasicStructure(here=here,form=form, field=field,
@@ -1425,8 +1421,6 @@ class BasicStructure:
       return [(Message(domain=None, message=message,mapping=None))]
 
 
-    #pdb.set_trace()
-
     ##################################################
     ############ GETTING SEC AXIS BOUNDS #############
     ##################################################
@@ -1483,7 +1477,6 @@ class BasicStructure:
     report_group objects
     """
     secondary_axis_occurence = []
-    #pdb.set_trace()
 
     # defining the objects requested for calendar mode testing
     if self.selection_report_path == 'parent':
@@ -1950,7 +1943,7 @@ class BasicGroup:
             stat_context.absolute_url = \
                          lambda x: activity_content.getObject().absolute_url()
             object = stat_context.getObject()
-            url = stat_context.getUrl()
+            url = object.getUrl()
 
             # XXX should define height of block here
             height = None
@@ -1999,6 +1992,7 @@ class BasicGroup:
       else:
         block_end = None
 
+
       # testing if activity is visible according to the current zoom selection
       # over the secondary_axis
       if block_begin == None:
@@ -2041,9 +2035,12 @@ class BasicGroup:
         # height should be implemented here
         height = None
 
+        # get object url, not group url
+        url = self.object.getObject().getUrl()
+
         # creating new activity instance
         activity=BasicActivity(title=info['info_center'], name=name,
-                               object=self.object.object, url=self.url,
+                               object=self.object.object, url=url,
                                absolute_begin=block_begin,
                                absolute_end=block_end,
                                absolute_start=block_start,
@@ -2112,7 +2109,7 @@ class PlanningStructure:
     like...
     """
     # recovering render format ('YX' or 'XY')
-    self.calendar_view = field.get_value('representation_type')
+    self.calendar_view = field.get_value('calendar_view')
 
     # declaring main axis
     self.main_axis = Axis(title='main axis', name='axis',
@@ -2401,7 +2398,6 @@ class PlanningStructure:
     warning_activity_list = REQUEST.get('warning_activity_list',[])
     error_block_list = REQUEST.get('error_block_list',[])
     error_info_dict = REQUEST.get('error_info_dict',{})
-    #pdb.set_trace()
     for axis_group_object in self.main_axis.axis_group:
       for axis_element_object in axis_group_object.axis_element_list:
         for activity in axis_element_object.activity_list:
@@ -2574,7 +2570,6 @@ class Activity:
       # now absolute positions are updated, and the axis values are known
       # (as parameters), processing relative values
       # => but before updating secondary_axis bounds
-      #pdb.set_trace()
       new_block.position_secondary.relative_begin = (
           float(new_block.position_secondary.absolute_begin -
           secondary_axis_start) / float(secondary_axis_range))
@@ -2585,20 +2580,7 @@ class Activity:
           new_block.position_secondary.relative_end -
           new_block.position_secondary.relative_begin)
 
-      """
-      new_block.position_secondary.relative_begin = (
-          float(new_block.position_secondary.absolute_begin -
-          secondary_axis_start) / float(secondary_axis_stop -
-          secondary_axis_start))
-      new_block.position_secondary.relative_end = (
-          float(new_block.position_secondary.absolute_end -
-          secondary_axis_start) / float(secondary_axis_stop -
-          secondary_axis_start))
-      new_block.position_secondary.relative_range = (
-          new_block.position_secondary.relative_end -
-          new_block.position_secondary.relative_begin)
-      """
-
+      # new coordinates are processed from the axis properties instead of the
       new_block.position_main.relative_begin = (
           float(new_block.position_main.absolute_begin - main_axis_start) /
           float(main_axis_stop - main_axis_start))
