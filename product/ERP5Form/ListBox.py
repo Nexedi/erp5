@@ -1183,7 +1183,7 @@ class ListBoxRenderer:
         if base_category == 'parent':
           for sub_obj in obj.contentValues(sort_on = sort_on):
             if getattr(aq_base(sub_obj), 'objectValues', None) is not None:
-              exception_uid_list.append(sub_o.getUid())
+              exception_uid_list.append(sub_obj.getUid())
 
         # Summary (open)
         tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
