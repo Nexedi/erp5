@@ -39,9 +39,6 @@ class DeliveryTool(BaseTool):
     """
     The DeliveryTool implements portal object
     deliveries building policies.
-
-    Status : not ready
-
     """
     id = 'portal_deliveries'
     meta_type = 'ERP5 Delivery Tool'
