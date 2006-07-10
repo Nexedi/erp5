@@ -79,7 +79,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         """
         ob = self.__ob
         allowed = {}
-        for r in rolesForPermissionOn('Access_contents_information', ob):
+        for r in rolesForPermissionOn('Access contents information', ob):
           allowed[r] = 1
         if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
