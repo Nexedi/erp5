@@ -80,6 +80,7 @@ for builder_id in builder_id_list:\n
     builder.activate(\n
           after_method_id = [ \'expand\', \n
                               \'recursiveImmediateReindexObject\',\n
+                              \'updateAppliedRule\',\n
                               \'immediateReindexObject\' ],\n
           ).build()\n
 \n
