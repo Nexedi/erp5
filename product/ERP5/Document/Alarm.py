@@ -75,7 +75,8 @@ class Alarm(Periodicity, XMLObject):
     security.declareProtected(Permissions.View, 'isActive')
     def isActive(self):
       """
-      This method returns only True or False. It simply tells if this alarm is currently
+      This method returns only True or False. 
+      It simply tells if this alarm is currently
       active or not. It is activated when it is doing some calculation with
       activeSense or solve.
       """
