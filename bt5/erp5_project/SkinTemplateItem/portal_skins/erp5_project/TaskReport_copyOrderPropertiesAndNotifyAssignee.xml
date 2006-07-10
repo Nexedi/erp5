@@ -119,7 +119,9 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/TaskReport_copyOrderPropertiesAndNotifyAssignee</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -94,7 +94,9 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(expl
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/task_workflow/scripts/Order_buildPackingList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -68,10 +68,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add CMF Calendar Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add CMF Core Tools</name>
    <role>Manager</role>
   </permission>
@@ -99,6 +95,9 @@
    <name>Add CMFActivity Tools</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add CMFCalendar Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add CMFCategory Tools</name>
    <role>Manager</role>
@@ -106,6 +105,30 @@
   <permission type='tuple'>
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add CMFWiki Comment</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartObject</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartTemplate</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Elements</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Slot Classs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Slots</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composites</name>
   </permission>
   <permission type='tuple'>
    <name>Add Configured CMF Sites</name>
@@ -251,7 +274,7 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Add Portal ZSyncer Tools</name>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -264,6 +287,9 @@
   <permission type='tuple'>
    <name>Add ReStructuredText Documents</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add RenderableObject</name>
   </permission>
   <permission type='tuple'>
    <name>Add Session Data Manager</name>
@@ -312,6 +338,9 @@
    <name>Add ZCatalogs</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add ZGDCharts</name>
+  </permission>
   <permission type='tuple'>
    <name>Add ZMailIn Clients</name>
    <role>Manager</role>
@@ -325,7 +354,7 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Add ZSyncers</name>
+   <name>Add Zope Schedulers</name>
   </permission>
   <permission type='tuple'>
    <name>Add Zope Tutorials</name>
@@ -358,6 +387,12 @@
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Change CMFWiki Regulations</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Composites</name>
   </permission>
   <permission type='tuple'>
    <name>Change DTML Documents</name>
@@ -419,6 +454,9 @@
    <name>Change Versions</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Change ZGDChart</name>
+  </permission>
   <permission type='tuple'>
    <name>Change ZMailIn</name>
    <role>Manager</role>
@@ -467,6 +505,9 @@
    <name>Copy or Move</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Create CMFWiki Page</name>
+  </permission>
   <permission type='tuple'>
    <name>Create Transient Objects</name>
    <role>Manager</role>
@@ -487,6 +528,9 @@
   <permission type='tuple'>
    <name>Download ExtFile/ExtImage</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Edit CMFWiki Page</name>
   </permission>
   <permission type='tuple'>
    <name>Edit Factories</name>
@@ -545,6 +589,9 @@
    <name>Manage Groups</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage Selenium test cases</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
@@ -568,6 +615,9 @@
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
@@ -597,6 +647,9 @@
    <name>Modify portal content</name>
    <role>Assignor</role>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Move CMFWiki Page</name>
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connection</name>
@@ -713,13 +766,10 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>ZSyncer: Use ZSyncer</name>
+   <name>ZopeScheduler: Manage scheduling task</name>
   </permission>
   <permission type='list'>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: view</name>
+   <name>ZopeScheduler: Schedule tasks</name>
   </permission>
  </permission_list>
  <portal_type>Task Module</portal_type>

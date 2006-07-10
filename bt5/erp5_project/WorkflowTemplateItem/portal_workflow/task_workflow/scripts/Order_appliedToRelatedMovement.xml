@@ -81,7 +81,9 @@ order.applyToOrderRelatedMovement(method_id=\'expand\')\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/task_workflow/scripts/Order_appliedToRelatedMovement</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

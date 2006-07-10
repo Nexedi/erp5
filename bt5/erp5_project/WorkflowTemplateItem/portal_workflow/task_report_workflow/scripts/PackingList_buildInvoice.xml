@@ -95,7 +95,9 @@ else :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/task_report_workflow/scripts/PackingList_buildInvoice</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

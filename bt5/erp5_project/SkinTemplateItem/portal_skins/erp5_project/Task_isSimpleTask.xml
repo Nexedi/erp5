@@ -80,7 +80,9 @@ return (obj_len == 0) or ((obj_len == 1) and context.has_key(\'default_task_line
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/Task_isSimpleTask</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -101,7 +101,9 @@ Please wisit ERP5: %(url)s\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/task_report_workflow/scripts/TaskReport_notifyAssignee</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

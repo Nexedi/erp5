@@ -80,7 +80,9 @@ return context.portal_catalog(**kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/RequirementDocument_getOrphanedRequirementList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
