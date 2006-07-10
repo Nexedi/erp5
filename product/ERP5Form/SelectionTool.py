@@ -276,7 +276,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
           try:
             selection_uid_dict[int(uid)] = 1
           except ValueError:
-            pass # this can happen in report
+            selection_uid_dict[uid] = 1
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
@@ -297,7 +297,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
           try:
             if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
           except ValueError:
-            pass # This happens in report mode
+            if selection_uid_dict.has_key(uid): del selection_uid_dict[uid]
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
