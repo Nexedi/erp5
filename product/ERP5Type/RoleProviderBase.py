@@ -90,6 +90,7 @@ class RoleProviderBase:
                  , condition
                  , category
                  , base_category_script
+                 # XXX Default value is a tuple, but a string is required
                  , base_category=()
                  , REQUEST=None
                  ):
