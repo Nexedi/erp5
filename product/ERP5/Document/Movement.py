@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
