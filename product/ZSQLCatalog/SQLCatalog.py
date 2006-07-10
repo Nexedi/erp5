@@ -29,7 +29,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
-from zLOG import LOG, WARNING, INFO, TRACE
+from zLOG import LOG, WARNING, INFO, TRACE, DEBUG
 from ZODB.POSException import ConflictError
 from DocumentTemplate.DT_Var import sql_quote
 
@@ -1150,7 +1150,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Alter/Create row
         try:
           #start_time = DateTime()
-          #LOG('catalogObjectList', 0, 'kw = %r, method_name = %r' % (kw, method_name))
+          #LOG('catalogObjectList', DEBUG, 'kw = %r, method_name = %r' % (kw, method_name))
           method(**kw)
           #end_time = DateTime()
           #if method_name not in profile_dict:
