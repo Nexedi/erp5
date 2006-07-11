@@ -1466,7 +1466,8 @@ class ListBoxRenderer:
               report_section_list.append(ReportSection(is_summary = False, object_list = object_list,
                                                        object_list_len = object_list_len,
                                                        is_open = report_tree.is_open,
-                                                       domain_selection = report_tree.domain_selection))
+                                                       domain_selection = report_tree.domain_selection,
+                                                       depth = report_tree.depth))
           else:
             stat_context = report_tree.obj.asContext()
             #absolute_url_txt = s[0].absolute_url()
@@ -1480,13 +1481,15 @@ class ListBoxRenderer:
                                                        object_list_len = 1,
                                                        is_open = True,
                                                        domain_selection = report_tree.domain_selection,
-                                                       context = stat_context))
+                                                       context = stat_context,
+                                                       depth = report_tree.depth))
               report_section_list.append(ReportSection(is_summary = False,
                                                        object_list = object_list,
                                                        object_list_len = object_list_len - 1,
                                                        is_open = True,
                                                        domain_selection = report_tree.domain_selection,
-                                                       offset = 1))
+                                                       offset = 1,
+                                                       depth = report_tree.depth))
             else:
               if report_tree.exception_uid_list is not None:
                 # Display current parent domain.
@@ -1495,7 +1498,8 @@ class ListBoxRenderer:
                                                          object_list_len = 1,
                                                          is_open = report_tree.is_open,
                                                          domain_selection = report_tree.domain_selection,
-                                                         context = stat_context))
+                                                         context = stat_context,
+                                                         depth = report_tree.depth))
               else:
                 # No data to display
                 report_section_list.append(ReportSection(is_summary = False,
@@ -1503,7 +1507,8 @@ class ListBoxRenderer:
                                                          object_list_len = 1,
                                                          is_open = report_tree.is_open,
                                                          domain_selection = report_tree.domain_selection,
-                                                         context = stat_context))
+                                                         context = stat_context,
+                                                         depth = report_tree.depth))
 
       # Reset the report parameter.
       selection.edit(report = None)
@@ -2622,6 +2627,7 @@ class ListBoxListRenderer(ListBoxRenderer):
     for line in self.query():
       listboxline = ListBoxLine()
       listboxline.markDataLine()
+      listboxline.setSectionDepth(line.getDepth())
 
       if line.isSummary():
         listboxline.markSummaryLine()
