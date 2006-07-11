@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>update_svn_wc</string> </value>
+            <value> <string>update_svn_bt</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>

@@ -9,8 +9,7 @@ Business Template | commit
 Business Template | svn_cleanup_locks
 Business Template | svn_conflicted_files
 Business Template | svn_unversioned_files
-Business Template | svn_update_working_copy
-Business Template | update_svn_wc
+Business Template | update_svn_bt
 Business Template | view_svn_repos_infos
 External Folder | history
 External Folder | metadata
