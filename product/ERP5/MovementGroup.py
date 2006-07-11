@@ -32,7 +32,7 @@
 Define in this file all classes intended to group every kind of movement
 """
 
-from zLOG import LOG
+from zLOG import LOG, DEBUG
 from Products.PythonScripts.Utility import allow_class
 
 class MovementRejected(Exception) : pass
@@ -496,6 +496,17 @@ class ResourceMovementGroup(RootMovementGroup):
     return movement.getResource() == self.resource
 
 allow_class(ResourceMovementGroup)
+
+class SplitResourceMovementGroup(RootMovementGroup):
+
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.resource = movement.getResource()
+
+  def test(self, movement):
+    return movement.getResource() == self.resource
+
+allow_class(SplitResourceMovementGroup)
 
 class BaseVariantMovementGroup(RootMovementGroup):
 
