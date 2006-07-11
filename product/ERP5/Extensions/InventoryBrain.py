@@ -136,7 +136,7 @@ class InventoryListBrain(ZSQLBrain):
     Return the quantity of the current delivery for a resource
     """
     total_kw = {
-      'explanation_uid': self.getDeliveryUid(),
+      'explanation_uid': self.getExplanationUid(),
       'resource_uid': self.resource_uid,
       'variation_text': self.variation_text,
     }
