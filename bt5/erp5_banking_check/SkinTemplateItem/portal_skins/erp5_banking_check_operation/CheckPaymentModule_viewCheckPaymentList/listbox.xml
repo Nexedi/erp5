@@ -360,7 +360,7 @@
                           <string>Account Name</string>
                         </tuple>
                         <tuple>
-                          <string>aggregate_reference</string>
+                          <string>aggregate_free_text</string>
                           <string>Check Number</string>
                         </tuple>
                         <tuple>
