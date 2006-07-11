@@ -132,19 +132,26 @@ class Getter(Method):
       self._storage_id = storage_id
       self._is_tales_type = (property_type == 'tales')
 
-    def __call__(self, instance, *args, **kw):
+    def __call__(self, instance, object=None, *args, **kw):
       if len(args) > 0:
         default = args[0]
       else:
         default = self._default
-      value = getattr(aq_base(instance), self._storage_id, None) # No acquisition on properties
+      # No acquisition on properties
+      value = getattr(aq_base(instance), self._storage_id, None) 
       if value is not None:
         if self._is_tales_type and kw.get('evaluate', 1):
-          return evaluateTales(instance, value)
+          if object is not None:
+            return evaluateTales(object, value)
+          else:
+            return evaluateTales(instance, value)
         else:
           return value
       if default is not None and self._is_tales_type and kw.get('evaluate', 1):
-        return evaluateTales(instance, default)
+        if object is not None:
+          return evaluateTales(object, default)
+        else:
+          return evaluateTales(instance, default)
       return default
 
     psyco.bind(__call__)
