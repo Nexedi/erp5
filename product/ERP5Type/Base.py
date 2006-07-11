@@ -974,7 +974,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         # This may be very long...
         old_value = None
         if not force_update:
-          old_value = self.getProperty(key)
+          try:
+            old_value = self.getProperty(key, evaluate=0)
+          except TypeError:
+            old_value = self.getProperty(key)
+
         
         if old_value != kw[key] or force_update:
           # We keep in a thread var the previous values
@@ -1315,7 +1319,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   getValueList = _getValueList
 
   security.declareProtected( Permissions.View, '_getDefaultAcquiredValue' )
-  def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=()):
+  def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
+                               evaluate=1):
     path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
                                                   portal_type=portal_type, base=1)
     # LOG("_getAcquiredDefaultValue",0,str(path))
@@ -1484,7 +1489,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _getCategoryMembershipItemList(self, category, spec=(), filter=None, portal_type=(), base=0):
     membership_list = self._getCategoryMembershipList(category,
                             spec = spec, filter=filter, portal_type=portal_type, base=base)
-    return map(lambda x: (x,x), membership_list)
+    return [(x, x) for x in membership_list]
 
   security.declareProtected( Permissions.AccessContentsInformation,
                                           '_getAcquiredCategoryMembershipItemList' )
@@ -1497,7 +1502,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
                            spec = spec, filter=filter, portal_type=portal_type, base=base)
       if sort_id == 'default':
         membership_list.sort()
-      return map(lambda x: (x,x), membership_list)
+      return [(x, x) for x in membership_list]
     # Advanced behaviour XXX This is new and needs to be checked
     membership_list = self._getAcquiredCategoryMembershipList(category,
                            spec = spec, filter=filter, portal_type=portal_type, base=1)
@@ -1508,7 +1513,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         result += [value]
     result.sort(lambda x, y: cmp(getattr(x,sort_id)(),getattr(y,sort_id)()))
     if method_id is None:
-      return map(lambda x: (x,x), membership_list)
+      return [(x, x) for x in membership_list]
     return map(lambda x: (x,getattr(x, method_id)()), membership_list)
 
   security.declareProtected( Permissions.View, '_getDefaultCategoryMembership' )
