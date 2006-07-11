@@ -90,7 +90,7 @@ class MappedValue(Predicate, Amount):
     Predicate._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  def getProperty(self, key, d=None):
+  def getProperty(self, key, d=None, evaluate=1):
     """
       Generic accessor. First we check if the value
       exists. Else we call the real accessor
