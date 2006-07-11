@@ -179,9 +179,10 @@ class TemplateTool (BaseTool):
       """
       path = business_template.getTitle()
       path = pathname2url(path)
-      tmpdir_path = mkdtemp() # XXX Why is it necessary to create a temporary
-                              # directory?
-      current_directory = os.getcwd() # XXX not thread safe
+      # XXX Why is it necessary to create a temporary directory?
+      tmpdir_path = mkdtemp() 
+      # XXX not thread safe
+      current_directory = os.getcwd() 
       os.chdir(tmpdir_path)
       export_string = business_template.export(path=path)
       os.chdir(current_directory)
@@ -243,8 +244,7 @@ class TemplateTool (BaseTool):
         tar = tarfile.open(path, 'r:gz')
         try:
           # create bt object
-          self.newContent(portal_type='Business Template', id=id)
-          bt = self._getOb(id)
+          bt = self.newContent(portal_type='Business Template', id=id)
           prop_dict = {}
           for prop in bt.propertyMap():
             prop_type = prop['type']
@@ -290,7 +290,7 @@ class TemplateTool (BaseTool):
     security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
       """
-        Download Business Template from url, can be file or local directory
+      Download Business Template from url, can be file or local directory
       """
       # For backward compatibility: If REQUEST is passed, it is likely that we
       # come from the management interface.
@@ -349,7 +349,8 @@ class TemplateTool (BaseTool):
 
       return bt
 
-    def importFile(self, import_file=None, id=None, REQUEST=None, **kw):
+    def importFile(self, import_file=None, id=None, REQUEST=None, 
+                   batch_mode=0, **kw):
       """
         Import Business Template from one file
       """
@@ -383,11 +384,14 @@ class TemplateTool (BaseTool):
       bt.build(no_action=1)
       bt.reindexObject()
 
-      if REQUEST is not None:
+      if (batch_mode == 0) and \
+         (REQUEST is not None):
         ret_url = bt.absolute_url() + '/view'
         psm = N_("Business+Templates+Imported+Successfully")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                   % (ret_url, psm))
+      elif (batch_mode == 1):
+        return bt
 
     def runUnitTestList(self, test_list=[], **kwd):
       """
