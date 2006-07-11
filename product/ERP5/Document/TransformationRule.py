@@ -276,13 +276,13 @@ class TransformationRule(Rule):
       # Calculate the industrial phase list
       previous_ind_phase_list = supply_chain.\
           getPreviousPackingListIndustrialPhaseList(current_supply_link)
-      ind_phase_id_list = [x.getId() for x in previous_ind_phase_list]
+      ind_phase_id_list = [x.getRelativeUrl() for x in previous_ind_phase_list]
       # Call getAggregatedAmountList
       # XXX expand failed if transformation is not defined.
       # Do we need to catch the exception ?
       amount_list = transformation.getAggregatedAmountList(
                    tmp_context,
-                   ind_phase_id_list=ind_phase_id_list)
+                   ind_phase_url_list=ind_phase_id_list)
       # Add entries in the consumed_movement_dict
       consumed_movement_dict = {}
       for amount in amount_list:

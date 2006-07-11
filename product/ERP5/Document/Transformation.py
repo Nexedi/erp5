@@ -95,6 +95,24 @@ class Transformation(XMLObject, Predicate, Variated):
       for transformation_line in transformation_line_list:
         transformation_line.updateVariationCategoryList()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVariationRangeBaseCategoryList')
+    def getVariationRangeBaseCategoryList(self):
+      """
+        Returns possible variation base_category ids of the
+        default resource which can be used a variation axis
+        in the transformation.
+      """
+      resource = self.getResourceValue()
+      if resource is not None:
+        result = resource.getVariationBaseCategoryList()
+      else:
+        # XXX result = self.getBaseCategoryIds()
+        # Why calling this method ?
+        # Get a global variable which define a list of variation base category
+        result = self.getPortalVariationBaseCategoryList()
+      return result
+
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getVariationRangeBaseCategoryItemList')
     def getVariationRangeBaseCategoryItemList(self,display_id='title_or_id',**kw):
@@ -206,7 +224,7 @@ class Transformation(XMLObject, Predicate, Variated):
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None,
-                                ind_phase_id_list=None, 
+                                ind_phase_url_list=None, 
                                 rejected_resource_uid_list=None, 
                                 context_quantity=0,**kw):
       """
@@ -231,11 +249,14 @@ class Transformation(XMLObject, Predicate, Variated):
       for transformation in ([self]+template_transformation_list):
         transformation_line_list.extend(transformation.objectValues())
       # Get only lines related to a precise industrial_phase
-      if ind_phase_id_list is not None:
-        transformation_line_list = filter(
-                        lambda x: x.getIndustrialPhaseId() in\
-                                                       ind_phase_id_list,
-                        transformation_line_list)
+      if ind_phase_url_list is not None:
+        new_transf_line_list = []
+        for line in transformation_line_list:
+          ind_ph = line.getIndustrialPhaseValue()
+          if ind_ph is not None:
+            if ind_ph.getRelativeUrl() in ind_phase_url_list:
+              new_transf_line_list.append(line)
+        transformation_line_list = new_transf_line_list
       # Filter lines with resource we do not want to see
       if rejected_resource_uid_list is not None:
         transformation_line_list = filter(

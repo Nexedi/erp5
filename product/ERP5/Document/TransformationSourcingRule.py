@@ -227,7 +227,8 @@ class TransformationSourcingRule(Rule):
             }
           })
         # Build the movement
-        self._buildMovementList(applied_rule, movement_dict,activate_kw=activate_kw)
+        self._buildMovementList(applied_rule, movement_dict,
+                                activate_kw=activate_kw)
       # Create one submovement which sources the transformation
       Rule.expand(self, applied_rule, activate_kw=activate_kw, **kw)
 
