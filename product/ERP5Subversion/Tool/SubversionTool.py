@@ -270,7 +270,7 @@ class DiffFile:
         new_line_tuple[1],
         escape(new_line).replace(' ', NBSP).replace('\t', NBSP_TAB))
         )
-    html_list.append('''</tbody></table><br/><br/>''')
+    html_list.append('''</tbody></table><br/>''')
     return '\n'.join(html_list)
       
 
