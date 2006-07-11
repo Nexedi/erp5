@@ -24,6 +24,12 @@
   <item>Arrow</item>
   <item>Checkbook</item>
  </portal_type>
+ <portal_type id="Checkbook Model">
+  <item>CheckModel</item>
+ </portal_type>
+ <portal_type id="Checkbook Model Check Amount Variation">
+  <item>Amount</item>
+ </portal_type>
  <portal_type id="Container Cell">
   <item>CashContainer</item>
  </portal_type>

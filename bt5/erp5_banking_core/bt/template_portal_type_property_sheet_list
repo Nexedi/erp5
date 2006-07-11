@@ -7,6 +7,8 @@ Cash Delivery Line | CashDeliveryLine
 Category | BaobabCategory
 Check | Arrow
 Check | Task
+Checkbook Model Check Amount Variation | Amount
+Checkbook Model | CheckModel
 Checkbook | Arrow
 Checkbook | Checkbook
 Checkbook | Task

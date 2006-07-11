@@ -18,6 +18,16 @@ Check | history
 Check | metadata
 Check | print
 Check | view
+Checkbook Model Check Amount Variation | metadata
+Checkbook Model Check Amount Variation | print
+Checkbook Model Check Amount Variation | view
+Checkbook Model Module | list_ui
+Checkbook Model Module | sort_on
+Checkbook Model Module | view
+Checkbook Model | history
+Checkbook Model | metadata
+Checkbook Model | print
+Checkbook Model | view
 Checkbook Module | list_ui
 Checkbook Module | sort_on
 Checkbook Module | view
