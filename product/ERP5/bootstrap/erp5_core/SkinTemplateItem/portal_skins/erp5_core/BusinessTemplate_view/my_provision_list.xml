@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_provides_list</string> </value>
+            <value> <string>my_provision_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -273,7 +273,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Provides</string> </value>
+                    <value> <string>Provision</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
