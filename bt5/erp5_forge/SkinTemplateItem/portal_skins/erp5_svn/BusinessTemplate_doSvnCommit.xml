@@ -72,6 +72,14 @@
 
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
+# XXX: To be compatible with commit from diff view\n
+if same_type(added, []):\n
+  added = \',\'.join(added)\n
+if same_type(modified, []):\n
+  modified = \',\'.join(modified)\n
+if same_type(removed, []):\n
+  removed = \',\'.join(removed)\n
+\n
 commit_non_recurs = added\n
 if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
   if modified != \'\' and modified != \'none\':\n
@@ -166,8 +174,9 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
-                            <string>commit_non_recurs</string>
+                            <string>same_type</string>
                             <string>_getattr_</string>
+                            <string>commit_non_recurs</string>
                             <string>_getitem_</string>
                             <string>context</string>
                             <string>commit_recurs</string>

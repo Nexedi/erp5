@@ -75,11 +75,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                        js_list python: [\'js/menuico.js\', \'js/movableMenu.js\', \'js/BusinessTemplate_doCreateJavaScriptDiff\']">\n
   <tal:block metal:use-macro="here/view_master/macros/master">\n
     <tal:block metal:fill-slot="main">\n
-<!-- Form Hidden : Selected files -->\n
-<input type=\'hidden\' name=\'removed\' tal:attributes="value python:context.REQUEST[\'removed\']"/>\n
-<input type=\'hidden\' name=\'added\' tal:attributes="value python:context.REQUEST[\'added\']"/>\n
-<input type=\'hidden\' name=\'modified\' tal:attributes="value python:context.REQUEST[\'modified\']"/>\n
-<!-- End Hidden -->\n
 <tal:py replace="structure \n
 here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
 \n

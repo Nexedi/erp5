@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:\'\\n\'.join(here.REQUEST[\'added\'].split(\',\'))</string> </value>
+            <value> <string>python:\'\\n\'.join(here.added.split(\',\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

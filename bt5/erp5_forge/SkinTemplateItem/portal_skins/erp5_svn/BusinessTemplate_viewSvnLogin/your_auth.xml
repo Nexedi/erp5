@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.realm</string> </value>
+            <value> <string>here/realm</string> </value>
         </item>
       </dictionary>
     </pickle>

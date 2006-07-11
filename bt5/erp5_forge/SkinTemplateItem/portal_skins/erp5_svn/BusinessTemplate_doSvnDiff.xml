@@ -81,6 +81,7 @@ tab_Removed=removed.split(\',\')\n
 \n
 if modified != \'none\':\n
   for f in tab_Modified:\n
+    print \'<input name="modified" value="%s" type="checkbox" checked="checked" />\'%f\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)    \n
     print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
@@ -92,6 +93,7 @@ if modified != \'none\':\n
 \n
 if added != \'none\':\n
   for f in tab_Added:\n
+    print \'<input name="added" value="%s" type="checkbox" checked="checked" />\'%f\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
     print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
@@ -102,6 +104,7 @@ if added != \'none\':\n
 \n
 if removed != \'none\':\n
   for f in tab_Removed:\n
+    print \'<input name="removed" value="%s" type="checkbox" checked="checked" />\'%f\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
     print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
