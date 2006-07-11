@@ -802,6 +802,65 @@ class TestBase(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCreateBaseCategory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a base category.
+    """
+    portal = self.getPortal()
+    module = portal.portal_categories
+    object_instance = module.newContent(portal_type="Base Category")
+    sequence.edit(
+        object_instance=object_instance,
+    )
+
+  def stepSetBadTalesExpression(self, sequence=None, sequence_list=None, **kw):
+    """
+    Set a wrong tales expression
+    """
+    object_instance = sequence.get('object_instance')
+    tales_expression = "python: 1 + 'a'"
+    object_instance.edit(acquisition_portal_type_list=tales_expression)
+    sequence.edit(
+        tales_expression=tales_expression,
+    )
+
+  def stepCheckTalesExpression(self, sequence=None, sequence_list=None, **kw):
+    """
+    Set a wrong tales expression
+    """
+    object_instance = sequence.get('object_instance')
+    tales_expression = sequence.get('tales_expression')
+    self.assertEquals(object_instance.getAcquisitionPortalTypeList(evaluate=0),
+                      tales_expression)
+
+  def stepSetGoodTalesExpression(self, sequence=None, 
+                                 sequence_list=None, **kw):
+    """
+    Set a wrong tales expression
+    """
+    object_instance = sequence.get('object_instance')
+    tales_expression = "python: 1 + 1"
+    object_instance.edit(acquisition_portal_type_list=tales_expression)
+    sequence.edit(
+        tales_expression=tales_expression,
+    )
+
+  def test_07_setEditTalesExpression(self, quiet=0, run=run_all_test):
+    """
+    Test if edit update a tales expression.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = '\
+              CreateBaseCategory \
+              SetBadTalesExpression \
+              CheckTalesExpression \
+              SetGoodTalesExpression \
+              CheckTalesExpression \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 if __name__ == '__main__':
     framework()
 else:
