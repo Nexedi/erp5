@@ -81,6 +81,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_provision_list</string>
                       </list>
                     </value>
                 </item>

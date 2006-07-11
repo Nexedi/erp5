@@ -358,6 +358,10 @@
                           <string>Dependencies</string>
                         </tuple>
                         <tuple>
+                          <string>provision_list</string>
+                          <string>Provision</string>
+                        </tuple>
+                        <tuple>
                           <string>license</string>
                           <string>License</string>
                         </tuple>
@@ -534,6 +538,10 @@
                         </tuple>
                         <tuple>
                           <string>dependency_list</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>provision_list</string>
 <string></string>
                         </tuple>
                         <tuple>
