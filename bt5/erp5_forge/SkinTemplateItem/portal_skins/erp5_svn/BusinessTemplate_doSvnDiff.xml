@@ -86,8 +86,9 @@ if modified != \'none\':\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
-    print \'</span><br/><hr/>\'\n
+    print \'</span><br/>\'\n
     print context.getPortalObject()["portal_subversion"].diffHTML(f, context)\n
+    print \'<hr/><br/>\'\n
 \n
 if added != \'none\':\n
   for f in tab_Added:\n
@@ -96,8 +97,8 @@ if added != \'none\':\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
-    print \'</span><br/><hr/>\'\n
-    print "<span style=\'color: green;\'><File Added</span><br/><br/>"\n
+    print \'</span><br/>\'\n
+    print "<span style=\'color: green;\'>File Added</span><br/><br/><hr/><br/>"\n
 \n
 if removed != \'none\':\n
   for f in tab_Removed:\n
@@ -106,8 +107,8 @@ if removed != \'none\':\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
-    print \'</span><br/><hr/>\'\n
-    print "<span style=\'color: red;\'>File Removed</span><br/><br/>"\n
+    print \'</span><br/>\'\n
+    print "<span style=\'color: red;\'>File Removed</span><br/><br/><hr/><br/>"\n
 \n
 print \'</div>\'\n
 return printed\n
