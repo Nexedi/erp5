@@ -67,7 +67,7 @@ customImporters={
     XMLExportImport.magic: XMLExportImport.importXML,
     }
 
-from zLOG import LOG
+from zLOG import LOG, WARNING, ERROR, INFO
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
@@ -542,8 +542,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           else:
             action = 'backup'
           # get subobjects in path
-          container_path = path.split('/')[:-1]
-          object_id = path.split('/')[-1]
+          path_list = path.split('/')
+          container_path = path_list[:-1]
+          object_id = path_list[-1]
           try:
             container = portal.unrestrictedTraverse(container_path)
           except KeyError:
@@ -557,7 +558,8 @@ class ObjectTemplateItem(BaseTemplateItem):
           subobjects_dict = {}
           # Object already exists
           if object_id in container_ids:
-            subobjects_dict = self._backupObject(action, trashbin, container_path, object_id)
+            subobjects_dict = self._backupObject(action, trashbin, 
+                                                 container_path, object_id)
             container.manage_delObjects([object_id])
           # install object
           obj = self._objects[path]
@@ -565,7 +567,8 @@ class ObjectTemplateItem(BaseTemplateItem):
             if getattr(obj, '_code') is None:
               obj._compile()
           if hasattr(aq_base(obj), 'groups'):
-            # we must keep original order groups because they change when we add subobjects
+            # we must keep original order groups 
+            # because they change when we add subobjects
             groups[path] = deepcopy(obj.groups)
           # copy the object
           obj = obj._getCopy(container)
@@ -574,11 +577,16 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj.manage_afterClone(obj)
           obj.wl_clearLocks()
           # if portal types upgrade, set backup properties
-          if getattr(obj, 'meta_type', None) == 'ERP5 Type Information' and len(subobjects_dict) > 0:
-            setattr(obj, 'allowed_content_types', subobjects_dict['allowed_content_type_list'] or [])
-            setattr(obj, 'hidden_content_type_list', subobjects_dict['hidden_content_type_list'] or [])
-            setattr(obj, 'property_sheet_list', subobjects_dict['property_sheet_list'] or [])
-            setattr(obj, 'base_category_list', subobjects_dict['base_category_list'] or [])
+          if getattr(obj, 'meta_type', None) == 'ERP5 Type Information' and \
+              len(subobjects_dict) > 0:
+            setattr(obj, 'allowed_content_types', 
+                    subobjects_dict['allowed_content_type_list'] or [])
+            setattr(obj, 'hidden_content_type_list', 
+                    subobjects_dict['hidden_content_type_list'] or [])
+            setattr(obj, 'property_sheet_list', 
+                    subobjects_dict['property_sheet_list'] or [])
+            setattr(obj, 'base_category_list', 
+                    subobjects_dict['base_category_list'] or [])
             setattr(obj, '_roles', subobjects_dict['roles_list'] or [])
             # set actions
             action_list = subobjects_dict['action_list']
@@ -618,7 +626,8 @@ class ObjectTemplateItem(BaseTemplateItem):
             # It is necessary to make sure that the sql connection
             # in this method is valid.
             sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
-            if obj.connection_id not in sql_connection_list:
+            if (obj.connection_id not in sql_connection_list) and \
+               (len(sql_connection_list) != 0):
               obj.connection_id = sql_connection_list[0]
       # now put original order group
       for path in groups.keys():
@@ -706,7 +715,9 @@ class PathTemplateItem(ObjectTemplateItem):
           object_id = relative_url.split('/')[-1]
           container = portal.unrestrictedTraverse(container_path)
           if trash and trashbin is not None:
-            self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
+            self.portal_trash.backupObject(trashbin, container_path, 
+                                           object_id, save=1, 
+                                           keep_subobjects=1)
           container.manage_delObjects([object_id])
         except (NotFound, KeyError):
           # object is already backup and/or removed
@@ -737,7 +748,9 @@ class PathTemplateItem(ObjectTemplateItem):
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
       if object_id != "":
-        path_list.extend(self._resolvePath(folder._getOb(object_id), relative_url_list + [object_id], id_list[1:]))
+        path_list.extend(self._resolvePath(
+            folder._getOb(object_id), 
+            relative_url_list + [object_id], id_list[1:]))
     return path_list
 
   def build(self, context, **kw):
@@ -767,6 +780,44 @@ class PathTemplateItem(ObjectTemplateItem):
           obj.groups = groups
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
+
+class PreferenceTemplateItem(PathTemplateItem):
+  """
+  This class is used to store preference objects
+  """
+  def _resolvePath(self, folder, relative_url_list, id_list):
+    """
+    This method calls itself recursively.
+
+    The folder is the current object which contains sub-objects.
+    The list of ids are path components. If the list is empty,
+    the current folder is valid.
+    """
+    if relative_url_list != []:
+      LOG("PreferenceTemplateItem, _resolvePath", WARNING,
+          "Should be empty")
+    if len(id_list) is not None:
+      LOG("PreferenceTemplateItem, _resolvePath", WARNING,
+          "Should contain only one element")
+    # XXX hardcoded
+    return ['portal_preferences/%s' % id_list[0]]
+
+  def install(self, context, trashbin, **kw):
+    """
+    Enable Preference
+    """
+    PathTemplateItem.install(self, context, trashbin, **kw)
+    portal = context.getPortalObject()
+    for object_path in self._objects.keys():
+      object = portal.unrestrictedTraverse(object_path)
+      # XXX getPreferenceState is a bad name
+      if object.getPreferenceState() == 'disabled':
+        object.portal_workflow.doActionFor(
+                      object,
+                      'enable_action',
+                      wf_id='preference_workflow',
+                      comment="Initialized during Business Template " \
+                              "installation.")
 
 class CategoryTemplateItem(ObjectTemplateItem):
 
@@ -936,7 +987,8 @@ class SkinTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       folder = p.unrestrictedTraverse(relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method',)):
-        if obj.connection_id not in sql_connection_list:
+        if (obj.connection_id not in sql_connection_list) and \
+           (len(sql_connection_list) != 0):
           obj.connection_id = sql_connection_list[0]
     # Add new folders into skin paths.
     ps = p.portal_skins
@@ -1193,6 +1245,12 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     keys.sort()
     for key in keys:
       workflow_list = self._objects[key]
+      # XXX Not always a list
+      if isinstance(workflow_list, str):
+        LOG("BusinessTemplate, generateXml.", ERROR,
+            "A list was expected instead of %s for key %s." % \
+                (workflow_list, key))
+        workflow_list = [workflow_list]
       xml_data += os.linesep+' <chain>'
       xml_data += os.linesep+'  <type>%s</type>' %(key,)
       xml_data += os.linesep+'  <workflow>%s</workflow>' %(', '.join(workflow_list))
@@ -1467,6 +1525,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
+
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1496,6 +1555,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
                       catalog.filter_dict[method_id]['type']
 
   def export(self, context, bta, **kw):
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except KeyError:
+      catalog = None
+    if catalog is None:
+      LOG('BusinessTemplate, export', 0, 'no SQL catalog was available')
+      return
+
     if len(self._objects.keys()) == 0:
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
@@ -3607,6 +3674,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_module_item',
       '_skin_item',
       '_path_item',
+      '_preference_item',
       '_action_item',
       '_portal_type_roles_item',
       '_local_roles_item',
@@ -3667,7 +3735,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         Copy existing portal objects to self
       """
-      if no_action: return # this is use at import of Business Template to get the status built
+      if no_action: return 
+        # this is use at import of Business Template to get the status built
       # Make sure that everything is sane.
       self.clean()
       
@@ -3738,6 +3807,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                self.getTemplatePortalTypeBaseCategoryList())
       self._path_item = \
                PathTemplateItem(self.getTemplatePathList())
+      self._preference_item = \
+               PreferenceTemplateItem(self.getTemplatePreferenceList())
       self._catalog_keyword_key_item = \
           CatalogKeywordKeyTemplateItem(
                self.getTemplateCatalogKeywordKeyList())
@@ -3916,7 +3987,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               break
       if update_catalog:
         catalog = local_configuration.portal_catalog.getSQLCatalog()
-        if catalog is None:
+        if (catalog is None) or (not site.isIndexable):
           LOG('Business Template', 0, 'no SQL Catalog available')
           update_catalog = 0
         else:
@@ -4084,6 +4155,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if result != ():
         result = list(result)
         result.sort()
+        # XXX Why do we need to return a tuple ?
         result = tuple(result)
       return result
 
@@ -4128,6 +4200,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_path')
+
+    def getTemplatePreferenceList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_preference')
 
     def getTemplatePortalTypeAllowedContentTypeList(self):
       """
@@ -4198,7 +4277,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Export this Business Template
       """
       if self.getBuildingState() != 'built':
-        raise TemplateConditionError, 'Business Template must be build before export'
+        raise TemplateConditionError, \
+              'Business Template must be build before export'
+      if self.getInstallationState() == 'installed':
+        raise TemplateConditionError, \
+              'Can not export installed Business Template'
 
       if local:
         # we export into a folder tree
@@ -4212,13 +4295,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for prop in self.propertyMap():
         prop_type = prop['type']
         id = prop['id']
-        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'install_object_list_list'):
+        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 
+                  'install_object_list_list'):
           continue
         value = self.getProperty(id)
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
         elif prop_type in ('lines', 'tokens'):
-          bta.addObject(obj=str(os.linesep).join(value), name=id, path=path+os.sep+'bt', ext='')
+          bta.addObject(obj=str(os.linesep).join(value), name=id, 
+                        path=path+os.sep+'bt', ext='')
 
       # Export each part
       for item_name in self._item_name_list:
@@ -4284,6 +4369,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                self.getTemplateMessageTranslationList())
       self._path_item = \
                PathTemplateItem(self.getTemplatePathList())
+      self._preference_item = \
+               PreferenceTemplateItem(self.getTemplatePreferenceList())
       self._portal_type_allowed_content_type_item = \
            PortalTypeAllowedContentTypeTemplateItem(
                self.getTemplatePortalTypeAllowedContentTypeList())
@@ -4356,6 +4443,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'Module' : '_module_item',
         'Skin' : '_skin_item',
         'Path' : '_path_item',
+        'Preference' : '_preference_item',
         'Action' : '_action_item',
         'PortalTypeRoles' : '_portal_type_roles_item',
         'LocalRoles' : '_local_roles_item',
@@ -4406,14 +4494,34 @@ Business Template is a set of definitions, such as skins, portal types and categ
       diff_msg = ''
 
       # Real Zope Objects (can be exported into XML directly by Zope)
-      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item',
+      # XXX Bad naming
+      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item',
+                     '_category_item', '_path_item', '_preference_tem', 
                      '_skin_item', '_action_item',]
 
       # Not considered as objects by Zope (will be exported into XML manually)
-      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item', '_catalog_keyword_key_item', '_catalog_full_text_key_item', '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item', '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item', '_portal_type_property_sheet_item', '_portal_type_roles_item', '_portal_type_base_category_item', '_local_roles_item', '_portal_type_workflow_chain_item',]
+      # XXX Bad naming
+      item_list_2 = ['_site_property_item', '_module_item', 
+                     '_catalog_result_key_item', '_catalog_related_key_item',
+                     '_catalog_result_table_item', 
+                     '_catalog_keyword_key_item', 
+                     '_catalog_full_text_key_item', 
+                     '_catalog_request_key_item', 
+                     '_catalog_multivalue_key_item', 
+                     '_catalog_topic_key_item', 
+                     '_portal_type_allowed_content_type_item', 
+                     '_portal_type_hidden_content_type_item', 
+                     '_portal_type_property_sheet_item', 
+                     '_portal_type_roles_item', 
+                     '_portal_type_base_category_item', 
+                     '_local_roles_item', 
+                     '_portal_type_workflow_chain_item',]
 
       # Text objects (no need to export them into XML)
-      item_list_3 = ['_document_item', '_property_sheet_item', '_constraint_item', '_extension_item', '_test_item', '_message_translation_item',]
+      # XXX Bad naming
+      item_list_3 = ['_document_item', '_property_sheet_item', 
+                     '_constraint_item', '_extension_item', 
+                     '_test_item', '_message_translation_item',]
 
       if item_name in item_list_1:
         f1 = StringIO() # for XML export of New Object
