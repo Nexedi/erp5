@@ -166,7 +166,7 @@ class Periodicity(Base):
       self.setAlarmDate(next_start_date)
 
 
-    security.declareProtected(Permissions.View, 'getWeekDayList')
+    security.declareProtected(Permissions.View, 'getAlarmDate')
     def getAlarmDate(self):
       """
       returns something like ['Sunday','Monday',...]
