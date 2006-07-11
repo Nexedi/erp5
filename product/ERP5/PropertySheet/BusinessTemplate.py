@@ -214,7 +214,7 @@ class BusinessTemplate:
       'type'        : 'lines',
       'mode'        : 'w',
       'default'     : () },
-    { 'id'          : 'provides',
+    { 'id'          : 'provision',
       'description' : 'a list of template names provided by this template',
       'type'        : 'lines',
       'mode'        : 'w',
