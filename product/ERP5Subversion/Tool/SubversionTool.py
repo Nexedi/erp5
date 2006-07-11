@@ -733,26 +733,10 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # First remove unversioned in working copy that could conflict
     self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
     client = self._getClient()
-    # Revert local changes in working copy first 
-    # to import a "pure" BT after update
-    self.revert(path=path, recurse=True)
     # Update from SVN
     client.update(path)
     # Import in zodb
     return self.importBT(business_template)
-  
-  security.declareProtected('Import/Export objects', 'updatewc')
-  def updatewc(self, business_template):
-    """Update a working copy.
-    """
-    path = self._getWorkingPath(self.getSubversionPath(business_template))
-    # First do recursive revert to avoid conflicts
-    self.revert(path, business_template, True)
-    # then remove unversioned in working copy that could conflict
-    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
-    client = self._getClient()
-    # Update from SVN
-    client.update(path)
 
   security.declareProtected('Import/Export objects', 'switch')
   def switch(self, business_template, url):
