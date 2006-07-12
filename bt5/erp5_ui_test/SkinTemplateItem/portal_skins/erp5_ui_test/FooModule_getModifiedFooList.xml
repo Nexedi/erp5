@@ -80,7 +80,9 @@ return context.FooModule_zGetModifiedFooList(**kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_ui_test/FooModule_getModifiedFooList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

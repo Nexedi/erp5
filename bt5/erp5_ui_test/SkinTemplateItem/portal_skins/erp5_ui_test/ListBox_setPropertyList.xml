@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string>d = dict(\n
   field_title = \'Foos\',\n
+  field_description = \'\',\n
+  field_css_class = \'\',\n
+  field_alternate_name = \'\',\n
+  field_hidden = \'\',\n
   field_lines = \'3\',\n
   field_columns = \'\\n\'.join((\n
     \'id | ID\',\n
@@ -87,14 +91,21 @@
   field_count_method = \'countFolder\',\n
   field_stat_method = \'\',\n
   field_selection_name = \'foo_selection\',\n
+  field_meta_types = \'\',\n
   field_portal_types = \'Foo\',\n
+  field_default_params = \'\',\n
+  field_global_attributes = \'\',\n
   field_search = \'checked\',\n
   field_select = \'checked\',\n
   field_domain_tree = \'\',\n
+  field_domain_root_list = \'\',\n
   field_report_tree = \'\',\n
+  field_report_root_list = \'\',\n
   field_list_action = \'list\',\n
   field_enabled = \'checked\',\n
   field_editable = \'\',\n
+  field_page_template = \'\',\n
+  field_external_validator = \'\',\n
 )\n
 \n
 d.update(context.REQUEST)\n
@@ -113,7 +124,9 @@ return \'Set Successfully.\'\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_ui_test/ListBox_setPropertyList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

@@ -218,7 +218,7 @@
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
