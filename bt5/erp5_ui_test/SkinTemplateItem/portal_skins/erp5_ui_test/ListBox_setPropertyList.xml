@@ -109,6 +109,7 @@
 )\n
 \n
 d.update(context.REQUEST)\n
+d.update(kw)\n
 #context.log(\'ListBox_setPropertyList\', \'kw = %r, d = %r\' % (kw, d,))\n
 r = context.form.validate(d)\n
 context.manage_edit_xmlrpc(r)\n
@@ -166,7 +167,7 @@ return \'Set Successfully.\'\n
                             <string>dict</string>
                             <string>_getattr_</string>
                             <string>d</string>
-<string>context</string>
+                            <string>context</string>
                             <string>r</string>
                           </tuple>
                         </value>

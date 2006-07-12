@@ -1,4 +1,8 @@
 2006-07-12 yo
+* Do not reset selections if not present in ListBoxZuite_reset.
+* Accept keyword parameters in ListBox_setPropertyList.
+
+2006-07-12 yo
 * Add missing properties to Listbox_setPropertyList.
 
 2006-06-30 yo

@@ -87,11 +87,13 @@ result = form.listbox.ListBox_setPropertyList()\n
 \n
 # Reset the selection.\n
 def resetSelection(selection_name):\n
-  context.portal_selections.setSelectionToAll(selection_name, reset_domain_tree=True, reset_report_tree=True)\n
-  context.portal_selections.setSelectionSortOrder(selection_name, [])\n
-  context.portal_selections.setSelectionColumns(selection_name, [])\n
-  context.portal_selections.setSelectionStats(selection_name, [])\n
-  context.portal_selections.setListboxDisplayMode(context.REQUEST, \'FlatListMode\', selection_name)\n
+  selection_tool = context.portal_selections\n
+  if selection_tool.getSelectionFor(selection_name) is not None:\n
+    selection_tool.setSelectionToAll(selection_name, reset_domain_tree=True, reset_report_tree=True)\n
+    selection_tool.setSelectionSortOrder(selection_name, [])\n
+    selection_tool.setSelectionColumns(selection_name, [])\n
+    selection_tool.setSelectionStats(selection_name, [])\n
+    selection_tool.setListboxDisplayMode(context.REQUEST, \'FlatListMode\', selection_name)\n
 \n
 resetSelection(\'foo_selection\')\n
 resetSelection(\'foo_line_selection\')\n
