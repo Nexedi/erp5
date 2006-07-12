@@ -2047,7 +2047,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     # If a specific template is specified, use it.
     method_id = self.field.get_value('page_template')
     if method_id:
-      return getattr(context, method_id)
+      return aq_base(getattr(self.getContext(), method_id)).__of__(context)
 
     # Otherwise, use the default one.
     return context.asHTML
@@ -2673,7 +2673,7 @@ class ListBoxListRenderer(ListBoxRenderer):
         if isinstance(value, str):
           value = value.replace('&nbsp;', ' ')
 
-        listboxline.addColumn(sql, value)
+        stat_listboxline.addColumn(sql, value)
 
       listboxline_list.append(stat_listboxline)
 
