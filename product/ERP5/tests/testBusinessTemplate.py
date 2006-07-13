@@ -143,6 +143,14 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     """
     bt = sequence.get('export_bt')
     sequence.edit(current_bt=bt)
+    
+  def stepUseDependencyBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+      Define dependency_bt as current bt
+    """
+    bt = sequence.get('dependency_bt')
+    sequence.edit(current_bt=bt)
 
   def stepUseImportBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -153,7 +161,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence.edit(current_bt=bt)
 
   def stepCheckInstalledInstallationState(self, sequence=None,
-                                        seqeunce_list=None, **kw):
+                                        sequence_list=None, **kw):
     """
     Check if installation state is installed
     """
@@ -161,7 +169,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.assertEquals(bt.getInstallationState(), 'installed')
 
   def stepCheckNotInstalledInstallationState(self, sequence=None,
-                                        seqeunce_list=None, **kw):
+                                        sequence_list=None, **kw):
     """
     Check if installation state is not_installed
     """
@@ -1391,6 +1399,13 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     """
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
+  
+  def stepInstallCurrentBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    current_bt = sequence.get('current_bt')
+    current_bt.install(force=1)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1535,20 +1550,61 @@ class TestBusinessTemplate(ERP5TypeTestCase):
   def stepCheckInitialRevision(self, sequence=None, sequence_list=None, **kw):
     """ Check if revision of a new bt is an empty string
     """
-    bt = sequence.get('export_bt')
+    bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '')
 
   def stepCheckFirstRevision(self, sequence=None, sequence_list=None, **kw):
     """ Check if revision of the bt is 1
     """
-    bt = sequence.get('export_bt')
+    bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '1')
     
   def stepCheckSecondRevision(self, sequence=None, sequence_list=None, **kw):
     """ Check if revision of the bt is 2
     """
-    bt = sequence.get('export_bt')
+    bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '2')
+    
+  def stepCheckNoMissingDependencies(self, sequence=None, sequence_list=None, **kw):
+    """ Check if bt has no missing dependency
+    """
+    missing_dep = False
+    bt = sequence.get('current_bt')
+    try:
+      bt.checkDependencies()
+    except:
+      missing_dep = True
+    self.failUnless(not missing_dep)
+    
+  def stepCheckMissingDependencies(self, sequence=None, sequence_list=None, **kw):
+    """ Check if bt has missing dependency
+    """
+    missing_dep = False
+    bt = sequence.get('current_bt')
+    try:
+      bt.checkDependencies()
+    except:
+      missing_dep = True
+    self.failUnless(missing_dep)
+    
+  def stepAddDependency(self, sequence=None, sequence_list=None, **kw):
+    """ Add a dependency to the business template
+    """
+    bt = sequence.get('current_bt')
+    bt.setDependencyList(['dependency_bt',])
+    
+  def stepCreateDependencyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a new Business Template
+    """
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    template.edit(title='dependency_bt',
+                  version='1.0',
+                  description='bt for unit_test')
+    sequence.edit(dependency_bt=template)
     
   # tests
   def test_01_checkNewSite(self, quiet=0, run=run_all_test):
@@ -2723,7 +2779,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
   def test_22_RevisionNumberIsIncremented(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test Business Template With Portal Types'
+      message = 'Test is revision number is incremented with the bt is built'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
@@ -2737,6 +2793,74 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       stepCheckFirstRevision \
 		       BuildBusinessTemplate \
 		       stepCheckSecondRevision \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_23_CheckNoDependencies(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if a new Business Template has no dependencies'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateNewBusinessTemplate \
+		       UseExportBusinessTemplate \
+                       CheckNoMissingDependencies \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+    
+  def test_24_CheckMissingDependency(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if a exception is raised when a dependency is missing'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateNewBusinessTemplate \
+		       UseExportBusinessTemplate \
+                       AddDependency \
+                       CheckMissingDependencies \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+    
+  def test_25_CheckNoMissingDependency(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if the dependency problem is fixed when the dependency is installed'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateNewBusinessTemplate \
+		       UseExportBusinessTemplate \
+                       AddDependency \
+                       CheckMissingDependencies \
+                       CreateDependencyBusinessTemplate \
+                       CheckMissingDependencies \
+                       UseDependencyBusinessTemplate \
+                       BuildBusinessTemplate \
+                       InstallCurrentBusinessTemplate \
+                       CheckInstalledInstallationState \
+                       UseExportBusinessTemplate \
+                       CheckNoMissingDependencies \
+                       UseDependencyBusinessTemplate \
+                       UninstallBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckMissingDependencies \
                        RemoveBusinessTemplate \
 		       RemovePortalType \
                        '
