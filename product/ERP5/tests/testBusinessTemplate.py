@@ -2861,6 +2861,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        UninstallBusinessTemplate \
                        UseExportBusinessTemplate \
                        CheckMissingDependencies \
+                       UseDependencyBusinessTemplate \
+                       RemoveBusinessTemplate \
+                       UseExportBusinessTemplate \
                        RemoveBusinessTemplate \
 		       RemovePortalType \
                        '
