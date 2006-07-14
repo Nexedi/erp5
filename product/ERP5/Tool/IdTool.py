@@ -84,7 +84,7 @@ class IdTool(UniqueObject, Folder):
         
   security.declareProtected(Permissions.AccessContentsInformation,
                             'setLastGeneratedId')
-  def setLastGeneratedId(self,new_id,id_group=None,default=None):
+  def setLastGeneratedId(self,new_id,id_group=None):
     """
     Set a new last id. This is usefull in order to reset
     a sequence of ids.
