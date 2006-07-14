@@ -85,13 +85,22 @@ class IdTool(UniqueObject, Folder):
       l = threading.Lock()
       l.acquire()
       try:
-        last_id = self.dict_ids.get(id_group, default or 0)
+        class Dummy:
+          pass
+        dummy = Dummy()
+        last_id = self.dict_ids.get(id_group, dummy)
+        if last_id is dummy:
+          if default is None:
+            new_id=0
+          else:
+            new_id=default
 
-        # Now generate a new id
-        if method is not None:
-          new_id = method(last_id)
         else:
-          new_id = last_id + 1
+          # Now generate a new id
+          if method is not None:
+            new_id = method(last_id)
+          else:
+            new_id = last_id + 1
  
         # Store the new value
         self.dict_ids[id_group] = new_id
