@@ -68,8 +68,39 @@ class IdTool(UniqueObject, Folder):
   # Filter content (ZMI))
   def __init__(self):
     return Folder.__init__(self, IdTool.id)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getLastGeneratedId')
+  def getLastGeneratedId(self,id_group=None,default=None):
+    """
+    Get the last id generated
+    """
+    if getattr(self, 'dict_ids', None) is None:
+      self.dict_ids = PersistentMapping()
+    last_id = None
+    if id_group is not None and id_group!='None':
+      last_id = self.dict_ids.get(id_group, default)
+    return last_id
         
-  # Filter content (ZMI))
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'setLastGeneratedId')
+  def setLastGeneratedId(self,new_id,id_group=None,default=None):
+    """
+    Set a new last id. This is usefull in order to reset
+    a sequence of ids.
+    """
+    if getattr(self, 'dict_ids', None) is None:
+      self.dict_ids = PersistentMapping()
+    if id_group is not None and id_group!='None':
+      l = threading.Lock()
+      l.acquire()
+      try:
+        self.dict_ids[id_group] = new_id
+      finally:
+        l.release()
+        
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'generateNewId')
   def generateNewId(self, id_group=None, default=None, method=None):
     """
       Generate a new Id
