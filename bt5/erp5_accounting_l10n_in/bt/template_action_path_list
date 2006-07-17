@@ -1,2 +1,4 @@
-Account Module | indian_balance_sheet_report
-Accounting Transaction Module | indian_balance_sheet_report
+Account Module | balance_sheet_report
+Account Module | profit_loss_report
+Accounting Transaction Module | balance_sheet_report
+Accounting Transaction Module | profit_loss_report

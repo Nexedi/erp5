@@ -132,7 +132,9 @@ return float ("%.2f"%(sum))\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_in/FiscalReportCell_doGetInventory</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

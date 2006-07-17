@@ -68,57 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-#context = self\n
+            <value> <string>#context = self\n
 # vim: ts=2 sw=2 et\n
 \n
 STRIP_IF_EMPTY = True\n
-\n
-"""\n
-(13:13:27) jerome@jabber.nexedi.com: >\n
->  Comment faire un getInventory pour un compte (Account)  sur un script de\n
-> la ZMI avec un compte???\n
-\n
-Avec la ligne comme context, quelque chose du genre:\n
-\n
-context.portal_simulation.getInventory( \n
-  simulation_state=[\'stopped\', \'delivered\'], # \xc3\xa0 toi de voir les \xc3\xa9tats que tu \n
-veux\n
-  section_uid=context.getSourceSectionUid(),\n
-  node_uid=context.getSourceUid(),\n
-  payment_uid=context.getSourcePaymentUid(),\n
-)\n
-donc ca te donne le solde de ton compte comptable (node_uid), pour \n
-l\'organisation concern\xc3\xa9e (section_uid) et pour le compte en banque concern\xc3\xa9 \n
-(payment_uid), pour les \xc3\xa9critures qui sont dans l\'\xc3\xa9tat de simulation que tu \n
-donnes (simulation_state). Tu peux aussi donner at_date si tu veux voir le \n
-solde \xc3\xa0 une date donn\xc3\xa9e. \n
-Tu te d\xc3\xa9brouilleras pour savoir si tu attends une valeur positive ou n\xc3\xa9gative, \n
-ca je n\'arrive jamais \xc3\xa0 le retenir ;)\n
-(13:13:43) jerome@jabber.nexedi.com: context est une accounting transaction line dans son cas\n
-(13:13:49) jerome@jabber.nexedi.com: mais en gros c\'est ca\n
-(13:14:13) jerome@jabber.nexedi.com: s/getInventory/getInventoryAssetPrice si tu veux la valeur dans ta devise locale\n
-(13:15:22) fabien@jabber.nexedi.com/Gaim: t\'as coll\xc3\xa9 ca d\'ou ?\n
-(13:15:36) jerome@jabber.nexedi.com: d\'une question qu\'on m\'avais pos\xc3\xa9\n
-(13:15:41) jerome@jabber.nexedi.com: tu veux la question ?\n
-(13:15:53) fabien@jabber.nexedi.com/Gaim: la ligne = la transaction ? ou l\'account ?\n
-(13:16:00) jerome@jabber.nexedi.com:  En fait j\'ai un probl\xc3\xa8me avec la validation de la comptabilit\xc3\xa9 quand on met une transaction comptable de montant par exemple 500 000F (d\xc3\xa9bit et cr\xc3\xa9dit). Au niveau de la ligne de transaction de paiement corespondant je veux valider pour que le montant soit inf\xc3\xa9rieur a 500 000F.\n
- \n
- L\'id\xc3\xa9e est de d\xc3\xa9terminer l\'inventaire du compte d\xc3\xa9biter au niveau du paiement pour voir es ce qu\'il est cr\xc3\xa9diteur de x avant de le d\xc3\xa9biter de x?\n
- \n
-(13:16:08) jerome@jabber.nexedi.com: la ligne = accounting transaction line\n
-(13:16:23) jerome@jabber.nexedi.com: en fait il t efaut passer le bon node_uid et le bon section_uid\n
-(13:16:29) jerome@jabber.nexedi.com: et les bons simulation_state\n
-(13:17:52) fabien@jabber.nexedi.com/Gaim: bon, bah du coup j\'ai une autre question\n
-(13:18:17) fabien@jabber.nexedi.com/Gaim: comment tu choppes les transactions li\xc3\xa9es \xc3\xa0 un account ?  :D\n
-(13:19:19) jerome@jabber.nexedi.com: tu as deux mani\xc3\xa8res\n
-(13:19:21) jerome@jabber.nexedi.com: la pourrie:\n
-(13:19:47) jerome@jabber.nexedi.com: getSourceRelatedValueList() + getDestinationRelatedValueList()\n
-(13:19:48) jerome@jabber.nexedi.com: la bonne\n
-(13:20:03) jerome@jabber.nexedi.com: getInventoryList(node_uid = , section_uid=,  ....)\n
-(13:20:31) jerome@jabber.nexedi.com: getInventoryList te donnes les mouvements qui t\'am\xc3\xa8ne au solde du compte que tu obtient avec getInventory\n
-"""\n
 request = context.REQUEST\n
 result = []\n
 GAP = context.portal_categories.restrictedTraverse(request[\'gap_base\'])\n
@@ -365,9 +318,7 @@ for item in structure:\n
 \tparse_structure(item)\n
 #return \'\\n\'.join(result)\n
 return (result, loop_dict[\'schedules\'])\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -377,7 +328,13 @@ return (result, loop_dict[\'schedules\'])\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_in/AccountingTransactionModule_getDataForBalanceSheet</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

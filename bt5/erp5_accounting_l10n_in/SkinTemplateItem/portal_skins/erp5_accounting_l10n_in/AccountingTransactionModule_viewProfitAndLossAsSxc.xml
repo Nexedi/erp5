@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5OOo.OOoTemplate</string>
+          <string>OOoTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAFoX5TTMBk1mQgEAAFEHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOw1I741GGmmx2ltT7TCS9q4TT82j
+qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyuscncNOpOhaD6SpdWCRWlatD+h6r5JFx+3X+e1kWj5U
+F/CgDdZ5YjxUFxn2Gmo+BOwEhGC0As55yp3rm6OruVY0FCJCT1tEFhfIkIypA/C2E1LIu5y3KW/e
+DXpM8ZgLPUti4EQbiGXwoBQazKGPUqUYp53mYhZ3FREMxgNjIXjwIYV8E1IhfPRjRCp30lPqxeDs
+vSkG1xZGJPmq2UKgoo472d+fDUpu6p4m6UZdC/6Ww51yxj3LqVdvwrOf/9fMv3OJDwZpdqxFhtke
+nvU22Y0DbUjyadgEN84Nn7ewyJz/xXNpF/LHt7j8BFBLAQIUABQAAAAIAFoX5TTMBk1mQgEAAFEH
+AAAVAAAAAAAAAAAAAAAAAAAAAABNRVRBLUlORi9tYW5pZmVzdC54bWxQSwUGAAAAAAEAAQBDAAAA
+dQEAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+          xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+          xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+         office:version=\'1.0\'>\n
+  <office:scripts/>\n
+  <office:font-face-decls>\n
+    <style:font-face svg:font-family="\'DejaVu Sans\'" style:name=\'DejaVu Sans\' style:font-pitch=\'variable\'/>\n
+    <style:font-face svg:font-family=\'Arial\' style:font-family-generic=\'swiss\' style:name=\'Arial\' style:font-pitch=\'variable\'/>\n
+  </office:font-face-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:family=\'table-column\' style:name=\'co1\'>\n
+      <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'3.574cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'co2\'>\n
+      <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'2.267cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro1\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.459cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro2\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.868cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro3\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.441cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table\' style:name=\'ta1\' style:master-page-name=\'Default\'>\n
+      <style:table-properties style:writing-mode=\'lr-tb\' table:display=\'true\'/>\n
+    </style:style>\n
+    <number:number-style style:name=\'N60004\' number:language=\'en\' number:country=\'IN\'>\n
+      <number:number number:grouping=\'true\' number:decimal-places=\'2\' number:min-integer-digits=\'1\'/>\n
+    </number:number-style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce1\'>\n
+      <style:table-cell-properties style:repeat-content=\'false\' style:text-align-source=\'fix\'/>\n
+      <style:paragraph-properties fo:text-align=\'center\' fo:margin-left=\'0cm\'/>\n
+      <style:text-properties fo:font-weight=\'bold\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce2\'>\n
+      <style:table-cell-properties fo:border=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce3\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'none\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+      <style:text-properties fo:font-weight=\'bold\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce4\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'none\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce5\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce6\'>\n
+      <style:table-cell-properties style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border=\'0.002cm solid #000000\'/>\n
+      <style:paragraph-properties fo:text-align=\'center\' fo:margin-left=\'0cm\'/>\n
+      <style:text-properties fo:font-weight=\'bold\'/>\n
+    </style:style>\n
+    <style:style style:data-style-name=\'N60004\' style:parent-style-name=\'Default\' style:name=\'ce7\' style:family=\'table-cell\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'none\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:data-style-name=\'N60004\' style:parent-style-name=\'Default\' style:name=\'ce8\' style:family=\'table-cell\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'none\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+      <style:text-properties style:text-underline-color=\'font-color\' style:text-underline-style=\'solid\' style:text-underline-width=\'auto\'/>\n
+    </style:style>\n
+    <style:style style:data-style-name=\'N60004\' style:parent-style-name=\'Default\' style:name=\'ce9\' style:family=\'table-cell\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'none\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+      <style:text-properties style:text-underline-color=\'font-color\' style:text-underline-style=\'solid\' fo:font-weight=\'bold\' style:text-underline-width=\'auto\'/>\n
+    </style:style>\n
+    <style:style style:data-style-name=\'N60004\' style:parent-style-name=\'Default\' style:name=\'ce10\' style:family=\'table-cell\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <office:spreadsheet>\n
+      <table:table table:style-name=\'ta1\' table:print=\'false\' table:name=\'Feuille1\'>\n
+        <office:forms form:apply-design-mode=\'false\' form:automatic-focus=\'false\'/>\n
+        <table:table-column table:style-name=\'co1\' table:default-cell-style-name=\'ce4\'/>\n
+        <table:table-column table:style-name=\'co2\' table:default-cell-style-name=\'ce4\'/>\n
+        <table:table-column table:style-name=\'co2\' table:default-cell-style-name=\'ce7\' table:number-columns-repeated=\'2\'/>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'ce1\' table:number-columns-spanned=\'4\' office:value-type=\'string\'>\n
+          <text:p tal:content="python:here.restrictedTraverse(request.organisation).getCorporateName()">COMPANY NAME</text:p>\n
+          </table:table-cell>\n
+          <table:covered-table-cell table:style-name=\'Default\' table:number-columns-repeated=\'3\'/>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro2\'>\n
+          <table:table-cell table:style-name=\'ce2\'/>\n
+          <table:table-cell table:style-name=\'ce6\' office:value-type=\'string\'>\n
+            <text:p>Schedule</text:p>\n
+            <text:p>No</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'ce6\' office:value-type=\'string\'>\n
+<text:p>as at <tal:x replace="request/at_date" /></text:p>\n
+                    <text:p>Rs. <text:s text:c=\'6\'/>P.</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'ce6\' office:value-type=\'string\'>\n
+<text:p>as at <tal:x replace="request/at_date2" /></text:p>\n
+            <text:p>Rs. <text:s text:c=\'6\'/>P.</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell table:style-name=\'ce3\' office:value-type=\'string\'>\n
+            <text:p>INCOME</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:number-columns-repeated=\'3\'/>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Sales</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: -context.ProfitLossCell_getCurrentInventory(\'48\',request)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: -context.ProfitLossCell_getCurrentInventory(\'48\',request, 2)"\n
+></table:table-cell>\n
+\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Discount Received</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: -context.ProfitLossCell_getCurrentInventory(\'51\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: -context.ProfitLossCell_getCurrentInventory(\'51\',request, 2)"\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Purchase Returns</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: -context.ProfitLossCell_getCurrentInventory(\'36\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: -context.ProfitLossCell_getCurrentInventory(\'36\',request, 2)"\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell table:number-columns-repeated=\'2\'/>\n
+          <table:table-cell table:formula=\'oooc:=SUM([.C4:.C6])\' table:style-name=\'ce8\' office:value=\'3\' office:value-type=\'float\'>\n
+            <text:p>3.00</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:formula=\'oooc:=SUM([.D4:.D6])\' table:style-name=\'ce8\' office:value=\'3\' office:value-type=\'float\'>\n
+            <text:p>3.00</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell table:style-name=\'ce3\' office:value-type=\'string\'>\n
+            <text:p>Expenditure</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:number-columns-repeated=\'3\'/>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Purchase</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'43\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'43\',request, 2)"\n
+\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Discount Given</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'49\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'49\',request, 2)"\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Sales Returns</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'53\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'53\',request, 2)"\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Wages</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'52\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'52\',request, 2)"\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Bad Debts</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'54\',request, 1)"\n
+></table:table-cell>\n
+          <table:table-cell office:value-type=\'float\'\n
+tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(\'54\',request, 2)"\n
+></table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell table:number-columns-repeated=\'2\'/>\n
+          <table:table-cell table:formula=\'oooc:=SUM([.C9:.C13])\' table:style-name=\'ce8\' office:value=\'5\' office:value-type=\'float\'>\n
+            <text:p>5.00</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:formula=\'oooc:=SUM([.D9:.D13])\' table:style-name=\'ce8\' office:value=\'5\' office:value-type=\'float\'>\n
+            <text:p>5.00</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell table:number-columns-repeated=\'4\'/>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro1\'>\n
+          <table:table-cell office:value-type=\'string\'>\n
+            <text:p>Profit before Tax</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell/>\n
+          <table:table-cell table:formula=\'oooc:=[.C7]-[.C14]\' table:style-name=\'ce9\' office:value=\'-2\' office:value-type=\'float\'>\n
+            <text:p>-2.00</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:formula=\'oooc:=[.D7]-[.D14]\' table:style-name=\'ce9\' office:value=\'-2\' office:value-type=\'float\'>\n
+            <text:p>-2.00</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell table:style-name=\'ce5\' table:number-columns-repeated=\'2\'/>\n
+          <table:table-cell table:style-name=\'ce10\' table:number-columns-repeated=\'2\'/>\n
+        </table:table-row>\n
+      </table:table>\n
+      <table:table table:style-name=\'ta1\' table:print=\'false\' table:name=\'Feuille2\'>\n
+        <table:table-column table:style-name=\'co2\' table:default-cell-style-name=\'Default\'/>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell/>\n
+        </table:table-row>\n
+      </table:table>\n
+      <table:table table:style-name=\'ta1\' table:print=\'false\' table:name=\'Feuille3\'>\n
+        <table:table-column table:style-name=\'co2\' table:default-cell-style-name=\'Default\'/>\n
+        <table:table-row table:style-name=\'ro3\'>\n
+          <table:table-cell/>\n
+        </table:table-row>\n
+      </table:table>\n
+    </office:spreadsheet>\n
+  </office:body>\n
+</office:document-content>\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_viewProfitAndLossAsSxc</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>AccountingTransactionModule_profitLossStylesheet</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Profit And Loss</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

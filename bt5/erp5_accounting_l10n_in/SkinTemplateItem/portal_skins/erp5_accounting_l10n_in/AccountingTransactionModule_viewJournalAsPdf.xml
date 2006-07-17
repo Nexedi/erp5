@@ -137,6 +137,7 @@
         <tal:block tal:replace="nothing"> Summary.\n
         </tal:block>\n
         <tal:block>\n
+\t\t\t<!--\n
             <table style="transaction_header" splitbyrow="1" repeatrows="0" repeatcols="0">\n
                 <tr rowheight="0.5cm">\n
                     <td colwidth="1.5cm"/>\n
@@ -148,12 +149,14 @@
                     <td colwidth="2.5cm"/>\n
                 </tr>\n
             </table>\n
+\t\t\t-->\n
             <table style="transaction_body" splitbyrow="1" repeatrows="0" repeatcols="0">\n
                 <tr rowheight="1.5cm">\n
-                    <td colwidth="1.5cm"/>\n
-                    <td colwidth="1.5cm"/>\n
-                    <td colwidth="2cm"/>\n
-                    <td colwidth="10cm" > Total </td>\n
+<!--                    <td colwidth="1.5cm"/>-->\n
+<!--                    <td colwidth="1.5cm"/>-->\n
+<!--                    <td colwidth="2cm"/>-->\n
+\t\t\t\t\t<td colwidth="0.5cm"/>\n
+                    <td colwidth="11.5cm" > Total </td>\n
                     <td colwidth="2.5cm" tal:content="python: here.Base_getRoundValue(transaction_list[-1][\'journal_total_debit\' ], precision) "/>\n
                     <td colwidth="2.5cm" tal:content="python: here.Base_getRoundValue(transaction_list[-1][\'journal_total_credit\'], precision) "/>\n
                 </tr>\n
