@@ -503,18 +503,14 @@ div.index_html table {\n
   text-align: right;\n
 }\n
 \n
-.content .left,\n
-.content .right {\n
-  width: 50%;\n
-}\n
-\n
 .content .left {\n
+  min-width: 50%;\n
   clear: left;\n
   float: left;\n
 }\n
 \n
 .content .right {\n
-  float: right;\n
+  float: left;\n
 }\n
 \n
 .content .field {\n
