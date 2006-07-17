@@ -1,3 +1,6 @@
+2006-07-17 jerome
+* Added incomplete tests suite for page templates. For now, only checks that page templates use actions slots correctly.
+
 2006-07-17 yo
 * Add testMetaTypes.
 
