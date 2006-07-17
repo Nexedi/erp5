@@ -88,7 +88,7 @@ else:\n
 if list_method_id:\n
   try:\n
     # Define form basic fields\n
-    form = getattr(context,dialog_id)\n
+    form = getattr(context,form_id)\n
     listbox_field = None\n
     # Search listbox\n
     for f in form.get_fields():\n
@@ -101,18 +101,18 @@ if list_method_id:\n
       v = request.form.get(col_id, \'\')\n
       kw[col_id] = v\n
     # Redirect\n
-    request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), dialog_id, make_query(kw)))\n
+    request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
   except ConflictError:\n
     raise\n
   except:\n
     # Default behaviour is not as great but returns something\n
-    return getattr(context,dialog_id)(request)\n
+    return getattr(context,form_id)(request)\n
 else:\n
   # Default behaviour is not as great but returns something\n
   kw.update(request.form)\n
   if kw.has_key(\'listbox_uid\'): del kw[\'listbox_uid\']\n
   if kw.has_key(\'list_start\'): del kw[\'list_start\']\n
-  request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), dialog_id, make_query(kw)))\n
+  request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
 </string> </value>
         </item>
         <item>
@@ -129,7 +129,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=\'\', selection_index=\'\', selection_name=\'\', list_method_id=None</string> </value>
+            <value> <string>form_id=\'\', selection_index=\'\', selection_name=\'\', list_method_id=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,7 +155,7 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>dialog_id</string>
+                            <string>form_id</string>
                             <string>selection_index</string>
                             <string>selection_name</string>
                             <string>list_method_id</string>
