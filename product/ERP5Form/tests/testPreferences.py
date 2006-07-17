@@ -93,8 +93,16 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(person2.getPreferenceState(), 'disabled')
     self.assertEquals(group.getPreferenceState(),   'disabled')
     self.assertEquals(site.getPreferenceState(),    'disabled')
-    
-   
+  
+  def test_AllowedContentTypes(self, quiet=quiet, run=run_all_tests):
+    """Tests Preference can be added in Preference Tool.
+    """
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\n Test allowed content types')
+    self.failUnless('Preference' in [x.getId() for x in
+           self.getPortal().portal_preferences.allowedContentTypes()])
+
   def test_EnablePreferences(self, quiet=quiet, run=run_all_tests) :
     """ tests preference workflow """
     if not run: return
