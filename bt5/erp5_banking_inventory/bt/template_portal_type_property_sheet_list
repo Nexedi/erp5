@@ -18,8 +18,10 @@ Bank Account Inventory | DublinCore
 Bank Account Inventory | Folder
 Bank Account Inventory | Inventory
 Bank Account Inventory | XMLObject
+Cash Inventory Cell | CashDeliveryLine
 Cash Inventory Group | Arrow
 Cash Inventory Group | Task
+Cash Inventory Line | CashDeliveryLine
 Cash Inventory Module | Base
 Cash Inventory Module | Document
 Cash Inventory Module | DublinCore

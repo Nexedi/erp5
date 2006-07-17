@@ -34,9 +34,15 @@
   <item>DublinCore</item>
   <item>Inventory</item>
  </portal_type>
+ <portal_type id="Cash Inventory Cell">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Cash Inventory Group">
   <item>Arrow</item>
   <item>Task</item>
+ </portal_type>
+ <portal_type id="Cash Inventory Line">
+  <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Cash Inventory Module">
   <item>Base</item>
