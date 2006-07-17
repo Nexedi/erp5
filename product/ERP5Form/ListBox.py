@@ -917,7 +917,7 @@ class ListBoxRenderer:
         if portal_type_list is not None:
           params.setdefault('portal_type', portal_type_list)
         elif meta_type_list is not None:
-          params.setdefaul('meta_type', meta_type_list)
+          params.setdefault('meta_type', meta_type_list)
 
         # Remove useless parameters.
         for k, v in params.items():
