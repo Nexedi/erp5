@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -80,9 +86,9 @@ XXX: Folder_filter accesses selection directly\n
             tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doJump\')">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Jump...</option>\n
-      <tal:block tal:repeat="jump filtered_actions/object_jump | nothing">\n
-        <option tal:attributes="value python: jump[1]"\n
-                tal:content="python: jump[0]"></option>\n
+      <tal:block tal:repeat="jump actions/object_jump | nothing">\n
+        <option tal:attributes="value jump/url"\n
+                tal:content="jump/name"></option>\n
       </tal:block>\n
       <tal:block tal:condition="python: here.getPortalType() in here.portal_types.objectIds() and here.portal_types[here.getPortalType()].Base_getSourceVisibility()">\n
         <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types[here.getPortalType()].absolute_url(),)"\n
@@ -302,7 +308,7 @@ XXX: Folder_filter accesses selection directly\n
       </a>\n
       <a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
          title="Activity Pending"\n
-         tal:attributes="href python: here.portal_membership.checkPermission(\'View management screens\', here.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],here.portal_activities.getUrl(), ) or \'#\'">\n
+         tal:attributes="href python: here.portal_membership.checkPermission(\'View management screens\', here.portal_activities) and \'%s/manageActivities\' % here.portal_activities.absolute_url() or \'#\'">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
       </a>\n
@@ -328,6 +334,27 @@ XXX: Folder_filter accesses selection directly\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>

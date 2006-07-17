@@ -1,3 +1,6 @@
+2006-07-17 jerome
+* fix object_jump actions that were not displayed.
+
 2006-06-28 Kevin
 * Fix default string.
 
