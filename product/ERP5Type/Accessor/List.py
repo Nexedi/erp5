@@ -317,7 +317,6 @@ class SetGetter(ListGetter):
 
     def __call__(self, instance, *args, **kw):
       result_list = ListGetter.__call__(self, instance, *args, **kw)
-#       import pdb; pdb.set_trace()
       result_set = dict([(x, 0) for x in result_list]).keys()
       return result_set
 
