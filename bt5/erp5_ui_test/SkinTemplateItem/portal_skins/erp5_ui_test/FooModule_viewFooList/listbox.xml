@@ -431,22 +431,22 @@
                 <item>
                     <key> <string>meta_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>ERP5 Delivery</string>
+                          <string>ERP5 Delivery</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>FooModule_renderListBox</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Foo</string>
-                          <string>Foo</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
