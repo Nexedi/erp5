@@ -75,27 +75,8 @@ class Movement(XMLObject, Amount):
 
     - a T/T report (a delivery of money between reals accounts)
 
-    For simple planning, we use a simple approach. Deliveries contain
-    a reference to an order (causality) 2 quantities:
 
-    - a quantity value
-
-    - a target_quantity value
-
-    When quantity and target_quantity, the delivery can be closed.
-    When quantity and target_quantity is different, a new delivery is created
-    with 0 quantity and target_quantity = target_quantity - quantity.
-    This simple system allows to delivery goods of a single order in
-    multiple times, and to keep track of deliveries without any complex
-    planning system. It is the basis of ERP5 trade module.
-
-    If we need to implement more complex planning, such as in a production
-    workshop, we can not use such a simple model. We have to implement a
-    planning system. The approach in ERP5 is based on "simulation".
-
-    In this case, target_quantity becomes meaningless.
-
-    For complex planning, the following approach is used instead.
+    For planning, the following approach is used:
 
     1- Movements from an order are never modified once the order
        is confirmed. This is a rule. An Order is like a contract.
@@ -114,7 +95,7 @@ class Movement(XMLObject, Amount):
     and allows to keep track of the causal relation between
     a delivery and an order.
 
-    A delivery document (actuall a delivery line) then points to one or more of
+    A delivery document (actually a delivery line) then points to one or more of
     the "delivery" movements in the simulation. It is possible to know
     which items have been delivered by making sure each movement in the simulation
     is associated to a "delivery document".
@@ -133,7 +114,7 @@ class Movement(XMLObject, Amount):
 
     One should note that
 
-    - movements are never joined (because it would breack causality and
+    - movements are never joined (because it would break causality and
       tracability)
 
     - movements acquire some context information from their causality
