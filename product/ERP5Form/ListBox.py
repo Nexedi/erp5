@@ -1898,14 +1898,29 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         # XXX this is a horrible hack.
         if editable_field.meta_type in ('DateTimeField', 'ProxyField', ):
           # XXX Some fields prefer None to ''.
-          cell_html = editable_field.render(value = original_value,
-                                            REQUEST = brain.asContext(REQUEST = self.renderer.request, form = self.renderer.request.form),
-                                            key = key)
+          cell_html = editable_field.render( \
+                            value   = original_value
+                          , REQUEST = brain.asContext( \
+                                               REQUEST = self.renderer.request
+                                             , form    = self.renderer.request.form
+                                             )
+                          , key     = key
+                          )
         else:
           # We use REQUEST which is not so good here.
           # This prevents from using standard display process.
           # XXX what does the above comment mean exactly? why don't we fix Formulator?
-          cell_html = editable_field.render(value = display_value, REQUEST = brain, key = key)
+          # XXX (JPS) - render_view does not get REQUEST - this breaks so many possibilities
+#          cell_html = editable_field.render(value = original_value,
+#                                       REQUEST = brain.asContext(cell = self.getObject()
+#                                                                ),
+#                                            key = key)
+          REQUEST = get_request() # Dirtymax hack by JPS - render_view API update required
+          REQUEST.cell = self.getObject()
+          cell_html = editable_field.render( value   = display_value
+                                           , REQUEST = brain
+                                           , key     = key
+                                           )
 
         if isinstance(cell_html, str):
           cell_html = unicode(cell_html, encoding)
@@ -2864,8 +2879,8 @@ class ListBox(ZMIField):
     def get_value(self, id, **kw):
       if (id == 'default'):
         if (kw.get('render_format') in ('list', )):
-          return self.widget.render(self, self.generate_field_key(), None, 
-                                    kw.get('REQUEST'), 
+          return self.widget.render(self, self.generate_field_key(), None,
+                                    kw.get('REQUEST'),
                                     render_format=kw.get('render_format'))
         else:
           return None

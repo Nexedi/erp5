@@ -59,7 +59,7 @@ def get_value(self, id, **kw):
     tales_expr = self.tales.get(id, "")
     if tales_expr:
         REQUEST = get_request()
-        form = self.aq_parent
+        form = self.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
         object = getattr(form, 'aq_parent', None)
         if object:
             # NEEDS TO BE CHECKED
@@ -90,6 +90,9 @@ def get_value(self, id, **kw):
             kw['cell'] = getattr(kw['REQUEST'],'cell')
           else:
             kw['cell'] = kw['REQUEST']
+        elif not kw.get('cell'):
+          if getattr(REQUEST,'cell',None) is not None:
+            kw['cell'] = getattr(REQUEST,'cell')
         try:
             value = tales_expr.__of__(self)(**kw)
         except (ConflictError, RuntimeError):
@@ -343,7 +346,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Special Settings
     settings_form = create_settings_form()
 
-    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8', 
+    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8',
                  stored_encoding='UTF-8'):
         """Initialize form.
         id    -- id of form
@@ -372,7 +375,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         extra_context['form'] = self
         extra_context['container'] = container ## PROBLEM NOT TAKEN INTO ACCOUNT
         extra_context['here'] = object
-        # We initialize here an index which is used to generate 
+        # We initialize here an index which is used to generate
         # different method ids for every field
         request = extra_context['request']
         # XXX We must not use a counter, but a ID for each field
