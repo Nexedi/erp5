@@ -72,7 +72,7 @@ class XMLMatrix(Folder):
 
       if not self.index.has_key(base_id):
         return None
-        
+
       cell_id_list = [base_id]
       append = cell_id_list.append
       index = self.index[base_id]
@@ -93,9 +93,9 @@ class XMLMatrix(Folder):
       cell = self.getCell(*kw, **kwd)
       if cell is None:
         return None
-      
+
       return cell.getProperty(base_id)
-      
+
     security.declareProtected( Permissions.View, 'hasCell' )
     def hasCell(self, *kw , **kwd):
       """
@@ -150,7 +150,7 @@ class XMLMatrix(Folder):
       """
       if not hasattr(self, 'index'):
         return 0
-    
+
       base_id = kwd.get('base_id', "cell")
       if not self.index.has_key(base_id):
         return 0
@@ -309,7 +309,7 @@ class XMLMatrix(Folder):
       # We don't need the old index any more, we
       # can set the new index
       self.index[base_id] = new_index[base_id]
-      
+
     security.declareProtected( Permissions.ModifyPortalContent, 'setCellRange' )
     def setCellRange(self, *kw, **kwd):
       """
@@ -326,13 +326,13 @@ class XMLMatrix(Folder):
       """
         The asCellRange script is Portal Type dependent
         which is not the case with this kind of code
-        a better implementation consists in defining asCellRange as a 
+        a better implementation consists in defining asCellRange as a
         generic method at matrix level (OverridableMethod(portal_type))
-        which lookups for script in class, meta_type and PT form 
+        which lookups for script in class, meta_type and PT form
         interaction could be implemented with interaction workflow
         this method should be renamed updateCellRange or updateMatrixCellRange
         base_id is parameter of updateCellRange
-        
+
         asCellRange scripts should be unified if possible
       """
       script = self._getTypeBasedMethod('asCellRange', script_id=script_id)
@@ -343,7 +343,7 @@ class XMLMatrix(Folder):
               "Did not find cell range script for portal type: %r" %\
               self.getPortalType()
       self._setCellRange(base_id=base_id, *cell_range)
-    
+
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateCellRange')
     def updateCellRange(self, base_id='cell', script_id=None, **kw):
@@ -351,7 +351,7 @@ class XMLMatrix(Folder):
       self._updateCellRange(base_id=base_id, script_id=script_id, **kw)
       self.reindexObject()
 
-    
+
     security.declareProtected( Permissions.ModifyPortalContent,
                                '_renameCellRange' )
     def _renameCellRange(self, *kw, **kwd):
@@ -622,12 +622,12 @@ class XMLMatrix(Folder):
       if not hasattr(self, 'index'):
         return ()
       return self.index.keys()
-    
+
     security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
     def delMatrix(self, base_id = 'cell'):
       """
         Delete all cells for a given base_id
-        
+
         XXX BAD NAME: make a difference between deleting matrix and matrix cells
       """
       ids = self.getCellIds(base_id = base_id)
@@ -668,12 +668,11 @@ class XMLMatrix(Folder):
         is_int = 1
         test_num = None
         while base_id_len > 0:
-          # XXX it is bad to use except without exception name !
-#           try:
+          try:
             # if this succeeds, it is very likely a cell with an id such as quantity_X_Y_0_Z
-          test_num = int(object_id_split[base_id_len-1])
-#           except:
-#             is_int = 0
+            test_num = int(object_id_split[base_id_len-1])
+          except ValueError:
+            is_int = 0
           if not is_int: break
           base_id_len -= 1
         if base_id_len > 0:
@@ -726,7 +725,7 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
     def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
       """
-        We must do some matrix range update in the event matrix range 
+        We must do some matrix range update in the event matrix range
         is defined by a category
       """
       LOG('XMLMatrix notifyAfterUpdateRelatedContent', 0, str(new_category_url))
@@ -736,7 +735,7 @@ class XMLMatrix(Folder):
         new_cell_range = []
         for range_item_list in cell_range:
           new_range_item_list = map(lambda c: update_method(c, previous_category_url, new_category_url), range_item_list)
-          new_cell_range.append(new_range_item_list) 
+          new_cell_range.append(new_range_item_list)
         kwd = {'base_id': base_id}
         LOG('XMLMatrix notifyAfterUpdateRelatedContent matrix', 0, str(base_id))
         LOG('XMLMatrix notifyAfterUpdateRelatedContent _renameCellRange', 0, str(new_cell_range))
