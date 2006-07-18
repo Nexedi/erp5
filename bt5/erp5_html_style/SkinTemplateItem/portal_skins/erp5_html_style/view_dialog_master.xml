@@ -205,7 +205,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
           </span>\n
           <input type="Submit"  value="Search"\n
                 i18n:attributes="value" i18n:domain="ui"\n
-                name="Base_callViewDialogMethod:method"\n
+                name="Base_callDialogMethod:method"\n
                 tal:attributes="value python:here.Base_getFormViewDialogActionButtonTitle(form)"/>\n
         </td>\n
         <td></td>\n
