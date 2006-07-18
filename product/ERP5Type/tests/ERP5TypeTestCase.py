@@ -23,7 +23,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import getLocalPropertySheetList, removeLocalPropertySheet
 from Products.ERP5Type.Utils import getLocalDocumentList, removeLocalDocument
 from Products.ERP5Type.Utils import getLocalConstraintList, removeLocalConstraint
-from zLOG import LOG
+from zLOG import LOG, DEBUG
 
 try:
   from transaction import get as get_transaction
@@ -232,7 +232,8 @@ class ERP5TypeTestCase(PortalTestCase):
               if os.path.exists(path):
                 template = path
               else:
-                # Otherwise, look at sub-directories. This is for backward-compatibility.
+                # Otherwise, look at sub-directories.
+                # This is for backward-compatibility.
                 path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
                 template_list = glob(path)
                 if len(template_list) == 0:
@@ -253,9 +254,12 @@ class ERP5TypeTestCase(PortalTestCase):
         light_install = self.enableLightInstall()
         create_activities = self.enableActivityTool()
         hot_reindexing = self.enableHotReindexing()
-        setupERP5Site(business_template_list = new_template_list,light_install=light_install,
-                      portal_name = self.getPortalName(),title = self.getTitle(),
-                      create_activities=create_activities,hot_reindexing=hot_reindexing)
+        setupERP5Site(business_template_list=new_template_list,
+                      light_install=light_install,
+                      portal_name=self.getPortalName(),
+                      title=self.getTitle(),
+                      create_activities=create_activities,
+                      hot_reindexing=hot_reindexing)
         PortalTestCase.setUp(self)
 
     def afterSetUp(self):
@@ -274,8 +278,8 @@ class ERP5TypeTestCase(PortalTestCase):
         """
 	  Shortcut function to log a message
 	"""
-	ZopeTestCase._print('\n%s ' % message)
-	LOG('Testing ... ',0,message)
+        ZopeTestCase._print('\n%s ' % message)
+        LOG('Testing ... ', DEBUG, message)
 
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
