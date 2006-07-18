@@ -394,24 +394,18 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_inventory.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
-  def stepDeliverInventory(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckInventoryDelivered(self, sequence=None, sequence_list=None, **kw):
     """
     Deliver the inventory
     """
-    state = self.cash_inventory_group.cash_inventory.getSimulationState()
-    # check that state is draft
-    self.assertEqual(state, 'draft')
-    self.workflow_tool.doActionFor(self.cash_inventory_group.cash_inventory, 'deliver_action', wf_id='inventory_workflow')
-    # execute tic
-    self.stepTic()
     # get state of cash sorting
     state = self.cash_inventory_group.cash_inventory.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_inventory_group.cash_inventory, name='history', wf_id='inventory_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 3)
+    # check len of len workflow history is 1
+    self.assertEqual(len(workflow_history), 1)
 
 
   def stepCheckInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -443,12 +437,12 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateInventoryLine1 CheckSubTotal1 ' \
                     + 'CreateInventoryLine2 CheckSubTotal2 ' \
                     + 'CreateInventoryLine3 CheckTotal ' \
-                    + 'DeliverInventory Tic CheckInventory ' \
+                    + 'CheckInventoryDelivered Tic CheckInventory ' \
                     + 'CreateCashInventoryGroup2 CreateCashInventory ' \
                     + 'CreateInventoryLine1 CheckSubTotal1 ' \
                     + 'CreateInventoryLine2 CheckSubTotal2 ' \
                     + 'CreateInventoryLine3 CheckTotal ' \
-                    + 'DeliverInventory Tic CheckInventory'
+                    + 'CheckInventoryDelivered Tic CheckInventory'
 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
