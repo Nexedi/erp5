@@ -59,7 +59,7 @@ def runUnitTestList(test_list) :
   os.environ['EVENT_LOG_FILE'] = os.path.join(tests_home, 'zLOG.log')
   os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-  execfile(os.path.join(tests_framework_home, 'framework.py')) 
+  execfile(os.path.join(tests_framework_home, 'framework.py'))
 
   import unittest
   from Testing import ZopeTestCase
@@ -98,7 +98,7 @@ def runUnitTestList(test_list) :
   sys.path.extend((real_tests_home, tests_home))
 
   # Make sure that locally overridden python modules are used
-  sys.path.insert(0, os.path.join(real_instance_home, 'lib%spython' % os.sep))
+  sys.path.insert(0, os.path.join(real_instance_home, 'lib', 'python'))
 
   # XXX Allowing to load modules from here is a wrong idea. use the above path
   # instead.
@@ -106,25 +106,32 @@ def runUnitTestList(test_list) :
   # this allows to bypass psyco by creating a dummy psyco module
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
   sys.path.insert(0, tests_framework_home)
-
+ 
+  filtered_tests_class_names = 0
   for test in test_list:
     if ':' in test:
       test_module = test.split(':')[0]
       if test_module.endswith('.py'):
         test_module = test_module[:-3]
       test_class_list = test.split(':')[1:]
+      filtered_tests_class_names = 1
     else:
       if test.endswith('.py'):
         test = test[:-3]
       test_module = test
       test_class_list = None
     m = __import__(test_module)
-    for attr_name in dir(m) :
-      attr = getattr(m, attr_name)
-      if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and \
-          (attr.__module__ == test_module) :
-        if test_class_list is None or attr.__name__ in test_class_list:
-          suite.addTest(unittest.makeSuite(attr))
+    if not filtered_tests_class_names and hasattr(m, 'test_suite'):
+      suite = m.test_suite()
+    else:
+      # dynamically create the test suite using class names passed on the
+      # command line.
+      for attr_name in dir(m):
+        attr = getattr(m, attr_name)
+        if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and \
+            (attr.__module__ == test_module) :
+          if test_class_list is None or attr.__name__ in test_class_list:
+            suite.addTest(unittest.makeSuite(attr))
 
   return TestRunner().run(suite)
 
