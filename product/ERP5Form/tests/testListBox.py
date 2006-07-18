@@ -36,6 +36,7 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Testing import ZopeTestCase
 from Products.ERP5Type.Utils import get_request
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 class TestListBox(ERP5TypeTestCase):
   """
@@ -82,7 +83,9 @@ class TestListBox(ERP5TypeTestCase):
   def stepModifyListBoxForStat(self, sequence = None, sequence_list = None, **kw):
     portal = self.getPortal()
     listbox = portal.FooModule_viewFooList.listbox
-    message = listbox.ListBox_setPropertyList(field_stat_columns = 'id|FooModule_statId\ntitle|FooModule_statTitle', field_stat_method = 'portal_catalog')
+    message = listbox.ListBox_setPropertyList(
+      field_stat_columns = 'id|FooModule_statId\ntitle|FooModule_statTitle',
+      field_stat_method = 'portal_catalog')
     self.failUnless('Set Successfully' in message)
 
   def stepRenderList(self, sequence = None, sequence_list = None, **kw):
@@ -137,7 +140,41 @@ class TestListBox(ERP5TypeTestCase):
                        CheckListBoxLineListWithStat \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_02_DefaultSort(self, quiet=0, run=run_all_test):
+    """Defaults sort parameters must be passed to the list method, under the
+    'sort_on' key.
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # We create a script to use as a list method, in this script, we will check
+    # the sort_on parameter.
+    list_method_id = 'ListBox_checkSortOnListmethod'
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        list_method_id,
+        'selection=None, sort_on=None, **kw',
+r"""
+assert sort_on == [('title', 'ASC'), ('uid', 'ASC')],\
+  'sort_on is %r' % sort_on
+return []
+""")
+ 
+    # set the listbox to use this as list method
+    listbox = portal.FooModule_viewFooList.listbox
+    message = listbox.ListBox_setPropertyList(
+      field_list_method = list_method_id,
+      field_sort = 'title | ASC\n'
+                   'uid | ASC',)
+    self.failUnless('Set Successfully' in message)
+    
+    # render the listbox, checks are done by list method itself
+    request = get_request()
+    request['here'] = portal.foo_module
+    listboxline_list = listbox.get_value('default', render_format = 'list',
+                                         REQUEST = request)
 
 if __name__ == '__main__':
   framework()
