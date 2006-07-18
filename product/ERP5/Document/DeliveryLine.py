@@ -154,10 +154,10 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
           return aggregate.total_quantity or 0.0
         return sum([cell.getQuantity() for cell in self.getCellValueList()])
 
-    security.declareProtected(Permissions.View, 'hasCellContent')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasCellContent')
     def hasCellContent(self, base_id='movement'):
-      """
-          This method can be overriden
+      """Return true if the object contains cells.
       """
       # Do not use XMLMatrix.hasCellContent, because it can generate
       # inconsistency in catalog

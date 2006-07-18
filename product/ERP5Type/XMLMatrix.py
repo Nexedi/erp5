@@ -61,7 +61,8 @@ class XMLMatrix(Folder):
     security = ClassSecurityInfo()
 
     # Matrix Methods
-    security.declareProtected( Permissions.View, 'getCell' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCell' )
     def getCell(self, *kw , **kwd):
       """
           Access a cell at row and column
@@ -84,7 +85,8 @@ class XMLMatrix(Folder):
       cell_id = '_'.join(cell_id_list)
       return self.get(cell_id)
 
-    security.declareProtected( Permissions.View, 'getCellProperty' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellProperty' )
     def getCellProperty(self, *kw , **kwd):
       """
           Get a property of a cell at row and column
@@ -96,7 +98,8 @@ class XMLMatrix(Folder):
 
       return cell.getProperty(base_id)
 
-    security.declareProtected( Permissions.View, 'hasCell' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'hasCell' )
     def hasCell(self, *kw , **kwd):
       """
           Checks if matrix corresponding to base_id contains cell specified
@@ -123,7 +126,8 @@ class XMLMatrix(Folder):
 
       return self.get(cell_id) is not None
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'hasCellContent' )
     def hasCellContent(self, base_id='cell'):
       """
           Checks if matrix corresponding to base_id contains cells.
@@ -142,7 +146,8 @@ class XMLMatrix(Folder):
 
       return 0
 
-    security.declareProtected( Permissions.View, 'hasInRange' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'hasInRange' )
     def hasInRange(self, *kw , **kwd):
       """
           Checks if *kw coordinates are in the range of the

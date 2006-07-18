@@ -64,10 +64,9 @@ class ProductionReportCell(DeliveryCell):
                       )
 
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'hasCellContent')
     def hasCellContent(self, base_id='movement'):
-      """
-          This method can be overriden
+      """A cell cannot have cell content itself.
       """
       return 0
