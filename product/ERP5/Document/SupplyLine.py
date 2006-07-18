@@ -27,25 +27,17 @@
 #
 ##############################################################################
 
-import ExtensionClass
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Path import Path
 from Products.ERP5Type.Utils import convertToUpperCase
 
 from zLOG import LOG
 
 class SupplyLine(DeliveryLine, Path):
-    """
-      A DeliveryLine object allows to implement lines in
-      Deliveries (packing list, order, invoice, etc.)
-
-      It may include a price (for insurance, for customs, for invoices,
-      for orders)
+    """A Supply Line is a path to define price 
     """
 
     meta_type = 'ERP5 Supply Line'
@@ -54,14 +46,14 @@ class SupplyLine(DeliveryLine, Path):
     isPortalContent = 1
     isRADContent = 1
     isPredicate = 1
-    isAccountable = 0
 
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( Interface.Variated,
+                       Interface.Predicate )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -82,7 +74,7 @@ class SupplyLine(DeliveryLine, Path):
     #############################################
     # Pricing methods
     #############################################
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPrice')
     def getPrice(self):
       # If price not defined, look up price
@@ -91,7 +83,7 @@ class SupplyLine(DeliveryLine, Path):
       # Return the price
       return self.price
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalPrice')
     def getTotalPrice(self):
       """
@@ -113,28 +105,27 @@ class SupplyLine(DeliveryLine, Path):
     def _getDefaultTotalPrice(self, context):
       return 0.0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
+      """Supply Line are not accounted.
       """
       return 0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultPrice')
     def getDefaultPrice(self, context=None, REQUEST=None, **kw):
       """
       """
-      return self._getDefaultPrice(self.asContext(context=context, 
+      return self._getDefaultPrice(self.asContext(context=context,
                                                   REQUEST=REQUEST, **kw))
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultTotalPrice')
     def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
       """
       """
-      return self._getDefaultTotalPrice(self.asContext(context=context, 
+      return self._getDefaultTotalPrice(self.asContext(context=context,
                                                        REQUEST=REQUEST, **kw))
 
     #############################################
@@ -146,14 +137,15 @@ class SupplyLine(DeliveryLine, Path):
     # XMLMatrix methods
     # XXX to be removed if possible
     #############################################
-    security.declareProtected(Permissions.ModifyPortalContent, 'hasCellContent')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasCellContent')
     def hasCellContent(self, base_id='path'):
       """
           This method can be overriden
       """
       return XMLMatrix.hasCellContent(self, base_id=base_id)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCellValueList' )
     def getCellValueList(self, base_id='path'):
       """
@@ -161,7 +153,7 @@ class SupplyLine(DeliveryLine, Path):
       """
       return XMLMatrix.getCellValueList(self, base_id=base_id)
 
-    security.declareProtected(Permissions.View, 'getCell')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCell')
     def getCell(self, *kw , **kwd):
       """
           This method can be overriden
@@ -182,7 +174,7 @@ class SupplyLine(DeliveryLine, Path):
     ############################################################
     # Quantity predicate API
     ############################################################
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantityPredicateIdList')
     def getQuantityPredicateIdList(self, price_parameter):
       """
@@ -199,7 +191,7 @@ class SupplyLine(DeliveryLine, Path):
               if x.startswith(predicate_id_start_with)]
       return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantityPredicateValueList')
     def getQuantityPredicateValueList(self, price_parameter):
       """
@@ -209,7 +201,8 @@ class SupplyLine(DeliveryLine, Path):
               self.getQuantityPredicateIdList(price_parameter)]
       return result
 
-    security.declareProtected(Permissions.View, 'getQuantityStepList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getQuantityStepList')
     def getQuantityStepList(self, price_parameter="base_price"):
       """
         Return predicate step related to a price_parameter
@@ -221,42 +214,44 @@ class SupplyLine(DeliveryLine, Path):
                      convertToUpperCase("%s_quantity_step" % price_parameter)
       return getattr(self, method_name)()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               'updateQuantityPredicate')
     def updateQuantityPredicate(self, price_parameter):
       """
-        Update the quantity predicate
+        Update the quantity predicate for this price parameter
       """
-      value = self.getQuantityStepList(price_parameter)
-      value.sort()
-      # XXX Hardcoded portal type name
+      quantity_step_list = self.getQuantityStepList(price_parameter)
+      quantity_step_list.sort()
+      
+      # remove old predicates
       for pid in self.getQuantityPredicateIdList(price_parameter):
         self.deleteContent(pid)
-      if len(value) > 0:
-        #value = value
-        value = [None] + value + [None]
-        # With this script, we can change customize the title of the 
-        # predicate
+      
+      if quantity_step_list:
+        quantity_step_list = [None] + quantity_step_list + [None]
+        # With this script, we can change the title of the predicate
         script = getattr(self, 'SupplyLine_getTitle', None)
         predicate_id_start_with = "quantity_range"
         if price_parameter != "base_price":
           predicate_id_start_with = "%s_%s" % \
               (price_parameter, predicate_id_start_with)
-        for i in range(0, len(value)-1):
-          min = value[i]
-          max = value[i+1]
+        for i in range(0, len(quantity_step_list)-1):
+          min_quantity = quantity_step_list[i]
+          max_quantity = quantity_step_list[i+1]
           # XXX Hardcoded portal type name
-          p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)), 
+          p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)),
                               portal_type = 'Predicate')
           p.setCriterionPropertyList(('quantity', ))
-          p.setCriterion('quantity', min=min, max=max)
+          p.setCriterion('quantity', min=min_quantity, max=max_quantity)
           if script is not None:
-            title = script(min=min, max=max)
+            title = script(min=min_quantity, max=max_quantity)
             p.setTitle(title)
           else:
-            if min is None:
-              p.setTitle(' quantity < %s' % repr(max))
-            elif max is None:
-              p.setTitle('%s <= quantity' % repr(min))
+            if min_quantity is None:
+              p.setTitle('quantity < %s' % max_quantity)
+            elif max_quantity is None:
+              p.setTitle('%s <= quantity' % min_quantity)
             else:
-              p.setTitle('%s <= quantity < %s' % (repr(min), repr(max)))
+              p.setTitle('%s <= quantity < %s' % (min_quantity, max_quantity))
+
+
