@@ -40,6 +40,7 @@ os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
@@ -50,6 +51,7 @@ GROUP_STOREVER_PATH = 'group/nexedi/storever'
 GROUP_OTHER_PATH = 'group/other'
 
 RUN_ALL_TESTS = 1
+QUIET = 1
 PREDICATE_FOLDER_NAME = "predicate_unit_test_folder"
 
 class TestPredicates(ERP5TypeTestCase):
@@ -71,10 +73,10 @@ class TestPredicates(ERP5TypeTestCase):
     self.login()
     
   # XXX ... this method is a copy / paste
-  def playSequence(self, sequence_string) :
+  def playSequence(self, sequence_string, quiet=QUIET) :
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=QUIET)
   
   # XXX ... this method is a copy / paste
   def createCategories(self):
@@ -121,26 +123,16 @@ class TestPredicates(ERP5TypeTestCase):
                     predicate_folder.allowedContentTypes()])
     return predicate_folder
     
-  def createPythonScript(self, method_id, script_params, script_content):
-    """Generic method to create a python script"""
-    folder = self.getPortal().portal_skins.erp5_base
-    if method_id in folder.objectIds():
-      folder.manage_delObjects([method_id])
-    
-    folder.manage_addProduct['PythonScripts']\
-                  .manage_addPythonScript(id = method_id)
-    script = folder[method_id]
-    script.ZPythonScript_edit(script_params, script_content)
-    self.getPortal().changeSkin(None)
-    
   def stepCreatePredicateTrueScript(self, sequence=None, **kw) :
     """Creates a script that always return true"""
-    self.createPythonScript('Predicate_true', '', """return 1""")
+    createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
+                           'Predicate_true', '', """return 1""")
     sequence.edit(test_method_id = 'Predicate_true')
   
   def stepCreatePredicateFalseScript(self, sequence=None, **kw) :
     """Creates a script that always return false"""
-    self.createPythonScript('Predicate_false', '', """return 0""")
+    createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
+                           'Predicate_false', '', """return 0""")
     sequence.edit(test_method_id = 'Predicate_false')
     
   def createPredicate(self, **kw):
@@ -277,7 +269,7 @@ class TestPredicates(ERP5TypeTestCase):
   ## Test Methods ############################################################
   ############################################################################
   
-  def test_Interface(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_Interface(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test Predicate implements Predicate interface."""
     if not run : return
     from Products.ERP5Type.Interface import Predicate as IPredicate
@@ -287,7 +279,7 @@ class TestPredicates(ERP5TypeTestCase):
     from Interface.Verify import verifyClass
     verifyClass(IPredicate, Predicate)
   
-  def test_CategoryMembership(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_CategoryMembership(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test basic category membership"""
     if not run : return
     self.playSequence("""
@@ -306,7 +298,7 @@ class TestPredicates(ERP5TypeTestCase):
       stepAssertPredicateFalse
     """)
   
-  def test_EmptyPredicates(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_EmptyPredicates(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test empty and always false predicates."""
     if not run : return
     self.playSequence("""
@@ -317,7 +309,7 @@ class TestPredicates(ERP5TypeTestCase):
       stepAssertPredicateFalse
     """)
 
-  def test_TestMethodId(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_TestMethodId(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test test_method_id attribute."""
     if not run : return
     self.playSequence("""
@@ -337,7 +329,7 @@ class TestPredicates(ERP5TypeTestCase):
       stepAssertPredicateFalse
     """)
   
-  def test_PredicateFusion(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_PredicateFusion(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test simple predicates fusion.
     New predicate act as a logical AND between predicates
     """
@@ -365,7 +357,7 @@ class TestPredicates(ERP5TypeTestCase):
       stepAssertPredicateFalse
     """)
 
-  def test_PredicateFusionAndTestMethodId(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_PredicateFusionAndTestMethodId(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test predicates fusion and test_method_id attribute."""
     if not run : return
     self.playSequence("""
