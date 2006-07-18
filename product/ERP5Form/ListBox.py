@@ -1056,7 +1056,7 @@ class ListBoxRenderer:
               # FIXME: this is a bad hack. DomainSelection should use
               # portal_type to determine the type of the object instead
               # of whether it is a string or not.
-              root_dict[base_domain] = root.getRelativeUrl()
+              root_dict[base_domain] = domain
         if root is None:
           try:
             root_dict[None] = portal_object.restrictedTraverse(domain)
