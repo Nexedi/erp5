@@ -123,7 +123,7 @@ class Rule(XMLObject, Predicate):
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):
       """
-        Solve inconsitency according to a certain number of solutions
+        Solve inconsistency according to a certain number of solutions
         templates. This updates the
 
         -> new status -> solved
