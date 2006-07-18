@@ -149,6 +149,8 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.counter = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
+    self.openCounter(self.counter)
+    self.openCounterDate(site=self.paris)
     self.createCashInventory(source=None, destination=self.counter, currency=self.currency_1,
                              line_list=line_list)
 
