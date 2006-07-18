@@ -234,7 +234,7 @@ IDEAS:\n
             <span id="language">\n
               <select name="language_select"\n
                       tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doLanguage\')">\n
-                <option selected="selected" value=""\n
+                <option value=""\n
                         i18n:translate="" i18n:domain="ui">My language</option>\n
                 <tal:block tal:repeat="language python: here.Localizer.get_languages_map()">\n
                   <option tal:attributes="value language/id;\n
