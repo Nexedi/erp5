@@ -27,7 +27,7 @@
 ##############################################################################
 import os, sys
 if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
+  execfile(os.path.join(sys.path[0], 'framework.py'))
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
@@ -245,10 +245,10 @@ class TestAmount(ERP5TypeTestCase):
     sequence_list.play(self)
 
 if __name__ == '__main__':
-    framework()
+  framework()
 else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestConstraint))
-        return suite
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestAmount))
+    return suite
