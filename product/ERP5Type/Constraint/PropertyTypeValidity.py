@@ -33,7 +33,7 @@ from DateTime import DateTime
 
 class PropertyTypeValidity(Constraint):
   """
-    This constraint class allows to check / fix type of each 
+    This constraint class allows to check / fix type of each
     attributes define in the PropertySheets.
     This Constraint is always created in ERP5Type/Utils.py
   """
@@ -63,7 +63,10 @@ class PropertyTypeValidity(Constraint):
     # For each attribute name, we check type
     for property in object.propertyMap():
       property_id = property['id']
-      property_type = property['type']
+      if property.get('multivalued', 0):
+        property_type = 'lines'
+      else:
+        property_type = property['type']
       wrong_type = 0
       value = object.getProperty(property_id)
       if value is not None:
