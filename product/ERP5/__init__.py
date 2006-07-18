@@ -32,7 +32,6 @@
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
-#import MovementGroup
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 from Products.PythonScripts.Utility import allow_class
@@ -73,7 +72,6 @@ from InteractionWorkflow import InteractionWorkflowDefinition
 def initialize( context ):
   import Document
   from zLOG import LOG
-  LOG('In ERP5 initialize', 0, '')
   # Initialize
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
@@ -83,6 +81,9 @@ def initialize( context ):
                          content_constructors = content_constructors,
                          content_classes = content_classes)
   
-  ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')   
+  ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')
 
-                         
+# backward compatibility names
+XML = None
+UI = None
+
