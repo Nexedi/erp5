@@ -118,9 +118,11 @@ class Domain(Predicate, MetaNode, MetaResource):
     domain = domain.__of__(self)
     return domain
 
-  def getChildDomainValueList(self, *args, **kw):
+  def getChildDomainValueList(self, parent = None, **kw):
     """
     Return child domain objects already present or me may generate
     dynamically childs.
     """
-    return self.portal_domains.getChildDomainValueList(self, *args, **kw)
+    if parent is None:
+      parent = self
+    return self.portal_domains.getChildDomainValueList(parent, **kw)

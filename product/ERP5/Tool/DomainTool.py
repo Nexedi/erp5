@@ -225,7 +225,7 @@ class DomainTool(BaseTool):
 
 
 
-    def getChildDomainValueList(self, parent,**kw):
+    def getChildDomainValueList(self, parent, **kw):
       """
       Return child domain objects already present adn thois generetaded dynamically
       """
@@ -239,14 +239,17 @@ class DomainTool(BaseTool):
       """
       Return the domain object for a given path
       """
-      domain = None
-      for subdomain in path.split('/'):
-        if domain is None:
-          domain = self[subdomain]        
-        domains = self.getChildDomainValueList(domain)
-        for d in domains:
+      path = path.split('/')
+      base_domain_id = path[0]
+      domain = self[base_domain_id]
+      for depth, subdomain in enumerate(path[1:]):
+        domain_list = self.getChildDomainValueList(domain, depth=depth)
+        for d in domain_list:
           if d.getId() == subdomain:
             domain = d
+            break
+        else:
+          raise KeyError, subdomain
       return domain
   
 InitializeClass(DomainTool)
