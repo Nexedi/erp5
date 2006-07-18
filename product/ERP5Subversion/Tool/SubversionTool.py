@@ -733,6 +733,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # First remove unversioned in working copy that could conflict
     self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
     client = self._getClient()
+    # Revert local changes in working copy first
+    # to import a "pure" BT after update
+    self.revert(path=path, recurse=True)
     # Update from SVN
     client.update(path)
     # Import in zodb
