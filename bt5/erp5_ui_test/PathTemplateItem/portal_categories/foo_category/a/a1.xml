@@ -180,55 +180,55 @@
                                     <dictionary>
                                       <item>
                                           <key> <string>_aday</string> </key>
-                                          <value> <string>Fri</string> </value>
+                                          <value> <string>Tue</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_amon</string> </key>
-                                          <value> <string>Jun</string> </value>
+                                          <value> <string>Jul</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_d</string> </key>
-                                          <value> <float>38531.6391255</float> </value>
+                                          <value> <float>38549.5584294</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_day</string> </key>
-                                          <value> <int>30</int> </value>
+                                          <value> <int>18</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_dayoffset</string> </key>
-                                          <value> <int>5</int> </value>
+                                          <value> <int>2</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_fday</string> </key>
-                                          <value> <string>Friday</string> </value>
+                                          <value> <string>Tuesday</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_fmon</string> </key>
-                                          <value> <string>June</string> </value>
+                                          <value> <string>July</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_hour</string> </key>
-                                          <value> <int>17</int> </value>
+                                          <value> <int>15</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_millis</string> </key>
-                                          <value> <long>1151680820440</long> </value>
+                                          <value> <long>1153229048297</long> </value>
                                       </item>
                                       <item>
                                           <key> <string>_minute</string> </key>
-                                          <value> <int>20</int> </value>
+                                          <value> <int>24</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_month</string> </key>
-                                          <value> <int>6</int> </value>
+                                          <value> <int>7</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_nearsec</string> </key>
-                                          <value> <float>20.0</float> </value>
+                                          <value> <float>8.0</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pday</string> </key>
-                                          <value> <string>Fri.</string> </value>
+                                          <value> <string>Tue.</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pm</string> </key>
@@ -236,19 +236,19 @@
                                       </item>
                                       <item>
                                           <key> <string>_pmhour</string> </key>
-                                          <value> <int>5</int> </value>
+                                          <value> <int>3</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pmon</string> </key>
-                                          <value> <string>June</string> </value>
+                                          <value> <string>July</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_second</string> </key>
-                                          <value> <float>20.44</float> </value>
+                                          <value> <float>8.297</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_t</string> </key>
-                                          <value> <float>1151680820.44</float> </value>
+                                          <value> <float>1153229048.3</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_tz</string> </key>
@@ -260,7 +260,7 @@
                                       </item>
                                       <item>
                                           <key> <string>time</string> </key>
-                                          <value> <float>0.639125462963</float> </value>
+                                          <value> <float>0.558429363424</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
@@ -297,55 +297,55 @@
                                     <dictionary>
                                       <item>
                                           <key> <string>_aday</string> </key>
-                                          <value> <string>Fri</string> </value>
+                                          <value> <string>Tue</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_amon</string> </key>
-                                          <value> <string>Jun</string> </value>
+                                          <value> <string>Jul</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_d</string> </key>
-                                          <value> <float>38531.6391255</float> </value>
+                                          <value> <float>38549.5584294</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_day</string> </key>
-                                          <value> <int>30</int> </value>
+                                          <value> <int>18</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_dayoffset</string> </key>
-                                          <value> <int>5</int> </value>
+                                          <value> <int>2</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_fday</string> </key>
-                                          <value> <string>Friday</string> </value>
+                                          <value> <string>Tuesday</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_fmon</string> </key>
-                                          <value> <string>June</string> </value>
+                                          <value> <string>July</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_hour</string> </key>
-                                          <value> <int>17</int> </value>
+                                          <value> <int>15</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_millis</string> </key>
-                                          <value> <long>1151680820444</long> </value>
+                                          <value> <long>1153229048300</long> </value>
                                       </item>
                                       <item>
                                           <key> <string>_minute</string> </key>
-                                          <value> <int>20</int> </value>
+                                          <value> <int>24</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_month</string> </key>
-                                          <value> <int>6</int> </value>
+                                          <value> <int>7</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_nearsec</string> </key>
-                                          <value> <float>20.0</float> </value>
+                                          <value> <float>8.0</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pday</string> </key>
-                                          <value> <string>Fri.</string> </value>
+                                          <value> <string>Tue.</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pm</string> </key>
@@ -353,19 +353,19 @@
                                       </item>
                                       <item>
                                           <key> <string>_pmhour</string> </key>
-                                          <value> <int>5</int> </value>
+                                          <value> <int>3</int> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pmon</string> </key>
-                                          <value> <string>June</string> </value>
+                                          <value> <string>July</string> </value>
                                       </item>
                                       <item>
                                           <key> <string>_second</string> </key>
-                                          <value> <float>20.444</float> </value>
+                                          <value> <float>8.3</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_t</string> </key>
-                                          <value> <float>1151680820.44</float> </value>
+                                          <value> <float>1153229048.3</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_tz</string> </key>
@@ -377,7 +377,7 @@
                                       </item>
                                       <item>
                                           <key> <string>time</string> </key>
-                                          <value> <float>0.63912550926</float> </value>
+                                          <value> <float>0.558429398152</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>

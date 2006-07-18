@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.BaseCategory</string>
-          <string>BaseCategory</string>
+          <string>Products.ERP5Type.Document.BaseDomain</string>
+          <string>BaseDomain</string>
         </tuple>
         <none/>
       </tuple>
@@ -25,6 +25,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -37,42 +43,36 @@
             </value>
         </item>
         <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>foo_category</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>This category is used for functional testing.</string> </value>
+            <value> <string>This domain is identical to foo_category, but uses a dynamic generation of domains, for testing purpose.</string> </value>
+        </item>
+        <item>
+            <key> <string>domain_generator_method_id</string> </key>
+            <value> <string>FooModule_generateDomain</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>foo_category</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>foo_domain</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Base Category</string> </value>
+            <value> <string>Base Domain</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Foo Category</string> </value>
+            <value> <string>Foo Domain</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
