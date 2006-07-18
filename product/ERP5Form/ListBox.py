@@ -1875,6 +1875,49 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       else:
         editable_field = None
 
+      # Prepare link value - we now use it for both static and field rendering
+      no_link = False
+      url_method = None
+      url = None
+
+      # Find an URL method.
+      if url_column_dict.has_key(sql):
+        url_method_id = url_column_dict.get(sql)
+        if url_method_id != sql:
+          if url_method_id is not None:
+            url_method = getattr(brain, url_method_id, None)
+            if url_method is None:
+              LOG('ListBox', WARNING, 'could not find the url method %s' % (url_method_id,))
+              no_link = True
+          else:
+            # If the value is None, generate no link.
+            no_link = True
+
+      if url_method is not None:
+        try:
+          url = url_method(brain = brain, selection = selection)
+        except (ConflictError, RuntimeError):
+          raise
+        except:
+          LOG('ListBox', WARNING, 'could not evaluate the url method %r with %r' % (url_method, brain),
+              error = sys.exc_info())
+      elif not no_link:
+        # XXX For compatibility?
+        # Check if this object provides a specific URL method.
+        if getattr(brain, 'getListItemUrl', None) is not None:
+          try:
+            url = brain.getListItemUrl(alias, self.index, selection_name)
+          except (ConflictError, RuntimeError):
+            raise
+          except:
+            LOG('ListBox', WARNING, 'could not evaluate the url method getListItemUrl with %r' % (brain,),
+                error = sys.exc_info())
+        else:
+          try:
+            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;reset:int=1' % (brain.getPath(), self.index, selection_name)
+          except AttributeError:
+            pass
+
       if editable_field is not None and sql in editable_column_id_set:
         # XXX what if the object does not have uid?
         key = '%s_%s' % (editable_field_id, self.getUid())
@@ -1911,10 +1954,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # This prevents from using standard display process.
           # XXX what does the above comment mean exactly? why don't we fix Formulator?
           # XXX (JPS) - render_view does not get REQUEST - this breaks so many possibilities
-#          cell_html = editable_field.render(value = original_value,
-#                                       REQUEST = brain.asContext(cell = self.getObject()
-#                                                                ),
-#                                            key = key)
           REQUEST = get_request() # Dirtymax hack by JPS - render_view API update required
           REQUEST.cell = self.getObject()
           cell_html = editable_field.render( value   = display_value
@@ -1925,51 +1964,13 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if isinstance(cell_html, str):
           cell_html = unicode(cell_html, encoding)
 
-        html = cell_html + error_message
+        if url is None:
+          html = cell_html + error_message
+        else:
+          html = u'<a href="%s">%s</a> <span class="warning">%s</span>' % (url, cell_html, error_message)
+
       else:
         # If not editable, show a static text with a link, if enabled.
-        no_link = False
-        url_method = None
-        url = None
-
-        # Find an URL method.
-        if url_column_dict.has_key(sql):
-          url_method_id = url_column_dict.get(sql)
-          if url_method_id != sql:
-            if url_method_id is not None:
-              url_method = getattr(brain, url_method_id, None)
-              if url_method is None:
-                LOG('ListBox', WARNING, 'could not find the url method %s' % (url_method_id,))
-                no_link = True
-            else:
-              # If the value is None, generate no link.
-              no_link = True
-
-        if url_method is not None:
-          try:
-            url = url_method(brain = brain, selection = selection)
-          except (ConflictError, RuntimeError):
-            raise
-          except:
-            LOG('ListBox', WARNING, 'could not evaluate the url method %r with %r' % (url_method, brain),
-                error = sys.exc_info())
-        elif not no_link:
-          # XXX For compatibility?
-          # Check if this object provides a specific URL method.
-          if getattr(brain, 'getListItemUrl', None) is not None:
-            try:
-              url = brain.getListItemUrl(alias, self.index, selection_name)
-            except (ConflictError, RuntimeError):
-              raise
-            except:
-              LOG('ListBox', WARNING, 'could not evaluate the url method getListItemUrl with %r' % (brain,),
-                  error = sys.exc_info())
-          else:
-            try:
-              url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;reset:int=1' % (brain.getPath(), self.index, selection_name)
-            except AttributeError:
-              pass
-
         processed_value = cgi.escape(processed_value)
         if url is None:
           html = processed_value
