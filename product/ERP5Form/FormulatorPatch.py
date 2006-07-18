@@ -325,6 +325,22 @@ class PatchedLinkWidget(TextWidget) :
 PatchedLinkWidgetInstance = PatchedLinkWidget()
 LinkField.widget = PatchedLinkWidgetInstance
 
+
+# Patch the render_view of TextField to enclose the value within <span> html tags if css class defined
+def TextWidget_patched_render_view(self, field, value):
+  """Render text as non-editable.
+  """
+  if value is None:
+    return ''
+  css_class = field.get_value('css_class')
+  if css_class not in ('', None):
+    return "<span class='%s'>%s</span>" % (css_class, value)
+  return value
+
+from Products.Formulator.Widget import TextWidget
+TextWidget.render_view = TextWidget_patched_render_view
+
+
 class IntegerWidget(TextWidget) :
   def render(self, field, key, value, REQUEST) :
     """Render link.
