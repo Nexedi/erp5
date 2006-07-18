@@ -12,6 +12,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testCMFActivity >> $DIRECTORY/test_full
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAlarm >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccountingRules >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccounting >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testAmount >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInvoice >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInvoiceVAT >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testResource >> $DIRECTORY/test_full_output 2>&1
@@ -37,6 +38,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Catalog >> $DIRECTORY/test_full
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testPreferences >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5SyncML >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testPredicate >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testListBox >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Security >> $DIRECTORY/test_full_output 2>&1
 
 cat $DIRECTORY/test_full_output | grep '\(^OK\|^FAILED\|^Ran\)' | sed "/^FAILED.*\|^OK.*/s/.*/\0\n/g" >> $DIRECTORY/test_output
