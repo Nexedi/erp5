@@ -511,6 +511,7 @@ div.index_html table {\n
 \n
 .content .right {\n
   float: left;\n
+  width: 50%;\n
 }\n
 \n
 .content .field {\n
