@@ -49,12 +49,23 @@ ZopeTestCase.installProduct('PageTemplates')
 ZopeTestCase.installProduct('PythonScripts')
 ZopeTestCase.installProduct('ExternalMethod')
 try:
+  # Workaround iHotFix patch that doesn't work with
+  # ZopeTestCase REQUESTs
   ZopeTestCase.installProduct('iHotfix')
   from Products import iHotfix
-  from StringIO import StringIO
+  from StringIO import StringIO as OrigStringIO
+  from types import UnicodeType
   # revert monkey patchs from iHotfix
   iHotfix.get_request = get_request
-  iHotfix.iHotfixStringIO = StringIO
+
+  class UnicodeSafeStringIO(OrigStringIO):
+    """StringIO like class which never fails with unicode."""
+    def write(self, s):
+      if isinstance(s, UnicodeType):
+        s = s.encode('utf8', 'repr')
+      OrigStringIO.write(self, s)
+  # iHotFix will patch PageTemplate StringIO with 
+  iHotfix.iHotfixStringIO = UnicodeSafeStringIO
 except ImportError:
   pass
 ZopeTestCase.installProduct('Localizer')
@@ -81,15 +92,16 @@ ZopeTestCase.installProduct('ERP5Security')
 
 # Debugging
 ZopeTestCase.installProduct('VerboseSecurity')
+ZopeTestCase.installProduct('Zelenium')
 
 # ERP5
 ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5Catalog')
 ZopeTestCase.installProduct('ERP5Type')
-ZopeTestCase.installProduct('ERP5Form') # Not required by ERP5Type but required by ERP5Form
+ZopeTestCase.installProduct('ERP5Form')
 ZopeTestCase.installProduct('ERP5SyncML')
 ZopeTestCase.installProduct('CMFCategory')
-ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
+ZopeTestCase.installProduct('ERP5')
 ZopeTestCase.installProduct('ZMySQLDDA')
 
 # Install everything else which looks like related to ERP5
