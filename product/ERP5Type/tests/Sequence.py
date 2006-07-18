@@ -42,7 +42,7 @@ class Step:
     self._required = required
     self._max_replay = max_replay
 
-  def play(self,context,sequence=None):
+  def play(self, context, sequence=None, quiet=0):
     method_name = 'step' + self._method_name
     method = getattr(context,method_name)
     # We can in same cases replay many times the same step,
@@ -52,22 +52,24 @@ class Step:
       if nb_replay==0:
         nb_replay=1
     for i in range(0,nb_replay):
-      ZopeTestCase._print('\n  Playing step... %s' % self._method_name)
-      LOG('Step.play',0,'Playing step... %s' % self._method_name)
+      if not quiet:
+        ZopeTestCase._print('\n  Playing step... %s' % self._method_name)
+        LOG('Step.play', 0, 'Playing step... %s' % self._method_name)
       method(sequence=sequence)
-    
+
 class Sequence:
 
   def __init__(self):
     self._step_list = []
     self._dict = {}
 
-  def play(self,context,sequence=None,sequence_number=0):
-    ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
-    LOG('Sequence.play',0,'Starting New Sequence %i... ' % sequence_number)
+  def play(self, context, sequence=None, sequence_number=0, quiet=0):
+    if not quiet:
+      ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
+      LOG('Sequence.play', 0, 'Starting New Sequence %i... ' % sequence_number)
     if sequence is None:
       for step in self._step_list:
-        step.play(context,sequence=self)
+        step.play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
         get_transaction().commit()
 
@@ -76,7 +78,7 @@ class Sequence:
                     required=required,max_replay=max_replay)
     self._step_list.append(new_step)
 
-  def set(self, keyword,value):
+  def set(self, keyword, value):
     self._dict[keyword]=value
 
   def edit(self, **kw):
@@ -109,14 +111,14 @@ class SequenceList:
     sequence = Sequence()
     for step in step_list:
       if step != '':
-        if step.startswith('step') : 
+        if step.startswith('step'):
           step = step[4:]
         sequence.addStep(step)
     self.addSequence(sequence)
 
-  def play(self, context):
+  def play(self, context, quiet=0):
     i = 1
     for sequence in self._sequence_list:
-      sequence.play(context,sequence_number=i)
+      sequence.play(context, sequence_number=i, quiet=quiet)
       i+=1
 
