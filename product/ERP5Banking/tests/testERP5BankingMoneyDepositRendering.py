@@ -149,6 +149,8 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.gros_versement = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
+    self.openCounterDate(site=self.paris)
+    self.openCounter(self.gros_versement)
     self.createCashInventory(source=None, destination=self.gros_versement, currency=self.currency_1,
                              line_list=line_list)
 
