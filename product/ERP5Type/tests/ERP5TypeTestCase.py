@@ -199,121 +199,124 @@ class ERP5TypeTestCase(PortalTestCase):
         uf._doAddUser(user_name, 'secret', ['Member'], [])
 
     def setUp(self):
-        '''Sets up the fixture. Do not override,
-           use the hooks instead.
-        '''
-        # This is a workaround for the overwriting problem in Testing/__init__.py in Zope.
-        # So this overwrites them again to revert the changes made by Testing.
-        try:
-          import App.config
-        except ImportError:
-          os.environ['INSTANCE_HOME'] = INSTANCE_HOME = os.environ['COPY_OF_INSTANCE_HOME']
-          os.environ['SOFTWARE_HOME'] = SOFTWARE_HOME = os.environ['COPY_OF_SOFTWARE_HOME']
-        else:
-          cfg = App.config.getConfiguration()
-          cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
-          App.config.setConfiguration(cfg)
-        INSTANCE_HOME = os.environ['INSTANCE_HOME']
+      '''Sets up the fixture. Do not override,
+         use the hooks instead.
+      '''
+      # This is a workaround for the overwriting problem in Testing/__init__.py
+      # in Zope.  So this overwrites them again to revert the changes made by
+      # Testing.
+      try:
+        import App.config
+      except ImportError:
+        os.environ['INSTANCE_HOME'] = INSTANCE_HOME =\
+                            os.environ['COPY_OF_INSTANCE_HOME']
+        os.environ['SOFTWARE_HOME'] = SOFTWARE_HOME =\
+                            os.environ['COPY_OF_SOFTWARE_HOME']
+      else:
+        cfg = App.config.getConfiguration()
+        cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
+        App.config.setConfiguration(cfg)
+      INSTANCE_HOME = os.environ['INSTANCE_HOME']
 
-        template_list = self.getBusinessTemplateList()
-        new_template_list = []
-        LOG('template_list',0,template_list)
-        for template in template_list:
-          id = template
-          try :
-            file, headers = urlretrieve(template)
-          except IOError :
-            # First, try the bt5 directory itself.
-            path = os.path.join(INSTANCE_HOME, 'bt5', template)
+      template_list = self.getBusinessTemplateList()
+      new_template_list = []
+      LOG('template_list',0,template_list)
+      for template in template_list:
+        id = template
+        try :
+          file, headers = urlretrieve(template)
+        except IOError :
+          # First, try the bt5 directory itself.
+          path = os.path.join(INSTANCE_HOME, 'bt5', template)
+          if os.path.exists(path):
+            template = path
+          else:
+            path = '%s.bt5' % path
             if os.path.exists(path):
               template = path
             else:
-              path = '%s.bt5' % path
-              if os.path.exists(path):
-                template = path
+              # Otherwise, look at sub-directories.
+              # This is for backward-compatibility.
+              path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
+              template_list = glob(path)
+              if len(template_list) == 0:
+                template_list = glob('%s.bt5' % path)
+              if len(template_list) and template_list[0]:
+                template = template_list[0]
               else:
-                # Otherwise, look at sub-directories.
-                # This is for backward-compatibility.
-                path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
-                template_list = glob(path)
-                if len(template_list) == 0:
-                  template_list = glob('%s.bt5' % path)
-                if len(template_list) and template_list[0]:
-                  template = template_list[0]
-                else:
-                  # The last resort is current directory.
-                  template = '%s' % id
-                  if not os.path.exists(template):
-                    template = '%s.bt5' % id
-          else:
-            template = '%s' % template
-            if not os.path.exists(template):
-              template = '%s.bt5' % template
-          new_template_list.append((template,id))
+                # The last resort is current directory.
+                template = '%s' % id
+                if not os.path.exists(template):
+                  template = '%s.bt5' % id
+        else:
+          template = '%s' % template
+          if not os.path.exists(template):
+            template = '%s.bt5' % template
+        new_template_list.append((template,id))
 
-        light_install = self.enableLightInstall()
-        create_activities = self.enableActivityTool()
-        hot_reindexing = self.enableHotReindexing()
-        setupERP5Site(business_template_list=new_template_list,
-                      light_install=light_install,
-                      portal_name=self.getPortalName(),
-                      title=self.getTitle(),
-                      create_activities=create_activities,
-                      hot_reindexing=hot_reindexing)
-        PortalTestCase.setUp(self)
+      light_install = self.enableLightInstall()
+      create_activities = self.enableActivityTool()
+      hot_reindexing = self.enableHotReindexing()
+      setupERP5Site(business_template_list=new_template_list,
+                    light_install=light_install,
+                    portal_name=self.getPortalName(),
+                    title=self.getTitle(),
+                    create_activities=create_activities,
+                    hot_reindexing=hot_reindexing)
+      PortalTestCase.setUp(self)
 
     def afterSetUp(self):
-        '''Called after setUp() has completed. This is
-           far and away the most useful hook.
-        '''
-        pass
+      '''Called after setUp() has completed. This is
+         far and away the most useful hook.
+      '''
+      pass
 
     def getBusinessTemplateList(self):
-        """
-          You must override this. Return the list of business templates.
-        """
-        return ()
+      """
+        You must override this. Return the list of business templates.
+      """
+      return ()
 
     def logMessage(self, message):
-        """
-	  Shortcut function to log a message
-	"""
-        ZopeTestCase._print('\n%s ' % message)
-        LOG('Testing ... ', DEBUG, message)
-
+      """
+        Shortcut function to log a message
+      """
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing ... ', DEBUG, message)
+    
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
-        return getToolByName(self.getPortal(), 'portal_templates', None)
+      return getToolByName(self.getPortal(), 'portal_templates', None)
       
     def getTrashTool(self):
-        return getToolByName(self.getPortal(), 'portal_trash', None)
+      return getToolByName(self.getPortal(), 'portal_trash', None)
 
     def getSkinsTool(self):
-        return getToolByName(self.getPortal(), 'portal_skins', None)
+      return getToolByName(self.getPortal(), 'portal_skins', None)
 
     def getCategoryTool(self):
-        return getToolByName(self.getPortal(), 'portal_categories', None)
+      return getToolByName(self.getPortal(), 'portal_categories', None)
 
     def getWorkflowTool(self):
-        return getToolByName(self.getPortal(), 'portal_workflow', None)
+      return getToolByName(self.getPortal(), 'portal_workflow', None)
 
     def getCatalogTool(self):
-        return getToolByName(self.getPortal(), 'portal_catalog', None)
+      return getToolByName(self.getPortal(), 'portal_catalog', None)
 
     def getTypeTool(self):
-        return getToolByName(self.getPortal(), 'portal_types', None)
+      return getToolByName(self.getPortal(), 'portal_types', None)
 
     def getRuleTool(self):
-        return getattr(self.getPortal(), 'portal_rules', None)
+      return getattr(self.getPortal(), 'portal_rules', None)
 
     def getClassTool(self):
-        return getattr(self.getPortal(), 'portal_classes', None)
+      return getattr(self.getPortal(), 'portal_classes', None)
 
     def getSimulationTool(self):
-        return getToolByName(self.getPortal(), 'portal_simulation', None)
+      return getToolByName(self.getPortal(), 'portal_simulation', None)
 
     def getSqlConnection(self):
-        return getToolByName(self.getPortal(), 'erp5_sql_connection', None)
+      return getToolByName(self.getPortal(), 'erp5_sql_connection', None)
 
     def getPortalId(self):
       return self.getPortal().getId()
@@ -367,11 +370,18 @@ class ERP5TypeTestCase(PortalTestCase):
         self.failUnless(i in a, msg)
       self.assertEquals(len(a), len(b), msg)
 
-def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0,
-                  light_install=1,create_activities=1,hot_reindexing=1):
+def setupERP5Site( business_template_list=(),
+                   app=None,
+                   portal_name=portal_name,
+                   title='',
+                   quiet=0,
+                   light_install=1,
+                   create_activities=1,
+                   hot_reindexing=1 ):
     '''
       Creates an ERP5 site.
-      business_template_list must be specified correctly (e.g. '("erp5_common", )').
+      business_template_list must be specified correctly
+      (e.g. '("erp5_common", )').
     '''
     try:
       if app is None:
@@ -379,79 +389,83 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
         global current_app
         current_app = app
       if not hasattr(aq_base(app), portal_name):
-          try:
-            _start = time.time()
-            # Add user and log in
-            if not quiet: ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
-            uf = app.acl_users
-            uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-            user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
-            newSecurityManager(None, user)
-            # Add ERP5 Site
-            reindex = 1
-            if hot_reindexing:
-              setattr(app,'isIndexable',0)
-              reindex = 0
-            if not quiet:
-              ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
-            factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
-            factory.manage_addERP5Site(portal_name,light_install=light_install,
-                reindex=reindex,create_activities=create_activities)
-            if not quiet:
-              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
+        try:
+          _start = time.time()
+          # Add user and log in
+          if not quiet:
+            ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
+          uf = app.acl_users
+          uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+          user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
+          newSecurityManager(None, user)
+          # Add ERP5 Site
+          reindex = 1
+          if hot_reindexing:
+            setattr(app,'isIndexable',0)
+            reindex = 0
+          if not quiet:
+            ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
+          factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
+          factory.manage_addERP5Site(portal_name,light_install=light_install,
+              reindex=reindex,create_activities=create_activities)
+          if not quiet:
+            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
+          # Release locks
+          get_transaction().commit()
+          portal=app[portal_name]
+          # Remove all local PropertySheets, Documents
+          for id in getLocalPropertySheetList():
+            removeLocalPropertySheet(id)
+          for id in getLocalDocumentList():
+            removeLocalDocument(id)
+          for id in getLocalConstraintList():
+            removeLocalConstraint(id)
+          # Disable reindexing before adding templates
+          # VERY IMPORTANT: Add some business templates
+          for url, id in business_template_list:
+            start = time.time()
+            ZopeTestCase._print('Adding %s business template ... ' % id)
+            portal.portal_templates.download(url, id=id)
+            portal.portal_templates[id].install(light_install=light_install)
             # Release locks
             get_transaction().commit()
-            portal=app[portal_name]
-            # Remove all local PropertySheets, Documents
-            for id in getLocalPropertySheetList():
-              removeLocalPropertySheet(id)
-            for id in getLocalDocumentList():
-              removeLocalDocument(id)
-            for id in getLocalConstraintList():
-              removeLocalConstraint(id)
-            # Disable reindexing before adding templates
-            # VERY IMPORTANT: Add some business templates
-            for url, id in business_template_list:
-              start = time.time()
-              ZopeTestCase._print('Adding %s business template ... ' % id)
-              portal.portal_templates.download(url, id=id)
-              portal.portal_templates[id].install(light_install=light_install)
-              # Release locks
-              get_transaction().commit()
-              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
-            # Enbable reindexing
-            # Do hot reindexing # Does not work
-            if hot_reindexing:
-              setattr(app,'isIndexable', 1)
-              portal.portal_catalog.manage_hotReindexAll()
+            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+          # Enbable reindexing
+          # Do hot reindexing # Does not work
+          if hot_reindexing:
+            setattr(app,'isIndexable', 1)
+            portal.portal_catalog.manage_hotReindexAll()
 
-            get_transaction().commit()
-            portal_activities = getattr(portal, 'portal_activities', None)
-            if portal_activities is not None:
-              count = 1000
-              while len(portal_activities.getMessageList()) > 0:
-                portal_activities.distribute()
-                portal_activities.tic()
-                get_transaction().commit()
-                count -= 1
-                if count == 0:
-                  raise RuntimeError, \
-                  'tic is looping forever. These messages are pending: %r' % (
-                      [('/'.join(m.object_path), m.method_id,
-                       m.processing_node, m.priority)
-                       for m in portal_activities.getMessageList()],)
-            # Reset aq dynamic, so all unit tests will start again
-            from Products.ERP5Type.Base import _aq_reset
-            _aq_reset()
-            # Log out
-            if not quiet: ZopeTestCase._print('Logout ... \n')
-            noSecurityManager()
-            if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
-            if not quiet: ZopeTestCase._print('Ran Unit test of %s\n' % title)
-          finally:
-            get_transaction().commit()
-            ZopeTestCase.close(app)
-            pass
+          get_transaction().commit()
+          portal_activities = getattr(portal, 'portal_activities', None)
+          if portal_activities is not None:
+            count = 1000
+            while len(portal_activities.getMessageList()) > 0:
+              portal_activities.distribute()
+              portal_activities.tic()
+              get_transaction().commit()
+              count -= 1
+              if count == 0:
+                raise RuntimeError, \
+                'tic is looping forever. These messages are pending: %r' % (
+                    [('/'.join(m.object_path), m.method_id,
+                     m.processing_node, m.priority)
+                     for m in portal_activities.getMessageList()],)
+          # Reset aq dynamic, so all unit tests will start again
+          from Products.ERP5Type.Base import _aq_reset
+          _aq_reset()
+          # Log out
+          if not quiet:
+            ZopeTestCase._print('Logout ... \n')
+          noSecurityManager()
+          if not quiet:
+            ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
+          if not quiet:
+            ZopeTestCase._print('Ran Unit test of %s\n' % title)
+        finally:
+          get_transaction().commit()
+          ZopeTestCase.close(app)
+          pass
     except:
       f = StringIO()
       traceback.print_exc(file=f)
@@ -460,16 +474,16 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
 
 
 def optimize():
-    '''Significantly reduces portal creation time.'''
-    def __init__(self, text):
-        # Don't compile expressions on creation
-        self.text = text
-    from Products.CMFCore.Expression import Expression
-    Expression.__init__ = __init__
-    def _cloneActions(self):
-        # Don't clone actions but convert to list only
-        return list(self._actions)
-    from Products.CMFCore.ActionProviderBase import ActionProviderBase
-    ActionProviderBase._cloneActions = _cloneActions
+  '''Significantly reduces portal creation time.'''
+  def __init__(self, text):
+    # Don't compile expressions on creation
+    self.text = text
+  from Products.CMFCore.Expression import Expression
+  Expression.__init__ = __init__
+  def _cloneActions(self):
+    # Don't clone actions but convert to list only
+    return list(self._actions)
+  from Products.CMFCore.ActionProviderBase import ActionProviderBase
+  ActionProviderBase._cloneActions = _cloneActions
 
 optimize()
