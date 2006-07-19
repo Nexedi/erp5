@@ -43,9 +43,9 @@ manage_addERP5SiteForm = Globals.HTMLFile('dtml/addERP5Site', globals())
 manage_addERP5SiteForm.__name__ = 'addERP5Site'
 
 # ERP5Site Constructor
-def manage_addERP5Site(self, 
-                       id, 
-                       title='ERP5', 
+def manage_addERP5Site(self,
+                       id,
+                       title='ERP5',
                        description='',
                        create_userfolder=1,
                        create_activities=1,
@@ -68,8 +68,8 @@ def manage_addERP5Site(self,
   '''
   gen = ERP5Generator()
   id = str(id).strip()
-  p = gen.create(self, 
-                 id, 
+  p = gen.create(self,
+                 id,
                  create_userfolder,
                  erp5_sql_connection_type,
                  erp5_sql_connection_string,
@@ -80,10 +80,10 @@ def manage_addERP5Site(self,
                  create_activities=create_activities,
                  light_install=light_install,
                  reindex=reindex)
-  gen.setupDefaultProperties(p, 
-                             title, 
+  gen.setupDefaultProperties(p,
+                             title,
                              description,
-                             email_from_address,  
+                             email_from_address,
                              email_from_name,
                              validate_email)
   if RESPONSE is not None:
@@ -101,9 +101,9 @@ class ERP5Site(FolderMixIn, CMFSite):
   icon = 'portal.gif'
 
   _properties = (
-      { 'id':'title', 
+      { 'id':'title',
         'type':'string'},
-      { 'id':'description', 
+      { 'id':'description',
         'type':'text'},
       )
   title = ''
@@ -127,12 +127,12 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return id in self.objectIds()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalObject')
   def getPortalObject(self):
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitle')
   def getTitle(self):
     """
@@ -151,7 +151,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return getattr(self, 'uid', 0)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getParentUid')
   def getParentUid(self):
     """
@@ -169,15 +169,18 @@ class ERP5Site(FolderMixIn, CMFSite):
   def setLastId(self, id):
     self.last_id = id
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
-  def getPath(self, REQUEST=None):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
+  def getUrl(self, REQUEST=None):
     """
       Returns the absolute path of an object
     """
     return join(self.getPhysicalPath(),'/')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                            'searchFolder')
+  # Old name - for compatibility
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
+  getPath = getUrl
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
     """
       Search the content of a folder by calling
@@ -226,7 +229,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     Returns a dictionnary of actions, sorted by type of object
 
-    This should absolutely be rewritten by using clean 
+    This should absolutely be rewritten by using clean
     concepts to separate worklists XXX
     """
     sorted_workflow_actions = {}
@@ -257,9 +260,9 @@ class ERP5Site(FolderMixIn, CMFSite):
                            email_from_address, email_from_name,
                            validate_email)
 
-  # Portal methods are based on the concept of having portal-specific 
-  # parameters for customization. In the past, we used global parameters, 
-  # but it was not very good because it was very difficult 
+  # Portal methods are based on the concept of having portal-specific
+  # parameters for customization. In the past, we used global parameters,
+  # but it was not very good because it was very difficult
   # to customize the settings for each portal site.
   def _getPortalConfiguration(self, id):
     """
@@ -268,8 +271,8 @@ class ERP5Site(FolderMixIn, CMFSite):
     Current implementation is using properties in a portal object.
     If not found, try to get a default value for backward compatibility.
 
-    This implementation can be improved by gathering information 
-    from appropriate places, such as portal_types, portal_categories 
+    This implementation can be improved by gathering information
+    from appropriate places, such as portal_types, portal_categories
     and portal_workflow.
     """
     if self.hasProperty(id):
@@ -290,7 +293,7 @@ class ERP5Site(FolderMixIn, CMFSite):
       return tuple(type_list)
 
     getTypeList = CachingMethod(getTypeList,
-                                id=('_getPortalGroupedTypeList', group), 
+                                id=('_getPortalGroupedTypeList', group),
                                 cache_duration=3600)
     return getTypeList(group)
 
@@ -307,7 +310,7 @@ class ERP5Site(FolderMixIn, CMFSite):
 
     getCategoryList = CachingMethod(
                             getCategoryList,
-                            id=('_getPortalGroupedCategoryList', group), 
+                            id=('_getPortalGroupedCategoryList', group),
                             cache_duration=3600)
     return getCategoryList(group)
 
@@ -325,7 +328,7 @@ class ERP5Site(FolderMixIn, CMFSite):
       return tuple(state_dict.keys())
 
     getStateList = CachingMethod(getStateList,
-                                 id=('_getPortalGroupedStateList', group), 
+                                 id=('_getPortalGroupedStateList', group),
                                  cache_duration=3600)
     return getStateList(group)
 
@@ -636,11 +639,11 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedStateList('future_inventory') or \
            self._getPortalConfiguration('portal_future_inventory_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                           'getPortalUpdatableAmortisationTransactionStateList')
   def getPortalUpdatableAmortisationTransactionStateList(self):
     """
-      Return states when Amortisation Transaction can be updated 
+      Return states when Amortisation Transaction can be updated
       by amortisation_transaction_builder.
     """
     return self._getPortalConfiguration(
@@ -677,7 +680,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
       Return the Accounting Plan to use by default (return the root node)
     """
-    LOG('ERP5Site', 0, 
+    LOG('ERP5Site', 0,
         'getPortalDefaultGapRoot is deprecated; ' \
         'use portal_preferences.getPreferredAccountingTransactionGap instead.')
 
@@ -791,11 +794,11 @@ class ERP5Generator(PortalGenerator):
     product_path = package_home(globals())
     return os.path.join(product_path, 'bootstrap')
 
-  def create(self, 
-             parent,  
-             id, 
+  def create(self,
+             parent,
+             id,
              create_userfolder,
-             erp5_sql_connection_type, 
+             erp5_sql_connection_type,
              erp5_sql_connection_string,
              erp5_sql_deferred_connection_type,
              erp5_sql_deferred_connection_string,
@@ -813,21 +816,21 @@ class ERP5Generator(PortalGenerator):
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
-    p._setProperty('erp5_sql_connection_type', 
+    p._setProperty('erp5_sql_connection_type',
                    erp5_sql_connection_type, 'string')
-    p._setProperty('erp5_sql_connection_string', 
+    p._setProperty('erp5_sql_connection_string',
                    erp5_sql_connection_string, 'string')
-    p._setProperty('erp5_sql_deferred_connection_type', 
+    p._setProperty('erp5_sql_deferred_connection_type',
                    erp5_sql_deferred_connection_type, 'string')
-    p._setProperty('erp5_sql_deferred_connection_string', 
+    p._setProperty('erp5_sql_deferred_connection_string',
                    erp5_sql_deferred_connection_string, 'string')
-    p._setProperty('cmf_activity_sql_connection_type', 
+    p._setProperty('cmf_activity_sql_connection_type',
                    cmf_activity_sql_connection_type, 'string')
-    p._setProperty('cmf_activity_sql_connection_string', 
+    p._setProperty('cmf_activity_sql_connection_string',
                    cmf_activity_sql_connection_string, 'string')
     # XXX hardcoded charset
     p._setProperty('management_page_charset', 'UTF-8', 'string')
-    self.setup(p, create_userfolder, 
+    self.setup(p, create_userfolder,
                create_activities=create_activities, **kw)
     return p
 
@@ -869,9 +872,9 @@ class ERP5Generator(PortalGenerator):
     if not 'portal_actions' in p.objectIds():
       PortalGenerator.setupTools(self, p)
 
-    # It is better to remove portal_catalog 
+    # It is better to remove portal_catalog
     # which is ZCatalog as soon as possible,
-    # because the API is not the completely same as ERP5Catalog, 
+    # because the API is not the completely same as ERP5Catalog,
     # and ZCatalog is useless for ERP5 after all.
     update = kw.get('update', 0)
     portal_catalog = getToolByName(p, 'portal_catalog', None)
@@ -909,14 +912,14 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Order Tool', None)
     if not p.hasObject('portal_tests'):
       addTool('ERP5 Test Tool', None)
-    
+
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
       if not p.hasObject('portal_subversion'):
         addTool('ERP5 Subversion Tool', None)
     except AttributeError:
       pass
-      
+
     # Add ERP5Type Tools
     addTool = p.manage_addProduct['ERP5Type'].manage_addTool
     if not p.hasObject('portal_classes'):
@@ -934,8 +937,8 @@ class ERP5Generator(PortalGenerator):
       if not p.hasObject('erp5_sql_connection'):
         addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
                                      manage_addZMySQLConnection
-        addSQLConnection('erp5_sql_connection', 
-                         'ERP5 SQL Server Connection', 
+        addSQLConnection('erp5_sql_connection',
+                         'ERP5 SQL Server Connection',
                          p.erp5_sql_connection_string)
     elif p.erp5_sql_connection_type == 'Z Gadfly':
       pass
@@ -946,8 +949,8 @@ class ERP5Generator(PortalGenerator):
       if not p.hasObject('erp5_sql_deferred_connection'):
         addSQLConnection = p.manage_addProduct['ZMySQLDDA'].\
             manage_addZMySQLDeferredConnection
-        addSQLConnection('erp5_sql_deferred_connection', 
-                         'ERP5 SQL Server Deferred Connection', 
+        addSQLConnection('erp5_sql_deferred_connection',
+                         'ERP5 SQL Server Deferred Connection',
                          p.erp5_sql_deferred_connection_string)
     elif p.erp5_sql_deferred_connection_type == 'Z Gadfly':
       pass
@@ -957,19 +960,19 @@ class ERP5Generator(PortalGenerator):
       if not p.hasObject('cmf_activity_sql_connection'):
         addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
                                      manage_addZMySQLConnection
-        addSQLConnection('cmf_activity_sql_connection', 
-                         'CMF Activity SQL Server Connection', 
+        addSQLConnection('cmf_activity_sql_connection',
+                         'CMF Activity SQL Server Connection',
                          p.cmf_activity_sql_connection_string)
     elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
       pass
-    
+
     portal_catalog = getToolByName(p, 'portal_catalog')
     if (not update) and (not portal_catalog.getSQLCatalog('erp5_mysql')):
       # Add a default SQL Catalog
       portal_catalog.addDefaultSQLMethods()
       if (p.erp5_sql_connection_type is not None):
         portal_catalog.manage_catalogClear()
-      # TODO: Replace previous lines with the commented below 
+      # TODO: Replace previous lines with the commented below
       # (not working actually).
       # The goal is to delete addDefaultSQLMethods() method and duplicated zsql
       # method from /ERP5Catalog/sql/mysql_erp5.
@@ -1045,7 +1048,7 @@ class ERP5Generator(PortalGenerator):
     tool = getToolByName(p, 'portal_workflow', None)
     if tool is None:
         return
-    for wf_id in ('business_template_building_workflow', 
+    for wf_id in ('business_template_building_workflow',
                   'business_template_installation_workflow'):
       if wf_id in tool.objectIds():
         tool.manage_delObjects([wf_id])
@@ -1070,7 +1073,7 @@ class ERP5Generator(PortalGenerator):
     skins_tool = getToolByName(p, 'portal_skins', None)
     if skins_tool is None:
       return
-    # When no SQL connection was define on the site, 
+    # When no SQL connection was define on the site,
     # we don't want to make it crash
     if p.erp5_sql_connection_type is not None:
       setattr(p, 'isIndexable', 1)
@@ -1146,7 +1149,7 @@ class ERP5Generator(PortalGenerator):
       'Set own password'             : ('Manager',),
       'Set own properties'           : ('Manager', 'Member'),
       'Undo changes'                 : ('Manager', 'Owner'),
-      'View'                         : ('Manager', 'Member', 
+      'View'                         : ('Manager', 'Member',
                                         'Owner', 'Anonymous'),
       'View management screens'      : ('Manager', 'Owner')
     }
