@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validated By Vault Manager</string> </value>
+            <value> <string>Assign To  Vault Controler</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated By Vault Manager Action</string> </value>
+            <value> <string>Assign To  Vault Controler Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -91,7 +91,6 @@
               <tuple>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>

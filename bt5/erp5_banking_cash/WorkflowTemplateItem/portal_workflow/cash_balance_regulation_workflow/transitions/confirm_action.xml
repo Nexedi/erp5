@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign To Cash Administrator </string> </value>
+            <value> <string>Assign To Controler Action</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assign To Cash Administrator Action</string> </value>
+            <value> <string>Assign To Controler Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -89,7 +89,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Owner</string>
                 <string>Manager</string>
               </tuple>
             </value>

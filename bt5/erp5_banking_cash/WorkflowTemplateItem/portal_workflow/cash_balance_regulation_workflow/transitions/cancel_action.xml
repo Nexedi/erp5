@@ -92,8 +92,6 @@
                 <string>Assignor</string>
                 <string>Manager</string>
                 <string>Assignee</string>
-                <string>DestinationAssignee</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>

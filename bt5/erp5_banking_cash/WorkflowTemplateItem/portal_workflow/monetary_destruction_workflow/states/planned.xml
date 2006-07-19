@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Validated By Vault Manager</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -83,37 +83,37 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

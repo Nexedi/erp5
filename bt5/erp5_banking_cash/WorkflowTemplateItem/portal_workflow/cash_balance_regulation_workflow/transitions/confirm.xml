@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assign To Cash Administrator</string> </value>
+            <value> <string>Assign To Controler</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -90,7 +90,8 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

@@ -76,6 +76,13 @@ object = state_change.object\n
 if not \'encaisse_des_devises\' in object.getDestination():\n
   msg = Message(domain="ui", msg="Wrong Destination Selected.")\n
   raise validationFailed, (msg,)\n
+\n
+object_price = object.getSourceTotalAssetPrice()\n
+line_price = object.getTotalPrice(deliveryLineType=\'Cash Delivery Line\')\n
+\n
+if object_price != line_price:\n
+  msg = Message(domain="ui", msg="Amount differs between document and lines.")\n
+  raise validationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -86,7 +93,7 @@ if not \'encaisse_des_devises\' in object.getDestination():\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/foreign_cash_reception_workflow/scripts/checkDestination</string> </value>
+            <value> <string>Script (Python):/baobab/portal_workflow/foreign_cash_reception_workflow/scripts/checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -125,6 +132,8 @@ if not \'encaisse_des_devises\' in object.getDestination():\n
                             <string>object</string>
                             <string>msg</string>
                             <string>validationFailed</string>
+                            <string>object_price</string>
+                            <string>line_price</string>
                           </tuple>
                         </value>
                     </item>
@@ -141,7 +150,7 @@ if not \'encaisse_des_devises\' in object.getDestination():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkDestination</string> </value>
+            <value> <string>checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

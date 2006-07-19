@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirmed for cash administrator</string> </value>
+            <value> <string>Confirmed By Initiator</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

@@ -100,8 +100,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
