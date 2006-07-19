@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>section</string> </value>
+            <value> <string>subcontent_preview</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
@@ -58,11 +58,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <float>3.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Section</string> </value>
+            <value> <string>Dynamic Content Preview</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -85,7 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/WebSite_viewSite</string> </value>
+            <value> <string>string:${object_url}/WebSection_viewContentList</string> </value>
         </item>
       </dictionary>
     </pickle>
