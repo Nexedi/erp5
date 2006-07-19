@@ -45,33 +45,37 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="global_definition">\n
-  <tal:block tal:define="global portal_url       python:here.portal_url();\n
-                         document                context/WebSite_getDocumentValue;\n
-                         global object_actions   python: None;\n
-                         global workflow_actions python: None;\n
-                         global jump_actions     python: None;\n
-                         global view_actions     python: None;        \n
-                         dummy                   python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
+  <tal:block\n
+   tal:define="global portal_url        python: here.portal_url();\n
+               global object_actions    python: None;\n
+               global workflow_actions  python: None;\n
+               global jump_actions      python: None;\n
+               global view_actions      python: None;\n
+                      dummy             python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\');\n
+\n
+                      document                  context/WebSite_getDocumentValue;\n
+                      default_doc               context/WebSite_getDefaultDocumentValue;\n
+               global is_edit_mode      python: not (not(hasattr(context.REQUEST, \'editable_mode\')) or not(context.REQUEST[\'editable_mode\']));\n
+               global is_section        python: context.getPortalType() == \'Web Section\';\n
+               global is_webdoc         python: context.getPortalType() == \'Web Page\';\n
+               global is_portal_root    python: context.WebSite_getDocumentPhysicalPath() == None;\n
+               global valid_default_doc python: default_doc != None and default_doc.getPortalType() == \'Web Page\';\n
+  ">\n
     <tal:block tal:condition="python: document is not None">\n
-      <tal:block tal:define="filtered_actions python:document.portal_actions.listFilteredActionsFor(document);\n
-                             object_actions filtered_actions/object_action | nothing;\n
-                             global object_actions python: document.WebSite_replaceActionUrl(object_actions);\n
-                             workflow_actions filtered_actions/workflow | nothing;\n
-                             global workflow_actions python: document.WebSite_replaceActionUrl(workflow_actions);\n
-                             jump_actions filtered_actions/object_jump | nothing;\n
-                             global jump_actions python: document.WebSite_replaceActionUrl(jump_actions);\n
-                             view_actions filtered_actions/object_view | nothing;\n
-                             global view_actions python: document.WebSite_replaceActionUrl(view_actions);\n
+      <tal:block\n
+       tal:define="       filtered_actions python: document.portal_actions.listFilteredActionsFor(document);\n
+                          object_actions   filtered_actions/object_action | nothing;\n
+                          workflow_actions filtered_actions/workflow      | nothing;\n
+                          jump_actions     filtered_actions/object_jump   | nothing;\n
+                          view_actions     filtered_actions/object_view   | nothing;\n
+                   global object_actions   python: document.WebSite_replaceActionUrl(object_actions);\n
+                   global workflow_actions python: document.WebSite_replaceActionUrl(workflow_actions);\n
+                   global jump_actions     python: document.WebSite_replaceActionUrl(jump_actions);\n
+                   global view_actions     python: document.WebSite_replaceActionUrl(view_actions);\n
       "/>\n
     </tal:block>\n
   </tal:block>\n
