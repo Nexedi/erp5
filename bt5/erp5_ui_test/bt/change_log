@@ -1,3 +1,6 @@
+2006-07-19 jerome
+* add user-extension.js for Selenium extensions
+
 2006-07-18 yo
 * Add a test for listbox with dynamically generated domains.
 
