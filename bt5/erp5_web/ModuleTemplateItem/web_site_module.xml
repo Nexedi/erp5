@@ -9,6 +9,11 @@
   </permission>
   <permission type='list'>
    <name>Access contents information</name>
+   <role>Anonymous</role>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Manager</role>
+   <role>Owner</role>
   </permission>
   <permission type='list'>
    <name>Access future portal content</name>
@@ -18,9 +23,6 @@
   </permission>
   <permission type='list'>
    <name>Access session data</name>
-  </permission>
-  <permission type='list'>
-   <name>AccessContentsInformation</name>
   </permission>
   <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
@@ -179,9 +181,6 @@
    <name>Add Plugin Registrys</name>
   </permission>
   <permission type='list'>
-   <name>Add Portal ZSyncer Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -221,7 +220,7 @@
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
@@ -234,9 +233,6 @@
   </permission>
   <permission type='list'>
    <name>Add ZODB Mount Points</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ZSyncers</name>
   </permission>
   <permission type='list'>
    <name>Add Zope Tutorials</name>
@@ -492,6 +488,11 @@
   </permission>
   <permission type='list'>
    <name>View</name>
+   <role>Anonymous</role>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Manager</role>
+   <role>Owner</role>
   </permission>
   <permission type='list'>
    <name>View History</name>
@@ -510,15 +511,6 @@
   </permission>
   <permission type='list'>
    <name>WebDAV access</name>
-  </permission>
-  <permission type='list'>
-   <name>ZSyncer: Use ZSyncer</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Web Site Module</portal_type>
