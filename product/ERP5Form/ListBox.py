@@ -1884,13 +1884,13 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       if url_column_dict.has_key(sql):
         url_method_id = url_column_dict.get(sql)
         if url_method_id != sql:
-          if url_method_id is not None:
+          if url_method_id not in (None, ''):
             url_method = getattr(brain, url_method_id, None)
             if url_method is None:
               LOG('ListBox', WARNING, 'could not find the url method %s' % (url_method_id,))
               no_link = True
           else:
-            # If the value is None, generate no link.
+            # If the URL Method is empty, generate no link.
             no_link = True
 
       if url_method is not None:
