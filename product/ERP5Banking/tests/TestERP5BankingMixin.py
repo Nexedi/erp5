@@ -1,4 +1,4 @@
-##############################################################################
+#############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Aurelien Calonne <aurel@nexedi.com>
@@ -550,8 +550,6 @@ class TestERP5BankingMixin:
                                            destination_payment_value=bank_account,
                                            inventory=amount)
 
-    # deliver the inventory
-    inventory.deliver()
     self.account_inventory_number += 1
     return bank_account
 
@@ -691,8 +689,6 @@ class TestERP5BankingMixin:
                                  line['variation_id'],
                                  line['variation_value'],
                                  line['quantity'],)
-    # deliver the inventory
-    inventory.deliver()
     return inventory_group
 
 
