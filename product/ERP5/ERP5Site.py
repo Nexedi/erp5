@@ -1162,6 +1162,9 @@ class ERP5Generator(PortalGenerator):
   def setup(self, p, create_userfolder, **kw):
     update = kw.get('update', 0)
 
+    if getattr(p, 'setDefaultSorting', None) is not None:
+      p.setDefaultSorting('id', 0)
+
     self.setupTools(p, **kw)
 
     if not p.hasObject('MailHost'):
