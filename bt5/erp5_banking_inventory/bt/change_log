@@ -1,4 +1,7 @@
 2006-06-30 aurel
+* modify workflow so that default state is delivered
+
+2006-06-30 aurel
 * add cash delivery line property sheet on cash inventory cell and line
 
 2006-06-30 aurel
