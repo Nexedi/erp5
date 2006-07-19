@@ -1,5 +1,5 @@
 <module>
- <id>counter_date_module</id>
+ <id>checkbook_model_module</id>
  <permission_list>
   <permission type='tuple'>
    <name>Access Transient Objects</name>
@@ -9,6 +9,7 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
+   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>Access arbitrary user session data</name>
@@ -40,6 +41,7 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
+   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
@@ -511,6 +513,7 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
+   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>List portal members</name>
@@ -694,6 +697,7 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
+   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>View ZMailMessage</name>
@@ -716,6 +720,6 @@
    <role>Manager</role>
   </permission>
  </permission_list>
- <portal_type>Counter Date Module</portal_type>
- <title>Counter Dates</title>
+ <portal_type>Checkbook Model Module</portal_type>
+ <title>Checkbook Models</title>
 </module>
