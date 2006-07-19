@@ -79,23 +79,13 @@ if source is None:\n
   raise ValidationFailed, (msg,)\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=source, date=transaction.getStartDate()):\n
+if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
   msg = Message(domain = "ui", message="Counter Date is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
 site = transaction.getSourceValue()\n
-while True:\n
-  if not hasattr(site, \'getVaultTypeList\'):\n
-    msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
-    raise ValidationFailed, (msg,)\n
-  if \'site\' in site.getVaultTypeList():\n
-    break\n
-  site = site.getParentValue()\n
 \n
-# check that the counter is opened\n
-counter_list = [x.getObject() for x in transaction.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
-\n
-if len(counter_list) == 0:\n
+if not context.Baobab_checkCounterOpened(site):\n
   msg = Message(domain = "ui", message="Counter is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
@@ -192,14 +182,6 @@ elif error[\'error_code\'] != 0:\n
                             <string>source</string>
                             <string>msg</string>
                             <string>site</string>
-                            <string>True</string>
-                            <string>hasattr</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_list</string>
-                            <string>len</string>
                             <string>context</string>
                             <string>line</string>
                             <string>bank_account</string>

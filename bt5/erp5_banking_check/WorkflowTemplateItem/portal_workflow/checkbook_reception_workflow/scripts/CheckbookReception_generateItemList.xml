@@ -116,6 +116,7 @@ for line in line_list:\n
         item.setQuantity(line.getPrice())\n
         item.setPriceCurrency(line.getPriceCurrency())\n
       item.setDestinationPayment(line.getDestinationPayment())\n
+      item.setDestinationTrade(line.getDestinationTrade())\n
       item.setResourceValue(resource)\n
       aggregate_list.append(item)\n
 \n

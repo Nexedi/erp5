@@ -81,7 +81,7 @@ if len(result) == 0:\n
 \n
   # Get a checkbook for this bank account.\n
   checkbook = None\n
-  generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', title = \'Generic\')[0].getObject()\n
+  generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', id = \'generic_checkbook\')[0].getObject()\n
   # XXX it would be better to use a related key for this, but z_related_resource is too specific to\n
   # movement at the moment.\n
   for brain in context.portal_catalog(portal_type = \'Checkbook\',\n
@@ -119,6 +119,12 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -206,6 +212,27 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
