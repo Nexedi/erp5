@@ -61,10 +61,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
-                <string>content bottom</string>
+                <string>left id</string>
+                <string>right detail</string>
+                <string>center comment</string>
+                <string>content bottom core</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -74,7 +74,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>center comment</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
@@ -82,7 +82,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>content bottom</string> </key>
+                    <key>                 <string>content bottom core</string> </key>
                     <value>
                       <list>
                         <string>my_text_content</string>
@@ -96,24 +96,24 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>left id</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
-                        <string>my_version</string>
+                        <string>my_title</string>
                         <string>my_short_title</string>
-                        <string>my_int_index</string>
-                        <string>my_language</string>
+                        <string>my_reference</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>right detail</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
                         <string>my_publication_section</string>
-                        <string>my_validation_state</string>
+                        <string>my_version</string>
+                        <string>my_language</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>
@@ -134,7 +134,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>web_form_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
