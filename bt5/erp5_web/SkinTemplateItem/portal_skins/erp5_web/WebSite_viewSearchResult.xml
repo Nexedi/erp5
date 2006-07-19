@@ -68,8 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.WebSite_viewSearchResultList(**kw)\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+# TODO: Clear here the search_selection selection to not display a random result page but always the first one\n
+# -> this not fix the problem: context.portal_selections.setSelectionCheckedUidsFor(\'search_selection\', [])\n
+return context.WebSite_viewSearchResultList(**kw)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -79,10 +85,6 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_viewSearchResult</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
