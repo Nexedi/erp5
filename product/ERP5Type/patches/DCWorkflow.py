@@ -14,6 +14,8 @@
 
 # Optimized rendering of global actions (cache)
 
+from Globals import DTMLFile
+from Products.ERP5Type import _dtmldir
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, ObjectMoved, createExprContext, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
@@ -27,6 +29,34 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
 from zLOG import LOG
+
+
+
+# Patch WorkflowUIMixin to add description on workflows
+from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
+from Products.DCWorkflow.Guard import Guard
+
+def WorkflowUIMixin_setProperties( self, title
+                                 , description='' # the only addition to WorkflowUIMixin.setProperties
+                                 , manager_bypass=0, props=None, REQUEST=None):
+  """Sets basic properties.
+  """
+  self.title = str(title)
+  self.description = str(description)
+  self.manager_bypass = manager_bypass and 1 or 0
+  g = Guard()
+  if g.changeFromProperties(props or REQUEST):
+      self.creation_guard = g
+  else:
+      self.creation_guard = None
+  if REQUEST is not None:
+      return self.manage_properties(
+          REQUEST, manage_tabs_message='Properties changed.')
+
+WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
+WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
+
+
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
