@@ -3,12 +3,6 @@
   <item>Outgoing Cash Balance Regulation Line</item>
   <item>Incoming Cash Balance Regulation Line</item>
  </portal_type>
- <portal_type id="Cash Container">
-  <item>Container Line</item>
- </portal_type>
- <portal_type id="Cash Container Item">
-  <item>Container Line</item>
- </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
@@ -16,9 +10,6 @@
  <portal_type id="Classification Survey">
   <item>Outgoing Classification Survey Line</item>
   <item>Incoming Classification Survey Line</item>
- </portal_type>
- <portal_type id="Container Line">
-  <item>Container Cell</item>
  </portal_type>
  <portal_type id="Counter Rendering">
   <item>Amount</item>

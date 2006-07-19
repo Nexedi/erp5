@@ -6,12 +6,6 @@
  <portal_type id="Cash Balance Regulation Module">
   <item>Cash Balance Regulation</item>
  </portal_type>
- <portal_type id="Cash Container">
-  <item>Container Line</item>
- </portal_type>
- <portal_type id="Cash Container Item">
-  <item>Container Line</item>
- </portal_type>
  <portal_type id="Cash Delivery Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
@@ -28,9 +22,6 @@
  </portal_type>
  <portal_type id="Classification Survey Module">
   <item>Classification Survey</item>
- </portal_type>
- <portal_type id="Container Line">
-  <item>Container Cell</item>
  </portal_type>
  <portal_type id="Counter Rendering">
   <item>Cash Delivery Line</item>
