@@ -183,7 +183,9 @@ return temp_stat_object_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_html_style/Planning_commonStats</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -242,7 +244,7 @@ return temp_stat_object_list\n
                             <string>block_end</string>
                             <string>block_size</string>
                             <string>float</string>
-<string>context</string>
+                            <string>context</string>
                             <string>temp_object</string>
                             <string>prop_list</string>
                             <string>temp_stat</string>
