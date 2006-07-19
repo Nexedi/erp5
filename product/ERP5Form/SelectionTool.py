@@ -331,7 +331,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        selection.edit(invert_mode=0, params={}, checked_uids=[])
+        selection.edit(invert_mode=0, params={}, checked_uids=[], report_opened=1)
         if reset_domain_tree:
           selection.edit(domain=None, domain_path=None, domain_list=None)
         if reset_report_tree:
