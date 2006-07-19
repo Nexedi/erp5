@@ -1,3 +1,6 @@
+2006-07-19 Kevin
+* Add support of HTML Report in list_mode (similar to history tab, but in list_mode).
+
 2006-06-28 Kevin
 * Fix default string.
 

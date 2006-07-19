@@ -92,25 +92,51 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   </head>\n
 \n
   <body>\n
-<div metal:fill-slot="main">\n
-<tal:block metal:define-macro="form_layout">\n
-  <div class="Main">\n
-    <tal:block metal:use-macro="here/form_developper_buttons/macros/form"/>\n
-<span tal:define="groups python: form.get_groups(include_empty=1);\n
-                  field_errors python: request.get(\'field_errors\',{});\n
-                  dummy python: request.set(\'here\',here)">\n
-  <tal:block tal:condition="python: len(groups)>0">\n
-    <span tal:repeat="field python:form.get_fields_in_group(groups[0])">\n
-      <tal:block metal:use-macro="here/form_developper_buttons/macros/field"/>\n
-      <div class="FormDescription" tal:content="python:field.get_value(\'description\')"></div>\n
-      <span tal:define="value python:request.get(field.id,None)"\n
-        tal:replace="structure python:field.render(value,request)" />\n
-    </span>\n
-  </tal:block>\n
-</span>\n
-          </div>\n
-</tal:block>\n
+    <div metal:fill-slot="main">\n
+      <div class="Main">\n
+        <span tal:define="groups python: form.get_groups(include_empty=1);\n
+                          field_errors python: request.get(\'field_errors\',{});\n
+                          dummy python: request.set(\'here\',here)">\n
+          <span tal:condition="python: len(groups)>0">\n
+            <span tal:repeat="field python:form.get_fields_in_group(groups[0])">\n
+              <div class="FormDescription" tal:content="python:field.get_value(\'description\')"></div>\n
+              <span tal:define="value python:request.get(field.id,None)"\n
+                tal:replace="structure python:field.render(value,request)" />\n
+            </span>\n
+          </span>\n
+        </span>\n
       </div>\n
+      <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
+        <tal:block tal:repeat="report_item python:report_method()">\n
+          <tal:block tal:define="here python:report_item.getObject(portal_object);\n
+                                 dummy python:report_item.pushReport(portal_object);\n
+                                 level report_item/getLevel | nothing">\n
+            <tal:block tal:condition="report_item/getTitle | report_item/getTranslatedTitle">\n
+              <tal:block tal:condition="report_item/getTitle">\n
+                <h1 tal:content="report_item/getTitle"\n
+                    i18n:translate="erp5_content"\n
+                    tal:condition="python:level==1">toto</h1>\n
+              </tal:block>\n
+              <tal:block tal:condition="report_item/getTranslatedTitle">\n
+                <h1 tal:content="report_item/getTitle"\n
+                    tal:condition="python:level==1">toto</h1>\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="report_item/getFormId">\n
+              <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
+                <tal:block tal:condition="python:form.pt == \'form_view\'">\n
+                  <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
+                </tal:block>\n
+                <tal:block tal:condition="python:form.pt == \'form_list\'">\n
+                  <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
+          </tal:block>\n
+        </tal:block>\n
+      </tal:block>\n
+    </div>\n
   </body>\n
 </html>\n
 </tal:block>
@@ -127,7 +153,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>report_list</string> </value>
         </item>
         <item>
             <key> <string>isIndexable</string> </key>
