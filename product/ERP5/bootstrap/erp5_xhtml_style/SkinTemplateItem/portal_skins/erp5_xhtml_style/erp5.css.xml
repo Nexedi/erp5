@@ -476,6 +476,14 @@ div.index_html table {\n
   color: inherit;\n
 }\n
 \n
+#context_bar .tool_buttons a {\n
+  margin-top: 1px;\n
+  margin-left: 2px;\n
+  margin-right: 2px;\n
+  padding: 0;\n
+  position: relative;\n
+}\n
+\n
 #context_bar .tool_buttons button {\n
  float: left;\n
 }\n
