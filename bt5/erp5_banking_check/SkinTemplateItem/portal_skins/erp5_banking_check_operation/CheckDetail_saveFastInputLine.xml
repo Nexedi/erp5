@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get the list of movement we need to create\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# get the list of movement we need to create\n
 \n
 # First call the first scripts wich check many things\n
 error_value = context.CheckDelivery_generateCheckDetailInputDialog(\n
@@ -91,6 +93,8 @@ if item_model.getPortalType()==\'Check\':\n
 \n
 create_line = 0\n
 aggregate_data_list = []\n
+context.log(\'CheckDetail_saveFastInputLine, listbox\',listbox)\n
+number_of_line_created = 0\n
 for line in listbox:\n
   add_line = 0\n
   quantity = line[\'quantity\']\n
@@ -108,6 +112,9 @@ for line in listbox:\n
   if destination_payment_relative_url not in (None,\'\'):\n
     add_line = 1\n
     line_kw_dict[\'destination_payment\'] = destination_payment_relative_url\n
+  destination_trade_relative_url = line.get(\'destination_trade_relative_url\',None)\n
+  if destination_trade_relative_url not in (None,\'\'):\n
+    line_kw_dict[\'destination_trade\'] = destination_trade_relative_url\n
   reference_range_min = line.get(\'reference_range_min\',None)\n
   if reference_range_min not in (None,\'\'):\n
     line_kw_dict[\'reference_range_min\'] = reference_range_min\n
@@ -118,17 +125,23 @@ for line in listbox:\n
   if check_amount_relative_url not in (None,\'\'):\n
     line_kw_dict[\'check_amount\'] = check_amount_relative_url\n
   if add_line:\n
+    number_of_line_created += 1\n
     context.newContent(portal_type=line_portal_type,**line_kw_dict)\n
 \n
 \n
 \n
 \n
 request  = context.REQUEST\n
+message = "No%%20Lines%%20Created"\n
+if number_of_line_created>0:\n
+  message = "Lines%%20Created"\n
 redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                , \'portal_status_message=Lines Created\'\n
+                                , \'portal_status_message=%s%%20Created\' % message\n
                                 )\n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -203,6 +216,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>item_module_id</string>
                             <string>create_line</string>
                             <string>aggregate_data_list</string>
+                            <string>number_of_line_created</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>add_line</string>
@@ -213,9 +227,11 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>line_kw_dict</string>
                             <string>_write_</string>
                             <string>destination_payment_relative_url</string>
+                            <string>destination_trade_relative_url</string>
                             <string>reference_range_min</string>
                             <string>reference_range_max</string>
                             <string>check_amount_relative_url</string>
+                            <string>message</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>

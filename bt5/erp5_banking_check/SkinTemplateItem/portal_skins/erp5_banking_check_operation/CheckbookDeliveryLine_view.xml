@@ -80,19 +80,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>my_aggregate_list</string>
@@ -100,7 +100,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_resource_title</string>
@@ -110,7 +110,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>rigth</string> </key>
+                    <key> <string>rigth</string> </key>
                     <value>
                       <list/>
                     </value>

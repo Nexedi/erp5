@@ -71,7 +71,7 @@
             <value> <string>from Products.ERP5Type.Message import Message\n
 \n
 model_list = [x.getObject() for x in context.checkbook_model_module.searchFolder()]\n
-result_list = [(x.getTitle(),x.getRelativeUrl()) for x in model_list]\n
+result_list = [(x.getTitle(),x.getRelativeUrl()) for x in model_list if not x.isInsideCheckbook()]\n
 return result_list\n
 </string> </value>
         </item>

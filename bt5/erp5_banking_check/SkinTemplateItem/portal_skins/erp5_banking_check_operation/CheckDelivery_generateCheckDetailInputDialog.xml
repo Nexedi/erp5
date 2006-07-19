@@ -80,6 +80,14 @@ context.log(\'resource\',resource)\n
 item_model = context.getPortalObject().restrictedTraverse(resource)\n
 context.log(\'item_model\',item_model)\n
 \n
+# We muste make sure that the selection is not None\n
+# or the validator of the Listbox will not work\n
+from Products.ERP5Form.Selection import Selection\n
+selection = context.portal_selections.getSelectionFor(\'Check_fastInputForm_selection\')\n
+if selection is None:\n
+  selection = Selection()\n
+context.portal_selections.setSelectionFor(\'Check_fastInputForm_selection\',selection)\n
+\n
 global error_value\n
 error_value = 0\n
 global field_error_dict\n
@@ -129,6 +137,8 @@ else:\n
       else:\n
         account = account_list[0]\n
         line[\'destination_payment_relative_url\'] = account.getRelativeUrl()\n
+        destination_trade = account.getParentValue()\n
+        line[\'destination_trade_relative_url\'] = destination_trade.getRelativeUrl()\n
       if reference_range_min in (None,\'\'):\n
         message = \'Please set a start number\'\n
         generate_error(line,\'reference_range_min\',message)\n
@@ -240,6 +250,9 @@ else:\n
                             <string>resource</string>
                             <string>previous_resource</string>
                             <string>item_model</string>
+                            <string>Products.ERP5Form.Selection</string>
+                            <string>Selection</string>
+                            <string>selection</string>
                             <string>error_value</string>
                             <string>field_error_dict</string>
                             <string>generate_error</string>
@@ -262,6 +275,7 @@ else:\n
                             <string>_getitem_</string>
                             <string>account</string>
                             <string>_write_</string>
+                            <string>destination_trade</string>
                             <string>check_quantity</string>
                             <string>check_amount_relative_url</string>
                             <string>check_amount_value</string>

@@ -75,7 +75,7 @@ if resource in (None,\'None\'):\n
 item_model = context.getPortalObject().restrictedTraverse(resource)\n
 context.log(\'CheckDetail_getItemModelVariationltemList item_model\',item_model)\n
 \n
-return item_model.getVariationRangeCategoryItemList(display_id=\'title\')\n
+return item_model.getVariationRangeCategoryItemList(display_id=\'title\',display_base_category=0)\n
 </string> </value>
         </item>
         <item>
