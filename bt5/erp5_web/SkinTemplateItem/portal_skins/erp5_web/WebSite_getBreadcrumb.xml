@@ -73,11 +73,9 @@
 html_list = []\n
 \n
 for crumb in context.WebSite_getBreadcrumbValue():\n
- text = None\n
- for property in (\'title\', \'short_title\', \'id\'):\n
-   if text in (None, \'\') and hasattr(crumb, property):\n
-    text = getattr(crumb, property)\n
- html_list.append(\'<a href="%s">%s</a>\' % (crumb.WebSite_getUrl(), text))\n
+  html_list.append(\'<a href="%s">%s</a>\' % ( crumb.WebSite_getUrl()\n
+                                           , crumb.ERP5Web_getVerboseTitle(priority=\'short_title\') \n
+                                           ))\n
 \n
 return \' &gt; \'.join(html_list)\n
 
@@ -92,10 +90,6 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getBreadcrumb</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -133,11 +127,6 @@ return \' &gt; \'.join(html_list)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>crumb</string>
-                            <string>None</string>
-                            <string>text</string>
-                            <string>property</string>
-                            <string>hasattr</string>
-                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
