@@ -70,17 +70,15 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-no_summary_message = "News vide !"\n
-\n
-if news_full_text in [None, \'\']:\n
-  return no_summary_message\n
+if full_text in [None, \'\']:\n
+  return "News vide !"\n
 \n
 # XXX ! Big Security issue here !!!\n
 # Must be replaced by http://www.zope.org/Members/itamar/striphtml ? \n
 \n
 # Other Alternative:\n
 #    from stripogram import html2text\n
-#    return html2text(news_full_text)\n
+#    return html2text(full_text)\n
 \n
 def StripTags(text):\n
   finished = 0\n
@@ -99,7 +97,7 @@ def StripTags(text):\n
 \n
 # End of bad HTML tag stripping\n
 \n
-word_list = StripTags(news_full_text).split(\' \')\n
+word_list = StripTags(full_text).split(\' \')\n
 \n
 # Get the first 30 words of the news\n
 word_count = 30\n
@@ -124,17 +122,13 @@ return summary\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getNewsItemSummary</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>news_full_text=None</string> </value>
+            <value> <string>full_text=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,8 +154,7 @@ return summary\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>news_full_text</string>
-                            <string>no_summary_message</string>
+                            <string>full_text</string>
                             <string>None</string>
                             <string>StripTags</string>
                             <string>_getattr_</string>
@@ -189,7 +182,7 @@ return summary\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getNewsItemSummary</string> </value>
+            <value> <string>WebPage_getContentSummary</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
