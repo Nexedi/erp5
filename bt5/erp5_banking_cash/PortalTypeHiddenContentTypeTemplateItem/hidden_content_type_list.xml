@@ -3,6 +3,10 @@
   <item>Outgoing Cash Balance Regulation Line</item>
   <item>Incoming Cash Balance Regulation Line</item>
  </portal_type>
+ <portal_type id="Cash Exchange">
+  <item>Incoming Cash Exchange Line</item>
+  <item>Outgoing Cash Exchange Line</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
@@ -20,6 +24,9 @@
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Incoming Cash Exchange Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -62,6 +69,9 @@
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Exchange Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">

@@ -1,5 +1,7 @@
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
+Cash Exchange | Incoming Cash Exchange Line
+Cash Exchange | Outgoing Cash Exchange Line
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
 Classification Survey | Incoming Classification Survey Line
@@ -9,6 +11,7 @@ Counter Rendering | Cash Delivery Line
 Counter Rendering | Price
 Foreign Cash Reception | Cash Delivery Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
+Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Monetary Destruction | Cash Delivery Line
@@ -25,6 +28,7 @@ Monetary Survey | Cash Delivery Line
 Money Deposit Rendering | Cash Delivery Line
 Money Deposit Transfer | Cash Delivery Line
 Outgoing Cash Balance Regulation Line | Cash Delivery Cell
+Outgoing Cash Exchange Line | Cash Delivery Cell
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
 Usual Cash Rendering | Cash Delivery Line

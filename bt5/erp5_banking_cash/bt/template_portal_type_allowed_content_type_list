@@ -2,6 +2,9 @@ Cash Balance Regulation Module | Cash Balance Regulation
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
 Cash Delivery Line | Cash Delivery Cell
+Cash Exchange Module | Cash Exchange
+Cash Exchange | Incoming Cash Exchange Line
+Cash Exchange | Outgoing Cash Exchange Line
 Cash Sorting Module | Cash Sorting
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
@@ -13,6 +16,7 @@ Counter Rendering | Cash Delivery Line
 Foreign Cash Reception Module | Foreign Cash Reception
 Foreign Cash Reception | Cash Delivery Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
+Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Monetary Destruction Module | Monetary Destruction
@@ -35,6 +39,7 @@ Money Deposit Rendering | Cash Delivery Line
 Money Deposit Transfer Module | Money Deposit Transfer
 Money Deposit Transfer | Cash Delivery Line
 Outgoing Cash Balance Regulation Line | Cash Delivery Cell
+Outgoing Cash Exchange Line | Cash Delivery Cell
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
 Usual Cash Rendering Module | Usual Cash Rendering

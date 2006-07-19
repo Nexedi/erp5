@@ -1,14 +1,23 @@
 <property_sheet_list>
  <portal_type id="Cash Balance Regulation">
-  <item>Resource</item>
   <item>Amount</item>
+  <item>Resource</item>
   <item>Price</item>
   <item>Simulation</item>
+ </portal_type>
+ <portal_type id="Cash Exchange">
+  <item>Price</item>
+  <item>Simulation</item>
+  <item>Resource</item>
+  <item>Amount</item>
  </portal_type>
  <portal_type id="Cash Sorting">
   <item>Price</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Incoming Cash Exchange Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -56,6 +65,9 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Exchange Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">

@@ -9,6 +9,13 @@
  <portal_type id="Cash Delivery Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
+ <portal_type id="Cash Exchange">
+  <item>Incoming Cash Exchange Line</item>
+  <item>Outgoing Cash Exchange Line</item>
+ </portal_type>
+ <portal_type id="Cash Exchange Module">
+  <item>Cash Exchange</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
@@ -36,6 +43,9 @@
   <item>Foreign Cash Reception</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Incoming Cash Exchange Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -98,6 +108,9 @@
   <item>Money Deposit Transfer</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Exchange Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">

@@ -1,5 +1,7 @@
 Cash Balance Regulation
 Cash Balance Regulation Module
+Cash Exchange
+Cash Exchange Module
 Cash Sorting
 Cash Sorting Module
 Classification Survey
@@ -9,6 +11,7 @@ Counter Rendering Module
 Foreign Cash Reception
 Foreign Cash Reception Module
 Incoming Cash Balance Regulation Line
+Incoming Cash Exchange Line
 Incoming Cash Sorting Line
 Incoming Classification Survey Line
 Monetary Destruction
@@ -30,6 +33,7 @@ Money Deposit Rendering Module
 Money Deposit Transfer
 Money Deposit Transfer Module
 Outgoing Cash Balance Regulation Line
+Outgoing Cash Exchange Line
 Outgoing Cash Sorting Cell
 Outgoing Cash Sorting Line
 Outgoing Classification Survey Cell
