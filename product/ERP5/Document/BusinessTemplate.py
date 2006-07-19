@@ -1959,7 +1959,7 @@ class ActionTemplateItem(ObjectTemplateItem):
 class PortalTypeRolesTemplateItem(BaseTemplateItem):
 
   def __init__(self, id_list, **kw):
-    id_list = ['portal_type_roles/%s' % id for id in id_list]
+    id_list = ['portal_type_roles/%s' % id for id in id_list if id != '']
     BaseTemplateItem.__init__(self, id_list, **kw)
 
   def build(self, context, **kw):
@@ -3445,7 +3445,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
 class LocalRolesTemplateItem(BaseTemplateItem):
 
   def __init__(self, id_list, **kw):
-    id_list = ['local_roles/%s' % id for id in id_list]
+    id_list = ['local_roles/%s' % id for id in id_list if id != '']
     BaseTemplateItem.__init__(self, id_list, **kw)
 
   def build(self, context, **kw):
