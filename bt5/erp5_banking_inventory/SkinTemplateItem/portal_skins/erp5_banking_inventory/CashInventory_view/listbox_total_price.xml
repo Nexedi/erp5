@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>IntegerField</string>
+          <string>FloatField</string>
         </tuple>
         <none/>
       </tuple>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox_inventory</string> </value>
+            <value> <string>listbox_total_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -31,12 +31,8 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>integer_out_of_range</string> </key>
-                    <value> <string>The integer you entered was out of range.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_integer</string> </key>
-                    <value> <string>You did not enter an integer.</string> </value>
+                    <key> <string>not_float</string> </key>
+                    <value> <string>You did not enter a floating point number.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -82,10 +78,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -98,11 +90,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>input_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -130,9 +126,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -155,10 +149,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -171,11 +161,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>input_style</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>precision</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -199,7 +197,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>figure</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -219,15 +217,11 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -242,16 +236,20 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1 234.5</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Inventory</string> </value>
+                    <value> <string>Total Price</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -277,7 +275,26 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Integer_toString(int(cell.getProperty(\'inventory\')))</string> </value>
+            <value> <string>string:-1 234.5 | preferences/getPreferredMoneyQuantityStyle</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getPriceCurrencyValue().getQuantityPrecision()</string> </value>
         </item>
       </dictionary>
     </pickle>

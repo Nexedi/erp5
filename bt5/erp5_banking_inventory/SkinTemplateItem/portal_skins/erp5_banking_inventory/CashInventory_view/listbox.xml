@@ -336,15 +336,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>total_inventory</string>
+                          <string>total_quantity</string>
                           <string>Inventory</string>
                         </tuple>
                         <tuple>
@@ -393,7 +389,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Inventory</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -492,7 +497,7 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>total_inventory</string>
+                          <string>total_quantity</string>
                           <string>Inventory</string>
                         </tuple>
                         <tuple>

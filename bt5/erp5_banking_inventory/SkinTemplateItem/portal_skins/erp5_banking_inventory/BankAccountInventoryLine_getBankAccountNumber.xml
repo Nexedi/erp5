@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getDestinationValue().getBbanTextFormat()\n
+            <value> <string>return context.getDestinationPaymentValue().getReference()\n
 </string> </value>
         </item>
         <item>

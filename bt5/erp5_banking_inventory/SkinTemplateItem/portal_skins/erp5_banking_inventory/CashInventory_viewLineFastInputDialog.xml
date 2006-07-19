@@ -94,7 +94,7 @@ if currency_id == context.Baobab_getPortalReferenceCurrencyID():\n
 else:\n
   letter_list      = [\'not_defined\']\n
   variation_list   = [\'not_defined\']\n
-  cash_status_list = [\'valid\']\n
+  cash_status_list = [\'not_defined\']\n
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Cash Inventory Line\'\n
                     , \'operation_currency\'       : context.getPriceCurrencyId()\n
@@ -102,9 +102,9 @@ cash_detail_dict = {\'line_portal_type\'           : \'Cash Inventory Line\'\n
                     , \'emission_letter_list\'     : letter_list\n
                     , \'variation_list\'           : variation_list\n
                     , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : True\n
+                    , \'read_only\'                : False\n
                     , \'column_base_category\'     : \'variation\'\n
-                    , \'use_inventory\'            : 1\n
+                    , \'use_inventory\'            : False\n
                     }\n
 \n
 return context.CashDelivery_generateCashDetailInputDialog( listbox              = None\n
@@ -172,7 +172,7 @@ return context.CashDelivery_generateCashDetailInputDialog( listbox              
                             <string>letter_list</string>
                             <string>variation_list</string>
                             <string>cash_status_list</string>
-                            <string>True</string>
+                            <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>
                         </value>
