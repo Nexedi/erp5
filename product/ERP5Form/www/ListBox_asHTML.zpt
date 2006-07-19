@@ -233,7 +233,7 @@
                 <td class="Data" style="width: 50px; text-align: left; vertical-align: middle" colspan="1"
                   tal:attributes="colspan python: show_search_line and 1 or (len(here.getSelectedColumnList()) + show_select_column + 1)"
                   tal:define="index python: selection_index is not None and '&amp;selection_index=%s' % selection_index or '';
-                              is_report_opened python: not here.getSelection().isReportOpened();
+                              is_report_opened python: int(not here.getSelection().isReportOpened());
                               url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"
                             tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"
                             tal:content="i">0</a></tal:block>&nbsp;-&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"
