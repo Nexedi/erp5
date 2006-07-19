@@ -334,7 +334,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title_or_id</string>
+                          <string>ERP5Web_getVerboseTitle</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -342,8 +342,32 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
+                          <string>reference</string>
+                          <string>Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string>Language</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Last Change</string>
+                        </tuple>
+                        <tuple>
+                          <string>programme</string>
+                          <string>Programme</string>
+                        </tuple>
+                        <tuple>
+                          <string>service</string>
+                          <string>Service</string>
+                        </tuple>
+                        <tuple>
+                          <string>theme</string>
+                          <string>Theme</string>
                         </tuple>
                       </list>
                     </value>
@@ -368,7 +392,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Search results</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -387,7 +411,24 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Last Change</string>
+                        </tuple>
+                        <tuple>
+                          <string>programme</string>
+                          <string>Programme</string>
+                        </tuple>
+                        <tuple>
+                          <string>service</string>
+                          <string>Service</string>
+                        </tuple>
+                        <tuple>
+                          <string>theme</string>
+                          <string>Theme</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -418,7 +459,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -441,9 +482,22 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string>ListBox_asWebStyleSearchResultHTML</string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Web Page</string>
+                          <string>Web Page</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Section</string>
+                          <string>Web Section</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -509,16 +563,20 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title_or_id</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
                           <string>description</string>
-                          <string>WebSite_getListboxUrl</string>
+                          <string>None</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>WebSite_getListboxUrl</string>
+                          <string>language</string>
+                          <string>None</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>None</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>None</string>
                         </tuple>
                       </list>
                     </value>
