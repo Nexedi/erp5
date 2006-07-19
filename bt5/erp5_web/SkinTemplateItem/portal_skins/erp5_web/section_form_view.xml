@@ -54,52 +54,33 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-<!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
-                   Vincent Pelletier <vincent@nexedi.com>\n
+<tal:block tal:define="default_layout  string:view_master;\n
+                       default_content here/WebSite_getDefaultDocumentValue | nothing;\n
+                       ignore_layout   request/ignore_layout | nothing;\n
+                       editable_mode   request/editable_mode | nothing;\n
+                       layout_form_id  here/getApplicableLayout | nothing;\n
+                       layout_form     python:not(layout_form_id) or ignore_layout or getattr(here, layout_form_id, None);\n
+                       layout_id       layout_form/pt | default_layout;">\n
 \n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
-<tal:block tal:define="ignore_layout request/ignore_layout | nothing;">\n
-  <tal:block tal:condition="ignore_layout">\n
-    <tal:block metal:use-macro="here/form_view/macros/master" />\n
-  </tal:block>\n
-  <tal:block tal:condition="not: ignore_layout">\n
-    <tal:block tal:define="editable_mode request/editable_mode | nothing;">\n
-      <tal:block tal:condition="editable_mode">\n
-        <tal:block metal:use-macro="here/web_form_view/macros/master" />\n
+  <tal:block metal:use-macro="python: getattr(here, layout_id).macros[\'master\']">\n
+    <tal:block metal:fill-slot="main">\n
+      <tal:block tal:condition="python: (not editable_mode) and (not ignore_layout) and (default_content is not None)">\n
+        <tal:block tal:define="global here                  python: default_content;\n
+                               global form                  python: here.WebPage_view;\n
+                               global default_content_title python: here.getTitle()"/>\n
       </tal:block>\n
-      <tal:block tal:condition="not: editable_mode">\n
-        <tal:block tal:define="default_content here/WebSite_getDefaultDocumentValue | nothing;">\n
-          <tal:block tal:condition="default_content">\n
-            <tal:block tal:define="dummy python: request.RESPONSE.redirect(\'%s/%s\' % (here.WebSite_getUrl(), default_content.getReference()))" />\n
-          </tal:block>\n
-          <tal:block tal:condition="not: default_content">\n
-            No default page defined.\n
-          </tal:block>\n
-        </tal:block>\n
+\n
+      <tal:block tal:condition="python: not(default_content is None and not editable_mode)">\n
+        <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+      </tal:block>\n
+\n
+      <tal:block tal:condition="python: default_content is None and not editable_mode">\n
+        No default page defined.\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+\n
+</tal:block>
 
 ]]></string> </value>
         </item>
