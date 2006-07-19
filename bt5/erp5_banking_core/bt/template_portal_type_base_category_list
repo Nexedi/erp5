@@ -1,4 +1,6 @@
+Cash Container Item | aggregate
 Cash Delivery Cell | variation
+Category | vault_type
 Checkbook | check_amount
 Checkbook | resource
 Container Cell | cash_status
