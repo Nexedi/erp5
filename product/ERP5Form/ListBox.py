@@ -2064,12 +2064,9 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     method_id = self.field.get_value('page_template')
     if method_id not in (None, ''):
       try:
-        return aq_base(getattr(self.getContext(), method_id)).__of__(context)
+        return getattr(context, method_id)
       except AttributeError:
-        page_template = getattr( context.getPortalObject()
-                               , method_id
-                               )
-        return page_template.__of__(context)
+        return getattr(context.getPortalObject(), method_id).__of__(context)
       return aq_base(getattr(self.getContext(), method_id)).__of__(context)
 
     # Otherwise, use the default one.
