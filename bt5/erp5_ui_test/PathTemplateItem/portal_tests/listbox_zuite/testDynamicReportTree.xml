@@ -52,12 +52,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Report Tree</title>\n
+<title>Test Dynamic Report Tree</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Report Tree</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Dynamic Report Tree</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -82,7 +82,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked;field_report_root_list=foo_category%7CFoo%20Category</td>\n
+\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked;field_report_root_list=foo_domain%7CFoo%20Domain</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -108,12 +108,12 @@
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>report_root_url</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_label_line"]/td[1]</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -195,7 +195,7 @@
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>report_root_url</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -261,7 +261,7 @@
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>report_root_url</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -327,7 +327,7 @@
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>report_root_url</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -393,7 +393,7 @@
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>report_root_url</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -454,7 +454,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testReportTree</string> </value>
+            <value> <string>testDynamicReportTree</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,3 +1,7 @@
+2006-07-19 yo
+* Fix testReportTree, since the default is "Hide" but not "Show" in report tree mode.
+* Add testDynamicReportTree which tests dynamically generated domains with report tree mode.
+
 2006-07-19 jerome
 * add user-extension.js for Selenium extensions
 
