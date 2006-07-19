@@ -477,7 +477,7 @@ div.index_html table {\n
 }\n
 \n
 #context_bar .tool_buttons a {\n
-  margin-top: 1px;\n
+  margin-top: 2px;\n
   margin-left: 2px;\n
   margin-right: 2px;\n
   padding: 0;\n
