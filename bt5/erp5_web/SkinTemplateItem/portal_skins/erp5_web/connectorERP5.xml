@@ -216,7 +216,7 @@ ConfigUserFilesPath=""\n
 # special review_states\n
 # (unpublished states for contents which need to be hidden to local_roles\n
 # not in rolesSeeUnpublishedContent even with View permission )\n
-unpublishedStates=[] #[\'visible\',\'pending\',\'rejected\', \'waitreview\']\n
+unpublishedStates = []   #[\'visible\',\'pending\',\'rejected\', \'waitreview\']\n
 \n
 # special local_roles who can see unpublished contents according to permissions\n
 # by default set to None\n
@@ -267,12 +267,12 @@ ConfigDeniedExtensions = { "Image": None\n
                           }\n
 \n
 # link by uid is against ERP5 rules\n
-linkbyuid=0\n
+linkbyuid = 0\n
 \n
-ERP5_FOLDER_TYPE=[\'Folder\', \'ERP5 Folder\', \'ERP5 Document\', \' ERP5 Web Page\']\n
+ERP5_FOLDER_TYPE = [\'Folder\', \'ERP5 Folder\', \'ERP5 Document\', \' ERP5 Web Page\']\n
 \n
 # ERP5 is full UTF-8, no need to get charset dynamiccaly\n
-charsetSite ="utf-8"\n
+charsetSite = "utf-8"\n
 \n
 \n
 # 2. utils\n
@@ -561,9 +561,6 @@ def UploadFile(resourceType, currentFolder, data, title) :\n
         idObj=""\n
 \n
         # define Portal Type to add\n
-\n
-        context.log("Kev upload >>>>>", repr(data))\n
-\n
         if resourceType == \'Image\' :\n
             typeToAdd=\'Image\'\n
         else:\n
@@ -595,10 +592,6 @@ def UploadFile(resourceType, currentFolder, data, title) :\n
         if not IsAllowedExt( FindExtension(idObj), resourceType ):\n
               error= "202"\n
 \n
-\n
-        context.log("Kev upload error >>>>>", repr(error))\n
-        context.log("Kev upload error >>>>>", repr(idObj))\n
-\n
         if not error :\n
             error="0"\n
             indice=0\n
@@ -609,8 +602,6 @@ def UploadFile(resourceType, currentFolder, data, title) :\n
             if indice!=0:\n
                 error= "201"\n
                 idObj = exemple_titre\n
-\n
-            context.log("Kev upload truc >>>>>", repr(\'XXXX\'))\n
 \n
             try:\n
                 # this method need to be changed for browser refresh\n
@@ -725,10 +716,6 @@ else :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/connectorERP5</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
