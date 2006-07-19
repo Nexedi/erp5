@@ -151,7 +151,7 @@ class TestListBox(ERP5TypeTestCase):
 
     # We create a script to use as a list method, in this script, we will check
     # the sort_on parameter.
-    list_method_id = 'ListBox_checkSortOnListmethod'
+    list_method_id = 'ListBox_checkSortOnListMethod'
     createZODBPythonScript(
         portal.portal_skins.custom,
         list_method_id,
@@ -164,17 +164,45 @@ return []
  
     # set the listbox to use this as list method
     listbox = portal.FooModule_viewFooList.listbox
-    message = listbox.ListBox_setPropertyList(
+    listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
       field_sort = 'title | ASC\n'
                    'uid | ASC',)
-    self.failUnless('Set Successfully' in message)
     
     # render the listbox, checks are done by list method itself
     request = get_request()
     request['here'] = portal.foo_module
-    listboxline_list = listbox.get_value('default', render_format = 'list',
-                                         REQUEST = request)
+    listbox.get_value('default', render_format='list', REQUEST=request)
+
+  def test_03_DefaultParameters(self, quiet=0, run=run_all_test):
+    """Defaults parameters are passed as keyword arguments to the list method
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # We create a script to use as a list method, in this script, we will check
+    # the default parameter.
+    list_method_id = 'ListBox_checkDefaultParametersListMethod'
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        list_method_id,
+        'selection=None, dummy_default_param=None, **kw',
+"""
+assert dummy_default_param == 'dummy value'
+return []
+""")
+ 
+    # set the listbox to use this as list method
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = list_method_id,
+      field_default_params = 'dummy_default_param | dummy value',)
+    
+    # render the listbox, checks are done by list method itself
+    request = get_request()
+    request['here'] = portal.foo_module
+    listbox.get_value('default', render_format='list', REQUEST=request)
+
 
 if __name__ == '__main__':
   framework()
