@@ -74,8 +74,21 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
-\n
 vault = transaction.getSource()\n
+date = transaction.getStartDate()\n
+\n
+# check we are in an opened accounting day\n
+if not transaction.Baobab_checkCounterDateOpen(site=vault, date=date):\n
+  msg = Message(domain = "ui", message="Counter Date is not opened")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# check counter is opened\n
+site = transaction.getDestinationValue()\n
+if not context.Baobab_checkCounterOpened(site):\n
+  msg = Message(domain = "ui", message="Counter is not opened")\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
 \n
 # Get price and total_price.\n
@@ -147,10 +160,13 @@ elif resource <> 0 :\n
                             <string>_getattr_</string>
                             <string>transaction</string>
                             <string>vault</string>
+                            <string>date</string>
+                            <string>msg</string>
+                            <string>site</string>
+                            <string>context</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
