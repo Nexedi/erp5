@@ -217,13 +217,35 @@ class TestERP5BankingMixin:
     """
     return getattr(self.getPortal(), 'checkbook_module', None)
 
+  def getCheckbookModelModule(self):
+    """
+    Return the Checkbook Module
+    """
+    return getattr(self.getPortal(), 'checkbook_model_module', None)
+
+  def getCheckbookReceptionModule(self):
+    """
+    Return the Checkbook Reception Module
+    """
+    return getattr(self.getPortal(), 'checkbook_reception_module', None)
+
+  def getCheckbookVaultTransferModule(self):
+    """
+    Return the Checkbook Vault Transfer Module
+    """
+    return getattr(self.getPortal(), 'checkbook_vault_transfer_module', None)
+
+  def getCheckModule(self):
+    """
+    Return the Check Module
+    """
+    return getattr(self.getPortal(), 'check_module', None)
 
   def getCounterDateModule(self):
     """
     Return the Counter Date Module
     """
     return getattr(self.getPortal(), 'counter_date_module', None)
-
 
   def getCounterModule(self):
     """
@@ -425,6 +447,12 @@ class TestERP5BankingMixin:
             sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
             for ssss in ['entrante', 'sortante']:
               sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+          for sss in ['encaisse_des_devises',]:
+            sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+            for currency in ['usd']:
+              sss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(ss.getId(),))
+              for ssss in ['entrante', 'sortante']:
+                sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
       # create sort room
       salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
       for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation']:
@@ -550,6 +578,10 @@ class TestERP5BankingMixin:
                                            destination_payment_value=bank_account,
                                            inventory=amount)
 
+    # deliver the inventory
+    if inventory.getSimulationState()!='delivered':
+      inventory.deliver()
+
     self.account_inventory_number += 1
     return bank_account
 
@@ -568,14 +600,38 @@ class TestERP5BankingMixin:
                                             reference_range_max = max,
                                             start_date = date)
 
+  def createCheckbookModel(self, id):
+    """
+    Create a checkbook for the given bank account
+    with 3 variations
+    """
+    model =  self.checkbook_model_module.newContent(id = id,
+                                            portal_type = 'Checkbook Model',
+                                            )
+    model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
+                     quantity=25,title='25')
+    model.newContent(id='variant_2',portal_type='Checkbook Model Check Amount Variation',
+                     quantity=25,title='50')
+    model.newContent(id='variant_3',portal_type='Checkbook Model Check Amount Variation',
+                     quantity=25,title='100')
+    return model
 
-  def createCheck(self, id, reference, checkbook):
+  def createCheckModel(self, id):
+    """
+    Create a checkbook for the given bank account
+    """
+    return self.checkbook_model_module.newContent(id = id,
+                                            portal_type = 'Check Model',
+                                            )
+
+  def createCheck(self, id, reference, checkbook,bank_account=None):
     """
     Create Check in a checkbook
     """
     check = checkbook.newContent(id=id,
                                  portal_type = 'Check',
-                                 reference=reference
+                                 reference=reference,
+                                 destination_payment_value=bank_account
                                 )
 
     # mark the check as issued
