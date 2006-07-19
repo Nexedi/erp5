@@ -71,6 +71,9 @@
             <value> <string>url = None\n
 if brain is not None:\n
   o = brain.getObject()\n
+#  context.log(\'WebSite_getListboxUrl\',\'context : %s\' % context.vincent_context())\n
+#  context.log(\'WebSite_getListboxUrl\',\'brain : %s\' % brain.vincent_context())\n
+#  context.log(\'WebSite_getListboxUrl\',\'URL1 : %s\' % context.REQUEST[\'URL1\'])\n
   url = \'%s/%s\' % (context.REQUEST[\'URL1\'], o.getRelativeUrl())\n
   if getattr(context.REQUEST, \'editable_mode\', None):\n
     url = \'%s/view?editable_mode=%s\' % (url, context.REQUEST[\'editable_mode\'])\n
@@ -85,10 +88,6 @@ return url\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getListboxUrl</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
