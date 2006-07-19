@@ -446,6 +446,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -515,11 +519,11 @@
                         </tuple>
                         <tuple>
                           <string>object_class</string>
-                          <string>None</string>
+<string></string>
                         </tuple>
                         <tuple>
                           <string>object_state</string>
-                          <string>None</string>
+<string></string>
                         </tuple>
                       </list>
                     </value>
