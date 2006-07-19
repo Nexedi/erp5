@@ -457,9 +457,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       generated = 1
       portal_types = getToolByName(self, 'portal_types', None)
       generated_bid = {}
+      econtext = createExpressionContext(self.getPortalObject())
       for pid, ps in PropertySheet.__dict__.items():
         if pid[0] != '_':
-          for bid in getattr(ps, '_categories', ()):
+          base_category_list = []
+          for cat in getattr(ps, '_categories', ()):
+            if isinstance(cat, Expression):
+              result = cat(econtext)
+              if isinstance(result, (list, tuple)):
+                base_category_list.extend(result)
+              else:
+                base_category_list.append(result)
+            else:
+              base_category_list.append(cat)
+          for bid in base_category_list:
             if bid not in generated_bid:
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
               createRelatedValueAccessors(Base, bid)
