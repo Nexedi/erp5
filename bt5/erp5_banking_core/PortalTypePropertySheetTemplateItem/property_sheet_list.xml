@@ -18,6 +18,9 @@
   <item>Task</item>
   <item>Arrow</item>
  </portal_type>
+ <portal_type id="Check Model">
+  <item>CheckModel</item>
+ </portal_type>
  <portal_type id="Checkbook">
   <item>VariationRange</item>
   <item>Task</item>
