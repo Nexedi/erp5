@@ -73,7 +73,7 @@
 if bank_account in (\'\', None):\n
   return []\n
 \n
-return bank_account.searchFolder()\n
+return bank_account.searchFolder(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -125,6 +125,7 @@ return bank_account.searchFolder()\n
                             <string>context</string>
                             <string>bank_account</string>
                             <string>None</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

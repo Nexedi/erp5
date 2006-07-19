@@ -86,9 +86,9 @@ for site in site_list:\n
       counter = "/".join(site_split[:-1])\n
       if not site_dict.has_key(counter):\n
         if not \'siege\' in site[1]:\n
-          site_dict[counter] = \'/\'.join(site[1].split("/")[:6])\n
+          site_dict[counter] = \'/\'.join(site[1].split("/")[:7])\n
         else:\n
-          site_dict[counter] = \'/\'.join(site[1].split("/")[:5])\n
+          site_dict[counter] = \'/\'.join(site[1].split("/")[:6])\n
     else:\n
       site_dict[site[0]] = site[1]\n
 \n

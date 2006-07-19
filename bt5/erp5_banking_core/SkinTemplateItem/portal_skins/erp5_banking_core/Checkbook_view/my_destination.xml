@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource</string> </value>
+            <value> <string>my_destination</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -257,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Check Model</string> </value>
+                    <value> <string>Emission Site</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.checkbook_model_module.objectValues(portal_type=\'Check Model\')]</string> </value>
+            <value> <string>python:here.Delivery_getVaultItemList(vault_type = \'site\', current_url = None, user_site = 1, leaf_node = 0, strict_membership = 1)</string> </value>
         </item>
       </dictionary>
     </pickle>

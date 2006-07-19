@@ -346,8 +346,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_section_title</string>
+                          <string>destination_trade_title</string>
                           <string>Holder</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Check Type</string>
                         </tuple>
                         <tuple>
                           <string>check_amount_title</string>

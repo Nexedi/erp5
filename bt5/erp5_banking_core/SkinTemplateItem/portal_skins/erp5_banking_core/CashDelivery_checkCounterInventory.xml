@@ -83,8 +83,8 @@ requested_dict = {}\n
 \n
 # test all movement\n
 tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
-#context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
-#context.log(\'source\',source)\n
+context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
+context.log(\'source\',source)\n
 line_list = []\n
 for l in tmp_list :\n
   # The source can be different for every line (due to getBaobabSource approach)\n
@@ -96,7 +96,7 @@ for l in tmp_list :\n
       line_list.append(l)\n
   except (AttributeError, KeyError):\n
     pass\n
-#context.log("line list", line_list)\n
+context.log("line list", line_list)\n
 if len(line_list) == 0 :\n
   # no resource\n
   return 2\n
@@ -186,6 +186,7 @@ return 0\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>tmp_list</string>
+                            <string>str</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>l</string>
@@ -197,7 +198,6 @@ return 0\n
                             <string>line_resource</string>
                             <string>cell</string>
                             <string>variation_text</string>
-                            <string>str</string>
                             <string>inventory_value</string>
                           </tuple>
                         </value>

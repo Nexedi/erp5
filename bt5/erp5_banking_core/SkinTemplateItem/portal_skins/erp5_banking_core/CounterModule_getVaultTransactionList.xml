@@ -100,14 +100,19 @@ if kw.has_key("portal_type"):\n
 \n
 if at_date is not None:\n
   inventory_kw[\'at_date\'] = at_date\n
+\n
+\n
+if from_date is not None:\n
+  inventory_kw[\'from_date\'] = from_date\n
+\n
 vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node_category=vault\n
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
-#context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node_category=vault\n
- #                                                                , ignore_variation=0,src__=1\n
-  #                                                               ,**inventory_kw\n
-   #                                                              ))\n
+# context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node_category=vault\n
+#                                                                 , ignore_variation=0,src__=1\n
+#                                                                ,**inventory_kw\n
+#                                                               ))\n
 \n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n

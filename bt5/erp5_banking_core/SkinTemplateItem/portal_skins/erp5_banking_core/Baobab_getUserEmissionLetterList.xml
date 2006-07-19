@@ -75,7 +75,10 @@
 emission_letter_dict = {}\n
 user_site_list = []\n
 if site == None :\n
-  user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  if user is not None:\n
+    user_site_list = context.Baobab_getUserAssignedSiteList(user)\n
+  else:\n
+    user_site_list = context.Baobab_getUserAssignedSiteList()\n
 else :\n
   user_site_list.append(site)\n
 \n
@@ -83,6 +86,7 @@ if len(user_site_list) > 0:\n
  for a in user_site_list:\n
   if not a.startswith(\'site\'):\n
     a = \'site/\' + a\n
+  context.log("a", a)\n
   site_codification = context.portal_categories.getCategoryValue(a).getCodification()\n
   if site_codification not in (\'\', None):\n
     emission_letter_dict[site_codification[0].lower()] = 1\n
@@ -110,7 +114,7 @@ return emission_letter_dict.keys()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site = None</string> </value>
+            <value> <string>user=None, site = None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,12 +134,13 @@ return emission_letter_dict.keys()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>user</string>
                             <string>site</string>
                             <string>emission_letter_dict</string>
                             <string>user_site_list</string>
@@ -160,6 +165,7 @@ return emission_letter_dict.keys()\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>

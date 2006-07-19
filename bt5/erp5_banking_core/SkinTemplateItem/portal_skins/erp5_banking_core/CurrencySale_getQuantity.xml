@@ -68,13 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>price = context.CurrencyExchange_getExchangeRateList()[1] * context.getBasePrice()\n
+            <value> <string>price = context.ERP5Banking_getExchangeValue()\n
 \n
 commission_ratio = context.getDiscountRatio()\n
 commission_price = context.getDiscount()\n
 if commission_ratio is not None and commission_ratio !=0 and commission_price is not None and commission_price !=0:\n
   return None\n
-if (commission_ratio is None or commission_ratio == 0) and (commission_price is None or commission_price == 0):\n
+if commission_ratio == 0 or commission_price == 0:\n
+  return price\n
+if commission_ratio is None and commission_price is None:\n
   return None\n
 \n
 if commission_ratio is not None:\n
@@ -132,7 +134,6 @@ return quantity\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>price</string>

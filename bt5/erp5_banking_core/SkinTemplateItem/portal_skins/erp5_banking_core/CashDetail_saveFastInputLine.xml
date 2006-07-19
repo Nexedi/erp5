@@ -265,7 +265,7 @@ if variation_not_defined:\n
 else:\n
   request  = context.REQUEST\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                  , \'portal_status_message=Lines Created\'\n
+                                  , \'portal_status_message=Lines%%20Created\'\n
                                   )\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
 

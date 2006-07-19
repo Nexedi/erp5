@@ -68,9 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string># We will take the emission letter and find what is the right site\n
+# for it and the return the result\n
 \n
-context.edit(variation_base_category_list = [\'check_amount\'])\n
+site_item_list = context.Delivery_getVaultItemList(vault_type=(\'site\',),user_site=0,\n
+                                                  with_base=0,strict_membership=1,\n
+                                                  leaf_node=0)\n
+site_path_list = [x[1] for x in site_item_list if x[1]!=\'\' and \'principale\' in x[1]]\n
+site_base_category = context.portal_categories.site\n
+for site_path in site_path_list:\n
+  site = site_base_category.restrictedTraverse(site_path)\n
+  if site.getCodification()[:1].lower()==emission_letter:\n
+    return site\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -80,8 +90,14 @@ context.edit(variation_base_category_list = [\'check_amount\'])\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CheckbookModel_init</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getEmissionLetterSiteValue</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -91,7 +107,7 @@ context.edit(variation_base_category_list = [\'check_amount\'])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>emission_letter=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -111,16 +127,26 @@ context.edit(variation_base_category_list = [\'check_amount\'])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>DateTime</string>
+                            <string>emission_letter</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>site_item_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>site_path_list</string>
+                            <string>site_base_category</string>
+                            <string>site_path</string>
+                            <string>site</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -132,17 +158,40 @@ context.edit(variation_base_category_list = [\'check_amount\'])\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckbookModel_init</string> </value>
+            <value> <string>Baobab_getEmissionLetterSiteValue</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

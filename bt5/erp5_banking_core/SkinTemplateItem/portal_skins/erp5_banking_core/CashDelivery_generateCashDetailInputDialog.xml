@@ -120,7 +120,9 @@ if listbox is None:\n
 \n
 \n
   # If use_inventory is passed, use that value. Otherwise, assume False.\n
-  use_inventory = cash_detail_dict.get(\'use_inventory\', False)\n
+  # use_inventory = cash_detail_dict.get(\'use_inventory\', False)\n
+  # assume this is always false as we don\'t need to distinguish this anymore\n
+  use_inventory = False\n
 \n
   if currency_cash_portal_type is None:\n
     currency_cash_portal_type = (\'Banknote\',\'Coin\')\n
@@ -444,10 +446,10 @@ else :\n
                             <string>column_base_category</string>
                             <string>read_only</string>
                             <string>currency_cash_portal_type</string>
-                            <string>_getattr_</string>
                             <string>False</string>
                             <string>use_inventory</string>
                             <string>list</string>
+                            <string>_getattr_</string>
                             <string>context</string>
                             <string>currency</string>
                             <string>result</string>
