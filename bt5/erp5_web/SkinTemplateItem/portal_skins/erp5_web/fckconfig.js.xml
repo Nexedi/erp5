@@ -151,12 +151,6 @@
             <value> <string>fckconfig.js</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>application/x-javascript</string> </value>
         </item>
