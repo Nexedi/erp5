@@ -1082,6 +1082,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
      and do svn add/del stuff comparing it
      to local working copy
     """
+    business_template.edit()
     business_template.build()
     svn_path = self._getWorkingPath(self.getSubversionPath(business_template) \
     + os.sep)
