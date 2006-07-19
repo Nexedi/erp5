@@ -10,10 +10,6 @@ Cash Balance Regulation | metadata
 Cash Balance Regulation | outgoing_fastinput
 Cash Balance Regulation | print
 Cash Balance Regulation | view
-Cash Container Item | metadata
-Cash Container Item | view
-Cash Container | metadata
-Cash Container | view
 Cash Sorting Module | list
 Cash Sorting Module | list_ui
 Cash Sorting Module | sort_on

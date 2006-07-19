@@ -3,8 +3,6 @@ Cash Balance Regulation | Price
 Cash Balance Regulation | Resource
 Cash Balance Regulation | Simulation
 Cash Sorting | Price
-Container Cell | CashContainer
-Container Line | CashContainer
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
