@@ -46,12 +46,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
@@ -68,6 +62,7 @@
             <value>
               <list>
                 <string>left</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -75,6 +70,17 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_theme</string>
+                        <string>listbox_programme</string>
+                        <string>listbox_service</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
@@ -116,7 +122,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Folder Contents</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
