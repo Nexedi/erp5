@@ -39,13 +39,13 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getDestinationSectionUid</string> </key>
+                                <key> <string>getBaobabDestinationSectionUid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getDestinationUid</string> </key>
+                                <key> <string>getBaobabDestinationUid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -93,15 +93,15 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>isMovement</string>
-                            <string>uid</string>
-                            <string>getStopDate</string>
-                            <string>getDestinationUid</string>
-                            <string>getDestinationSectionUid</string>
-                            <string>getResourceUid</string>
-                            <string>getVariationText</string>
-                            <string>getSimulationState</string>
-                            <string>getAggregateUidList</string>
+<string>isMovement</string>
+<string>uid</string>
+<string>getStopDate</string>
+<string>getBaobabDestinationUid</string>
+<string>getBaobabDestinationSectionUid</string>
+<string>getResourceUid</string>
+<string>getVariationText</string>
+<string>getSimulationState</string>
+<string>getAggregateUidList</string>
                           </list>
                         </value>
                     </item>
@@ -121,8 +121,8 @@
             <value> <string>isMovement\r\n
 uid\r\n
 getStopDate\r\n
-getDestinationUid\r\n
-getDestinationSectionUid\r\n
+getBaobabDestinationUid\r\n
+getBaobabDestinationSectionUid\r\n
 getResourceUid\r\n
 getVariationText\r\n
 getSimulationState\r\n
@@ -191,8 +191,8 @@ VALUES\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabDestinationUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabDestinationSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar sequence-item type="int" optional>,\n
   <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,\n
@@ -268,8 +268,8 @@ VALUES\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabDestinationUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabDestinationSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar sequence-item type="int" optional>,\n
   <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,\n
