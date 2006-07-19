@@ -137,7 +137,7 @@ return \'\'\'\n
       var imAr = new Array(0);\n
       for(var i=0;i<imSrcAr.length;i++){\n
               imAr[imAr.length] = new Image();\n
-              imAr[imAr.length-1].src = \'imgs/\'+imSrcAr[i]\n
+              imAr[imAr.length-1].src = \'ERP5Subversion_imgs/\'+imSrcAr[i]\n
       }\n
     }\n
 \n
@@ -145,7 +145,7 @@ return \'\'\'\n
       preLoadImages();\n
 \n
       tree=new dhtmlXTreeObject(document.getElementById(\'treebox1\'),\'100%%\',\'100%%\',0);\n
-      tree.setImagePath(\'imgs/\');\n
+      tree.setImagePath(\'ERP5Subversion_imgs/\');\n
       tree.setDragHandler();\n
       tree.enableCheckBoxes(true)\n
       tree.enableThreeStateCheckboxes(true);\n
@@ -502,7 +502,7 @@ return \'\'\'\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_doCreateJavaScriptStatus</string> </value>
+            <value> <string>ERP5Subversion_doCreateJavaScriptStatus.js</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

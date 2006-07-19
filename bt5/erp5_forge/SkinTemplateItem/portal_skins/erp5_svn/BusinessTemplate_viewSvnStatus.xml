@@ -71,8 +71,8 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block tal:define="css_list python: [\'css/dhtmlXTree.css\', \'css/movableMenu.css\'];\n
-                       js_list python: [\'js/dhtmlXCommon.js\', \'js/dhtmlXTree.js\', \'js/menuico.js\', \'js/movableMenu.js\', \'js/BusinessTemplate_doCreateJavaScriptStatus\']">\n
+<tal:block tal:define="css_list python: [\'ERP5Subversion_dhtmlXTree.css\', \'ERP5Subversion_movableMenu.css\'];\n
+                       js_list python: [\'ERP5Subversion_dhtmlXCommon.js\', \'ERP5Subversion_dhtmlXTree.js\', \'ERP5Subversion_menuico.js\', \'ERP5Subversion_movableMenu.js\', \'ERP5Subversion_doCreateJavaScriptStatus.js\']">\n
   <tal:block metal:use-macro="here/view_master/macros/master">\n
     <tal:block metal:fill-slot="main">\n
       <noscript>\n
@@ -127,7 +127,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
         <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
           <span class="titleBarText">Legend -- SVN</span>\n
-          <img class="titleBarButtons" alt="" src="imgs/altbuttons.gif" longdesc="imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
+          <img class="titleBarButtons" alt="" src="ERP5Subversion_imgs/altbuttons.gif" longdesc="ERP5Subversion_imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
           <map id="sampleMap3" name="sampleMap3">\n
             <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />\n
             <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />\n
@@ -155,11 +155,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <script type="text/javascript">\n
         // Menu Customization\n
         var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
-        MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
-        MenuToolBar.Add("imgs/expandoff.png", "imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
-        MenuToolBar.Add("imgs/diffoff.png", "imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.getElementById(\'main_form\'));");\n
-        MenuToolBar.Add("imgs/execoff.png", "imgs/execon.png", "Commit Changes", "#", "commit(0,document.getElementById(\'main_form\'));");\n
-        MenuToolBar.Add("imgs/revertoff.png", "imgs/reverton.png", "Revert Changes", "#", "revert(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("ERP5Subversion_imgs/captionoff.png", "ERP5Subversion_imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
+        MenuToolBar.Add("ERP5Subversion_imgs/expandoff.png", "ERP5Subversion_imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
+        MenuToolBar.Add("ERP5Subversion_imgs/diffoff.png", "ERP5Subversion_imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("ERP5Subversion_imgs/execoff.png", "ERP5Subversion_imgs/execon.png", "Commit Changes", "#", "commit(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("ERP5Subversion_imgs/revertoff.png", "ERP5Subversion_imgs/reverton.png", "Revert Changes", "#", "revert(0,document.getElementById(\'main_form\'));");\n
         // Menu Display\n
         MenuToolBar.Display();\n
         doOnLoad();\n

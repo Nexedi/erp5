@@ -1,3 +1,6 @@
+2006-07-19 chris
+* Renamed or moved some files/folders to avoid conflicts with other business templates.
+
 2006-07-11 chris
 * Now possible to filter files to commit from diff view
 
