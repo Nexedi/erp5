@@ -339,7 +339,7 @@
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>Reference</string>
+                          <string>Page URI</string>
                         </tuple>
                         <tuple>
                           <string>short_title</string>
@@ -358,11 +358,15 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
+                          <string>language</string>
+                          <string>Language</string>
+                        </tuple>
+                        <tuple>
                           <string>int_index</string>
                           <string>Index</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -529,7 +533,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Contents</string> </value>
+                    <value> <string>Web Pages</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
