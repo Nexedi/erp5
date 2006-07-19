@@ -97,18 +97,11 @@ def isSameSet(a, b):\n
 \n
 \n
 def create_movement(CD_head_dict, CD_line_list):\n
-##   context.log(\'CD_head_dict\',CD_head_dict)\n
-##   context.log(\'CD_line_list\',CD_line_list)\n
-##   context.log(\'create_movement on...\',context.getPath())\n
   # Head creation\n
   movement_head = context.newContent( portal_type       = \'Monetary Reception\'\n
                                     , reindex_object    = 1\n
-#                                    , reference         = CD_head_dict[\'reference\']\n
-#                                    , resource         = CD_head_dict[\'currency\'] # done by init script\n
                                     , start_date        = CD_head_dict[\'start_date\']\n
-#                                    , emission_letter   = CD_head_dict[\'emission_letter\']\n
-#                                    , cash_status       = CD_head_dict[\'cash_status\']\n
-#                                    , destination       = CD_head_dict[\'destination\']\n
+                                    , destination       = CD_head_dict[\'destination\']\n
                                     )\n
   # Container Creation\n
   base_list=(\'emission_letter\', \'variation\', \'cash_status\')\n
@@ -129,12 +122,8 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                                    , resource_value = CD_head_dict[\'resource\']\n
                                                    , quantity       = CD_line[\'quantity\']\n
                                                    )\n
-##     context.log(\'container_line.getPath()\',container_line.getPath() )\n
-##     context.log(\'base_list\',base_list)\n
-##     context.log(\'category_list\',category_list)\n
 \n
     container_line.setResourceValue(CD_head_dict[\'resource\'])\n
-#    container_line.setVariationBaseCategoryList(base_list)\n
     container_line.setVariationCategoryList(category_list)\n
     container_line.updateCellRange(script_id=\'CashDetail_asCellRange\',base_id="movement")\n
     for key in container_line.getCellKeyList(base_id=\'movement\'):\n
@@ -156,8 +145,6 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                            , resource_value = CD_head_dict[\'resource\']\n
                                            , quantity_unit_value = context.portal_categories.quantity_unit.unit\n
                                            )\n
-  #context.log(\'base_list\',base_list)\n
-  #context.log(\'category_list\',category_list)\n
   movement_line.setVariationBaseCategoryList(base_list)\n
   movement_line.setVariationCategoryList(category_list)\n
   movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")\n
@@ -171,12 +158,8 @@ def create_movement(CD_head_dict, CD_line_list):\n
       cell.setMembershipCriterionCategoryList(category_list)\n
       cell.edit(force_update = 1,\n
                 price = movement_line.getResourceValue().getBasePrice())\n
-  #    movement_line.setResourceValue(CD_head_dict[\'resource\'])\n
-##   context.log("movement cell = %r" %(list(movement_line.objectIds(),)), "")\n
-  #   cell = movement_line.getCell(category_list[0], category_list[1], category_list[2])\n
-  #   cell.setQuantity(resouce_total_quantity)\n
 \n
-  return {\'error\' : False, \'message\':message_dict[\'00\']+CD_head_dict[\'reference\']}\n
+  return {\'error\' : False, \'message\':message_dict[\'00\']+CD_head_dict[\'reference\'],\'delivery_id\':movement_head.getId()}\n
 \n
 \n
 def split_head(CD_file_line_list):\n
@@ -263,12 +246,19 @@ def split_head(CD_file_line_list):\n
   if head_resource is None:\n
     return {\'error\':True, \'message\':message_dict[\'12\'], \'head_dict\':{}}\n
 \n
-#   # Destination search\n
-#   user_site_list = context.Baobab_getUserAssignedSiteList ()\n
-#   if user_site_list is None:\n
-#     return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
+  # Destination search\n
+  user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  if user_site_list is None:\n
+    return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
 \n
-#   head_destination  = user_site_list[0] +\'/caveau/serre/encaisse_des_billets_neufs_non_emis\'\n
+  head_destination  = \'%s/%s\' % (user_site_list[0],\'caveau/serre\')\n
+  if head_emission_letter in context.Baobab_getUserEmissionLetterList():\n
+    head_destination = \'%s/%s\' % (head_destination,\'encaisse_des_billets_neufs_non_emis\')\n
+  else:\n
+    site = context.Baobab_getEmissionLetterSiteValue(emission_letter=head_emission_letter)\n
+    head_destination = \'%s/%s/%s\' % (head_destination,\n
+                  \'encaisse_des_billets_neufs_non_emis_en_transit_allant_a\',site.getId())\n
+  context.log(\'head_destination\',head_destination)\n
 \n
   CD_head_dict = {\'reference\'       : head_movement_id\n
                  ,\'start_date\'      : head_start_date\n
@@ -277,7 +267,7 @@ def split_head(CD_file_line_list):\n
                  ,\'emission_letter\' : head_emission_letter\n
                  ,\'variation\'       : head_variation\n
                  ,\'cash_status\'     : \'new_not_emitted\'\n
-#                  ,\'destination\'     : head_destination\n
+                 ,\'destination\'     : head_destination\n
                  }\n
 \n
   return {\'error\':False, \'message\':None, \'head_dict\':CD_head_dict}\n
@@ -324,8 +314,11 @@ def split_lines(CD_file_line_list):\n
      return {\'error\':True, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'08\'],\'lines_dict\':{}}\n
 \n
 \n
-def url_redirection(error_message):\n
-   redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
+def url_redirection(error_message,delivery_id=None):\n
+   if delivery_id is not None:\n
+     redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+delivery_id+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
+   else:\n
+     redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
    request[ \'RESPONSE\' ].redirect( redirect_url )\n
 \n
 \n
@@ -358,7 +351,7 @@ message_dict = create_movement(CD_head_dict = split_head_result_dict[\'head_dict
 if message_dict[\'error\'] :\n
    None # Annuler les transactions\n
 \n
-return url_redirection(message_dict[\'message\' ])\n
+return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'delivery_id\'])\n
 
 
 ]]></string> </value>
@@ -428,6 +421,7 @@ return url_redirection(message_dict[\'message\' ])\n
                             <string>create_movement</string>
                             <string>split_head</string>
                             <string>split_lines</string>
+                            <string>None</string>
                             <string>request</string>
                             <string>url_redirection</string>
                             <string>_getattr_</string>
@@ -436,7 +430,6 @@ return url_redirection(message_dict[\'message\' ])\n
                             <string>_getitem_</string>
                             <string>split_head_result_dict</string>
                             <string>split_line_result_dict</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

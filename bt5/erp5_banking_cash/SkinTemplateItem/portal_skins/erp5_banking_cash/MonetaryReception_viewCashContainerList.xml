@@ -102,9 +102,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_reference</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

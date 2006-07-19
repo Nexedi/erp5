@@ -78,8 +78,8 @@ for group, role_list in old_group_list:\n
     user = group\n
 \n
 site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
-\n
-if context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and context.getEmissionLetter() in context.Baobab_getOwnerEmissionLetterList(user):\n
+context.log("user, site", str((user, site)))\n
+if context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList(user):\n
   # remaining banknote which are not sorted yet, or cancelled one\n
   if not \'ventilation\' in context.getSource():\n
     return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
@@ -87,7 +87,7 @@ if context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancel
     # take classification into account here\n
     source_list = context.getSource().split(\'/\')\n
     return \'%s/caveau/auxiliaire/%s\' %(site,\'/\'.join(source_list[-2:]))\n
-elif context.getEmissionLetter() in context.Baobab_getOwnerEmissionLetterList(user):\n
+elif context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList(user):\n
   return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
 else:\n
   return \'%s/caveau/externes/encaisse_des_externes\' %(site,)\n
@@ -154,6 +154,7 @@ else:\n
                             <string>role_list</string>
                             <string>user</string>
                             <string>site</string>
+                            <string>str</string>
                             <string>source_list</string>
                             <string>_getitem_</string>
                           </tuple>

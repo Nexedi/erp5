@@ -334,7 +334,7 @@
                           <string>Denomination</string>
                         </tuple>
                         <tuple>
-                          <string>cash_status_title</string>
+                          <string>cash_status_translated_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>

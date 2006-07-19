@@ -308,7 +308,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getSource(), vault_type=\'site/surface\')</string> </value>
+            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getSource(), vault_type=(\'site/surface\', \'site/caveau\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

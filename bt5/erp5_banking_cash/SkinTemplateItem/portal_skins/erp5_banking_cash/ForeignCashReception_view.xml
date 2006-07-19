@@ -110,9 +110,9 @@
                     <value>
                       <list>
                         <string>my_source_reference</string>
-                        <string>my_resource_title</string>
                         <string>my_destination</string>
                         <string>my_resource</string>
+                        <string>my_source_total_asset_price</string>
                       </list>
                     </value>
                 </item>

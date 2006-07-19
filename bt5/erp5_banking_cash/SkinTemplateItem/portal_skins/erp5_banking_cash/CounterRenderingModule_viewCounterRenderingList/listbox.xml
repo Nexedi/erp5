@@ -343,11 +343,7 @@
                         </tuple>
                         <tuple>
                           <string>source_logical_path</string>
-                          <string>Source Vault</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_logical_path</string>
-                          <string>Destination Vault</string>
+                          <string>Vault</string>
                         </tuple>
                         <tuple>
                           <string>source_total_asset_price</string>

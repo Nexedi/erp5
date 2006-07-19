@@ -334,6 +334,10 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>Price</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -373,6 +377,10 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>Price</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -431,6 +439,10 @@
                         <tuple>
                           <string>delivery.start_date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>Price</string>
                         </tuple>
                       </list>
                     </value>
@@ -536,7 +548,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Monetary Receptions</string> </value>
+                    <value> <string>Foreign Cash Receptions</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
