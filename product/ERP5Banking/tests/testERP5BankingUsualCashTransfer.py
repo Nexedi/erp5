@@ -45,14 +45,14 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 # Define how to launch the script if we don't use runUnitTest script
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
-  
+
 
 class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Usual Cash Transfer
 
     Here are the following step that will be done in the test :
-  
+
     - before the test, we need to create some movements that will put resources in the source
 
     - create a cash transfer
@@ -119,11 +119,11 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     """
       Method called before the launch of the test to initialize some data
     """
-    # Set some variables : 
+    # Set some variables :
     self.initDefaultVariable()
     # the cahs transfer module
     self.usual_cash_transfer_module = self.getUsualCashTransferModule()
-    
+
     self.createManagerAndLogin()
 
     # create categories
@@ -133,22 +133,24 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createBanknotesAndCoins()
 
     # Before the test, we need to input the inventory
-    
+
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_10000}
-    
+
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.piece_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
-    
+
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.counter = self.paris.surface.banque_interne.guichet_1
+    self.openCounterDate(site=self.paris)
+    self.openCounter(self.counter)
     self.createCashInventory(source=None, destination=self.usual_cash, currency=self.currency_1,
                              line_list=line_list)
 
@@ -347,7 +349,7 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.usual_cash_transfer.setSourceTotalAssetPrice('172400.0')
-    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition 
+    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.usual_cash_transfer, 'confirm_action', wf_id='usual_cash_transfer_workflow')
     # execute tic
     self.stepTic()
@@ -405,7 +407,7 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault usual_cash is right after confirm and before deliver 
+    Check that compution of inventory at vault usual_cash is right after confirm and before deliver
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
@@ -448,7 +450,7 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_transfer, name='history', wf_id='usual_cash_transfer_workflow')
     # check len of len workflow history is 6
     self.assertEqual(len(workflow_history), 6)
-    
+
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
