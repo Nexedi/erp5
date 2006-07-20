@@ -491,6 +491,22 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('supply') or \
            self._getPortalConfiguration('portal_supply_type_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalDocumentTypeList')
+  def getPortalDocumentTypeList(self):
+    """
+      Return document types.
+    """
+    return self._getPortalGroupedTypeList('dms_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalWebDocumentTypeList')
+  def getPortalWebDocumentTypeList(self):
+    """
+      Return web page types.
+    """
+    return self._getPortalGroupedTypeList('web_document')
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalSupplyPathTypeList')
   def getPortalSupplyPathTypeList(self):
