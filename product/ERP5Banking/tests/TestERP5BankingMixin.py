@@ -745,6 +745,9 @@ class TestERP5BankingMixin:
                                  line['variation_id'],
                                  line['variation_value'],
                                  line['quantity'],)
+    # deliver the inventory
+    if inventory.getSimulationState()!='delivered':
+      inventory.deliver()
     return inventory_group
 
 
