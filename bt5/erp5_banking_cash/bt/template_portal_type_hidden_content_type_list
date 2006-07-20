@@ -1,3 +1,5 @@
+Account Incident | Incoming Account Incident Line
+Account Incident | Outgoing Account Incident Line
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
 Cash Exchange | Incoming Cash Exchange Line
@@ -10,6 +12,7 @@ Counter Rendering | Amount
 Counter Rendering | Cash Delivery Line
 Counter Rendering | Price
 Foreign Cash Reception | Cash Delivery Line
+Incoming Account Incident Line | Cash Delivery Cell
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
 Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
@@ -27,6 +30,7 @@ Monetary Reception | Cash Delivery Line
 Monetary Survey | Cash Delivery Line
 Money Deposit Rendering | Cash Delivery Line
 Money Deposit Transfer | Cash Delivery Line
+Outgoing Account Incident Line | Cash Delivery Cell
 Outgoing Cash Balance Regulation Line | Cash Delivery Cell
 Outgoing Cash Exchange Line | Cash Delivery Cell
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell

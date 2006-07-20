@@ -1,3 +1,5 @@
+Account Incident | Amount
+Account Incident | Price
 Cash Balance Regulation | Amount
 Cash Balance Regulation | Price
 Cash Balance Regulation | Resource
@@ -7,6 +9,7 @@ Cash Exchange | Price
 Cash Exchange | Resource
 Cash Exchange | Simulation
 Cash Sorting | Price
+Incoming Account Incident Line | CashDeliveryLine
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
@@ -29,6 +32,7 @@ Money Deposit Rendering | Amount
 Money Deposit Rendering | Price
 Money Deposit Transfer | Amount
 Money Deposit Transfer | Price
+Outgoing Account Incident Line | CashDeliveryLine
 Outgoing Cash Balance Regulation Line | CashDeliveryLine
 Outgoing Cash Exchange Line | CashDeliveryLine
 Outgoing Cash Sorting Cell | CashDeliveryLine

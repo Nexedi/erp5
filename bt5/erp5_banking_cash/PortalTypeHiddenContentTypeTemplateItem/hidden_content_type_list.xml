@@ -1,4 +1,8 @@
 <hidden_content_type_list>
+ <portal_type id="Account Incident">
+  <item>Outgoing Account Incident Line</item>
+  <item>Incoming Account Incident Line</item>
+ </portal_type>
  <portal_type id="Cash Balance Regulation">
   <item>Outgoing Cash Balance Regulation Line</item>
   <item>Incoming Cash Balance Regulation Line</item>
@@ -22,6 +26,9 @@
  </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Incoming Account Incident Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>
@@ -67,6 +74,9 @@
  </portal_type>
  <portal_type id="Money Deposit Transfer">
   <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Outgoing Account Incident Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>

@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Account Incident</type>
+  <workflow>edit_workflow, account_incident_workflow</workflow>
+ </chain>
+ <chain>
   <type>Cash Balance Regulation</type>
   <workflow>cash_balance_regulation_workflow</workflow>
  </chain>
@@ -9,7 +13,7 @@
  </chain>
  <chain>
   <type>Cash Sorting</type>
-  <workflow>edit_workflow, cash_sorting_workflow</workflow>
+  <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Classification Survey</type>
@@ -29,7 +33,7 @@
  </chain>
  <chain>
   <type>Monetary Issue</type>
-  <workflow>monetary_issue_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, monetary_issue_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Recall</type>

@@ -1,3 +1,14 @@
+Account Incident Module | print_pdf
+Account Incident Module | sort_on
+Account Incident Module | view
+Account Incident | history
+Account Incident | incoming_input
+Account Incident | incoming_view
+Account Incident | metadata
+Account Incident | outgoing_input
+Account Incident | outgoing_view
+Account Incident | print_pdf
+Account Incident | view
 Cash Balance Regulation Module | list
 Cash Balance Regulation Module | list_ui
 Cash Balance Regulation Module | sort_on
@@ -63,6 +74,8 @@ Foreign Cash Reception | history
 Foreign Cash Reception | metadata
 Foreign Cash Reception | print_pdf
 Foreign Cash Reception | view
+Incoming Account Incident Line | metadata
+Incoming Account Incident Line | view
 Incoming Cash Balance Regulation Line | history
 Incoming Cash Balance Regulation Line | metadata
 Incoming Cash Balance Regulation Line | print
@@ -150,6 +163,8 @@ Money Deposit Transfer | history
 Money Deposit Transfer | metadata
 Money Deposit Transfer | print_pdf
 Money Deposit Transfer | view
+Outgoing Account Incident Line | metadata
+Outgoing Account Incident Line | view
 Outgoing Cash Balance Regulation Line | history
 Outgoing Cash Balance Regulation Line | metadata
 Outgoing Cash Balance Regulation Line | print
