@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.Report</string>
-          <string>ERP5Report</string>
+          <string>Products.ERP5Form.Form</string>
+          <string>ERP5Form</string>
         </tuple>
         <none/>
       </tuple>
@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
@@ -62,9 +68,6 @@
             <value>
               <list>
                 <string>Default</string>
-                <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -73,30 +76,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>page_title</string>
-                        <string>breadcrumb</string>
+                        <string>workflow_title</string>
+                        <string>workflow_description</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -104,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_viewPendingWorkList</string> </value>
+            <value> <string>ERP5Web_viewMyTaskWorkflowHeader</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -112,15 +97,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ERP5Site_viewWorkList</string> </value>
+            <value> <string>ERP5Web_viewMyTaskWorkflowHeader</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>report_list</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>ERP5Site_getPendingWorkListSectionList</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -132,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Pending Work List</string> </value>
+            <value> <string>Workflow Web Header</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
