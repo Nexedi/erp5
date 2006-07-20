@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: here.getInstallationState() != \'installed\'</string> </value>
+            <value> <string>python: here.getInstallationState() != \'installed\' and here.getInstallationState() != \'replaced\'</string> </value>
         </item>
       </dictionary>
     </pickle>
