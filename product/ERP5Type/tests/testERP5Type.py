@@ -13,9 +13,10 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 from random import randint
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
+from zLOG import LOG, INFO
+from Products.CMFCore.tests.base.testcase import LogInterceptor
 
-class TestERP5Type(ERP5TypeTestCase):
+class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
     # Some helper methods
 
@@ -74,11 +75,7 @@ class TestERP5Type(ERP5TypeTestCase):
       # Create a business template and test if portal_type matches
       # Make a extension tests on basic accessors
       portal_templates = self.getTemplateTool()
-      business_template = self.getTemplateTool().newContent(portal_type="Business Template") # Fails Why ?
-                                                                               # may be because there is
-                                                                               # no "Business Template"
-                                                                               # in portal_types, it may
-                                                                               # be added to erp5_common
+      business_template = self.getTemplateTool().newContent(portal_type="Business Template")
       self.failUnless(business_template.getPortalType() == 'Business Template')
       # Test simple string accessor
       test_string = self.getRandomString()
@@ -285,6 +282,17 @@ class TestERP5Type(ERP5TypeTestCase):
       new_orga = folder[new_id]
       self.assertEquals(new_orga.getTitle(), 'something')
       
+    def test_AccessorGeneration(self):
+      """Tests accessor generation doesn't generate error messages.
+      """
+      from Products.ERP5Type.Base import _aq_reset
+      _aq_reset()
+      self._catch_log_errors(ignored_level=INFO)
+      folder = self.getOrganisationModule()
+      orga = folder.newContent(portal_type='Organisation',)
+      # call an accessor, _aq_dynamic will generate accessors
+      orga.getId()
+      self._ignore_log_errors()
 
 if __name__ == '__main__':
     framework()
