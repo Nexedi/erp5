@@ -277,6 +277,7 @@ class TestERP5BankingMixin:
     # Define static values (only use prime numbers to prevent confusions like 2 * 6 == 3 * 4)
     # variation list is the list of years for banknotes and coins
     self.variation_list = ('variation/1992', 'variation/2003')
+    self.usd_variation_list = ('variation/not_defined',)
     # quantity of banknotes of 10000 :
     self.quantity_10000 = {}
     # 2 banknotes of 10000 for the year 1992
