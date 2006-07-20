@@ -72,14 +72,16 @@
   return None\n
 \n
 # must use owner to know site letter\n
-old_group_list = context.get_local_roles()\n
-for group, role_list in old_group_list:\n
-  if \'Owner\' in role_list:\n
-    user = group\n
+#old_group_list = context.get_local_roles()\n
+#for group, role_list in old_group_list:\n
+#  if \'Owner\' in role_list:\n
+#    user = group\n
 \n
+site_letter = context.getSourceValue().getCodification()[0].lower()\n
+#site_letter = context.Baobab_getUserEmissionLetterList(user)\n
 site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
-context.log("user, site", str((user, site)))\n
-if context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList(user):\n
+\n
+if context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and context.getEmissionLetter() in site_letter:\n
   # remaining banknote which are not sorted yet, or cancelled one\n
   if not \'ventilation\' in context.getSource():\n
     return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
@@ -87,7 +89,7 @@ if context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancel
     # take classification into account here\n
     source_list = context.getSource().split(\'/\')\n
     return \'%s/caveau/auxiliaire/%s\' %(site,\'/\'.join(source_list[-2:]))\n
-elif context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList(user):\n
+elif context.getEmissionLetter() in site_letter:\n
   return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
 else:\n
   return \'%s/caveau/externes/encaisse_des_externes\' %(site,)\n
@@ -148,15 +150,10 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
-                            <string>old_group_list</string>
-                            <string>_getiter_</string>
-                            <string>group</string>
-                            <string>role_list</string>
-                            <string>user</string>
-                            <string>site</string>
-                            <string>str</string>
-                            <string>source_list</string>
                             <string>_getitem_</string>
+                            <string>site_letter</string>
+                            <string>site</string>
+                            <string>source_list</string>
                           </tuple>
                         </value>
                     </item>

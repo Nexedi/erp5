@@ -1,3 +1,6 @@
+2006-07-20 aurel
+* do not get site letter from owner but from source
+
 2006-07-19 aurel
 * define 'add portal content' permission on cash sorting workflow
 
