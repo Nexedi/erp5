@@ -2,6 +2,8 @@
 * Add description on publication workflow.
 * In ListBox_asWebStyleHTML, use editable_field returned by the rendering of a listbox to get and apply the css style even if the table cell is empty.
 * Add listbox mockups.
+* Add generic My Task/Worklist Report.
+* Add simple version of My Stuff/My Document page.
 
 2006-06-15 Kevin
 * Move fulltext indexing ZSQLMethods to erp5_core.
