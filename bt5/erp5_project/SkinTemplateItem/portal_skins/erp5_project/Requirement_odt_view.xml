@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5OOo.OOoTemplate</string>
+          <string>OOoTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAMmBmDQBRxQR/gAAAPACAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1srdKxasMw
+EAbgvU+h3m6d06kEO4HEKRTa2oMzdBT2ORHYkrDOafz2VQfHhWQJZJPE3Xe/4JL1uWvFiXqvrUlh
+IWMQZCpba3NIYV++Ra+wXj0lz1m+Lb+LneiU0Q15Xk4HUew3H+9bARFi7sjkTaMrkrY/IGZlJj6n
+umAj7r5AwPQka64h4NdmCGX85ZrCkdktEW3w7ey/xPECp6IAiVlqdEsRGe7Hf4mp1iri0VEKyrlW
+V4rDr/FkaukHI8NQ+dNrph7mpmZo28gpPqaAgHfNuK0UuuKhJ3+vxnRmDBFvq5U1HJr//vBQ1/PY
+kn842xGrx2cl5rC2l7QJXi3W6hdQSwECFAAUAAAACADJgZg0AUcUEf4AAADwAgAAFQAAAAAAAAAA
+AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'text\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+          xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+          xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+         office:version=\'1.0\'>\n
+  <office:script/>\n
+  <office:font-decls>\n
+    <style:font-decl fo:font-family="Tahoma, Lucidasans, \'Lucida Sans\', \'Arial Unicode MS\'" style:name=\'Tahoma1\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="\'Andale Sans UI\'" style:name=\'Andale Sans UI\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="\'Bitstream Vera Sans\'" style:font-style-name=\'Gras\' style:name=\'Bitstream Vera Sans\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family=\'Mincho\' style:name=\'Mincho\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="Tahoma, Lucidasans, \'Lucida Sans\', \'Arial Unicode MS\'" style:name=\'Tahoma\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="\'Nimbus Roman No9 L\'" style:font-family-generic=\'roman\' style:name=\'Nimbus Roman No9 L\'/>\n
+  </office:font-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:parent-style-name=\'Heading 1\' style:family=\'paragraph\' style:name=\'P1\'>\n
+      <style:properties style:auto-text-indent=\'true\' fo:margin-right=\'0cm\' fo:text-indent=\'0.026cm\' fo:margin-left=\'0.026cm\'/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <text:sequence-decls>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Table\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Text\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
+    </text:sequence-decls>\n
+    <text:p text:style-name=\'Heading\'>Requirements list:</text:p>\n
+    <text:p text:style-name=\'Text body\'/>\n
+\t<tal:x repeat="requirement python:here.Requirement_flatten_list()">\n
+\t\t<text:h text:style-name=\'P1\' text:level=\'1\'><tal:x replace="python: requirement[0].title" /> (ref <tal:x replace="python: requirement[1]" />)</text:h>\n
+\t\t<text:p text:style-name=\'First line indent\' tal:content="python: requirement[0].description">This is a very long endless description</text:p>\n
+\t</tal:x>\n
+  </office:body>\n
+</office:document-content>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.sun.xml.writer</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Requirement_odt_view</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Requirement_odt_style</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
