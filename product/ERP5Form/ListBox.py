@@ -1977,7 +1977,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           html = u'<a href="%s">%s</a>' % (url, processed_value)
 
-      html_list.append((html, original_value, error))
+      html_list.append((html, original_value, error, editable_field))
 
     return html_list
 
