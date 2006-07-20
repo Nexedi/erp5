@@ -68,10 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = [(\'title\', \'Title\'),(\'reference\', \'Reference\'), (\'portal_type\',\'Type\')]\n
+            <value> <string>result = [ (\'title\', \'Title\')\n
+         , (\'reference\', \'Reference\')\n
+         , (\'version\', \'Version\')\n
+         , (\'language\', \'Language\')\n
+         , (\'theme\', \'Theme\')\n
+         , (\'programme\', \'Programme\')\n
+         , (\'service\', \'Service\')\n
+         , (\'WebPage_getModificationDate\', \'Last Change\')\n
+         , (\'portal_type\', \'Type\')\n
+         ]\n
 \n
 for varkey in context.getVarMatchKeys():\n
-  result.append((varkey, varkey))\n
+  result.append((\'translated_%s_title\' % varkey, \'State\'))\n
 \n
 return result\n
 </string> </value>
@@ -84,6 +93,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -119,7 +134,7 @@ return result\n
                             <string>result</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>varkey</string>
                           </tuple>
                         </value>
@@ -137,7 +152,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WorkList_getWorkColumnList</string> </value>
+            <value> <string>WorkList_getColumnList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
