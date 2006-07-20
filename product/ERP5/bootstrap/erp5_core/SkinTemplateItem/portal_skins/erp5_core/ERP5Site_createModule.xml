@@ -176,6 +176,7 @@ object_portal_type_value.addAction( "view"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_view"\n
+                                  , priority = 1\n
                                   )\n
 object_portal_type_value.addAction( "history"\n
                                   , "History"\n
@@ -183,6 +184,7 @@ object_portal_type_value.addAction( "history"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_view"\n
+                                  , priority = 2\n
                                   )\n
 object_portal_type_value.addAction( "metadata"\n
                                   , "Metadata"\n
@@ -190,6 +192,7 @@ object_portal_type_value.addAction( "metadata"\n
                                   , ""\n
                                   , "Manage properties"\n
                                   , "object_view"\n
+                                  , priority = 3\n
                                   )\n
 object_portal_type_value.addAction( "print_pdf"\n
                                   , "Print"\n
