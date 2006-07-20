@@ -30,9 +30,7 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -41,7 +39,7 @@
         <item>
             <key> <string>icon</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -91,25 +89,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:object.getSimulationState() == \'draft\'</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>
