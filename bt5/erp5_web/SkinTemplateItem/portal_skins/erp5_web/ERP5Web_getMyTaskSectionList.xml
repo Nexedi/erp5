@@ -69,39 +69,37 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
+\n
 result = []\n
 \n
-workflow_dict = {}\n
-action_dict = context.portal_actions.listFilteredActionsFor(context)\n
+workflow_dict      = {}\n
+action_dict        = context.portal_actions.listFilteredActionsFor(context)\n
 global_action_list = action_dict[\'global\']\n
+\n
+\n
 for action in global_action_list:\n
   if action.has_key(\'workflow_id\'):\n
+\n
     # Get the workflow\n
     workflow = getattr(context.portal_workflow, action[\'workflow_id\'])\n
-    if not workflow_dict.has_key(action[\'workflow_id\']):\n
-      # Each time we find a new workflow, we add a title section\n
-      workflow_dict[action[\'workflow_id\']] = None\n
-      result.append(\n
-        ReportSection(\n
-          title=workflow.title,\n
-          level=1,\n
-          form_id=None,\n
-        )\n
-      )\n
+    result.append( ReportSection( path    = workflow.getPhysicalPath()\n
+                                , level   = 1\n
+                                , form_id = \'ERP5Web_viewMyTaskWorkflowHeader\'\n
+                                )\n
+                  )\n
+\n
     # Each time we find a worklist, we add a section\n
     if action.has_key(\'worklist_id\'):\n
       # Get the worklist\n
       worklist = getattr(workflow.worklists, action[\'worklist_id\'])\n
-      result.append(\n
-        ReportSection(\n
-          path=worklist.getPhysicalPath(),\n
-          title=worklist.title,\n
-          level=1,\n
-          form_id=\'WorkList_viewPendingWork\',\n
-          selection_params={},\n
-          listbox_display_mode=\'FlatListMode\')\n
-      )\n
-      \n
+      # Print worklist content in a listbox\n
+      result.append( ReportSection( path                 = worklist.getPhysicalPath()\n
+                                  , level                = 1\n
+                                  , form_id              = \'WorkList_viewPendingWork\'\n
+                                  , selection_params     = {}\n
+                                  , listbox_display_mode = \'FlatListMode\'\n
+                                  )\n
+                   )\n
 \n
 return result\n
 </string> </value>
@@ -120,6 +118,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -183,8 +187,6 @@ return result\n
                             <string>action</string>
                             <string>getattr</string>
                             <string>workflow</string>
-                            <string>None</string>
-                            <string>_write_</string>
                             <string>worklist</string>
                           </tuple>
                         </value>
@@ -202,7 +204,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getPendingWorkListSectionList</string> </value>
+            <value> <string>ERP5Web_getMyTaskSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
