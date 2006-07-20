@@ -92,7 +92,7 @@ class TestTrashTool(ERP5TypeTestCase):
     """
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
-    base_category = pc._getOb(bc_id, None)    
+    base_category = pc._getOb(bc_id, None)
     self.failUnless(base_category is not None)
     category_list = []
     for i in xrange(10):
@@ -117,7 +117,7 @@ class TestTrashTool(ERP5TypeTestCase):
     n = 0
     while bt_id in pt.objectIds():
       n = n + 1
-      bt_id = 'fake_id_%s' %(n)      
+      bt_id = 'fake_id_%s' %(n)
     bt = pt.newContent(id=bt_id, portal_type="Business Template")
     self.failUnless(bt is not None)
     trashbin = trash.newTrashBin(bt_title='fake_bin', bt=bt)
@@ -171,7 +171,7 @@ class TestTrashTool(ERP5TypeTestCase):
     self.assertEqual(cat_object.getPortalType(), 'Base Category')
     # check no subobjects
     subcat_objects_list = (cat_object.objectIds())
-    self.assertEqual(len(subcat_objects_list), 0)    
+    self.assertEqual(len(subcat_objects_list), 0)
 
   def stepCheckObjectBackupWithSubObjects(self, sequence=None, sequence_list=None, **kw):
     """
@@ -187,7 +187,7 @@ class TestTrashTool(ERP5TypeTestCase):
     self.failUnless(len(trashbin_objects_list) > 0)
     self.assertEqual(len(trashbin_objects_list), 1)
     obj = trashbin_objects_list[0]
-    self.assertEqual(obj.getId(), 'portal_categories_items')    
+    self.assertEqual(obj.getId(), 'portal_categories_items')
     self.assertEqual(obj.getPortalType(), 'Trash Folder')
     self.assertEqual(obj.isIndexable, 0)
     # get base category backup
@@ -279,7 +279,7 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckTrashBinIndexable \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
     
   def test_02_checkBackupWithoutSave(self, quiet=0, run=run_all_test):
     if not run: return
@@ -299,7 +299,7 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckObjectNotBackup \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
   def test_03_checkBackupWithSave(self, quiet=0, run=run_all_test):
     if not run: return
@@ -320,7 +320,7 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckObjectBackupWithoutSubObjects \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
   def test_04_checkBackupWithSubObjects(self, quiet=0, run=run_all_test):
     if not run: return
@@ -341,7 +341,7 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckObjectBackupWithSubObjects \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
 if __name__ == '__main__':
   framework()
@@ -349,5 +349,5 @@ else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestBusinessTemplate))
+    suite.addTest(unittest.makeSuite(TestTrashTool))
     return suite
