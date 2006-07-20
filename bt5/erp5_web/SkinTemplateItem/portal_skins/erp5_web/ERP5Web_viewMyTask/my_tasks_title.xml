@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>page_title</string> </value>
+            <value> <string>my_tasks_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -199,7 +199,11 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>My Tasks</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<h1>My Tasks</h1>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -243,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>My Tasks</string> </value>
+                    <value> <string>my_tasks_title</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
