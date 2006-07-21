@@ -101,7 +101,7 @@ objects in the selection.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_workflow_actions_present</string> </value>
+            <value> <string>testWorkflowActions</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

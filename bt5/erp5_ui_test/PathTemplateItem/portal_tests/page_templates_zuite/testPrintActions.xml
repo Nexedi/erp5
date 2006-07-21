@@ -102,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_print_actions_present</string> </value>
+            <value> <string>testPrintActions</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -96,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_object_actions_present</string> </value>
+            <value> <string>testObjectActions</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

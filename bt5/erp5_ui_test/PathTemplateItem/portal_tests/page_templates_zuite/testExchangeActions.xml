@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_exchange_actions_present</string> </value>
+            <value> <string>testExchangeActions</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
