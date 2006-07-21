@@ -100,8 +100,9 @@
           <form method="POST" id="main_form" enctype="" tal:attributes="action python:\'erp5/medicentre/site/search/WebSite_viewSearchResult\'">\n
             <input class="text" id="SearchableText" name="SearchableText" type="text" size="40"\n
                    tal:attributes="value search_query"/>\n
+            <input type="hidden" name="reset" value="1"/>\n
             <input class="button" value="Chercher" name="WebSite_viewSearchResultList:method" type="submit"/>\n
-            <a href="advanced_search" class="tinyFont">Advanced search</a>\n
+            <!--a href="advanced_search" class="tinyFont">Advanced search</a-->\n
           </form>\n
         </div>\n
 \n
@@ -163,17 +164,7 @@
                  tal:repeat="p python: range(0, here.total_pages)"\n
                  tal:content="python: p+1"\n
                  tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
-                                 href  python:\n
-\n
-\n
- \'portal_selections/setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;SearchableText=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, search_query, p*int(here.getMaxLineNumber()))"/>\n
-\n
-<!--\n
-\n
-\'portal_selections/setPage?form_id=PersonModule_viewPersonList&amp;is_list=1&amp;language_select=fr&amp;SearchableText=&amp;action_select=&amp;selection_name=person_selection&amp;list_selection_name=person_selection&amp;list_start=30&amp;title=&amp;subordination_title=&amp;description=&amp;translated_validation_state_title=&amp;listbox_uid%3Alist=77406\'"/>\n
-\n
--->\n
-\n
+                                 href  python: \'portal_selections/setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;SearchableText=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, search_query, p*int(here.getMaxLineNumber()))"/>\n
           </p>\n
         </div>\n
 \n
@@ -183,13 +174,14 @@
           <form method="POST" id="main_form" enctype="" tal:attributes="action python:\'erp5/medicentre/site/search/WebSite_viewSearchResult\'">\n
             <input class="text" id="SearchableText" name="SearchableText" type="text" size="40"\n
                    tal:attributes="value search_query"/>\n
+            <input type="hidden" name="reset" value="1"/>\n
             <input class="button" value="Chercher" name="WebSite_viewSearchResultList:method" type="submit"/>\n
           </form>\n
-          <p>\n
+          <!--p>\n
             <a href="advanced_search">Search within results</a> |\n
             <a href="advanced_search">Search Tips</a> |\n
             <a href="advanced_search">Advanced search</a>\n
-          </p>\n
+          </p-->\n
         </div>\n
 \n
       </tal:block>\n
