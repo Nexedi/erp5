@@ -1,3 +1,7 @@
+2006-07-21 aurel
+* register checked uid in selection in Base_callDialogMethod
+* execute Base_setDefaultSecurity when creating new module
+
 2006-07-20 aurel
 * define priority on action when creating module
 

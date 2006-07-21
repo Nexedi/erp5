@@ -202,10 +202,11 @@ object_portal_type_value.addAction( "print_pdf"\n
                                   , "object_print"\n
                                   )\n
 # Finally add the module to the site\n
-portal.newContent( portal_type = module_portal_type\n
-                 , id          = module_id\n
-                 , title       = module_title\n
-                 )\n
+module_object = portal.newContent( portal_type = module_portal_type\n
+                                   , id          = module_id\n
+                                   , title       = module_title\n
+                                   )\n
+module_object.Base_setDefaultSecurity()\n
 \n
 if not selection_index:\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
@@ -231,6 +232,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -304,6 +311,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>default_groups</string>
                             <string>group</string>
                             <string>object_portal_type_value</string>
+                            <string>module_object</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>
@@ -330,6 +338,27 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
