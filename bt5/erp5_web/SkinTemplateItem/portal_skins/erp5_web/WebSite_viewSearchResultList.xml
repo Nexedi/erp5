@@ -75,9 +75,6 @@
                     <value>
                       <list>
                         <string>listbox_modification_date</string>
-                        <string>listbox_theme</string>
-                        <string>listbox_programme</string>
-                        <string>listbox_service</string>
                       </list>
                     </value>
                 </item>

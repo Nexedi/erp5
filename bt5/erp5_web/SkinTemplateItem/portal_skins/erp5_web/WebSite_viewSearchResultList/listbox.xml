@@ -357,18 +357,6 @@
                           <string>modification_date</string>
                           <string>Last Change</string>
                         </tuple>
-                        <tuple>
-                          <string>programme</string>
-                          <string>Programme</string>
-                        </tuple>
-                        <tuple>
-                          <string>service</string>
-                          <string>Service</string>
-                        </tuple>
-                        <tuple>
-                          <string>theme</string>
-                          <string>Theme</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -415,18 +403,6 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>Last Change</string>
-                        </tuple>
-                        <tuple>
-                          <string>programme</string>
-                          <string>Programme</string>
-                        </tuple>
-                        <tuple>
-                          <string>service</string>
-                          <string>Service</string>
-                        </tuple>
-                        <tuple>
-                          <string>theme</string>
-                          <string>Theme</string>
                         </tuple>
                       </list>
                     </value>

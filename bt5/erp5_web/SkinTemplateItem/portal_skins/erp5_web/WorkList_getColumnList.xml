@@ -72,9 +72,6 @@
          , (\'reference\', \'Reference\')\n
          , (\'version\', \'Version\')\n
          , (\'language\', \'Language\')\n
-         , (\'theme\', \'Theme\')\n
-         , (\'programme\', \'Programme\')\n
-         , (\'service\', \'Service\')\n
          , (\'WebPage_getModificationDate\', \'Last Change\')\n
          , (\'portal_type\', \'Type\')\n
          ]\n

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_service</string> </value>
+            <value> <string>listbox_translated_validation_state_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -120,13 +120,13 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -245,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_service</string> </value>
+                    <value> <string>translated_validation_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: "Service"</string> </value>
+            <value> <string>python: cell.getValidationState()</string> </value>
         </item>
       </dictionary>
     </pickle>
