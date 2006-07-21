@@ -2,6 +2,10 @@
  <portal_type id="Account Incident">
   <item>source_decision</item>
  </portal_type>
+ <portal_type id="Cash Incident">
+  <item>responsible</item>
+  <item>source_decision</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>
  </portal_type>

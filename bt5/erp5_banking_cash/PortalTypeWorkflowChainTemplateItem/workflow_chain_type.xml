@@ -12,6 +12,10 @@
   <workflow>cash_exchange_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Cash Incident</type>
+  <workflow>edit_workflow, cash_incident_workflow</workflow>
+ </chain>
+ <chain>
   <type>Cash Sorting</type>
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>

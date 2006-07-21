@@ -1,6 +1,7 @@
 account_incident_workflow
 cash_balance_regulation_workflow
 cash_exchange_workflow
+cash_incident_workflow
 cash_sorting_workflow
 classification_survey_workflow
 counter_rendering_workflow

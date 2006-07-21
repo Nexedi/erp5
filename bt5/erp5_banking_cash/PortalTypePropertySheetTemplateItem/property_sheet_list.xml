@@ -15,6 +15,10 @@
   <item>Resource</item>
   <item>Amount</item>
  </portal_type>
+ <portal_type id="Cash Incident">
+  <item>Amount</item>
+  <item>Price</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
   <item>Price</item>
  </portal_type>
@@ -25,6 +29,9 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Cash Exchange Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Incoming Cash Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -80,6 +87,9 @@
  <portal_type id="Outgoing Cash Exchange Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Outgoing Cash Incident Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>CashDeliveryLine</item>
  </portal_type>
@@ -93,8 +103,8 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Usual Cash Transfer">
   <item>Price</item>

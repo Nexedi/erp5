@@ -8,10 +8,13 @@ Cash Exchange | Amount
 Cash Exchange | Price
 Cash Exchange | Resource
 Cash Exchange | Simulation
+Cash Incident | Amount
+Cash Incident | Price
 Cash Sorting | Price
 Incoming Account Incident Line | CashDeliveryLine
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
+Incoming Cash Incident Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
 Monetary Destruction | Account
@@ -35,6 +38,7 @@ Money Deposit Transfer | Price
 Outgoing Account Incident Line | CashDeliveryLine
 Outgoing Cash Balance Regulation Line | CashDeliveryLine
 Outgoing Cash Exchange Line | CashDeliveryLine
+Outgoing Cash Incident Line | CashDeliveryLine
 Outgoing Cash Sorting Cell | CashDeliveryLine
 Outgoing Cash Sorting Line | CashDeliveryLine
 Outgoing Classification Survey Cell | CashDeliveryLine
