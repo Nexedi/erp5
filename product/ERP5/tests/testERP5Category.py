@@ -256,6 +256,6 @@ else:
     import unittest
     def test_suite():
         suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
+        suite.addTest(unittest.makeSuite(TestERP5Category))
         return suite
 
