@@ -220,12 +220,12 @@ if dialog_category == "object_search" :\n
   context.portal_selections.setSelectionParamsFor(request_form[\'selection_name\'], request_form)\n
 \n
 # if we have checked line in listbox, modify the selection\n
-listbox_uid = request.get(\'listbox_uid\', None)\n
+listbox_uid = request_form.get(\'listbox_uid\', None)\n
 if listbox_uid is not None:\n
-  uids = request.get(\'uids\')\n
+  uids = request_form.get(\'uids\')\n
   selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
-                                               selection_name,\n
-                                               listbox_uid, uids)\n
+    selection_name,\n
+    listbox_uid, uids)\n
 \n
 # Remove values which doesn\'t work with make_query.\n
 clean_kw = {}\n
@@ -364,7 +364,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>object_uid_list</string>
                             <string>error</string>
                             <string>N_</string>
-                            <string>request</string>
                             <string>listbox_uid</string>
                             <string>uids</string>
                             <string>selection_name</string>
