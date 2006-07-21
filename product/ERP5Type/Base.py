@@ -59,6 +59,7 @@ from CopySupport import CopyContainer, CopyError,\
 from Errors import DeferredCatalogError
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
+from Products.ERP5Type.Accessor.TypeDefinition import asDate
 
 from string import join
 import sys
@@ -120,7 +121,7 @@ def _aq_reset():
   Base.aq_method_generated = {}
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
-  Base.aq_preference_generated = 0 
+  Base.aq_preference_generated = 0
 
   # Some method generations are based on portal methods, and portal methods cache results.
   # So it is safer to invalidate the cache.
@@ -228,10 +229,10 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
   # We should now make sure workflow methods are defined
   # and also make sure simulation state is defined
   portal_workflow = getToolByName(self, 'portal_workflow')
-#   LOG('getWorkflowsFor', 0, 
+#   LOG('getWorkflowsFor', 0,
 #       str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
   for wf in portal_workflow.getWorkflowsFor(self):
-#     LOG('in aq_portal_type %s' % id, 0, 
+#     LOG('in aq_portal_type %s' % id, 0,
 #         "found state workflow %s" % wf.id)
     if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
       wf_id = wf.id
@@ -241,16 +242,16 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
       for method_id, getter in (
           ('get%s' % UpperCase(state_var), WorkflowState.Getter),
           ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
-          ('getTranslated%s' % UpperCase(state_var), 
+          ('getTranslated%s' % UpperCase(state_var),
                                      WorkflowState.TranslatedGetter),
-          ('getTranslated%sTitle' % UpperCase(state_var), 
+          ('getTranslated%sTitle' % UpperCase(state_var),
                                      WorkflowState.TranslatedTitleGetter)):
         if not hasattr(prop_holder, method_id):
           method = getter(method_id, wf_id)
           # Attach to portal_type
-          setattr(prop_holder, method_id, method) 
+          setattr(prop_holder, method_id, method)
           prop_holder.security.declareProtected(
-                                 Permissions.AccessContentsInformation, 
+                                 Permissions.AccessContentsInformation,
                                  method_id )
   for wf in portal_workflow.getWorkflowsFor(self):
     wf_id = wf.id
@@ -266,9 +267,9 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
              (not hasattr(klass, method_id)):
             method = WorkflowMethod(klass._doNothing, tr_id)
             # Attach to portal_type
-            setattr(prop_holder, method_id, method) 
-            prop_holder.security.declareProtected( 
-                                     Permissions.AccessContentsInformation, 
+            setattr(prop_holder, method_id, method)
+            prop_holder.security.declareProtected(
+                                     Permissions.AccessContentsInformation,
                                      method_id )
           else:
             # Wrap method into WorkflowMethod is needed
@@ -276,13 +277,13 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
               method = getattr(klass, method_id)
             except AttributeError:
               method = getattr(prop_holder, method_id)
-              work_method_holder = prop_holder 
+              work_method_holder = prop_holder
             else:
               work_method_holder = klass
             # Wrap method
             if callable(method):
               if not isinstance(method, WorkflowMethod):
-                setattr(work_method_holder, method_id, 
+                setattr(work_method_holder, method_id,
                         WorkflowMethod(method, method_id))
               else :
                 # some methods (eg. set_ready) doesn't have the same name
@@ -308,7 +309,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                (not hasattr(klass,method_id)):
               method = WorkflowMethod(klass._doNothing, imethod_id)
               # Attach to portal_type
-              setattr(prop_holder, method_id, method) 
+              setattr(prop_holder, method_id, method)
               prop_holder.security.declareProtected(
                                       Permissions.AccessContentsInformation,
                                       method_id)
@@ -369,8 +370,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   aq_method_generated = {}
   aq_portal_type = {}
   aq_related_generated = 0
-  
-  aq_preference_generated = 0 
+
+  aq_preference_generated = 0
   # FIXME: Preference should not be included in ERP5Type
 
   # Declarative security
@@ -480,9 +481,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           if bid not in generated_bid :
             createRelatedValueAccessors(Base, bid)
             generated_bid[bid] = 1
-      
+
       Base.aq_related_generated = 1
-    
+
     if not Base.aq_preference_generated:
       try :
         from Products.ERP5Form.PreferenceTool import createPreferenceMethods
@@ -492,7 +493,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
             'unable to create methods for PreferenceTool', e)
         raise
       Base.aq_preference_generated = 1
-    
+
     # Always try to return something after generation
     if generated:
       # We suppose that if we reach this point
@@ -990,7 +991,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           except TypeError:
             old_value = self.getProperty(key)
 
-        
+
         if old_value != kw[key] or force_update:
           # We keep in a thread var the previous values
           # this can be useful for interaction workflow to implement lookups
@@ -1090,7 +1091,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
           (table, self.getUid(), table, base_category.getBaseCategoryUid())
     return sql_text
-  
+
   security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
   def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
     """
@@ -1617,7 +1618,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     return self._getCategoryTool().isAcquiredMemberOf(self, category)
 
   # Aliases
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitleOrId')
   def getTitleOrId(self):
     """
@@ -2161,7 +2162,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           # Then get the first line of edit_workflow
           return history[0].get('time', None)
     if hasattr(self, 'CreationDate') :
-      return self.CreationDate()
+      return asDate(self.CreationDate())
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
@@ -2250,7 +2251,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # go back to previous situation (class based definition)
     if self.__dict__.has_key('isIndexable'): delattr(self, 'isIndexable')
     if self.__dict__.has_key('isTemplate'): delattr(self, 'isTemplate')
-    
+
     # Add to catalog
     self.reindexObject()
 
