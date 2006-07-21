@@ -71,16 +71,17 @@
             <value> <string>context.getPortalObject()["portal_subversion"].setLogin(auth, user, password)\n
 if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
-elif caller == \'updatewc\':\n
+if caller == \'tree\':\n
+  return context.BusinessTemplate_viewSvnStatus(do_extract=\'False\')\n
+if caller == \'updatewc\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdatewc\')\n
-elif caller == \'commit\':\n
+if caller == \'commit\':\n
   return context.BusinessTemplate_doSvnCommit(changelog=changelog,added=added,removed=removed,modified=modified)\n
-elif caller == \'info\':\n
+if caller == \'info\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
-elif caller == \'switch\':\n
+if caller == \'switch\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnSwitch(repos_url)\')\n
-else:\n
-  return \'Error: Caller \'+caller+\' is unknown\'\n
+return \'Error: Caller \'+caller+\' is unknown\'\n
 </string> </value>
         </item>
         <item>

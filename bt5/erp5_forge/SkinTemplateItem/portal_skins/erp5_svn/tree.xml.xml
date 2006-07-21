@@ -82,6 +82,10 @@ try:\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'tree\').BusinessTemplate_viewSvnSSLTrust()\n
+except SubversionLoginError, error1 :\n
+  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
+  return context.asContext(caller=\'tree\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+\n
 \n
 if not root:\n
   return \'\'\'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
@@ -141,6 +145,8 @@ return context.getPortalObject().portal_subversion.treeToXML(root, context)\n
                             <string>context</string>
                             <string>root</string>
                             <string>error</string>
+                            <string>error1</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
