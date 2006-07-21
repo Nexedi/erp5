@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getSource()\n
+            <value> <string>return None\n
 </string> </value>
         </item>
         <item>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/OutgoingCashIncidentLine_getBaobabSource</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/IncomingCashIncidentLine_getBaobabSource</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -115,8 +115,7 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,7 +132,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OutgoingCashIncidentLine_getBaobabSource</string> </value>
+            <value> <string>IncomingCashIncidentLine_getBaobabSource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

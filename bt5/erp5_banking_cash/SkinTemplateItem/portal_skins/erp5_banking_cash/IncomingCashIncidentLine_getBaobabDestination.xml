@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return None\n
+            <value> <string>return context.getSource()\n
 </string> </value>
         </item>
         <item>
@@ -115,7 +115,8 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
