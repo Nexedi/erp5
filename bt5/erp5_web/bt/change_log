@@ -1,3 +1,10 @@
+2006-07-21 Kevin
+* Enhancements on My Stuff page.
+* Make column filter box working and support pagination in generic HTML style listboxes.
+* Auto-reset some listboxes when needed.
+Hide non-working features (advanced search etc.).
+* Remove dummy 'Theme', 'Programme' and 'Service' columns.
+
 2006-07-20 Kevin
 * Add description on publication workflow.
 * In ListBox_asWebStyleHTML, use editable_field returned by the rendering of a listbox to get and apply the css style even if the table cell is empty.
