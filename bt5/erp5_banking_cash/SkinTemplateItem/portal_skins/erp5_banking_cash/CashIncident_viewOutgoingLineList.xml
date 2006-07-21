@@ -129,7 +129,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccountIncident_viewOutgoingLineList</string> </value>
+            <value> <string>CashIncident_viewOutgoingLineList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

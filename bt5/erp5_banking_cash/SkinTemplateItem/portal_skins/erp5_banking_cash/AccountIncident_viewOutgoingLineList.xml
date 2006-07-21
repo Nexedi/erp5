@@ -129,7 +129,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>AccountIncident_viewOutgoingLineList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -153,7 +153,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>AccountIncident_viewIncomingLineList</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
