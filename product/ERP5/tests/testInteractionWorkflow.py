@@ -32,11 +32,9 @@
 # Skeleton ZopeTestCase
 #
 
-from random import randint
-
 import os, sys
 if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
+  execfile(os.path.join(sys.path[0], 'framework.py'))
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
@@ -46,7 +44,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5.Document.Organisation import Organisation
-from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from DateTime import DateTime
 from Products.ERP5.Document.Person import Person
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
@@ -69,7 +66,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
-    #self.createData()
 
   def login(self, quiet=0):
     uf = self.getPortal().acl_users
@@ -434,6 +430,6 @@ else:
     import unittest
     def test_suite():
         suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
+        suite.addTest(unittest.makeSuite(TestInteractionWorkflow))
         return suite
 
