@@ -230,6 +230,7 @@ for folder in context.portal_url.getPortalObject()\\\n
       except:\n
         context.log(\'Unable to reindex\', \'error: folder=%s, o=%s\' %\n
                                       (repr(folder.getId()), repr(o)))\n
+        raise\n
 \n
 # Then we index inventories\n
 for folder in context.portal_url.getPortalObject()\\\n
