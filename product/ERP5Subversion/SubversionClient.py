@@ -127,6 +127,18 @@ try:
       # XXX SSL server certificate failure bits are not defined in pysvn.
       # 0x8 means that the CA is unknown.
       return True, 0x8, permanent
+    
+  class SSLServerPromptCallback(Callback):
+    def __call__(self):
+      return
+    
+  class SSLClientCertPromptCallback(Callback):
+    def __call__(self):
+      return
+    
+  class SSLClientCertPasswordPromptCallback(Callback):
+    def __call__(self):
+      return
 
   # Wrap objects defined in pysvn so that skins
   # have access to attributes in the ERP5 way.
@@ -192,12 +204,16 @@ try:
       self.client = pysvn.Client()
       self.client.set_auth_cache(0)
       obj = self.__of__(container)
+      self.client.exception_style = 1
       self.client.callback_cancel = CancelCallback(obj)
       self.client.callback_get_log_message = GetLogMessageCallback(obj)
       self.client.callback_get_login = GetLoginCallback(obj)
       self.client.callback_notify = NotifyCallback(obj)
       self.client.callback_ssl_server_trust_prompt = \
       SSLServerTrustPromptCallback(obj)
+      self.client.callback_ssl_server_prompt = SSLServerPromptCallback(obj)
+      self.client.callback_ssl_client_cert_prompt = SSLClientCertPromptCallback(obj)
+      self.client.callback_ssl_client_cert_password_prompt = SSLClientCertPasswordPromptCallback(obj)
       self.creation_time = time.time()
       self.__dict__.update(**kw)
       self.exception = None

@@ -134,6 +134,11 @@ class SubversionNotAWorkingCopyError(Exception):
   """
   pass
 
+class SubversionBusinessTemplateNotInstalled(Exception):
+  """ Exception called when the business template is not installed
+  """
+  pass
+
 class UnauthorizedAccessToPath(Exception):
   """ When path is not in zope home instance
   """
@@ -915,6 +920,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       # Partially reinstall installed bt
       installed_bt = business_template.portal_templates\
       .getInstalledBusinessTemplate(business_template.getTitle())
+      if installed_bt is None:
+        raise SubversionBusinessTemplateNotInstalled, "Revert won't work if the business template is not installed. Please install it first."
       installed_bt.reinstall(object_to_update=object_to_update, force=0)
     
   security.declareProtected('Import/Export objects', 'resolved')
@@ -1033,8 +1040,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # Business template root directory is the root of the tree
     root = Dir(business_template.getTitle(), "normal")
     something_modified = False
+    
     statusObj_list = self.status(os.path.join(bt_path, \
-    business_template.getTitle()), update=True)
+    business_template.getTitle()), update=False)
     # We browse the files returned by svn status
     for status_obj in statusObj_list :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
