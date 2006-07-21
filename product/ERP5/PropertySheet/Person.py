@@ -200,7 +200,6 @@ class Person:
                               , 'role', 'role_id', 'role_title', 'role_value'
                               , 'function', 'function_id', 'function_title', 'function_value'
                               )
-    , 'deprecated'          : 1
     , 'mode'                : 'w'
     },
   )
