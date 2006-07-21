@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-"""\
-ERP portal_selection tool.
+"""
+  ERP5 portal_selection tool.
 """
 
 from OFS.Traversable import NotFound
@@ -210,11 +210,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
           return params
       else:
         return params
-    
-    # backward compatibility 
+
+    # backward compatibility
     security.declareProtected(ERP5Permissions.View, 'getSelectionParams')
     getSelectionParams = getSelectionParamsFor
-    
+
     security.declareProtected(ERP5Permissions.View, 'setSelectionParamsFor')
     def setSelectionParamsFor(self, selection_name, params, REQUEST=None):
       """
@@ -504,6 +504,48 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
 
     # ListBox related methods
+
+    security.declareProtected(ERP5Permissions.View, 'firstPage')
+    def firstPage(self, listbox_uid, uids=None, REQUEST=None):
+      """
+        Access the first page of a list
+      """
+      if uids is None: uids = []
+      request = REQUEST
+      #form_id = request.form_id
+      selection_name = request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST)
+      params = selection.getParams()
+      params['list_start'] = 0
+      selection.edit(params=params)
+      self.uncheckAll(selection_name, listbox_uid)
+      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+
+    security.declareProtected(ERP5Permissions.View, 'lastPage')
+    def lastPage(self, listbox_uid, uids=None, REQUEST=None):
+      """
+        Access the last page of a list
+      """
+      if uids is None: uids = []
+      request = REQUEST
+      #form_id = request.form_id
+      selection_name = request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST)
+      params = selection.getParams()
+      # XXX This will not work if the number of lines shown in the listbox is greater
+      #       than the BIG_INT constan. Such a case has low probability but is not
+      #       impossible. If you are in this case, send me a mail ! -- Kev
+      BIG_INT = 10000000
+      last_page_start = BIG_INT
+      total_lines = request.form.get('total_size', BIG_INT)
+      if total_lines != BIG_INT:
+        lines_per_page  = params.get('list_lines', 1)
+        last_page_start = int(total_lines) - (int(total_lines) % int(lines_per_page))
+      params['list_start'] = last_page_start
+      selection.edit(params=params)
+      self.uncheckAll(selection_name, listbox_uid)
+      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+
     security.declareProtected(ERP5Permissions.View, 'nextPage')
     def nextPage(self, listbox_uid, uids=None, REQUEST=None):
       """
@@ -518,8 +560,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       lines = params.get('list_lines',0)
       start = params.get('list_start', 0)
       params['list_start'] = int(start) + int(lines)
-      selection.edit(params= params)
-
+      selection.edit(params=params)
       self.uncheckAll(selection_name, listbox_uid)
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
@@ -537,8 +578,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       lines = params.get('list_lines',0)
       start = params.get('list_start', 0)
       params['list_start'] = max(int(start) - int(lines), 0)
-      selection.edit(params= selection.params)
-
+      selection.edit(params=selection.params)
       self.uncheckAll(selection_name, listbox_uid)
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
@@ -551,21 +591,19 @@ class SelectionTool( UniqueObject, SimpleItem ):
       request = REQUEST
       #form_id = request.form_id
       selection_name = request.list_selection_name
-
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
         lines = params.get('list_lines',0)
         start = request.form.get('list_start',0)
-
         params['list_start'] = start
         selection.edit(params= selection.params)
-
       self.uncheckAll(selection_name, listbox_uid)
       return self.checkAll(selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
 
     # PlanningBox related methods
+
     security.declareProtected(ERP5Permissions.View, 'setZoomLevel')
     def setZoomLevel(self, uids=None, REQUEST=None):
       """
@@ -749,7 +787,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return 'FlatListMode'
 
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
-    def setListboxDisplayMode(self, REQUEST, listbox_display_mode, 
+    def setListboxDisplayMode(self, REQUEST, listbox_display_mode,
                               selection_name=None, redirect=0,
                               form_id=None, query_string=None):
       """
@@ -763,8 +801,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       # This need to be cleaned
       # Beware, this fix may break the report system...
       # and we don't have test for this
-      # Possible fix: currently, display mode icon are implemented as 
-      # method. It could be easier to generate them as link (where we 
+      # Possible fix: currently, display mode icon are implemented as
+      # method. It could be easier to generate them as link (where we
       # can define explicitely parameters through the url).
       try:
         list_selection_name = request.list_selection_name
@@ -794,7 +832,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       else:
         flat_list_mode = 0
         domain_tree_mode = 0
-        report_tree_mode = 0      
+        report_tree_mode = 0
 
       selection.edit(flat_list_mode=flat_list_mode,
                      domain_tree_mode=domain_tree_mode,
@@ -815,7 +853,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Set display of the listbox to FlatList mode
       """
       return self.setListboxDisplayMode(
-                       REQUEST=REQUEST, listbox_display_mode='FlatListMode', 
+                       REQUEST=REQUEST, listbox_display_mode='FlatListMode',
                        selection_name=selection_name, redirect=1)
 
     security.declareProtected(ERP5Permissions.View, 'setDomainTreeMode')
@@ -824,7 +862,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
          Set display of the listbox to DomainTree mode
       """
       return self.setListboxDisplayMode(
-                       REQUEST=REQUEST, listbox_display_mode='DomainTreeMode', 
+                       REQUEST=REQUEST, listbox_display_mode='DomainTreeMode',
                        selection_name=selection_name, redirect=1)
 
     security.declareProtected(ERP5Permissions.View, 'setReportTreeMode')
@@ -867,8 +905,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if len(value_list) == 0:
         value_list = self.getSelectionSelectedValueList(
                                             selection_name,
-                                            REQUEST=REQUEST, 
-                                            selection_method=selection_method, 
+                                            REQUEST=REQUEST,
+                                            selection_method=selection_method,
                                             context=context)
       return value_list
 
@@ -885,7 +923,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         We want to be sure that the selection did not change
       """
       # XXX To avoid the difference of the string representations of int and long,
-      # convert each element to a string. 
+      # convert each element to a string.
       object_uid_list = [str(x) for x in object_uid_list]
       object_uid_list.sort()
       new_md5_string = md5.new(str(object_uid_list)).hexdigest()
@@ -1071,10 +1109,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
           # Checked current uid
           kw ={}
           kw[field.get_value('catalog_index')] = field_value
-          self.portal_selections.setSelectionParamsFor(selection_name, 
+          self.portal_selections.setSelectionParamsFor(selection_name,
                                                        kw.copy())
           self.portal_selections.setSelectionCheckedUidsFor(
-                                             selection_name, 
+                                             selection_name,
                                              current_uid_list)
           field_value = str(field_value).splitlines()
           REQUEST.form[field_key] = field_value
@@ -1112,7 +1150,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         kw['previous_form_id'] = form_id
         kw[field.get_value('catalog_index')] = field_value
         kw['portal_status_message'] = portal_status_message
-        kw['form_pickle'] = form_pickle   
+        kw['form_pickle'] = form_pickle
         kw['form_signature'] = form_signature
 
          # Empty the selection (uid)
@@ -1125,7 +1163,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     def _aq_dynamic(self, name):
       """
-        Generate viewSearchRelatedDocumentDialog0, 
+        Generate viewSearchRelatedDocumentDialog0,
                  viewSearchRelatedDocumentDialog1,... if necessary
       """
       aq_base_name = getattr(aq_base(self), name, None)
@@ -1154,17 +1192,17 @@ class SelectionTool( UniqueObject, SimpleItem ):
               sub_index = None
 
             # generate dynamicaly needed forwarder methods
-            def viewSearchRelatedDocumentDialogWrapper(self, form_id, 
+            def viewSearchRelatedDocumentDialogWrapper(self, form_id,
                                                        REQUEST=None, **kw):
               """
                 viewSearchRelatedDocumentDialog Wrapper
               """
-              LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw', 
+              LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw',
                   0, kw)
               return self.viewSearchRelatedDocumentDialog(
-                                   method_count, form_id, 
+                                   method_count, form_id,
                                    REQUEST=REQUEST, sub_index=sub_index, **kw)
-            setattr(self.__class__, name, 
+            setattr(self.__class__, name,
                     viewSearchRelatedDocumentDialogWrapper)
 
             klass = aq_base(self).__class__
@@ -1192,22 +1230,22 @@ class TreeListLine:
     self.exception_uid_list=exception_uid_list
   def getObject(self):
     return self.object
-    
+
   def getIsPureSummary(self):
     return self.is_pure_summary
-    
+
   def getDepth(self):
     return self.depth
-    
+
   def getIsOpen(self):
     return self.is_open
-  
-  def getSelectDomainDict(self): 
+
+  def getSelectDomainDict(self):
     return self.select_domain_dict
-    
+
   def getExceptionUidList(self):
     return self.exception_uid_list
-  
+
 
 def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1, sort_on = (('id', 'ASC'),)):
   """
@@ -1274,7 +1312,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
             for sub_zo in o.searchFolder(sort_on=sort_on):
               sub_o = sub_zo.getObject()
               if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
-                exception_uid_list.append(sub_o.getUid())          
+                exception_uid_list.append(sub_o.getUid())
             tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, exception_uid_list)] # Summary (open)
             if is_report_opened :
               tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)] # List (contents, closed, must be strict selection)
@@ -1295,12 +1333,12 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
         tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, None)] # Summary (open)
         if is_report_opened :
           tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, None)] # List (contents, closed, must be strict selection)
-        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, 
-            unfolded_list, form_id, selection_name, report_depth, 
+        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1,
+            unfolded_list, form_id, selection_name, report_depth,
             is_report_opened=is_report_opened, sort_on=sort_on)
       else:
 
         tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, None)] # Summary (closed)
-   
+
   return tree_list
 
