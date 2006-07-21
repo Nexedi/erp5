@@ -1,0 +1,30 @@
+<workflow_chain>
+ <chain>
+  <type>File</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Graphic</type>
+  <workflow>edit_workflow, ooo_interaction_workflow, document_publication_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Presentation</type>
+  <workflow>document_publication_workflow, edit_workflow, ooo_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Role Definition</type>
+  <workflow>edit_workflow, local_permission_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Spreadsheet</type>
+  <workflow>document_publication_workflow, ooo_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Text</type>
+  <workflow>edit_workflow, ooo_interaction_workflow, document_publication_workflow</workflow>
+ </chain>
+</workflow_chain>

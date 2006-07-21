@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># category_order : list of base_categories we want to use to generate the group id\n
+# kw : keys should be base categories,\n
+#      values should be value of corresponding relative urls (obtained by getBaseCategory())\n
+#\n
+# Example call : context.ERP5TypeSecurity_asGroupId(category_order=(\'site\', \'group\', \'function\'),\n
+#                    site=\'france/lille\', group=\'nexedi\', function=\'accounting/accountant\')\n
+# This will generate a string like \'LIL_NXD_ACT\' where "LIL", "NXD" and "ACT" are the codification\n
+#   of respecively "france/lille", "nexedi" and "accounting/accountant" categories\n
+#\n
+# ERP5Type_asSecurityGroupId can also return a list of users whenever a category points\n
+# to a Person instance. This is useful to implement user based local role assignments\n
+\n
+code_list = []\n
+user_list = []\n
+\n
+# sort the category list lexicographically\n
+# this prevents us to choose the exact order we want,\n
+# but also prevents some human mistake to break everything by creating site_function instead of function_site\n
+if category_order not in (None, \'\'):\n
+  category_order = list(category_order)\n
+  category_order.sort()\n
+else:\n
+  category_order = []\n
+\n
+for base_category in category_order:\n
+ if kw.has_key(base_category):\n
+  category_list   = kw[base_category]\n
+  if same_type(category_list, \'\'):\n
+    category_list = [category_list]\n
+  for category in category_list:\n
+    category_path   = \'%s/%s\' % (base_category, category)\n
+    category_object = context.portal_categories.getCategoryValue(category_path)\n
+    if category_object in (None, \'\'):\n
+      raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
+    if category_object.getPortalType() == \'Person\':\n
+      # We define a person here\n
+      user_name = category_object.getReference()\n
+      if user_name is not None: user_list.append(user_name)\n
+    elif category_object.getPortalType() == \'Project\':\n
+      # We use the project reference as a group\n
+      category_code = category_object.getReference(category_object.getTitle())\n
+      code_list.append(category_code)\n
+    else:\n
+      # We define a group item here\n
+      category_code   = category_object.getCodification() or category_object.getId()\n
+      code_list.append(category_code)\n
+\n
+# Return a list of users or a single group\n
+if user_list: return user_list\n
+return \'_\'.join(code_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>category_order, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>category_order</string>
+                            <string>kw</string>
+                            <string>code_list</string>
+                            <string>user_list</string>
+                            <string>None</string>
+                            <string>list</string>
+                            <string>_getattr_</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
+                            <string>_getitem_</string>
+                            <string>category_list</string>
+                            <string>same_type</string>
+                            <string>category</string>
+                            <string>category_path</string>
+                            <string>context</string>
+                            <string>category_object</string>
+                            <string>user_name</string>
+                            <string>category_code</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Type_asSecurityGroupId</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

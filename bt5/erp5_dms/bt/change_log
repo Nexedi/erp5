@@ -1,0 +1,29 @@
+2006-07-20 BG
+* Completed document publication workflow
+* Fixed fields in document-related forms
+* patched Base_edit
+* added missing categories
+2006-05-05 JPS
+* Refactored as a document management system
+* Create portal types for every kind of document and use mime types in CMF
+* Added very basic wiki support
+* Implemented complete prototype of security and workflows (publication, staging). Spec is in decription of transitions and states.
+
+2006-05-27
+* Allowed target mimetypes now drawn from server and cached
+* Tested for some more mimetypes
+
+2006-05-23
+* Implemented generic file generation mechanism, tested for rtf
+
+2006-05-11
+* Fixed char encoding problems
+* Implemented editing base set of metadata
+* Fixed and tidied up controls
+
+2006-05-10
+* Fixed lots of bugs
+* Conversion and metadata editing works with the server
+
+2006-05-05
+* Initial build (previous log in cvs)

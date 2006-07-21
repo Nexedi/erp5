@@ -1,0 +1,84 @@
+Document Module | list_ui
+Document Module | sort_on
+Document Module | view
+Document Module | webdav
+File | download
+File | history
+File | metadata
+File | print
+File | view
+Graphic | convert
+Graphic | create_snapshot
+Graphic | download
+Graphic | download_ooo
+Graphic | download_snapshot
+Graphic | export
+Graphic | get_snapshot
+Graphic | history
+Graphic | local_permission
+Graphic | metadata
+Graphic | print
+Graphic | related_document
+Graphic | view
+Image Module | list_ui
+Image Module | sort_on
+Image Module | view
+Image | download
+Image | fullsize_view
+Image | history
+Image | metadata
+Image | print
+Image | view
+Presentation | convert
+Presentation | create_snapshot
+Presentation | download
+Presentation | download_ooo
+Presentation | download_snapshot
+Presentation | export
+Presentation | get_snapshot
+Presentation | history
+Presentation | local_permission
+Presentation | metadata
+Presentation | print
+Presentation | related_document
+Presentation | view
+Role Definition | history
+Role Definition | metadata
+Role Definition | print
+Role Definition | view
+Spreadsheet | convert
+Spreadsheet | create_snapshot
+Spreadsheet | download
+Spreadsheet | download_ooo
+Spreadsheet | download_snapshot
+Spreadsheet | export
+Spreadsheet | get_snapshot
+Spreadsheet | history
+Spreadsheet | local_permission
+Spreadsheet | metadata
+Spreadsheet | print
+Spreadsheet | related_document
+Spreadsheet | view
+Text | convert
+Text | create_snapshot
+Text | download
+Text | download_ooo
+Text | download_snapshot
+Text | export
+Text | get_snapshot
+Text | history
+Text | local_permission
+Text | metadata
+Text | print
+Text | related_document
+Text | view
+Wiki Module | list_ui
+Wiki Module | sort_on
+Wiki Module | view
+Wiki Page | classification
+Wiki Page | list
+Wiki Page | local_permission
+Wiki Page | metadata
+Wiki Page | related
+Wiki Page | render
+Wiki Page | view

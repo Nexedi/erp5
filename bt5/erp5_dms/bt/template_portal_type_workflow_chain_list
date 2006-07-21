@@ -1,0 +1,16 @@
+File | edit_workflow
+Graphic | document_publication_workflow
+Graphic | edit_workflow
+Graphic | ooo_interaction_workflow
+Image | edit_workflow
+Presentation | document_publication_workflow
+Presentation | edit_workflow
+Presentation | ooo_interaction_workflow
+Role Definition | edit_workflow
+Role Definition | local_permission_workflow
+Spreadsheet | document_publication_workflow
+Spreadsheet | edit_workflow
+Spreadsheet | ooo_interaction_workflow
+Text | document_publication_workflow
+Text | edit_workflow
+Text | ooo_interaction_workflow

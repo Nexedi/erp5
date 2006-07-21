@@ -1,0 +1,19 @@
+<allowed_content_type_list>
+ <portal_type id="Document Module">
+  <item>Text</item>
+  <item>Spreadsheet</item>
+  <item>Presentation</item>
+  <item>Graphic</item>
+ </portal_type>
+ <portal_type id="Image Module">
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Wiki Module">
+  <item>Wiki Page</item>
+ </portal_type>
+ <portal_type id="Wiki Page">
+  <item>Image</item>
+  <item>File</item>
+  <item>Role Definition</item>
+ </portal_type>
+</allowed_content_type_list>

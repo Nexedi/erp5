@@ -1,0 +1,27 @@
+<base_category_list>
+ <portal_type id="Presentation">
+  <item>group</item>
+  <item>publication_section</item>
+  <item>source_project</item>
+  <item>site</item>
+  <item>classification</item>
+  <item>function</item>
+ </portal_type>
+ <portal_type id="Role Definition">
+  <item>gap</item>
+  <item>function</item>
+  <item>site</item>
+  <item>group</item>
+ </portal_type>
+ <portal_type id="Wiki Page">
+  <item>extra_assignor</item>
+  <item>extra_author</item>
+  <item>destination</item>
+  <item>extra_assignee</item>
+  <item>similar</item>
+  <item>source</item>
+  <item>extra_associate</item>
+  <item>publication_section</item>
+  <item>extra_auditor</item>
+ </portal_type>
+</base_category_list>

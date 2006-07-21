@@ -47,14 +47,6 @@
             <value> <string>python: []</string> </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>predecessor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -62,7 +54,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>predecessor</string> </value>
+            <value> <string>classification</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -70,7 +66,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Predecessor</string> </value>
+            <value> <string>Security Classification</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

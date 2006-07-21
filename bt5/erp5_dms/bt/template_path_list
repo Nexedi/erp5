@@ -1,0 +1,8 @@
+content_type_registry#ooo_calc
+content_type_registry#ooo_draw
+content_type_registry#ooo_impress
+content_type_registry#ooo_writer
+portal_categories/classification*
+portal_categories/classification/*
+portal_categories/function/project*
+portal_categories/function/project/*
