@@ -739,13 +739,15 @@ class TestERP5BankingMixin:
     # variation_value : list of variation value (must be in the same order as variation_id
     # quantity
     for line in line_list:
+      variation_list = line.get('variation_list',None)
       self.addCashLineToDelivery(inventory,
                                  line['id'],
                                  "Cash Inventory Line",
                                  line['resource'],
                                  line['variation_id'],
                                  line['variation_value'],
-                                 line['quantity'],)
+                                 line['quantity'],
+				 variation_list=variation_list)
     # deliver the inventory
     if inventory.getSimulationState()!='delivered':
       inventory.deliver()
