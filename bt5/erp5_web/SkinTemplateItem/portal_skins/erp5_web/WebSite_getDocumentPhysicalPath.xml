@@ -70,11 +70,15 @@
             <key> <string>_body</string> </key>
             <value> <string>if reference_path is None:\n
   reference_path = context\n
+\n
 section = reference_path.WebSite_getSectionValue()\n
 document = context.WebSite_getDocumentValue()\n
+\n
 if section is not None and document is not None:\n
   return "%s/%s" % (section.WebSite_getUrl(), document.getRelativeUrl())\n
-return None\n
+\n
+# We are at the website root\n
+return context.WebSite_getUrl()\n
 </string> </value>
         </item>
         <item>
