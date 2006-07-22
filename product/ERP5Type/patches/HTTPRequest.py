@@ -17,6 +17,8 @@
 # documents referenced by the web site are accessed
 # through the web site rather than directly.
 
+website_key = 'web_site_value'
+
 from ZPublisher.HTTPRequest import HTTPRequest
 def HTTPRequest_physicalPathToVirtualPath(self, path):
     """
