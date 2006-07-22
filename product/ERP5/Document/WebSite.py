@@ -38,10 +38,14 @@ from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthentic
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.User import emergency_user
 from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
+from Products.ERP5Type.patches.HTTPRequest import website_key
 
 from zLOG import LOG
 
 Domain_getattr = Domain.inheritedAttribute('__getattr__')
+
+# Use a request key to store access attributes and prevent infinite recursion
+cache_key = 'web_site_aq_cache'
 
 class WebSite(Domain):
     """
@@ -77,10 +81,11 @@ class WebSite(Domain):
       """
         Try to find a suitable document based on the
         web site local naming policies as defined by
-        the WebSite_getDocument script """
-      # Use a non recursion variable
-      cache_key = 'web_site_aq_cache'
+        the WebSite_getDocument script
+      """
       request = self.REQUEST
+      # Register current web site physical path for later URL generation
+      if not request.has_key(website_key): request[website_key] = self.getPhysicalPath()
       # First let us call the super method
       dynamic = Domain._aq_dynamic(self, name)
       if dynamic is not None :
@@ -112,4 +117,5 @@ class WebSite(Domain):
           del request[cache_key][name]
         raise
       return document
+
 
