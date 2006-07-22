@@ -1835,6 +1835,7 @@ class ListBoxRendererLine:
       else:
         processed_value = unicode(str(processed_value), self.renderer.getEncoding())
 
+      LOG(sql, 0, str((obj.getPath(),original_value, type(original_value))))
       value_list.append((original_value, processed_value))
 
     return value_list
@@ -1967,8 +1968,12 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is None:
           html = cell_html + error_message
         else:
-          html = u'<a href="%s">%s</a> <span class="warning">%s</span>' % (url, cell_html, error_message)
-
+          if editable_field.get_value('editable'):
+            html = u'%s' % cell_html
+          else:
+            html = u'<a href="%s">%s</a>' % (url, cell_html)
+          if error_message not in ('', None):
+            html += u' <span class="warning">%s</span>' % error_message
       else:
         # If not editable, show a static text with a link, if enabled.
         processed_value = cgi.escape(processed_value)
