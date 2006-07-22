@@ -68,26 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX For now, this script requires proxy manager\n
-\n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             When using PluggableAuthService with ERP5GroupMAnager, user_name is the id\n
-#             of the person linked to getUser().getId() through getReference() (which is its login).\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
-\n
-# must always return a list of dicts\n
-\n
-category_list = []\n
-\n
-if object is None:\n
-  return []\n
-\n
-for base_category in base_category_list:\n
-  category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
-context.log(script.getId(),category_list)\n
-return category_list\n
+            <value> <string>context.log(script.getId(),\'done\')\n
+sci.object.assignRoleToSecurityGroup()\n
 </string> </value>
         </item>
         <item>
@@ -104,15 +86,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>sci</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,23 +106,16 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>base_category_list</string>
-                            <string>user_name</string>
-                            <string>object</string>
-                            <string>portal_type</string>
-                            <string>category_list</string>
-                            <string>None</string>
-                            <string>_getiter_</string>
-                            <string>base_category</string>
+                            <string>sci</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>script</string>
+<string>context</string>
+<string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -165,7 +132,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromArrow</string> </value>
+            <value> <string>Document_assignRoleToGroup</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

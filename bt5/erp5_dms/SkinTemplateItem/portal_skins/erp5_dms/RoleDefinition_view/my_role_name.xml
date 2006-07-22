@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ListField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>ListField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -278,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/valid_roles</string> </value>
+            <value> <string>python: [r for r in here.valid_roles() if r!=\'Owner\']</string> </value>
         </item>
       </dictionary>
     </pickle>

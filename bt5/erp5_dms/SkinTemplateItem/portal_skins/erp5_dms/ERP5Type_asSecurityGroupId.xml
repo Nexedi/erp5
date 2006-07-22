@@ -80,6 +80,9 @@
 # ERP5Type_asSecurityGroupId can also return a list of users whenever a category points\n
 # to a Person instance. This is useful to implement user based local role assignments\n
 \n
+context.log(script.getId(),category_order)\n
+context.log(script.getId(),kw)\n
+\n
 code_list = []\n
 user_list = []\n
 \n
@@ -116,7 +119,10 @@ for base_category in category_order:\n
       code_list.append(category_code)\n
 \n
 # Return a list of users or a single group\n
-if user_list: return user_list\n
+if user_list: \n
+  context.log(\'user_list\',user_list)\n
+  return user_list\n
+context.log(\'code_list\',code_list)\n
 return \'_\'.join(code_list)\n
 </string> </value>
         </item>
@@ -162,11 +168,13 @@ return \'_\'.join(code_list)\n
                           <tuple>
                             <string>category_order</string>
                             <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>script</string>
                             <string>code_list</string>
                             <string>user_list</string>
                             <string>None</string>
                             <string>list</string>
-                            <string>_getattr_</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>_getitem_</string>
@@ -174,7 +182,6 @@ return \'_\'.join(code_list)\n
                             <string>same_type</string>
                             <string>category</string>
                             <string>category_path</string>
-                            <string>context</string>
                             <string>category_object</string>
                             <string>user_name</string>
                             <string>category_code</string>

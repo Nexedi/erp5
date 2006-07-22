@@ -1,3 +1,8 @@
+2006-02-22 BG
+* finished (and renamed) local roles interaction workflow
+* assigned portal types to appropriate workflows
+* made File a non-terminating leaf (not in this bt5)
+
 2006-07-20 BG
 * Completed document publication workflow
 * Fixed fields in document-related forms

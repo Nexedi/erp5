@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5Form.MultiRelationField</string>
+          <string>MultiRelationStringField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -499,10 +502,6 @@
                         <tuple>
                           <string>Person</string>
                           <string>Person</string>
-                        </tuple>
-                        <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
                         </tuple>
                       </list>
                     </value>

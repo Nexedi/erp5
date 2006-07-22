@@ -13,18 +13,18 @@
  </chain>
  <chain>
   <type>Presentation</type>
-  <workflow>document_publication_workflow, edit_workflow, ooo_interaction_workflow</workflow>
+  <workflow>document_publication_workflow, edit_workflow, ooo_interaction_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Role Definition</type>
-  <workflow>edit_workflow, local_permission_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Spreadsheet</type>
-  <workflow>document_publication_workflow, ooo_interaction_workflow, edit_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, document_publication_workflow, ooo_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>edit_workflow, ooo_interaction_workflow, document_publication_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, ooo_interaction_workflow, edit_workflow, document_publication_workflow</workflow>
  </chain>
 </workflow_chain>
