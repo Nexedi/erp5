@@ -235,6 +235,12 @@ class TestERP5BankingMixin:
     """
     return getattr(self.getPortal(), 'checkbook_vault_transfer_module', None)
 
+  def getCheckbookUsualCashTransferModule(self):
+    """
+    Return the Checkbook Vault Transfer Module
+    """
+    return getattr(self.getPortal(), 'checkbook_usual_cash_transfer_module', None)
+
   def getCheckModule(self):
     """
     Return the Check Module
@@ -540,6 +546,8 @@ class TestERP5BankingMixin:
     self.simulation_tool = self.getSimulationTool()
     # get the currency module
     self.currency_module = self.getCurrencyModule()
+    # a default date
+    self.date = DateTime()
 
 
 
