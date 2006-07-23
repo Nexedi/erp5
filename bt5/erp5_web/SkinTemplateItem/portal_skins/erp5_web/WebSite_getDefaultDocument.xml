@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.WebSite_getDefaultDocumentValue().WebSite_getUrl()\n
+            <value> <string>default_document = context.WebSite_getDefaultDocumentValue()\n
+if default_document:\n
+  return default_document.WebSite_getUrl()\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -113,6 +116,8 @@
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>default_document</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
