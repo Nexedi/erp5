@@ -69,11 +69,21 @@ class  ZSQLBrain(Acquisition.Implicit):
           error=sys.exc_info() )
       return None
 
-  def absolute_url(self):
+  def absolute_url(self, relative=0):
     """
-      returns the path stored in the Catalog
+      Default method used to return the path stored in the Catalog.
+      However, if virtual hosting is implemented, we must return
+      a value which is compatible with the standard absolute_url
+      behaviour
+
+      And if absolute_url is invoked within a Web Site,
+      additional Web Site behaviour is required
+
+      Implementation of absolute_url therefore consists in using
+      physicalPathToURL defined in the REQUEST so that absolute_url
+      is consistent with HTTPRequest implementation.
     """
-    return self.path
+    return self.REQUEST.physicalPathToURL(self.path, relative=relative)
 
   def resolve_url(self, path, REQUEST):
     """
