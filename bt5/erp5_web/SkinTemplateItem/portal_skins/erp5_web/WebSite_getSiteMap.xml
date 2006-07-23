@@ -121,7 +121,7 @@ for section in site_root.WebSite_getMainSectionList():\n
 if include_site:\n
   # Add the most upper object: the website site itself\n
   site_map = {\n
-      \'title\'       : "%s - Home" % (site_root.getTitle())\n
+      \'title\'       : "%s - Home" % (site_root.getTitleOrId())\n
     , \'link\'        : site_root.absolute_url()\n
     , \'object\'      : site_root\n
     , \'sub-content\' : site_content\n
