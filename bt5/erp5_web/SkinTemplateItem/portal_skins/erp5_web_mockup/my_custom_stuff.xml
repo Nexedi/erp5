@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -158,7 +164,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX MOCKUP</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -356,7 +362,7 @@ has been reviewed by relevant agents before it is widely published.</p>\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX MOCKUP</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
