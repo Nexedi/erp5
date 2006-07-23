@@ -33,7 +33,6 @@ from Products.ERP5Type.patches import ppml
 from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware
-from Products.ERP5Type.patches import BaseRequest
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
 from Products.ERP5Type.patches import States

@@ -15,8 +15,10 @@
 """
 
 import Globals
+import AccessControl
 from Globals import package_home
 
+from ZPublisher import BeforeTraverse
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite, PortalGenerator
 from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
@@ -30,9 +32,8 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 
 import ERP5Defaults
-from os import path
 
-from zLOG import LOG
+from zLOG import LOG, INFO
 from string import join
 import os
 MARKER = []
@@ -89,6 +90,49 @@ def manage_addERP5Site(self,
   if RESPONSE is not None:
     RESPONSE.redirect(p.absolute_url())
 
+
+class ReferCheckerBeforeTraverseHook:
+  """This before traverse hook checks the HTTP_REFERER argument in the request
+  and refuses access to anything else that portal_url.
+
+  This is enabled by calling the method enableRefererCheck on the portal.
+  """
+  handle = '_erp5_referer_check'
+
+  def __call__(self, container, request):
+    """Checks the request contains a valid referrer.
+    """
+    response = request.RESPONSE
+    http_url = request.get('ACTUAL_URL', '').strip()
+    http_referer = request.get('HTTP_REFERER', '').strip()
+
+    security_manager = AccessControl.getSecurityManager()
+    user = security_manager.getUser()
+    user_roles = user.getRolesInContext(object)
+
+    # Manager can do anything
+    if 'Manager' in user_roles:
+      return
+    
+    portal_url = container.portal_url.getPortalObject().absolute_url()
+    if http_referer != '':
+      # if HTTP_REFERER is set, user can acces the object if referer is ok
+      if http_referer.startswith(portal_url):
+        return
+      LOG('HTTP_REFERER_CHECK : BAD REFERER !', INFO,
+          'request : "%s", referer : "%s"' % (http_url, http_referer))
+      response.unauthorized()
+    else:
+      # no HTTP_REFERER, we only allow to reach portal_url
+      for i in ('/', '/index_html', '/login_form', '/view'):
+        if http_url.endswith(i):
+          http_url = http_url[:-len(i)]
+          break
+      if len(http_url) == 0 or not portal_url.startswith(http_url):
+        LOG('HTTP_REFERER_CHECK : NO REFERER !', INFO,
+            'request : "%s"' % http_url)
+        response.unauthorized()
+
 class ERP5Site(FolderMixIn, CMFSite):
   """
   The *only* function this class should have is to help in the setup
@@ -120,6 +164,20 @@ class ERP5Site(FolderMixIn, CMFSite):
       Implemented for consistency
     """
     return self.index_html()
+  
+  security.declareProtected(Permissions.ManagePortal, 'enableRefererCheck')
+  def enableRefererCheck(self):
+    """Enable a ReferCheckerBeforeTraverseHook to check users have valid
+    HTTP_REFERER
+    """
+    BeforeTraverse.registerBeforeTraverse(self,
+                                        ReferCheckerBeforeTraverseHook(),
+                                        ReferCheckerBeforeTraverseHook.handle)
+  
+  def _disableRefererCheck(self):
+    """Disable the HTTP_REFERER check."""
+    BeforeTraverse.unregisterBeforeTraverse(self,
+                                        ReferCheckerBeforeTraverseHook.handle)
 
   def hasObject(self, id):
     """
@@ -491,7 +549,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('supply') or \
            self._getPortalConfiguration('portal_supply_type_list')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalDocumentTypeList')
   def getPortalDocumentTypeList(self):
     """
