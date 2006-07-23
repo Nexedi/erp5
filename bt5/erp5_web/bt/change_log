@@ -1,9 +1,15 @@
+2006-07-23 Kevin
+* Add WebSite_getBaseURL to get dynamic base url.
+
 2006-07-21 Kevin
 * Enhancements on My Stuff page.
 * Make column filter box working and support pagination in generic HTML style listboxes.
 * Auto-reset some listboxes when needed.
 Hide non-working features (advanced search etc.).
 * Remove dummy 'Theme', 'Programme' and 'Service' columns.
+* Move ERP55 FCKEditor wrapper in a dedicated skin folder.
+* Move Mockup to dedicated folder.
+* WebSite_newContent definitely replace WebSite_clone.
 
 2006-07-20 Kevin
 * Add description on publication workflow.
