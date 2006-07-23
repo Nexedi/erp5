@@ -80,6 +80,14 @@ Base_viewSearchResultList?validation_state=draft&reset=1
             <value>
               <dictionary>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Web Page</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
