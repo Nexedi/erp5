@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+  Create New Content by Cloning or Other Methods (replace old WebSite_clone).\n
+"""\n
+\n
 form_data = context.REQUEST.form\n
 context.log(\'WebSite_clone received REQUEST:\', form_data)\n
 \n
@@ -105,7 +109,7 @@ if creation_mode == \'clone\':\n
   #context.log("Kev test clipboard >>>>>", repr(clipboard))\n
   #context.log("Kev test paste_result >>>>>", repr(paste_result))\n
   #context.log("Kev test directory.WebSite_getUrl() >>>>>", repr(directory.WebSite_getUrl()))\n
-  #context.log("Kev test  new_object.getId() >>>>>", repr(new_object.getId()))\n
+  #context.log("Kev test new_object.getId() >>>>>", repr(new_object.getId()))\n
 \n
   redirect_url = \'%s/%s/WebPage_view?editable_mode=1\' % (directory.WebSite_getUrl(), new_object.getId())\n
 \n
@@ -142,7 +146,7 @@ elif creation_mode == \'clone_to\':\n
                                                            )\n
 \n
 \n
-# Create a new object here\n
+# Create a new object here (this is a copy and paste of the previous WebSite_clone script)\n
 else:\n
   # Get the new object portal type\n
   new_portal_type = context.REQUEST.form[\'new_portal_type\']\n
@@ -249,7 +253,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create New Content by Cloning or Other Methods (replace old WebSite_clone)</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
