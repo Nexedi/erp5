@@ -30,6 +30,8 @@ def HTTPRequest_physicalPathToVirtualPath(self, path):
 
     website_path = self.get(website_key, None)
     if website_path:
+      website_path = tuple(website_path)    # Make sure all path are tuples
+      path = tuple(path)                    # Make sure all path are tuples
       # Search for the common part index
       # XXX more testing should be added to check
       # if the URL is the kind of URL which is a Web Site
