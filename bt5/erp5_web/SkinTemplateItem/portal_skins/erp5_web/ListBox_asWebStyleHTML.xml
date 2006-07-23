@@ -52,23 +52,23 @@
   xmlns:tal="http://xml.zope.org/namespaces/tal"\n
   xmlns:metal="http://xml.zope.org/namespaces/metal"\n
   xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-  tal:define="field_id here/getId;\n
-  form_id python: here.getForm().id;\n
-  selection_name here/getSelectionName;\n
-  requested_selection_name here/getRequestedSelectionName;\n
-  selection_index here/getSelectionIndex;\n
-  selection here/getSelection;\n
-  portal_url_string here/getPortalUrlString;\n
-  real_context here/getContext;\n
-  context_url real_context/getUrl;\n
-  md5_string here/getMD5Checksum;\n
-  line_list here/query;\n
-  is_domain_tree_mode here/isDomainTreeMode;\n
-  is_report_tree_mode here/isReportTreeMode;\n
-  is_domain_tree_supported here/isDomainTreeSupported;\n
-  is_report_tree_supported here/isReportTreeSupported;\n
-  show_select_column here/showSelectColumn;\n
-  show_search_line here/showSearchLine;\n
+  tal:define="field_id                 here/getId;\n
+              form_id                  python: here.getForm().id;\n
+              selection_name           here/getSelectionName;\n
+              requested_selection_name here/getRequestedSelectionName;\n
+              selection_index          here/getSelectionIndex;\n
+              selection                here/getSelection;\n
+              portal_url_string        here/getPortalUrlString;\n
+              real_context             here/getContext;\n
+              context_url              real_context/getUrl;\n
+              md5_string               here/getMD5Checksum;\n
+              line_list                here/query;\n
+              is_domain_tree_mode      here/isDomainTreeMode;\n
+              is_report_tree_mode      here/isReportTreeMode;\n
+              is_domain_tree_supported here/isDomainTreeSupported;\n
+              is_report_tree_supported here/isReportTreeSupported;\n
+              show_select_column       here/showSelectColumn;\n
+              show_search_line         here/showSearchLine;\n
   ">\n
 \n
   <!-- ListBox starts here -->\n
@@ -79,6 +79,8 @@
   <input type="hidden" name="selection_name" tal:attributes="value selection_name" tal:condition="selection_name"/>\n
   <input type="hidden" name="selection_index" tal:attributes="value selection_index" tal:condition="selection_index"/>\n
   <input type="hidden" name="reset" value="1"/>\n
+  <input type="hidden" name="listbox_uid:list" value="" tal:attributes="name string:${field_id}_uid:list"/>\n
+  <input type="hidden" name="total_size" value="" tal:attributes="value here/total_size"/>\n
   <input id="listbox_select" tal:attributes="id string: ${field_id}_select"\n
          title="Filter" alt="Filter" name="Base_doSelect:method"\n
          type="submit" style="visibility: hidden"/>\n
@@ -161,40 +163,47 @@
               </tr>\n
             </thead>\n
 \n
+            <tal:replace tal:content="nothing">\n
+              TODO: Move pagination pre-calcultion higher in that code.\n
+            </tal:replace>\n
             <tfoot tal:condition="python: int(here.total_size) > int(here.getMaxLineNumber())">\n
-              <tr>\n
-                <td tal:attributes="colspan python: len(here.getSelectedColumnList())">\n
-                  <a class="pageNavigation" href="portal_selections/firstPage:method"\n
-                     tal:condition="python: here.current_page > 0"\n
-                     title="First page: Page 1">|&lt;</a>\n
-                  <a class="pageNavigation" href="portal_selections/previousPage:method"\n
-                     tal:condition="python: here.current_page > 0"\n
-                     tal:attributes="title python: \'Previous Page: page \' + str(here.current_page - 1)"\n
-                     title="Previous page: Page 67">&lt;&lt;</a>\n
-                  <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"\n
-                          onChange="submitAction(this.form, \'context/portal_selections/setPage\')"\n
-                          tal:define="lines here/getMaxLineNumber"\n
-                          tal:attributes="id string:${field_id}_page_selection;\n
-                             onChange string:submitAction(this.form, \'${context_url}/portal_selections/setPage\')"\n
-                          i18n:domain="ui" i18n:attributes="title">\n
+              <tr tal:define="max_lines      python: here.getMaxLineNumber();\n
+                              total_page     python: here.total_pages;\n
+                              page_id        python: here.current_page;\n
+                              current_page   python: page_id + 1;\n
+                              previous_page  python: current_page - 1;\n
+                              next_page      python: current_page + 1;\n
+                              ">\n
+                <td class="pageNavigation"\n
+                    tal:attributes="colspan python: len(here.getSelectedColumnList())">\n
+                  <tal:block tal:condition="python: current_page > 1">\n
+                    <button title="First page: Page 1" name="portal_selections/firstPage:method"\n
+                            tal:attributes="id string: ${field_id}_first_page;">|&lt;</button>\n
+                    <button name="portal_selections/previousPage:method"\n
+                            tal:attributes="title python: \'Previous Page: page %s\' % previous_page;\n
+                                            id    string: ${field_id}_previous_page;">&lt;&lt;</button>\n
+                  </tal:block>\n
+                  <select\n
+                    name="list_start" title="Change Page" size="1"\n
+                    tal:attributes="id       string: ${field_id}_page_selection;\n
+                                    onChange string: submitAction(this.form, \'${context_url}/portal_selections/setPage\')"\n
+                    i18n:domain="ui" i18n:attributes="title">\n
                     <option\n
-                      tal:repeat="p python: range(0, here.total_pages)"\n
-                      tal:attributes="selected python: p == here.current_page;\n
-                                      value    python: p * lines"\n
-                      i18n:domain="ui" i18n:translate="">\n
-                      Page <tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block>\n
-                      of <tal:block tal:replace="here/total_pages" i18n:name="total_pages">1</tal:block>\n
-                    </option>\n
+                      tal:repeat="p python: range(total_page)"\n
+                      tal:attributes="selected python: p == page_id;\n
+                                      value    python: p * max_lines"\n
+                      i18n:domain="ui" i18n:translate="">Page <tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block> of <tal:block tal:replace="total_page" i18n:name="total_pages">1</tal:block></option>\n
                   </select>\n
-                  <a class="pageNavigation"\n
-                     href="nextPage:method"\n
-                     tal:condition="python: here.current_page + 1 < here.total_pages"\n
-                     tal:attributes="title python: \'Next page: Page \' + str(here.current_page + 1)"\n
-                     >&gt;&gt;</a>\n
-                  <a class="pageNavigation"\n
-                     tal:condition="python: here.current_page + 1 < here.total_pages"\n
-                     href="portal_selections/lastPage:method"\n
-                     tal:attributes="title python: \'Last page: Page \' + str(here.total_pages)">&gt;|</a>\n
+                  <tal:block tal:condition="python: current_page < total_page">\n
+                    <button\n
+                      name="portal_selections/nextPage:method"\n
+                      tal:attributes="title python: \'Next page: Page %s\' % next_page;\n
+                                      id    string: ${field_id}_next_page;">&gt;&gt;</button>\n
+                    <button\n
+                      name="portal_selections/lastPage:method"\n
+                      tal:attributes="title python: \'Last page: Page %s\' % total_page;\n
+                                      id    string: ${field_id}_last_page;">&gt;|</button>\n
+                  </tal:block>\n
                 </td>\n
               </tr>\n
             </tfoot>\n
@@ -209,10 +218,6 @@
                                   editable_field_css python: editable_field != None and editable_field.get_value(\'css_class\');\n
                                   empty              python: original_value in (\'\', None)"\n
                       tal:attributes="class python: empty and \'emptyCell\' or nothing">\n
-                    <input tal:condition="not: repeat/value/index"\n
-                      type="hidden" value="1" name="listbox_uid:list"\n
-                      tal:attributes="value python: line.getUid() or \'\';\n
-                                    name string:${field_id}_uid:list" />\n
                     <tal:block tal:condition="empty"><span tal:attributes="class editable_field_css">-</span></tal:block>\n
                     <tal:block tal:condition="not: empty" tal:replace="structure html">value</tal:block>\n
                   </td>\n
@@ -227,8 +232,7 @@
   </tal:block>\n
   <!-- ListBox ends here -->\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
