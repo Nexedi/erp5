@@ -90,9 +90,9 @@ XXX: Folder_filter accesses selection directly\n
         <option tal:attributes="value jump/url"\n
                 tal:content="jump/name"></option>\n
       </tal:block>\n
-      <tal:block tal:condition="python: here.getPortalType() in here.portal_types.objectIds() and here.portal_types[here.getPortalType()].Base_getSourceVisibility()">\n
-        <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types[here.getPortalType()].absolute_url(),)"\n
-                tal:content="python: \'Edit Portal Type \\\'%s\\\'\' % (here.getPortalType(),)"\n
+      <tal:block tal:condition="python: here.getPortalTypeName() in here.portal_types.objectIds() and here.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
+        <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types.getTypeInfo(here).absolute_url(),)"\n
+                tal:content="python: \'Edit Portal Type \\\'%s\\\'\' % (here.getPortalTypeName(),)"\n
                 i18n:translate="" i18n:domain="ui"></option>\n
       </tal:block>\n
       <tal:block tal:condition="here/portal_workflow/Base_getSourceVisibility">\n
@@ -117,8 +117,8 @@ XXX: Folder_filter accesses selection directly\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Action...</option>\n
       <tal:block tal:repeat="content here/allowedContentTypes | nothing">\n
-        <tal:block tal:condition="python: not content.id in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">\n
-          <option tal:attributes="value python: \'add \' + content.id"\n
+        <tal:block tal:condition="python: not content.getId() in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">\n
+          <option tal:attributes="value python: \'add \' + content.getId()"\n
                   i18n:translate="" i18n:domain="ui">\n
             Add <tal:block tal:content="content/Title"\n
                             i18n:name="portal_type" i18n:translate="" i18n:domain="ui"></tal:block>\n
@@ -198,7 +198,7 @@ XXX: Folder_filter accesses selection directly\n
         <span class="description" i18n:translate="" i18n:domain="ui">Print</span>\n
       </button>\n
       <button class="new" type="submit" title="New"\n
-              tal:attributes="name python: hasattr(here.getParent(), \'getLastId\') and \'Base_createNewDocument:method\' or \'Folder_create:method\'"\n
+              tal:attributes="name python: hasattr(here.aq_parent, \'getLastId\') and \'Base_createNewDocument:method\' or \'Folder_create:method\'"\n
               i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
