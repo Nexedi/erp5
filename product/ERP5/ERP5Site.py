@@ -105,14 +105,14 @@ class ReferCheckerBeforeTraverseHook:
     response = request.RESPONSE
     http_url = request.get('ACTUAL_URL', '').strip()
     http_referer = request.get('HTTP_REFERER', '').strip()
-
-    security_manager = AccessControl.getSecurityManager()
-    user = security_manager.getUser()
-    user_roles = user.getRolesInContext(object)
-
-    # Manager can do anything
-    if 'Manager' in user_roles:
-      return
+    
+    user_password = request._authUserPW()
+    if user_password:
+      user = container.acl_users.getUserById(user_password[0]) or\
+              container.aq_parent.acl_users.getUserById(user_password[0])
+      # Manager can do anything
+      if user is not None and 'Manager' in user.getRoles():
+        return
     
     portal_url = container.portal_url.getPortalObject().absolute_url()
     if http_referer != '':
@@ -172,7 +172,9 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     BeforeTraverse.registerBeforeTraverse(self,
                                         ReferCheckerBeforeTraverseHook(),
-                                        ReferCheckerBeforeTraverseHook.handle)
+                                        ReferCheckerBeforeTraverseHook.handle,
+                             # we want to be registered _after_ CookieCrumbler
+                                        100)
   
   def _disableRefererCheck(self):
     """Disable the HTTP_REFERER check."""
