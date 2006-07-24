@@ -81,7 +81,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_provision_list</string>
                       </list>
                     </value>
                 </item>
@@ -90,6 +89,7 @@
                     <value>
                       <list>
                         <string>listbox_dependency_list</string>
+                        <string>listbox_provision_list</string>
                       </list>
                     </value>
                 </item>

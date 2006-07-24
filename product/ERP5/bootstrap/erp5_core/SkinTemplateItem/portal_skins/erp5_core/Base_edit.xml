@@ -247,12 +247,12 @@ else:\n
     redirect_url = \'%s/%s?editable_mode=1\' % (context.REQUEST.URL1, form_id)\n
   elif not selection_index:\n
     redirect_url = \'%s/%s?portal_status_message=%s\' % (context.absolute_url(),\n
-                                                       dialog_id,\n
+                                                       form_id,\n
                                                        message)\n
   else:\n
     redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % (\n
                                 context.absolute_url(),\n
-                                dialog_id,\n
+                                form_id,\n
                                 selection_index,\n
                                 selection_name,\n
                                 message)\n
