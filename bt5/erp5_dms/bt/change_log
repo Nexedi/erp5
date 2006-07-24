@@ -1,3 +1,6 @@
+2006-07-24
+* made all the security system work (!!! required a change to ERP5Type.py and to destination_project base cat., not in svn yet)
+
 2006-02-22 BG
 * finished (and renamed) local roles interaction workflow
 * assigned portal types to appropriate workflows
