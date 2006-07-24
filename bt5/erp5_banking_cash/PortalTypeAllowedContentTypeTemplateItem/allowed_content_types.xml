@@ -34,6 +34,13 @@
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
  </portal_type>
+ <portal_type id="Cash Sorting Incident">
+  <item>Outgoing Cash Sorting Incident Line</item>
+  <item>Incoming Cash Sorting Incident Line</item>
+ </portal_type>
+ <portal_type id="Cash Sorting Incident Module">
+  <item>Cash Sorting Incident</item>
+ </portal_type>
  <portal_type id="Cash Sorting Module">
   <item>Cash Sorting</item>
  </portal_type>
@@ -66,6 +73,9 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Incident Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Incoming Cash Sorting Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -137,6 +147,9 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Incident Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Sorting Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">

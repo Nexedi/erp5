@@ -20,6 +20,10 @@
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Cash Sorting Incident</type>
+  <workflow>cash_sorting_incident_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Classification Survey</type>
   <workflow>classification_survey_workflow, edit_workflow</workflow>
  </chain>

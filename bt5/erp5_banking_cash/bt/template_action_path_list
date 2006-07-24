@@ -43,6 +43,16 @@ Cash Incident | metadata
 Cash Incident | out_view
 Cash Incident | outgoing_input
 Cash Incident | view
+Cash Sorting Incident Module | list_ui
+Cash Sorting Incident Module | sort_on
+Cash Sorting Incident Module | view
+Cash Sorting Incident | history
+Cash Sorting Incident | in_view
+Cash Sorting Incident | incoming_input
+Cash Sorting Incident | metadata
+Cash Sorting Incident | out_view
+Cash Sorting Incident | outgoing_input
+Cash Sorting Incident | view
 Cash Sorting Module | list
 Cash Sorting Module | list_ui
 Cash Sorting Module | sort_on
@@ -96,6 +106,8 @@ Incoming Cash Exchange Line | print
 Incoming Cash Exchange Line | view
 Incoming Cash Incident Line | metadata
 Incoming Cash Incident Line | view
+Incoming Cash Sorting Incident Line | metadata
+Incoming Cash Sorting Incident Line | view
 Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
 Incoming Classification Survey Line | metadata
@@ -189,6 +201,8 @@ Outgoing Cash Incident Line | metadata
 Outgoing Cash Incident Line | view
 Outgoing Cash Sorting Cell | metadata
 Outgoing Cash Sorting Cell | view
+Outgoing Cash Sorting Incident Line | metadata
+Outgoing Cash Sorting Incident Line | view
 Outgoing Cash Sorting Line | metadata
 Outgoing Cash Sorting Line | view
 Outgoing Classification Survey Cell | metadata

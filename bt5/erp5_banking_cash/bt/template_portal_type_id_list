@@ -7,6 +7,8 @@ Cash Exchange Module
 Cash Incident
 Cash Incident Module
 Cash Sorting
+Cash Sorting Incident
+Cash Sorting Incident Module
 Cash Sorting Module
 Classification Survey
 Classification Survey Module
@@ -18,6 +20,7 @@ Incoming Account Incident Line
 Incoming Cash Balance Regulation Line
 Incoming Cash Exchange Line
 Incoming Cash Incident Line
+Incoming Cash Sorting Incident Line
 Incoming Cash Sorting Line
 Incoming Classification Survey Line
 Monetary Destruction
@@ -43,6 +46,7 @@ Outgoing Cash Balance Regulation Line
 Outgoing Cash Exchange Line
 Outgoing Cash Incident Line
 Outgoing Cash Sorting Cell
+Outgoing Cash Sorting Incident Line
 Outgoing Cash Sorting Line
 Outgoing Classification Survey Cell
 Outgoing Classification Survey Line

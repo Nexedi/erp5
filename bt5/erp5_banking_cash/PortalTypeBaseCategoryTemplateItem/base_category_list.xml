@@ -3,8 +3,12 @@
   <item>source_decision</item>
  </portal_type>
  <portal_type id="Cash Incident">
-  <item>responsible</item>
   <item>source_decision</item>
+  <item>responsible</item>
+ </portal_type>
+ <portal_type id="Cash Sorting Incident">
+  <item>source_decision</item>
+  <item>responsible</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>
