@@ -193,7 +193,9 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     f.close()
 
   def _initImport(self, file=None, path=None, **kw):
-    self.file_list = file
+    # Normalize the paths to eliminate the effect of double-slashes.
+    self.file_list = [os.path.normpath(f) for f in file]
+    path = os.path.normpath(path)
     # to make id consistent, must remove a part of path while importing
     self.root_path_len = len(string.split(path, os.sep)) + 1
 
