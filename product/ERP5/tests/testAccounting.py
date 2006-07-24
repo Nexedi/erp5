@@ -48,6 +48,7 @@ from DateTime import DateTime
 SOURCE = 'source'
 DESTINATION = 'destination'
 RUN_ALL_TESTS = 1
+QUIET = 1
 
 class TestAccounting(ERP5TypeTestCase):
   """Test Accounting. """
@@ -61,10 +62,10 @@ class TestAccounting(ERP5TypeTestCase):
            getattr(self.getPortal(), 'account', None))
   
   # XXX
-  def playSequence(self, sequence_string) :
+  def playSequence(self, sequence_string, quiet=1) :
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
   
   account_portal_type           = 'Account'
   accounting_period_portal_type = 'Accounting Period'
@@ -1031,7 +1032,7 @@ class TestAccounting(ERP5TypeTestCase):
   ## Test Methods ############################################################
   ############################################################################
   
-  def test_MultiCurrencyInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_MultiCurrencyInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Basic test for multi currency accounting"""
     if not run : return
     self.playSequence("""
@@ -1043,9 +1044,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckAccountBalanceLocalCurrency
       stepCheckAccountBalanceExternalCurrency
       stepCheckAccountBalanceConvertedCurrency
-    """)
+    """, quiet=quiet)
 
-  def test_AccountingPeriod(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_AccountingPeriod(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Basic test for Accounting Periods"""
     if not run : return
     self.playSequence("""
@@ -1068,10 +1069,10 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckInvoicesAreDelivered
       stepTic
       stepCheckAccountingTransactionDelivered
-    """)
+    """, quiet=quiet)
   
   def test_AccountingPeriodRefusesWrongDateTransactionValidation(
-        self, quiet=0, run=RUN_ALL_TESTS):
+        self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Accounting Periods prevents transactions to be validated
         when there is no oppened accounting period"""
     if not run : return
@@ -1087,9 +1088,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckStopInvoicesRefused
       stepTic
       stepCheckInvoicesAreDraft
-    """)
+    """, quiet=quiet)
 
-  def test_AccountingPeriodNotStoppedTransactions(self, quiet=0,
+  def test_AccountingPeriodNotStoppedTransactions(self, quiet=QUIET,
                                                   run=RUN_ALL_TESTS):
     """Accounting Periods refuse to close when some transactions are
       not stopped"""
@@ -1106,9 +1107,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckAccountingPeriodRefusesClosing
       stepTic
       stepCheckInvoicesAreDraft
-    """)
+    """, quiet=quiet)
 
-  def test_AccountingPeriodOtherSections(self, quiet=0,
+  def test_AccountingPeriodOtherSections(self, quiet=QUIET,
                                                   run=RUN_ALL_TESTS):
     """Accounting Periods does not change other section transactions."""
     if not run : return
@@ -1127,9 +1128,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepTic
       stepCheckAccountingPeriodDelivered
       stepCheckInvoicesAreDraft
-    """)
+    """, quiet=quiet)
 
-  def test_MirrorAccounts(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_MirrorAccounts(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Tests using an account on one sides uses the mirror account
     on the other size. """
     if not run : return
@@ -1137,18 +1138,18 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateEntities
       stepCreateAccounts
       stepCreateAccountingTransactionAndCheckMirrorAccount
-    """)
+    """, quiet=quiet)
 
-  def test_Acquisition(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_Acquisition(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Tests acquisition, categories and portal types are well
     configured. """
     if not run : return
     self.playSequence("""
       stepCreateCurrencies
       stepCheckAcquisition
-      """)
+      """, quiet=quiet)
 
-  def test_AccountingTransactionValidationDate(self, quiet=0,
+  def test_AccountingTransactionValidationDate(self, quiet=QUIET,
                                             run=RUN_ALL_TESTS):
     """Transaction validation and dates"""
     if not run : return
@@ -1157,9 +1158,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateAccounts
       stepCreateValidAccountingTransaction
-      stepValidateNoDate""")
+      stepValidateNoDate""", quiet=quiet)
 
-  def test_AccountingTransactionValidationSection(self, quiet=0,
+  def test_AccountingTransactionValidationSection(self, quiet=QUIET,
                                              run=RUN_ALL_TESTS):
     """Transaction validation and section"""
     if not run : return
@@ -1168,9 +1169,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateAccounts
       stepCreateValidAccountingTransaction
-      stepValidateNoSection""")
+      stepValidateNoSection""", quiet=quiet)
 
-  def test_AccountingTransactionValidationCurrency(self, quiet=0,
+  def test_AccountingTransactionValidationCurrency(self, quiet=QUIET,
                                            run=RUN_ALL_TESTS):
     """Transaction validation and currency"""
     if not run : return
@@ -1179,9 +1180,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateAccounts
       stepCreateValidAccountingTransaction
-      stepValidateNoCurrency""")
+      stepValidateNoCurrency""", quiet=quiet)
 
-  def test_AccountingTransactionValidationAccounts(self, quiet=0,
+  def test_AccountingTransactionValidationAccounts(self, quiet=QUIET,
                                            run=RUN_ALL_TESTS):
     """Transaction validation and accounts"""
     if not run : return
@@ -1192,9 +1193,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateValidAccountingTransaction
       stepValidateClosedAccount
       stepCreateValidAccountingTransaction
-      stepValidateNoAccounts""")
+      stepValidateNoAccounts""", quiet=quiet)
 
-  def test_AccountingTransactionValidationBalanced(self, quiet=0,
+  def test_AccountingTransactionValidationBalanced(self, quiet=QUIET,
                                               run=RUN_ALL_TESTS):
     """Transaction validation and balance"""
     if not run : return
@@ -1203,9 +1204,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateAccounts
       stepCreateValidAccountingTransaction
-      stepValidateNotBalanced""")
+      stepValidateNotBalanced""", quiet=quiet)
 
-  def test_AccountingTransactionValidationPayment(self, quiet=0,
+  def test_AccountingTransactionValidationPayment(self, quiet=QUIET,
                                              run=RUN_ALL_TESTS):
     """Transaction validation and payment"""
     if not run : return
@@ -1215,9 +1216,9 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateAccounts
       stepCreateValidAccountingTransaction
       stepValidateNoPayment
-    """)
+    """, quiet=quiet)
 
-  def test_AccountingTransactionValidationRemoveEmptyLines(self, quiet=0,
+  def test_AccountingTransactionValidationRemoveEmptyLines(self, quiet=QUIET,
                                              run=RUN_ALL_TESTS):
     """Transaction validation removes empty lines"""
     if not run : return
@@ -1227,7 +1228,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateAccounts
       stepCreateValidAccountingTransaction
       stepValidateRemoveEmptyLines
-    """)
+    """, quiet=quiet)
 
 
 if __name__ == '__main__':

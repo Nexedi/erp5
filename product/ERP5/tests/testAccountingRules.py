@@ -99,13 +99,13 @@ class TestAccountingRulesMixin:
         getattr(self.getPortal(), 'product_module'))
   
   ## XXX move this to "Sequence class"
-  def playSequence(self, sequence_string) :
+  def playSequence(self, sequence_string, quiet=0) :
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   
-class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
+class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   """
   This should test the simulation tree and builds starting from the
   invoice.
@@ -113,6 +113,7 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
   """
 
   RUN_ALL_TESTS = 1
+  QUIET = 1
   RUN_BROKEN_TESTS = os.getenv('RUN_BROKEN_TESTS', 0)
 
   
@@ -149,6 +150,8 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
             portal_type = 'Category',
             id = cat,
             immediate_reindex = 1 )
+        else:
+          path = getattr(path, cat)
     # check categories have been created
     for cat_string in self.getCategoriesToCreate() :
       self.assertNotEquals(None,
@@ -289,7 +292,7 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
     )
   
   def stepUpdateSaleInvoiceTransactionRuleMatrix(self, sequence, **kw) :
-    """ creates/updates the matrix of the sale invoice transacction rule """
+    """Creates/updates the matrix of the sale invoice transaction rule """
     invoice_transaction_rule = sequence.get('invoice_transaction_rule')
     base_id = 'movement'
     kwd = {'base_id': base_id}
@@ -1393,7 +1396,7 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
               accounting_line.getTotalQuantity())
     
     
-  def test_01_HasEverything(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ check necessary tools and modules are present. """
     if not run:
       return
@@ -1412,7 +1415,7 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
     self.failUnless(self.getProductModule() != None)
     self.failUnless(self.getCurrencyModule() != None)
 
-  def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=0,
+  def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=QUIET,
                                               run=RUN_ALL_TESTS):
     """ test edition of matrix and rule.
     Try to update the matrix after adding some predicates, 
@@ -1434,10 +1437,10 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepCheckRemovePredicate
       stepTic
       stepCheckRestoreOriginalPredicates
-    """)
+    """, quiet=quiet)
 
   def test_03_invoiceTransactionRule_getMatchingCell(self,
-                                    quiet=0, run=RUN_ALL_TESTS):
+                                    quiet=QUIET, run=RUN_ALL_TESTS):
     """ test predicates for the cells of invoice transaction rule
     """
     if not run:
@@ -1461,9 +1464,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepCheckMatchableSaleInvoiceMovements
       stepCreateNotMatchableSaleInvoiceMovements
       stepCheckNotMatchableSaleInvoiceMovements
-    """)
+    """, quiet=quiet)
   
-  def test_04_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_04_SimpleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice.
     Try to expand an invoice containing only one simple Invoice Line.
     Check that the build is correct.
@@ -1494,9 +1497,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepConfirmInvoice
       stepTic
       stepCheckAccountingLinesCoherantWithSimulation
-      """ )
+      """, quiet=quiet )
 
-  def test_04b_SimpleInvoiceConfirm(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_04b_SimpleInvoiceConfirm(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """  Same test as SimpleInvoice but directly confirm the invoice
     without planning it """
     if not run:
@@ -1522,9 +1525,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
   
-  def test_04c_SimpleInvoiceTwoLines(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_04c_SimpleInvoiceTwoLines(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice, 2 lines.
     Same test as SimpleInvoice but use 2 lines of quantity 5 instead of
     1 line of quantity 10.
@@ -1552,9 +1555,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
       
-  def test_04d_SimpleInvoiceTwoCells(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_04d_SimpleInvoiceTwoCells(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice, 2 cells.
     Same test as SimpleInvoice but use 2 cells of quantity 5 instead of
     1 line of quantity 10.
@@ -1582,10 +1585,10 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
    
   # next 5 tests will check update of applied rules. 
-  def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=0,
+  def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=QUIET,
         run=RUN_ALL_TESTS):
     """ Add a new line then updateAppliedRule.
     Create an empty invoice, plan, add a line so that this
@@ -1618,9 +1621,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
       
-  def test_05b_SimpleInvoiceReExpandEditLine(self, quiet=0,
+  def test_05b_SimpleInvoiceReExpandEditLine(self, quiet=QUIET,
               run = RUN_ALL_TESTS):
     """ Tests that editing a line updates simulation correctly """
     if not run:
@@ -1649,10 +1652,10 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
 
   def test_05c_SimpleInvoiceReExpandDeleteLine(
-                        self, quiet=0, run=RUN_ALL_TESTS):
+                        self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Tests that removing a line updates simulation correctly """
     if not run:
       return
@@ -1682,9 +1685,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
       
-  def test_05d_SimpleInvoiceReExpandCreateCell(self, quiet=0,
+  def test_05d_SimpleInvoiceReExpandCreateCell(self, quiet=QUIET,
                   run=RUN_ALL_TESTS):
     """ Tests that replacing a line by cells updates simulation correctly """
     if not run:
@@ -1713,10 +1716,10 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """)
+      """, quiet=quiet)
                      
   def test_05e_SimpleInvoiceExpandManyTimes(
-                                self, quiet=0, run=RUN_ALL_TESTS):
+                                self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Tests that updating an applied rule many times doesn't break the
     build """
     if not run:
@@ -1749,9 +1752,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
 
-  def test_06_MultiLineInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_06_MultiLineInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Multiple lines invoice.
     Try to expand an invoice containing multiples Invoice Line.
     Check that the build is correct, ie similar movements are aggregated.
@@ -1783,9 +1786,9 @@ class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
       stepTic
       stepCheckAccountingLinesCreatedForMultiLineInvoice
       stepRebuildAndCheckNothingIsCreated
-      """ )
+      """, quiet=quiet )
     
-  def test_07_PaymentRuleForSaleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_07_PaymentRuleForSaleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Payment Rule.
       checks the payment rule is applied on sale invoice simulation
       movement. """
