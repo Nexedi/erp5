@@ -76,8 +76,18 @@ txn = state_change[\'object\']\n
 in_list = txn.searchFolder(portal_type=\'Incoming Cash Incident Line\')\n
 out_list = txn.searchFolder(portal_type=\'Outgoing Cash Incident Line\')\n
 \n
+price = txn.getSourceTotalAssetPrice()\n
+in_price = txn.getTotalPrice(deliveryLineType=\'Incoming Cash Incident Line\')\n
+out_price = txn.getTotalPrice(deliveryLineType=\'Outgoing Cash Incident Line\')\n
+\n
 if len(in_list) != 0 and len(out_list) != 0:\n
   msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n
+  raise ValidationFailed, (msg,)\n
+elif len(in_list) == 0 and len(out_list) == 0:\n
+  msg = Message(domain = "ui", message="No resource.")\n
+  raise ValidationFailed, (msg,)\n
+elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != price):\n
+  msg = Message(domain = "ui", message="Price differs between document and resource.")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -129,6 +139,9 @@ if len(in_list) != 0 and len(out_list) != 0:\n
                             <string>_getattr_</string>
                             <string>in_list</string>
                             <string>out_list</string>
+                            <string>price</string>
+                            <string>in_price</string>
+                            <string>out_price</string>
                             <string>len</string>
                             <string>msg</string>
                           </tuple>
