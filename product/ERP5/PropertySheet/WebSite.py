@@ -31,8 +31,12 @@ class WebSite:
     """
 
     _properties = (
-        {   'id'          : 'layout',
-            'description' : 'ID of a page template or form which defines the rendering layout',
+        {   'id'          : 'container_layout',
+            'description' : 'ID of a page template or form which defines the rendering layout for the container',
+            'type'        : 'string',
+            'mode'        : '' },
+        {   'id'          : 'content_layout',
+            'description' : 'ID of a page template or form which defines the rendering layout for contents',
             'type'        : 'string',
             'mode'        : '' },
         {   'id'          : 'webmaster',
