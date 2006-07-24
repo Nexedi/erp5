@@ -1403,6 +1403,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.assertEquals(import_bt.getPortalType(), 'Business Template')
     sequence.edit(import_bt=import_bt)
 
+  def stepAddExtraSlashesToTemplatePath(self, sequence=None, sequence_list=None, **kw):
+    """Add extra slashes to the template path for testing.
+    """
+    template_path = sequence.get('template_path')
+    sequence.edit(template_path = template_path + '//')
+
   def stepInstallBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Install importzed business template
@@ -2879,6 +2885,52 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  # test of skins
+  def test_26_ImportWithDoubleSlashes(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Importing Business Template With Double Slashes'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateSkinFolder \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveSkinFolder \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       AddExtraSlashesToTemplatePath \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTrashBin \
+                       CheckSkinsLayers \
+                       CheckSkinFolderExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckSkinFolderRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
 if __name__ == '__main__':
   framework()
