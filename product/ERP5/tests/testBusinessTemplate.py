@@ -62,6 +62,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     - Upgrade a template
   """
   run_all_test = 1
+  quiet = 1
 
   def getBusinessTemplateList(self):
     return ('erp5_csv_style', 'erp5_pdf_style')
@@ -81,6 +82,18 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
 
+  def beforeTearDown(self):
+    """Remove objects created tests."""
+    if 'erp5_geek' in self.getSkinsTool().objectIds():
+      self.getSkinsTool().manage_delObjects(['erp5_geek'])
+    if 'Geek Object' in self.getTypeTool().objectIds():
+      self.getTypeTool().manage_delObjects(['Geek Object', 'Geek Module'])
+    if 'geek_module' in self.getPortal().objectIds():
+      self.getPortal().manage_delObjects(['geek_module'])
+    if 'geek_workflow' in self.getWorkflowTool().objectIds():
+      self.getWorkflowTool().manage_delObjects(['geek_workflow'])
+    get_transaction().commit()
+    
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
@@ -89,9 +102,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
   def stepTic(self,**kw):
     self.tic()
-
-  def stepCommitTransaction(self, **kw):
-    get_transaction().commit()
 
   def stepUseCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -1607,7 +1617,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence.edit(dependency_bt=template)
     
   # tests
-  def test_01_checkNewSite(self, quiet=0, run=run_all_test):
+  def test_01_checkNewSite(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check New Site'
@@ -1622,10 +1632,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of portal types
-  def test_02_BusinessTemplateWithPortalTypes(self, quiet=0, run=run_all_test):
+  def test_02_BusinessTemplateWithPortalTypes(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Portal Types'
@@ -1667,10 +1677,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of skins
-  def test_03_BusinessTemplateWithSkins(self, quiet=0, run=run_all_test):
+  def test_03_BusinessTemplateWithSkins(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Skin Folder'
@@ -1711,10 +1721,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckSkinFolderRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of workflow
-  def test_04_BusinessTemplateWithWorkflow(self, quiet=0, run=run_all_test):
+  def test_04_BusinessTemplateWithWorkflow(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Workflow'
@@ -1755,10 +1765,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckWorkflowRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of module
-  def test_05_BusinessTemplateWithModule(self, quiet=0, run=run_all_test):
+  def test_05_BusinessTemplateWithModule(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Module'
@@ -1807,10 +1817,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of categories
-  def test_06_BusinessTemplateWithBaseCategory(self, quiet=0, run=run_all_test):
+  def test_06_BusinessTemplateWithBaseCategory(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Base Category'
@@ -1851,10 +1861,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckBaseCategoryRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of actions
-  def test_07_BusinessTemplateWithOneAction(self, quiet=0, run=run_all_test):
+  def test_07_BusinessTemplateWithOneAction(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With One Action'
@@ -1898,9 +1908,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_08_BusinessTemplateWithTwoActions(self, quiet=0, run=run_all_test):
+  def test_08_BusinessTemplateWithTwoActions(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Two Actions'
@@ -1948,9 +1958,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_09_BusinessTemplateWithPath(self, quiet=0, run=run_all_test):
+  def test_09_BusinessTemplateWithPath(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With A Simple Path'
@@ -1992,9 +2002,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckBaseCategoryRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_10_BusinessTemplateWithPathAndJoker1(self, quiet=0, run=run_all_test):
+  def test_10_BusinessTemplateWithPathAndJoker1(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Path And Joker *'
@@ -2038,9 +2048,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_11_BusinessTemplateWithPathAndJoker2(self, quiet=0, run=run_all_test):
+  def test_11_BusinessTemplateWithPathAndJoker2(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Path And Joker **'
@@ -2086,9 +2096,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=0, run=run_all_test):
+  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Catalog Method, Related Key, Result Key And Table'
@@ -2134,9 +2144,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_13_BusinessTemplateWithRole(self, quiet=0, run=run_all_test):
+  def test_13_BusinessTemplateWithRole(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Role'
@@ -2177,9 +2187,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckRoleRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_14_BusinessTemplateWithLocalRoles(self, quiet=0, run=run_all_test):
+  def test_14_BusinessTemplateWithLocalRoles(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Local Roles'
@@ -2224,9 +2234,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_15_BusinessTemplateWithPropertySheet(self, quiet=0, run=run_all_test):
+  def test_15_BusinessTemplateWithPropertySheet(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Property Sheet'
@@ -2267,10 +2277,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 
-  def test_16_BusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
+  def test_16_BusinessTemplateWithAllItems(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With All Items'
@@ -2365,11 +2375,11 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 
 
-  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self, quiet=0, run=run_all_test):
+  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Upgrade Of Business Template Keeps Subobjects'
@@ -2444,9 +2454,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_18_upgradeBusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
+  def test_18_upgradeBusinessTemplateWithAllItems(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Upgrade Business Template With All Items'
@@ -2565,10 +2575,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveAllTrashBins \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test specific to erp5_core
-  def test_19_checkUpdateBusinessTemplateWorkflow(self, quiet=0, run=run_all_test):
+  def test_19_checkUpdateBusinessTemplateWorkflow(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Update of Business Template Workflows is working'
@@ -2652,10 +2662,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 
-  def test_20_checkUpdateTool(self, quiet=0, run=run_all_test):
+  def test_20_checkUpdateTool(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Update of Tool is working'
@@ -2750,10 +2760,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 
-  def test_21_CategoryIncludeSubobjects(self, quiet=0, run=run_all_test):
+  def test_21_CategoryIncludeSubobjects(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Category includes subobjects'
@@ -2773,10 +2783,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckSubobjectsNotIncluded \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   # test of portal types
-  def test_22_RevisionNumberIsIncremented(self, quiet=0, run=run_all_test):
+  def test_22_RevisionNumberIsIncremented(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test is revision number is incremented with the bt is built'
@@ -2797,9 +2807,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_23_CheckNoDependencies(self, quiet=0, run=run_all_test):
+  def test_23_CheckNoDependencies(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test if a new Business Template has no dependencies'
@@ -2815,9 +2825,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
     
-  def test_24_CheckMissingDependency(self, quiet=0, run=run_all_test):
+  def test_24_CheckMissingDependency(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test if a exception is raised when a dependency is missing'
@@ -2834,9 +2844,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
     
-  def test_25_CheckNoMissingDependency(self, quiet=0, run=run_all_test):
+  def test_25_CheckNoMissingDependency(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test if the dependency problem is fixed when the dependency is installed'
@@ -2868,7 +2878,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
   framework()
