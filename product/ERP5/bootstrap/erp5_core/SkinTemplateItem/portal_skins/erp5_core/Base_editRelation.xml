@@ -73,87 +73,31 @@
 # Updates attributes of an Zope document\n
 # which is in a class inheriting from ERP5 Base\n
 from Products.ERP5Type.Message import Message\n
-from Products.Formulator.Errors import ValidationError, FormValidationError\n
+from Products.Formulator.Errors import ValidationError\n
 \n
-# Harcoded value, which must be taken from RelationField.py\n
+# XXX: Harcoded value, which must be taken from RelationField.py\n
 SUB_FIELD_ID = \'relation\'\n
 \n
-portal = context.getPortalObject()\n
-request=context.REQUEST\n
-o = context.portal_catalog.getObject(object_uid)\n
-\n
-if o is None:\n
-  message = Message(domain=\'erp5_ui\',\n
-                    message=\'Sorrry, Error, \' \\\n
-                            \'the calling object was not catalogued.\' \\\n
-                            \' Do not know how to do ?\')\n
-  raise ValidationError, message\n
-\n
 if listbox_uid is not None:\n
-  selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
-                                               selection_name,\n
-                                               listbox_uid, uids)\n
+  selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
   uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-\n
-if request.has_key(\'previous_form_id\'):\n
-  previous_form_id = request.get(\'previous_form_id\')\n
-  if previous_form_id != \'\':\n
-    form_id = previous_form_id\n
-\n
-form = getattr(context, form_id)\n
-field = form.get_field(field_id)\n
-\n
-base_category = field.get_value(\'base_category\')\n
-relation_setter_id = field.get_value(\'relation_setter_id\')\n
-if relation_setter_id: \n
-  relation_setter = getattr(o, relation_setter_id)\n
-\n
-portal_type = [x[0] for x in field.get_value(\'portal_type\')]\n
-\n
-old_request = context.portal_selections.getObjectFromPickleAndSignature(\n
-                              request.form_pickle, \n
-                              request.form_signature)\n
-\n
+old_request = context.portal_selections.getObjectFromPickleAndSignature(form_pickle, form_signature)\n
+field = getattr(context, form_id).get_field(field_id)\n
 field_key = field.generate_field_key()\n
 if old_request.has_key(\'sub_index\'):\n
   if len(uids) > 0:\n
-    # XXX Hardwired\n
-    sub_field_key = field.generate_subfield_key(\n
-                                              "%s_%s" % (SUB_FIELD_ID, \n
-                                                         old_request[\'sub_index\']), \n
-                                              key=field_key)\n
+    # XXX Hardcoded\n
+    sub_field_key = field.generate_subfield_key("%s_%s" % (SUB_FIELD_ID, old_request[\'sub_index\']), key=field_key)\n
     old_request[sub_field_key] = str(uids[0])\n
 else:\n
   # XXX Not very dynamic...\n
-\n
-  sub_field_key = field.generate_subfield_key(SUB_FIELD_ID, \n
-                                              key=field_key)\n
+  sub_field_key = field.generate_subfield_key(SUB_FIELD_ID, key=field_key)\n
   old_request[sub_field_key] = uids\n
-\n
-# Purge the REQUEST from relation form input\n
-static_dict = {\n
-  \'PATH_INFO\':1, \n
-  \'AUTHENTICATION_PATH\':1,\n
-  \'AUTHENTICATED_USER\':1,\n
-  \'USER_PREF_LANGUAGES\':1,\n
-  \'SERVER_URL\':1,\n
-  \'URL\':1,\n
-  \'PUBLISHED\':1,\n
-  \'RESPONSE\':1,\n
-  \'PARENTS\':1,\n
-  \'AcceptLanguage\':1\n
-}\n
-\n
-for k in request.other.keys():\n
-  if not static_dict.has_key(k):\n
-    del request.other[k]\n
-for k in request.form.keys():\n
-  del request.form[k]\n
-\n
-# Create a fake request with nothing like form or ...\n
-request.form.update(old_request)\n
-\n
-return context.Base_edit(form_id, \n
+request_form = context.REQUEST.form\n
+for k in request_form.keys():\n
+  del request_form[k]\n
+request_form.update(old_request)\n
+return context.Base_edit(form_id,\n
                          selection_index=old_request.get(\'selection_index\', 0),\n
                          selection_name=old_request.get(\'selection_name\', \'\'))\n
 
@@ -180,7 +124,7 @@ return context.Base_edit(form_id, \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, field_id, selection_index, selection_name, uids, object_uid, listbox_uid, batch_mode=0</string> </value>
+            <value> <string>form_id, field_id, selection_index, selection_name, uids, object_uid, listbox_uid, form_pickle, form_signature, batch_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -200,7 +144,7 @@ return context.Base_edit(form_id, \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -213,41 +157,29 @@ return context.Base_edit(form_id, \n
                             <string>uids</string>
                             <string>object_uid</string>
                             <string>listbox_uid</string>
+                            <string>form_pickle</string>
+                            <string>form_signature</string>
                             <string>batch_mode</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
-                            <string>FormValidationError</string>
                             <string>SUB_FIELD_ID</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>request</string>
-                            <string>o</string>
-                            <string>None</string>
-                            <string>message</string>
                             <string>selected_uids</string>
-                            <string>previous_form_id</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>field</string>
-                            <string>base_category</string>
-                            <string>relation_setter_id</string>
-                            <string>relation_setter</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>_getitem_</string>
-                            <string>portal_type</string>
                             <string>old_request</string>
+                            <string>getattr</string>
+                            <string>field</string>
                             <string>field_key</string>
                             <string>len</string>
+                            <string>_getitem_</string>
                             <string>sub_field_key</string>
                             <string>str</string>
                             <string>_write_</string>
-                            <string>static_dict</string>
+                            <string>request_form</string>
+                            <string>_getiter_</string>
                             <string>k</string>
                           </tuple>
                         </value>

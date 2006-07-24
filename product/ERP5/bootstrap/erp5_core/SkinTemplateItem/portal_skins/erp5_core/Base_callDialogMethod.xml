@@ -124,7 +124,9 @@ if dialog_method == \'Base_editRelation\':\n
                                    selection_index=request_form[\'selection_index\'],\n
                                    object_uid=request_form[\'object_uid\'],\n
                                    uids=request_form[\'uids\'],\n
-                                   listbox_uid=request_form[\'listbox_uid\'])\n
+                                   listbox_uid=request_form[\'listbox_uid\'],\n
+                                   form_pickle=request_form[\'form_pickle\'],\n
+                                   form_signature=request_form[\'form_signature\'])\n
 # Exception for create relation\n
 if dialog_method == \'Base_createRelation\':\n
   return context.Base_createRelation(form_id=request_form[\'form_id\'],\n
