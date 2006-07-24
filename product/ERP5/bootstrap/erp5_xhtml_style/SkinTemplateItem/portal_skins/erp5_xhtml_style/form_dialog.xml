@@ -81,6 +81,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                              right_group python: form.get_fields_in_group(\'right\');\n
                              center_group python: form.get_fields_in_group(\'center\');\n
                              dialog_actions python: actions.get(dialog_category, [])">\n
+        <tal:block tal:define="template python: here.developper_shortcut_render">\n
+          <tal:block metal:use-macro="template/macros/form" />\n
+        </tal:block>\n
         <div tal:condition="python: len(left_group) or len(right_group) or len(center_group) or len(dialog_actions)>1"\n
              class="dialog_box">\n
           <div tal:condition="python: len(dialog_actions) > 1"\n
@@ -108,9 +111,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             </button>\n
           </div>\n
           <div class="content">\n
-            <tal:block tal:define="template python: here.developper_shortcut_render">\n
-              <tal:block metal:use-macro="template/macros/form" />\n
-            </tal:block>\n
             <div tal:condition="python: len(left_group) > 0 or len(right_group) > 0"\n
                 class="top_group">\n
               <div tal:condition="python: len(left_group) > 0"\n

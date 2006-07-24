@@ -82,8 +82,8 @@ XXX: Folder_filter accesses selection directly\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
   <span id="jump">\n
-    <select name="jump_select"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doJump\')">\n
+    <select name="select_jump"\n
+            tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doJump\')">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Jump...</option>\n
       <tal:block tal:repeat="jump actions/object_jump | nothing">\n
@@ -102,7 +102,7 @@ XXX: Folder_filter accesses selection directly\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
-    <button type="submit" name="Base_doJump:method" title="Jump"\n
+    <button type="submit" name="ERP5XhtmlStyle_doJump:method" title="Jump"\n
             i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description"\n
@@ -111,8 +111,8 @@ XXX: Folder_filter accesses selection directly\n
   </span>\n
   <span class="separator"></span>\n
   <span id="action">\n
-    <select name="action_select"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"\n
+    <select name="select_action"\n
+            tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doAction\')"\n
             tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Action...</option>\n
@@ -157,7 +157,7 @@ XXX: Folder_filter accesses selection directly\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
-    <button type="submit" name="Base_doAction:method" title="Action"\n
+    <button type="submit" name="ERP5XhtmlStyle_doAction:method" title="Action"\n
             i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description">Action</span>\n
@@ -192,13 +192,6 @@ XXX: Folder_filter accesses selection directly\n
         </button>\n
         <span class="separator"></span>\n
       </tal:block>\n
-      <tal:block tal:condition="selection_index | nothing">\n
-        <a class="list_mode" title="List Mode" tal:attributes="href selection_url">\n
-          <span class="image"></span>\n
-          <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
-        </a>\n
-      <span class="separator"></span>\n
-      </tal:block>\n
       <button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method" title="Print"\n
               i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
@@ -215,33 +208,39 @@ XXX: Folder_filter accesses selection directly\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
       </button>\n
-      <tal:block tal:condition="selection_index | nothing">\n
-        <span class="separator"></span>\n
-        <a class="jump_first" title="First"\n
-           tal:attributes="href python: here.ERP5Site_renderLink(\'portal_selections/viewFirst\', http_parameters)">\n
-          <span class="image"></span>\n
-          <span class="description" i18n:translate="" i18n:domain="ui">First</span>\n
-        </a>\n
-        <a class="jump_previous" title="Previous"\n
-           tal:attributes="href python: here.ERP5Site_renderLink(\'portal_selections/viewPrevious\', http_parameters)">\n
-          <span class="image"></span>\n
-          <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
-        </a>\n
-        <a class="jump_next" title="Next"\n
-           tal:attributes="href python: here.ERP5Site_renderLink(\'portal_selections/viewNext\', http_parameters)">\n
-          <span class="image"></span>\n
-          <span class="description" i18n:translate="" i18n:domain="ui">Next</span>\n
-        </a>\n
-        <a class="jump_last" title="Last"\n
-           tal:attributes="href python: here.ERP5Site_renderLink(\'portal_selections/viewLast\', http_parameters)">\n
-          <span class="image"></span>\n
-          <span class="description" i18n:translate="" i18n:domain="ui">Last</span>\n
-        </a>\n
+      <tal:block tal:condition="not: list_mode | nothing">\n
+        <tal:block tal:condition="request/selection_index | nothing">\n
+          <span class="separator"></span>\n
+          <a class="jump_first" title="First"\n
+            tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(\'portal_selections/viewFirst\', http_parameters)">\n
+            <span class="image"></span>\n
+            <span class="description" i18n:translate="" i18n:domain="ui">First</span>\n
+          </a>\n
+          <a class="jump_previous" title="Previous"\n
+            tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(\'portal_selections/viewPrevious\', http_parameters)">\n
+            <span class="image"></span>\n
+            <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
+          </a>\n
+          <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request[\'selection_name\'])">\n
+            <span class="image"></span>\n
+            <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
+          </a>\n
+          <a class="jump_next" title="Next"\n
+            tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(\'portal_selections/viewNext\', http_parameters)">\n
+            <span class="image"></span>\n
+            <span class="description" i18n:translate="" i18n:domain="ui">Next</span>\n
+          </a>\n
+          <a class="jump_last" title="Last"\n
+            tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(\'portal_selections/viewLast\', http_parameters)">\n
+            <span class="image"></span>\n
+            <span class="description" i18n:translate="" i18n:domain="ui">Last</span>\n
+          </a>\n
+        </tal:block>\n
       </tal:block>\n
       <tal:block tal:condition="list_mode | nothing">\n
         <span class="separator"></span>\n
         <a tal:condition="search_actions" class="find" title="Find"\n
-           tal:attributes="href python: here.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')">\n
+           tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Find</span>\n
         </a>\n
@@ -257,7 +256,7 @@ XXX: Folder_filter accesses selection directly\n
           <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
         </button>\n
         <a tal:condition="sort_actions" class="sort" title="Sort"\n
-           tal:attributes="href python: here.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')">\n
+           tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>\n
         </a>\n
@@ -265,19 +264,19 @@ XXX: Folder_filter accesses selection directly\n
       <span tal:condition="exchange_actions | report_actions"\n
             class="separator"></span>\n
       <a tal:condition="exchange_actions" class="import_export" title="Import / Export"\n
-         tal:attributes="href python: here.ERP5Site_renderCustomLink(exchange_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_exchange\')">\n
+         tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(exchange_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_exchange\')">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>\n
       </a>\n
       <a tal:condition="report_actions" class="report" title="Report"\n
-         tal:attributes="href python: here.ERP5Site_renderCustomLink(report_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_report\')">\n
+         tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(report_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_report\')">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Report</span>\n
       </a>\n
       <tal:block tal:condition="button_actions">\n
         <span class="separator"></span>\n
         <tal:block tal:repeat="button_action button_actions">\n
-          <a tal:attributes="href python: here.ERP5Site_renderLink(button_action[\'url\'], http_parameters)">\n
+          <a tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(button_action[\'url\'], http_parameters)">\n
             <img i18n:attributes="title" i18n:domain="ui"\n
                  tal:attributes="src python:button_action[\'icon\'];\n
                                  title python:button_action[\'name\'];\n
@@ -288,15 +287,16 @@ XXX: Folder_filter accesses selection directly\n
       <tal:block tal:condition="ui_actions">\n
         <span class="separator"></span>\n
         <a class="configure" title="Configure"\n
-          tal:attributes="href python: here.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')">\n
+          tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Configure</span>\n
         </a>\n
       </tal:block>\n
     </span>\n
     <span class="second">\n
-      <a class="jump_help" title="Help"\n
-         tal:attributes="href python: here.Base_getHelpUrl(current_action=current_action, dialog_id=dialog_id, workflow_action=request.get(\'workflow_action\'))">\n
+      <a tal:condition="here/portal_preferences/getPreferredHtmlStyleContextualHelp"\n
+         class="jump_help" title="Help"\n
+         tal:attributes="href python: here.ERP5XhtmlStyle_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Help</span>\n
       </a>\n

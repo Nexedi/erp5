@@ -76,42 +76,27 @@ IDEAS:\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-<tal:block tal:condition="form/pt | nothing">\n
-  <tal:block tal:define="global list_mode python: form[\'pt\'] == \'form_list\';\n
-                         global listmode_default_listbox python: here.ERP5Site_getListbox(form=form)" />\n
-</tal:block>\n
-<tal:block tal:define="global actions python:here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
-                       global dialog_id form/id | template/id;\n
-                       global form_id request/form_id | dialog_id;\n
-                       global field_errors python: request.get(\'field_errors\',{});\n
-                       global cancel_url request/cancel_url | request/ACTUAL_URL;\n
-                       global dialog_method form/action | form_id;\n
-                       global form_action form_action | dialog_method;\n
-                       global dialog_category request/dialog_category | nothing;\n
+<tal:block tal:define="\n
+                       cancel_url request/cancel_url | request/ACTUAL_URL;\n
+                       local_parameter_list local_parameter_list | python: {};\n
+                       dummy python: local_parameter_list.update({\'cancel_url\': cancel_url});\n
+\n
+                       global actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
                        global url python: \'%s%s\' % (request[\'SERVER_URL\'], here.getPath(), );\n
-                       global ignore_layout request/ignore_layout | python: 0;\n
-\n
-                       global selection_name request/selection_name | listmode_default_listbox/selection_name | nothing;\n
-                       dummy python: selection_name and request.set(\'selection_name\', selection_name);\n
-                       global selection_index request/selection_index | nothing;\n
-                       global selection_url python: selection_name and here.portal_selections.getSelectionListUrlFor(selection_name,REQUEST=request) or None;\n
-\n
-                       global current_url python: \'%s/%s\' % (url, dialog_id);\n
-                       global current_action python: here.ERP5Site_getCurrentAction(current_url, actions);\n
-                       form_pickle request/form_pickle | nothing;\n
-                       form_signature request/form_signature | nothing;\n
-                       field_id request/field_id | nothing;\n
-                       object_uid here/getUid | nothing;\n
-                       object_path here/getPath | nothing;\n
-                       dummy python: request.set(\'here\',here);\n
-\n
-                       global http_parameter_list python: here.ERP5Site_getHTTPParameterList(request_form=request.form, form_id=form_id, dialog_id=dialog_id, selection_name=selection_name, selection_index=selection_index, selection_url=selection_url, cancel_url=cancel_url, form_action=form_action, dialog_method=dialog_method, dialog_category=dialog_category, form_pickle=form_pickle, form_signature=form_signature, field_id=field_id, object_uid=object_uid, object_path=object_path);\n
-                       global http_parameters python: here.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
-\n
+                       global current_form_id python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
+                       global current_url python: \'%s/%s\' % (url, current_form_id);\n
+                       global current_action python: here.ERP5XhtmlStyle_getCurrentAction(current_url, actions);\n
+                       dummy python: request.set(\'here\', here);\n
                        global css_list css_list | python: [];\n
                        dummy python: css_list.append(\'%s/erp5.css\' % (here.portal_url.getPortalPath(), ));\n
                        global js_list js_list | python: [];\n
                        dummy python: js_list.append(\'%s/erp5.js\' % (here.portal_url.getPortalPath(), ));\n
+\n
+\n
+                       global http_parameter_list request/form/copy;\n
+                       http_parameter_list python: here.ERP5XhtmlStyle_filterParameterList(http_parameter_list);\n
+                       dummy python: http_parameter_list.update(local_parameter_list);\n
+                       global http_parameters python: here.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list);\n
                        " />\n
 <?xml version="1.0" encoding="UTF-8"?>\n
 <!DOCTYPE html\n
@@ -133,7 +118,7 @@ IDEAS:\n
     </tal:block>\n
 \n
     <tal:block tal:condition="form/pt | nothing">\n
-      <tal:block tal:define="planning_box python: here.ERP5Site_getPlanningBox(form)">\n
+      <tal:block tal:define="planning_box python: here.ERP5XhtmlStyle_getPlanningBox(form)">\n
         <tal:block tal:condition="python: planning_box">\n
 \n
           <style tal:content="structure python: planning_box.render_css(None,REQUEST=request)"\n
@@ -153,6 +138,7 @@ IDEAS:\n
     </tal:block>\n
   </head>\n
   <body>\n
+<!--     <tal:block tal:replace="structure request"/> -->\n
     <form id="main_form"\n
           tal:attributes="enctype form/enctype | nothing;\n
                           action url;\n
@@ -160,7 +146,7 @@ IDEAS:\n
       <div id="bars">\n
         <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n
         <!-- We should probably call the default method instead -->\n
-        <input tal:condition="form_action"\n
+        <input tal:condition="form_action | nothing"\n
                id="hidden_button" type="submit" value="dummy"\n
                tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
         <!-- Generic way of specifying http parameters -->\n
@@ -172,10 +158,10 @@ IDEAS:\n
         <div id="main_bar">\n
           <span class="first">\n
             <span id="favourites">\n
-              <select name="favorite_select"\n
+              <select name="select_favorite"\n
                       tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
                                   user_actions actions/user;"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doFavorite\')">\n
+                      tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doFavorite\')">\n
                 <option selected="selected" value=""\n
                         i18n:translate="" i18n:domain="ui">My favourites</option>\n
                 <tal:block tal:condition="ordered_global_actions">\n
@@ -202,7 +188,7 @@ IDEAS:\n
                           i18n:translate="" i18n:domain="ui"></option>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="Base_doFavorite:method" title="Select Favorite"\n
+              <button type="submit" name="ERP5XhtmlStyle_doFavorite:method" title="Select Favorite"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
@@ -211,9 +197,9 @@ IDEAS:\n
             </span>\n
             <span class="separator"></span>\n
             <span id="modules">\n
-              <select name="module_select"\n
-                      tal:define="module_list here/ERP5Site_getModuleItemList;"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doModule\')">\n
+              <select name="select_module"\n
+                      tal:define="module_list here/ERP5XhtmlStyle_getModuleItemList;"\n
+                      tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doModule\')">\n
                 <option selected="selected" value=""\n
                         i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
                 <tal:block tal:repeat="module module_list">\n
@@ -222,7 +208,7 @@ IDEAS:\n
                           tal:content="python: module[0]" />\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="Base_doModule:method" title="Select Module"\n
+              <button type="submit" name="ERP5XhtmlStyle_doModule:method" title="Select Module"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
@@ -232,8 +218,8 @@ IDEAS:\n
           </span>\n
           <span class="second">\n
             <span id="language">\n
-              <select name="language_select"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doLanguage\')">\n
+              <select name="select_language"\n
+                      tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doLanguage\')">\n
                 <option value=""\n
                         i18n:translate="" i18n:domain="ui">My language</option>\n
                 <tal:block tal:repeat="language python: here.Localizer.get_languages_map()">\n
@@ -242,7 +228,7 @@ IDEAS:\n
                           tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])"></option>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="Base_doLanguage:method" title="Select Language"\n
+              <button type="submit" name="ERP5XhtmlStyle_doLanguage:method" title="Select Language"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
@@ -271,12 +257,12 @@ IDEAS:\n
           <tal:block tal:repeat="item here/breadcrumbs">\n
             <tal:block tal:condition="python: repeat[\'item\'].index < 2">\n
               <a tal:attributes="href item/url"\n
-                 tal:content="item/title"\n
-                 i18n:translate="" i18n:domain="ui"></a>\n
+                tal:content="item/title"\n
+                i18n:translate="" i18n:domain="ui"></a>\n
             </tal:block>\n
             <tal:block tal:condition="python: repeat[\'item\'].index >= 2">\n
               <a tal:attributes="href item/url"\n
-                 tal:content="item/title"></a>\n
+                tal:content="item/title"></a>\n
             </tal:block>\n
             /\n
           </tal:block>\n

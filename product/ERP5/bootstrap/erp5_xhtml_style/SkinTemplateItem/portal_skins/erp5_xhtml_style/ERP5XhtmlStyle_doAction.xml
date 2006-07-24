@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+Base_doAction = select_action.split()\n
+doAction0 = Base_doAction[0]\n
+request = context.REQUEST\n
+\n
+# Reinject parameters in kw\n
+kw[\'selection_name\']=selection_name\n
+kw[\'uids\']=uids\n
+kw[\'listbox_uid\']=listbox_uid\n
+kw[\'ignore_layout\']=ignore_layout\n
+\n
+# Update checked uids\n
+if None not in (selection_name, uids, listbox_uid):\n
+  context.portal_selections.updateSelectionCheckedUidList(selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
+\n
+# If this is an object, a workflow or a folder, then jump to that view\n
+if doAction0 in (\'object\', \'workflow\', \'folder\'):\n
+  redirect_url = \' \'.join(Base_doAction[1:])\n
+  if doAction0 == \'object\':\n
+    kw[\'dialog_category\'] = \'object_action\'\n
+# Otherwise, check if this is an automatic menu (add)\n
+elif doAction0 == \'add\':\n
+  new_id = context.generateNewId()\n
+  type_name = \' \'.join(Base_doAction[1:])\n
+  new_content = context.newContent(portal_type=type_name,\n
+                                   container=context,\n
+                                   id=str(new_id))\n
+  kw[\'portal_status_message\'] = N_("Object+Created.")\n
+  if not(ignore_layout) and context.getApplicableLayout():\n
+    kw[\'editable_mode\'] = 1\n
+    redirect_url = \'%s/view\' % (new_content.WebSite_getDocumentPhysicalPath(), )\n
+  else:\n
+    redirect_url = \'%s/view\' % (new_content.absolute_url(), )\n
+  # The created object is not a part of the selection, so prevent from displaying the selection navigation controls\n
+  kw[\'selection_index\']=None\n
+  kw[\'selection_name\']=None\n
+# Otherwise, check if this is an automatic menu (template)\n
+elif doAction0 == \'template\':\n
+  template_relative_url = \' \'.join(Base_doAction[1:])\n
+  template = context.getPortalObject().restrictedTraverse(template_relative_url)\n
+  if template is not None:\n
+    preference = template.getParentValue()\n
+    preference.manage_copyObjects(ids=[template.getId()], REQUEST=request, RESPONSE=None)\n
+    new_content_list = context.manage_pasteObjects(request[\'__cp\'])\n
+    new_content_id = new_content_list[0][\'new_id\']\n
+    new_content = context[new_content_id]\n
+    new_content.makeTemplateInstance()\n
+    kw[\'portal_status_message\'] = N_("Template+Created.")\n
+    redirect_url = \'%s/view\' % ( new_content.absolute_url(), )\n
+  else:\n
+    kw[\'portal_status_message\'] = N_("Template+Does+not+Exist.")\n
+    redirect_url = \'%s/view\' % (context.absolute_url(), )\n
+else:\n
+  redirect_url = request[\'ACTUAL_URL\']\n
+  kw[\'portal_status_message\'] = N_(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
+\n
+return context.ERP5XhtmlStyle_redirect(redirect_url, **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>select_action, selection_name=None, uids=None, listbox_uid=None, ignore_layout=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>select_action</string>
+                            <string>selection_name</string>
+                            <string>uids</string>
+                            <string>listbox_uid</string>
+                            <string>ignore_layout</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>Base_doAction</string>
+                            <string>_getitem_</string>
+                            <string>doAction0</string>
+                            <string>request</string>
+                            <string>_write_</string>
+                            <string>None</string>
+                            <string>redirect_url</string>
+                            <string>new_id</string>
+                            <string>type_name</string>
+                            <string>str</string>
+                            <string>new_content</string>
+                            <string>template_relative_url</string>
+                            <string>template</string>
+                            <string>preference</string>
+                            <string>new_content_list</string>
+                            <string>new_content_id</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5XhtmlStyle_doAction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

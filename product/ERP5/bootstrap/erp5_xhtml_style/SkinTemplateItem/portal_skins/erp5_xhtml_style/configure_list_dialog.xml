@@ -77,51 +77,23 @@ XXX: uses hardcoded indices values to access fields\n
 <tal:block metal:define-macro="master">\n
   <tal:block metal:use-macro="here/dialog_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
-      <tal:block tal:define="template python: here.developper_shortcut_render">\n
-        <tal:block metal:use-macro="template/macros/form" />\n
-      </tal:block>\n
-      <table tal:define="base_form python: getattr(here,form_id);\n
-                         groups base_form/get_groups;\n
-                         default_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'columns\');\n
-                         columns python: here.portal_selections.getSelectionColumns(selection_name, REQUEST=request, columns=default_columns);\n
-                         selected_stats  python: here.portal_selections.getSelectionStats(selection_name, REQUEST=request);\n
-                         global row_index python: 0;\n
-                         global row_keys python: [\'None\'];\n
-                         global stats python: [\' \',\'count\',\'sum\',\'max\',\'min\',\'avg\'];\n
-                         all_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\')">\n
-        <tal:block tal:repeat="item columns">\n
-          <tr tal:define="global row_index python:row_index+1;\n
-                          dummy python:row_keys.append(item[0])"\n
-              tal:attributes="id string:column_${row_index}">\n
-            <td>\n
-              <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
-              <tal:block tal:replace="row_index" />\n
-            </td>\n
-            <td>\n
-              <select name="field_columns">\n
-                <tal:block tal:repeat="option python: [(\'None\',\'None\')] + all_columns">\n
-                  <option tal:content="python: option[1]"\n
-                          tal:attributes="value python:option[0];\n
-                                          selected python: option[0]==item[0] and \'selected\' or nothing"\n
-                          i18n:translate="" i18n:domain="ui" />\n
-                </tal:block>\n
-              </select>\n
-            </td>\n
-            <td>\n
-              <select name="stat_columns">\n
-                <tal:block tal:repeat="stat stats">\n
-                  <option tal:content="stat"\n
-                          tal:attributes="value stat;\n
-                                          selected python: (len(selected_stats) >= row_index and stat == selected_stats[row_index - 1]) and \'selected\' or nothing"\n
-                          i18n:translate="" i18n:domain="ui" />\n
-                </tal:block>\n
-              </select>\n
-            </td>\n
-          </tr>\n
+      <div class="dialog_box">\n
+        <tal:block tal:define="template python: here.developper_shortcut_render">\n
+          <tal:block metal:use-macro="template/macros/form" />\n
         </tal:block>\n
-        <tal:block tal:repeat="item all_columns">\n
-          <tal:block tal:condition="python: item[0] not in row_keys">\n
-            <tr tal:define="global row_index python:row_index+1"\n
+        <table tal:define="selection_name request/selection_name;\n
+                          base_form python: getattr(here, request[\'form_id\']);\n
+                          groups base_form/get_groups;\n
+                          default_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'columns\');\n
+                          columns python: here.portal_selections.getSelectionColumns(selection_name, REQUEST=request, columns=default_columns);\n
+                          selected_stats  python: here.portal_selections.getSelectionStats(selection_name, REQUEST=request);\n
+                          global row_index python: 0;\n
+                          global row_keys python: [\'None\'];\n
+                          global stats python: [\' \',\'count\',\'sum\',\'max\',\'min\',\'avg\'];\n
+                          all_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\')">\n
+          <tal:block tal:repeat="item columns">\n
+            <tr tal:define="global row_index python:row_index+1;\n
+                            dummy python:row_keys.append(item[0])"\n
                 tal:attributes="id string:column_${row_index}">\n
               <td>\n
                 <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
@@ -129,15 +101,12 @@ XXX: uses hardcoded indices values to access fields\n
               </td>\n
               <td>\n
                 <select name="field_columns">\n
-                  <option selected="selected"\n
-                          value="None"\n
-                          i18n:translate="" i18n:domain="ui">\n
-                    None\n
-                  </option>\n
-                  <option tal:repeat="option all_columns"\n
-                          tal:content="python:option[1]"\n
-                          tal:attributes="value python:option[0]"\n
-                          i18n:translate="" i18n:domain="ui" />\n
+                  <tal:block tal:repeat="option python: [(\'None\',\'None\')] + all_columns">\n
+                    <option tal:content="python: option[1]"\n
+                            tal:attributes="value python:option[0];\n
+                                            selected python: option[0]==item[0] and \'selected\' or nothing"\n
+                            i18n:translate="" i18n:domain="ui" />\n
+                  </tal:block>\n
                 </select>\n
               </td>\n
               <td>\n
@@ -145,15 +114,49 @@ XXX: uses hardcoded indices values to access fields\n
                   <tal:block tal:repeat="stat stats">\n
                     <option tal:content="stat"\n
                             tal:attributes="value stat;\n
-                            selected python: len(selected_stats) >= row_index and stat == selected_stats[row_index - 1] and \'selected or nothing\'"\n
+                                            selected python: (len(selected_stats) >= row_index and stat == selected_stats[row_index - 1]) and \'selected\' or nothing"\n
                             i18n:translate="" i18n:domain="ui" />\n
                   </tal:block>\n
                 </select>\n
               </td>\n
             </tr>\n
           </tal:block>\n
-        </tal:block>\n
-      </table>\n
+          <tal:block tal:repeat="item all_columns">\n
+            <tal:block tal:condition="python: item[0] not in row_keys">\n
+              <tr tal:define="global row_index python:row_index+1"\n
+                  tal:attributes="id string:column_${row_index}">\n
+                <td>\n
+                  <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
+                  <tal:block tal:replace="row_index" />\n
+                </td>\n
+                <td>\n
+                  <select name="field_columns">\n
+                    <option selected="selected"\n
+                            value="None"\n
+                            i18n:translate="" i18n:domain="ui">\n
+                      None\n
+                    </option>\n
+                    <option tal:repeat="option all_columns"\n
+                            tal:content="python:option[1]"\n
+                            tal:attributes="value python:option[0]"\n
+                            i18n:translate="" i18n:domain="ui" />\n
+                  </select>\n
+                </td>\n
+                <td>\n
+                  <select name="stat_columns">\n
+                    <tal:block tal:repeat="stat stats">\n
+                      <option tal:content="stat"\n
+                              tal:attributes="value stat;\n
+                              selected python: len(selected_stats) >= row_index and stat == selected_stats[row_index - 1] and \'selected or nothing\'"\n
+                              i18n:translate="" i18n:domain="ui" />\n
+                    </tal:block>\n
+                  </select>\n
+                </td>\n
+              </tr>\n
+            </tal:block>\n
+          </tal:block>\n
+        </table>\n
+      </div>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>

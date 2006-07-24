@@ -1,3 +1,13 @@
+2006-07-24 vincent
+* Re-implement parameters propagation. Allows to remove most of the previously hardcoded value names from the style.
+* Keep parameters when going through a workflow transition (ex : "follow bug" in bug module)
+* Fixes bugs about form_id & dialog_id not generated the way they are supposed to.
+* Move "list mode" button between "previous" and "next" buttons.
+* Use "contextual help" preference to display or not the help button on top right - it's the only purpose of this preference.
+* Follow the field naming convention for menus.
+* Rename all scripts designed for xhtml style to "ERP5XhtmlStyle_" to make it clear. Some are rewrite of "Base_" scripts.
+* !BUG!: listbox search fields require quite a lot of work to be cleanly filtered out. This will be hopefully corrected in next version.
+
 2006-07-17 jerome
 * fix object_jump actions that were not displayed.
 

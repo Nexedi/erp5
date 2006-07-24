@@ -73,7 +73,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="field_render">\n
-  <tal:block tal:define="value python:request.get(field.id, None)">\n
+  <tal:block tal:define="value python:request.get(field.id, None);\n
+                         field_errors python: request.get(\'field_errors\',{})">\n
     <tal:block tal:define="html_render python: field.render_htmlgrid(value, request)">\n
       <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
         <div tal:repeat="html_tuple html_render" class="field"\n

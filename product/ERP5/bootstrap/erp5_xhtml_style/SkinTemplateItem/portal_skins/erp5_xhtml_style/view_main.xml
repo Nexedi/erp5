@@ -73,34 +73,43 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/main_template/macros/master">\n
-    <tal:block metal:fill-slot="context_bar">\n
-      <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
-    </tal:block>\n
-    <tal:block metal:fill-slot="main">\n
-      <div class="document"\n
-            tal:define="actions actions/object_view | python: []">\n
-        <div class="actions">\n
-          <tal:block tal:condition="editable_mode | python: 1">\n
-            <button tal:condition="python: here.portal_membership.checkPermission(\'Modify portal content\', here)"\n
-                    type="submit" name="Base_edit:method" class="save" title="Save"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description"\n
-                    i18n:translate="" i18n:domain="ui">Save</span>\n
-            </button>\n
-          </tal:block>\n
-          <ul tal:condition="python: len(actions)">\n
-            <tal:block tal:repeat="action actions">\n
-              <li tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
-                <a tal:attributes="href python: here.ERP5Site_renderLink(action[\'url\'], http_parameters)"\n
-                    tal:content="action/name"></a>\n
-              </li>\n
+  <tal:block tal:define="object_uid here/getUid | nothing;\n
+                         object_path here/getPath | nothing;\n
+                         form_id form/id | nothing;\n
+                         form_action python: here.portal_membership.checkPermission(\'Modify portal content\', here) and \'Base_edit:method\' or nothing;\n
+\n
+                         local_parameter_list local_parameter_list | python: {};\n
+                         dummy python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
+                         ">\n
+    <tal:block metal:use-macro="here/main_template/macros/master">\n
+      <tal:block metal:fill-slot="context_bar">\n
+        <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="main">\n
+        <div class="document"\n
+              tal:define="actions actions/object_view | python: []">\n
+          <div class="actions">\n
+            <tal:block tal:condition="editable_mode | python: 1">\n
+              <button tal:condition="python: here.portal_membership.checkPermission(\'Modify portal content\', here)"\n
+                      type="submit" name="Base_edit:method" class="save" title="Save"\n
+                      i18n:attributes="title" i18n:domain="ui">\n
+                <span class="image"></span>\n
+                <span class="description"\n
+                      i18n:translate="" i18n:domain="ui">Save</span>\n
+              </button>\n
             </tal:block>\n
-          </ul>\n
+            <ul tal:condition="python: len(actions)">\n
+              <tal:block tal:repeat="action actions">\n
+                <li tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
+                  <a tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(action[\'url\'], http_parameters)"\n
+                      tal:content="action/name"></a>\n
+                </li>\n
+              </tal:block>\n
+            </ul>\n
+          </div>\n
+          <div class="content"><tal:block metal:define-slot="main" /></div>\n
         </div>\n
-        <div class="content"><tal:block metal:define-slot="main" /></div>\n
-      </div>\n
+      </tal:block>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>\n

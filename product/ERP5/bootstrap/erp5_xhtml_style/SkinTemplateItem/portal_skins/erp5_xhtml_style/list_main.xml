@@ -73,12 +73,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/main_template/macros/master">\n
-    <tal:block metal:fill-slot="context_bar">\n
-      <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
-    </tal:block>\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block metal:define-slot="main" />\n
+  <tal:block tal:define="form_action string:Base_doSelect:method;\n
+                         form_id form/id;\n
+                         list_mode python: True;\n
+                         listmode_default_listbox python: here.ERP5XhtmlStyle_getListbox(form=form);\n
+                         selection_name listmode_default_listbox/selection_name;\n
+                         selection_index request/selection_index | python:0;\n
+                         dummy python: selection_name and request.set(\'selection_name\', selection_name);\n
+\n
+                         local_parameter_list local_parameter_list | python: {};\n
+                         dummy python: local_parameter_list.update({\'selection_name\': selection_name, \'selection_index\': selection_index, \'form_id\': form_id});\n
+                         ">\n
+    <tal:block metal:use-macro="here/main_template/macros/master">\n
+      <tal:block metal:fill-slot="context_bar">\n
+        <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="main">\n
+        <tal:block metal:define-slot="main" />\n
+      </tal:block>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>
