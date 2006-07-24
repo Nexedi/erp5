@@ -692,6 +692,9 @@ class TestERP5Catalog(ERP5TypeTestCase):
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_title='Nexedi')]
     self.assertEquals(organisation_list,[organisation])
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(default_group_title='Nexedi')]
+    self.assertEquals(organisation_list,[organisation])
     # Try to get the organisation with the group id nexedi
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_id='storever')]
