@@ -101,7 +101,8 @@
                       <list>
                         <string>my_id</string>
                         <string>my_title</string>
-                        <string>my_layout</string>
+                        <string>my_container_layout</string>
+                        <string>my_content_layout</string>
                         <string>my_webmaster</string>
                       </list>
                     </value>
