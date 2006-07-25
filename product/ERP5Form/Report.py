@@ -245,7 +245,7 @@ class ReportSection:
 
   security.declarePublic('getObject')
   def getObject(self, context):
-    return context.restrictedTraverse(self.path)
+    return context.getPortalObject().restrictedTraverse(self.path)
 
   security.declarePublic('getFormId')
   def getFormId(self):
