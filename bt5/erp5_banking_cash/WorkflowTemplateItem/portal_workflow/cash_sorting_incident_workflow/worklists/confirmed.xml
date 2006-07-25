@@ -30,13 +30,13 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?cash_sorting_state=confimed&portal_type=Account Incident&reset=1
+Base_viewSearchResultList?cash_sorting_state=confimed&portal_type=Cash Sorting Incident&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Account Incident To Validate</string> </value>
+            <value> <string>Cash Sorting Incident To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -101,7 +101,7 @@ Base_viewSearchResultList?cash_sorting_state=confimed&portal_type=Account Incide
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Account Incident</string>
+                        <string>Cash Sorting Incident</string>
                       </tuple>
                     </value>
                 </item>

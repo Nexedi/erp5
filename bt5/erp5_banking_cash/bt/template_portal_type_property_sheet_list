@@ -20,6 +20,7 @@ Incoming Cash Incident Line | CashDeliveryLine
 Incoming Cash Sorting Incident Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
+Incoming Usual Cash Incident Line | CashDeliveryLine
 Monetary Destruction | Account
 Monetary Destruction | Amount
 Monetary Destruction | Price
@@ -47,6 +48,9 @@ Outgoing Cash Sorting Incident Line | CashDeliveryLine
 Outgoing Cash Sorting Line | CashDeliveryLine
 Outgoing Classification Survey Cell | CashDeliveryLine
 Outgoing Classification Survey Line | CashDeliveryLine
+Outgoing Usual Cash Incident Line | CashDeliveryLine
+Usual Cash Incident | Amount
+Usual Cash Incident | Price
 Usual Cash Rendering | Amount
 Usual Cash Rendering | Price
 Usual Cash Transfer | Amount

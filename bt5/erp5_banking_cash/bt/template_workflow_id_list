@@ -14,6 +14,7 @@ monetary_reception_workflow
 monetary_survey_workflow
 money_deposit_rendering_workflow
 money_deposit_transfer_workflow
+usual_cash_incident_workflow
 usual_cash_rendering_workflow
 usual_cash_transfer_workflow
 vault_transfer_interaction_workflow

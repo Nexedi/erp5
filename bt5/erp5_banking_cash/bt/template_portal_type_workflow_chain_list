@@ -29,6 +29,8 @@ Money Deposit Rendering | edit_workflow
 Money Deposit Rendering | money_deposit_rendering_workflow
 Money Deposit Transfer | edit_workflow
 Money Deposit Transfer | money_deposit_transfer_workflow
+Usual Cash Incident | edit_workflow
+Usual Cash Incident | usual_cash_incident_workflow
 Usual Cash Rendering | edit_workflow
 Usual Cash Rendering | usual_cash_rendering_workflow
 Usual Cash Transfer | edit_workflow

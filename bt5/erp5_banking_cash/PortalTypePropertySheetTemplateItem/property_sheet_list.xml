@@ -47,6 +47,9 @@
  <portal_type id="Incoming Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Incoming Usual Cash Incident Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Amount</item>
   <item>Account</item>
@@ -111,6 +114,13 @@
  </portal_type>
  <portal_type id="Outgoing Classification Survey Line">
   <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Outgoing Usual Cash Incident Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Usual Cash Incident">
+  <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Amount</item>

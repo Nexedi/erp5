@@ -112,6 +112,8 @@ Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
+Incoming Usual Cash Incident Line | metadata
+Incoming Usual Cash Incident Line | view
 Monetary Destruction Module | list_ui
 Monetary Destruction Module | sort_on
 Monetary Destruction Module | view
@@ -209,6 +211,18 @@ Outgoing Classification Survey Cell | metadata
 Outgoing Classification Survey Cell | view
 Outgoing Classification Survey Line | metadata
 Outgoing Classification Survey Line | view
+Outgoing Usual Cash Incident Line | metadata
+Outgoing Usual Cash Incident Line | view
+Usual Cash Incident Module | list_ui
+Usual Cash Incident Module | sort_on
+Usual Cash Incident Module | view
+Usual Cash Incident | history
+Usual Cash Incident | in_view
+Usual Cash Incident | incoming_input
+Usual Cash Incident | metadata
+Usual Cash Incident | out_view
+Usual Cash Incident | outgoing_input
+Usual Cash Incident | view
 Usual Cash Rendering Module | list_ui
 Usual Cash Rendering Module | print_pdf
 Usual Cash Rendering Module | sort_on

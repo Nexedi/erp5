@@ -23,6 +23,7 @@ Incoming Cash Incident Line
 Incoming Cash Sorting Incident Line
 Incoming Cash Sorting Line
 Incoming Classification Survey Line
+Incoming Usual Cash Incident Line
 Monetary Destruction
 Monetary Destruction Module
 Monetary Issue
@@ -50,6 +51,9 @@ Outgoing Cash Sorting Incident Line
 Outgoing Cash Sorting Line
 Outgoing Classification Survey Cell
 Outgoing Classification Survey Line
+Outgoing Usual Cash Incident Line
+Usual Cash Incident
+Usual Cash Incident Module
 Usual Cash Rendering
 Usual Cash Rendering Module
 Usual Cash Transfer

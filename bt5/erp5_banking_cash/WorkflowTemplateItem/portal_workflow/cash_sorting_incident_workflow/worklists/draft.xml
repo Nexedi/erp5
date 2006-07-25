@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?cash_sorting_state=draft&portal_type=Account Incident&reset=1
+Base_viewSearchResultList?cash_sorting_state=draft&portal_type=Cash Sorting Incident&reset=1
 
 ]]></string> </value>
         </item>
@@ -101,7 +101,7 @@ Base_viewSearchResultList?cash_sorting_state=draft&portal_type=Account Incident&
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Account Incident</string>
+                        <string>Cash Sorting Incident</string>
                       </tuple>
                     </value>
                 </item>

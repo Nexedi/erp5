@@ -31,6 +31,7 @@ Incoming Cash Incident Line | Cash Delivery Cell
 Incoming Cash Sorting Incident Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
+Incoming Usual Cash Incident Line | Cash Delivery Cell
 Monetary Destruction Module | Monetary Destruction
 Monetary Destruction | Cash Delivery Line
 Monetary Issue Container | Container Line
@@ -57,6 +58,10 @@ Outgoing Cash Incident Line | Cash Delivery Cell
 Outgoing Cash Sorting Incident Line | Cash Delivery Cell
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
+Outgoing Usual Cash Incident Line | Cash Delivery Cell
+Usual Cash Incident Module | Usual Cash Incident
+Usual Cash Incident | Incoming Usual Cash Incident Line
+Usual Cash Incident | Outgoing Usual Cash Incident Line
 Usual Cash Rendering Module | Usual Cash Rendering
 Usual Cash Rendering | Cash Delivery Line
 Usual Cash Transfer Module | Usual Cash Transfer
