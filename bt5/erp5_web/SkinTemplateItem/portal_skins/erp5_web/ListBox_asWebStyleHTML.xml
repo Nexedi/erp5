@@ -109,7 +109,7 @@
 \n
             <caption>\n
               <div>\n
-                <span class="left"><em tal:content="here/field/title" tal:condition="here/field/title"/></span>\n
+                <span class="left"><em tal:content="here/getTitle" tal:condition="here/getTitle"/></span>\n
                 <span class="right"\n
                   tal:define="listbox_max_lines  python: int(here.getMaxLineNumber());\n
                               total_line         python: int(here.total_size);\n
