@@ -1,3 +1,8 @@
+2006-07-25 Kevin
+* Differentiate two level of layout: container_layout and content_layout.
+* Fix WebSite_newContent.
+* Revert consistent tab naming (JPS).
+
 2006-07-23 Kevin
 * Add WebSite_getBaseURL to get dynamic base url.
 
