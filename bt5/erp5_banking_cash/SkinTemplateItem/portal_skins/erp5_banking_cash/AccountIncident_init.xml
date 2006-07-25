@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/surface/salle_de_tri/encaisse_des_differences" %(context.getSource(),)\n
+            <value> <string>user_site = context.Baobab_getUserAssignedSiteList()[0]\n
+context.edit(source=user_site)\n
 </string> </value>
         </item>
         <item>
@@ -79,7 +80,7 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/OutgoingAccountIncidentLine_getBaobabSource</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/AccountIncident_init</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -89,7 +90,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,8 +116,12 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
+                            <string>user_site</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,7 +138,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OutgoingAccountIncidentLine_getBaobabSource</string> </value>
+            <value> <string>AccountIncident_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -68,14 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>old_group_list = context.get_local_roles()\n
-for group, role_list in old_group_list:\n
-  if \'Owner\' in role_list:\n
-    user = group\n
-\n
-user_site = context.Baobab_getUserAssignedSiteList(user)[0]\n
-\n
-return "%s/surface/salle_de_tri/encaisse_des_differences" %(user_site,)\n
+            <value> <string>return "%s/surface/salle_de_tri/encaisse_des_differences" %(context.getSource(),)\n
 </string> </value>
         </item>
         <item>
@@ -124,13 +117,6 @@ return "%s/surface/salle_de_tri/encaisse_des_differences" %(user_site,)\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>old_group_list</string>
-                            <string>_getiter_</string>
-                            <string>group</string>
-                            <string>role_list</string>
-                            <string>user</string>
-                            <string>_getitem_</string>
-                            <string>user_site</string>
                           </tuple>
                         </value>
                     </item>
