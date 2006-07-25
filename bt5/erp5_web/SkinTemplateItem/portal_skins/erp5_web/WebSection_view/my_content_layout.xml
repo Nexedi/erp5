@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_layout</string> </value>
+            <value> <string>my_content_layout</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Layout</string> </value>
+                    <value> <string>Content Layout</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
