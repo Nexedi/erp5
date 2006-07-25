@@ -68,33 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
-trust_dict={}\n
-for key in dict_keys:\n
-  trust_dict[key]=context.REQUEST[key]\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
-context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)\n
+try:\n
+  new_bt = context.getPortalObject()["portal_subversion"].updateKeep(context)\n
+except SubversionSSLTrustError, error:\n
+  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'updateKeep\').BusinessTemplate_viewSvnSSLTrust()\n
+except SubversionLoginError, error1 :\n
+  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
+  return context.asContext(caller=\'updateKeep\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
 \n
-if caller == \'update\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
-if caller == \'tree\':\n
-  return context.BusinessTemplate_viewSvnStatus(do_extract=\'False\')\n
-if caller == \'update\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
-if caller == \'updateKeep\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdateKeep\')\n
-if caller == \'commit\':\n
-  return context.BusinessTemplate_doSvnCommit(changelog=changelog,added=added,removed=removed,modified=modified)\n
-if caller == \'ls\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?added=\'+added.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
-if caller == \'log\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?added=\'+added.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
-if caller == \'info\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
-if caller == \'switch\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnSwitch(repos_url)\')\n
-return \'Error: Caller \'+ caller + \'is unknown\'\n
-</string> </value>
+context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully.\')\n
+return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.getId()+\'/\'+\'BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=\'+new_bt.getId())\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -110,7 +101,7 @@ return \'Error: Caller \'+ caller + \'is unknown\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>added, modified, removed, caller, changelog, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,27 +121,21 @@ return \'Error: Caller \'+ caller + \'is unknown\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>added</string>
-                            <string>modified</string>
-                            <string>removed</string>
-                            <string>caller</string>
-                            <string>changelog</string>
-                            <string>kw</string>
-                            <string>dict_keys</string>
-                            <string>trust_dict</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>_getitem_</string>
+                            <string>Products.ERP5Subversion.SubversionClient</string>
+                            <string>SubversionSSLTrustError</string>
+                            <string>SubversionLoginError</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>_write_</string>
-                            <string>True</string>
+                            <string>new_bt</string>
+                            <string>error</string>
+                            <string>error1</string>
                           </tuple>
                         </value>
                     </item>
@@ -167,7 +152,7 @@ return \'Error: Caller \'+ caller + \'is unknown\'\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_doSvnSslTrust</string> </value>
+            <value> <string>BusinessTemplate_doSvnUpdateKeep</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

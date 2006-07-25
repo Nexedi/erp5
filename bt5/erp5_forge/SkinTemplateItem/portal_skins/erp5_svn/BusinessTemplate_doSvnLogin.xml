@@ -73,8 +73,10 @@ if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
 if caller == \'tree\':\n
   return context.BusinessTemplate_viewSvnStatus(do_extract=\'False\')\n
-if caller == \'updatewc\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdatewc\')\n
+if caller == \'update\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
+if caller == \'updateKeep\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdateKeep\')\n
 if caller == \'commit\':\n
   return context.BusinessTemplate_doSvnCommit(changelog=changelog,added=added,removed=removed,modified=modified)\n
 if caller == \'info\':\n

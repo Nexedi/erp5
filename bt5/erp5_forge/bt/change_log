@@ -1,3 +1,6 @@
+2006-07-25 chris
+* Added function to update business template, without reverting the changes
+
 2006-07-19 chris
 * Renamed or moved some files/folders to avoid conflicts with other business templates.
 
