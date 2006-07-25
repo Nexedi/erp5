@@ -120,7 +120,7 @@ context.edit(source=user_site)\n
                             <string>kw</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>user_site</string>
                           </tuple>
                         </value>
