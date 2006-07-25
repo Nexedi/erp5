@@ -1915,7 +1915,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 error = sys.exc_info())
         else:
           try:
-            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;reset:int=1' % (brain.getPath(), self.index, selection_name)
+            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;reset:int=1' % (brain.absolute_url(), self.index, selection_name)
           except AttributeError:
             pass
 
