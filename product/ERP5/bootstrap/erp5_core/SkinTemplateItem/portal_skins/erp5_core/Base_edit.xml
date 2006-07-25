@@ -76,6 +76,10 @@ request=context.REQUEST\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
+# Use dialog_id if present, otherwise fall back on form_id.\n
+if dialog_id not in (\'\', None):\n
+  form_id = dialog_id\n
+\n
 # Prevent users who don\'t have rights to edit the object from\n
 # editing it by calling the Base_edit script with correct \n
 # parameters directly.\n
@@ -83,11 +87,8 @@ if not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', cont
   redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % (context.absolute_url(), form_id, selection_index, selection_name, \'portal_status_message=You+don\\\'t+have+the+permissions+to+edit+the+object.\')\n
   return request[\'RESPONSE\'].redirect(redirect_url)\n
 \n
-# Define form\n
-if dialog_id==\'\' or dialog_id is None:\n
-  form = getattr(context,form_id)\n
-else:\n
-  form = getattr(context,dialog_id)\n
+# Get the form\n
+form = getattr(context,form_id)\n
 \n
 try:\n
   # Validate\n
@@ -320,9 +321,9 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>request</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>None</string>
                             <string>redirect_url</string>
                             <string>_getitem_</string>
-                            <string>None</string>
                             <string>getattr</string>
                             <string>form</string>
                             <string>validation_errors</string>
