@@ -90,7 +90,7 @@ net_salary     = 0.0\n
 for object in context.objectValues():\n
   if object.getPortalType()==\'Pay Sheet Line\':\n
     # get the gross salary\n
-    if object.getResource() == \'service_module/labour\':\n
+    if object.getResource() == \'payroll_service_module/labour\':\n
       for cell in object.objectValues():\n
         if cell.getCategoriesList() == [\'tax_category/social/employer_share\', \'salary_range/france\']:\n
           gross_salary = r_(cell.getPrice())\n
@@ -324,8 +324,16 @@ return details\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_getDetails</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -443,6 +451,27 @@ return details\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

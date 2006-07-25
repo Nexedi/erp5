@@ -118,10 +118,14 @@ erp5site = context.portal_url.getPortalObject()\n
 \n
 # during 06/2005 service module has been renamed service_module\n
 # both names are supported\n
-if hasattr(erp5site, \'service_module\') :\n
+# XXX This should definitly use portal_catalog !!!\n
+if hasattr(erp5site, \'payroll_service_module\') :\n
+  service_module = erp5site.payroll_service_module\n
+elif hasattr(erp5site, \'service_module\') :\n
   service_module = erp5site.service_module\n
 else :\n
   service_module = erp5site.service\n
+\n
 \n
 for service in service_module.objectValues():\n
   base_cat = service.getVariationBaseCategoryList()\n
@@ -180,8 +184,16 @@ return l\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_initializePreview</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -275,6 +287,27 @@ return l\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

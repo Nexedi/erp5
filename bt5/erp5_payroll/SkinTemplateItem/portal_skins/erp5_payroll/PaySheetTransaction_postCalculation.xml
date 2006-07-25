@@ -210,18 +210,18 @@ for item in paysheet_items.values():\n
                       , cells    = item[\'cells\']\n
                       )\n
 \n
-# Finaly add the salary line\n
+# Finaly add the salary line, with labour service as resource\n
+portal = context.getPortalObject()\n
+labour_service = portal.restritedTraverse(\'payroll_service_module/labour\', None)\n
+if labour_service is None:\n
+  labour_service = portal.restritedTraverse(\'service_module/labour\', None)\n
+if labour_service is None:\n
+  raise ValueError, "Unable to find `labour` service"\n
 \n
-# during 06/2005 service module has been renamed service_module\n
-# both names are supported\n
-if hasattr(context.getPortalObject(), \'service_module\'):\n
-  service_module_name = \'service_module\'\n
-else :\n
-  service_module_name = \'service\'\n
 gross_salary = r_(context.getGrossSalary())\n
 \n
 createPaySheetItem( title    = \'Salary\'\n
-                  , res      = \'%s/labour\' % service_module_name\n
+                  , res      = labour_service.getRelativeUrl()\n
                   , dest_org = context.getDestinationSection()\n
                   , cells    = [{ "x"    : \'tax_category/social/employee_share\'\n
                                 , "y"    : \'salary_range/france\'\n
@@ -247,8 +247,16 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_postCalculation</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -315,8 +323,8 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
                             <string>float</string>
                             <string>rate</string>
                             <string>item</string>
-                            <string>hasattr</string>
-                            <string>service_module_name</string>
+                            <string>labour_service</string>
+                            <string>ValueError</string>
                             <string>gross_salary</string>
                             <string>True</string>
                           </tuple>
@@ -343,6 +351,27 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
