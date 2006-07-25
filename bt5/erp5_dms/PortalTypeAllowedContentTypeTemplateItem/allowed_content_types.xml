@@ -4,9 +4,19 @@
   <item>Spreadsheet</item>
   <item>Presentation</item>
   <item>Graphic</item>
+  <item>File</item>
+ </portal_type>
+ <portal_type id="File">
+  <item>Address</item>
  </portal_type>
  <portal_type id="Image Module">
   <item>Image</item>
+ </portal_type>
+ <portal_type id="Presentation">
+  <item>Role Definition</item>
+ </portal_type>
+ <portal_type id="Text">
+  <item>Role Definition</item>
  </portal_type>
  <portal_type id="Wiki Module">
   <item>Wiki Page</item>

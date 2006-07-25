@@ -1,3 +1,6 @@
+2006-07-25
+Fixed bugs; made it work with the conversion server; tidied up actions in Text.
+
 2006-07-24
 * made all the security system work (!!! required a change to ERP5Type.py and to destination_project base cat., not in svn yet)
 

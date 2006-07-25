@@ -1,3 +1,5 @@
+File | destination
+File | source
 Presentation | classification
 Presentation | function
 Presentation | group
@@ -8,6 +10,10 @@ Role Definition | function
 Role Definition | gap
 Role Definition | group
 Role Definition | site
+Text | destination
+Text | similar
+Text | source
+Text | source_project
 Wiki Page | destination
 Wiki Page | extra_assignee
 Wiki Page | extra_assignor

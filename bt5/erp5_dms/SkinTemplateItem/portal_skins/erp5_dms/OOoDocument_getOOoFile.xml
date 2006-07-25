@@ -134,7 +134,7 @@ return context.getOOfile()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_getOOfile</string> </value>
+            <value> <string>OOoDocument_getOOoFile</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

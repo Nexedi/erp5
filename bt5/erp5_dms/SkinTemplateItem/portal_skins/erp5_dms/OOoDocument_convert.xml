@@ -68,11 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
-context.log(\'format\',context.getFormat())\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n
-return context.getPdf()\n
+            <value> <string>msg=context.convert()\n
+context.log(script.getId(),msg)\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_status_message=\'+str(msg[1]))\n
 </string> </value>
         </item>
         <item>
@@ -117,7 +115,10 @@ return context.getPdf()\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
+                            <string>msg</string>
+                            <string>script</string>
+                            <string>str</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -134,7 +135,7 @@ return context.getPdf()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_getPDF</string> </value>
+            <value> <string>OOoDocument_convert</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

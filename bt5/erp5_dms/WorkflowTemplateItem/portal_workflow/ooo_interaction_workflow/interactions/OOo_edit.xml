@@ -70,8 +70,9 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>OOoDocument</string>
                 <string>Presentation</string>
+                <string>Spreadsheet</string>
+                <string>Text</string>
               </list>
             </value>
         </item>

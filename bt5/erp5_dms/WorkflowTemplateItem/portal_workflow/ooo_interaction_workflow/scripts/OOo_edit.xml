@@ -71,15 +71,15 @@
             <value> <string>ob=state_change.object\n
 kw=ob.REQUEST\n
 ob.log(\'interaction\',\'edit\')\n
-\n
+metafields=(\'title\',\'subject\',\'keywords\',\'description\',\'reference\')\n
 f=kw.get(\'my_file\',None)\n
 ob.log(\'f\',f)\n
 \n
 # edit metadata (only if we have OOo file)\n
 if ob.hasOOfile():\n
   newmeta={}\n
-  ob.log(\'metafields\',ob.metafields)\n
-  for mf in ob.metafields:\n
+  ob.log(\'metafields\',metafields)\n
+  for mf in metafields:\n
     keymf=\'my_\'+mf\n
     ob.log(\'keymf\',keymf)\n
     if kw.has_key(keymf):\n
@@ -94,6 +94,7 @@ if f is not None and f:\n
   ob.log(\'file\',f)\n
   fname=f.filename\n
   ob.setOriginalFilename(fname)\n
+  ob.setTitle(fname)\n
   ob.setLastUploadTime(DateTime())\n
   ob.clearCache()\n
 </string> </value>
@@ -142,6 +143,7 @@ if f is not None and f:\n
                             <string>_getattr_</string>
                             <string>ob</string>
                             <string>kw</string>
+                            <string>metafields</string>
                             <string>None</string>
                             <string>f</string>
                             <string>newmeta</string>

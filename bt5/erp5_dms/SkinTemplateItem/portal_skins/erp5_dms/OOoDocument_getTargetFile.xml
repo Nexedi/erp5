@@ -72,7 +72,7 @@
 \n
 request=context.REQUEST\n
 request.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
-context.log(\'format\',context.getFormat())\n
+context.log(\'format\',format)\n
 request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.%s"\' % ((filename or context.title_or_id(), format)))\n
 return context.getTargetFile(format)\n
 </string> </value>
