@@ -114,7 +114,9 @@ return report_lines\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_getReportLineList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

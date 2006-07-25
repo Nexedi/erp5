@@ -137,7 +137,9 @@ context.REQUEST.RESPONSE.redirect("%s?portal_status_message=%s" % ( context.getP
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_createPayroll</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

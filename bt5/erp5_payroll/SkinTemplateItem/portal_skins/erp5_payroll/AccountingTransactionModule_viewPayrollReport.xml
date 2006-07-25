@@ -94,7 +94,9 @@ context.REQUEST.RESPONSE.redirect("%s/%s?year=%s&salary_type=%s" % ( context.get
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/AccountingTransactionModule_viewPayrollReport</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
