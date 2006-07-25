@@ -759,7 +759,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def updateKeep(self, business_template):
     """
      Update a working copy / business template, 
-     keeping all local changes
+     keeping all local changes (appart from revision)
     """
     path = self._getWorkingPath(self.getSubversionPath(business_template))
     client = self._getClient()
