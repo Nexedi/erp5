@@ -462,7 +462,7 @@ class TestERP5BankingMixin:
                 sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
       # create sort room
       salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
-      for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation']:
+      for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences']:
         ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
         if 'ventilation' in ss.getId():
           for country in ['France', 'Spain']:
@@ -561,13 +561,14 @@ class TestERP5BankingMixin:
                                          last_name = last_name)
 
 
-  def createBankAccount(self, person, account_id, currency, amount):
+  def createBankAccount(self, person, account_id, currency, amount, **kw):
     """
     Create and initialize a bank account for a person
     """
     bank_account = person.newContent(id = account_id,
-                                          portal_type = 'Bank Account',
-                                          price_currency_value = currency)
+                                     portal_type = 'Bank Account',
+                                     price_currency_value = currency,
+                                     **kw)
     # validate this bank account for payment
     bank_account.validate()
     if amount == 0:
