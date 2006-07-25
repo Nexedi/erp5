@@ -134,6 +134,11 @@ class SubversionNotAWorkingCopyError(Exception):
   """
   pass
 
+class SubversionConflictError(Exception):
+  """The base exception class when there is a conflict
+  """
+  pass
+
 class SubversionBusinessTemplateNotInstalled(Exception):
   """ Exception called when the business template is not installed
   """
@@ -732,7 +737,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     
   security.declareProtected('Import/Export objects', 'update')
   def update(self, business_template):
-    """Update a working copy.
+    """
+     Update a working copy / business template, 
+     reverting all local changes
     """
     path = self._getWorkingPath(self.getSubversionPath(business_template))
     # First remove unversioned in working copy that could conflict
@@ -745,6 +752,29 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
     # Update from SVN
     client.update(path)
+    # Import in zodb
+    return self.importBT(business_template)
+  
+  security.declareProtected('Import/Export objects', 'updateKeep')
+  def updateKeep(self, business_template):
+    """
+     Update a working copy / business template, 
+     keeping all local changes
+    """
+    path = self._getWorkingPath(self.getSubversionPath(business_template))
+    client = self._getClient()
+    # Revert revision file so that it does not conflict
+    revision_path = os.path.join(path, 'bt', 'revision')
+    if os.path.exists(revision_path):
+      self.revert(path=revision_path, recurse=False)
+    # remove unversioned files in working copy that could be annoying
+    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
+    # Update from SVN
+    client.update(path)
+    # Check if some files are conflicted to raise an exception
+    conflicted_list = self.conflictedFiles(self.getSubversionPath(business_template))
+    if len(conflicted_list) != 0:
+      raise SubversionConflictError, 'The following files conflicts (%s), please resolve manually.' % repr(conflicted_list)
     # Import in zodb
     return self.importBT(business_template)
 
