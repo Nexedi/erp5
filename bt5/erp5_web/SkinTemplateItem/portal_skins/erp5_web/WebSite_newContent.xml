@@ -78,38 +78,42 @@ form_data = context.REQUEST.form\n
 context.log(\'WebSite_clone received REQUEST:\', form_data)\n
 \n
 # Here is the list of field name to ignore as property\n
-IGNORED_FORM_ID_LIST = [ # don\'t change id, else it would paste & setid in the same transaction.\n
+IGNORED_FORM_ID_LIST = [ \\\n
+                       # don\'t change id, else it would paste & setid in the same transaction.\n
                          \'id\'\n
-                         # type of creation method\n
+                       # type of creation method\n
                        , \'document_action_mode\'\n
-                         # input button pointer coordinates\n
+                       # input button pointer coordinates\n
                        , \'x\', \'y\'\n
-                         # custom forms field ids\n
+                       # custom forms field ids\n
                        , \'new_portal_type\', \'destination_section\'\n
                        ]\n
 \n
-directory     = context.getParent()\n
+directory     = context.restrictedTraverse(context.getRelativeUrl()).getParent()\n
 creation_mode = form_data[\'document_action_mode\']\n
 \n
 \n
 \n
 # Standard cloning method\n
 if creation_mode == \'clone\':\n
-  # TODO?\n
-  # if the document language hasn\'t changed and the version wasn\'t increased, change the copied document reference to "copy-of-%s"\n
-  # To avoid confusion (invisible published cloned document due to duplicate document references in a given section), always modify the document\n
+  # TODO ?: If the document language hasn\'t changed and the version wasn\'t increased,\n
+  #           change the copied document reference to "copy-of-%s". This idea came from\n
+  #           the fact some published document are "invisible" because cloned documents\n
+  #           share by default the same reference (within a set of documents of same\n
+  #           references in a given section, only one document is display).\n
+\n
+  #context.log("Kev test context.getId >>>>>", repr(context.getId()))\n
+  #context.log("Kev test directory     >>>>>", repr(directory))\n
 \n
   # Copy and paste the object\n
   clipboard    = directory.manage_copyObjects(ids=[context.getId()])\n
+  #context.log("Kev test clipboard                  >>>>>", repr(clipboard))\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
   new_object   = directory[paste_result[0][\'new_id\']]\n
 \n
-  #context.log("Kev test directory >>>>>", repr(directory))\n
-  #context.log("Kev test context.getI >>>>>", repr(context.getId()))\n
-  #context.log("Kev test clipboard >>>>>", repr(clipboard))\n
-  #context.log("Kev test paste_result >>>>>", repr(paste_result))\n
+  #context.log("Kev test paste_result               >>>>>", repr(paste_result))\n
   #context.log("Kev test directory.WebSite_getUrl() >>>>>", repr(directory.WebSite_getUrl()))\n
-  #context.log("Kev test new_object.getId() >>>>>", repr(new_object.getId()))\n
+  #context.log("Kev test new_object.getId()         >>>>>", repr(new_object.getId()))\n
 \n
   redirect_url = \'%s/%s/WebPage_view?editable_mode=1\' % (directory.WebSite_getUrl(), new_object.getId())\n
 \n
