@@ -474,7 +474,12 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Web Page</string>
+                          <string>Web Page</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -575,7 +580,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>countFolder</string> </value>
+            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -594,7 +599,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>
