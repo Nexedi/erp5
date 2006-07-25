@@ -75,7 +75,15 @@
       </tal:block>\n
 \n
       <tal:block tal:condition="python: default_content is None and not editable_mode">\n
-        No default page defined.\n
+        <tal:block tal:replace="nothing"><!--\n
+          Render a special page for news web_sites.\n
+        --></tal:block>\n
+        <tal:block tal:condition="python: context.getId().lower() == \'news\'">\n
+         <tal:block metal:use-macro="python: getattr(here, \'%s_news_list\' % here.WebSite_getSiteValue().getId()).macros[\'master\']"/>\n
+        </tal:block>\n
+        <tal:block tal:condition="python: context.getId().lower() != \'news\'">\n
+          No default page defined.\n
+        </tal:block>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
