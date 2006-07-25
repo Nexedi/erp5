@@ -49,6 +49,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="master">\n
+  <!-- TODO: get master layout dynamiccaly -->\n
+  <!--tal:block metal:use-macro="python: getattr(here, getattr(here, here.getContainerLayout()).pt).macros[\'master\']"-->\n
   <tal:block metal:use-macro="here/medicentre_section_master/macros/master">\n
     <tal:block metal:fill-slot="main_content">\n
       <tal:block metal:define-slot="main">\n
@@ -56,7 +58,7 @@
         <h1>Site Map</h1>\n
 \n
         <tal:block tal:replace="nothing"><!--\n
-           This macro is recursive and diplay lists of lists to display a tree.\n
+           This macro is recursive and display lists of lists to display a tree.\n
         --></tal:block>\n
         <tal:block metal:define-macro="SectionContentList">\n
           <tal:block tal:define="web_document web_document | nothing"\n
