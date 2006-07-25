@@ -71,11 +71,14 @@
             <value> <string>#XXX This script should be named WebSite_getDocument\n
 document = context.WebSite_getDocumentValue()\n
 if document is not None:\n
-  doc_url = context.WebSite_getSection()\n
-  doc_ref = document.getReference()\n
-  if doc_ref is not None:\n
-    doc_url += \'/%s\' % doc_ref\n
-  return doc_url\n
+  section_url = context.WebSite_getSection()\n
+  if section_url is not None:\n
+    doc_ref = document.getReference()\n
+    if doc_ref is not None:\n
+      return \'%s/%s\' % (section_url, doc_ref)\n
+    return section_url\n
+  else:\n
+    return document.absolute_url()\n
 return context.WebSite_getUrl()\n
 </string> </value>
         </item>
@@ -123,7 +126,7 @@ return context.WebSite_getUrl()\n
                             <string>context</string>
                             <string>document</string>
                             <string>None</string>
-                            <string>doc_url</string>
+                            <string>section_url</string>
                             <string>doc_ref</string>
                           </tuple>
                         </value>
