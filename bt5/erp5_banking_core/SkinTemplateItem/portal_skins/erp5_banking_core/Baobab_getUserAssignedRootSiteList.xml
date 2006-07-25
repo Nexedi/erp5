@@ -77,8 +77,9 @@ for a in valid_assignment_list:\n
   new_site = a.getSiteValue()\n
   while new_site.getVaultType()!=\'site\':\n
     new_site = new_site.getParentValue()\n
-  if new_site not in site_list:\n
-    site_list.append(new_site)\n
+  site_url = new_site.getRelativeUrl()\n
+  if site_url not in site_list:\n
+    site_list.append(site_url)\n
 return site_list\n
 </string> </value>
         </item>
@@ -143,6 +144,7 @@ return site_list\n
                             <string>_getiter_</string>
                             <string>a</string>
                             <string>new_site</string>
+                            <string>site_url</string>
                           </tuple>
                         </value>
                     </item>
