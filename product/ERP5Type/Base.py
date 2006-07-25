@@ -2194,9 +2194,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       is why standard acquisition must be circumvented here.
     """
     current = self
+    # First try to get a container layout
+    if hasattr(current, 'getContainerLayout') and current.hasContainerLayout():
+      return current.getContainerLayout()
+    # First try to get a content layout
     while current is not None:
-      if hasattr(current, 'hasLayout') and current.hasLayout():
-        return current.getLayout()
+      if hasattr(current, 'hasContentLayout') and current.hasContentLayout():
+        return current.getContentLayout()
       current = current.getParentValue()
       if not hasattr(current, 'getApplicableLayout'):
         return None
