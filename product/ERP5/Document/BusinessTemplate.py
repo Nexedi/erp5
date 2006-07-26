@@ -2378,8 +2378,9 @@ class DocumentTemplateItem(BaseTemplateItem):
           path, name = os.path.split(id)
           # This raises an exception if the file already exists.
           try:
-            globals()[self.local_file_writer_name](name, text, create=1)
+            globals()[self.local_file_writer_name](name, text, create=0)
           except IOError, error:
+            LOG("BusinessTemplate.py", WARNING, "Cannot install class %s on file system" %(name,))
             if error.errno :
               raise
             continue
