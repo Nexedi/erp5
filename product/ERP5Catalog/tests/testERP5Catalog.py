@@ -500,6 +500,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     organisation = module.newContent(portal_type='Organisation',)
     creation_date = organisation.getCreationDate().ISO()
     get_transaction().commit()
+    now = DateTime()
     self.tic()
     sql = """select creation_date, modification_date 
              from catalog where uid = %s""" % organisation.getUid()
@@ -511,18 +512,19 @@ class TestERP5Catalog(ERP5TypeTestCase):
     
     import time; time.sleep(3)
     organisation.edit(title='edited')
-    organisation.reindexObject()
-    now = DateTime().ISO()
     get_transaction().commit()
     self.tic()
     result = sql_connection.manage_test(sql)
     self.assertEquals(creation_date, result[0]['creation_date'].ISO())
     self.assertNotEquals(organisation.getModificationDate(),
                               organisation.getCreationDate())
-    self.assertEquals(organisation.getModificationDate().ISO(), now)
+    # This test was first written with a now variable initialized with
+    # DateTime(). But since we are never sure of the time required in
+    # order to execute some line of code
     self.assertEquals(organisation.getModificationDate().ISO(),
                               result[0]['modification_date'].ISO())
-    self.assertEquals(now, result[0]['modification_date'].ISO())
+    self.assertTrue(organisation.getModificationDate()>now)
+    self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
     
   def test_18_buildSQLQuery(self, quiet=0, run=0) :#run_all_test):
     """Tests that buildSQLQuery works with another query_table than 'catalog'"""
