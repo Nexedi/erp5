@@ -513,6 +513,10 @@
                           <string>Presentation</string>
                           <string>Presentation</string>
                         </tuple>
+                        <tuple>
+                          <string>Graphic</string>
+                          <string>Graphic</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

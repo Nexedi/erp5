@@ -3,11 +3,8 @@ Document Module | Graphic
 Document Module | Presentation
 Document Module | Spreadsheet
 Document Module | Text
-File | Address
+File | Role Definition
+Graphic | Role Definition
 Image Module | Image
 Presentation | Role Definition
 Text | Role Definition
-Wiki Module | Wiki Page
-Wiki Page | File
-Wiki Page | Image
-Wiki Page | Role Definition

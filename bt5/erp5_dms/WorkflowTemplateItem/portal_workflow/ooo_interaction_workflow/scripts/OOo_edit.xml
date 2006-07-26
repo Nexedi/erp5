@@ -71,7 +71,7 @@
             <value> <string>ob=state_change.object\n
 kw=ob.REQUEST\n
 ob.log(\'interaction\',\'edit\')\n
-metafields=(\'title\',\'subject\',\'keywords\',\'description\',\'reference\')\n
+metafields=(\'title\',\'subject\',\'keywords\',\'description\',\'reference\',\'version\',\'language\')\n
 f=kw.get(\'my_file\',None)\n
 ob.log(\'f\',f)\n
 \n

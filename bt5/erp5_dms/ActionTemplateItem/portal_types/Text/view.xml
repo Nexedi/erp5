@@ -48,7 +48,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Reply to item</string>
+                <string>View</string>
               </tuple>
             </value>
         </item>

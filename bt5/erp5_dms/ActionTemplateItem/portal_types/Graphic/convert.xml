@@ -72,8 +72,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -88,15 +91,18 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:not object.hasOOfile()</string> </value>
+            <value> <string>python:object.hasFile() and not object.hasOOfile()</string> </value>
         </item>
       </dictionary>
     </pickle>

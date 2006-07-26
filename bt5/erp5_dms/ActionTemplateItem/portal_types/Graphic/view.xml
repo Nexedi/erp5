@@ -48,7 +48,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Reply to item</string>
+                <string>View</string>
               </tuple>
             </value>
         </item>
@@ -70,8 +70,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_validation_state</string> </value>
+            <value> <string>my_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Publication State</string> </value>
+                    <value> <string>Type</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

@@ -1,15 +1,7 @@
 <workflow_chain>
  <chain>
-  <type>File</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Graphic</type>
-  <workflow>edit_workflow, ooo_interaction_workflow, document_publication_workflow</workflow>
- </chain>
- <chain>
-  <type>Image</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, ooo_interaction_workflow, local_permission_interaction_workflow, document_publication_workflow</workflow>
  </chain>
  <chain>
   <type>Presentation</type>

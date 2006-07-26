@@ -404,6 +404,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -498,8 +502,20 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Web Page</string>
-                          <string>Web Page</string>
+                          <string>Text</string>
+                          <string>Text</string>
+                        </tuple>
+                        <tuple>
+                          <string>Spreadsheet</string>
+                          <string>Spreadsheet</string>
+                        </tuple>
+                        <tuple>
+                          <string>Presentation</string>
+                          <string>Presentation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Graphic</string>
+                          <string>Graphic</string>
                         </tuple>
                       </list>
                     </value>

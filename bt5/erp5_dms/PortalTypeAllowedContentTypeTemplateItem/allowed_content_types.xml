@@ -7,7 +7,10 @@
   <item>File</item>
  </portal_type>
  <portal_type id="File">
-  <item>Address</item>
+  <item>Role Definition</item>
+ </portal_type>
+ <portal_type id="Graphic">
+  <item>Role Definition</item>
  </portal_type>
  <portal_type id="Image Module">
   <item>Image</item>
@@ -16,14 +19,6 @@
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Text">
-  <item>Role Definition</item>
- </portal_type>
- <portal_type id="Wiki Module">
-  <item>Wiki Page</item>
- </portal_type>
- <portal_type id="Wiki Page">
-  <item>Image</item>
-  <item>File</item>
   <item>Role Definition</item>
  </portal_type>
 </allowed_content_type_list>
