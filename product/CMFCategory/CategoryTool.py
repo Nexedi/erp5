@@ -756,11 +756,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               else:
                 append(category_url[len(my_base_category)+1:])
             else:
-              try:
-                my_reference = self.unrestrictedTraverse(category_url)
-              except KeyError:
-                # object does not exist
-                my_reference = None
+              my_reference = self.unrestrictedTraverse(category_url, None)
               if my_reference is not None:
                 if my_reference.portal_type in spec:
                   if base:
