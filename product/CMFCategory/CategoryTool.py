@@ -879,7 +879,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           return result
         # First we look at local ids
         for object_id in base_category_value.getAcquisitionObjectIdList():
-          my_acquisition_object = getattr(context,object_id,None)
+          my_acquisition_object = context._getOb(object_id, None)
           if my_acquisition_object is not None:
             #my_acquisition_object_path = my_acquisition_object.getPhysicalPath()
             #if my_acquisition_object_path in acquired_object_dict:
