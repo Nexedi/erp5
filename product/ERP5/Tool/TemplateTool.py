@@ -479,9 +479,9 @@ class TemplateTool (BaseTool):
         self.repository_dict[repository] = tuple(property_dict_list)
         
       if REQUEST is not None:
-        ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
+        ret_url = self.absolute_url() + '/' + REQUEST.get('dialog_id', 'view')
         psm = N_("Business+Templates+Updated+Successfully")
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s&dialog_category=object_exchange&selection_name=business_template_selection"
                                   % (ret_url, psm))
                 
     security.declareProtected( Permissions.AccessContentsInformation,
