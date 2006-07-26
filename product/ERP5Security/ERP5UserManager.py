@@ -80,7 +80,7 @@ class ERP5UserManager(BasePlugin):
           return None
 
         def _authenticateCredentials(login, password, path):
-            if login is None or password is None:
+            if not login or not password:
                 return None
 
             user_list = self.getUserByLogin(login)
@@ -156,6 +156,8 @@ class ERP5UserManager(BasePlugin):
         Search the Catalog for login and return a list of person objects
         login can be a string list or a list of strings
         """
+        if not login:
+          return []
         # because we aren't logged in, we have to create our own
         # SecurityManager to be able to access the Catalog
         sm = getSecurityManager()
