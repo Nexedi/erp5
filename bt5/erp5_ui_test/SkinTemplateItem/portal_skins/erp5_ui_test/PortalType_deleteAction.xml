@@ -68,20 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Add or replace an action on a type informations from types tool.\n
+            <value> <string>"""Delete an action on a type informations from types tool.\n
 """\n
 assert context.meta_type == \'ERP5 Type Information\'\n
 \n
-context.PortalType_deleteAction(id=id)\n
+existing_actions_indexs = []\n
+for idx, ai in enumerate(context.listActions()):\n
+  if ai.getId() == id:\n
+    existing_actions_indexs.append(idx)\n
 \n
-context.addAction( id         = id\n
-                 , action     = action\n
-                 , name       = name\n
-                 , condition  = condition\n
-                 , permission = permission\n
-                 , category   = category\n
-                 , icon       = icon\n
-                 )\n
+if existing_actions_indexs:\n
+  context.deleteActions(existing_actions_indexs)\n
 \n
 return \'Set Successfully.\'\n
 </string> </value>
@@ -112,7 +109,7 @@ return \'Set Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>name=None, id=None, action=None, icon=None, condition=None, permission=\'View\', category=None</string> </value>
+            <value> <string>id=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,22 +129,21 @@ return \'Set Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>name</string>
                             <string>id</string>
-                            <string>action</string>
-                            <string>icon</string>
-                            <string>condition</string>
-                            <string>permission</string>
-                            <string>category</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>AssertionError</string>
+                            <string>existing_actions_indexs</string>
+                            <string>_getiter_</string>
+                            <string>enumerate</string>
+                            <string>idx</string>
+                            <string>ai</string>
                           </tuple>
                         </value>
                     </item>
@@ -161,18 +157,12 @@ return \'Set Successfully.\'\n
             <value>
               <tuple>
                 <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <string>View</string>
-                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PortalType_addAction</string> </value>
+            <value> <string>PortalType_deleteAction</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

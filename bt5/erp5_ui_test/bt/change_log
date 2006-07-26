@@ -1,3 +1,7 @@
+2006-07-26 Kevin
+* Test form_dialog Action List Rendering.
+* Extract PortalType_addAction delete part to new PortalType_deleteAction script.
+
 2006-07-26 yo
 * Test a validation error with an editable float field in a listbox.
 
