@@ -41,6 +41,10 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from Products.PluggableAuthService import PluggableAuthService
+try:
+    from zope.interface.verify import verifyClass
+except ImportError:
+    from Interface.Verify import verifyClass
 
 class TestERP5Security(ERP5TypeTestCase):
   """Test invoice are created from orders then packing lists. """
@@ -62,11 +66,31 @@ class TestERP5Security(ERP5TypeTestCase):
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
   
-  def test_Interfaces(self, run=RUN_ALL_TESTS):
-    """Tests plugins respects interfaces they declare."""
-    # TODO
+  def test_GroupManagerInterfaces(self, run=RUN_ALL_TESTS):
+    """Tests group manager pluign respects interfaces."""
     if not run:
       return
+    from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
+    from Products.ERP5Security.ERP5GroupManager import ERP5GroupManager
+    verifyClass(IGroupsPlugin, ERP5GroupManager)
+
+  def test_UserManagerInterfaces(self, run=RUN_ALL_TESTS):
+    """Tests user manager pluign respects interfaces."""
+    if not run:
+      return
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, IUserEnumerationPlugin
+    from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+    verifyClass(IAuthenticationPlugin, ERP5UserManager)
+    verifyClass(IUserEnumerationPlugin, ERP5UserManager)
+
+  def test_RolesManagerInterfaces(self, run=RUN_ALL_TESTS):
+    """Tests group manager pluign respects interfaces."""
+    if not run:
+      return
+    from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
+    from Products.ERP5Security.ERP5RoleManager import ERP5RoleManager
+    verifyClass(IRolesPlugin, ERP5RoleManager)
 
   def test_UserFolder(self, run=RUN_ALL_TESTS):
     """Tests user folder has correct meta type."""
