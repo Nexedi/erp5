@@ -1,3 +1,6 @@
+2006-07-26 yo
+* Add a new suite "document_zuite".
+
 2006-07-19 yo
 * Fix testReportTree, since the default is "Hide" but not "Show" in report tree mode.
 * Add testDynamicReportTree which tests dynamically generated domains with report tree mode.
