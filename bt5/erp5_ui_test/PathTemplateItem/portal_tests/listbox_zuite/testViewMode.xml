@@ -382,6 +382,29 @@
 \t<td>//tr[@id="listbox_data_line_2"]/td[2]//input[@type="text"]</td>\n
 \t<td></td>\n
 </tr>\n
+<!-- Check a validation error message. -->\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[3]//input[@type="text"]</td>\n
+\t<td>abc</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>Base_edit:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[3]//input[@type="text"]</td>\n
+\t<td>abc</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+\t<td>*You did not enter a floating point*</td>\n
+</tr>\n
+\n
+\n
 <!-- More tests are required, such as sorting, searching, domain tree, etc. -->\n
 \n
 </tbody></table>\n

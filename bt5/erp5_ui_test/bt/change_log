@@ -1,4 +1,7 @@
 2006-07-26 yo
+* Test a validation error with an editable float field in a listbox.
+
+2006-07-26 yo
 * Add a new suite "document_zuite".
 
 2006-07-19 yo
