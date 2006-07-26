@@ -623,7 +623,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>AccountingTransaction_searcAccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
