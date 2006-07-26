@@ -36,10 +36,11 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                     get_request
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Type.Cache import clearCache
 from Products.PluggableAuthService import PluggableAuthService
 try:
     from zope.interface.verify import verifyClass
@@ -59,13 +60,25 @@ class TestERP5Security(ERP5TypeTestCase):
     """List of BT to install. """
     return ('erp5_base',)
   
+  def beforeTearDown(self):
+    """Clears person module and invalidate caches when tests are finished."""
+    clearCache()
+    self.getPersonModule().manage_delObjects([x for x in
+                             self.getPersonModule().objectIds()])
+    get_transaction().commit()
+    self.tic()
+  
   def login(self, quiet=0, run=1):
-    uf = self.getPortal().acl_users
+    uf = self.getUserFolder()
     uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
-  
+
+  def getUserFolder(self):
+    """Returns the acl_users. """
+    return self.getPortal().acl_users
+
   def test_GroupManagerInterfaces(self, run=RUN_ALL_TESTS):
     """Tests group manager plugin respects interfaces."""
     if not run:
@@ -96,7 +109,7 @@ class TestERP5Security(ERP5TypeTestCase):
     """Tests user folder has correct meta type."""
     if not run:
       return
-    self.failUnless(isinstance(self.getPortal().acl_users,
+    self.failUnless(isinstance(self.getUserFolder(),
         PluggableAuthService.PluggableAuthService))
 
   def _makePerson(self, **kw):
@@ -109,10 +122,69 @@ class TestERP5Security(ERP5TypeTestCase):
     self.tic()
     return new_person
 
+  def _assertUserExists(self, login, password):
+    """Checks that a user with login and password exists and can log in to the
+    system.
+    """
+    from Products.PluggableAuthService.interfaces.plugins import\
+                                                      IAuthenticationPlugin
+    uf = self.getUserFolder()
+    self.assertNotEquals(uf.getUserById(login, None), None)
+    for plugin_name, plugin in uf._getOb('plugins').listPlugins(
+                                IAuthenticationPlugin ):
+      if plugin.authenticateCredentials(
+                  {'login':login, 'password':password}) is not None:
+        break
+    else:
+      self.fail("No plugin could authenticate '%s' with password '%s'" %
+              (login, password))
+  
+  def _assertUserDoesNotExists(self, login, password):
+    """Checks that a user with login and password does not exists and cannot
+    log in to the system.
+    """
+    from Products.PluggableAuthService.interfaces.plugins import\
+                                                        IAuthenticationPlugin
+    uf = self.getUserFolder()
+    for plugin_name, plugin in uf._getOb('plugins').listPlugins(
+                              IAuthenticationPlugin ):
+      if plugin.authenticateCredentials(
+                {'login':login, 'password':password}) is not None:
+        self.fail(
+           "Plugin %s should not have authenticated '%s' with password '%s'" %
+           (plugin_name, login, password))
+
+  def test_PersonWithLoginPasswordAreUsers(self, run=RUN_ALL_TESTS):
+    """Tests a person with a login & password is a valid user."""
+    p = self._makePerson(reference='the_user', password='secret',
+                        career_role='internal')
+    self._assertUserExists('the_user', 'secret')
+    
+  def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self, run=RUN_ALL_TESTS):
+    """Tests a person with a login but no password is not a valid user."""
+    self._makePerson(reference='the_user', career_role='internal')
+    self._assertUserDoesNotExists('the_user', None)
+    self._makePerson(reference='another_user', password='',
+                     career_role='internal')
+    self._assertUserDoesNotExists('another_user', '')
+  
+  def test_PersonWithEmptyLoginAreNotUsers(self, run=RUN_ALL_TESTS):
+    """Tests a person with a login & password is a valid user."""
+    self._makePerson(reference='', password='secret', career_role='internal')
+    self._assertUserDoesNotExists('', 'secret')
+  
+  def test_PersonWithSuperUserLogin(self, run=RUN_ALL_TESTS):
+    """Tests one cannot create person with the "super user" special login."""
+    from Products.ERP5Security.ERP5UserManager import SUPER_USER
+    self.assertRaises(RuntimeError, self._makePerson, reference=SUPER_USER)
+  
+  def test_PersonWithSuperUserLogin(self, run=RUN_ALL_TESTS):
+    """Tests one cannot use the "super user" special login."""
+    from Products.ERP5Security.ERP5UserManager import SUPER_USER
+    self._assertUserDoesNotExists(SUPER_USER, '')
+
   def test_MultiplePersonReference(self, run=RUN_ALL_TESTS):
     """Tests that it's refused to create two Persons with same reference."""
-    if not run:
-      return
     self._makePerson(reference='new_person')
     self.assertRaises(RuntimeError, self._makePerson, reference='new_person')
 
