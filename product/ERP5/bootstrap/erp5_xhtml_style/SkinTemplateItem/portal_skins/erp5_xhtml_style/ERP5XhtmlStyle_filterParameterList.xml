@@ -84,7 +84,7 @@
 \n
 # Remove some special values\n
 # FIXME: This list should be mostly empty, every variable not to propagate must have a distinct prefix and thus be handled by isValid.\n
-for k in (\'-C\', \'SearchableText\', \'uids\', \'listbox_uid\', \'list_selection_name\', \'list_start\', \'portal_status_message\', \'update_action\', \'dialog_method\', \'cancel_method\', \'title\', \'description\', \'reset\', \'md5_object_uid_list\', \'id\'):\n
+for k in (\'-C\', \'SearchableText\', \'uids\', \'listbox_uid\', \'list_selection_name\', \'list_start\', \'portal_status_message\', \'update_action\', \'dialog_method\', \'cancel_method\', \'title\', \'description\', \'reset\', \'md5_object_uid_list\', \'id\', \'came_from\', \'dialog_select\'):\n
   if parameter_list.has_key(k):\n
     del parameter_list[k]\n
 \n
