@@ -1973,7 +1973,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           else:
             html = u'<a href="%s">%s</a>' % (url, cell_html)
           if error_message not in ('', None):
-            html += u' <span class="warning">%s</span>' % error_message
+            html += u' <span class="error">%s</span>' % error_message
       else:
         # If not editable, show a static text with a link, if enabled.
         processed_value = cgi.escape(processed_value)
