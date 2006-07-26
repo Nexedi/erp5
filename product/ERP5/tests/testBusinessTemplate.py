@@ -1346,7 +1346,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     f.write(ps_data)
     f.close()
     self.failUnless(os.path.exists(file_path))
-    sequence.edit(ps_title=ps_title, ps_path=file_path)
+    sequence.edit(ps_title=ps_title, ps_path=file_path, ps_data=ps_data)
 
   def stepAddPropertySheetToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1373,9 +1373,14 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     Check presence of Property Sheet
     """
     ps_path = sequence.get('ps_path', None)
+    ps_data = sequence.get('ps_data', None)
     self.failUnless(ps_path is not None)
     self.failUnless(os.path.exists(ps_path))
-
+    # check data in property sheet
+    f = file(ps_path, 'r')
+    data = f.read()
+    self.assertEqual(data, ps_data)
+    
   def stepCheckPropertySheetRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
     Check presence of Property Sheet
@@ -1383,6 +1388,36 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     ps_path = sequence.get('ps_path', None)
     self.failUnless(ps_path is not None)
     self.failIf(os.path.exists(ps_path))
+
+  def stepCreateUpdatedPropertySheet(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a Property Sheet
+    """
+    ps_title = 'UnitTest'
+    ps_data =  ' \nclass UnitTest2: \n  """ \n  Second Fake property sheet for unit test \n \
+    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'PropertySheet', ps_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(ps_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(ps_data_u=ps_data)
+
+  def stepCheckUpdatedPropertySheetExists(self, sequence=None, sequencer_list=None, **kw):
+    """
+    Check presence of Property Sheet
+    """
+    ps_path = sequence.get('ps_path', None)
+    ps_data = sequence.get('ps_data_u', None)
+    self.failUnless(ps_path is not None)
+    self.failUnless(os.path.exists(ps_path))
+    # check data in property sheet
+    f = file(ps_path, 'r')
+    data = f.read()
+    self.assertEqual(data, ps_data)
 
   # Busines templates
   def stepImportBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
@@ -2285,6 +2320,73 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+
+  def test_155_BusinessTemplateUpdateWithPropertySheet(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Property Sheet'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePropertySheet \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTrashBin \
+                       CheckSkinsLayers \
+                       CheckPropertySheetExists \
+                       RemovePropertySheet \
+                       CreateUpdatedPropertySheet \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CreatePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckUpdatedPropertySheetExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckPropertySheetRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
   def test_16_BusinessTemplateWithAllItems(self, quiet=quiet, run=run_all_test):
     if not run: return
