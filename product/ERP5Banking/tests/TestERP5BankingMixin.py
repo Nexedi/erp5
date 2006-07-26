@@ -241,6 +241,12 @@ class TestERP5BankingMixin:
     """
     return getattr(self.getPortal(), 'checkbook_usual_cash_transfer_module', None)
 
+  def getCheckbookMovementModule(self):
+    """
+    Return the Checkbook Movement Module
+    """
+    return getattr(self.getPortal(), 'checkbook_movement_module', None)
+
   def getCheckModule(self):
     """
     Return the Check Module
@@ -273,7 +279,21 @@ class TestERP5BankingMixin:
 
   def createCurrency(self, id='EUR', title='Euro'):
     # create the currency document for euro inside the currency module
-    return self.currency_module.newContent(id=id, title=title)
+    currency = self.currency_module.newContent(id=id, title=title)
+    if id!='EUR':
+      # Create an exchange line
+      exchange_line = currency.newContent(portal_type='Currency Exchange Line',
+          start_date='01/01/1900',stop_date='01/01/2900',
+          price_currency='currency_module/EUR',
+          currency_exchange_type_list=['currency_exchange_type/sale',
+                                       'currency_exchange_type/purchase'],
+          base_price=2)
+      cell_list = exchange_line.objectValues()
+      self.assertEquals(len(cell_list),2)
+      for cell in cell_list:
+        cell.setBasePrice(2.1)
+        cell.setDiscount(0.1)
+    return currency
 
 
   def createBanknotesAndCoins(self):
@@ -407,6 +427,11 @@ class TestERP5BankingMixin:
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
+
+    # add category for currency_exchange_type
+    self.currency_exchange_type = getattr(self.category_tool,'currency_exchange_type')
+    self.currency_exchange_type.newContent(id='sale')
+    self.currency_exchange_type.newContent(id='purchase')
 
     # get the base category function
     self.function_base_category = getattr(self.category_tool, 'function')
