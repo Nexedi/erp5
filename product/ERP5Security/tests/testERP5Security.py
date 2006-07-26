@@ -47,7 +47,7 @@ except ImportError:
     from Interface.Verify import verifyClass
 
 class TestERP5Security(ERP5TypeTestCase):
-  """Test invoice are created from orders then packing lists. """
+  """Test ERP5 Security."""
  
   RUN_ALL_TESTS = 1
   
@@ -67,7 +67,7 @@ class TestERP5Security(ERP5TypeTestCase):
     newSecurityManager(None, user)
   
   def test_GroupManagerInterfaces(self, run=RUN_ALL_TESTS):
-    """Tests group manager pluign respects interfaces."""
+    """Tests group manager plugin respects interfaces."""
     if not run:
       return
     from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
@@ -75,7 +75,7 @@ class TestERP5Security(ERP5TypeTestCase):
     verifyClass(IGroupsPlugin, ERP5GroupManager)
 
   def test_UserManagerInterfaces(self, run=RUN_ALL_TESTS):
-    """Tests user manager pluign respects interfaces."""
+    """Tests user manager plugin respects interfaces."""
     if not run:
       return
     from Products.PluggableAuthService.interfaces.plugins import\
@@ -85,7 +85,7 @@ class TestERP5Security(ERP5TypeTestCase):
     verifyClass(IUserEnumerationPlugin, ERP5UserManager)
 
   def test_RolesManagerInterfaces(self, run=RUN_ALL_TESTS):
-    """Tests group manager pluign respects interfaces."""
+    """Tests group manager plugin respects interfaces."""
     if not run:
       return
     from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
@@ -99,18 +99,22 @@ class TestERP5Security(ERP5TypeTestCase):
     self.failUnless(isinstance(self.getPortal().acl_users,
         PluggableAuthService.PluggableAuthService))
 
-  def test_MultiplePersonReference(self, run=RUN_ALL_TESTS):
-    """Tests that it's refused to create two Person with same reference."""
-    if not run:
-      return
+  def _makePerson(self, **kw):
+    """Creates a person in person module, and returns the object, after
+    indexing is done. """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
-                     portal_type='Person',
-                     reference='new_person')
+                     portal_type='Person', **kw)
     get_transaction().commit()
     self.tic()
-    self.assertRaises(RuntimeError, person_module.newContent,
-                    portal_type='Person', reference='new_person')
+    return new_person
+
+  def test_MultiplePersonReference(self, run=RUN_ALL_TESTS):
+    """Tests that it's refused to create two Persons with same reference."""
+    if not run:
+      return
+    self._makePerson(reference='new_person')
+    self.assertRaises(RuntimeError, self._makePerson, reference='new_person')
 
 if __name__ == '__main__':
   framework()
