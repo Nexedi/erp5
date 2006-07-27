@@ -498,8 +498,13 @@ class TestERP5BankingMixin:
       for s in ['auxiliaire', 'reserve', 'externes', 'serre','devises']:
         s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
         if s.getId() == 'serre':
-          for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits']:
+          for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+           if 'transit' in ss.getId():
+              for country in ['France', 'Spain']:
+                if country[0] != c.getCodification()[0]:
+                  ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+
         else:
           for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
                      'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
@@ -781,7 +786,7 @@ class TestERP5BankingMixin:
                                  line['variation_id'],
                                  line['variation_value'],
                                  line['quantity'],
-				 variation_list=variation_list)
+                                 variation_list=variation_list)
     # deliver the inventory
     if inventory.getSimulationState()!='delivered':
       inventory.deliver()
