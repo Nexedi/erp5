@@ -266,7 +266,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 
     security.declareProtected(ERP5Permissions.ModifyPortalContent,
                               'assignRoleToSecurityGroup')
-    def assignRoleToSecurityGroup(self, object, user_name = None):
+    def assignRoleToSecurityGroup(self, ob, user_name = None):
       """
         Assign Local Roles to Groups on object, based on Portal Type
         Role Definitions
@@ -276,7 +276,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       if user_name is None:
         # First try to guess from the owner
         try:
-          user_name = object.getOwnerInfo()['id']
+          user_name = ob.getOwnerInfo()['id']
         except AttributeError:
           pass
       if user_name is None:
@@ -291,15 +291,15 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
                 'Please install it to benefit from group-based security'
 
       # Retrieve applicable roles
-      role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
+      role_mapping = self.getFilteredRoleListFor(ob=ob) # kw provided in order to take any appropriate action
       #LOG('ERP5TypeInformation', 0, 'role_mapping = %r, object = %r' % (role_mapping, object))
 
       # Create an empty local Role Definition dict
       role_category_list_dict = {}
 
       # Fill it with explicit local roles defined as subobjects of current object
-      if getattr(aq_base(object), 'isPrincipiaFolderish', 0):
-        for roledef in object.objectValues(spec = 'ERP5 Role Definition'):
+      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0):
+        for roledef in ob.objectValues(spec = 'ERP5 Role Definition'):
           role_category_list_dict.setdefault(roledef.getRoleName(), []).append(
                             {
                                 'category_order'  : ['agent'],
@@ -325,10 +325,10 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
           # get the script and apply it if dynamic_base_category_list is not empty
           if len(dynamic_base_category_list) > 0:
             base_category_script_id = definition['base_category_script']
-            base_category_script = getattr(object, base_category_script_id, None)
+            base_category_script = getattr(ob, base_category_script_id, None)
             if base_category_script is not None:
               # call the script, which should return either a dict or a list of dicts
-              category_result = base_category_script(dynamic_base_category_list, user_name, object, object.getPortalType())
+              category_result = base_category_script(dynamic_base_category_list, user_name, ob, ob.getPortalType())
               #LOG('ERP5TypeInformation', 0, 'category_result = %r' % (category_result,))
               # If we decide in the script that we don't want to update the security for this object,
               # we can just have it return None instead of a dict or list of dicts
@@ -356,7 +356,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
-      group_id_generator = getattr(object, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
+      group_id_generator = getattr(ob, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
       if group_id_generator is None:
         raise RuntimeError, '%s script was not found' % ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
       for role, value_list in role_category_list_dict.items():
@@ -384,8 +384,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       # Update role assignments to groups
       if ERP5UserManager is not None: # Default implementation
         # Clean old group roles
-        old_group_list = object.get_local_roles()
-        object.manage_delLocalRoles([x[0] for x in old_group_list])
+        old_group_list = ob.get_local_roles()
+        ob.manage_delLocalRoles([x[0] for x in old_group_list])
         # Save the owner
         for group, role_list in old_group_list:
           if 'Owner' in role_list:
@@ -395,13 +395,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
               group_id_role_dict[group].append('Owner')
         # Assign new roles
         for group, role_list in group_id_role_dict.items():
-          object.manage_addLocalRoles(group, role_list)
+          ob.manage_addLocalRoles(group, role_list)
       else: # NuxUserGroups implementation
         # Clean old group roles
-        old_group_list = object.get_local_group_roles()
+        old_group_list = ob.get_local_group_roles()
         # We duplicate role settings to mimic PAS
-        object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-        object.manage_delLocalRoles([x[0] for x in old_group_list])
+        ob.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+        ob.manage_delLocalRoles([x[0] for x in old_group_list])
         # Save the owner
         for group, role_list in old_group_list:
           if 'Owner' in role_list:
@@ -412,20 +412,25 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         # Assign new roles
         for group, role_list in group_id_role_dict.items():
           # We duplicate role settings to mimic PAS
-          object.manage_addLocalGroupRoles(group, role_list)
-          object.manage_addLocalRoles(group, role_list)
+          ob.manage_addLocalGroupRoles(group, role_list)
+          ob.manage_addLocalRoles(group, role_list)
 
     security.declarePublic('getFilteredRoleListFor')
-    def getFilteredRoleListFor(self, object=None, **kw):
+    def getFilteredRoleListFor(self, ob=None, **kw):
         """
         Return a mapping containing of all roles applicable to the
         object against user.
         """
+        # This is only for backward-compatibility. The keyword parameter
+        # took object instead of ob in the old implementation.
+        if ob is None:
+          ob = kw.get('object')
+
         portal = self.portal_url.getPortalObject()
-        if object is None:
+        if ob is None:
           folder = portal
         else:
-          folder = aq_parent(object)
+          folder = aq_parent(ob)
           # Search up the containment hierarchy until we find an
           # object that claims it's a folder.
           while folder is not None:
@@ -435,10 +440,10 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
             else:
               folder = aq_parent(folder)
 
-        ec = createExprContext(folder, portal, object)
+        ec = createExprContext(folder, portal, ob)
         roles = []
         append = roles.append
-        info = ori(self, folder, object)
+        info = ori(self, folder, ob)
 
         # Include actions from self
         self._filterRoleList(append,self,info,ec)
@@ -458,9 +463,9 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
     #
     #   Helper methods
     #
-    def _filterRoleList(self,append,object,info,ec):
-        r = object.getRoleList(info)
-        if r and type(r[0]) is not type({}):
+    def _filterRoleList(self, append, ob, info, ec):
+        r = ob.getRoleList(info)
+        if r and not isinstance(r[0], dict):
             for ri in r:
                 if ri.testCondition(ec):
                     append(ri.getRole(ec))
