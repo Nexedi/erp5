@@ -72,8 +72,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
         quantity_unit/volume/m3
 
       Membership is ordered and multiple. For example, if a swim suit uses
-      three colors (eg : color1, color2, color3 which are used in the top, belt and in
-      the bottom) and if a particular variation of that swim suit has two of the three colors        the same (eg black, blue, black) then the category membership list from the color point        of view is::
+      three colors (eg : color1, color2, color3 which are used in the top, belt
+      and in the bottom) and if a particular variation of that swim suit has
+      two of the three colors the same (eg black, blue, black) then the
+      category membership list from the color point of view is::
 
         color/black
         color/blue
