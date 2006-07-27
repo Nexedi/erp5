@@ -93,10 +93,18 @@
 \n
   <tal:block tal:define="expand python: 1">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
-      <tal:block metal:fill-slot="ListBoxBody">\n
+      <tal:block\n
+        metal:fill-slot="ListBoxBody"\n
+        tal:define="listbox_max_lines  python: int(here.getMaxLineNumber());\n
+                    total_line         python: int(here.total_size);\n
+                    current_page       python: int(here.current_page) + 1;\n
+                    current_page_max   python: listbox_max_lines * current_page;\n
+                    current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n
+                    current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;">\n
 \n
         <!-- top search -->\n
         <div class="centeredInner searchBar">\n
+          <!-- TODO: get dynamic path here -->\n
           <form method="POST" id="main_form" enctype="" tal:attributes="action python:\'erp5/medicentre/site/search/WebSite_viewSearchResult\'">\n
             <input class="text" id="SearchableText" name="SearchableText" type="text" size="40"\n
                    tal:attributes="value search_query"/>\n
@@ -109,14 +117,8 @@
         <!-- result header -->\n
         <div class="searchResultHeader">\n
           <div>\n
-            <span class="left"><em tal:content="here/field/title" tal:condition="here/field/title"/></span>\n
-            <span class="right"\n
-              tal:define="listbox_max_lines  python: int(here.getMaxLineNumber());\n
-                          total_line         python: int(here.total_size);\n
-                          current_page       python: int(here.current_page) + 1;\n
-                          current_page_max   python: listbox_max_lines * current_page;\n
-                          current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n
-                          current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;">\n
+            <span class="left"><em tal:content="here/getTitle" tal:condition="here/getTitle"/></span>\n
+            <span class="right">\n
               <tal:block condition="python: total_line > 0">Resultats <em tal:content="current_page_start"/> - <em tal:content="current_page_stop"/> sur un total de <em tal:content="total_line"/><tal:block tal:condition="search_query"> pour <em tal:content="search_query"/></tal:block>.</tal:block>\n
               <span tal:condition="python: total_line == 0" class="warning">No result !</span>\n
             </span>\n
@@ -124,60 +126,67 @@
           <div class="clear"></div>\n
         </div>\n
 \n
-        <!-- search results -->\n
-        <ul class="searchResult">\n
-          <li tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
-            <div class="typeIcon">\n
-              <a href="#" title="Download original file"><img src="pictures/type-image.png"/></a>\n
-            </div>\n
-            <div class="detail"\n
+        <tal:block tal:condition="total_line">\n
+\n
+          <!-- search results -->\n
+          <ul class="searchResult">\n
+            <li tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
+              <div class="typeIcon">\n
+                <!-- TODO: get dynamic icon here -->\n
+                <a href="#" title="Download original file"><img src="pictures/type-image.png"/></a>\n
+              </div>\n
+              <div class="detail"\n
                 tal:define="line_details   python: line.render();\n
                             html_list      python: [(x[1] not in (\'\', None) and x[0] or None) for x in line_details];\n
                             main_link      python: html_list[0];\n
                             context_result python: html_list[1];\n
                             details_links  python: html_list[2:6];\n
                             related_links  python: html_list[6:9]">\n
-              <h4 tal:content="structure python: main_link"/>\n
-              <p>\n
-                <tal:block tal:condition="python: context_result != None"><tal:block replace="structure python: context_result"/><br/></tal:block>\n
-                <span class="searchDetails">\n
-                  <tal:block repeat="link details_links"><tal:block tal:condition="python: link != None"><tal:block replace="structure python: link"/><tal:block tal:condition="not: repeat/link/end"> - </tal:block></tal:block></tal:block>\n
-                </span>\n
-                <span class="relatedLinks">\n
-                  <tal:block repeat="link related_links"><tal:block tal:condition="python: link != None"> - <tal:block replace="structure python: link"/></tal:block></tal:block>\n
-                </span>\n
-              </p>\n
-            </div>\n
-            <div class="clear"></div>\n
-          </li>\n
-        </ul>\n
+                <h4 tal:content="structure python: main_link"/>\n
+                <p>\n
+                  <tal:block tal:condition="python: context_result != None"><tal:block replace="structure python: context_result"/><br/></tal:block>\n
+                  <span class="searchDetails">\n
+                    <tal:block repeat="link details_links"><tal:block tal:condition="python: link != None"><tal:block replace="structure python: link"/><tal:block tal:condition="not: repeat/link/end"> - </tal:block></tal:block></tal:block>\n
+                  </span>\n
+                  <span class="relatedLinks">\n
+                    <tal:block repeat="link related_links"><tal:block tal:condition="python: link != None"> - <tal:block replace="structure python: link"/></tal:block></tal:block>\n
+                  </span>\n
+                </p>\n
+              </div>\n
+              <div class="clear"></div>\n
+            </li>\n
+          </ul>\n
 \n
-        <!-- result page -->\n
-        <div class="centeredInner searchPages" tal:condition="python: int(here.total_size) > int(here.getMaxLineNumber())">\n
-          <p>Result Page:\n
+          <!-- result page -->\n
+          <div class="centeredInner searchPages" tal:condition="python: total_line > listbox_max_lines">\n
+            <p>Result Page:\n
               <a href="#"\n
                  tal:repeat="p python: range(0, here.total_pages)"\n
                  tal:content="python: p+1"\n
                  tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
-                                 href  python: \'portal_selections/setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;SearchableText=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, search_query, p*int(here.getMaxLineNumber()))"/>\n
-          </p>\n
-        </div>\n
+                                 href  python: \'portal_selections/setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;SearchableText=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, search_query, p*listbox_max_lines)"/>\n
+            </p>\n
+          </div>\n
 \n
-        <!-- bottom search -->\n
-        <!-- TODO: macro-ize / widget-ize this part of code (duplicate with top search) -->\n
-        <div class="centeredInner extendedSearchBar">\n
-          <form method="POST" id="main_form" enctype="" tal:attributes="action python:\'erp5/medicentre/site/search/WebSite_viewSearchResult\'">\n
-            <input class="text" id="SearchableText" name="SearchableText" type="text" size="40"\n
-                   tal:attributes="value search_query"/>\n
-            <input type="hidden" name="reset" value="1"/>\n
-            <input class="button" value="Chercher" name="WebSite_viewSearchResultList:method" type="submit"/>\n
-          </form>\n
-          <!--p>\n
-            <a href="advanced_search">Search within results</a> |\n
-            <a href="advanced_search">Search Tips</a> |\n
-            <a href="advanced_search">Advanced search</a>\n
-          </p-->\n
-        </div>\n
+          <!-- bottom search -->\n
+          <!-- TODO: macro-ize / widget-ize this part of code (duplicate with top search) -->\n
+          <div class="centeredInner extendedSearchBar">\n
+            <!-- TODO: get dynamic path here -->\n
+            <!-- TODO: when switch to another page, search_query is lost -->\n
+            <form method="POST" id="main_form" enctype="" tal:attributes="action python:\'erp5/medicentre/site/search/WebSite_viewSearchResult\'">\n
+              <input class="text" id="SearchableText" name="SearchableText" type="text" size="40"\n
+                    tal:attributes="value search_query"/>\n
+              <input type="hidden" name="reset" value="1"/>\n
+              <input class="button" value="Chercher" name="WebSite_viewSearchResultList:method" type="submit"/>\n
+            </form>\n
+            <!--p>\n
+              <a href="advanced_search">Search within results</a> |\n
+              <a href="advanced_search">Search Tips</a> |\n
+              <a href="advanced_search">Advanced search</a>\n
+            </p-->\n
+          </div>\n
+\n
+        </tal:block>\n
 \n
       </tal:block>\n
     </tal:block>\n
