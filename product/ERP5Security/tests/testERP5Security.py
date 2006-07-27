@@ -173,7 +173,7 @@ class TestERP5Security(ERP5TypeTestCase):
     self._makePerson(reference='', password='secret', career_role='internal')
     self._assertUserDoesNotExists('', 'secret')
   
-  def test_PersonWithSuperUserLogin(self, run=RUN_ALL_TESTS):
+  def test_PersonWithSuperUserLoginCannotBeCreated(self, run=RUN_ALL_TESTS):
     """Tests one cannot create person with the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
     self.assertRaises(RuntimeError, self._makePerson, reference=SUPER_USER)
