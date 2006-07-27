@@ -1,3 +1,8 @@
+2006-07-27 Kevin
+* Some search result screen modifications.
+* Allow sorting of new columns.
+* Add some comments to not forget bugs and ToDos.
+
 2006-07-25 Kevin
 * Differentiate two level of layout: container_layout and content_layout.
 * Fix WebSite_newContent.
