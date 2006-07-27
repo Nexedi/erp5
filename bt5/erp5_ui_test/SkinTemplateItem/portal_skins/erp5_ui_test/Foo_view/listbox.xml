@@ -345,6 +345,10 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -396,6 +400,10 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>quantity</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -436,6 +444,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

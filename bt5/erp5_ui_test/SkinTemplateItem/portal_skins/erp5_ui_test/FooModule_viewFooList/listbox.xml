@@ -431,12 +431,7 @@
                 <item>
                     <key> <string>meta_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>ERP5 Delivery</string>
-                          <string>ERP5 Delivery</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -446,7 +441,12 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Foo</string>
+                          <string>Foo</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

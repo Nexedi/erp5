@@ -1,5 +1,7 @@
 portal_categories/foo_category/**
 portal_domains/foo_domain
+portal_tests/check_box_field_zuite
+portal_tests/check_box_field_zuite/**
 portal_tests/document_zuite
 portal_tests/document_zuite/**
 portal_tests/listbox_zuite

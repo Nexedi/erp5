@@ -1,3 +1,7 @@
+2006-07-27 yo
+* Add a new suite "check_box_field_zuite".
+* Add my_frozen to Foo_view.
+
 2006-07-26 Kevin
 * Test form_dialog Action List Rendering.
 * Extract PortalType_addAction delete part to new PortalType_deleteAction script.

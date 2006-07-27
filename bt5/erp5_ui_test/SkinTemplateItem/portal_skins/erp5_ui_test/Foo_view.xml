@@ -99,6 +99,7 @@
                       <list>
                         <string>listbox_title</string>
                         <string>listbox_id</string>
+                        <string>listbox_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -117,6 +118,7 @@
                     <value>
                       <list>
                         <string>my_quantity</string>
+                        <string>my_frozen</string>
                       </list>
                     </value>
                 </item>
