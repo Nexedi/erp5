@@ -1223,7 +1223,7 @@ class BasicStructure:
       return [(Message(domain=None, message=message,mapping=None))]
     if (default_selection_report_path in portal_categories.objectIds()) or \
       (portal_domains is not None and default_selection_report_path in \
-       portal_domaind.objectIds()):
+       portal_domains.objectIds()):
       pass
     else:
       default_selection_root_path = self.report_root_list[0][0]
