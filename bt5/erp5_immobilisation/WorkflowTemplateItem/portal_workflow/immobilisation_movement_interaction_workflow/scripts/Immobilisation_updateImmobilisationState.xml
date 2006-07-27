@@ -66,7 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>immobilisation = state_change.object\n
+            <value> <string>immobilisation = state[\'change.object\']\n
 if immobilisation.getImmobilisationState() != \'calculating\':\n
   immobilisation.calculate_immobilisation_validity()\n
 </string> </value>
