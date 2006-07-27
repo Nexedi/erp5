@@ -149,16 +149,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.createCashInventory(source=None, destination=self.diff_vault, currency=self.currency_1,
                              line_list=line_list)
 
-    # create a person and a bank account
-    self.person_1 = self.createPerson(id='person_1',
-                                      first_name='toto',
-                                      last_name='titi')
-    self.bank_account_1 = self.createBankAccount(person=self.person_1,
-                                                 account_id='bank_account_1',
-                                                 title = 'Bank Account 1',
-                                                 currency=self.currency_1,                                                 
-                                                 amount=100000)
-
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
@@ -199,9 +189,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     # check we have 12 coin of 200 in usual_cash
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    # check the inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
 
 
   def stepCreateCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
@@ -209,8 +196,7 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     Create a cash transfer document and check it
     """
     # Cash transfer has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_sorting_incident = self.cash_sorting_incident_module.newContent(id='cash_sorting_incident_1', portal_type='Cash Sorting Incident', source_total_asset_price=52400.0,
-                                                                    destination_payment_value=self.bank_account_1)
+    self.cash_sorting_incident = self.cash_sorting_incident_module.newContent(id='cash_sorting_incident_1', portal_type='Cash Sorting Incident', source_total_asset_price=52400.0,)
     # execute tic
     self.stepTic()
     # check we have only one cash transfer
@@ -219,7 +205,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.cash_sorting_incident = getattr(self.cash_sorting_incident_module, 'cash_sorting_incident_1')
     # check its portal type
     self.assertEqual(self.cash_sorting_incident.getPortalType(), 'Cash Sorting Incident')
-    self.assertEqual(self.cash_sorting_incident.getDestinationPaymentTitle(), 'Bank Account 1')
     # check that its destination is counter
     self.assertEqual(self.cash_sorting_incident.getSource(), 'site/testsite/paris')
     self.assertEqual(self.cash_sorting_incident.getDestination(), None)
@@ -458,9 +443,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     # check we have 12 coin of 200 in usual_cash
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    # check the inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
 
 
   ##################################
