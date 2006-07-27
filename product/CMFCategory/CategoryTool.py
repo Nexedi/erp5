@@ -1229,7 +1229,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
             category_list += [new_category]
           self._setCategoryList(o, category_list)
 
-          if hasattr(aq_base(o), 'notifyAfterUpdateRelatedContent'):
+          if getattr(aq_base(o),
+                    'notifyAfterUpdateRelatedContent', None) is not None:
             o.notifyAfterUpdateRelatedContent(previous_category_url,
                                               new_category_url)
 
@@ -1239,7 +1240,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       aq_context = aq_base(context)
       # Update related recursively if required
-      if hasattr(aq_context, 'listFolderContents'):
+      if getattr(aq_context, 'listFolderContents', None) is not None:
         for o in context.listFolderContents():
           new_o_category_url = o.getRelativeUrl()
           # Relative Url is based on parent new_category_url so we must
