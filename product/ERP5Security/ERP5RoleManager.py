@@ -20,12 +20,14 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
-from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin, IRoleEnumerationPlugin
+from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin,\
+                                                    IRoleEnumerationPlugin
 
 from ERP5UserManager import SUPER_USER
 
 manage_addERP5RoleManagerForm = PageTemplateFile(
-    'www/ERP5Security_addERP5RoleManager', globals(), __name__='manage_addERP5RoleManagerForm' )
+    'www/ERP5Security_addERP5RoleManager', globals(),
+    __name__='manage_addERP5RoleManagerForm' )
 
 def addERP5RoleManager( dispatcher, id, title=None, REQUEST=None ):
     """ Add a ERP5RoleManager to a Pluggable Auth Service. """

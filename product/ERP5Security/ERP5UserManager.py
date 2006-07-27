@@ -37,7 +37,8 @@ except ImportError:
 SUPER_USER = '__erp5security-=__'
 
 manage_addERP5UserManagerForm = PageTemplateFile(
-    'www/ERP5Security_addERP5UserManager', globals(), __name__='manage_addERP5UserManagerForm' )
+    'www/ERP5Security_addERP5UserManager', globals(),
+    __name__='manage_addERP5UserManagerForm' )
 
 def addERP5UserManager(dispatcher, id, title=None, REQUEST=None):
     """ Add a ERP5UserManagern to a Pluggable Auth Service. """
@@ -102,14 +103,19 @@ class ERP5UserManager(BasePlugin):
 
             return None
 
-        _authenticateCredentials = CachingMethod(_authenticateCredentials, id='ERP5UserManager_authenticateCredentials')
-        return _authenticateCredentials(login=credentials.get('login'), password=credentials.get('password'), path=self.getPhysicalPath())
+        _authenticateCredentials = CachingMethod(_authenticateCredentials,
+                                    id='ERP5UserManager_authenticateCredentials')
+        return _authenticateCredentials(
+                      login=credentials.get('login'),
+                      password=credentials.get('password'),
+                      path=self.getPhysicalPath())
 
     #
     #   IUserEnumerationPlugin implementation
     #
     security.declarePrivate( 'enumerateUsers' )
-    def enumerateUsers(self, id=None, login=None, exact_match=False, sort_by=None, max_results=None, **kw):
+    def enumerateUsers(self, id=None, login=None, exact_match=False,
+                       sort_by=None, max_results=None, **kw):
         """ See IUserEnumerationPlugin.
         """
         def _enumerateUsers(id_tuple, exact_match, path):
@@ -141,7 +147,8 @@ class ERP5UserManager(BasePlugin):
 
             return tuple(user_info)
 
-        _enumerateUsers = CachingMethod(_enumerateUsers, id='ERP5UserManager_enumerateUsers')
+        _enumerateUsers = CachingMethod(_enumerateUsers,
+                                        id='ERP5UserManager_enumerateUsers')
 
         if id is None:
           id = login
@@ -149,7 +156,9 @@ class ERP5UserManager(BasePlugin):
           id = (id,)
         if isinstance(id, list):
           id = tuple(id)
-        return _enumerateUsers(id_tuple=id, exact_match=exact_match, path=self.getPhysicalPath())
+        return _enumerateUsers(id_tuple=id,
+                               exact_match=exact_match,
+                               path=self.getPhysicalPath())
 
     def getUserByLogin(self, login):
         """
@@ -164,7 +173,8 @@ class ERP5UserManager(BasePlugin):
         if sm.getUser() != SUPER_USER:
           newSecurityManager(self, self.getUser(SUPER_USER))
 
-        result = self.getPortalObject().portal_catalog(portal_type="Person", reference=login)
+        result = self.getPortalObject().portal_catalog(
+                                  portal_type="Person", reference=login)
 
         setSecurityManager(sm)
         return [item.getObject() for item in result]
