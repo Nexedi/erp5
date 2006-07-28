@@ -70,7 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>context.edit(quantity_unit = \'unit\',\n
              source = \'account_module/bank_account\',\n
-             destination = \'account_module/bank_account\')\n
+             destination = \'account_module/bank_account\',\n
+             resource = \'currency_module/%s\' % context.Baobab_getPortalReferenceCurrencyID())\n
 </string> </value>
         </item>
         <item>
