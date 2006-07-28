@@ -212,9 +212,9 @@ for item in paysheet_items.values():\n
 \n
 # Finaly add the salary line, with labour service as resource\n
 portal = context.getPortalObject()\n
-labour_service = portal.restritedTraverse(\'payroll_service_module/labour\', None)\n
+labour_service = portal.restrictedTraverse(\'payroll_service_module/labour\', None)\n
 if labour_service is None:\n
-  labour_service = portal.restritedTraverse(\'service_module/labour\', None)\n
+  labour_service = portal.restrictedTraverse(\'service_module/labour\', None)\n
 if labour_service is None:\n
   raise ValueError, "Unable to find `labour` service"\n
 \n
