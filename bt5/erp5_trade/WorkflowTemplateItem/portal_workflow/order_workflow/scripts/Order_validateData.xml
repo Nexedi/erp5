@@ -76,6 +76,11 @@ order = state_change.object\n
 error_message = \'\'\n
 message_list = []\n
 \n
+if order.getStopDate() is not None  and order.getStartDate() is not None: \n
+    if (order.getStopDate() < order.getStartDate()):\n
+        message_list.append("Stop date before Start date") \n
+\n
+\n
 if order.getSource() is None:\n
   message_list.append(\'No Source\')\n
 if order.getStartDate() is None and order.getStopDate() is not None:\n
@@ -108,7 +113,9 @@ if len(message_list) > 0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/order_workflow/scripts/Order_validateData</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
