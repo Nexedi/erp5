@@ -42,7 +42,6 @@ from AccessControl.User import emergency_user
 from AccessControl.SecurityManagement import newSecurityManager,\
                                              setSecurityManager
 from ZPublisher import BeforeTraverse
-from Products.ERP5Type.patches.HTTPRequest import website_key
 
 from zLOG import LOG
 
