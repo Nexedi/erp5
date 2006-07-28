@@ -107,6 +107,11 @@ def checkField(folder, form, field):\n
       error_message += checkTitle(path, \'columns\', title)\n
     for id, title in field.get_value(\'all_columns\'):\n
       error_message += checkTitle(path, \'all_columns\', title)\n
+\n
+    a = field.getListMethodName()\n
+    if (a!= None and not a.endswith(\'List\')):\n
+      if a not in [\'portal_catalog\', \'searchFolder\', \'objectValues\']:\n
+        error_message = "%s : %s : %r Bad Naming Convention\\n" % (path, id, a)\n
   return error_message\n
 \n
 \n
