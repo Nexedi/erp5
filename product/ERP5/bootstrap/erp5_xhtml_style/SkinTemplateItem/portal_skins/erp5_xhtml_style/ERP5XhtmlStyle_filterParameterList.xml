@@ -91,13 +91,7 @@ if parameter_list.has_key(\'-C\'):\n
 \n
 # erp5_xhtml_style special fields.\n
 # This is normal.\n
-for k in (\'came_from\', \'SearchableText\', \'portal_status_message\', \'reset\'):\n
-  if parameter_list.has_key(k):\n
-    del parameter_list[k]\n
-\n
-# erp5_xhtml_style special fields.\n
-# XXX: This should not be needed.\n
-for k in (\'update_action\', \'dialog_method\', \'cancel_method\'):\n
+for k in (\'came_from\', \'SearchableText\', \'portal_status_message\', \'reset\', \'dialog_id\', \'update_action\', \'dialog_method\', \'cancel_method\'):\n
   if parameter_list.has_key(k):\n
     del parameter_list[k]\n
 \n
