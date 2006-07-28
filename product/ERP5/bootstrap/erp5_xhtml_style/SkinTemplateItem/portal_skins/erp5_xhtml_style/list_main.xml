@@ -73,7 +73,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block tal:define="form_action string:Base_doSelect:method;\n
+  <tal:block tal:define="form_action string:Base_doSelect;\n
                          form_id form/id;\n
                          list_mode python: True;\n
                          listmode_default_listbox python: here.ERP5XhtmlStyle_getListbox(form=form);\n
