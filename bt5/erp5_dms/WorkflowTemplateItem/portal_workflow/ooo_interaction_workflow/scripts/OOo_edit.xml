@@ -93,6 +93,13 @@ if f is not None and f:\n
   # if file uploaded, then:\n
   ob.log(\'file\',f)\n
   fname=f.filename\n
+  # we check for appropriate file type (by extension, using content_type_registry)\n
+  ctype=context.content_type_registry.findTypeName(fname,None,None)\n
+  context.log(context.getPortalType(),ctype)\n
+  if ctype is None:\n
+    raise Exception(\'File type of \'+fname+\' is not registered\')\n
+  if ctype!=ob.getPortalType():\n
+    raise Exception(\'This file should be created as \'+ctype)\n
   ob.setOriginalFilename(fname)\n
   ob.setTitle(fname)\n
   ob.setLastUploadTime(DateTime())\n
@@ -153,6 +160,9 @@ if f is not None and f:\n
                             <string>_getitem_</string>
                             <string>_write_</string>
                             <string>fname</string>
+                            <string>context</string>
+                            <string>ctype</string>
+                            <string>Exception</string>
                             <string>DateTime</string>
                           </tuple>
                         </value>

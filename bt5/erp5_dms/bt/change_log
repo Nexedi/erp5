@@ -1,3 +1,6 @@
+2006-07-27
+Type checking upon upload using content_type_registry
+
 2006-07-26 BG
 Cleaned redundant paths; removed wiki; removed redundant portal_types; removed predecessor base_cat (overlaps with erp5_project); completed content_type_registry; tidied up roles and actions in all types; implemented Graphic support.
 
