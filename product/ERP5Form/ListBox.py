@@ -2878,25 +2878,35 @@ class ListBoxValidator(Validator.Validator):
 ListBoxValidatorInstance = ListBoxValidator()
 
 class ListBox(ZMIField):
-    meta_type = "ListBox"
+  meta_type = "ListBox"
 
-    widget = ListBoxWidgetInstance
-    validator = ListBoxValidatorInstance
+  widget = ListBoxWidgetInstance
+  validator = ListBoxValidatorInstance
 
-    security = ClassSecurityInfo()
+  security = ClassSecurityInfo()
 
-    security.declareProtected('Access contents information', 'get_value')
-    def get_value(self, id, **kw):
-      if (id == 'default'):
-        if (kw.get('render_format') in ('list', )):
-          return self.widget.render(self, self.generate_field_key(), None,
-                                    kw.get('REQUEST'),
-                                    render_format=kw.get('render_format'))
-        else:
-          return None
+  security.declareProtected('Access contents information', 'get_value')
+  def get_value(self, id, **kw):
+    if (id == 'default'):
+      if (kw.get('render_format') in ('list', )):
+        return self.widget.render(self, self.generate_field_key(), None,
+                                  kw.get('REQUEST'),
+                                  render_format=kw.get('render_format'))
       else:
-        return ZMIField.get_value(self, id, **kw)
+        return None
+    else:
+      return ZMIField.get_value(self, id, **kw)
 
+  security.declareProtected('Access contents information', 'getListMethodName')
+  def getListMethodName(self):
+    """Return the name of the list method. If not defined, return None.
+    """
+    list_method = self.get_value('list_method')
+    try:
+      name = getattr(list_method, 'method_name')
+    except AttributeError:
+      name = list_method
+    return name or None
 
 
 class ListBoxLine:
