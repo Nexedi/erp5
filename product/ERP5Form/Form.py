@@ -113,25 +113,19 @@ def get_value(self, id, **kw):
             # call wrapped method to get answer
             value = override.__of__(self)()
         else:
-            # get normal value
+            # Get a normal value.
             value = self.get_orig_value(id)
 
-            # For the 'default' value, we try to get a default value
-            if id == 'default':
-                if (value is None or value == '' or value == [] or value == ()) \
-                       and self.meta_type != 'MethodField' :
-                  # If nothing was provided then try to
-                  # find a default method to get the value
-                  # for that field
-                  # NEEDS TO BE CLEANED UP
-                  try:
-                    form = self.aq_parent
-                    object = getattr(form, 'aq_parent', None)
-                    key = self.id
-                    key = key[3:]
-                    value = object.getProperty(key, d=value)
-                  except (KeyError, AttributeError):
-                    value = None
+            # For the 'default' value, we try to get a property value
+            # stored in the context, only if the field is prefixed with my_.
+            if id == 'default' and self.id[:3] == 'my_':
+              try:
+                form = self.aq_parent
+                ob = getattr(form, 'aq_parent', None)
+                key = self.id[3:]
+                value = ob.getProperty(key, d=value)
+              except (KeyError, AttributeError):
+                value = None
             # For the 'editable' value, we try to get a default value
             elif id == 'editable':
                 # By default, pages are editable and
