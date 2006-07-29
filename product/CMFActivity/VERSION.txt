@@ -1,1 +1,1 @@
-CMFActivity 0.12
+CMFActivity 0.13
