@@ -70,6 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>listbox = kw.get(\'listbox\', ())\n
 \n
+bt_id_list = getattr(context.REQUEST, \'bt_list\', ())\n
 bt_dict = {}\n
 object_to_update = {}\n
 for item in listbox:\n
@@ -86,6 +87,12 @@ for bt_id in bt_dict.keys():\n
   bt = context.portal_templates[bt_id]\n
   bt.install(force=0, object_to_update=object_list)\n
   bt_title_list.append(bt.getTitle())\n
+\n
+for id in bt_id_list:\n
+  if id not in bt_dict.keys():\n
+    bt = context.portal_templates[id]\n
+    bt.install(force=0, object_to_update=[])\n
+    bt_title_list.append(bt.getTitle())\n
 \n
 \n
 REQUEST = container.REQUEST\n
@@ -143,6 +150,9 @@ return RESPONSE.redirect("%s?portal_status_message=Business+Template+%s+installe
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>listbox</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>bt_id_list</string>
                             <string>bt_dict</string>
                             <string>object_to_update</string>
                             <string>_getiter_</string>
@@ -153,8 +163,8 @@ return RESPONSE.redirect("%s?portal_status_message=Business+Template+%s+installe
                             <string>_write_</string>
                             <string>bt_title_list</string>
                             <string>object_list</string>
-                            <string>context</string>
                             <string>bt</string>
+                            <string>id</string>
                             <string>container</string>
                             <string>REQUEST</string>
                             <string>RESPONSE</string>

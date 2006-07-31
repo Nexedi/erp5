@@ -76,20 +76,60 @@ REQUEST = container.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
 \n
 uids = getattr(REQUEST, \'uids\', ())\n
-ret_url = \'/\'.join([context.absolute_url(), REQUEST.get(\'form_id\', \'view\')])\n
 \n
-#return repr(len(uids))\n
 if len(uids) == 0:\n
-  RESPONSE.redirect("%s?portal_status_message=No+Business+Template+Specified" % ret_url)\n
-  return\n
+  return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), context.urlQuote(\'No Business Template specified.\')))\n
 \n
-bt_list = []\n
+# Initilization\n
+id_list = []\n
+portal_status_message = \'\'\n
+current_uid_list=[]\n
+for uid in uids:\n
+  current_uid_list.append(uid)\n
+  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
+  id_list.append(id)\n
+\n
+# Check for missing dependencies\n
 for uid in uids:\n
   repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
+  dependency_list = context.getDependencyList((repository, id));\n
+  for dep_repository, dep_id in dependency_list:\n
+    if dep_id not in id_list:\n
+      id_list.append(dep_id)\n
+      if dep_repository != \'meta\':\n
+        portal_status_message+=\'\\\'%s\\\' added because \\\'%s\\\' depends on it.<br/>\'%(dep_id.replace(\'.bt5\', \'\'), id.replace(\'.bt5\', \'\'))\n
+        current_uid_list.append(context.encodeRepositoryBusinessTemplateUid(dep_repository, dep_id))\n
+      else:\n
+        provider_list = context.getProviderList(dep_id)\n
+        provider_installed = False\n
+        for provider in provider_list:\n
+          if provider+\'.bt5\' in id_list:\n
+            provider_installed = True\n
+            break\n
+        if not provider_installed:\n
+          portal_status_message+=\'\\\'%s\\\' requires you to select one of the following business templates: %s\'%(id.replace(\'.bt5\', \'\'), provider_list)\n
+\n
+# If somes dependencies were missing\n
+# we call the dialog again with the\n
+# new bts selected\n
+if portal_status_message != \'\' :\n
+  #context.portal_selections.setSelectionCheckedUidsFor(REQUEST.get(\'selection_name\'), current_uid_list)\n
+  context.portal_selections.setSelectionCheckedUidsFor(\'template_tool_install_selection\', current_uid_list)\n
+  return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), context.urlQuote(portal_status_message)))\n
+\n
+# order uids according to dependencies before processing\n
+tuple_list = []\n
+for uid in uids:\n
+  tuple_list.append(context.decodeRepositoryBusinessTemplateUid(uid))\n
+tuple_list = context.sortBusinessTemplateList(tuple_list)\n
+\n
+bt_list = []\n
+for repository, id in tuple_list:\n
   bt = context.download(\'/\'.join([repository, id]))\n
   bt_list.append(bt.getId())\n
 \n
 RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=BusinessTemplate_installationChoice\' %(context.absolute_url(), make_query({\'bt_list\' : bt_list})))\n
+#return context.ERP5XhtmlStyle_redirect(\'%s/TemplateTool_viewMultiInstallationDialog\' % (context.absolute_url(), ), {\'bt_list\' : bt_list})\n
 
 
 ]]></string> </value>
@@ -149,14 +189,25 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
                             <string>RESPONSE</string>
                             <string>getattr</string>
                             <string>uids</string>
-                            <string>context</string>
-                            <string>ret_url</string>
                             <string>len</string>
-                            <string>bt_list</string>
+                            <string>context</string>
+                            <string>id_list</string>
+                            <string>portal_status_message</string>
+                            <string>current_uid_list</string>
                             <string>_getiter_</string>
                             <string>uid</string>
                             <string>repository</string>
                             <string>id</string>
+                            <string>dependency_list</string>
+                            <string>dep_repository</string>
+                            <string>dep_id</string>
+                            <string>provider_list</string>
+                            <string>False</string>
+                            <string>provider_installed</string>
+                            <string>provider</string>
+                            <string>True</string>
+                            <string>tuple_list</string>
+                            <string>bt_list</string>
                             <string>bt</string>
                           </tuple>
                         </value>
