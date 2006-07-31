@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Dependency Handling</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Dependency Handling</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>/erp5/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange&cancel_url=http%3A//127.0.0.1%3A9080/erp5/portal_templates/&selection_index:int=0&form_id=TemplateTool_viewBusinessTemplateList&selection_name=business_template_selection</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Business Templates Updated Successfully</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Install Business Templates From Repositories</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX2ZyLmJ0NScKcDIKdC4=\']</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>\'test_core\' added because \'test_accounting_fr\' depends on it.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>\'test_accounting\' added because \'test_accounting_fr\' depends on it.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Validate Installation</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Business Template test_core, test_accounting, test_accounting_fr installed</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Install Business Templates From Repositories</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX2luLmJ0NScKcDIKdC4=\']</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>BusinessTemplateMissingDependency</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Install Business Templates From Repositories</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX3BsLmJ0NScKcDIKdC4=\']</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Validate Installation</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Business Template test_accounting_pl installed</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Install Business Templates From Repositories</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF93ZWIuYnQ1JwpwMgp0Lg==\']</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>\'test_web\' requires you to select one of the following business templates: [\'test_html_style\', \'test_xhtml_style\']</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF94aHRtbF9zdHlsZS5idDUnCnAyCnQu\']</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTitle</td>\n
+\t<td>Validate Installation</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Business Template test_xhtml_style, test_web installed</td>\n
+\t<td></td>\n
+</tr>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testDependenciesHandling</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
