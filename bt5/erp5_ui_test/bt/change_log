@@ -1,20 +1,5 @@
-2006-07-31 jerome
-* Add a new suite "relation_field_zuite"
-* Add checkPortalStatusMessage to user-extensions.js
-
-2006-07-27 yo
-* Add a new suite "check_box_field_zuite".
-* Add my_frozen to Foo_view.
-
-2006-07-26 Kevin
-* Test form_dialog Action List Rendering.
-* Extract PortalType_addAction delete part to new PortalType_deleteAction script.
-
-2006-07-26 yo
-* Test a validation error with an editable float field in a listbox.
-
-2006-07-26 yo
-* Add a new suite "document_zuite".
+2006-07-31 chris
+* Added tests for dependency handling in business template install
 
 2006-07-19 yo
 * Fix testReportTree, since the default is "Hide" but not "Show" in report tree mode.

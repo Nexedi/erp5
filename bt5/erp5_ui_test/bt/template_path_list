@@ -1,12 +1,8 @@
 portal_categories/foo_category/**
 portal_domains/foo_domain
-portal_tests/check_box_field_zuite
-portal_tests/check_box_field_zuite/**
-portal_tests/document_zuite
-portal_tests/document_zuite/**
+portal_tests/business_template_zuite
+portal_tests/business_template_zuite/**
 portal_tests/listbox_zuite
 portal_tests/listbox_zuite/**
 portal_tests/page_templates_zuite
 portal_tests/page_templates_zuite/**
-portal_tests/relation_field_zuite
-portal_tests/relation_field_zuite/**
