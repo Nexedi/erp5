@@ -40,12 +40,11 @@ def PropertyManager_updateProperty(self, id, value):
     self._wrapperCheck(value)
     if not hasattr(self, 'isRADContent'):
       if not self.hasProperty(id):
-          raise 'Bad Request', 'The property %s does not exist' % escape(id)
-    if type(value)==type(''):
+          raise BadRequest, 'The property %s does not exist' % escape(id)
+    if isinstance(value, str):
         proptype=self.getPropertyType(id) or 'string'
         if type_converters.has_key(proptype):
             value=type_converters[proptype](value)
-    #LOG('_updateProperty', 0, 'self = %r, id = %r, value = %r' % (self, id, value))
     self._setPropValue(id, value)
 
 def PropertyManager_hasProperty(self, id):
@@ -58,13 +57,13 @@ def PropertyManager_hasProperty(self, id):
 def PropertyManager_getProperty(self, id, d=None, evaluate=1):
     """Get the property 'id', returning the optional second
         argument or None if no such property is found."""
-    type = self.getPropertyType(id)
-    if evaluate and type == 'tales':
+    property_type = self.getPropertyType(id)
+    if evaluate and property_type == 'tales':
         value = getattr(self, id)
         expression = Expression(value)
         econtext = createExpressionContext(self)
         return expression(econtext)
-    elif type:
+    elif property_type:
       return getattr(self, id)
     return d
 
@@ -83,16 +82,15 @@ def PropertyManager_setProperty(self, id, value, type=None):
 
     if type is None:
       # Generate a default type
-      value_type = type(value)
-      if value_type in (type([]), type(())):
+      if isinstance(value, (list, tuple)):
         type = 'lines'
-      elif value_type is type(1):
+      elif isinstance(value, int):
         type = 'int'
-      elif value_type is type(1L):
+      elif isinstance(value, long):
         type = 'long'
-      elif value_type is type(1.0):
+      elif isinstance(value, float):
         type = 'float'
-      elif value_type is type('a'):
+      elif isinstance(value, basestring):
         if len(value_type.split('\n')) > 1:
           type = 'text'
         else:
@@ -114,7 +112,8 @@ def PropertyManager_setProperty(self, id, value, type=None):
         else:
             self._setPropValue(id, [])
     else:
-        self._local_properties=getattr(self, '_local_properties', ())+({'id':id,'type':type},)
+        self._local_properties = getattr(self,
+                '_local_properties', ()) + ({'id':id, 'type':type},)
         self._setPropValue(id, value)
 
 def PropertyManager_delProperty(self, id):
