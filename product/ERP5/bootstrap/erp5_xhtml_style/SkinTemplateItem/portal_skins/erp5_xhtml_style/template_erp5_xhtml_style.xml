@@ -151,9 +151,17 @@ IDEAS:\n
                tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
         <!-- Generic way of specifying http parameters -->\n
         <tal:block tal:repeat="parameter http_parameter_list/items">\n
-          <input tal:condition="python: parameter[1] is not None"\n
+          <tal:block tal:condition="python: same_type(parameter[1], [])">\n
+            <tal:block tal:repeat="list_item python: parameter[1]">\n
+              <input tal:condition="python: list_item is not None"\n
+                     tal:attributes="name python: \'%s:list\' % (parameter[0], );\n
+                                     value python: list_item;" type="hidden" />\n
+            </tal:block>\n
+          </tal:block>\n
+          <input tal:condition="python: not same_type(parameter[1], []) and parameter[1] is not None"\n
                  tal:attributes="name python: parameter[0];\n
                                  value python: parameter[1];" type="hidden" />\n
+\n
         </tal:block>\n
         <div id="main_bar">\n
           <span class="first">\n
