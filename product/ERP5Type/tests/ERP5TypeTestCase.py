@@ -401,36 +401,64 @@ def setupERP5Site( business_template_list=(),
           # Add ERP5 Site
           reindex = 1
           if hot_reindexing:
-            setattr(app,'isIndexable',0)
+            setattr(app, 'isIndexable', 0)
             reindex = 0
           if not quiet:
             ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
-          factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
-          factory.manage_addERP5Site(portal_name,light_install=light_install,
-              reindex=reindex,create_activities=create_activities)
+          
+          sql_connections_dict = {}
+          erp5_sql_connection_string = os.environ.get(
+                                        'erp5_sql_connection_string')
+          if erp5_sql_connection_string:
+            sql_connections_dict['erp5_sql_connection_string'] = \
+                                        erp5_sql_connection_string
+          cmf_activity_sql_connection_string = os.environ.get(
+                                    'cmf_activity_sql_connection_string',
+                                    os.environ.get('erp5_sql_connection_string'))
+          if cmf_activity_sql_connection_string:
+            sql_connections_dict['cmf_activity_sql_connection_string'] = \
+                                        cmf_activity_sql_connection_string
+          erp5_sql_deferred_connection_string = os.environ.get(
+                                    'erp5_sql_deferred_connection_string',
+                                    os.environ.get('erp5_sql_connection_string'))
+          if erp5_sql_deferred_connection_string:
+            sql_connections_dict['erp5_sql_deferred_connection_string'] = \
+                                        erp5_sql_deferred_connection_string
+          factory = app.manage_addProduct['ERP5']
+          factory.manage_addERP5Site(portal_name,
+                                     light_install=light_install,
+                                     reindex=reindex,
+                                     create_activities=create_activities,
+                                     **sql_connections_dict )
+
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
           # Release locks
           get_transaction().commit()
-          portal=app[portal_name]
+          portal = app[portal_name]
+
           # Remove all local PropertySheets, Documents
-          for id in getLocalPropertySheetList():
-            removeLocalPropertySheet(id)
-          for id in getLocalDocumentList():
-            removeLocalDocument(id)
-          for id in getLocalConstraintList():
-            removeLocalConstraint(id)
+          for id_ in getLocalPropertySheetList():
+            removeLocalPropertySheet(id_)
+          for id_ in getLocalDocumentList():
+            removeLocalDocument(id_)
+          for id_ in getLocalConstraintList():
+            removeLocalConstraint(id_)
+
           # Disable reindexing before adding templates
           # VERY IMPORTANT: Add some business templates
-          for url, id in business_template_list:
+          for url, id_ in business_template_list:
             start = time.time()
-            ZopeTestCase._print('Adding %s business template ... ' % id)
-            portal.portal_templates.download(url, id=id)
-            portal.portal_templates[id].install(light_install=light_install)
+            if not quiet:
+              ZopeTestCase._print('Adding %s business template ... ' % id_)
+            portal.portal_templates.download(url, id=id_)
+            portal.portal_templates[id_].install(light_install=light_install)
             # Release locks
             get_transaction().commit()
-            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
-          # Enbable reindexing
+            if not quiet:
+              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
+          # Enable reindexing
           # Do hot reindexing # Does not work
           if hot_reindexing:
             setattr(app,'isIndexable', 1)
@@ -451,27 +479,26 @@ def setupERP5Site( business_template_list=(),
                     [('/'.join(m.object_path), m.method_id,
                      m.processing_node, m.priority)
                      for m in portal_activities.getMessageList()],)
+
           # Reset aq dynamic, so all unit tests will start again
           from Products.ERP5Type.Base import _aq_reset
           _aq_reset()
+
           # Log out
           if not quiet:
             ZopeTestCase._print('Logout ... \n')
           noSecurityManager()
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
-          if not quiet:
             ZopeTestCase._print('Ran Unit test of %s\n' % title)
         finally:
           get_transaction().commit()
           ZopeTestCase.close(app)
-          pass
     except:
       f = StringIO()
       traceback.print_exc(file=f)
       ZopeTestCase._print(f.getvalue())
       f.close()
-
 
 def optimize():
   '''Significantly reduces portal creation time.'''

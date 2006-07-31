@@ -1,7 +1,4 @@
 #!/usr/bin/python
-#
-# Runs the tests passed on the command line
-#
 import os
 import sys
 import getopt
@@ -11,13 +8,22 @@ __doc__ = """%(program)s: unit test runner for the ERP5 Project
 usage: %(program)s [options] [UnitTest1[:TestClass1[:TestClass2]] [UnitTest2]]
 
 Options:
--v/--verbose -- produce verbose output
-
+  -v, --verbose              produce verbose output
+  -h, --help                 this help screen
+  --erp5_sql_connection_string=STRING
+                             ZSQL Connection string for erp5_sql_connection, by
+                             default, it will use "test test"                            
+  --cmf_activity_sql_connection_string=STRING
+                             ZSQL Connection string for
+                             cmf_activity_sql_connection (if unset, defaults to
+                             erp5_sql_connection_string)
+  --erp5_sql_deferred_connection_string=STRING 
+                             ZSQL Connection string for
+                             erp5_sql_deferred_connection (if unset, defaults
+                             to erp5_sql_connection_string)
+ 
 """
 
-
-def getUnitTestFile() :
-  return os.path.abspath(__file__)
 
 def initializeInstanceHome(tests_framework_home,
                            real_instance_home,
@@ -159,7 +165,8 @@ def usage(stream, msg=None):
 def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
-        "hv", ["help", "verbose", ] )
+        "hv", ["help", "verbose", "erp5_sql_connection_string=",
+        "cmf_activity_sql_connection_string=", "erp5_deferred_sql_connection_string="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -167,9 +174,16 @@ def main():
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
       os.environ['VERBOSE'] = "1"
-    if opt in ("-h", "--help"):
+    elif opt in ("-h", "--help"):
       usage(sys.stdout)
       sys.exit()
+    elif opt == "--erp5_sql_connection_string":
+      os.environ["erp5_sql_connection_string"] = arg
+      print "set to ", arg
+    elif opt == "--cmf_activity_sql_connection_string":
+      os.environ["cmf_activity_sql_connection_string"] = arg
+    elif opt == "--erp5_sql_deferred_connection_string":
+      os.environ["erp5_sql_deferred_connection_string"] = arg
 
   test_list = args
   if not test_list:
