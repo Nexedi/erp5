@@ -1,3 +1,7 @@
+2006-07-31 jerome
+* Add a new suite "relation_field_zuite"
+* Add checkPortalStatusMessage to user-extensions.js
+
 2006-07-27 yo
 * Add a new suite "check_box_field_zuite".
 * Add my_frozen to Foo_view.
