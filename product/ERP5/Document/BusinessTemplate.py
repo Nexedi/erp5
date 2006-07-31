@@ -87,7 +87,11 @@ catalog_method_list = ('_is_catalog_list_method_archive',
 catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_expression_instance_archive',
                               '_filter_type_archive',)
-
+                              
+class BusinessTemplateMissingDependency(Exception):
+  """ Exception raised when a dependency is missing
+  """
+  pass
 
 def removeAll(entry):
   '''
@@ -302,8 +306,8 @@ class BaseTemplateItem(Implicit, Persistent):
     self._archive = PersistentMapping()
     self._objects = PersistentMapping()
     for id in id_list:
-      if not id: continue
-      self._archive[id] = None
+      if id is not None and id != '':
+        self._archive[id] = None
 
   def build(self, context, **kw):
     pass
@@ -397,8 +401,9 @@ class ObjectTemplateItem(BaseTemplateItem):
     if tool_id is not None:
       id_list = self._archive.keys()
       self._archive.clear()
-      for id in id_list:
-        self._archive["%s/%s" % (tool_id, id)] = None
+      for id in id_list :
+        if id != '':
+          self._archive["%s/%s" % (tool_id, id)] = None
 
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
@@ -4417,6 +4422,31 @@ Business Template is a set of definitions, such as skins, portal types and categ
         item = getattr(self, item_name)
         items_list.extend(item.getKeys())
       return items_list
+    
+    #By christophe Dumez <christophe@nexedi.com>
+    def checkDependencies(self):
+      """
+       Check if all the dependencies of the business template
+       are installed. Raise an exception with the list of
+       missing dependencies if some are missing
+      """
+      missing_dep_list = []
+      dependency_list = self.getDependencyList()
+      if len(dependency_list)!=0:
+        for dependency_couple in dependency_list:
+          dependency_couple_list = dependency_couple.split(' ')
+          dependency = dependency_couple_list[0]
+          version_restriction = None
+          if len(dependency_couple_list) > 1:
+            version_restriction = dependency_couple_list[1][1:-1]
+          installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
+          if (not self.portal_templates.IsOneProviderInstalled(dependency)) \
+             and ((installed_bt is None) \
+                  or (version_restriction is not None and 
+                     (not self.portal_templates.compareVersionStrings(installed_bt.getVersion(), version_restriction)))):
+            missing_dep_list.append((dependency, version_restriction or ''))
+      if len(missing_dep_list) != 0:
+        raise BusinessTemplateMissingDependency, 'Impossible to install, please install the following dependencies before: %s'%repr(missing_dep_list)
 
     def diffObject(self, REQUEST, **kw):
       """
