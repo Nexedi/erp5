@@ -2,12 +2,26 @@
 #
 # Runs the tests passed on the command line
 #
-import os, sys
+import os
+import sys
+import getopt
+
+__doc__ = """%(program)s: unit test runner for the ERP5 Project
+
+usage: %(program)s [options] [UnitTest1[:TestClass1[:TestClass2]] [UnitTest2]]
+
+Options:
+-v/--verbose -- produce verbose output
+
+"""
+
 
 def getUnitTestFile() :
   return os.path.abspath(__file__)
 
-def initializeInstanceHome(tests_framework_home, real_instance_home, instance_home):
+def initializeInstanceHome(tests_framework_home,
+                           real_instance_home,
+                           instance_home):
   if not os.path.exists(instance_home):
     os.mkdir(instance_home)
   for d in ('Constraint', 'Document', 'PropertySheet', 'tests', 'var'):
@@ -56,8 +70,8 @@ def runUnitTestList(test_list) :
   os.environ['SOFTWARE_HOME'] = software_home
   os.environ['COPY_OF_INSTANCE_HOME'] = instance_home
   os.environ['COPY_OF_SOFTWARE_HOME'] = software_home
-  os.environ['EVENT_LOG_FILE'] = os.path.join(tests_home, 'zLOG.log')
-  os.environ['EVENT_LOG_SEVERITY'] = '-300'
+  os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
+  os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
   execfile(os.path.join(tests_framework_home, 'framework.py'))
 
@@ -122,7 +136,7 @@ def runUnitTestList(test_list) :
       test_class_list = None
     m = __import__(test_module)
     if not filtered_tests_class_names and hasattr(m, 'test_suite'):
-      suite = m.test_suite()
+      suite.addTest(m.test_suite())
     else:
       # dynamically create the test suite using class names passed on the
       # command line.
@@ -135,12 +149,35 @@ def runUnitTestList(test_list) :
 
   return TestRunner().run(suite)
 
-if __name__ == '__main__' :
-  test_list = sys.argv[1:]
-  if len(test_list) == 0 :
+def usage(stream, msg=None):
+  if msg:
+    print >>stream, msg
+    print >>stream
+  program = os.path.basename(sys.argv[0])
+  print >>stream, __doc__ % {"program": program}
+
+def main():
+  try:
+    opts, args = getopt.getopt(sys.argv[1:],
+        "hv", ["help", "verbose", ] )
+  except getopt.GetoptError, msg:
+    usage(sys.stderr, msg)
+    sys.exit(2)
+  
+  for opt, arg in opts:
+    if opt in ("-v", "--verbose"):
+      os.environ['VERBOSE'] = "1"
+    if opt in ("-h", "--help"):
+      usage(sys.stdout)
+      sys.exit()
+
+  test_list = args
+  if not test_list:
     print "No test to run, exiting immediately."
-    print "Usage : %s UnitTest1[:TestClass1[:TestClass2]...] UnitTest2 ..." % sys.argv[0]
     sys.exit(1)
+  
   result = runUnitTestList(test_list=test_list)
-  if len(result.failures) or len(result.errors) :
-    sys.exit(1)
+  sys.exit(len(result.failures) + len(result.errors))
+
+if __name__ == '__main__':
+  main()
