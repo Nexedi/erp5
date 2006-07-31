@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -52,21 +58,18 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Workflow Actions</title>\n
+<title>Test Button Actions</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Workflow Actions</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Button Actions</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
-<!-- "fake" workflow actions can be created as a workflow action, this is the\n
-way used to display workflow actions on a folder, passing transitions for all\n
-objects in the selection.\n
--->\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action&name=Workflow Action to Portal&category=workflow&action=string:%24{portal_url}/view">Create a dummy action that redirects to the portal</td>\n
+  <td tal:content="string:\n
+  ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action&name=Dummy Button&category=object_button&icon=string:images/filenew.png&action=string:%24{portal_url}/view">Create a dummy action that redirects to the portal</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -75,8 +78,8 @@ objects in the selection.\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_action</td>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@title=\'Dummy Button\']</td>\n
   <td>Workflow Action to Portal</td>\n
 </tr>\n
 <tr>\n
@@ -84,7 +87,6 @@ objects in the selection.\n
   <td>Welcome to ERP5</td>\n
   <td></td>\n
 </tr>\n
-<!-- TODO: test "real workflow actions" -->\n
 </body>\n
 </html>\n
 
@@ -101,11 +103,32 @@ objects in the selection.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testWorkflowActions</string> </value>
+            <value> <string>testButtonActions</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
