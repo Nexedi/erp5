@@ -39,6 +39,7 @@ os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from ZopeTestCase import _print
 from DateTime import DateTime
 
 class TestInvoiceVAT(ERP5TypeTestCase):
@@ -93,8 +94,8 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     activity_tool = self.getPortal().portal_activities
     for message in activity_tool.getMessageList():
       activity_tool.manageCancel(message.object_path, message.method_id)
-      ZopeTestCase._print('\nCancelling active message %s.%s()\n'
-                          % (message.object_path, message.method_id) )
+      _print('\nCancelling active message %s.%s()\n'
+             % (message.object_path, message.method_id) )
     get_transaction().commit()
 
   def login(self, quiet=0, run=1):
