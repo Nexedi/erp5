@@ -69,6 +69,6 @@ class SupplyCell(Predicate, DeliveryCell, Path):
                       , PropertySheet.FlowCapacity
                       , PropertySheet.Predicate
                       , PropertySheet.MappedValue
-		      , PropertySheet.Reference
+                      , PropertySheet.Reference
                       )
 
