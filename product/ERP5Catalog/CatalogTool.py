@@ -123,11 +123,13 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
-
+    """A Dynamic Method to act as a related key.
+    """
     def __init__(self, id):
       self._id = id
 
     def __call__(self, instance, table_0, table_1, query_table='catalog',**kw):
+      """Create the sql code for this related key."""
       base_category_uid = instance.portal_categories._getOb(self._id).getUid()
       expression_list = []
       append = expression_list.append
@@ -551,14 +553,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # can find 'title', or 'portal_type'...
         for i in range(1,len(splitted_key))[::-1]:
           expected_base_cat_id = '_'.join(splitted_key[0:i])
-          if expected_base_cat_id!='parent' and \
+          if expected_base_cat_id != 'parent' and \
              expected_base_cat_id in base_cat_id_list:
             # We have found a base_category
             end_key = '_'.join(splitted_key[i:])
             # accept only some catalog columns
-            if end_key in ('title','uid','description','id','portal_type'):
-              related_key_list.append('%s%s | category,catalog/%s/z_related_%s' %
-                                        (prefix,key,end_key,expected_base_cat_id))
+            if end_key in ('title', 'uid', 'description',
+                           'relative_url', 'id', 'portal_type'):
+              related_key_list.append(
+                      '%s%s | category,catalog/%s/z_related_%s' %
+                      (prefix, key, end_key, expected_base_cat_id))
 
       return related_key_list
 

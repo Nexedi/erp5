@@ -713,5 +713,10 @@ class TestERP5Catalog(ERP5TypeTestCase):
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(default_group_description='c')]
     self.assertEquals(organisation_list,[])
+    # Try to get the organisation with group relative_url
+    group_relative_url = group_nexedi_category.getRelativeUrl()
+    organisation_list = [x.getObject() for x in 
+                 module.searchFolder(group_relative_url=group_relative_url)]
+    self.assertEquals(organisation_list, [organisation])
 
 
