@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts53312644.38</string> </value>
+            <value> <string>ts54185041.28</string> </value>
         </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
@@ -64,6 +64,17 @@ Selenium.prototype.assertFloat = function(locator, text) {\n
     }\n
     Assert.matches(expectedValue.toString(), actualValue.toString());\n
 };\n
+\n
+\n
+/**\n
+ * Checks the portal status message.\n
+ */\n
+Selenium.prototype.assertPortalStatusMessage = function(text) {\n
+    var psm_locator = "//div[@id=\'transition_message\']";\n
+    var actualValue = getText(this.page().findElement(psm_locator));\n
+    Assert.matches(text, actualValue);\n
+};\n
+\n
 </string> </value>
         </item>
         <item>
@@ -72,7 +83,7 @@ Selenium.prototype.assertFloat = function(locator, text) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>664</long> </value>
+            <value> <long>944</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
