@@ -1084,8 +1084,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         field_key = field.generate_field_key()
         field_value = REQUEST.form[field_key]
         # XXX Hardcoded form name
-        redirect_form_id = 'Base_viewRelatedObjectList'
-        redirect_form = getattr(o, redirect_form_id)
+        dialog_id = 'Base_viewRelatedObjectList'
+        redirect_form = getattr(o, dialog_id)
         # XXX Hardcoded listbox field
         selection_name = redirect_form.listbox.get_value('selection_name')
         # Reset current selection
@@ -1135,7 +1135,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         base_category = None
         kw = {}
         kw['object_uid'] = object_uid
-        kw['form_id'] = redirect_form_id
+        kw['dialog_id'] = dialog_id
         kw['selection_name'] = selection_name
         kw['selection_index'] = 0 # We start on the first page
         kw['field_id'] = field.id
@@ -1147,7 +1147,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         kw['reset'] = 0
         kw['base_category'] = field.get_value( 'base_category')
         kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
-        kw['previous_form_id'] = form_id
+        kw['form_id'] = form_id
         kw[field.get_value('catalog_index')] = field_value
         kw['portal_status_message'] = portal_status_message
         kw['form_pickle'] = form_pickle
@@ -1157,9 +1157,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
         REQUEST.form = kw # New request form
         # Define new HTTP_REFERER
         REQUEST.HTTP_REFERER = '%s/%s' % (o.absolute_url(),
-                                          redirect_form_id)
+                                          dialog_id)
         # Return the search dialog
-        return getattr(o, redirect_form_id)(REQUEST=REQUEST)
+        return getattr(o, dialog_id)(REQUEST=REQUEST)
 
     def _aq_dynamic(self, name):
       """
