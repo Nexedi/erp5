@@ -38,13 +38,14 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
+from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
 from OFS.Traversable import NotFound
 from difflib import unified_diff
 from cStringIO import StringIO
 from zLOG import LOG
-from urllib import pathname2url, urlopen, splittype, urlretrieve
+from urllib import pathname2url, urlopen, splittype, urlretrieve, quote
 import re
 from xml.dom.minidom import parse
 import struct
@@ -55,6 +56,22 @@ except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
 from Products.ERP5Type.Message import Message
 N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
+
+class BusinessTemplateUnknownError(Exception):
+  """ Exception raised when the business template
+      is impossible to find in the repositories
+  """
+  pass
+
+class UnsupportedComparingOperator(Exception):
+  """ Exception when the comparing string is unsupported
+  """
+  pass
+
+class BusinessTemplateIsMeta(Exception):
+  """ Exception when the business template is provided by another one
+  """
+  pass
 
 class LocalConfiguration(Implicit):
   """
@@ -427,7 +444,7 @@ class TemplateTool (BaseTool):
       """
       self.repository_dict = PersistentMapping()
       property_list = ('title', 'version', 'revision', 'description', 'license',
-                       'dependency', 'copyright')
+                       'dependency', 'provision', 'copyright')
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
@@ -467,6 +484,8 @@ class TemplateTool (BaseTool):
                   temp_property_dict.get('license', [''])[0]
               property_dict['dependency_list'] = \
                   temp_property_dict.get('dependency', ())
+              property_dict['provision_list'] = \
+                  temp_property_dict.get('provision', ())
               property_dict['copyright_list'] = \
                   temp_property_dict.get('copyright', ())
               
@@ -499,7 +518,198 @@ class TemplateTool (BaseTool):
         Return a repository and an id.
       """
       return cPickle.loads(b64decode(uid))
-      
+    
+    security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
+    def encodeRepositoryBusinessTemplateUid(self, repository, id):
+      """
+        encode the repository and the id of a business template.
+        Return an uid.
+      """
+      return b64encode(cPickle.dumps((repository, id)))
+
+    def compareVersionStrings(self, version, comparing_string):
+      """
+       comparing_string is like "<= 0.2" | "operator version"
+       operators supported: '<=', '<' or '<<', '>' or '>>', '>=', '=' or '=='
+      """
+      operator, comp_version = comparing_string.split(' ')
+      diff_version = self.compareVersions(version, comp_version)
+      if operator == '<' or operator == '<<':
+        if diff_version < 0:
+          return True;
+        return False;
+      if operator == '<=':
+        if diff_version <= 0:
+          return True;
+        return False;
+      if operator == '>' or operator == '>>':
+        if diff_version > 0:
+          return True;
+        return False;
+      if operator == '>=':
+        if diff_version >= 0:
+          return True;
+        return False;
+      if operator == '=' or operator == '==':
+        if diff_version == 0:
+          return True;
+        return False;
+      raise UnsupportedComparingOperator, 'Unsupported comparing operator: %s'%(operator,)
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'IsOneProviderInstalled')
+    def IsOneProviderInstalled(self, title):
+      """
+        return true if a business template that
+        provides the bt with the given title is
+        installed
+      """
+      installed_bt_list = self.getInstalledBusinessTemplatesList()
+      for bt in installed_bt_list:
+        provision_list = bt.getProvisionList()
+        if title in provision_list:
+          return True
+      return False
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                               'getLastestBTOnRepos')
+    def getLastestBTOnRepos(self, title, version_restriction=None):
+      """
+       It's possible we have different versions of the same BT
+       available on various repositories or on the same repository. 
+       This function returns the latest one that meet the version_restriction
+       (i.e "<= 0.2") in the following form :
+       tuple (repository, id)
+      """
+      result = None
+      for repository, property_dict_list in self.repository_dict.items():
+	for property_dict in property_dict_list:
+          provision_list = property_dict.get('provision_list', [])
+          if title in provision_list:
+            raise BusinessTemplateIsMeta, 'Business Template %s is provided by another one'%(title,)
+	  if title == property_dict['title']:
+            if (version_restriction is None) or (self.compareVersionStrings(property_dict['version'], version_restriction)):
+              if (result is None) or (self.compareVersions(property_dict['version'], result[2]) > 0):
+                result = (repository,  property_dict['id'], property_dict['version'])
+      if result is not None:
+        return (result[0], result[1])
+      else:
+        raise BusinessTemplateUnknownError, 'Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or '')
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getProviderList')
+    def getProviderList(self, title):
+      """
+       return a list of business templates that provides
+       the given business template
+      """
+      result_list = []
+      for repository, property_dict_list in self.repository_dict.items():
+        for property_dict in property_dict_list:
+          provision_list = property_dict['provision_list']
+          if (title in provision_list) and (property_dict['title'] not in result_list):
+            result_list.append(property_dict['title'])
+      return result_list
+     
+    security.declareProtected(Permissions.AccessContentsInformation,
+                               'getDependencyList')
+    def getDependencyList(self, bt):
+      """
+       Return the list of missing dependencies for a business
+       template, given a tuple : (repository, id)
+      """
+      # We do not take into consideration the dependencies
+      # for meta business templates
+      if bt[0] == 'meta':
+        return []
+      result_list = []
+      for repository, property_dict_list in self.repository_dict.items():
+        if repository == bt[0]:
+          for property_dict in property_dict_list:
+            if property_dict['id'] == bt[1]:
+              dependency_list = property_dict['dependency_list']
+              for dependency_couple in dependency_list:
+                # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
+                dependency_couple_list = dependency_couple.split(' ', 1)
+                dependency = dependency_couple_list[0]
+                version_restriction = None
+                if len(dependency_couple_list) > 1:
+                  # remove parenthesis to get something like ">= O.2"
+                  version_restriction = dependency_couple_list[1][1:-1]
+                require_update = False
+                installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
+                if version_restriction is not None:
+                  if installed_bt is not None:
+                    # Check if the installed version require an update
+                    if not self.compareVersionStrings(installed_bt.getVersion(), version_restriction):
+                      operator = version_restriction.split(' ')[0]
+                      if operator in ('<', '<<', '<='):
+                        raise BusinessTemplateMissingDependency, '%s (%s) is present but %s require: %s (%s)'%(dependency, installed_bt.getVersion(), property_dict['title'], dependency, version_restriction)
+                      else:
+                        require_update = True
+                if (require_update or installed_bt is None) \
+                  and dependency not in result_list:
+                  # Get the lastest version of the dependency on the
+                  # repository that meet the version restriction
+                  provider_installed = False
+                  try:
+                    bt_dep = self.getLastestBTOnRepos(dependency, version_restriction)
+                  except BusinessTemplateUnknownError:
+                    raise BusinessTemplateMissingDependency, 'The following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(dependency, version_restriction or '')
+                  except BusinessTemplateIsMeta:
+                    provider_list = self.getProviderList(dependency)
+                    for provider in provider_list:
+                      if self.portal_templates.getInstalledBusinessTemplate(provider) is not None:
+                        provider_installed = True
+                        break
+                    if not provider_installed:
+                      bt_dep = ('meta', dependency)
+                  if not provider_installed:
+                    sub_dep_list = self.getDependencyList(bt_dep)
+                    for sub_dep in sub_dep_list:
+                      if sub_dep not in result_list:
+                        result_list.append(sub_dep)
+                    result_list.append(bt_dep)
+              return result_list
+      raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
+                
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'urlQuote')
+    def urlQuote(self, url):
+      """ wrapper for urllib.quote()
+      """
+      return quote(url)
+    
+    def findProviderInBTList(self, provider_list, bt_list):
+      """
+       Find one provider in provider_list which is present in
+       bt_list and returns the found tuple (repository, id)
+       in bt_list.
+      """
+      for provider in provider_list:
+        for repository, id in bt_list:
+          if id.startswith(provider):
+            return (repository, id)
+      raise BusinessTemplateUnknownError, 'Provider not found in bt_list'
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'sortBusinessTemplateList')
+    def sortBusinessTemplateList(self, bt_list):
+      """
+       Sort a list of bt according to dependencies
+      """
+      result_list = []
+      for repository, id in bt_list:
+        dependency_list = self.getDependencyList((repository, id))
+        dependency_list.append((repository, id))
+        for dependency in dependency_list:
+          if dependency[0] == 'meta':
+            provider_list = self.getProviderList(dependency[1])
+            dependency = self.findProviderInBTList(provider_list, bt_list)
+          if dependency not in result_list:
+            result_list.append(dependency)
+      return result_list
+    
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
     def getRepositoryBusinessTemplateList(self, update_only=0, **kw):
@@ -550,7 +760,6 @@ class TemplateTool (BaseTool):
 	         and property_dict['revision'] \
 		 and installed_bt.getRevision() < property_dict['revision'] :
 		   template_item_list.append((repository, property_dict))
-        # FIXME: resolve dependencies
       else:
         for repository, property_dict_list in self.repository_dict.items():
           for property_dict in property_dict_list:
