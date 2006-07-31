@@ -1835,7 +1835,6 @@ class ListBoxRendererLine:
       else:
         processed_value = unicode(str(processed_value), self.renderer.getEncoding())
 
-      LOG(sql, 0, str((obj.getPath(),original_value, type(original_value))))
       value_list.append((original_value, processed_value))
 
     return value_list
