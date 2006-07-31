@@ -74,6 +74,7 @@
 for name in (\'foo_module\', \'bar_module\'):\n
   module = getattr(context, name)\n
   module.manage_delObjects(list(module.objectIds()))\n
+  module.setLastId(1)\n
 \n
 # Reset the form.\n
 form = context.FooModule_viewFooList\n
