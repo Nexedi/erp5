@@ -92,12 +92,11 @@ object_list = []\n
 no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
                  \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\', \n
                  \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
-\n
-for bt in bt_objects.keys():\n
+for bt in bt_id_list:\n
   modified_object_list = bt_objects[bt][1]  \n
   bt_title = bt_objects[bt][0]\n
   keys = modified_object_list.keys()\n
-  #keys.sort()\n
+  keys.sort()\n
   i = 0\n
   for object_id in keys:    \n
     object_state, object_class = modified_object_list[object_id]\n
