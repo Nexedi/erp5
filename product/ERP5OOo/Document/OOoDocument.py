@@ -37,13 +37,16 @@ from Products.ERP5.Document.File import File
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
 import xmlrpclib, base64
+# to overwrite WebDAV methods
+from Products.CMFDefault.File import File as CMFFile
 
 enc=base64.encodestring
 dec=base64.decodestring
 
 class ConvertionError(Exception):pass
 
-class OOoDocument(File, XMLObject):
+#class OOoDocument(File):
+class OOoDocument(XMLObject,File):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -104,8 +107,15 @@ class OOoDocument(File, XMLObject):
   cached_time={}
   # generated files (cache)
   cached_data={}
+  # mime types for cached formats XXX to be refactored
+  cached_mime={}
   # XXX the above craves for a separate class, but I'm not sure how to handle
   # it in ZODB, so for now let it be
+
+  #def __init__(self,*args,**kwargs):
+    #XMLObject.__init__(self,*args,**kwargs)
+    #File.__init__(self,*args,**kwargs)
+    #self.__dav_collection__=0
 
   security.declareProtected(Permissions.ModifyPortalContent,'clearCache')
   def clearCache(self):
@@ -115,13 +125,14 @@ class OOoDocument(File, XMLObject):
     """
     self.cached_time={}
     self.cached_data={}
+    self.cached_mime={}
 
   def _getServerCoordinates(self):
     """
     Returns OOo conversion server data from some
     preferences. NOT IMPLEMENTED YET - XXX
     """
-    return '192.168.0.3',8080
+    return '127.0.0.1',8080
 
   def _mkProxy(self):
     sp=xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinates(),allow_none=True)
@@ -164,7 +175,7 @@ class OOoDocument(File, XMLObject):
     def cached_getTargetFormatItemList(mimetype):
       sp=self._mkProxy()
       allowed=sp.getAllowedTargets(mimetype)
-      return allowed
+      return [[y,x] for x,y in allowed] # have to reverse tuple order
 
     cached_getTargetFormatItemList = CachingMethod(cached_getTargetFormatItemList,
                                         id = "OOoDocument_getTargetFormatItemList" )
@@ -188,10 +199,10 @@ class OOoDocument(File, XMLObject):
 
     """
     if not self.hasOOfile(): return False
-    allowed=self.getTargetFormatList()
+    allowed=self.getTargetFormatItemList()
     self.log('allowed',allowed)
     if allowed is None: return False
-    return (format in allowed)
+    return (format in [x[1] for x in allowed])
 
   security.declareProtected(Permissions.ModifyPortalContent,'editMetadata')
   def editMetadata(self,newmeta):
@@ -283,6 +294,8 @@ class OOoDocument(File, XMLObject):
     """
     Checks whether we have an initial file
     """
+    print 'IS INSTANCE'
+    print isinstance(self,object)
     _marker=[]
     if getattr(self,'data',_marker) is not _marker: # XXX - use propertysheet accessors
       return getattr(self,'data') is not None
@@ -315,6 +328,7 @@ class OOoDocument(File, XMLObject):
 
     XXX - we should not create a snapshot if some error happened at conversion
           is this checked ?
+    XXX - error at conversion raises an exception, so it should be ok
     """
     if self.hasSnapshot():
       if REQUEST is not None:
@@ -333,7 +347,7 @@ class OOoDocument(File, XMLObject):
     '''getSnapshot'''
     if not self.hasSnapshot():
       self.createSnapshot()
-    return self.getSnapshot() # XXX - use propertysheet accessors
+    return self.snapshot # XXX - use propertysheet accessors
 
   security.declareProtected(Permissions.ManagePortal,'deleteSnapshot')
   def deleteSnapshot(self):
@@ -354,7 +368,7 @@ class OOoDocument(File, XMLObject):
       return self.returnMessage('can not convert to '+format+' for some reason')
     try:
       self.makeFile(format)
-      return self.cached_data[format]
+      return self.cached_mime[format],self.cached_data[format]
     except ConvertionError,e:
       return self.returnMessage(str(e))
 
@@ -412,7 +426,7 @@ class OOoDocument(File, XMLObject):
       raise ConvertionError('needs conversion')
     if self.isFileChanged(format):
       try:
-        self.cached_data[format]=self._makeFile(format)
+        self.cached_mime[format],self.cached_data[format]=self._makeFile(format)
         self._p_changed=1 # XXX not sure it is necessary
       except xmlrpclib.Fault,e:
         if REQUEST is not None:
@@ -434,8 +448,9 @@ class OOoDocument(File, XMLObject):
     """
     # real version:
     sp=self._mkProxy()
-    meta,file=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),format)
-    return Pdata(dec(file))
+    mime,file=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),format)
+    self.log('_makeFile',mime)
+    return mime,Pdata(dec(file))
 
   security.declareProtected(Permissions.View,'getCacheInfo')
   def getCacheInfo(self):
@@ -461,6 +476,19 @@ class OOoDocument(File, XMLObject):
       s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),str(self.isFileChanged(f)))
     s+='</table>'
     return s
+
+  # make sure to call the right edit methods
+  _edit=File._edit
+  edit=File.edit
+
+  # BG copied from File in case
+  index_html = CMFFile.index_html
+  PUT = CMFFile.PUT
+  security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
+  manage_FTPget = CMFFile.manage_FTPget
+  manage_FTPlist = CMFFile.manage_FTPlist
+  manage_FTPstat = CMFFile.manage_FTPstat
+
 
 # vim: syntax=python shiftwidth=2 
 
