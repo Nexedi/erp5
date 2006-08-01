@@ -1,3 +1,9 @@
+2006-08-01 BG
+* Support for File (unregistered content type)
+* Mime header caching and sending
+* Improvements to conversion procedure
+* Numerous bugfixes
+
 2006-07-27
 Type checking upon upload using content_type_registry
 

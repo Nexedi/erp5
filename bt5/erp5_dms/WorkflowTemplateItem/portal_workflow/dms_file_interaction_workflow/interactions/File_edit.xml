@@ -40,7 +40,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>OOo_edit</string>
+                <string>File_edit</string>
               </list>
             </value>
         </item>
@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOo_edit</string> </value>
+            <value> <string>File_edit</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
@@ -70,10 +70,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Graphic</string>
-                <string>Presentation</string>
-                <string>Spreadsheet</string>
-                <string>Text</string>
+                <string>DMS File</string>
               </list>
             </value>
         </item>

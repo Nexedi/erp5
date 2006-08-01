@@ -80,7 +80,6 @@
                         <string>my_description</string>
                         <string>my_keywords</string>
                         <string>my_subject</string>
-                        <string>my_original_filename</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +108,7 @@
                         <string>my_int_index</string>
                         <string>my_validation_state</string>
                         <string>my_file</string>
+                        <string>my_original_filename</string>
                       </list>
                     </value>
                 </item>
@@ -130,7 +130,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_view</string> </value>
+            <value> <string>DMSFile_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

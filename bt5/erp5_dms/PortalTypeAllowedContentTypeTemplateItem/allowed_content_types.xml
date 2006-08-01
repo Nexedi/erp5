@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="DMS File">
+  <item>Role Definition</item>
+ </portal_type>
  <portal_type id="Document Module">
   <item>Text</item>
   <item>Spreadsheet</item>

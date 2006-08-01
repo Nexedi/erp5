@@ -68,13 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># ZMI level interface for getting file converted to a desired format\n
-res=context.getTargetFile(format)\n
-request=context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', res[0])\n
-context.log(\'format\',format)\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.%s"\' % ((filename or context.title_or_id(), format)))\n
-return res[1]\n
+            <value> <string>request=context.REQUEST\n
+try:\n
+  request.RESPONSE.setHeader(\'Content-type\', context.getContentType())\n
+except AttributeError:\n
+  request.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n
+return context.manage_FTPget()\n
 </string> </value>
         </item>
         <item>
@@ -91,7 +91,7 @@ return res[1]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>filename, format</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -111,19 +111,16 @@ return res[1]\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>filename</string>
-                            <string>format</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>res</string>
                             <string>request</string>
-                            <string>_getitem_</string>
+                            <string>AttributeError</string>
                           </tuple>
                         </value>
                     </item>
@@ -140,7 +137,7 @@ return res[1]\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_getTargetFile</string> </value>
+            <value> <string>Base_download</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

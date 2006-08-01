@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/convert</string> </value>
+            <value> <string>string:${object_url}/OOoDocument_convert</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object.hasFile() and not object.hasOOfile()</string> </value>
+            <value> <string>python:object.hasFile() and object.isFileUploaded()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>OFS.Folder</string>
-          <string>Folder</string>
+          <string>Products.DCWorkflow.Scripts</string>
+          <string>Scripts</string>
         </tuple>
         <none/>
       </tuple>
@@ -19,24 +19,20 @@
             </value>
         </item>
         <item>
+            <key> <string>_mapping</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_wiki</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>scripts</string> </value>
         </item>
       </dictionary>
     </pickle>
