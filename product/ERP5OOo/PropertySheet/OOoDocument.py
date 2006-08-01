@@ -65,7 +65,7 @@ class OOoDocument:
     'mode'    : ''},
   )
 
-  _categories = ('destination','similar','source','source_project')
+  _categories = ('destination','similar','source','source_project','publication_section')
  
 
 # vim: shiftwidth=2
