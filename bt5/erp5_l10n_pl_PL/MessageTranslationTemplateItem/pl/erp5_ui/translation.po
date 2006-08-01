@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2006-07-27 07:07+CET\n"
-"PO-Revision-Date: 2006-07-27 07:07+CET\n"
+"POT-Creation-Date: 2006-08-01 08:08+CET\n"
+"PO-Revision-Date: 2006-08-01 08:08+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: pl <>\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,9 @@ msgstr ""
 msgid "%s is already in an opened accounting period"
 msgstr ""
 
+msgid "&nbsp;"
+msgstr ""
+
 msgid "(re)Calculation of the Pay Sheet Transaction"
 msgstr ""
 
@@ -58,91 +61,91 @@ msgid "A flag indicating if we have to update business template workflows"
 msgstr "Flaga oznaczająca, że chcemy aktualizować workflow business template'a"
 
 msgid "A flag indicating if we have to update tools"
-msgstr ""
+msgstr "Flaga informująca o tym, że musimy aktualizować narzędzie"
 
 msgid "A list of ERP5Types for which we want to add the roles in the template"
 msgstr "Lista typów ERP5Types, dla których chcemy dodać role w tym szablonie"
 
 msgid "A list of allowed content types for portal types"
-msgstr ""
+msgstr "Lista dozwolonych typów zawartości dla typów portalu"
 
 msgid "A list of base categories for portal types"
-msgstr ""
+msgstr "Lista kategorii bazowych dla typów portalu"
 
 msgid "A list of copyright holders"
 msgstr "Lista właścicieli praw autorskich"
 
 msgid "A list of hidden content types for portal types"
-msgstr ""
+msgstr "Lista ukrytych typów zawartości dla typów portalu"
 
 msgid "A list of ids of actions used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów akcji użytych przez ten template"
 
 msgid "A list of ids of base categories used by this template"
 msgstr "Lista identyfikatorów kategorii bazowych użytych przez ten template"
 
 msgid "A list of ids of constraints used by this template"
-msgstr ""
+msgstr "Lista ograniczeń użytych przez ten template"
 
 msgid "A list of ids of documents used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów dokumentów użytych przez ten template"
 
 msgid "A list of ids of extensions used by this template"
-msgstr ""
+msgstr "Lista rozszerzeń użytych przez ten template"
 
 msgid "A list of ids of modules used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów modułów użyta przez ten template"
 
 msgid "A list of ids of portal types used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów typów portalu użytych przez ten template"
 
 msgid "A list of ids of products used by this template"
-msgstr ""
+msgstr "Lista produktów użytych przez ten template"
 
 msgid "A list of ids of property sheets used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów property sheetów użytych przez ten template"
 
 msgid "A list of ids of roles used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów ról użytych przez ten template"
 
 msgid "A list of ids of site properties used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów właściwości strony użytych przez ten template"
 
 msgid "A list of ids of skins used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów skorek użytych przez ten template"
 
 msgid "A list of ids of tests used by this template"
-msgstr ""
+msgstr "Lista identyfikatorów testów użytych przez ten template"
 
 msgid "A list of local roles used by this template"
-msgstr ""
+msgstr "Lista ról lokalnych użytych przez ten template"
 
 msgid "A list of maintainers"
-msgstr ""
+msgstr "Lista opiekunów"
 
 msgid "A list of message translations used by this template"
-msgstr ""
+msgstr "Lista tłumaczonych wiadomości, użytych przez ten template"
 
 msgid "A list of object paths used by this template"
-msgstr ""
+msgstr "Lista ścieżek do obiektów użytych przez ten template"
 
 msgid "A list of property sheet for portal types"
-msgstr ""
+msgstr "Lista property sheetów dla typu portalu"
 
 msgid "A list of workflow chains of portal types used by this template"
-msgstr ""
+msgstr "Lista łańcuchów workflow typów portalu użytych przez ten template"
 
 msgid "A revision identifier"
-msgstr ""
+msgstr "Identyfikator rewizji"
 
 msgid "A version identifier"
-msgstr ""
+msgstr "Identyfikator wersji"
 
 msgid "Absolute Payment Date"
 msgstr ""
 
 msgid "Accept decision"
-msgstr ""
+msgstr "Zatwierdź dezycję"
 
 msgid "Account"
 msgstr "Konto"
@@ -343,7 +346,7 @@ msgid "Alarm Tool"
 msgstr ""
 
 msgid "Allowed Content Types"
-msgstr ""
+msgstr "Zezwolone typy zawartości"
 
 msgid "Amount"
 msgstr "Ilość"
@@ -361,7 +364,7 @@ msgid "Apply Sale Trade Condition"
 msgstr "Zastosuj warunek sprzedaży"
 
 msgid "Assign"
-msgstr ""
+msgstr "Przypisz"
 
 msgid "Assignee"
 msgstr ""
@@ -376,7 +379,7 @@ msgid "At Date"
 msgstr "Na dzień"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Załączniki"
 
 msgid "Auto Planned"
 msgstr "Automatycznie zaplanowany"
@@ -385,13 +388,13 @@ msgid "Available"
 msgstr "Dostępny"
 
 msgid "BBAN"
-msgstr ""
+msgstr "BBAN"
 
 msgid "BBAN Key"
-msgstr ""
+msgstr "Klucz BBAN"
 
 msgid "BIC (Bank Identifier Code)"
-msgstr ""
+msgstr "BIC (Kod Identyfikatora Banku)"
 
 msgid "BT Title"
 msgstr ""
@@ -478,16 +481,16 @@ msgid "Base Price Variation Axes"
 msgstr ""
 
 msgid "Base name"
-msgstr ""
+msgstr "Nazwa bazowa"
 
 msgid "Base value"
-msgstr ""
+msgstr "Wartość bazowa"
 
 msgid "Begin"
 msgstr "Rozpoczęcie"
 
 msgid "Beginning Date"
-msgstr ""
+msgstr "Data rozpoczęcia"
 
 msgid "Being Closed"
 msgstr ""
@@ -529,46 +532,46 @@ msgid "Building State"
 msgstr ""
 
 msgid "Business Template"
-msgstr ""
+msgstr "Business Template"
 
 msgid "Business Template Building Workflow"
-msgstr ""
+msgstr "Workflow budowania Business Template'a"
 
 msgid "Business Template Definition"
-msgstr ""
+msgstr "Definicja Business Template'a"
 
 msgid "Business Template Downloaded Successfully"
-msgstr ""
+msgstr "Business Template pobrany z powodzeniem"
 
 msgid "Business Template File"
-msgstr ""
+msgstr "Plik Business Template'a"
 
 msgid "Business Template ID"
-msgstr ""
+msgstr "ID Business Template'a"
 
 msgid "Business Template Imported Successfully"
-msgstr ""
+msgstr "Business Template zaimportowano z powodzeniem"
 
 msgid "Business Template Title"
-msgstr ""
+msgstr "Tytuł Business Template'a"
 
 msgid "Business Template URL"
-msgstr ""
+msgstr "URL Business Template'a"
 
 msgid "Business Templates"
-msgstr ""
+msgstr "Business Template'y"
 
 msgid "Business Templates Downloaded Successfully"
-msgstr ""
+msgstr "Business Template'y pobrane z powodzeniem"
 
 msgid "Business Templates Imported Successfully"
-msgstr ""
+msgstr "Business Template'y zaimportowane z powodzeniem"
 
 msgid "Business+Templates+Imported+Successfully"
-msgstr ""
+msgstr "Business+Template'y+zaimportowane+z+powodzeniem"
 
 msgid "Business+Templates+Updated+Successfully"
-msgstr ""
+msgstr "Business+Template'y+zaktualizowane+z+powodzeniem"
 
 msgid "BusinessTemplate_viewSvnDiff"
 msgstr ""
@@ -583,7 +586,7 @@ msgid "Calculate the Pay Sheet Transaction"
 msgstr "Przelicz dane do listy płac"
 
 msgid "Calculating"
-msgstr ""
+msgstr "Obliczenia w toku"
 
 msgid "Cancel"
 msgstr "Anuluj"
@@ -660,32 +663,29 @@ msgstr ""
 msgid "Category Types"
 msgstr ""
 
-msgid "Causality"
-msgstr ""
-
 msgid "Causality (Invoices ...)"
 msgstr "Powiązania (faktury...)"
 
 msgid "Causality State"
-msgstr ""
+msgstr "Stan powiązania z powodem"
 
 msgid "Causality workflow"
-msgstr ""
+msgstr "Workflow powodu"
 
 msgid "Change Language"
 msgstr "Zmiana języka"
 
 msgid "Change Log"
-msgstr ""
+msgstr "Rejestr zmian"
 
 msgid "Change Page"
-msgstr ""
+msgstr "Zmień stronę"
 
 msgid "Change Password"
 msgstr "Zmień hasło"
 
 msgid "Changelog"
-msgstr ""
+msgstr "Rejestr zmian"
 
 msgid "Chat Address"
 msgstr ""
@@ -697,7 +697,7 @@ msgid "Children"
 msgstr "Dzieci"
 
 msgid "Choice"
-msgstr ""
+msgstr "Wybór"
 
 msgid "Choose Solve Actions"
 msgstr "Wybierz akcje rozwiązujące"
@@ -706,16 +706,16 @@ msgid "City"
 msgstr "Miasto"
 
 msgid "Class"
-msgstr ""
+msgstr "Klasa"
 
 msgid "Clean Business Template"
-msgstr ""
+msgstr "Wyczyść Business Template'a"
 
 msgid "Clean SVN unversioned files"
-msgstr ""
+msgstr "Wyczyść pliki nie będące w systemie SVN"
 
 msgid "Clean Up SVN Locks"
-msgstr ""
+msgstr "Wyczyść blokady SVNa"
 
 msgid "Client"
 msgstr "Klient"
@@ -754,10 +754,10 @@ msgid "Closing Date"
 msgstr "Data zamknięcia"
 
 msgid "Codification"
-msgstr ""
+msgstr "Kodyfikacja"
 
 msgid "Collaborators"
-msgstr ""
+msgstr "Współpracownicy"
 
 msgid "Collective Agreement"
 msgstr "Układ zbiorowy"
@@ -805,7 +805,7 @@ msgid "Confirm Transaction"
 msgstr "Zatwierdź transakcję"
 
 msgid "Confirm Transactions"
-msgstr ""
+msgstr "Potwierdź tranzakcje"
 
 msgid "Confirmed"
 msgstr "Zatwierdzona"
@@ -820,10 +820,10 @@ msgid "Contacts"
 msgstr "Kontakty"
 
 msgid "Contained Quantity"
-msgstr ""
+msgstr "Ilość w kontenerze"
 
 msgid "Contained Total Quantity"
-msgstr ""
+msgstr "Całkowita ilość w kontenerze"
 
 msgid "Container"
 msgstr "Kontener"
@@ -844,7 +844,7 @@ msgid "Container Line"
 msgstr "Linia kontenera"
 
 msgid "Container Quantity"
-msgstr ""
+msgstr "Ilość kontenera"
 
 msgid "Container State"
 msgstr "Stan kontenera"
@@ -868,7 +868,7 @@ msgid "Contextual help"
 msgstr "Pomoc kontekstowa"
 
 msgid "Contributors"
-msgstr ""
+msgstr "Współtwórcy"
 
 msgid "Convert"
 msgstr ""
@@ -1159,10 +1159,10 @@ msgid "Diff"
 msgstr "Różnica"
 
 msgid "Diff Business Template"
-msgstr ""
+msgstr "Zróznicuj Business Template'a"
 
 msgid "Diff BusinessTemplate"
-msgstr ""
+msgstr "Zróżnicuj Business Template'a"
 
 msgid "Diff View"
 msgstr "Widok różnic"
@@ -1201,7 +1201,7 @@ msgid "Document"
 msgstr "Dokument"
 
 msgid "Document Classes"
-msgstr ""
+msgstr "Klasy dokumentu"
 
 msgid "Document Reference"
 msgstr "Identyfikator dokumentu"
@@ -1279,7 +1279,7 @@ msgid "Email"
 msgstr "Email"
 
 msgid "Emit Date"
-msgstr ""
+msgstr "Data emisji"
 
 msgid "Employee"
 msgstr "Pracownik"
@@ -1303,7 +1303,7 @@ msgid "End"
 msgstr "Zakończenie"
 
 msgid "End Date"
-msgstr ""
+msgstr "Data końcowa"
 
 msgid "English"
 msgstr "Angielski"
@@ -1354,7 +1354,7 @@ msgid "Explanation"
 msgstr ""
 
 msgid "Export Business Template"
-msgstr ""
+msgstr "Eksportuj Business Template'a"
 
 msgid "Export CSV File"
 msgstr "Exportuj do pliku CSV"
@@ -1363,10 +1363,10 @@ msgid "Export Csv File"
 msgstr "Eksportuj do pliku CSV"
 
 msgid "Extensions"
-msgstr ""
+msgstr "Rozszerzenia"
 
 msgid "External Folder"
-msgstr ""
+msgstr "Folder zewnętrzny"
 
 msgid "FAX"
 msgstr "faks"
@@ -1435,7 +1435,7 @@ msgid "Follow-Ups"
 msgstr ""
 
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 msgid "Frequency In Days"
 msgstr "Częstotliwość w dniach"
@@ -1456,7 +1456,7 @@ msgid "From Date"
 msgstr "Od"
 
 msgid "From Date N-1"
-msgstr ""
+msgstr "Od daty N-q"
 
 msgid "Full Text Keys"
 msgstr "Klucze pełnotekstowe"
@@ -1501,7 +1501,7 @@ msgid "Get Pdf"
 msgstr "Pobierz PDF"
 
 msgid "Get Portal Types Properties"
-msgstr ""
+msgstr "Pobierz właściwości typów portalu"
 
 msgid "Get RTF"
 msgstr "Pobierz RTF"
@@ -1723,16 +1723,16 @@ msgid "Invoicing Rule"
 msgstr ""
 
 msgid "Is OOo version up to date"
-msgstr ""
+msgstr "Czy wersja OOo jest aktualna"
 
 msgid "Is Uploaded"
-msgstr ""
+msgstr "Jest wgrane"
 
 msgid "Is changed"
-msgstr ""
+msgstr "Jest zmienione"
 
 msgid "Is pdf version up to date"
-msgstr ""
+msgstr "Czy wersja PDF jest aktualna"
 
 msgid "Item"
 msgstr "Element"
@@ -1762,7 +1762,7 @@ msgid "Jump"
 msgstr "Skocz do"
 
 msgid "Jump Relation"
-msgstr ""
+msgstr "Skocz do relacji"
 
 msgid "Jump to Accounting Preference"
 msgstr ""
@@ -1780,10 +1780,10 @@ msgid "Jump..."
 msgstr "Skocz"
 
 msgid "Keyword Keys"
-msgstr ""
+msgstr "Klucze słów kluczy"
 
 msgid "Keywords"
-msgstr ""
+msgstr "Słowa klucze"
 
 msgid "Label"
 msgstr "Etykieta"
@@ -1882,7 +1882,7 @@ msgid "Manage members"
 msgstr "Zarządzaj użytkownikami"
 
 msgid "Manual Price"
-msgstr ""
+msgstr "Cena ręczna"
 
 msgid "Mapped Value"
 msgstr ""
@@ -2275,13 +2275,13 @@ msgid "Period Stop Date"
 msgstr "Koniec okresu"
 
 msgid "Periodicity"
-msgstr ""
+msgstr "Okresowość"
 
 msgid "Periodicity Start Date"
-msgstr ""
+msgstr "Data początku okresowości"
 
 msgid "Periodicity Stop Date"
-msgstr ""
+msgstr "Data końca okresowości"
 
 msgid "Person"
 msgstr "Osoba"
@@ -2374,7 +2374,7 @@ msgid "Precision"
 msgstr "Dokładność"
 
 msgid "Predicate"
-msgstr ""
+msgstr "Orzeczenie"
 
 msgid "Predicate Group"
 msgstr ""
@@ -2383,7 +2383,7 @@ msgid "Predicate Groups"
 msgstr ""
 
 msgid "Predicates"
-msgstr ""
+msgstr "Orzeczenia"
 
 msgid "Preference"
 msgstr "Ustawienie"
@@ -2419,7 +2419,7 @@ msgid "Price Variation Axes"
 msgstr ""
 
 msgid "Priced Quantity"
-msgstr ""
+msgstr "Cena za ilość"
 
 msgid "Print"
 msgstr "Drukuj"
@@ -2539,7 +2539,7 @@ msgid "Property Criteria"
 msgstr ""
 
 msgid "Property Sheets"
-msgstr ""
+msgstr "Property Sheety"
 
 msgid "Provision"
 msgstr ""
@@ -3085,10 +3085,10 @@ msgid "Sorry your selection has changed"
 msgstr "Przykro mi, Twój wybór się zmienił"
 
 msgid "Sorry, 1 Item Is In Use."
-msgstr ""
+msgstr "Przykro mi, 1 element w użyciu."
 
 msgid "Sorry,+1+Item+Is+In+Use."
-msgstr ""
+msgstr "Przykro+mi,+1+element+w+użyciu."
 
 msgid "Sort"
 msgstr "Sortuj"
@@ -3205,7 +3205,7 @@ msgid "Subversion"
 msgstr "Subversion"
 
 msgid "Subversion Working Copy List"
-msgstr ""
+msgstr "Lista roboczej kopii subversion"
 
 msgid "Suffix"
 msgstr "Sufiks"
@@ -3226,31 +3226,31 @@ msgid "Supplier Reference"
 msgstr "Referencja dostawcy"
 
 msgid "Supply Cell"
-msgstr ""
+msgstr "Komórka dostaw"
 
 msgid "Supply Chain"
-msgstr ""
+msgstr "Łańcuch dostaw"
 
 msgid "Supply Chain Module"
-msgstr ""
+msgstr "Moduł łańcucha dostaw"
 
 msgid "Supply Chains"
-msgstr ""
+msgstr "Łańcuchy dostaw"
 
 msgid "Supply Line"
-msgstr ""
+msgstr "Linia dostaw"
 
 msgid "Supply Link"
-msgstr ""
+msgstr "Ogniwo dostaw"
 
 msgid "Supply Links"
-msgstr ""
+msgstr "Ogniwa dostaw"
 
 msgid "Supply Node"
-msgstr ""
+msgstr "Węzeł dostaw"
 
 msgid "Supply Nodes"
-msgstr ""
+msgstr "Węzły dostaw"
 
 msgid "Support Request"
 msgstr ""
@@ -3286,13 +3286,13 @@ msgid "Telephone"
 msgstr "Telefon"
 
 msgid "Template Tool"
-msgstr ""
+msgstr "Narzędzie template'ów"
 
 msgid "Terminate the current career step"
 msgstr "Zakończ bieżący stopień kariery"
 
 msgid "Test Method ID"
-msgstr ""
+msgstr "Przetestuj metodę o ID"
 
 msgid "Text"
 msgstr "Tekst"
@@ -3301,16 +3301,16 @@ msgid "The Subversion working copies"
 msgstr "Kopia robocza Subversion"
 
 msgid "The employee must have a career grade"
-msgstr ""
+msgstr "Pracownik musi mieć stopień kariery"
 
 msgid "The employee must have a marital status"
-msgstr ""
+msgstr "Pracownik musi mieć status małżeński"
 
 msgid "The order of year, month and day."
 msgstr ""
 
 msgid "The section category for documents; usually something like group/nexedi."
-msgstr ""
+msgstr "Kategoria sekcji dla dokumentów; zazwyczaj coś w stylu group/nexedi."
 
 msgid "The user name for Subversion"
 msgstr "Użytkownik Subversion"
@@ -3349,7 +3349,7 @@ msgid "To Date"
 msgstr "Do"
 
 msgid "To Date N-1"
-msgstr ""
+msgstr "Do daty N-1"
 
 msgid "Too many documents were found."
 msgstr "Znaleziono za dużo dokumentów."
@@ -3679,7 +3679,7 @@ msgid "Visible Modules"
 msgstr "Widoczne moduły"
 
 msgid "Warehouse"
-msgstr ""
+msgstr "Magazyn"
 
 msgid "Web Page"
 msgstr ""
@@ -3793,22 +3793,22 @@ msgid "being_modified"
 msgstr ""
 
 msgid "build"
-msgstr ""
+msgstr "zbudowane"
 
 msgid "building"
-msgstr ""
+msgstr "budowanie"
 
 msgid "built"
-msgstr ""
+msgstr "zbudowane"
 
 msgid "business_template_building_workflow"
-msgstr ""
+msgstr "business_template_building_workflow"
 
 msgid "calculating"
 msgstr "obliczanie"
 
 msgid "can not convert to rtf for some reason"
-msgstr ""
+msgstr "nie mogłem skonwertować do rtfa z jakiegoś powodu"
 
 msgid "cancelled"
 msgstr "anulowane"
@@ -3835,7 +3835,7 @@ msgid "converge"
 msgstr "zbieżne"
 
 msgid "converted"
-msgstr ""
+msgstr "skonwertowano"
 
 msgid "count"
 msgstr "ilość"
@@ -3844,19 +3844,19 @@ msgid "current"
 msgstr "aktualnie"
 
 msgid "default_address"
-msgstr ""
+msgstr "default_address"
 
 msgid "default_career"
-msgstr ""
+msgstr "default_career"
 
 msgid "default_email"
-msgstr ""
+msgstr "default_email"
 
 msgid "default_fax"
-msgstr ""
+msgstr "default_fax"
 
 msgid "default_telephone"
-msgstr ""
+msgstr "default_telephone"
 
 msgid "deliver"
 msgstr ""
@@ -3895,7 +3895,7 @@ msgid "event_workflow"
 msgstr ""
 
 msgid "expense"
-msgstr ""
+msgstr "wydatek"
 
 msgid "go back."
 msgstr "wróć."
@@ -4042,16 +4042,16 @@ msgid "solving"
 msgstr "rozwiązuje"
 
 msgid "start"
-msgstr ""
+msgstr "start"
 
 msgid "start_building"
 msgstr ""
 
 msgid "started"
-msgstr ""
+msgstr "zastartowane"
 
 msgid "stop"
-msgstr ""
+msgstr "stop"
 
 msgid "stopped"
 msgstr "zaksięgowana"
@@ -4069,10 +4069,10 @@ msgid "update_quantity"
 msgstr ""
 
 msgid "valid"
-msgstr ""
+msgstr "poprawne"
 
 msgid "validated"
-msgstr ""
+msgstr "potwierdzone"
 
 msgid "validating_closing"
 msgstr ""

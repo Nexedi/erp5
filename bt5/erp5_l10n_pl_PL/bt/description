@@ -1,1 +1,9 @@
-Tłumaczenie interfejsu i podstawowych modułów (accounting, currency, organisation, person).
+Interface translation for business templates:
+erp5_accounting
+erp5_base
+erp5_core
+erp5_forge
+erp5_item
+erp5_mrp
+erp5_pdm
+erp5_trade
