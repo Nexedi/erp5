@@ -70,7 +70,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
@@ -152,7 +152,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Trade Purchase Field Library</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
