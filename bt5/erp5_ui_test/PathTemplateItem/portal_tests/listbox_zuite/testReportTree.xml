@@ -82,7 +82,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked;field_report_root_list=foo_category%7CFoo%20Category</td>\n
+\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked;field_report_root_list=foo_category%7CFoo%20Category%0Afoo_empty_category%7CFoo%20Empty%20Category</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -113,7 +113,7 @@
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_label_line"]/td[1]</td>\n
-\t<td>Foo Category</td>\n
+\t<td>Foo Category*</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -435,6 +435,28 @@
 \t<td>id=listbox_record_number</td>\n
 \t<td>8 record(s)</td>\n
 </tr>\n
+<!-- Test an empty report tree -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Empty Category</td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Empty Category</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>0 record(s)</td>\n
+</tr>\n
+\n
 <!-- Still very far from complete. Show/Hide should be tested, closing a tree should be tested, sorting should be tested. -->\n
 \n
 </tbody></table>\n

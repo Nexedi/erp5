@@ -1,3 +1,6 @@
+2006-08-02 yo
+* Check for an empty report tree.
+
 2006-07-31 chris
 * Added tests for dependency handling in usiness template install
 
