@@ -493,7 +493,44 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       if 'erp5_geek' not in selection:
         selection.append('erp5_geek')
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
+      
+  def stepCreateSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.failUnless(skin_folder is not None)
+    skin_folder.manage_addFolder('erp5_subgeek')
+    skin_subfolder = skin_folder._getOb('erp5_subgeek', None)
+    self.failUnless(skin_subfolder is not None)
+    sequence.edit(skin_subfolder_id=skin_subfolder.getId())
 
+  def stepCheckSkinSubFolderExists(self, sequence=None,sequence_list=None, **kw):
+    """
+    Check presence of skin sub folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    self.failUnless(skin_folder is not None)
+    subskin_id = sequence.get('skin_subfolder_id')
+    skin_subfolder = skin_folder._getOb(subskin_id, None)
+    self.failUnless(skin_subfolder is not None)
+    
+  def stepCreateNewObjectInSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a new object in skin subfolder
+    """
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.failUnless(skin_folder is not None)
+    skin_subfolder = skin_folder._getOb('erp5_subgeek', None)
+    self.failUnless(skin_subfolder is not None)
+    method_id = "z_fake_method"
+    addSQLMethod = skin_subfolder.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
+    addSQLMethod(id = method_id,title = '', connection_id = 'test test', arguments = '', template = '')
+    zsql_method = skin_subfolder._getOb(method_id, None)
+    self.failUnless(zsql_method is not None)
+    sequence.edit(zsql_method_id = method_id)
+    
   def stepRemoveSkinFolder(self, sequence=None, sequence_list=None, **kw):
     """
     Remove Skin folder
@@ -3033,6 +3070,31 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_27_CheckInstallWithBackup(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if backup works during installation of a bt with subfolder in skin folder'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateSkinFolder \
+                       CheckSkinFolderExists \
+                       CreateSkinSubFolder \
+                       CheckSkinSubFolderExists \
+                       CreateNewObjectInSkinSubFolder \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       InstallCurrentBusinessTemplate \
+                       UninstallBusinessTemplate \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 if __name__ == '__main__':
   framework()
