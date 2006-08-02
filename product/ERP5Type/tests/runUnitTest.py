@@ -38,10 +38,14 @@ def initializeInstanceHome(tests_framework_home,
     src = os.path.join(real_instance_home, d)
     dst = os.path.join(instance_home, d)
     if not os.path.exists(dst):
+      if os.path.lexists(dst):
+        raise RuntimeError, '%s is a broken symlink' % dst
       os.symlink(src, dst)
   src = os.path.join(tests_framework_home, 'custom_zodb.py')
   dst = os.path.join(instance_home, 'custom_zodb.py')
   if not os.path.exists(dst):
+    if os.path.lexists(dst):
+      raise RuntimeError, '%s is a broken symlink' % dst
     os.symlink(src, dst)
 
 # site specific variables
@@ -179,7 +183,6 @@ def main():
       sys.exit()
     elif opt == "--erp5_sql_connection_string":
       os.environ["erp5_sql_connection_string"] = arg
-      print "set to ", arg
     elif opt == "--cmf_activity_sql_connection_string":
       os.environ["cmf_activity_sql_connection_string"] = arg
     elif opt == "--erp5_sql_deferred_connection_string":
