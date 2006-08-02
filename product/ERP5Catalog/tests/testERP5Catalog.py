@@ -28,7 +28,7 @@
 
 import os, sys
 if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
+  execfile(os.path.join(sys.path[0], 'framework.py'))
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
@@ -58,6 +58,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1
+  quiet = 1
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -98,8 +99,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
       self.failUnless(path not in  path_list)
       LOG('checkRelativeUrlInSqlPathList not found path:',0,path)
 
-  def test_01_HasEverything(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_01_HasEverything(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Has Everything ')
@@ -110,8 +110,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     self.failUnless(self.getSqlConnection()!=None)
     self.failUnless(self.getCatalogTool()!=None)
 
-  def test_02_EverythingCatalogued(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_02_EverythingCatalogued(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Everything Catalogued')
@@ -121,8 +120,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     organisation_module_list = portal_catalog(portal_type='Organisation Module')
     self.assertEquals(len(organisation_module_list),1)
 
-  def test_03_CreateAndDeleteObject(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_03_CreateAndDeleteObject(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Create And Delete Objects'
@@ -156,8 +154,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     person_module.deleteContent('3')
     self.checkRelativeUrlNotInSqlPathList(path_list)
 
-  def test_04_SearchFolderWithDeletedObjects(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_04_SearchFolderWithDeletedObjects(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Search Folder With Deleted Objects'
@@ -175,8 +172,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
-  def test_05_SearchFolderWithImmediateReindexObject(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_05_SearchFolderWithImmediateReindexObject(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Search Folder With Immediate Reindex Object'
@@ -198,8 +194,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
-  def test_06_SearchFolderWithRecursiveImmediateReindexObject(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_06_SearchFolderWithRecursiveImmediateReindexObject(self,
+                                              quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Search Folder With Recursive Immediate Reindex Object'
@@ -221,7 +217,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
-  def test_07_ClearCatalogAndTestNewContent(self, quiet=0, run=run_all_test):
+  def test_07_ClearCatalogAndTestNewContent(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Clear Catalog And Test New Content'
@@ -238,7 +234,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals(['4'],folder_object_list)
 
-  def test_08_ClearCatalogAndTestRecursiveImmediateReindexObject(self, quiet=0, run=run_all_test):
+  def test_08_ClearCatalogAndTestRecursiveImmediateReindexObject(self,
+                                               quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Clear Catalog And Test Recursive Immediate Reindex Object'
@@ -256,7 +253,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals(['4'],folder_object_list)
 
-  def test_09_ClearCatalogAndTestImmediateReindexObject(self, quiet=0, run=run_all_test):
+  def test_09_ClearCatalogAndTestImmediateReindexObject(self, quiet=quiet,
+                                                        run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Clear Catalog And Test Immediate Reindex Object'
@@ -274,7 +272,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals(['4'],folder_object_list)
 
-  def test_10_OrderedSearchFolder(self, quiet=0, run=run_all_test):
+  def test_10_OrderedSearchFolder(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Ordered Search Folder'
@@ -293,14 +291,19 @@ class TestERP5Catalog(ERP5TypeTestCase):
     person.immediateReindexObject()
     person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
     person.immediateReindexObject()
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('id','ascending')])]
+    folder_object_list = [x.getObject().getId()
+              for x in person_module.searchFolder(sort_on=[('id','ascending')])]
     self.assertEquals(['a','b','c'],folder_object_list)
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('title','ascending'),('description','ascending')])]
+    folder_object_list = [x.getObject().getId()
+              for x in person_module.searchFolder(
+              sort_on=[('title','ascending'), ('description','ascending')])]
     self.assertEquals(['c','b','a'],folder_object_list)
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('title','ascending'),('description','descending')])]
+    folder_object_list = [x.getObject().getId()
+              for x in person_module.searchFolder(
+              sort_on=[('title','ascending'),('description','descending')])]
     self.assertEquals(['a','b','c'],folder_object_list)
 
-  def test_11_CastStringAsInt(self, quiet=0, run=run_all_test):
+  def test_11_CastStringAsInt(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Cast String As Int With Order By'
@@ -324,7 +327,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending','int')])]
     self.assertEquals(['1','2','12'],folder_object_list)
 
-  def test_12_TransactionalUidBuffer(self, quiet=0, run=run_all_test):
+  def test_12_TransactionalUidBuffer(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Transactional Uid Buffer'
@@ -350,7 +353,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     get_transaction().abort()
     self.failUnless(len(getattr(catalog, '_v_uid_buffer', [])) == 0)
 
-  def test_13_ERP5Site_reindexAll(self, quiet=0, run=run_all_test):
+  def test_13_ERP5Site_reindexAll(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'ERP5Site_reindexAll'
@@ -395,7 +398,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
                 organisation.getRelativeUrl(),
                 'portal_categories/%s' % base_category.getRelativeUrl()])
 
-  def test_14_ReindexWithBrokenCategory(self, quiet=0, run=run_all_test):
+  def test_14_ReindexWithBrokenCategory(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Reindexing an object with 1 broken category must not'\
@@ -460,18 +463,17 @@ class TestERP5Catalog(ERP5TypeTestCase):
       self.assertEquals(theorical_count, cataloged_obj_count,
             'category %s is not cataloged correctly' % base_cat)
 
-  def test_15_getObject(self, quiet=0, run=run_all_test):
+  def test_15_getObject(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'getObject'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # portal_catalog.getObject should return None if the UID parameters
-    # is a string
+    # portal_catalog.getObject raises a ValueError if UID parameter is a string
     portal_catalog = self.getCatalogTool()
     self.assertRaises(ValueError, portal_catalog.getObject, "StringUID")
   
-  def test_16_newUid(self, quiet=0, run=run_all_test):
+  def test_16_newUid(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'newUid'
@@ -486,7 +488,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
       self.failIf(uid in uid_dict)
       uid_dict[uid] = None
   
-  def test_17_CreationDate_ModificationDate(self, quiet=0, run=run_all_test):
+  def test_17_CreationDate_ModificationDate(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'getCreationDate, getModificationDate'
@@ -526,7 +528,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     self.assertTrue(organisation.getModificationDate()>now)
     self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
     
-  def test_18_buildSQLQuery(self, quiet=0, run=0) :#run_all_test):
+  def test_18_buildSQLQuery(self, quiet=quiet, run=0) :#run_all_test):
     """Tests that buildSQLQuery works with another query_table than 'catalog'"""
     if not run: return
     if not quiet:
@@ -640,8 +642,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
                        source_organisation.getUid(),
                        testMethod(src__=1, **kw) )
     
-  def test_19_SearchFolderWithNonAsciiCharacter(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  def test_19_SearchFolderWithNonAsciiCharacter(self,
+                                quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Search Folder With Non Ascii Character'
@@ -659,9 +661,10 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in 
                               person_module.searchFolder(title=title)]
     self.assertEquals(['5'],folder_object_list)
-    
-  def test_20_SearchFolderWithDynamicRelatedKey(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+  
+
+  def test_20_SearchFolderWithDynamicRelatedKey(self,
+                                  quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Search Folder With Dynamic Related Key'
@@ -717,6 +720,10 @@ class TestERP5Catalog(ERP5TypeTestCase):
     group_relative_url = group_nexedi_category.getRelativeUrl()
     organisation_list = [x.getObject() for x in 
                  module.searchFolder(group_relative_url=group_relative_url)]
+    self.assertEquals(organisation_list, [organisation])
+    # Try to get the organisation with group uid
+    organisation_list = [x.getObject() for x in 
+                 module.searchFolder(group_uid=group_nexedi_category.getUid())]
     self.assertEquals(organisation_list, [organisation])
 
 
