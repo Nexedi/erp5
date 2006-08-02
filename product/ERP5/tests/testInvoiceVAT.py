@@ -39,7 +39,7 @@ os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from ZopeTestCase import _print
+from Testing.ZopeTestCase import _print
 from DateTime import DateTime
 
 class TestInvoiceVAT(ERP5TypeTestCase):
