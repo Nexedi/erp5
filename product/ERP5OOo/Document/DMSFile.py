@@ -66,6 +66,23 @@ class DMSFile(XMLObject,File):
   _edit=File._edit
   edit=File.edit
 
+  ### Content indexing methods
+  security.declareProtected(Permissions.View, 'getSearchableText')
+  def getSearchableText(self, md=None):
+    """\
+    Used by the catalog for basic full text indexing
+    And so we end up with a strange hybrid of File and Document
+    This is the same as in OOoDocument except that no text_content here
+    Some people call it 'copy-and-paste programming'
+    """
+    searchable_attrs=('title','description','id','reference','version',
+        'short_title','keywords','subject','original_filename','source_project_title')
+    searchable_text = ' '.join(map(lambda x: self.getProperty(x) or ' ',searchable_attrs))
+    return searchable_text
+
+  SearchableText=getSearchableText
+
+
   # BG copied from File in case
   index_html = CMFFile.index_html
   PUT = CMFFile.PUT
