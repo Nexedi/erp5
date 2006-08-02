@@ -1,3 +1,6 @@
+2006-08-02 Romain
+* Add documentation_view to fix Inspector with xhtml_style.
+
 2006-07-24 vincent
 * Re-implement parameters propagation. Allows to remove most of the previously hardcoded value names from the style.
 * Keep parameters when going through a workflow transition (ex : "follow bug" in bug module)
