@@ -363,7 +363,6 @@ class TemplateTool (BaseTool):
           os.remove(temppath)
       bt.build(no_action=1)
       bt.reindexObject()
-
       return bt
 
     def importFile(self, import_file=None, id=None, REQUEST=None, 
@@ -427,12 +426,19 @@ class TemplateTool (BaseTool):
       """
       bt1_id = getattr(REQUEST, 'bt1', None)
       bt2_id = getattr(REQUEST, 'bt2', None)
-      bt1 = self._getOb(bt1_id)
-      bt2 = self._getOb(bt2_id)
-      if self.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:
-        return bt2.diffObject(REQUEST, compare_with=bt1_id)
+      if bt1_id is not None and bt2_id is not None:
+        bt1 = self._getOb(bt1_id)
+        bt2 = self._getOb(bt2_id)
+        if self.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:
+          return bt2.diffObject(REQUEST, compare_with=bt1_id)
+        else:
+          return bt1.diffObject(REQUEST, compare_with=bt2_id)
       else:
-        return bt1.diffObject(REQUEST, compare_with=bt2_id)
+        object_id = getattr(REQUEST, 'object_id', None)
+        bt1_id = object_id.split('|')[0]
+        bt1 = self._getOb(bt1_id)
+        REQUEST.set('object_id', object_id.split('|')[1])
+        return bt1.diffObject(REQUEST)
 
     security.declareProtected( 'Import/Export objects',
                                'updateRepositoryBusinessTemplateList' )
