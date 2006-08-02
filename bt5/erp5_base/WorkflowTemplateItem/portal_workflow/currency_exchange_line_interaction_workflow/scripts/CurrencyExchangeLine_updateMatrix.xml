@@ -68,10 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>base_value = context.Base_edit(form_id, selection_index=selection_index, selection_name=selection_name, dialog_id=dialog_id)\n
+            <value> <string>context = state_change.object\n
 \n
 base_id = \'path\'\n
 kwd = {\'base_id\': base_id}\n
+\n
 \n
 context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
 cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
@@ -88,8 +89,6 @@ if cell_range_key_list != [[None, None]] :\n
            category_list = category_list,\n
     )\n
     c.setCriterion(\'stop_date\', min=context.getStartDate(), max=context.getStopDate())\n
-\n
-return base_value\n
 </string> </value>
         </item>
         <item>
@@ -100,17 +99,13 @@ return base_value\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_base/CurrencyExchangeLine_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\',dialog_id=\'\'</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,19 +125,16 @@ return base_value\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>selection_index</string>
-                            <string>selection_name</string>
-                            <string>dialog_id</string>
+                            <string>state_change</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>base_value</string>
+<string>context</string>
                             <string>base_id</string>
                             <string>kwd</string>
                             <string>cell_range_key_list</string>
@@ -169,16 +161,12 @@ return base_value\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-                <string></string>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CurrencyExchangeLine_edit</string> </value>
+            <value> <string>CurrencyExchangeLine_updateMatrix</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
