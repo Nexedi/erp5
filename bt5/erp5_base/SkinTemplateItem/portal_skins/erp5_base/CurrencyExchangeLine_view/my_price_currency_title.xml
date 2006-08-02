@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_price_currency_id</string> </value>
+            <value> <string>my_price_currency_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -272,7 +272,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <none/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>jump_method</string> </key>
@@ -355,7 +357,7 @@
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
-                    <value> <string>id</string> </value>
+                    <value> <string>title</string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -364,12 +366,18 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -435,6 +443,14 @@
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
