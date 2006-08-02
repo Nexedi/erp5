@@ -100,6 +100,7 @@ class OOoDocument(XMLObject,File):
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Reference
+                    , PropertySheet.Document
                     , PropertySheet.OOoDocument
                     )
 
@@ -116,6 +117,21 @@ class OOoDocument(XMLObject,File):
     #XMLObject.__init__(self,*args,**kwargs)
     #File.__init__(self,*args,**kwargs)
     #self.__dav_collection__=0
+
+  ### Content indexing methods
+  security.declareProtected(Permissions.View, 'getSearchableText')
+  def getSearchableText(self, md=None):
+    """\
+    Used by the catalog for basic full text indexing
+    And so we end up with a strange hybrid of File and Document
+    """
+    searchable_attrs=('title','description','id','text_content','reference','version',
+        'short_title','keywords','subject','original_filename','source_project_title')
+    searchable_text = ' '.join(map(lambda x: self.getProperty(x) or ' ',searchable_attrs))
+    return searchable_text
+
+  SearchableText=getSearchableText
+
 
   security.declareProtected(Permissions.ModifyPortalContent,'clearCache')
   def clearCache(self):
@@ -235,8 +251,12 @@ class OOoDocument(XMLObject,File):
     self.log('_convert',enc(self._unpackData(self.data))[:500])
     meta,oo_data=sp.run_convert(self.getOriginalFilename(),enc(self._unpackData(self.data)))
     self.oo_data=Pdata(dec(oo_data))
+    # now we get text content (for now, only for Text type)
+    # converting spreadsheet and presentations into plain text is less trivial
+    if self.getPortalType()=='Text':
+      nic,text_data=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),'txt')
+      self.setTextContent(dec(text_data))
     self._setMetaData(meta)
-    #self.refreshAllowedTargets()
 
   security.declarePrivate('_setMetaData')
   def _setMetaData(self,meta):
