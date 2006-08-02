@@ -1,5 +1,7 @@
 DMS File | Role Definition
-Document Module | File
+DMS Pdf File | Role Definition
+Document Module | DMS File
+Document Module | DMS Pdf File
 Document Module | Graphic
 Document Module | Presentation
 Document Module | Spreadsheet
@@ -8,4 +10,5 @@ File | Role Definition
 Graphic | Role Definition
 Image Module | Image
 Presentation | Role Definition
+Spreadsheet | Role Definition
 Text | Role Definition

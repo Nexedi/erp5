@@ -1,3 +1,8 @@
+2006-08-02 BG
+* Support for Pdf File
+* fixes in actions, type registry and forms
+* searchable text for Text type
+
 2006-08-01 BG
 * Support for File (unregistered content type)
 * Mime header caching and sending

@@ -2,3 +2,5 @@ content_type_registry/file
 content_type_registry/ooo_calc
 content_type_registry/ooo_impress
 content_type_registry/ooo_writer
+content_type_registry/pdf_file
+content_type_registry/text_file

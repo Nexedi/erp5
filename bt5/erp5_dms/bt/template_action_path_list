@@ -1,6 +1,15 @@
 DMS File | download
+DMS File | history
 DMS File | local_permission
+DMS File | metadata
+DMS File | related_document
 DMS File | view
+DMS Pdf File | download
+DMS Pdf File | history
+DMS Pdf File | local_permission
+DMS Pdf File | metadata
+DMS Pdf File | related_document
+DMS Pdf File | view
 Document Module | list_ui
 Document Module | sort_on
 Document Module | view
