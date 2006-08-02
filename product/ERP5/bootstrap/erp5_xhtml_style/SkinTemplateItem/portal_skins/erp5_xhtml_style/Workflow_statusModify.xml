@@ -117,7 +117,7 @@ context.portal_workflow.doActionFor(\n
     context,\n
     doaction_param_list[\'workflow_action\'],\n
     **doaction_param_list)\n
-return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form_id),keep_items={\'portal_status_message\': N_(\'Status+changed.\')})\n
+return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form_id),keep_items={\'portal_status_message\': N_(\'Status changed.\')})\n
 </string> </value>
         </item>
         <item>
