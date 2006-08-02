@@ -1594,32 +1594,37 @@ class ListBoxRenderer:
     # Make a list of lines.
     line_class = self.getLineClass()
     line_list = []
-    section_index = 0
-    current_section_base_index = 0
-    current_section = report_section_list[0]
-    current_section_size = current_section.object_list_len
-    for i in range(start, end):
-      # Make sure we go to the right section.
-      while current_section_base_index + current_section_size <= i:
-        current_section_base_index += current_section_size
-        section_index += 1
-        current_section = report_section_list[section_index]
-        current_section_size = current_section.object_list_len
 
-      offset = i - current_section_base_index + current_section.offset
-      if current_section.is_summary:
-        index = None
-      elif self.isReportTreeMode():
-        index = offset
-      else:
-        index = i
-      #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
-      line = line_class(renderer = self, obj = current_section.object_list[offset],
-                        index = index, is_summary = current_section.is_summary,
-                        context = current_section.context, is_open = current_section.is_open,
-                        domain_selection = current_section.domain_selection,
-                        depth = current_section.depth)
-      line_list.append(line)
+    try:
+      section_index = 0
+      current_section_base_index = 0
+      current_section = report_section_list[0]
+      current_section_size = current_section.object_list_len
+      for i in range(start, end):
+        # Make sure we go to the right section.
+        while current_section_base_index + current_section_size <= i:
+          current_section_base_index += current_section_size
+          section_index += 1
+          current_section = report_section_list[section_index]
+          current_section_size = current_section.object_list_len
+
+        offset = i - current_section_base_index + current_section.offset
+        if current_section.is_summary:
+          index = None
+        elif self.isReportTreeMode():
+          index = offset
+        else:
+          index = i
+        #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
+        line = line_class(renderer = self, obj = current_section.object_list[offset],
+                          index = index, is_summary = current_section.is_summary,
+                          context = current_section.context, is_open = current_section.is_open,
+                          domain_selection = current_section.domain_selection,
+                          depth = current_section.depth)
+        line_list.append(line)
+    except IndexError:
+      # If the report section list is empty, nothing to do.
+      pass
 
     return line_list
 
