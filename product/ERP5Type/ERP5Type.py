@@ -242,7 +242,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
     def getGroupList( self ):
         return self.defined_group_list
 
-    security.declareProtected( ERP5Permissions.AccessContentsInformation, 'getInstancePropertyMap' )
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+                              'getInstancePropertyMap' )
     def getInstancePropertyMap(self):
       """
       Returns the list of properties which are specific to the portal type.
@@ -291,13 +292,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
                 'Please install it to benefit from group-based security'
 
       # Retrieve applicable roles
-      role_mapping = self.getFilteredRoleListFor(ob=ob) # kw provided in order to take any appropriate action
-      #LOG('ERP5TypeInformation', 0, 'role_mapping = %r, object = %r' % (role_mapping, object))
+      role_mapping = self.getFilteredRoleListFor(ob=ob)
 
       # Create an empty local Role Definition dict
       role_category_list_dict = {}
 
-      # Fill it with explicit local roles defined as subobjects of current object
+      # Fill it with explicit local roles defined as subobjects of current
+      # object
       if getattr(aq_base(ob), 'isPrincipiaFolderish', 0):
         for roledef in ob.objectValues(spec = 'ERP5 Role Definition'):
           role_category_list_dict.setdefault(roledef.getRoleName(), []).append(
@@ -312,9 +313,12 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         # and try to use it to retrieve the values for the base_category list
         for definition in definition_list:
           # get the list of base_categories that are statically defined
-          static_base_category_list = [x.split('/', 1)[0] for x in definition['category']]
-          # get the list of base_categories that are to be fetched through the script
-          dynamic_base_category_list = [x for x in definition['base_category'] if x not in static_base_category_list]
+          static_base_category_list = [x.split('/', 1)[0]
+                                       for x in definition['category']]
+          # get the list of base_categories that are to be fetched through the
+          # script
+          dynamic_base_category_list = [x for x in 
+             definition['base_category'] if x not in static_base_category_list]
           # get the aggregated list of base categories, to preserve the order
           category_order_list = []
           category_order_list.extend(definition['base_category'])
@@ -322,16 +326,22 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
             if bc not in category_order_list:
               category_order_list.append(bc)
 
-          # get the script and apply it if dynamic_base_category_list is not empty
+          # get the script and apply it if dynamic_base_category_list is not
+          # empty
           if len(dynamic_base_category_list) > 0:
             base_category_script_id = definition['base_category_script']
             base_category_script = getattr(ob, base_category_script_id, None)
             if base_category_script is not None:
-              # call the script, which should return either a dict or a list of dicts
-              category_result = base_category_script(dynamic_base_category_list, user_name, ob, ob.getPortalType())
-              #LOG('ERP5TypeInformation', 0, 'category_result = %r' % (category_result,))
-              # If we decide in the script that we don't want to update the security for this object,
-              # we can just have it return None instead of a dict or list of dicts
+              # call the script, which should return either a dict or a list of
+              # dicts
+              category_result = base_category_script(
+                                        dynamic_base_category_list,
+                                        user_name,
+                                        ob,
+                                        ob.getPortalType() )
+              # If we decide in the script that we don't want to update the
+              # security for this object, we can just have it return None
+              # instead of a dict or list of dicts
               if category_result is None:
                 continue
               elif isinstance(category_result, dict):
@@ -342,7 +352,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
                                             ', '.join(dynamic_base_category_list))
           else:
             category_result = [{}]
-          # add the result to role_category_list_dict, aggregated with category_order and statically defined categories
+          # add the result to role_category_list_dict, aggregated with
+          # category_order and statically defined categories
           for role in role_text.split(';'):
             role = role.strip()
             role_category_list = role_category_list_dict.setdefault(role, [])
@@ -356,9 +367,12 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
-      group_id_generator = getattr(ob, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
+      group_id_generator = getattr( ob,
+                             ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
+                             None )
       if group_id_generator is None:
-        raise RuntimeError, '%s script was not found' % ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+        raise RuntimeError, '%s script was not found' % \
+                              ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
       for role, value_list in role_category_list_dict.items():
         role_group_dict = {}
         for category_dict in value_list:
