@@ -525,23 +525,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 
 InitializeClass( ERP5TypeInformation )
 
-typeClasses = [
-    {'class':FactoryTypeInformation,
-     'name':FactoryTypeInformation.meta_type,
-     'action':'manage_addFactoryTIForm',
-     'permission':'Manage portal'},
-    {'class':ScriptableTypeInformation,
-     'name':ScriptableTypeInformation.meta_type,
-     'action':'manage_addScriptableTIForm',
-     'permission':'Manage portal'},
-    {'class':ERP5TypeInformation,
-     'name':ERP5TypeInformation.meta_type,
-     'action':'manage_addERP5TIForm',
-     'permission':'Manage portal'},
-    ]
-
 def manage_addERP5TIForm(self, REQUEST):
-  ' '
+  ' form to add an ERP5 Type Information '
   return self._addTIForm(
       self, REQUEST,
       add_meta_type=ERP5TypeInformation.meta_type,
@@ -549,6 +534,10 @@ def manage_addERP5TIForm(self, REQUEST):
 
 
 # Dynamic patch
-Products.CMFCore.TypesTool.typeClasses = typeClasses
+Products.CMFCore.TypesTool.typeClasses.append(
+                          {'class':ERP5TypeInformation,
+                           'name':ERP5TypeInformation.meta_type,
+                           'action':'manage_addERP5TIForm',
+                           'permission':'Manage portal'}, )
 Products.CMFCore.TypesTool.TypesTool.manage_addERP5TIForm = manage_addERP5TIForm
 
