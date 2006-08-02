@@ -73,7 +73,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="edit_link">\n
-  <a tal:condition="python: hasattr(object, \'meta_type\') and object.Base_getSourceVisibility()"\n
+  <a tal:condition="python: hasattr(object, \'meta_type\') and context.Base_getSourceVisibility(object)"\n
      tal:attributes="href python: \'%s/%s\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):]), manage) # XXX: quick hack to get path;\n
                      title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
                                                        alt info;"/></a>\n
