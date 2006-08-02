@@ -883,7 +883,6 @@ class ERP5Generator(PortalGenerator):
              create_activities=1,
              reindex=1,
              **kw):
-    LOG('setupTools, create', 0, kw)
     id = str(id)
     portal = self.klass(id=id)
     # Make sure reindex will not be called until business templates
@@ -1123,7 +1122,7 @@ class ERP5Generator(PortalGenerator):
     """
     tool = getToolByName(p, 'portal_workflow', None)
     if tool is None:
-        return
+      return
     for wf_id in ('business_template_building_workflow',
                   'business_template_installation_workflow'):
       if wf_id in tool.objectIds():
@@ -1140,7 +1139,6 @@ class ERP5Generator(PortalGenerator):
     tool.setChainForPortalTypes( ( 'Business Template', ),
                                  ( 'business_template_building_workflow',
                                    'business_template_installation_workflow' ) )
-    pass
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
@@ -1246,8 +1244,8 @@ class ERP5Generator(PortalGenerator):
     if not p.hasObject('MailHost'):
       self.setupMailHost(p)
 
-    if int(create_userfolder) != 0 and not p.hasObject('acl_users'):
-        self.setupUserFolder(p)
+    if create_userfolder and not p.hasObject('acl_users'):
+      self.setupUserFolder(p)
 
     if not p.hasObject('cookie_authentication'):
       self.setupCookieAuth(p)
