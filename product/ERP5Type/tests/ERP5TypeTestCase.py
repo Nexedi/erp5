@@ -303,8 +303,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getCatalogTool(self):
       return getToolByName(self.getPortal(), 'portal_catalog', None)
 
-    def getTypeTool(self):
+    def getTypesTool(self):
       return getToolByName(self.getPortal(), 'portal_types', None)
+    getTypeTool = getTypesTool
 
     def getRuleTool(self):
       return getattr(self.getPortal(), 'portal_rules', None)
