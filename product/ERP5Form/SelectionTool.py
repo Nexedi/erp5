@@ -690,6 +690,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string)
+                                            
+    security.declareProtected(ERP5Permissions.View, 'setDomainRootFromParam')
+    def setDomainRootFromParam(self, REQUEST, selection_name, domain_root):
+      if REQUEST is None:
+        return
+      selection = self.getSelectionFor(selection_name, REQUEST)
+      selection.edit(domain_path=domain_root, domain_list=())
 
     security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
     def unfoldDomain(self, REQUEST, form_id=None, query_string=None):
