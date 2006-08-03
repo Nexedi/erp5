@@ -251,11 +251,9 @@ class OOoDocument(XMLObject,File):
     self.log('_convert',enc(self._unpackData(self.data))[:500])
     meta,oo_data=sp.run_convert(self.getOriginalFilename(),enc(self._unpackData(self.data)))
     self.oo_data=Pdata(dec(oo_data))
-    # now we get text content (for now, only for Text type)
-    # converting spreadsheet and presentations into plain text is less trivial
-    if self.getPortalType()=='Text':
-      nic,text_data=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),'txt')
-      self.setTextContent(dec(text_data))
+    # now we get text content 
+    nic,text_data=sp.run_getplaintext(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)))
+    self.setTextContent(dec(text_data))
     self._setMetaData(meta)
 
   security.declarePrivate('_setMetaData')
