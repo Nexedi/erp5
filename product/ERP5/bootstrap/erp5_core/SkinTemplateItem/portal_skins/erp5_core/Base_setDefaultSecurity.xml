@@ -71,7 +71,6 @@
             <value> <string>valid_role_list = context.valid_roles()\n
 role_index_list = range(len(valid_role_list))\n
 permission_list = context.possible_permissions()\n
-#return context.possible_permissions()\n
 \n
 \n
 # First, remove all permissions (very secure by default)\n
@@ -82,24 +81,24 @@ for permission in permission_list:\n
 \n
 # Then, define default ERP5 permissions\n
 \n
-common_permission_list = [\n
+common_permission_list = [p for p in [\n
   \'Access Transient Objects\',\n
   \'Access contents information\',\n
   \'Access session data\',\n
   \'List folder contents\',\n
   \'View\',\n
   \'View History\',\n
-]\n
+] if p in permission_list]\n
 \n
-author_permission_list = [\n
+author_permission_list = [p for p in [\n
   \'Add portal content\',\n
   \'Add portal folders\',\n
-]\n
+] if p in permission_list]\n
 \n
-assignor_permission_list = [\n
+assignor_permission_list = [p for p in [\n
   \'Modify portal content\',\n
   \'Delete objects\',\n
-]\n
+] if p in permission_list]\n
 \n
 # Define ERP5 permissions for each role\n
 erp5_role_dict = {\n
