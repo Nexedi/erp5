@@ -892,10 +892,14 @@ class CategoryTemplateItem(ObjectTemplateItem):
               raise
             container_ids = container.objectIds()
             # Object already exists
+            object_uid = None
             if category_id in container_ids:
+              object_uid = container[category_id].getUid()
               subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
               container.manage_delObjects([category_id])
             category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
+            if object_uid is not None:
+              category.setUid(object_uid)
             for property in obj.propertyIds():
               if property not in ('id', 'uid'):
                 category.setProperty(property, obj.getProperty(property, evaluate=0))
