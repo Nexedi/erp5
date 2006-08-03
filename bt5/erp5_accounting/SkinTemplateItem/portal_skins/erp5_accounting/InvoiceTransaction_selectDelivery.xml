@@ -81,11 +81,11 @@ LOG("movements = %s"%movement_list)\n
 deliveries_keys = {}\n
 for movement in movement_list :\n
   # in case of invoice rule (ie. starting from Invoice)\n
-  line = movement.getParent().getParent().getOrderValue()\n
+  line = movement.getParentValue().getParentValue().getOrderValue()\n
 \n
   if line is None : \n
     # in case of invoicing rule (ie. starting from Order)\n
-    line = movement.getParent().getParent().getDeliveryValue()\n
+    line = movement.getParentValue().getParentValue().getDeliveryValue()\n
 \n
   deliveries_keys[line.getExplanationValue()] = 1\n
 \n

@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>line = brain.getObject()\n
-return "%s/view" % line.getParent().absolute_url()\n
+return "%s/view" % line.getParentValue().absolute_url()\n
 </string> </value>
         </item>
         <item>

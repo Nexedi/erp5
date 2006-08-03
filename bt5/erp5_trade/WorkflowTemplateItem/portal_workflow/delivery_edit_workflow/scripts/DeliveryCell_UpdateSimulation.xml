@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># trigger the simulation update from the parent line\n
-sci[\'object\'].getParent().edit()\n
+sci[\'object\'].getParentValue().edit()\n
 </string> </value>
         </item>
         <item>

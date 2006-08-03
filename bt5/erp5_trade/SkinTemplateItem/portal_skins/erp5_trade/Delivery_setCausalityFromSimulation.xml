@@ -96,8 +96,8 @@ LOG("simulation_movement_list %s " % simulation_movement_list)\n
 causality_value_set = {}\n
 for simulation_movement in simulation_movement_list :\n
   LOG("simulation_movement %s " % simulation_movement.getPath())\n
-  if simulation_movement.getParent() != simulation_movement.getRootAppliedRule():\n
-    explanation_value = simulation_movement.getParent().getParent().getExplanationValue()\n
+  if simulation_movement.getParentValue() != simulation_movement.getRootAppliedRule():\n
+    explanation_value = simulation_movement.getParentValue().getValueParent().getExplanationValue()\n
   else :\n
     explanation_value = simulation_movement.getExplanationValue()\n
   if explanation_value is not None :\n

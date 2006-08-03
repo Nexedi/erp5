@@ -69,9 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># XXX Set a resource for the supply line inside a resource\n
-if context.getParent().getPortalType() in \\\n
+if context.getParentValue().getPortalType() in \\\n
                              context.getPortalResourceTypeList():\n
-  context.setResourceValue(context.getParent())\n
+  context.setResourceValue(context.getParentValue())\n
 # Predicate ?\n
 context.setMappedValuePropertyList([\n
                     \'base_price\', \'additional_price\',\n
