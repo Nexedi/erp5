@@ -70,6 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
+preserved_parameters={}\n
 \n
 Base_doAction = select_action.split()\n
 doAction0 = Base_doAction[0]\n
@@ -77,13 +78,14 @@ request = context.REQUEST\n
 \n
 # Reinject parameters in kw\n
 kw[\'selection_name\']=selection_name\n
-kw[\'uids\']=uids\n
-kw[\'listbox_uid\']=listbox_uid\n
+#uids=None, listbox_uid=None\n
+#kw[\'uids\']=uids\n
+#kw[\'listbox_uid\']=listbox_uid\n
 kw[\'ignore_layout\']=ignore_layout\n
 \n
 # Update checked uids\n
-if None not in (selection_name, uids, listbox_uid):\n
-  context.portal_selections.updateSelectionCheckedUidList(selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
+#if None not in (selection_name, uids, listbox_uid):\n
+#  context.portal_selections.updateSelectionCheckedUidList(selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
 \n
 # If this is an object, a workflow or a folder, then jump to that view\n
 if doAction0 in (\'object\', \'workflow\', \'folder\'):\n
@@ -97,7 +99,7 @@ elif doAction0 == \'add\':\n
   new_content = context.newContent(portal_type=type_name,\n
                                    container=context,\n
                                    id=str(new_id))\n
-  kw[\'portal_status_message\'] = N_("Object+Created.")\n
+  preserved_parameters[\'portal_status_message\'] = N_("Object Created.")\n
   if not(ignore_layout) and context.getApplicableLayout():\n
     kw[\'editable_mode\'] = 1\n
     redirect_url = \'%s/view\' % (new_content.WebSite_getDocumentPhysicalPath(), )\n
@@ -117,16 +119,16 @@ elif doAction0 == \'template\':\n
     new_content_id = new_content_list[0][\'new_id\']\n
     new_content = context[new_content_id]\n
     new_content.makeTemplateInstance()\n
-    kw[\'portal_status_message\'] = N_("Template+Created.")\n
+    preserved_parameters[\'portal_status_message\'] = N_("Template Created.")\n
     redirect_url = \'%s/view\' % ( new_content.absolute_url(), )\n
   else:\n
-    kw[\'portal_status_message\'] = N_("Template+Does+not+Exist.")\n
+    preserved_parameters[\'portal_status_message\'] = N_("Template Does not Exist.")\n
     redirect_url = \'%s/view\' % (context.absolute_url(), )\n
 else:\n
   redirect_url = request[\'ACTUAL_URL\']\n
-  kw[\'portal_status_message\'] = N_(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
+  preserved_parameters[\'portal_status_message\'] = N_(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
 \n
-return context.ERP5XhtmlStyle_redirect(redirect_url, **kw)\n
+return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parameters, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -143,7 +145,7 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, **kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_action, selection_name=None, uids=None, listbox_uid=None, ignore_layout=None, **kw</string> </value>
+            <value> <string>select_action, selection_name=None, ignore_layout=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -163,7 +165,7 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, **kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -171,25 +173,24 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, **kw)\n
                           <tuple>
                             <string>select_action</string>
                             <string>selection_name</string>
-                            <string>uids</string>
-                            <string>listbox_uid</string>
                             <string>ignore_layout</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>preserved_parameters</string>
                             <string>Base_doAction</string>
                             <string>_getitem_</string>
                             <string>doAction0</string>
                             <string>request</string>
                             <string>_write_</string>
-                            <string>None</string>
                             <string>redirect_url</string>
                             <string>new_id</string>
                             <string>type_name</string>
                             <string>str</string>
                             <string>new_content</string>
+                            <string>None</string>
                             <string>template_relative_url</string>
                             <string>template</string>
                             <string>preference</string>
@@ -208,8 +209,6 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, **kw)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
                 <none/>
                 <none/>
               </tuple>
