@@ -109,7 +109,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 tal:define="actions python:filtered_actions[dialog_category]">\n
               <input type="hidden" name="dialog_category" value="dialog_category"\n
                  tal:attributes="value dialog_category" />\n
-              <select name="dialog_select" size="1"\n
+              <select name="select_dialog" size="1"\n
                 tal:attributes="onChange string:submitAction(this.form, \'${here/absolute_url}/Base_doDialog\')">\n
                 <span tal:repeat="action actions">\n
                  <option value="1" tal:content="action/name"\n
