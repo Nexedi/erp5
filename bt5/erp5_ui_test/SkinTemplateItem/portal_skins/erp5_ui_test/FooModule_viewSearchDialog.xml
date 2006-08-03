@@ -101,8 +101,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_id</string>
-                        <string>your_title</string>
+                        <string>your_search_listbox_id</string>
+                        <string>your_search_listbox_title</string>
                       </list>
                     </value>
                 </item>
