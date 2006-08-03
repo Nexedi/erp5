@@ -57,7 +57,7 @@ def generateParts(context,text,sw,tags,trail,maxlines):
 
 def cutFound(context,txt,sw,tags,trail,maxlines):
   FoundWord.tags=tags
-  text = txt.split(' ') # very rough tokenization
+  text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
   return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
 
 
