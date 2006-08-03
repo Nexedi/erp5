@@ -75,8 +75,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 <tal:block metal:define-macro="master">\n
   <tal:block tal:define="object_uid here/getUid | nothing;\n
                          object_path here/getPath | nothing;\n
+                         form form | nothing;\n
                          form_id form/id | nothing;\n
-                         form_action python: here.portal_membership.checkPermission(\'Modify portal content\', here) and \'Base_edit\' or nothing;\n
+                         form_action python: form and form.action not in (\'\', None) and here.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
 \n
                          local_parameter_list local_parameter_list | python: {};\n
                          dummy python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
@@ -90,8 +91,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               tal:define="actions actions/object_view | python: []">\n
           <div class="actions">\n
             <tal:block tal:condition="editable_mode | python: 1">\n
-              <button tal:condition="python: here.portal_membership.checkPermission(\'Modify portal content\', here)"\n
-                      type="submit" name="Base_edit:method" class="save" title="Save"\n
+              <button tal:condition="form_action"\n
+                      type="submit" class="save" title="Save"\n
+                      tal:attributes="name form_action"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
