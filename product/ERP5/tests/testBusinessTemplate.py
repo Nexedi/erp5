@@ -566,7 +566,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
   def stepAddSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
-    Add sin folder to business template
+    Add skin folder to business template
     """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
@@ -574,6 +574,14 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     wf_ids.append(sequence.get('skin_folder_id', ''))
     self.assertEqual(len(wf_ids), 1)
     bt.edit(template_skin_id_list=wf_ids)
+    
+  def stepAddPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add a path to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_path_list=['geek_path',])
 
   # Base Category
   def stepCreateBaseCategory(self, sequence=None, sequence_list=None, **kw):
@@ -1508,6 +1516,22 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                   description='bt for unit_test')
     sequence.edit(export_bt=template)
 
+  def stepBuildBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Build Business Template
+    """
+    template = sequence.get('current_bt')
+    template.build()
+  
+  def stepBuildBusinessTemplateFail(self, sequence=None, sequence_list=None, **kw):
+    """
+    Build Business Template
+    """
+    template = sequence.get('current_bt')
+    import pdb; pdb.set_trace()
+    self.assertRaises(AttributeError,
+                      template.build)
+  
   def stepBuildBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Build Business Template
@@ -3090,6 +3114,25 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        BuildBusinessTemplate \
                        InstallCurrentBusinessTemplate \
                        UninstallBusinessTemplate \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_28_CheckBuildWithUnexistingPath(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if build fails when one of the paths does not exist'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPathToBusinessTemplate \
+                       BuildBusinessTemplateFail \
                        RemoveBusinessTemplate \
 		       RemovePortalType \
                        '
