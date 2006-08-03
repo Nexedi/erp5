@@ -87,16 +87,6 @@ catalog_method_list = ('_is_catalog_list_method_archive',
 catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_expression_instance_archive',
                               '_filter_type_archive',)
-                              
-class BusinessTemplateMissingDependency(Exception):
-  """ Exception raised when a dependency is missing
-  """
-  pass
-
-class BusinessTemplateResolveError(Exception):
-  """ Exception raised when a dependency is missing
-  """
-  pass
 
 def removeAll(entry):
   '''
@@ -298,8 +288,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     io.close()
 
 class TemplateConditionError(Exception): pass
-
 class TemplateConflictError(Exception): pass
+class BusinessTemplateMissingDependency(Exception): pass
 
 class BaseTemplateItem(Implicit, Persistent):
   """
@@ -749,10 +739,9 @@ class PathTemplateItem(ObjectTemplateItem):
     id = id_list[0]
     if re.search('[\*\?\[\]]', id) is None:
       # If the id has no meta character, do not have to check all objects.
-      try:
-        obj = folder._getOb(id)
-      except AttributeError:
-        raise BusinessTemplateResolveError, "Could not resolve '%s' during business template processing." % id
+      obj = folder._getOb(id, None)
+      if obj is None:
+        raise AttributeError, "Could not resolve '%s' during business template processing." % id
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
