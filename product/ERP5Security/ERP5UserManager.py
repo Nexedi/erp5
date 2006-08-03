@@ -173,10 +173,11 @@ class ERP5UserManager(BasePlugin):
         if sm.getUser() != SUPER_USER:
           newSecurityManager(self, self.getUser(SUPER_USER))
 
-        result = self.getPortalObject().portal_catalog(
+        try:
+          result = self.getPortalObject().portal_catalog(
                                   portal_type="Person", reference=login)
-
-        setSecurityManager(sm)
+        finally:
+          setSecurityManager(sm)
         return [item.getObject() for item in result]
 
 classImplements( ERP5UserManager
