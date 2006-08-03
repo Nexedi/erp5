@@ -3094,7 +3094,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_27_CheckInstallWithBackup(self, quiet=0, run=run_all_test):
+  def test_27_CheckInstallWithBackup(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test if backup works during installation of a bt with subfolder in skin folder'
@@ -3118,9 +3118,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_28_CheckBuildWithUnexistingPath(self, quiet=0, run=run_all_test):
+  def test_28_CheckBuildWithUnexistingPath(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test if build fails when one of the paths does not exist'
@@ -3137,7 +3137,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
   framework()
