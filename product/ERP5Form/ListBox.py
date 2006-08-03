@@ -906,6 +906,11 @@ class ListBoxRenderer:
       for k, v in self.getDefaultParamList():
         params.setdefault(k, v)
 
+      search_prefix = 'search_%s_' % (self.getId(), )
+      for k, v in params.items():
+        if k.startswith(search_prefix):
+          params[k[len(search_prefix):]] = v
+
       # Set parameters, depending on the list method.
       list_method_name = self.getListMethodName()
       meta_type_list = self.getMetaTypeList()
@@ -1276,7 +1281,7 @@ class ListBoxRenderer:
     search_column_id_set = self.getSearchColumnIdSet()
     param_dict = self.getParamDict()
     value_list = []
-    for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
+    for (sql, title), alias in zip(self.getSelectedColumnList(), ['search_%s_%s' % (self.getId(), alias) for alias in self.getColumnAliasList()]):
       if sql in search_column_id_set:
         # Get the current value and encode it in unicode.
         param = param_dict.get(alias, u'')
@@ -1284,9 +1289,8 @@ class ListBoxRenderer:
           param = unicode(param, self.getEncoding())
 
         # Obtain a search field, if any.
-        search_field_id = 'search_%s_%s' % (self.getId(), alias)
-        if self.getForm().has_field(search_field_id):
-          search_field = self.getForm().get_field(search_field_id)
+        if self.getForm().has_field(alias):
+          search_field = self.getForm().get_field(alias)
         else:
           search_field = None
 
