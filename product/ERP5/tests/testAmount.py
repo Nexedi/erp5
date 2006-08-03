@@ -145,12 +145,8 @@ class TestAmount(ERP5TypeTestCase):
       Test the method GetVariationPropertyDict.
     """
     amount = sequence.get('amount')
-    try:
-      amount.setVariationPropertyDict(self.variation_property_dict)
-    except KeyError:
-      return
-    else:
-      raise KeyError
+    self.assertRaises(KeyError, amount.setVariationPropertyDict,
+                      self.variation_property_dict)
 
   def stepSetVariationPropertyDict(self, sequence=None, 
                                         sequence_list=None, **kw):
@@ -181,12 +177,8 @@ class TestAmount(ERP5TypeTestCase):
       Test the method GetVariationPropertyDict.
     """
     amount = sequence.get('amount')
-    try:
-      amount.setVariationPropertyDict(self.failed_variation_property_dict)
-    except KeyError:
-      return
-    else:
-      raise KeyError
+    self.assertRaises(KeyError, amount.setVariationPropertyDict,
+                      self.failed_variation_property_dict)
 
   def stepCheckEdit(self, sequence=None, sequence_list=None, **kw):
     """
