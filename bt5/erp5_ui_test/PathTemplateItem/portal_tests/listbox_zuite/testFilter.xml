@@ -256,7 +256,7 @@
 <!-- Search by id -->\n
 <tr>\n
 \t<td>type</td>\n
-\t<td>id</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
 \t<td>3</td>\n
 </tr>\n
 <tr>\n
