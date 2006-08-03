@@ -73,6 +73,8 @@ N_ = portal.Base_translateString\n
 preserved_parameters={}\n
 \n
 Base_doAction = select_action.split()\n
+if len(Base_doAction) == 0:\n
+  return\n
 doAction0 = Base_doAction[0]\n
 request = context.REQUEST\n
 \n
@@ -181,6 +183,7 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parame
                             <string>N_</string>
                             <string>preserved_parameters</string>
                             <string>Base_doAction</string>
+                            <string>len</string>
                             <string>_getitem_</string>
                             <string>doAction0</string>
                             <string>request</string>
