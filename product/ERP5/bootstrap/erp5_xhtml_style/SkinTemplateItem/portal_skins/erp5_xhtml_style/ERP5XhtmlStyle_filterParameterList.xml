@@ -81,7 +81,6 @@ def isValid(value_name):\n
   prefix = value_name.split(\'_\')[0]\n
   if value_name == \'field_id\' \\\n
      or prefix not in (\'field\', \'subfield\', \'default\', \'select\', \'search\'):\n
-    context.log(\'filter\', \'keeping %s\' % (value_name, ))\n
     return True\n
   return False\n
 \n
