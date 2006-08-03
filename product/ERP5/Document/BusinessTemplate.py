@@ -93,6 +93,11 @@ class BusinessTemplateMissingDependency(Exception):
   """
   pass
 
+class BusinessTemplateResolveError(Exception):
+  """ Exception raised when a dependency is missing
+  """
+  pass
+
 def removeAll(entry):
   '''
     Remove all files and directories under 'entry'.
@@ -747,10 +752,7 @@ class PathTemplateItem(ObjectTemplateItem):
       try:
         obj = folder._getOb(id)
       except AttributeError:
-        # XXX FIXME
-        LOG("WARNING!", 100,
-            "Can not resolve '%s' during business template installation." % id)
-        return []
+        raise BusinessTemplateResolveError, "Could not resolve '%s' during business template processing." % id
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
