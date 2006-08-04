@@ -113,7 +113,7 @@ class CachingMethod:
         try:
           for index in CachingMethod.cached_object_dict.keys():
             obj = CachingMethod.cached_object_dict[index]
-            if obj.time + obj.duration < now:
+            if obj.duration is not None and obj.time + obj.duration < now:
               # LOG('CachingMethod', 0, 'expire %s' % index)
               del CachingMethod.cached_object_dict[index]
         except KeyError:
@@ -131,7 +131,7 @@ class CachingMethod:
     index = str(index)
 
     obj = CachingMethod.cached_object_dict.get(index)
-    if obj is None or obj.time + obj.duration < now:
+    if obj is None or (obj.duration is not None and obj.time + obj.duration < now):
       #LOG('CachingMethod', 0, 'cache miss: id = %s, duration = %s, method = %s, args = %s, kwd = %s' % (str(self.id), str(self.duration), str(self.method), str(args), str(kwd)))
       obj = CachedObject()
       obj.time = now
