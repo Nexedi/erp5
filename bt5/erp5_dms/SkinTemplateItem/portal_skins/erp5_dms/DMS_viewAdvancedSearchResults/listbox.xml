@@ -395,7 +395,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Base_showFoundText</string>
+                          <string>Base_showFoundText</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -479,7 +484,12 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>None</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -488,7 +498,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>search_selection</string> </value>
+                    <value> <string>search_advanced_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -499,7 +509,12 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>None</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

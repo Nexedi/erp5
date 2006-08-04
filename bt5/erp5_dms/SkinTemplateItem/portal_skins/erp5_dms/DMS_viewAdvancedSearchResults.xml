@@ -74,6 +74,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_Base_showFoundText</string>
                       </list>
                     </value>
                 </item>
@@ -82,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewSearchResultList</string> </value>
+            <value> <string>DMS_viewAdvancedSearchResults</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

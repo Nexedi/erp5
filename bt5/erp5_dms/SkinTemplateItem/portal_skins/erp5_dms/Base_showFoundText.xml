@@ -68,18 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>tags=(\'[[\',\']]\')\n
+            <value> <string encoding="cdata"><![CDATA[
+
+tags=(\'<div style="font-weight:bold;display:inline;">\',\'</div>\')\n
 trail=5\n
 maxlines=5\n
-txt=brain.SearchableText()\n
+txt=brain.getObject().SearchableText()\n
 sw=context.REQUEST.get(\'SearchableText\',None)\n
-context.log(script.getId(),sw)\n
 if sw is None:\n
   return \'\'\n
 sw=sw.split()\n
 res=context.cutFound(context,txt,sw,tags,trail,maxlines)\n
 return \' \'.join(map(str,res))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -131,7 +134,6 @@ return \' \'.join(map(str,res))\n
                             <string>context</string>
                             <string>None</string>
                             <string>sw</string>
-                            <string>script</string>
                             <string>res</string>
                             <string>map</string>
                             <string>str</string>

@@ -1,3 +1,6 @@
+2006-08-04 BG
+Support for advanced search; a dialog and output form for advanced search; fixes in display of found text.
+
 2006-08-03 BG
 Nice display of search results (with highlights from SearchableText); searchable text for Spreadsheet.
 
