@@ -2065,7 +2065,7 @@ msgid "Name"
 msgstr "Nom"
 
 msgid "National ID"
-msgstr ""
+msgstr "Code carte d'identité"
 
 msgid "Nationality"
 msgstr "Nationalité"
@@ -3355,7 +3355,7 @@ msgid "Visual Pattern"
 msgstr "Type pour placement"
 
 msgid "Voter ID"
-msgstr ""
+msgstr "Code du votant"
 
 msgid "Weight (g)"
 msgstr "Poids (g)"
