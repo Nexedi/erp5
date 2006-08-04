@@ -44,7 +44,6 @@ import Form, FSForm, ListBox, MatrixBox, SelectionTool
 import ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField
 import RelationField, ImageField, MultiRelationField, MultiLinkField
-import RawHTMLField
 import ZPyChart
 import PreferenceTool
 
@@ -141,8 +140,6 @@ def initialize( context ):
                                 'www/LinkField.gif')
     FieldRegistry.registerField(MultiLinkField.MultiLinkField,
                                 'www/LinkField.gif')
-    FieldRegistry.registerField(RawHTMLField.RawHTMLField,
-                                'www/StringField.gif')
  
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
