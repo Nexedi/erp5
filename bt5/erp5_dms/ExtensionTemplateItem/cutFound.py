@@ -1,4 +1,7 @@
+import string
 
+redundant_chars='"\'.:;,-' # chars we need to strip from a word before we see if it matches
+tr=string.maketrans(redundant_chars,' '*len(redundant_chars))
 
 class Done(Exception):
   pass
@@ -28,8 +31,6 @@ class Part:
       self.chain.pop()
 
   def add(self,w):
-    #import pdb
-    #pdb.set_trace()
     self.chain.insert(0,FoundWord(w))
     self.limit+=self.trail+1
     self.has=True
@@ -37,9 +38,11 @@ class Part:
   def __str__(self):
     return '...%s...' % ' '.join(map(str,self.chain))
 
+
+
 def generateParts(context,text,sw,tags,trail,maxlines):
   par=Part(tags,trail)
-  test=lambda w:w.strip().replace('"','').replace("'","") in sw
+  test=lambda w:w.translate(tr).strip() in sw
   i=0
   for aw in text:
     if i==maxlines:
