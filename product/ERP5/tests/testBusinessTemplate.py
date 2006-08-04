@@ -1528,7 +1528,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     Build Business Template
     """
     template = sequence.get('current_bt')
-    import pdb; pdb.set_trace()
     self.assertRaises(AttributeError,
                       template.build)
   
