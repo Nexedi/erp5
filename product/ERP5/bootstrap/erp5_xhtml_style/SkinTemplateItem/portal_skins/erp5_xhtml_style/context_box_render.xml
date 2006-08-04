@@ -308,7 +308,7 @@ XXX: Folder_filter accesses selection directly\n
       </a>\n
       <a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
          title="Activity Pending"\n
-         tal:attributes="href python: here.portal_membership.checkPermission(\'View management screens\', here.portal_activities) and \'%s%s/manageActivities\\\' % (here.REQUEST[\\\'SERVER_URL\\\'],here.portal_activities.getUrl(), ) or \'#\'">\n
+         tal:attributes="href python: here.portal_membership.checkPermission(\'View management screens\', here.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],here.portal_activities.getUrl(), ) or \'#\'">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
       </a>\n
