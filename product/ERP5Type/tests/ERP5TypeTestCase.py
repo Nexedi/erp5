@@ -10,6 +10,8 @@ __version__ = '0.3.0'
 current_app = None
 import Products.ERP5Type.Utils
 import Globals
+# store a copy of the original method
+original_get_request = Globals.get_request
 
 def get_request():
   return current_app.REQUEST
@@ -159,10 +161,10 @@ class ERP5TypeTestCase(PortalTestCase):
       return portal_name + '_' + uid
 
     def getPortal(self):
-        """Returns the portal object, i.e. the "fixture root".
-           Override if you don't like the default.
-        """
-        return self.app[self.getPortalName()]
+      """Returns the portal object, i.e. the "fixture root".
+         Override if you don't like the default.
+      """
+      return self.app[self.getPortalName()]
 
     def enableLightInstall(self):
       """
