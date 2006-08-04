@@ -1,13 +1,13 @@
 msgid ""
-msgstr ""
-"Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2006-06-30 10:06+CET\n"
-"PO-Revision-Date: 2006-06-30 10:06+CET\n"
+msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+"POT-Creation-Date: 2006-08-04 09:08+CET\n"
+"PO-Revision-Date: 2006-08-04 09:08+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
 
 msgid "${number} item(s) selected"
 msgstr "${number} élément(s) sélectionné(s)"
@@ -18,6 +18,9 @@ msgstr "${number} enregistrements "
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
 
+msgid "&nbsp;"
+msgstr ""
+
 msgid "-- Object --"
 msgstr "-- Action sur l'Objet --"
 
@@ -26,6 +29,135 @@ msgstr "-- Autres --"
 
 msgid "-- User --"
 msgstr "-- Utilisateur --"
+
+msgid "-- Workflows --"
+msgstr ""
+
+msgid "<b>Fingerprint</b>"
+msgstr ""
+
+msgid "<b>Host name</b>"
+msgstr ""
+
+msgid "<b>Issuer name</b>"
+msgstr ""
+
+msgid "<b>Nb failures</b>"
+msgstr ""
+
+msgid "<b>Realm Server</b>"
+msgstr ""
+
+msgid "<b>Valid Until</b>"
+msgstr ""
+
+msgid "<b>Valid from</b>"
+msgstr ""
+
+msgid "A change log"
+msgstr ""
+
+msgid "A flag indicating if we have to update business template workflows"
+msgstr ""
+
+msgid "A flag indicating if we have to update tools"
+msgstr ""
+
+msgid "A list of ERP5Types for which we want to add the roles in the template"
+msgstr ""
+
+msgid "A list of allowed content types for portal types"
+msgstr ""
+
+msgid "A list of base categories for portal types"
+msgstr ""
+
+msgid "A list of copyright holders"
+msgstr ""
+
+msgid "A list of hidden content types for portal types"
+msgstr ""
+
+msgid "A list of ids of actions used by this template"
+msgstr ""
+
+msgid "A list of ids of base categories used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog keyword keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog methods used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog related keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog result keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog result tables used by this template"
+msgstr ""
+
+msgid "A list of ids of constraints used by this template"
+msgstr ""
+
+msgid "A list of ids of documents used by this template"
+msgstr ""
+
+msgid "A list of ids of extensions used by this template"
+msgstr ""
+
+msgid "A list of ids of modules used by this template"
+msgstr ""
+
+msgid "A list of ids of portal types used by this template"
+msgstr ""
+
+msgid "A list of ids of products used by this template"
+msgstr ""
+
+msgid "A list of ids of property sheets used by this template"
+msgstr ""
+
+msgid "A list of ids of roles used by this template"
+msgstr ""
+
+msgid "A list of ids of site properties used by this template"
+msgstr ""
+
+msgid "A list of ids of skins used by this template"
+msgstr ""
+
+msgid "A list of ids of tests used by this template"
+msgstr ""
+
+msgid "A list of local roles used by this template"
+msgstr ""
+
+msgid "A list of maintainers"
+msgstr ""
+
+msgid "A list of message translations used by this template"
+msgstr ""
+
+msgid "A list of object paths used by this template"
+msgstr ""
+
+msgid "A list of property sheet for portal types"
+msgstr ""
+
+msgid "A list of workflow chains of portal types used by this template"
+msgstr ""
+
+msgid "A revision identifier"
+msgstr ""
+
+msgid "A version identifier"
+msgstr ""
+
+msgid "Accept"
+msgstr ""
 
 msgid "Account"
 msgstr "Compte"
@@ -72,6 +204,30 @@ msgstr "Vue de la Comptabilité"
 msgid "Accounts"
 msgstr "Comptes"
 
+msgid "Acquisition Append Value"
+msgstr ""
+
+msgid "Acquisition Base Categories"
+msgstr ""
+
+msgid "Acquisition Copy Value"
+msgstr ""
+
+msgid "Acquisition Mask Value"
+msgstr ""
+
+msgid "Acquisition Object IDs"
+msgstr ""
+
+msgid "Acquisition Portal Types"
+msgstr ""
+
+msgid "Acquisition Sync Value"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
 msgid "Action impossible : credit is greater than debit"
 msgstr "Action impossible : l'écriture n'est pas équilibrée"
 
@@ -84,9 +240,7 @@ msgstr "Action impossible : le tiers n'est pas spécifié"
 msgid "Action impossible : source_section is not defined"
 msgstr "Action impossible : La source n'est pas spécifiée"
 
-msgid ""
-"Action impossible : the quantity of the transaction is greater than the "
-"transferable maximum quantity (TMQ): TMQ = 50000.00"
+msgid "Action impossible : the quantity of the transaction is greater than the transferable maximum quantity (TMQ): TMQ = 50000.00"
 msgstr "hkhkjhkjh"
 
 msgid "Action..."
@@ -94,6 +248,9 @@ msgstr "Action ..."
 
 msgid "Actions"
 msgstr "Actions"
+
+msgid "Active"
+msgstr ""
 
 msgid "Activity"
 msgstr "Activité"
@@ -109,6 +266,9 @@ msgstr "Ajouter ${portal_type}"
 
 msgid "Add Apparel Fabric Colour Variation"
 msgstr "Ajouter Coloris"
+
+msgid "Added files"
+msgstr ""
 
 msgid "Additional payment"
 msgstr "Modes de règlement"
@@ -128,6 +288,9 @@ msgstr "Avantage en nature"
 msgid "Agent"
 msgstr "Mandataire"
 
+msgid "Agent Privilege"
+msgstr ""
+
 msgid "Agents"
 msgstr "Mandataires"
 
@@ -137,11 +300,17 @@ msgstr "Composants indiqués sur le Modèle"
 msgid "Aggregated Industrial Process"
 msgstr "Explications données sur le Modèle"
 
+msgid "Agriculteur"
+msgstr ""
+
 msgid "Alarm"
 msgstr "Alarme"
 
 msgid "Alarm Tool"
 msgstr "Outil Alarme"
+
+msgid "Allowed Content Types"
+msgstr ""
 
 msgid "Amount"
 msgstr "Montant"
@@ -230,9 +399,7 @@ msgstr "Produit Fini"
 msgid "Apparel Model Colour Variation"
 msgstr "Coloris"
 
-msgid ""
-"Apparel Model Colour Variation already exists "
-"with                                   this price. Check your line."
+msgid "Apparel Model Colour Variation already exists with                                   this price. Check your line."
 msgstr "Cette référence a déjà été saisie au même prix !"
 
 msgid "Apparel Model Industrial Description"
@@ -322,6 +489,9 @@ msgstr "Tissu"
 msgid "Apparel shape"
 msgstr "Modèle"
 
+msgid "Applied Rule"
+msgstr ""
+
 msgid "Apply Purchase Trade Condition"
 msgstr "Importer les conditions d'achat"
 
@@ -351,6 +521,12 @@ msgstr "N° de compte complet"
 
 msgid "BBAN Key"
 msgstr "Clé n° de compte"
+
+msgid "BIGNONA"
+msgstr ""
+
+msgid "BT Title"
+msgstr ""
 
 msgid "Balance"
 msgstr "Solde"
@@ -403,6 +579,9 @@ msgstr "Catégories de base"
 msgid "Base Category"
 msgstr "Catégorie de Base"
 
+msgid "Base Domain"
+msgstr ""
+
 msgid "Base size"
 msgstr "Taille de base"
 
@@ -411,6 +590,12 @@ msgstr "Début"
 
 msgid "Beginning of this career step"
 msgstr "Début de carrière"
+
+msgid "Being Closed"
+msgstr ""
+
+msgid "Being Modified"
+msgstr ""
 
 msgid "Bill of material description"
 msgstr "Description des composants"
@@ -478,11 +663,59 @@ msgstr "Budgets"
 msgid "Bug"
 msgstr "Bogue"
 
+msgid "Bug Module"
+msgstr ""
+
+msgid "Bugs"
+msgstr ""
+
+msgid "Build Business Template"
+msgstr ""
+
+msgid "Building State"
+msgstr ""
+
+msgid "Business Template"
+msgstr ""
+
+msgid "Business Template Definition"
+msgstr ""
+
+msgid "Business Template File"
+msgstr ""
+
+msgid "Business Templates"
+msgstr ""
+
+msgid "Business+Templates+Imported+Successfully"
+msgstr ""
+
+msgid "Business+Templates+Updated+Successfully"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnDiff"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnShowFile"
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnStatus"
+msgstr ""
+
 msgid "Buyer"
 msgstr "Acheteur"
 
 msgid "CAD Library"
 msgstr "Nom du fichier Lectra"
+
+msgid "CSP"
+msgstr ""
+
+msgid "CSP &amp; Region"
+msgstr ""
+
+msgid "Cadre"
+msgstr ""
 
 msgid "Calculate the Pay Sheet Transaction"
 msgstr "Calcul de la fiche de paye"
@@ -496,14 +729,32 @@ msgstr "Annuler"
 msgid "Cancel Transaction"
 msgstr "Annuler la transaction"
 
+msgid "Cancelled"
+msgstr ""
+
 msgid "Career"
 msgstr "Carrière"
+
+msgid "Career Comments"
+msgstr ""
+
+msgid "Career End"
+msgstr ""
+
+msgid "Career Function"
+msgstr ""
+
+msgid "Career Start"
+msgstr ""
 
 msgid "Career Step"
 msgstr "Étape De Carrière"
 
 msgid "Career Steps"
 msgstr "Etapes de Carrière"
+
+msgid "Career Title"
+msgstr ""
 
 msgid "Career end"
 msgstr "Fin de carrière"
@@ -559,8 +810,38 @@ msgstr "ligne de transfert intercaisse"
 msgid "Cash Transfers"
 msgstr "Transfert Intercaisse"
 
+msgid "Catalog Methods"
+msgstr ""
+
+msgid "Catalog Related Keys"
+msgstr ""
+
+msgid "Catalog Result Keys"
+msgstr ""
+
+msgid "Catalog Result Tables"
+msgstr ""
+
 msgid "Categories"
 msgstr "Catégories"
+
+msgid "Category"
+msgstr ""
+
+msgid "Category Definition File"
+msgstr ""
+
+msgid "Category File"
+msgstr ""
+
+msgid "Category Tool"
+msgstr ""
+
+msgid "Category Types"
+msgstr ""
+
+msgid "Category types to group categories for portal methods"
+msgstr ""
 
 msgid "Causality"
 msgstr "Commande"
@@ -574,8 +855,20 @@ msgstr "État Commande"
 msgid "Change Language"
 msgstr "Changer la langue"
 
+msgid "Change Log"
+msgstr ""
+
 msgid "Change Page"
 msgstr "Changement de page"
+
+msgid "Change Password"
+msgstr ""
+
+msgid "Changelog"
+msgstr ""
+
+msgid "Chat Address"
+msgstr ""
 
 msgid "Check All"
 msgstr "Cocher Tous"
@@ -622,14 +915,32 @@ msgstr "Nombre d'enfants"
 msgid "City"
 msgstr "Ville"
 
+msgid "Class"
+msgstr ""
+
+msgid "Clean Business Template"
+msgstr ""
+
+msgid "Clean SVN unversioned files"
+msgstr ""
+
+msgid "Clean Up SVN Locks"
+msgstr ""
+
 msgid "Close Transaction"
 msgstr "Cloturer la Transaction"
+
+msgid "Closed"
+msgstr ""
 
 msgid "Closing Date"
 msgstr "Date de Cloture"
 
 msgid "Cloth"
 msgstr "Vêtement"
+
+msgid "Codification"
+msgstr ""
 
 msgid "Collection"
 msgstr "Saison"
@@ -688,11 +999,17 @@ msgstr "Couleur"
 msgid "Colours"
 msgstr "Coordonnés"
 
+msgid "Column"
+msgstr ""
+
 msgid "Comment"
 msgstr "Commentaire"
 
 msgid "Comments"
 msgstr "Commentaires"
+
+msgid "Commit"
+msgstr ""
 
 msgid "Complete quantity matrix"
 msgstr "Quantités variables"
@@ -712,11 +1029,17 @@ msgstr "Nom de la variante"
 msgid "Configure"
 msgstr "Configurer"
 
+msgid "Configure Categories"
+msgstr ""
+
 msgid "Confirm"
 msgstr "Envoyer en validation"
 
 msgid "Confirm Transaction"
 msgstr "Confirmer la Transaction"
+
+msgid "Constraints"
+msgstr ""
 
 msgid "Consumption"
 msgstr "Table de Consommation"
@@ -733,6 +1056,9 @@ msgstr "Type de contact"
 msgid "Contents"
 msgstr "Contenu"
 
+msgid "Contextual help"
+msgstr ""
+
 msgid "Contributors"
 msgstr "Contributeurs"
 
@@ -744,6 +1070,9 @@ msgstr "Tissus coordonnés"
 
 msgid "Copy"
 msgstr "Copier"
+
+msgid "Copyright"
+msgstr ""
 
 msgid "Corporate Name"
 msgstr "Société"
@@ -768,6 +1097,9 @@ msgstr "Pays d'origine"
 
 msgid "Country prefix"
 msgstr "Préfixe Pays"
+
+msgid "Create Module"
+msgstr ""
 
 msgid "Create New Document(s)"
 msgstr "Création"
@@ -805,6 +1137,9 @@ msgstr "Compte Créditeur"
 msgid "Credit Balance"
 msgstr "Solde Créditeur"
 
+msgid "Credit Card"
+msgstr ""
+
 msgid "Currencies"
 msgstr "Devises"
 
@@ -831,6 +1166,12 @@ msgstr "Achat de devises par crédit de compte"
 
 msgid "Currency Sale"
 msgstr "Vente de devises par débit de compte"
+
+msgid "Current"
+msgstr ""
+
+msgid "Current Function"
+msgstr "CSP"
 
 msgid "Current career comments"
 msgstr "Commentaires"
@@ -871,11 +1212,20 @@ msgstr "Réf. client"
 msgid "Cut"
 msgstr "Couper"
 
+msgid "DAKAR"
+msgstr ""
+
+msgid "DIOURBEL"
+msgstr ""
+
 msgid "Data Updated."
 msgstr "Données Enregistrées."
 
 msgid "Data+Updated."
 msgstr "Données enregistrées."
+
+msgid "Date Order"
+msgstr ""
 
 msgid "Days of month"
 msgstr "Jours de Mois"
@@ -907,11 +1257,20 @@ msgstr "Définir l'ordre de tri."
 msgid "Define advantages"
 msgstr "Définir avantages"
 
+msgid "Defines the base URL where portal type action documentation will be searched for."
+msgstr ""
+
 msgid "Delete"
 msgstr "Effacer"
 
+msgid "Delete The Objects"
+msgstr ""
+
 msgid "Delete the objects"
 msgstr "Supprimer les objets"
+
+msgid "Deleted objects: ${object_ids}"
+msgstr ""
 
 msgid "Deleted."
 msgstr "Elément(s) supprimé(s)"
@@ -925,6 +1284,9 @@ msgstr "Livrez à "
 msgid "Delivered Quantity"
 msgstr "Qté livrée"
 
+msgid "Delivery Builder"
+msgstr ""
+
 msgid "Delivery Date"
 msgstr "Date de livraison souhaitée"
 
@@ -934,8 +1296,17 @@ msgstr "Ligne de commande"
 msgid "Delivery State"
 msgstr "Etat livraison"
 
+msgid "Delivery Tool"
+msgstr ""
+
 msgid "Delivery mode"
 msgstr "Mode de livraison"
+
+msgid "Dependencies"
+msgstr ""
+
+msgid "Description"
+msgstr ""
 
 msgid "Destination"
 msgstr "Destination"
@@ -970,11 +1341,32 @@ msgstr "Lieu de livraison"
 msgid "Details"
 msgstr "Détail"
 
+msgid "Determines if acquired value should be copied"
+msgstr ""
+
+msgid "Determines if the acquired value should be appended"
+msgstr ""
+
+msgid "Determines if the acquired value should be synced"
+msgstr ""
+
+msgid "Determines if the local value have priority"
+msgstr ""
+
+msgid "Developper mode"
+msgstr ""
+
+msgid "Diff BusinessTemplate"
+msgstr ""
+
 msgid "Dimension"
 msgstr "Valeur Mesure"
 
 msgid "Disable Preference"
 msgstr "Désactiver la préférence"
+
+msgid "Disabled"
+msgstr ""
 
 msgid "Discount"
 msgstr "Remise"
@@ -985,13 +1377,35 @@ msgstr "Taux remise"
 msgid "Discount Type"
 msgstr "Type de remise"
 
+msgid "Document"
+msgstr ""
+
+msgid "Document Classes"
+msgstr ""
+
+msgid "Documentation URL"
+msgstr ""
+
+msgid "Domain"
+msgstr ""
+
+msgid "Domain Tool"
+msgstr ""
+
 msgid "Domain Tree"
 msgstr "Filtres pré-déterminés"
 
 msgid "Don't forget to logout or exit your browser when you're done."
+msgstr "N'oubliez pas de vous déconnecter ou de fermer votre navigateur quand vous avez terminé."
+
+msgid "Download Business Template From URL"
 msgstr ""
-"N'oubliez pas de vous déconnecter ou de fermer votre navigateur quand vous "
-"avez terminé."
+
+msgid "Download Business Templates From Repositories"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
 
 msgid "Drafts to Validate"
 msgstr "Brouillons à valider"
@@ -1011,8 +1425,41 @@ msgstr "Temps"
 msgid "EAN 13 code"
 msgstr "Code Barre EAN 13"
 
+msgid "ERP5"
+msgstr ""
+
 msgid "ERP5 Modules"
 msgstr "Modules ERP5"
+
+msgid "Edit Portal Type 'Base Category'"
+msgstr ""
+
+msgid "Edit Portal Type 'Business Template'"
+msgstr ""
+
+msgid "Edit Portal Type 'Category Tool'"
+msgstr ""
+
+msgid "Edit Portal Type 'Category'"
+msgstr ""
+
+msgid "Edit Portal Type 'Member Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Person Module'"
+msgstr ""
+
+msgid "Edit Portal Type 'Person'"
+msgstr ""
+
+msgid "Edit Portal Type 'Preference Tool'"
+msgstr ""
+
+msgid "Edit Portal Type 'Preference'"
+msgstr ""
+
+msgid "Edit Portal Type 'Template Tool'"
+msgstr ""
 
 msgid "Effective date"
 msgstr "Valable du"
@@ -1028,6 +1475,12 @@ msgstr "Efficience (coef.)"
 
 msgid "Eip"
 msgstr "Segmentation"
+
+msgid "Email"
+msgstr ""
+
+msgid "Email Report"
+msgstr ""
 
 msgid "Emission Letter"
 msgstr "Lettre d'émission"
@@ -1046,6 +1499,12 @@ msgstr "Employeur"
 
 msgid "Employer share rate (%)"
 msgstr "Part employeur (%)"
+
+msgid "Enable Preference"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
 
 msgid "End"
 msgstr "Fin"
@@ -1071,6 +1530,24 @@ msgstr "Au"
 msgid "Expiration date"
 msgstr "Au"
 
+msgid "Export Business Template"
+msgstr ""
+
+msgid "Extensions"
+msgstr ""
+
+msgid "External Folder"
+msgstr ""
+
+msgid "FATICK"
+msgstr ""
+
+msgid "FAX"
+msgstr ""
+
+msgid "Fallback Base Categories"
+msgstr ""
+
 msgid "Family"
 msgstr "Famille"
 
@@ -1080,8 +1557,14 @@ msgstr "Saisie Ordre"
 msgid "Favorite"
 msgstr "Favori"
 
+msgid "Female"
+msgstr ""
+
 msgid "File"
 msgstr "Fichier"
+
+msgid "File Name"
+msgstr ""
 
 msgid "Files and Images"
 msgstr "Fichiers et Images"
@@ -1101,6 +1584,9 @@ msgstr "Premier"
 msgid "First Name"
 msgstr "Prénom"
 
+msgid "First name."
+msgstr ""
+
 msgid "Fiscal Report"
 msgstr "Rapport fiscal"
 
@@ -1109,6 +1595,9 @@ msgstr "Tout"
 
 msgid "Flow capacity"
 msgstr "Délais"
+
+msgid "Folder"
+msgstr ""
 
 msgid "Folder Contents"
 msgstr "Liste"
@@ -1121,6 +1610,9 @@ msgstr "Date de début"
 
 msgid "From Date N-1"
 msgstr "Date de début (N-1)"
+
+msgid "Full Text Keys"
+msgstr ""
 
 msgid "Function"
 msgstr "Fonction"
@@ -1140,6 +1632,9 @@ msgstr "Plan comptable"
 msgid "GSM"
 msgstr "Portable"
 
+msgid "GUEDIAWAYE"
+msgstr ""
+
 msgid "Gender"
 msgstr "Sexe"
 
@@ -1148,6 +1643,18 @@ msgstr "Grand livre"
 
 msgid "Geographic incorporate code"
 msgstr "N° SIRET"
+
+msgid "Gestion des membres"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "Godfather"
+msgstr "Parrain"
+
+msgid "Grade"
+msgstr ""
 
 msgid "Gross Salary"
 msgstr "Salaire Brut"
@@ -1161,14 +1668,23 @@ msgstr "Groupe"
 msgid "Grouping"
 msgstr "Lettrage"
 
-msgid ""
-"Having trouble logging in? Make sure to enable cookies in your web browser."
+msgid "Guess Portal Types From Modules"
 msgstr ""
-"En cas de problème de connexion, vérifiez que vous avez autorisé les cookies "
-"dans votre navigateur."
+
+msgid "Guess Properties Of Portal Types"
+msgstr ""
+
+msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
+msgstr "En cas de problème de connexion, vérifiez que vous avez autorisé les cookies dans votre navigateur."
 
 msgid "Height (cm)"
 msgstr "Epaisseur (mm)"
+
+msgid "Help"
+msgstr ""
+
+msgid "Hidden Content Types"
+msgstr ""
 
 msgid "History"
 msgstr "Historique"
@@ -1176,11 +1692,20 @@ msgstr "Historique"
 msgid "Hours"
 msgstr "Heures"
 
+msgid "Html Style"
+msgstr ""
+
 msgid "I forgot my password!"
 msgstr "J'ai oublié mon mot de passe !"
 
 msgid "IBAN Key"
 msgstr "Clé IBAN"
+
+msgid "ID"
+msgstr ""
+
+msgid "Image"
+msgstr ""
 
 msgid "Image View"
 msgstr "Aperçu"
@@ -1190,6 +1715,15 @@ msgstr "Remise immédiate"
 
 msgid "Import / Export"
 msgstr "Importer / Exporter"
+
+msgid "Import Business Template"
+msgstr ""
+
+msgid "Import Categories"
+msgstr ""
+
+msgid "Import OpenOffice Document"
+msgstr ""
 
 msgid "Industrial Description"
 msgstr "Données techniques"
@@ -1203,8 +1737,26 @@ msgstr "Explications pour la fabrication"
 msgid "Input is required but no input given."
 msgstr "Ce champ est obligatoire."
 
+msgid "Inspect object"
+msgstr ""
+
+msgid "Install Business Template"
+msgstr ""
+
+msgid "Install Business Templates From Repositories"
+msgstr ""
+
+msgid "Installation Choice"
+msgstr ""
+
 msgid "Installation State"
 msgstr "Etat de l'Installation"
+
+msgid "Installed"
+msgstr ""
+
+msgid "Integer which define the category position when the category is in a sorted list."
+msgstr ""
 
 msgid "Internal Money Deposit"
 msgstr "Dépôt sur compte d'ordre"
@@ -1214,6 +1766,9 @@ msgstr "Dépôt sur compte d'ordre"
 
 msgid "Invalidate"
 msgstr "Annuler"
+
+msgid "Invalidated"
+msgstr ""
 
 msgid "Inventory"
 msgstr "Inventaire"
@@ -1251,6 +1806,9 @@ msgstr "Elément(s) coupé(s)"
 msgid "Item(s) Pasted."
 msgstr "Elément(s) collé(s)"
 
+msgid "Item(s)+Copied."
+msgstr ""
+
 msgid "Journal Type"
 msgstr "Type d'écriture"
 
@@ -1272,6 +1830,18 @@ msgstr "Aller au payement"
 msgid "Jump..."
 msgstr "Aller à ..."
 
+msgid "KAOLACK"
+msgstr ""
+
+msgid "KOLDA"
+msgstr ""
+
+msgid "Keyword Keys"
+msgstr ""
+
+msgid "LOUGA"
+msgstr ""
+
 msgid "Language"
 msgstr "Langue"
 
@@ -1284,17 +1854,71 @@ msgstr "Nom"
 msgid "Last Report"
 msgstr "Dernier Rapport"
 
+msgid "Last name."
+msgstr ""
+
 msgid "Length (cm)"
 msgstr "Longueur (cm)"
 
 msgid "Length quantity"
 msgstr "Longueur équivalente"
 
+msgid "Level"
+msgstr ""
+
+msgid "License"
+msgstr ""
+
 msgid "Lines created."
 msgstr "Ordre enregistré"
 
+msgid "Link"
+msgstr ""
+
+msgid "List Emails"
+msgstr ""
+
+msgid "List Mode"
+msgstr ""
+
 msgid "List Report"
 msgstr "Edition"
+
+msgid "Liste de membres"
+msgstr ""
+
+msgid "Liste des Membres"
+msgstr ""
+
+msgid "Liste des membres avec carte"
+msgstr ""
+
+msgid "Liste des membres avec carte par CSP"
+msgstr ""
+
+msgid "Liste des membres avec carte par sexe"
+msgstr ""
+
+msgid "Liste des membres par CSP"
+msgstr ""
+
+msgid "Liste des membres par sexe"
+msgstr ""
+
+msgid "Liste des membres sans carte"
+msgstr ""
+
+msgid "Liste des membres sans carte par CSP"
+msgstr ""
+
+msgid "Liste des membres sans carte par sexe"
+msgstr ""
+
+msgid "Local ID of the object in its enclosing container"
+msgstr ""
+
+msgid "Local Roles"
+msgstr ""
 
 msgid "Log in"
 msgstr "Connexion"
@@ -1305,6 +1929,9 @@ msgstr "Déconnexion"
 msgid "Logged In as"
 msgstr "Utilisateur"
 
+msgid "Logged In as :"
+msgstr ""
+
 msgid "Login"
 msgstr "Connexion"
 
@@ -1314,6 +1941,12 @@ msgstr "La connexion a échoué."
 msgid "Login success"
 msgstr "Connexion réussie"
 
+msgid "Login+and/or+password+is+incorrect."
+msgstr ""
+
+msgid "MATAM"
+msgstr ""
+
 msgid "Main Apparel Fabric"
 msgstr "Tissu principal"
 
@@ -1322,6 +1955,24 @@ msgstr "Fournisseur Tissu principal"
 
 msgid "Main resource"
 msgstr "Nomenclature du (Modèle ou Article)"
+
+msgid "Maintainers"
+msgstr ""
+
+msgid "Male"
+msgstr ""
+
+msgid "Manage Business Templates"
+msgstr ""
+
+msgid "Manage members"
+msgstr ""
+
+msgid "Mapped Value"
+msgstr ""
+
+msgid "Marabout"
+msgstr ""
 
 msgid "Marital Status"
 msgstr "Situation Familliale"
@@ -1341,6 +1992,21 @@ msgstr "Cote"
 msgid "Measure type"
 msgstr "Nature mesure"
 
+msgid "Member"
+msgstr ""
+
+msgid "Member ID"
+msgstr "ID du Membre"
+
+msgid "Member Module"
+msgstr ""
+
+msgid "Members"
+msgstr ""
+
+msgid "Message Translations"
+msgstr ""
+
 msgid "Metadata"
 msgstr "Métadonnées"
 
@@ -1359,6 +2025,15 @@ msgstr "Minimum de commande"
 msgid "Mirror Account"
 msgstr "Compte Miroir"
 
+msgid "Mobile"
+msgstr ""
+
+msgid "Modified files"
+msgstr ""
+
+msgid "Modules"
+msgstr ""
+
 msgid "Monetary Destruction"
 msgstr "Destruction de billets"
 
@@ -1374,6 +2049,12 @@ msgstr "Motif"
 msgid "Movement Date"
 msgstr "Date "
 
+msgid "Multiple Installation Of Business Templates"
+msgstr ""
+
+msgid "Multivalue Keys"
+msgstr ""
+
 msgid "My favourites"
 msgstr "Mes favoris"
 
@@ -1382,6 +2063,9 @@ msgstr "Langue"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "National ID"
+msgstr ""
 
 msgid "Nationality"
 msgstr "Nationalité"
@@ -1398,6 +2082,9 @@ msgstr "Nouveau"
 msgid "Next"
 msgstr "Suivant"
 
+msgid "Next Page"
+msgstr ""
+
 msgid "No Trade Condition."
 msgstr "Conditions de vente non définies."
 
@@ -1413,11 +2100,29 @@ msgstr "Aucune quantité n'est indiquée !"
 msgid "No such document was found."
 msgstr "Aucun document correspondant n'a été trouvé."
 
+msgid "No. Related Objects"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Not Installed"
+msgstr ""
+
 msgid "Number"
 msgstr "Numéro"
 
+msgid "OUSSOUYE"
+msgstr ""
+
+msgid "Object"
+msgstr ""
+
 msgid "Object Created."
 msgstr "Création effectuée"
+
+msgid "Object+Created."
+msgstr ""
 
 msgid "Omit \"Grouped References\""
 msgstr "Sans les écritures lettrées"
@@ -1427,6 +2132,15 @@ msgstr "Sans compte soldés"
 
 msgid "Omit Empty Accounts"
 msgstr "Sans comptes vides"
+
+msgid "Open"
+msgstr ""
+
+msgid "OpenOffice Source File"
+msgstr ""
+
+msgid "OpenOffice Source File Example"
+msgstr ""
 
 msgid "Opening Date"
 msgstr "Date d'ouverture"
@@ -1445,6 +2159,12 @@ msgstr "Opération"
 
 msgid "Operation Title"
 msgstr "Opération"
+
+msgid "Order Builder"
+msgstr ""
+
+msgid "Order Tool"
+msgstr ""
 
 msgid "Order date"
 msgstr "Date de la commande"
@@ -1488,8 +2208,17 @@ msgstr "Provision de tri tiers"
 msgid "Outsourcing Sort Line Out"
 msgstr "Résultat de tri tiers"
 
+msgid "Ouvrier"
+msgstr ""
+
+msgid "PIKINE"
+msgstr ""
+
 msgid "Packing List Line"
 msgstr "Ligne Article"
+
+msgid "Parrain"
+msgstr ""
 
 msgid "Partners"
 msgstr "Nombre d'épouses"
@@ -1499,6 +2228,12 @@ msgstr "Mot de passe"
 
 msgid "Paste"
 msgstr "Coller"
+
+msgid "Path"
+msgstr ""
+
+msgid "Paths"
+msgstr ""
 
 msgid "Pay Sheet Line"
 msgstr "Ligne de Feuille de Salaire"
@@ -1578,8 +2313,20 @@ msgstr "Personnes"
 msgid "Person Assignment View"
 msgstr "Affectation"
 
+msgid "Person Career"
+msgstr ""
+
 msgid "Person Career View"
 msgstr "Carrière"
+
+msgid "Person Module"
+msgstr ""
+
+msgid "Person Module old"
+msgstr ""
+
+msgid "Person Report"
+msgstr ""
 
 msgid "Personal Name"
 msgstr "Nom"
@@ -1608,8 +2355,26 @@ msgstr "Veuillez sélectionner un (ou plusieurs) objet."
 msgid "Please select one object."
 msgstr "Veuillez sélectionner un objet."
 
+msgid "Portal Type Property"
+msgstr ""
+
+msgid "Portal Type Roles"
+msgstr ""
+
+msgid "Portal Types"
+msgstr ""
+
 msgid "Post Code"
 msgstr "Code Postal"
+
+msgid "Predicate"
+msgstr ""
+
+msgid "Preference"
+msgstr ""
+
+msgid "Preference Tool"
+msgstr ""
 
 msgid "Preferences"
 msgstr "Préférences"
@@ -1619,6 +2384,9 @@ msgstr "Préfixe"
 
 msgid "Previous"
 msgstr "Précédent"
+
+msgid "Previous Page"
+msgstr ""
 
 msgid "Price"
 msgstr "Prix"
@@ -1664,6 +2432,12 @@ msgstr "Profil"
 
 msgid "Project"
 msgstr "Projet"
+
+msgid "Property Sheets"
+msgstr ""
+
+msgid "Provision"
+msgstr ""
 
 msgid "Purchase Invoice Transaction"
 msgstr "Écriture d'achat"
@@ -1731,11 +2505,26 @@ msgstr "Tranches"
 msgid "Quantity unit"
 msgstr "Unité"
 
+msgid "RUFISQUE"
+msgstr ""
+
+msgid "Rapports"
+msgstr ""
+
 msgid "Ratio"
 msgstr "Taux (%)"
 
 msgid "Raw width (cm)"
 msgstr "Laize commerciale (cm)"
+
+msgid "Re-install Business Template"
+msgstr ""
+
+msgid "Realm Server"
+msgstr ""
+
+msgid "Rebuild Business Template"
+msgstr ""
 
 msgid "Received date"
 msgstr "Commande Reçue le"
@@ -1815,14 +2604,35 @@ msgstr "Nomenclatures dépendantes"
 msgid "Relation Unchanged."
 msgstr "Lien inchangé"
 
+msgid "Relative URL"
+msgstr ""
+
+msgid "Religion"
+msgstr ""
+
 msgid "Remember my name."
 msgstr "Mémoriser mon Nom"
+
+msgid "Removed files"
+msgstr ""
+
+msgid "Replaced"
+msgstr ""
 
 msgid "Report"
 msgstr "Editions"
 
 msgid "Report Select:"
 msgstr "Type d'édition"
+
+msgid "Repositories"
+msgstr ""
+
+msgid "Request Keys"
+msgstr ""
+
+msgid "Resolve SVN conflicted files"
+msgstr ""
 
 msgid "Resource"
 msgstr "Nature"
@@ -1839,11 +2649,35 @@ msgstr "Unité de compte"
 msgid "Results"
 msgstr "Liste"
 
+msgid "Revert &amp; Update Business Template from SVN"
+msgstr ""
+
+msgid "Revision"
+msgstr ""
+
+msgid "Revision Number"
+msgstr ""
+
 msgid "Rights"
 msgstr "Droits"
 
 msgid "Role"
 msgstr "Rôle"
+
+msgid "Role &amp; Region"
+msgstr ""
+
+msgid "Route Tool"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
+msgid "Run Unit Tests"
+msgstr ""
+
+msgid "SAINT-LOUIS"
+msgstr ""
 
 msgid "Salary Coefficient"
 msgstr "Coefficient"
@@ -1890,8 +2724,14 @@ msgstr "Ordres non confirmés"
 msgid "Sale trade condition"
 msgstr "Conditions de vente"
 
+msgid "Sans emploi"
+msgstr ""
+
 msgid "Save"
 msgstr "Enregistrer"
+
+msgid "Save Business Template"
+msgstr ""
 
 msgid "Search"
 msgstr "Rechercher"
@@ -1911,17 +2751,35 @@ msgstr "Compte de Section"
 msgid "Section Bank Account"
 msgstr "Compte en banque"
 
+msgid "Section Category"
+msgstr ""
+
 msgid "Section Transaction Reference"
 msgstr "N° de Référence"
 
 msgid "Segment"
 msgstr "Typologie"
 
+msgid "Select"
+msgstr ""
+
+msgid "Select Actions"
+msgstr ""
+
+msgid "Select Exchange"
+msgstr ""
+
 msgid "Select Favorite"
 msgstr "Sélectionner un favori"
 
+msgid "Select Language"
+msgstr ""
+
 msgid "Select Module"
 msgstr "Sélectionner un module"
+
+msgid "Select Report"
+msgstr ""
 
 msgid "Select Variation"
 msgstr "Variante(s) à commander"
@@ -1932,13 +2790,11 @@ msgstr "Sélectionnez le document approprié dans la liste."
 msgid "Set List Settting"
 msgstr "Appliquer"
 
-msgid ""
-"Setting the 'Remember my name' option will set a cookie with your username, "
-"so that when you next log in, your user name will already be filled in for "
-"you."
+msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you."
+msgstr "Cocher 'Mémoriser mon Nom'  permettra de le faire apparaître lors de votre prochaine connexion."
+
+msgid "Sexe"
 msgstr ""
-"Cocher 'Mémoriser mon Nom'  permettra de le faire apparaître lors de votre "
-"prochaine connexion."
 
 msgid "Shape"
 msgstr "Modèle"
@@ -1955,17 +2811,32 @@ msgstr "Tout Montrer"
 msgid "Signature Preview"
 msgstr "Aperçu de la signature"
 
+msgid "Simulation Movement"
+msgstr ""
+
 msgid "Simulation State"
 msgstr "État de simulation"
+
+msgid "Simulation Tool"
+msgstr ""
 
 msgid "Site"
 msgstr "Atelier"
 
+msgid "Site Properties"
+msgstr ""
+
 msgid "Size"
 msgstr "Gamme de Tailles"
 
+msgid "Skill"
+msgstr ""
+
 msgid "Skills"
 msgstr "Compétences"
+
+msgid "Skin Folders"
+msgstr ""
 
 msgid "Social Name"
 msgstr "Raison Sociale"
@@ -1986,9 +2857,7 @@ msgid "Social form"
 msgstr "Forme de la Sté"
 
 msgid "Sorry your selection has changed"
-msgstr ""
-"Désolé ! Essayez encore après avoir cliqué devant le nombre d'éléments de la "
-"liste."
+msgstr "Désolé ! Essayez encore après avoir cliqué devant le nombre d'éléments de la liste."
 
 msgid "Sorry, 1 Item Is In Use."
 msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
@@ -2013,6 +2882,9 @@ msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
 
 msgid "Sort"
 msgstr "Trier"
+
+msgid "Sort Index"
+msgstr ""
 
 msgid "Source"
 msgstr "Source"
@@ -2062,6 +2934,15 @@ msgstr "Spécifique pour le client"
 msgid "Specific condition"
 msgstr "A compter de"
 
+msgid "Spreadsheet Column"
+msgstr ""
+
+msgid "Spreadsheet Column To Property Mapping"
+msgstr ""
+
+msgid "Spreadsheet Name"
+msgstr ""
+
 msgid "Standard Price"
 msgstr "Prix Laize 150cm"
 
@@ -2074,8 +2955,14 @@ msgstr "Ne Pas livrer Avant le"
 msgid "State"
 msgstr "État"
 
+msgid "Status"
+msgstr ""
+
 msgid "Status changed."
 msgstr "Etat modifié."
+
+msgid "Status+changed."
+msgstr ""
 
 msgid "Stop Date"
 msgstr "Date de fin"
@@ -2091,6 +2978,15 @@ msgstr "Brouillard"
 
 msgid "Street Address"
 msgstr "Adresse"
+
+msgid "Sub Categories"
+msgstr ""
+
+msgid "Subversion"
+msgstr ""
+
+msgid "Subversion Working Copy List"
+msgstr ""
 
 msgid "Suffix"
 msgstr "Suffixe"
@@ -2119,6 +3015,12 @@ msgstr "Ref Fournisseur"
 msgid "Surname"
 msgstr "Prénom"
 
+msgid "TAMBACOUNDA"
+msgstr ""
+
+msgid "THIES"
+msgstr ""
+
 msgid "Tariff nomenclature"
 msgstr "Code nomenclature douanière"
 
@@ -2134,16 +3036,47 @@ msgstr "Elémént du dossier"
 msgid "Telephone"
 msgstr "Téléphone"
 
+msgid "Template Tool"
+msgstr ""
+
+msgid "Terminate the current career step"
+msgstr ""
+
+msgid "The Subversion working copies"
+msgstr ""
+
+msgid "The absolute references of the document (our reference)"
+msgstr ""
+
+msgid "The base categories to browse"
+msgstr ""
+
+msgid "The default contained object id to look up"
+msgstr ""
+
 msgid "The integer you entered was out of range."
 msgstr "Ce nombre est hors limites..."
 
-msgid ""
-"There is no such document in the database. You may create an new document of "
-"type ${portal_type} in relation with ${title} according to relation "
-"${base_category}. Use the form bellow to enter the ${catalog_index} values "
-"of new documents."
+msgid "The order of year, month and day."
 msgstr ""
-"Il n'y a pas d'enregistrement à ce nom. Vous pouvez le créer maintenant."
+
+msgid "The portal types to browse"
+msgstr ""
+
+msgid "The references of the document for default destinations"
+msgstr ""
+
+msgid "The references of the document for default sources"
+msgstr ""
+
+msgid "The section category for documents; usually something like group/nexedi."
+msgstr ""
+
+msgid "The user name for Subversion"
+msgstr ""
+
+msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
+msgstr "Il n'y a pas d'enregistrement à ce nom. Vous pouvez le créer maintenant."
 
 msgid "Third Party"
 msgstr "Tiers"
@@ -2161,14 +3094,10 @@ msgid "This price is not defined in tariff. Enter a value."
 msgstr "Ce prix n'est pas dans le tarif. Veuillez saisir le prix."
 
 msgid "This price is not equal to tariff price. Are you sure of your price ?"
-msgstr ""
-"Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante "
-"pour le valider."
+msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
 
 msgid "This price is not equal to tariff price. Check your price !"
-msgstr ""
-"Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante "
-"pour le valider."
+msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
 
 msgid "This size is not possible."
 msgstr "Cette taille est hors standard"
@@ -2193,6 +3122,9 @@ msgstr "Trop de possibilités trouvées."
 
 msgid "Topic"
 msgstr "Thème"
+
+msgid "Topic Keys"
+msgstr ""
 
 msgid "Total Price"
 msgstr "Montant"
@@ -2251,8 +3183,23 @@ msgstr "Fournitures"
 msgid "Transformed Resource List"
 msgstr "Liste des Fournitures"
 
+msgid "Translator mode"
+msgstr ""
+
+msgid "Trash Bin"
+msgstr ""
+
+msgid "Trash Folder"
+msgstr ""
+
+msgid "Trash Tool"
+msgstr ""
+
 msgid "Trial Balance"
 msgstr "Balance"
+
+msgid "Type"
+msgstr ""
 
 msgid "Type Width"
 msgstr "Laize coupe-Type (cm)"
@@ -2260,11 +3207,17 @@ msgstr "Laize coupe-Type (cm)"
 msgid "Type Width (cm)"
 msgstr "Laize coupe-type (cm)"
 
+msgid "URL"
+msgstr ""
+
 msgid "Uncheck All"
 msgstr "Décocher Tous"
 
 msgid "Undo"
 msgstr "Annuler"
+
+msgid "Uninstall Business Template"
+msgstr ""
 
 msgid "Unit"
 msgstr "Unité"
@@ -2272,14 +3225,35 @@ msgstr "Unité"
 msgid "Unit Price"
 msgstr "P.U."
 
+msgid "Unit Test Classes"
+msgstr ""
+
+msgid "Unversioned Files"
+msgstr ""
+
 msgid "Update"
 msgstr "Actualiser"
+
+msgid "Update Business Template Workflows"
+msgstr ""
+
+msgid "Update Business Template from SVN"
+msgstr ""
 
 msgid "Update Relation"
 msgstr "Etablir le lien"
 
+msgid "Update Repository Information"
+msgstr ""
+
+msgid "Update Tools"
+msgstr ""
+
 msgid "Update variations"
 msgstr "Actualiser les variantes"
+
+msgid "Upgrade Business Templates From Repositories"
+msgstr ""
 
 msgid "Upkeep Code"
 msgstr "Codes de lavage"
@@ -2290,8 +3264,20 @@ msgstr "Code lavage"
 msgid "Upload"
 msgstr "Charger le fichier"
 
+msgid "Upload Business Template"
+msgstr ""
+
+msgid "Upload Module"
+msgstr ""
+
 msgid "User"
 msgstr "Utilisateur"
+
+msgid "User Name"
+msgstr ""
+
+msgid "User name"
+msgstr ""
 
 msgid "Usual Name"
 msgstr "Nom courant"
@@ -2302,14 +3288,29 @@ msgstr "Nom de l'utilisateur"
 msgid "VAT code"
 msgstr "N° TVA"
 
+msgid "Valid"
+msgstr ""
+
 msgid "Validate"
 msgstr "Valider"
+
+msgid "Validate Installation"
+msgstr ""
 
 msgid "Validate Transaction"
 msgstr "Passer l'écriture au brouillard"
 
 msgid "Validate Workflow Action"
 msgstr "Valider le Changement d'État"
+
+msgid "Validated"
+msgstr ""
+
+msgid "Validating Closing"
+msgstr ""
+
+msgid "Validating Modification"
+msgstr ""
 
 msgid "Validation State"
 msgstr "Etat"
@@ -2338,11 +3339,23 @@ msgstr "Compte de Fournisseur"
 msgid "Vendor Transaction Reference"
 msgstr "Référence pour le tiers"
 
+msgid "Version"
+msgstr ""
+
 msgid "View"
 msgstr "Général"
 
+msgid "View SVN History"
+msgstr ""
+
+msgid "View SVN Repository Infos"
+msgstr ""
+
 msgid "Visual Pattern"
 msgstr "Type pour placement"
+
+msgid "Voter ID"
+msgstr ""
 
 msgid "Weight (g)"
 msgstr "Poids (g)"
@@ -2356,22 +3369,35 @@ msgstr "Bienvenue dans ERP5"
 msgid "Welcome. You are currently logged in."
 msgstr "Bienvenue. Vous êtes connecté."
 
+msgid "When true, links to contextual help will be displayed."
+msgstr ""
+
+msgid "When true, links to translation system will be displayed."
+msgstr ""
+
+msgid "When true, usefull links for developpers are shown in the interface."
+msgstr ""
+
 msgid "Width"
 msgstr "Laize"
 
 msgid "Width (cm)"
 msgstr "Laize (cm)"
 
+msgid "Workflow Chains"
+msgstr ""
+
 msgid "Workflows"
 msgstr "Workflows"
 
-msgid ""
-"You are not currently logged in. Your username and or password may be "
-"incorrect. Your browser may also not be configured to accept HTTP cookies. "
-"If you need help please contact ${admin_email}."
+msgid "You are not allowed to add new content in this context."
 msgstr ""
-"Vous n'êtes pas connecté. Votre Nom ou votre Mot de passe sont peut-être "
-"incorrects. En cas de besoin, contactez  ${admin_email}."
+
+msgid "You are not currently logged in. Your username and or password may be incorrect. Your browser may also not be configured to accept HTTP cookies. If you need help please contact ${admin_email}."
+msgstr "Vous n'êtes pas connecté. Votre Nom ou votre Mot de passe sont peut-être incorrects. En cas de besoin, contactez  ${admin_email}."
+
+msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
+msgstr ""
 
 msgid "You did not enter a floating point number."
 msgstr "Vous devez entrer un numérique."
@@ -2382,14 +3408,35 @@ msgstr "La date n'est pas correcte !"
 msgid "You did not enter an integer."
 msgstr "Vous devez saisir un nombre entier."
 
+msgid "You don't have enough permissions to access this page"
+msgstr ""
+
 msgid "You don't have the permissions to edit the object."
 msgstr "Vous n'avez pas la permission d'éditer l'objet"
 
 msgid "You selected an item that was not in the list."
 msgstr "Cet élément n'est pas dans la liste"
 
+msgid "ZIGUINCHOR"
+msgstr ""
+
 msgid "Zip Code"
 msgstr "Code Postal"
+
+msgid "Zope Products"
+msgstr ""
+
+msgid "Zope Roles"
+msgstr ""
+
+msgid "a list of template names provided by this template"
+msgstr ""
+
+msgid "a list of template names required by this template"
+msgstr ""
+
+msgid "a string which can be used to identify a category"
+msgstr ""
 
 msgid "accounting_workflow"
 msgstr "Workflow de Comptabilité"
@@ -2400,14 +3447,32 @@ msgstr "Action"
 msgid "actor"
 msgstr "Utilisateur"
 
+msgid "another base category to get if everything else fails"
+msgstr ""
+
 msgid "auto_planned"
 msgstr "Plannifié (automatiquement)"
+
+msgid "avg"
+msgstr ""
+
+msgid "being_closed"
+msgstr ""
+
+msgid "being_modified"
+msgstr ""
+
+msgid "built"
+msgstr ""
 
 msgid "cancelled"
 msgstr "Annulé"
 
 msgid "cash_status"
 msgstr "Etat de valeur"
+
+msgid "closed"
+msgstr ""
 
 msgid "collection"
 msgstr "Collection"
@@ -2418,8 +3483,17 @@ msgstr "Commentaire"
 msgid "confirmed"
 msgstr "Confirmé"
 
+msgid "count"
+msgstr ""
+
+msgid "current"
+msgstr ""
+
 msgid "delivered"
 msgstr "Cloturé"
+
+msgid "disabled"
+msgstr ""
 
 msgid "draft"
 msgstr "Brouillon"
@@ -2427,17 +3501,29 @@ msgstr "Brouillon"
 msgid "edit_workflow"
 msgstr "Workflow d'édition"
 
+msgid "enabled"
+msgstr ""
+
 msgid "error_message"
 msgstr "Message d'erreur"
 
 msgid "file"
 msgstr "Fichier Image"
 
+msgid "go back"
+msgstr ""
+
 msgid "history"
 msgstr "Historique"
 
 msgid "index_html"
 msgstr "ERP5"
+
+msgid "installed"
+msgstr ""
+
+msgid "invalidated"
+msgstr ""
 
 msgid "listbox"
 msgstr "Liste"
@@ -2451,14 +3537,41 @@ msgstr "Vous êtes déconnecté."
 msgid "login_form"
 msgstr "Page de Connexion"
 
+msgid "max"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "modified"
+msgstr ""
+
+msgid "not_installed"
+msgstr ""
+
 msgid "numberLineToAdd"
 msgstr "Lignes à ajouter"
+
+msgid "open"
+msgstr ""
 
 msgid "planned"
 msgstr "Plannifié"
 
+msgid "portal_categories"
+msgstr ""
+
+msgid "portal_preferences"
+msgstr ""
+
+msgid "portal_templates"
+msgstr ""
+
 msgid "quantity"
 msgstr "Quantité"
+
+msgid "replaced"
+msgstr ""
 
 msgid "simulation_state"
 msgstr "État de Simulation"
@@ -2472,8 +3585,23 @@ msgstr "Etat"
 msgid "stopped"
 msgstr "Brouillard"
 
+msgid "sum"
+msgstr ""
+
 msgid "time"
 msgstr "Date"
+
+msgid "valid"
+msgstr ""
+
+msgid "validated"
+msgstr ""
+
+msgid "validating_closing"
+msgstr ""
+
+msgid "validating_modification"
+msgstr ""
 
 msgid "validation_state"
 msgstr "État de Validation"
