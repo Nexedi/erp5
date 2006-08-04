@@ -614,15 +614,16 @@ div.index_html table {\n
   margin-left: 6px;\n
   margin-right: 6px;\n
   border-width: 1px;\n
-  border-style: outset;\n
 }\n
 \n
 #main_bar .separator {\n
   border-color: <dtml-var context_bar_background_color>;\n
+  border-style: outset;\n
 }\n
 \n
 #context_bar .separator {\n
   border-color: <dtml-var navigation_bar_background_color>;\n
+  border-style: inset;\n
 }\n
 \n
 #context_bar .tool_buttons a .image,\n
@@ -858,12 +859,13 @@ div.index_html table {\n
   */\n
 .ListSummary {\n
   background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/tab_left.png\') top left no-repeat;\n
-  color: inherit;\n
+  color: #000;\n
   background-color: <dtml-var document_background_color>;\n
   padding-left: 10px;\n
 }\n
 \n
 .ListSummary table {\n
+  width: 100%;\n
   border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 1px;\n
@@ -887,12 +889,16 @@ div.index_html table {\n
 }\n
 \n
 .ListContent {\n
-  border: 1px solid;\n
+  color: #000;\n
+  background-color: <dtml-var document_background_color>;\n
 }\n
 \n
 .ListContent table {\n
   width: 100%;\n
   border-collapse: collapse;\n
+  border-color: <dtml-var document_border_color>;\n
+  border-style: solid;\n
+  border-width: 1px;\n
 }\n
 \n
 .ListContent #listbox_label_line {\n
@@ -903,6 +909,7 @@ div.index_html table {\n
 .ListContent #listbox_stat_line {\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
+  border-color: <dtml-var document_border_color>;\n
   color: inherit;\n
   background-color: <dtml-var listbox_stat_background_color>;\n
 }\n
@@ -924,6 +931,7 @@ div.index_html table {\n
 }\n
 \n
 .ListContent td {\n
+  border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 0;\n
   border-bottom-width: 0;\n
