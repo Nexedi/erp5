@@ -48,20 +48,34 @@ from MethodObject import Method
 import os, time, urllib
 from zLOG import LOG
 
-  # Security uses ERP5Security by default
+SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
 try:
-  from Products.ERP5Security import ERP5UserManager
-  withnuxgroups = 0
+  from Products.PluggableAuthService import PluggableAuthService
+  PAS_meta_type = PluggableAuthService.PluggableAuthService.meta_type
 except ImportError:
-  ERP5UserManager = None
-  # If NuxUserGroups is installed and ERP5Security is not installed, we use NuxUserGroups groups
-  try:
-    from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
-    from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
-    withnuxgroups = 1
-  except ImportError:
-    withnuxgroups = 0
+  PAS_meta_type = ''
+
+try:
+  from Products.NuxUserGroups import UserFolderWithGroups
+  NUG_meta_type = UserFolderWithGroups.meta_type
+except ImportError:
+  NUG_meta_type = ''
     
+def getSecurityProduct(acl_users):
+  """returns the security used by the user folder passed.
+  (NuxUserGroup, ERP5Security, or None if anything else).
+  """
+  if acl_users.meta_type == PAS_meta_type:
+    return SECURITY_USING_PAS
+  elif acl_users.meta_type == NUG_meta_type:
+    return SECURITY_USING_NUX_USER_GROUPS
+
+try:
+  from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
+  from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
+except ImportError:
+  pass
+
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
     def __setattr__(self, name, value):
@@ -78,6 +92,8 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         Used by PortalCatalog to filter out items you're not allowed to see.
         """
         ob = self.__ob
+        withnuxgroups = getSecurityProduct(ob.acl_users)\
+                              == SECURITY_USING_NUX_USER_GROUPS
         allowed = {}
         for r in rolesForPermissionOn('Access contents information', ob):
           allowed[r] = 1
@@ -119,7 +135,6 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
                 allowed['user:' + user + ':' + role] = 1
         if allowed.has_key('Owner'):
           del allowed['Owner']
-        #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
@@ -208,7 +223,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # Make this the default.
       self.default_sql_catalog_id = config_id
-      
+     
     security.declareProtected( 'Import/Export objects', 'exportSQLMethods' )
     def exportSQLMethods(self, sql_catalog_id=None, config_id='erp5'):
       """
@@ -259,7 +274,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return msg
         
     def _listAllowedRolesAndUsers(self, user):
-      if ERP5UserManager is not None:
+      security_product = getSecurityProduct(self.acl_users)
+      if security_product == SECURITY_USING_PAS:
         # We use ERP5Security PAS based authentication
         result = CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
         # deal with groups
@@ -273,7 +289,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 result.append('user:%s' % group)
         # end groups
         return result
-      elif withnuxgroups:
+      elif security_product == SECURITY_USING_NUX_USER_GROUPS:
         return _getAllowedRolesAndUsers(user)
       else:
         return CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
