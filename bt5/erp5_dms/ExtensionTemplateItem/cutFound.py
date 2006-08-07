@@ -1,4 +1,4 @@
-import string
+import string, re
 
 redundant_chars='"\'.:;,-' # chars we need to strip from a word before we see if it matches
 tr=string.maketrans(redundant_chars,' '*len(redundant_chars))
@@ -59,7 +59,16 @@ def generateParts(context,text,sw,tags,trail,maxlines):
 
 
 def cutFound(context,txt,sw,tags,trail,maxlines):
+  # initialize class
   FoundWord.tags=tags
+  # strip html tags (in case it is a web page - we show result without formatting)
+  r=re.compile('<script>.*?</script>',re.DOTALL|re.IGNORECASE)
+  r=re.compile('<head>.*?</head>',re.DOTALL|re.IGNORECASE)
+  txt=re.sub(r,'',txt)
+  r=re.compile('<([^>]+)>',re.DOTALL|re.IGNORECASE)
+  txt=re.sub(r,'',txt)
+  r=re.compile('\s+')
+  txt=re.sub(r,' ',txt)
   text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
   return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
 
