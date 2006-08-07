@@ -50,6 +50,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>search_mode</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>select_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -92,14 +98,15 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>where_expression</string>
-                            <string>select_expression</string>
-                            <string>from_table_list</string>
-                            <string>sort_on</string>
-                            <string>limit_expression</string>
+<string>selection</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>where_expression</string>
+<string>select_expression</string>
+<string>from_table_list</string>
+<string>sort_on</string>
+<string>limit_expression</string>
+<string>search_mode</string>
                           </list>
                         </value>
                     </item>
@@ -123,7 +130,8 @@ where_expression\r\n
 select_expression\r\n
 from_table_list:list\r\n
 sort_on\r\n
-limit_expression</string> </value>
+limit_expression\r\n
+search_mode</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
