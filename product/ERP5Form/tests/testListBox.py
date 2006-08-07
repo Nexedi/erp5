@@ -203,7 +203,35 @@ return []
     request['here'] = portal.foo_module
     listbox.get_value('default', render_format='list', REQUEST=request)
 
+  def test_04_UnicodeParameters(self, quiet=0, run=run_all_test):
+    """Defaults parameters are passed as keyword arguments to the list method
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
 
+    # We create a script to use as a list method, in this script, we will check
+    # the default parameter.
+    list_method_id = 'ListBox_ParametersListMethod'
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        list_method_id,
+        'selection=None, dummy_default_param=None, **kw',
+"""
+context = context.asContext(alternate_title = u'élisa')
+return [context,]
+""")
+ 
+    # set the listbox to use this as list method
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = list_method_id,
+      field_columns = ['alternate_title | Alternate Title',],)
+    
+    # render the listbox, checks are done by list method itself
+    request = get_request()
+    request['here'] = portal.foo_module
+    listbox.get_value('default', render_format='list', REQUEST=request)
+    
 if __name__ == '__main__':
   framework()
 else:
