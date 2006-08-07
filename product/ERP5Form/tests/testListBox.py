@@ -37,12 +37,25 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Testing import ZopeTestCase
 from Products.ERP5Type.Utils import get_request
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from ZPublisher.HTTPRequest import FileUpload
+from StringIO import StringIO
+from Products.ERP5Form.Selection import Selection
+
+
+class DummyFieldStorage:
+  """A dummy FieldStorage to be wrapped in a FileUpload object.
+  """
+  def __init__(self):
+    self.file = StringIO()
+    self.filename = '<dummy field storage>'
+    self.headers = {}
 
 class TestListBox(ERP5TypeTestCase):
   """
     Test the API of ListBox. The user-visible aspect is tested
     by functional testing.
   """
+  quiet = 1
   run_all_test = 1
 
   def getBusinessTemplateList(self):
@@ -125,7 +138,7 @@ class TestListBox(ERP5TypeTestCase):
       self.assertEqual(key, result[i][0])
       self.assertEqual(str(value).strip(), result[i][1])
 
-  def test_01_CheckListBoxLinesWithStat(self, quiet=0, run=run_all_test):
+  def test_01_CheckListBoxLinesWithStat(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test ListBoxLines With Statistics'
@@ -142,7 +155,7 @@ class TestListBox(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_02_DefaultSort(self, quiet=0, run=run_all_test):
+  def test_02_DefaultSort(self, quiet=quiet, run=run_all_test):
     """Defaults sort parameters must be passed to the list method, under the
     'sort_on' key.
     """
@@ -174,7 +187,7 @@ return []
     request['here'] = portal.foo_module
     listbox.get_value('default', render_format='list', REQUEST=request)
 
-  def test_03_DefaultParameters(self, quiet=0, run=run_all_test):
+  def test_03_DefaultParameters(self, quiet=quiet, run=run_all_test):
     """Defaults parameters are passed as keyword arguments to the list method
     """
     portal = self.getPortal()
@@ -204,22 +217,18 @@ return []
     listbox.get_value('default', render_format='list', REQUEST=request)
 
   def test_04_UnicodeParameters(self, quiet=0, run=run_all_test):
-    """Defaults parameters are passed as keyword arguments to the list method
+    """Unicode properties are handled. 
     """
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
 
-    # We create a script to use as a list method, in this script, we will check
-    # the default parameter.
+    # We create a script to use as a list method 
     list_method_id = 'ListBox_ParametersListMethod'
     createZODBPythonScript(
         portal.portal_skins.custom,
         list_method_id,
-        'selection=None, dummy_default_param=None, **kw',
-"""
-context = context.asContext(alternate_title = u'élisa')
-return [context,]
-""")
+        'selection=None, **kw',
+        """return [context.asContext(alternate_title = u'\xe9lisa')]""")
  
     # set the listbox to use this as list method
     listbox = portal.FooModule_viewFooList.listbox
@@ -227,11 +236,34 @@ return [context,]
       field_list_method = list_method_id,
       field_columns = ['alternate_title | Alternate Title',],)
     
-    # render the listbox, checks are done by list method itself
     request = get_request()
     request['here'] = portal.foo_module
+    try:
+      listbox.get_value('default', render_format='list', REQUEST=request)
+    except UnicodeError, e:
+      self.fail('Rendering failed: %s' % e)
+
+  def test_05_EditSelectionWithFileUpload(self, quiet=quiet, run=run_all_test):
+    """Listbox edits selection with request parameters. Special care must be
+    taken for FileUpload objects that cannot be pickled, thus cannot be stored
+    in the ZODB.
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+    listbox = portal.FooModule_viewFooList.listbox
+    # XXX isn't Selection automatically created ?
+    portal.portal_selections.setSelectionFor(
+          listbox.get_value('selection_name'), Selection())
+
+    request = get_request()
+    request['here'] = portal.foo_module
+    request.form['my_file_upload'] = FileUpload(DummyFieldStorage())
     listbox.get_value('default', render_format='list', REQUEST=request)
-    
+    try:
+      get_transaction().commit()
+    except TypeError, e:
+      self.fail('Unable to commit transaction: %s' % e)
+
 if __name__ == '__main__':
   framework()
 else:
@@ -240,3 +272,4 @@ else:
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestListBox))
     return suite
+
