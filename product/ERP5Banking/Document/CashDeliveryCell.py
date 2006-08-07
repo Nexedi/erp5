@@ -54,15 +54,16 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.Arrow
-                    , PropertySheet.Amount
-                    , PropertySheet.Task
-                    , PropertySheet.Movement
-                    , PropertySheet.Price
-                    , PropertySheet.Predicate
-                    , PropertySheet.MappedValue
-                    , PropertySheet.ItemAggregation
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.Arrow
+                      , PropertySheet.Amount
+                      , PropertySheet.Task
+                      , PropertySheet.Movement
+                      , PropertySheet.Price
+                      , PropertySheet.Predicate
+                      , PropertySheet.MappedValue
+                      , PropertySheet.ItemAggregation
+                      , PropertySheet.VariationRange
                     )
 
   security.declareProtected(Permissions.View, 'getBaobabSource')

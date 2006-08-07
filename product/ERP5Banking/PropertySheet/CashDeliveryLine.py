@@ -37,5 +37,4 @@ class CashDeliveryLine:
 
   _categories = ( 'emission_letter'
                 , 'cash_status'
-                , 'variation'
                 )
