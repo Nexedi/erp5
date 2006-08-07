@@ -171,6 +171,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   uid -> the (local) universal ID of objects
   path -> the (local) path of objects
 
+  If you pass it a "SearchableText" argument, it does a MySQL full-text search.
+  Additionally you can pass it a search_mode argument ('natural', 'in_boolean_mode'
+  or 'with_query_expansion') to use an advanced search mode ('natural'
+  is the default).
+
 
   bgrain defined in meyhods...
 
@@ -1600,7 +1605,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   where_expression += ["%s LIKE '%%%s%%'" % (key, value)]
                 elif key in full_text_search_keys:
                   # We must add % in the request to simulate the catalog
-                  where_expression += ["MATCH %s AGAINST ('%s')" % (key, value)]
+                  search_mode=kw.get('search_mode','natural').lower()
+                  modes={'natural':'','in_boolean_mode':'IN BOOLEAN MODE','with_query_expansion':'WITH QUERY EXPANSION'}
+                  mode=modes.get(search_mode,'')
+                  where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
                 else:
                   where_expression += ["%s = '%s'" % (key, value)]
             elif type(value) is type([]) or type(value) is type(()):
@@ -1623,7 +1631,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       query_item += ["%s LIKE '%%%s%%'" % (key, value_item)]
                     elif key in full_text_search_keys:
                       # We must add % in the request to simulate the catalog
-                      query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value)]
+                      search_mode=kw.get('search_mode','natural').lower()
+                      modes={'natural':'','in_boolean_mode':'IN BOOLEAN MODE','with_query_expansion':'WITH QUERY EXPANSION'}
+                      mode=modes.get(search_mode,'')
+                      query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value, mode)]
                     else:
                       query_item += ["%s = '%s'" % (key, value_item)]
               if len(query_item) > 0:
@@ -1934,3 +1945,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 Globals.default__class_init__(Catalog)
 
 class CatalogError(Exception): pass
+
+
+
+# vim: filetype=python syntax=python shiftwidth=2 
