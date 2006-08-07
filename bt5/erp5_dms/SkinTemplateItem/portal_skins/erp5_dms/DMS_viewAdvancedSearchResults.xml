@@ -74,6 +74,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>zlistbox_Base_showFoundText</string>
                         <string>listbox_Base_showFoundText</string>
                       </list>
                     </value>
