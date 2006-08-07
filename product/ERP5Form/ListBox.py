@@ -926,7 +926,7 @@ class ListBoxRenderer:
 
         # Remove useless parameters.
         for k, v in params.items():
-          if v in (None, ''):
+          if v in (None, '') or hasattr(v, 'read'):
             del params[k]
 
     # Set the columns. The idea behind this is that, instead of selecting all columns,
@@ -1841,7 +1841,7 @@ class ListBoxRendererLine:
       # Process the value.
       if processed_value is None:
         processed_value = u''
-      else:
+      elif not isinstance(processed_value, unicode):
         processed_value = unicode(str(processed_value), self.renderer.getEncoding())
 
       value_list.append((original_value, processed_value))
