@@ -80,7 +80,6 @@ for permission in permission_list:\n
   context.manage_permission(permission, [\'Manager\'], 0)\n
 \n
 # Then, define default ERP5 permissions\n
-\n
 common_permission_list = [p for p in [\n
   \'Access Transient Objects\',\n
   \'Access contents information\',\n
@@ -104,10 +103,10 @@ assignor_permission_list = [p for p in [\n
 erp5_role_dict = {\n
   \'Assignee\': common_permission_list,\n
   \'Assignor\': common_permission_list + author_permission_list +\\\n
-              assignor_permission_list, \n
-  \'Associate\': common_permission_list, \n
+              assignor_permission_list,\n
+  \'Associate\': common_permission_list,\n
   \'Auditor\' : common_permission_list,\n
-  \'Author\': common_permission_list + author_permission_list,\n
+  \'Author\': author_permission_list,\n
   \'Manager\': permission_list\n
 }\n
 \n
@@ -180,6 +179,9 @@ return "finished"\n
                             <string>permission_list</string>
                             <string>_getiter_</string>
                             <string>permission</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>p</string>
                             <string>common_permission_list</string>
                             <string>author_permission_list</string>
                             <string>assignor_permission_list</string>
