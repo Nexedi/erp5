@@ -66,13 +66,6 @@ class TestListBox(ERP5TypeTestCase):
   def getTitle(self):
     return "ListBox"
 
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   def afterSetUp(self):
     self.login()
 
@@ -170,8 +163,8 @@ class TestListBox(ERP5TypeTestCase):
         list_method_id,
         'selection=None, sort_on=None, **kw',
 r"""
-assert sort_on == [('title', 'ASC'), ('uid', 'ASC')],\
-  'sort_on is %r' % sort_on
+if sort_on != [('title', 'ASC'), ('uid', 'ASC')]:
+  raise AssertionError('sort_on is %r' % sort_on)
 return []
 """)
  
@@ -201,7 +194,9 @@ return []
         list_method_id,
         'selection=None, dummy_default_param=None, **kw',
 """
-assert dummy_default_param == 'dummy value'
+if dummy_default_param != 'dummy value':
+  raise AssertionError('recieved wrong arguments: %s instead of "dummy value"'
+                        % dummy_default_param )
 return []
 """)
  
