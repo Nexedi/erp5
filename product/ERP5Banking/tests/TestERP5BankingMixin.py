@@ -500,7 +500,7 @@ class TestERP5BankingMixin:
         if s.getId() == 'serre':
           for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-           if 'transit' in ss.getId():
+            if 'transit' in ss.getId():
               for country in ['France', 'Spain']:
                 if country[0] != c.getCodification()[0]:
                   ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
