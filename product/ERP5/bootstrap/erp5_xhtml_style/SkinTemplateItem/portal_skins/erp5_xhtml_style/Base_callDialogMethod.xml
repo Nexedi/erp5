@@ -81,6 +81,17 @@ from ZTUtils import make_query\n
 request_form = context.REQUEST.form\n
 error_message = \'\'\n
 \n
+def removeUnpickableObjectsFromDict(request_form):\n
+  """\n
+   Known unpickable objects:\n
+    - <ZPublisher.HTTPRequest.FileUpload instance>\n
+  """\n
+  cleaned_dict = request_form.copy()\n
+  for k, v in cleaned_dict.items():\n
+    if v in (None, \'\') or hasattr(v, \'read\'):\n
+      del cleaned_dict[k]\n
+  return cleaned_dict\n
+\n
 # Make this script work alike wether called from another script or by a request\n
 # Reinject parameters in the request\n
 request_form[\'dialog_method\'] = dialog_method\n
@@ -206,7 +217,10 @@ if len(listbox_id_list):\n
     request_form[listbox_id] = listbox_line_list\n
 \n
 if enable_pickle or (form.update_action != \'\'):\n
-  request_form[\'pickle_string\'] = context.portal_selections.getPickle(**request_form)\n
+  #############################################\n
+  context.log(\'request_form\', request_form)\n
+  request_form_cleaned = removeUnpickableObjectsFromDict(request_form)\n
+  request_form[\'pickle_string\'] = context.portal_selections.getPickle(**request_form_cleaned)\n
 \n
 # Check if the selection changed\n
 if hasattr(request_form, \'previous_md5_object_uid_list\'):\n
@@ -324,6 +338,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>context</string>
                             <string>request_form</string>
                             <string>error_message</string>
+                            <string>removeUnpickableObjectsFromDict</string>
                             <string>_write_</string>
                             <string>_getiter_</string>
                             <string>k</string>
@@ -353,6 +368,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>key</string>
                             <string>listbox_line</string>
                             <string>tuple</string>
+                            <string>request_form_cleaned</string>
                             <string>selection_list</string>
                             <string>map</string>
                             <string>object_uid_list</string>
