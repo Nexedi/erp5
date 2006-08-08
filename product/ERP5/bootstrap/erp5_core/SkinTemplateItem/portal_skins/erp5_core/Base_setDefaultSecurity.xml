@@ -103,7 +103,7 @@ erp5_role_dict = {\n
               assignor_permission_list,\n
   \'Associate\': common_permission_list,\n
   \'Auditor\' : common_permission_list,\n
-  \'Author\': author_permission_list,\n
+  \'Author\': common_permission_list + author_permission_list,\n
   \'Manager\': permission_list\n
 }\n
 \n
