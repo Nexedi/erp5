@@ -277,7 +277,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       security_product = getSecurityProduct(self.acl_users)
       if security_product == SECURITY_USING_PAS:
         # We use ERP5Security PAS based authentication
-        result = CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
+        result = list( user.getRoles() )
+        result.append( 'Anonymous' )
+        result.append( 'user:%s' % user.getId() )
         # deal with groups
         getGroups = getattr(user, 'getGroups', None)
         if getGroups is not None:
