@@ -78,7 +78,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
       need to be installed to run the test on.
     """
     return ('erp5_base',
-            'baobab_unit_test',
+            'erp5_trade',
+            'erp5_accounting',
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_check'
