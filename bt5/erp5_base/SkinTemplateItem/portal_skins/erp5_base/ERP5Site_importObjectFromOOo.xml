@@ -108,12 +108,12 @@ if kw.has_key(\'listbox\') and kw[\'listbox\'] not in (\'\', None):\n
 \n
 # First step\n
 if len(listbox) == 0:\n
-\n
   spreadsheets = getSpreadsheet()\n
   # Put the result of OOo parsing in the request\n
   request.set(\'ooo_import_spreadsheet_data\', spreadsheets)\n
   # Set a flag in the request to differentiate the two steps\n
   request.set(\'OOOIMPORT_STEP_TWO\', True)\n
+  request.set(\'my_import_file\', None)\n
 \n
 # Second Step\n
 else:\n
@@ -127,7 +127,14 @@ else:\n
   listbox_ordered_lines = context.ERP5Site_getSpreadsheetColumnNameList()\n
   for line in listbox_ordered_lines:\n
     listbox_id = line.getUid()[4:]\n
-    portal_type_property = listbox[listbox_id][\'portal_type_property_list\']\n
+    portal_type_property = None\n
+    if same_type(listbox, dict):\n
+      portal_type_property = listbox[listbox_id][\'portal_type_property_list\']\n
+    else:\n
+      for listbox_dict in listbox:\n
+        if listbox_dict[\'listbox_key\'] == listbox_id:\n
+          portal_type_property = listbox_dict[\'portal_type_property_list\']\n
+          break\n
     if portal_type_property not in (\'\', None):\n
       spreadsheet_name = getattr(line, \'spreadsheet_name\')\n
       column_name      = getattr(line, \'spreadsheet_column\')\n
@@ -179,7 +186,6 @@ else:\n
 \n
       if len(new_object_property_dict.keys()) > 0:\n
         object_list[property_module][property_pt].append(new_object_property_dict)\n
-\n
   # Create new ERP5 objects\n
   new_path_list = []\n
   for (module, per_portal_type_data) in object_list.items():\n
@@ -206,7 +212,9 @@ return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_base/ERP5Site_importObjectFromOOo</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -261,6 +269,9 @@ return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
                             <string>line</string>
                             <string>listbox_id</string>
                             <string>portal_type_property</string>
+                            <string>same_type</string>
+                            <string>dict</string>
+                            <string>listbox_dict</string>
                             <string>getattr</string>
                             <string>spreadsheet_name</string>
                             <string>column_name</string>
