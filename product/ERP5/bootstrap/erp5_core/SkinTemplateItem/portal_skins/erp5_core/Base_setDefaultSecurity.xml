@@ -68,10 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>valid_role_list = context.valid_roles()\n
-role_index_list = range(len(valid_role_list))\n
-permission_list = context.possible_permissions()\n
-\n
+            <value> <string>permission_list = context.possible_permissions()\n
 \n
 # First, remove all permissions (very secure by default)\n
 # We should keep only Manager, or we will not be able to\n
@@ -172,10 +169,6 @@ return "finished"\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>valid_role_list</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>role_index_list</string>
                             <string>permission_list</string>
                             <string>_getiter_</string>
                             <string>permission</string>
