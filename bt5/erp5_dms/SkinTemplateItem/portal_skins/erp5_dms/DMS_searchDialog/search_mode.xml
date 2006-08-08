@@ -231,11 +231,11 @@
                         </tuple>
                         <tuple>
                           <string>Boolean</string>
-                          <string>1</string>
+                          <string>in_boolean_mode</string>
                         </tuple>
                         <tuple>
                           <string>With query expansion</string>
-                          <string>2</string>
+                          <string>with_query_expansion</string>
                         </tuple>
                       </list>
                     </value>

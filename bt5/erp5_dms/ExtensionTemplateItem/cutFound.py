@@ -1,6 +1,6 @@
 import string, re
 
-redundant_chars='"\'.:;,-' # chars we need to strip from a word before we see if it matches
+redundant_chars='"\'.:;,-+<>()*~' # chars we need to strip from a word before we see if it matches, and from the searchwords to eliminate boolean mode chars
 tr=string.maketrans(redundant_chars,' '*len(redundant_chars))
 
 class Done(Exception):
@@ -42,6 +42,7 @@ class Part:
 
 def generateParts(context,text,sw,tags,trail,maxlines):
   par=Part(tags,trail)
+  sw=sw.translate(tr).strip().split()
   test=lambda w:w.translate(tr).strip() in sw
   i=0
   for aw in text:

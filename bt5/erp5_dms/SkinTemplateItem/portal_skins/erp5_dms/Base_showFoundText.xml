@@ -77,7 +77,6 @@ txt=brain.getObject().SearchableText()\n
 sw=context.REQUEST.get(\'SearchableText\',None)\n
 if sw is None:\n
   return \'\'\n
-sw=sw.split()\n
 res=context.cutFound(context,txt,sw,tags,trail,maxlines)\n
 return \' \'.join(map(str,res))\n
 
