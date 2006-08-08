@@ -217,8 +217,6 @@ if len(listbox_id_list):\n
     request_form[listbox_id] = listbox_line_list\n
 \n
 if enable_pickle or (form.update_action != \'\'):\n
-  #############################################\n
-  context.log(\'request_form\', request_form)\n
   request_form_cleaned = removeUnpickableObjectsFromDict(request_form)\n
   request_form[\'pickle_string\'] = context.portal_selections.getPickle(**request_form_cleaned)\n
 \n
