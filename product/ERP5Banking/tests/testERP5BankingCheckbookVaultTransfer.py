@@ -44,9 +44,60 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
+class TestERP5BankingCheckbookVaultTransferMixin:
 
+  def createCheckbookReception(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create a checkbook Reception
+    We do not need to check it because it is already done in another unit test.
+    """
+    self.checkbook_reception = self.checkbook_reception_module.newContent(
+                     id='checkbook_reception', portal_type='Checkbook Reception',
+                     source_value=None, destination_value=self.reception_destination_site,
+                     resource_value=self.currency_1,
+                     start_date=(self.date-4))
+    # get the checkbook reception document
+    self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
+    # Add a line for check and checkbook
+    self.line_1 = self.checkbook_reception.newContent(quantity=1,
+                                 resource_value=self.checkbook_model_1,
+                                 check_amount_value=self.checkbook_model_1.variant_1,
+                                 destination_payment_value=self.bank_account_1,
+                                 reference_range_min=1,
+                                 reference_range_max=50,
+                                 )
+    self.line_2 = self.checkbook_reception.newContent(quantity=1,
+                                 resource_value=self.check_model_1,
+                                 check_amount_value=None,
+                                 destination_payment_value=self.bank_account_2,
+                                 reference_range_min=51,
+                                 reference_range_max=51,
+                                 )
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
+                                   wf_id='checkbook_reception_workflow')
 
-class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
+  def checkItemsCreated(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the checkbook
+    """
+    self.checkbook_1 = None
+    self.check_1 = None
+
+    for line in self.checkbook_reception.objectValues():
+      aggregate_value_list = line.getAggregateValueList()
+      self.assertEquals(len(aggregate_value_list),1)
+      aggregate_value = aggregate_value_list[0]
+      if aggregate_value.getPortalType()=='Checkbook':
+        self.checkbook_1 = aggregate_value
+      elif aggregate_value.getPortalType()=='Check':
+        self.check_1 = aggregate_value
+    self.assertNotEquals(None,self.checkbook_1)
+    self.assertNotEquals(None,self.check_1)
+
+class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransferMixin,
+                                              TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Cash Transfer
 
@@ -166,55 +217,6 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCa
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                              node=self.destination_vault.getRelativeUrl())), 0)
 
-  def createCheckbookReception(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create a checkbook Reception
-    We do not need to check it because it is already done in another unit test.
-    """
-    self.checkbook_reception = self.checkbook_reception_module.newContent(
-                     id='checkbook_reception', portal_type='Checkbook Reception',
-                     source_value=None, destination_value=self.reception_destination_site,
-                     resource_value=self.currency_1)
-    # get the checkbook reception document
-    self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
-    # Add a line for check and checkbook
-    self.line_1 = self.checkbook_reception.newContent(quantity=1,
-                                 resource_value=self.checkbook_model_1,
-                                 check_amount_value=self.checkbook_model_1.variant_1,
-                                 destination_payment_value=self.bank_account_1,
-                                 reference_range_min=1,
-                                 reference_range_max=50
-                                 )
-    self.line_2 = self.checkbook_reception.newContent(quantity=1,
-                                 resource_value=self.check_model_1,
-                                 check_amount_value=None,
-                                 destination_payment_value=self.bank_account_2,
-                                 reference_range_min=51,
-                                 reference_range_max=51
-                                 )
-    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
-                                   wf_id='checkbook_reception_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
-                                   wf_id='checkbook_reception_workflow')
-
-
-  def checkItemsCreated(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create the checkbook
-    """
-    self.checkbook_1 = None
-    self.check_1 = None
-
-    for line in self.checkbook_reception.objectValues():
-      aggregate_value_list = line.getAggregateValueList()
-      self.assertEquals(len(aggregate_value_list),1)
-      aggregate_value = aggregate_value_list[0]
-      if aggregate_value.getPortalType()=='Checkbook':
-        self.checkbook_1 = aggregate_value
-      elif aggregate_value.getPortalType()=='Check':
-        self.check_1 = aggregate_value
-    self.assertNotEquals(None,self.checkbook_1)
-    self.assertNotEquals(None,self.check_1)
 
   def stepCreateCheckbookVaultTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
