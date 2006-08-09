@@ -237,7 +237,6 @@ try:\n
       kw[\'base_category\'] = base_category\n
       kw[\'selection_name\'] = \'Base_viewRelatedObjectList\'\n
       kw[\'cancel_url\'] = request.get(\'HTTP_REFERER\')\n
-      kw[\'previous_form_id\'] = form_id\n
       redirect_url = \'%s/%s?%s\' % ( o.absolute_url()\n
                                 , \'Base_viewRelatedObjectList\'\n
                                 , make_query(kw)\n
