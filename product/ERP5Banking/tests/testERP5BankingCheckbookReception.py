@@ -164,7 +164,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkbook_reception = self.checkbook_reception_module.newContent(
                      id='checkbook_reception', portal_type='Checkbook Reception',
                      source_value=None, destination_value=self.destination_site,
-                     resource_value=self.currency_1)
+                     resource_value=self.currency_1,
+                     start_date=self.date)
     # get the checkbook reception document
     self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
     # check its portal type
