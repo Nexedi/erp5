@@ -72,7 +72,7 @@
 
 # get a dict like {\'religion\': \'MRD\', \'gender\': \'M\'} and returns {\'religion\': \'MSM/MRD\', gender: \'male\'} so that \n
 # we can call an edit(category_dict) directly on the object it browse recursively the subcategories of the \n
-# category (key in the dict) and find a match "Codification" (TODO: support "Reference" & \'id\' matching)\n
+# category (key in the dict) and find a matching reference or title.\n
 # Christophe Dumez <christophe@nexedi.com>\n
 \n
 #def getMatchingCategoryUsingCodification(root_category, codification):\n

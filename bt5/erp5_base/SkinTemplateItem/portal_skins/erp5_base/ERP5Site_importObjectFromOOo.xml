@@ -191,7 +191,7 @@ else:\n
   for (module, per_portal_type_data) in object_list.items():\n
     for (portal_type, new_object_list) in per_portal_type_data.items():\n
       for new_object_property_dict in new_object_list:\n
-        #get portal tye objects\n
+        #get portal type objects\n
         ptype_object = None\n
         for allowed_ptype in module.allowedContentTypes():\n
           ptype_name = \'\'.join(allowed_ptype.id.split(\' \'))\n
