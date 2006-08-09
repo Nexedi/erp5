@@ -726,4 +726,17 @@ class TestERP5Catalog(ERP5TypeTestCase):
                  module.searchFolder(group_uid=group_nexedi_category.getUid())]
     self.assertEquals(organisation_list, [organisation])
 
+  def test_21_SearchingWithUnicode(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test searching with unicode'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+    person_module.newContent(portal_type='Person', title='A Person')
+    get_transaction().commit()
+    self.tic()
+    self.assertNotEquals([], self.getCatalogTool().searchResults(
+                                          portal_type='Person', title=u'A Person'))
 

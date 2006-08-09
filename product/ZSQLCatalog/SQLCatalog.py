@@ -1240,7 +1240,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # Get the appropriate SQL Method
       method = getattr(self, self.sql_getitem_by_path)
       search_result = method(path = path, uid_only=1)
-      # If not emptyn return first record
+      # If not empty, return first record
       if len(search_result) > 0:
         return search_result[0].uid
       else:
@@ -1468,22 +1468,21 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
       # We must now turn sort_index into
       # a dict with keys as sort keys and values as sort order
-      if type(sort_index) is type('a'):
+      if isinstance(sort_index, basestring):
         sort_index = [(sort_index, so)]
-      elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
+      elif not isinstance(sort_index, (list, tuple)):
         sort_index = None
 
 
       # If sort_index is a dictionnary
       # then parse it and change it
       sort_on = None
-      #LOG('sorting', 0, str(sort_index))
       if sort_index is not None:
         new_sort_index = []
         for sort in sort_index:
-          if len(sort)==2:
-            new_sort_index.append((sort[0],sort[1],None))
-          elif len(sort)==3:
+          if len(sort) == 2:
+            new_sort_index.append((sort[0], sort[1], None))
+          elif len(sort) == 3:
             new_sort_index.append(sort)
         sort_index = new_sort_index
         try:
@@ -1580,7 +1579,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               # Add table to table dict
               from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
             # Default case: variable equality
-            if type(value) is type('') or isinstance(value, DateTime):
+            if isinstance(value, basestring) or isinstance(value, DateTime):
               # For security.
               value = self._quoteSQLString(value)
               if value != '' or not ignore_empty_string:
@@ -1611,7 +1610,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
                 else:
                   where_expression += ["%s = '%s'" % (key, value)]
-            elif type(value) is type([]) or type(value) is type(()):
+            elif isinstance(value, (list, tuple)):
               # We have to create an OR from tuple or list
               query_item = []
               for value_item in value:
@@ -1639,11 +1638,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       query_item += ["%s = '%s'" % (key, value_item)]
               if len(query_item) > 0:
                 where_expression += ['(%s)' % join(query_item, ' OR ')]
-            elif type(value) is type({}):
+            elif isinstance(value, dict):
               # We are in the case of a complex query
               query_item = []
               query_value = value['query']
-              if type(query_value) != type([]) and type(query_value) != type(()) :
+              if not isinstance(query_value, (list, tuple)):
                 query_value = [query_value]
               operator_value = sql_quote(value.get('operator', 'or'))
               range_value = value.get('range')
@@ -1671,10 +1670,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           elif key in topic_search_keys:
             # ERP5 CPS compatibility
             topic_operator = 'or'
-            if type(value) is type({}):
+            if isinstance(value, dict):
               topic_operator = sql_quote(value.get('operator', 'or'))
               value = value['query']
-            if type(value) is type(''):
+            if isinstance(value, basestring):
               topic_value = [value]
             else:
               topic_value = value # list or tuple
@@ -1718,7 +1717,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         where_expression = join(where_expression, ' AND ')
 
       limit_expression = kw.get('limit', None)
-      if type(limit_expression) in (type(()), type([])):
+      if isinstance(limit_expression, (list, tuple)):
         limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
       elif limit_expression is not None:
         limit_expression = str(limit_expression)
