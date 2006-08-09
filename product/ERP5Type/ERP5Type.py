@@ -314,8 +314,15 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 	ps_property = getattr(base, '_properties', None)
         if type(ps_property) in (type(()), type([])):
           for prop in ps_property:
-            if prop['id'] not in current_list:
-	      current_list.append(prop['id'])
+            if prop['type'] != 'content':
+              if prop['id'] not in current_list:
+	        current_list.append(prop['id'])
+	    else:
+	      suffix_list = prop['acquired_property_id']
+	      for suffix in suffix_list:
+	        full_id = prop['id']+'_'+suffix
+		if full_id not in current_list:
+		  current_list.append(full_id)
         ps_property = getattr(base, '_categories', None)
 	if type(ps_property) in (type(()), type([])):
 	  cat_dict_list = []
