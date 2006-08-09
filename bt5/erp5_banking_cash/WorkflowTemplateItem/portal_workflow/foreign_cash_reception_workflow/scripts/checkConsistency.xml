@@ -74,14 +74,14 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 object = state_change.object\n
 \n
 if not \'encaisse_des_devises\' in object.getDestination():\n
-  msg = Message(domain="ui", msg="Wrong Destination Selected.")\n
+  msg = Message(domain="ui", message="Wrong Destination Selected.")\n
   raise validationFailed, (msg,)\n
 \n
 object_price = object.getSourceTotalAssetPrice()\n
 line_price = object.getTotalPrice(deliveryLineType=\'Cash Delivery Line\')\n
 \n
 if object_price != line_price:\n
-  msg = Message(domain="ui", msg="Amount differs between document and lines.")\n
+  msg = Message(domain="ui", message="Amount differs between document and lines.")\n
   raise validationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -89,6 +89,12 @@ if object_price != line_price:\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -156,6 +162,27 @@ if object_price != line_price:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
