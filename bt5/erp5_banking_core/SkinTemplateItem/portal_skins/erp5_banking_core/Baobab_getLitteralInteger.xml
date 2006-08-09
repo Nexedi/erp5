@@ -77,7 +77,7 @@ class Number:\n
             80:\'quatre vingt\',100:\'cent\',1000:\'mille\',1000000:\'million\',1000000000:\'milliard\'}\n
 \n
     def MinusHumdred(self,MyNumber):\n
-        context.log(\'MinusHumdred\', MyNumber)\n
+        #context.log(\'MinusHumdred\', MyNumber)\n
         if MyNumber == 0:\n
             return \'\'\n
         elif MyNumber in self.DIC:\n

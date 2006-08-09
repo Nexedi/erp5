@@ -86,7 +86,7 @@ if len(user_site_list) > 0:\n
  for a in user_site_list:\n
   if not a.startswith(\'site\'):\n
     a = \'site/\' + a\n
-  context.log("a", a)\n
+  #context.log("a", a)\n
   site_codification = context.portal_categories.getCategoryValue(a).getCodification()\n
   if site_codification not in (\'\', None):\n
     emission_letter_dict[site_codification[0].lower()] = 1\n

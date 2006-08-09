@@ -86,11 +86,11 @@ if site is None:\n
     site = site_list[0]\n
 \n
 # get only the office, not need of vault\n
-context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
+#context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
 site = context.Baobab_getVaultSite(site)\n
 \n
 kw = {"portal_type" : \'Counter Date\', "delivery.start_date" : str(date), "site_id" : site.getId(), "simulation_state" : "open"}\n
-context.log(\'Baobab_checkCounterDateOpen\', \'kw = %s\' %(kw,))\n
+#context.log(\'Baobab_checkCounterDateOpen\', \'kw = %s\' %(kw,))\n
 counter_date_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
 #context.log(\'Baobab_checkCounterDateOpen\', \'counter_date_list = %s, requete = %s\' %(counter_date_list, context.portal_catalog(src__=1, **kw)))\n
 \n

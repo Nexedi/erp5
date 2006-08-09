@@ -93,7 +93,7 @@ if resource is None :\n
 \n
 # Next, check the balance of the account\n
 account_balance = resource.getFutureInventory(payment=payment, src__=src__)\n
-context.log("account balance",account_balance)\n
+#context.log("account balance",account_balance)\n
 if src__ :\n
   return account_balance \n
 \n

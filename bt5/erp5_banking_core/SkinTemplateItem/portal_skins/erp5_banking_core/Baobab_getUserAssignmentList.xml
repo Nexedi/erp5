@@ -78,7 +78,7 @@ else:\n
 persons = context.acl_users.erp5_users.getUserByLogin(login)\n
 \n
 if len(persons) == 0:\n
-  context.log(\'Baobab_getUserAssignementList\', \'Person %s not found\' %(login))\n
+  #context.log(\'Baobab_getUserAssignementList\', \'Person %s not found\' %(login))\n
   return []\n
 else:\n
   #person = persons[0].getObject()\n

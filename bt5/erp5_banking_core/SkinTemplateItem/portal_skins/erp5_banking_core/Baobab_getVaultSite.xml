@@ -74,7 +74,7 @@ site = vault\n
 if same_type(site, \'\'):\n
   site = context.restrictedTraverse(\'portal_categories/site/%s\' %(site,))\n
 \n
-context.log(\'site\', site)\n
+#context.log(\'site\', site)\n
 while True:\n
   if not hasattr(site, \'getVaultTypeList\'):\n
     msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n

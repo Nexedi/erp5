@@ -1,21 +1,5 @@
-2006-07-18 aurel
-* add and modify some script for checking counter and counter date
-
-2006-07-15 Seb
-* added check book model module
-
-2006-07-03 aurel
-* update generic fast input script
-
-2006-06-26 Seb
-* Fixed display of inventory lines
-
-2006-06-16 seb
-* Added work done by Aurelien on fast input
-* Some minor changes
-
-2006-06-02 aurel
-* add vault type base category to category
+2006-08-9 aurel
+* fix script that check counter is opened and comment useless log to prevent security problem
 
 2006-05-18 aurel
 * update Delivery_getVaultItemList to take new categories into account and fix   Baobab_getResourceVintageList

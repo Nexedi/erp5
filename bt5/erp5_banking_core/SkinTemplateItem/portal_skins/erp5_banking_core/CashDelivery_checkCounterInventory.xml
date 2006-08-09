@@ -83,8 +83,8 @@ requested_dict = {}\n
 \n
 # test all movement\n
 tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
-context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
-context.log(\'source\',source)\n
+#context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
+#context.log(\'source\',source)\n
 line_list = []\n
 for l in tmp_list :\n
   # The source can be different for every line (due to getBaobabSource approach)\n
@@ -96,7 +96,7 @@ for l in tmp_list :\n
       line_list.append(l)\n
   except (AttributeError, KeyError):\n
     pass\n
-context.log("line list", line_list)\n
+#context.log("line list", line_list)\n
 if len(line_list) == 0 :\n
   # no resource\n
   return 2\n
@@ -108,11 +108,11 @@ for line in line_list :\n
   if line.hasCellContent() :\n
     for cell in line.objectValues() :\n
       variation_text = cell.getVariationText()\n
-      context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
+      #context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
       inventory_value = context.portal_simulation.getFutureInventory(node=source_counter, resource = line_resource,\n
           variation_text = variation_text)\n
-      context.log(\'cell quantity\', cell.getQuantity())\n
-      context.log(\'inventory value\', inventory_value)\n
+      #context.log(\'cell quantity\', cell.getQuantity())\n
+      #context.log(\'inventory value\', inventory_value)\n
       if inventory_value - cell.getQuantity() < 0:\n
         return 1\n
 \n
@@ -186,7 +186,6 @@ return 0\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>tmp_list</string>
-                            <string>str</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>l</string>

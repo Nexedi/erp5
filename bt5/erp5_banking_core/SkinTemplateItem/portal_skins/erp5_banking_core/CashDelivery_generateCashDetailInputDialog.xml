@@ -208,6 +208,7 @@ if listbox is None:\n
     if cash_delivery_line is not None:\n
       # If a line exists for this cash currency, add lines into the listbox according to\n
       # the currency information.\n
+      #context.log("cash_delivery_line", "cash_delivery_line = %s, currency = %s, type = %s" %(cash_delivery_line, currency_cash, line_portal_type))\n
       currency_dict = None\n
       resource_price = currency_cash.getBasePrice()\n
 \n
@@ -218,6 +219,7 @@ if listbox is None:\n
         category2 = cell.getProperty(axis_dict[\'line2\'])\n
         column_category = cell.getProperty(axis_dict[\'column\'])\n
         key = (category1, category2)\n
+        #context.log(str((key, axis_dict[\'column\'], column_category, cell.getVariation())), cell)\n
         cell_dict_dict.setdefault(key, {})[column_category] = cell\n
 \n
       # Sort the keys to obtain a consistent behavior.\n
@@ -231,6 +233,7 @@ if listbox is None:\n
         currency_dict = None\n
         for counter, column in enumerate(axis_list_dict[\'column\']):\n
           cell = cell_dict.get(column, None)\n
+          #context.log("Cashdelivery_...", "cell = %s, column = %s"%(cell, column))\n
           if cell is None:\n
             continue\n
 \n
@@ -252,7 +255,7 @@ if listbox is None:\n
 \n
           currency_dict[\'column%d\' % (counter + 1)] = quantity\n
           total_quantity += quantity\n
-\n
+        #context.log("currency_dict", currency_dict)\n
         if currency_dict is not None:\n
           price = total_quantity * resource_price\n
           currency_dict[\'price\'] = price\n

@@ -70,6 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string># in this script you must return the default value of the account for this site\n
 # this must correspond to the relative url of the default account\n
+\n
 return \'\'\n
 </string> </value>
         </item>

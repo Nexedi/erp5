@@ -183,11 +183,11 @@ elif import_type == \'assign_codification\' :\n
         category = context.portal_categories.getCategoryValue(lowerCase(e_list[0]))\n
         category.setCodification(e_list[1])\n
         # Automatically assign code for some subcategories\n
-        context.log(\'e_list[0]\',e_list[0])\n
+        #context.log(\'e_list[0]\',e_list[0])\n
         if e_list[0].startswith(\'site\'):\n
           acquired_vault_code = {\'banque_interne\':\'BI\',\'operations_diverses\':\'OD\',\'gros_paiement\':\'GP\',\'gros_versement\':\'GV\',\n
                         \'guichet_1\':\'G1\',\'guichet_2\':\'G2\',\'guichet_3\':\'G3\'}\n
-          context.log(\'category\',category.getPath())\n
+          #context.log(\'category\',category.getPath())\n
           for sub_cat in category.getCategoryChildValueList(sort_id=\'path\'):\n
             print "    %s" % sub_cat.getRelativeUrl()\n
             if sub_cat.getId() in acquired_vault_code.keys():\n

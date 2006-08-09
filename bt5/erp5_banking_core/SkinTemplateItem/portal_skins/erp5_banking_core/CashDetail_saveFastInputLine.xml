@@ -96,6 +96,7 @@ per_resource_dict = {}\n
 \n
 # remove previous line\n
 old_line = [x.getObject() for x in context.searchFolder(portal_type=[line_portal_type,])]\n
+#context.log("will erease old line", old_line)\n
 if len(old_line)>0:\n
   for object_list in old_line:\n
     context.deleteContent(object_list.getId())\n
@@ -105,7 +106,7 @@ for line in listbox:\n
   for counter in xrange(1, len(column_base_list)+1):\n
     quantity = line["column%s" %(str(counter),)]\n
     if quantity != 0:\n
-      context.log("listboxline", line)\n
+      #context.log("listboxline", line)\n
       movement = {}\n
       movement[\'quantity\'] = quantity\n
       # get variation for the cell\n
@@ -151,7 +152,7 @@ for line in listbox:\n
         else:\n
           movement[\'emission_letter\'] = "emission_letter/not_defined"\n
         movement[\'variation\'] = "variation/%s" %variation_list[counter-1]\n
-      context.log("movement", movement)\n
+      #context.log("movement", movement)\n
       # generate a key based on variation\n
       # this will allow us to check if there is multiple line for the same resource + variation\n
       movement_key = \'%s_%s_%s\' %(movement[\'cash_status\'], movement[\'emission_letter\'], movement[\'variation\'])\n
@@ -173,7 +174,7 @@ for resource_id in per_resource_dict.keys():\n
   # get the resource\n
   resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'), id = resource_id)\n
   if len(resource_list) == 0:\n
-    context.log(\'CashDetail_saveFastInputLine\', \'Cannot get the resource object for id = %s\' %(resource_id,))\n
+    #context.log(\'CashDetail_saveFastInputLine\', \'Cannot get the resource object for id = %s\' %(resource_id,))\n
     continue\n
   resource_object = resource_list[0].getObject()\n
   # get the variation\n
