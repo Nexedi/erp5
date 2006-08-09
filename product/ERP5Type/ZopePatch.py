@@ -20,7 +20,6 @@
 ##############################################################################
 
 # Load all monkey patches
-from Products.ERP5Type.patches import MembershipTool
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import DA
