@@ -73,8 +73,11 @@
 property_list = []\n
 \n
 for portal_type in module.allowedContentTypes():\n
-  for property in portal_type.getInstancePropertyMap():\n
-    property_string = "%s.%s" % (portal_type.id, property[\'id\'])\n
+  #for property in portal_type.getInstancePropertyMap():\n
+    #property_string = "%s.%s" % (portal_type.id, property[\'id\'])\n
+    #property_list.append(property_string)\n
+  for property in portal_type.getPropertiesAndCategories():\n
+    property_string = "%s.%s" % (portal_type.id, property)\n
     property_list.append(property_string)\n
 \n
 property_list.sort()\n
@@ -89,7 +92,9 @@ return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x,x), property_
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_base/ERP5Site_getModulePortalTypeSortedPropertyList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -132,7 +137,6 @@ return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x,x), property_
                             <string>_getattr_</string>
                             <string>portal_type</string>
                             <string>property</string>
-                            <string>_getitem_</string>
                             <string>property_string</string>
                             <string>map</string>
                           </tuple>
