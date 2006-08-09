@@ -85,12 +85,13 @@ class PropertyTypeValidity(Constraint):
             (property_id, property_type, str(type(value)))
         if fixit:
           # try to cast to correct type
-          if wrong_type :
-            try :
+          if wrong_type:
+            try:
               value = self._type_dict[property_type][0](value)
             except (KeyError, ValueError), error:
               error_message += " (Type cast failed : %s)" % error
-          object.setProperty(property_id, value)
-          error_message += " (Fixed)"
+            else:
+              object.setProperty(property_id, value)
+              error_message += " (Fixed)"
         errors.append(self._generateError(object, error_message))
     return errors
