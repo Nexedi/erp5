@@ -47,6 +47,10 @@
             <value> <string>M</string> </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>M</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>male</string> </value>
         </item>

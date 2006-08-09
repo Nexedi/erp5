@@ -47,6 +47,10 @@
             <value> <string>F</string> </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>F</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>female</string> </value>
         </item>
