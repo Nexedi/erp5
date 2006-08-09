@@ -30,7 +30,7 @@ from Products.CMFCore.interfaces.portal_types import ContentTypeInformation as I
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.utils import SimpleItemWithProperties
 from Products.CMFCore.Expression import createExprContext
-
+from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions as ERP5Permissions
 
@@ -241,6 +241,48 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
                               'getGroupList')
     def getGroupList( self ):
         return self.defined_group_list
+
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+		              'getPropertiesAndCategories')
+    def getPropertiesAndCategories(self):
+      """
+       Return all the properties and categories of
+       the portal type
+      """
+      ptype_object = self
+      # get the klass of the object based on the constructor document
+      m = Products.ERP5Type._m
+      ptype_name = ''.join(ptype_object.id.split(' '))
+      constructor = 'add%s' %(ptype_name)
+      klass = None
+      for method, doc in m.items():
+        if method == constructor:
+          klass = doc.klass
+          break
+      # get the property sheet list for the portal type
+      # from the list of property sheet defined on the portal type
+      ps_list = map(lambda p: getattr(PropertySheet, p, None),
+                  ptype_object.property_sheet_list)
+      ps_list = filter(lambda p: p is not None, ps_list)
+      # from the property sheets defined on the class
+      if klass is not None:
+        from Products.ERP5Type.Base import getClassPropertyList
+        ps_list = tuple(ps_list) + getClassPropertyList(klass)
+      # get all properties from the property sheet list
+      current_list = []
+      for base in ps_list:
+	ps_property = getattr(base, '_properties', None)
+        if type(ps_property) in (type(()), type([])):
+          for prop in ps_property:
+            if prop['id'] not in current_list:
+	      current_list.append(prop['id'])
+        ps_property = getattr(base, '_categories', None)
+	if type(ps_property) in (type(()), type([])):
+	  cat_dict_list = []
+	  for category in ps_property:
+	    if category not in current_list:
+              current_list.append(category)
+      return current_list
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation,
                               'getInstancePropertyMap' )
