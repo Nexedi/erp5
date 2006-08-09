@@ -105,7 +105,7 @@ if len(old_line)>0:\n
 for line in listbox:\n
   for counter in xrange(1, len(column_base_list)+1):\n
     quantity = line["column%s" %(str(counter),)]\n
-    if quantity != 0:\n
+    if quantity != 0 and quantity != \'\':\n
       #context.log("listboxline", line)\n
       movement = {}\n
       movement[\'quantity\'] = quantity\n
@@ -166,7 +166,7 @@ for line in listbox:\n
       else:\n
         # create a dict of variation for this resource\n
         per_resource_dict[resource_id] = {movement_key:movement,}\n
-\n
+#context.log("resource", per_resource_dict)\n
 # create the movement\n
 variation_not_defined = 0\n
 for resource_id in per_resource_dict.keys():\n
