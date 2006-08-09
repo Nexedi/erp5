@@ -263,13 +263,14 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       # from the list of property sheet defined on the portal type
       ps_list = map(lambda p: getattr(PropertySheet, p, None),
                   ptype_object.property_sheet_list)
+      cat_list = ptype_object.base_category_list
       ps_list = filter(lambda p: p is not None, ps_list)
       # from the property sheets defined on the class
       if klass is not None:
         from Products.ERP5Type.Base import getClassPropertyList
         ps_list = tuple(ps_list) + getClassPropertyList(klass)
       # get all properties from the property sheet list
-      current_list = []
+      current_list = cat_list
       for base in ps_list:
 	ps_property = getattr(base, '_properties', None)
         if type(ps_property) in (type(()), type([])):
