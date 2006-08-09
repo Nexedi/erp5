@@ -243,8 +243,46 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         return self.defined_group_list
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation,
-		              'getPropertiesAndCategories')
-    def getPropertiesAndCategories(self):
+		              'getCategoryList')
+    def getCategoryList(self):
+      """
+       Return all the categories of the portal type
+      """
+      current_list = []
+      ptype_object = self
+      # get the klass of the object based on the constructor document
+      m = Products.ERP5Type._m
+      ptype_name = ''.join(ptype_object.id.split(' '))
+      constructor = 'add%s' %(ptype_name)
+      klass = None
+      for method, doc in m.items():
+        if method == constructor:
+          klass = doc.klass
+          break
+
+      # get categories from portal type
+      cat_list = ptype_object.base_category_list
+      current_list += cat_list
+      # get categories from property sheet
+      ps_list = map(lambda p: getattr(PropertySheet, p, None),
+                    ptype_object.property_sheet_list)
+      ps_list = filter(lambda p: p is not None, ps_list)
+      # from the property sheets defined on the class
+      if klass is not None:
+        from Products.ERP5Type.Base import getClassPropertyList
+        ps_list = tuple(ps_list) + getClassPropertyList(klass)
+      for base in ps_list:
+        ps_property = getattr(base, '_categories', None)
+        if type(ps_property) in (type(()), type([])):
+          cat_dict_list = []
+          for category in ps_property:
+            if category not in current_list:
+              current_list.append(category)
+      return current_list
+
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+		              'getPropertyAndCategoryList')
+    def getPropertyAndCategoryList(self):
       """
        Return all the properties and categories of
        the portal type
