@@ -237,9 +237,15 @@ class TestERP5BankingMixin:
 
   def getCheckbookUsualCashTransferModule(self):
     """
-    Return the Checkbook Vault Transfer Module
+    Return the Checkbook Delivery Module
     """
     return getattr(self.getPortal(), 'checkbook_usual_cash_transfer_module', None)
+
+  def getCheckbookDeliveryModule(self):
+    """
+    Return the Checkbook Vault Transfer Module
+    """
+    return getattr(self.getPortal(), 'checkbook_delivery_module', None)
 
   def getCheckbookMovementModule(self):
     """
