@@ -72,7 +72,7 @@
 # by Base_viewRelatedObjectList from the relation field\n
 result = None\n
 if parameter is not None:\n
-  result = getattr(context, context.REQUEST.previous_form_id, None).get_field( context.REQUEST.field_id ).get_value(parameter)\n
+  result = getattr(context, context.REQUEST.form_id, None).get_field( context.REQUEST.field_id ).get_value(parameter)\n
 \n
   if result in [ [], (), None, \'\']:\n
     \n

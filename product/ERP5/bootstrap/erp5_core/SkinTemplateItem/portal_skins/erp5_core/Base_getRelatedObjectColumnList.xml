@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = getattr(context, context.REQUEST.previous_form_id, None).get_field( context.REQUEST.field_id ).get_value(\'columns\')\n
+            <value> <string>result = getattr(context, context.REQUEST.form_id, None).get_field( context.REQUEST.field_id ).get_value(\'columns\')\n
 \n
 if result in [ [], (), None, \'\']:\n
   result = getattr(context, \'Base_viewRelatedObjectList\', None).get_field( \'listbox\' ).get_value(\'columns\')\n
