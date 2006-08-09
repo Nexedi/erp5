@@ -270,7 +270,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         from Products.ERP5Type.Base import getClassPropertyList
         ps_list = tuple(ps_list) + getClassPropertyList(klass)
       # get all properties from the property sheet list
-      current_list = cat_list
+      current_list = []
+      current_list += cat_list
       for base in ps_list:
 	ps_property = getattr(base, '_properties', None)
         if type(ps_property) in (type(()), type([])):
