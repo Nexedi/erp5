@@ -1732,7 +1732,7 @@ class ListBoxRendererLine:
     _marker = []
     value_list = []
     selection = self.renderer.getSelection()
-    param_dict = self.getParamDict()
+    param_dict = self.renderer.getParamDict()
 
     # Embed the selection index.
     selection.edit(index = self.index)
