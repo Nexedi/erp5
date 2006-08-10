@@ -72,7 +72,7 @@
 counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
 for counter_ob in counter_list:\n
 #  context.log(counter.getRelativeUrl(), counter_ob.getSite())\n
-  if "site/%" %counter_ob.getSite() in counter.getRelativeUrl() or counter.getRelativeUrl() in "site/%" %counter_ob.getSite():\n
+  if "site/%s" %counter_ob.getSite() in counter.getRelativeUrl() or counter.getRelativeUrl() in "site/%s" %counter_ob.getSite():\n
     return 1\n
 else:\n
   return 0\n
