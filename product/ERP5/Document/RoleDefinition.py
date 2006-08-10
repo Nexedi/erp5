@@ -26,8 +26,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_parent
+from Acquisition import aq_inner
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
+
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
@@ -49,3 +52,13 @@ class RoleDefinition(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.RoleDefinition
                       )
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                             'assignRoleToSecurityGroupOnParent')
+    def assignRoleToSecurityGroupOnParent(self, **kw):
+      """Assign roles to security group on the parent.
+
+      We redefine this method here, because we want the security check to be
+      performed on the role definition object itself, and not the parent. """
+      aq_parent(aq_inner(self)).assignRoleToSecurityGroup(**kw)
+
