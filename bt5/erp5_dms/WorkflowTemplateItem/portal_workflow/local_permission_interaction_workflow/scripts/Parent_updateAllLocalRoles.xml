@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change.object.getParent().assignRoleToSecurityGroup()\n
+            <value><string>state_change[\'object\'].assignRoleToSecurityGroupOnParent()\n
 </string> </value>
         </item>
         <item>
