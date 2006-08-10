@@ -6,6 +6,10 @@
 
 __version__ = '0.3.0'
 
+# XXX: Suppress DeprecationWarnings
+import warnings
+warnings.simplefilter('ignore', DeprecationWarning, append=1)
+
 # XXX make sure that get_request works.
 current_app = None
 import Products.ERP5Type.Utils
@@ -31,10 +35,6 @@ try:
   from transaction import get as get_transaction
 except ImportError:
   pass
-
-# XXX: Suppress DeprecationWarnings
-import warnings
-warnings.simplefilter('ignore', DeprecationWarning, append=1)
 
 # Std Zope Products
 ZopeTestCase.installProduct('ExtFile')
