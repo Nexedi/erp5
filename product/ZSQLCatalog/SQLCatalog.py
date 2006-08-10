@@ -1583,12 +1583,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               # For security.
               value = self._quoteSQLString(value)
               if value != '' or not ignore_empty_string:
-                # we consider empty string as Non Significant
-                if value == '=':
-                  # But we consider the sign = as empty string
-                  value=''
                 if '%' in value:
                   where_expression += ["%s LIKE '%s'" % (key, value)]
+		elif value.startswith('='):
+		  where_expression += ["%s = '%s'" % (key, value[1:])]
                 elif value.startswith('>='):
                   where_expression += ["%s >= '%s'" % (key, value[2:])]
                 elif value.startswith('<='):
