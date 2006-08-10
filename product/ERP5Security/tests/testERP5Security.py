@@ -43,9 +43,9 @@ from zLOG import LOG
 from Products.ERP5Type.Cache import clearCache
 from Products.PluggableAuthService import PluggableAuthService
 try:
-    from zope.interface.verify import verifyClass
+  from Interface.Verify import verifyClass
 except ImportError:
-    from Interface.Verify import verifyClass
+  from zope.interface.verify import verifyClass
 
 class TestERP5Security(ERP5TypeTestCase):
   """Test ERP5 Security."""
