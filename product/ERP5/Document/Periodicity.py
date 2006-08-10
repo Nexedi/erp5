@@ -205,7 +205,7 @@ class Periodicity(Base):
       """
       Make sure that the list of days is ordered
       """
-      LOG('getPeriodicityWeekDayList',0,'we should order')
+      #LOG('getPeriodicityWeekDayList',0,'we should order')
       day_list = self._baseGetPeriodicityWeekDayList()
       new_list = []
       for day in self.getWeekDayList():
