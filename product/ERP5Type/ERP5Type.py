@@ -243,7 +243,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         return self.defined_group_list
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation,
-		              'getCategoryList')
+                              'getCategoryList')
     def getCategoryList(self):
       """
        Return all the categories of the portal type
@@ -281,7 +281,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       return current_list
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation,
-		              'getPropertyAndCategoryList')
+                              'getPropertyAndCategoryList')
     def getPropertyAndCategoryList(self):
       """
        Return all the properties and categories of
@@ -311,23 +311,23 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       current_list = []
       current_list += cat_list
       for base in ps_list:
-	ps_property = getattr(base, '_properties', None)
+        ps_property = getattr(base, '_properties', None)
         if type(ps_property) in (type(()), type([])):
           for prop in ps_property:
             if prop['type'] != 'content':
               if prop['id'] not in current_list:
-	        current_list.append(prop['id'])
-	    else:
-	      suffix_list = prop['acquired_property_id']
-	      for suffix in suffix_list:
-	        full_id = prop['id']+'_'+suffix
-		if full_id not in current_list:
-		  current_list.append(full_id)
+                current_list.append(prop['id'])
+            else:
+              suffix_list = prop['acquired_property_id']
+              for suffix in suffix_list:
+                full_id = prop['id']+'_'+suffix
+                if full_id not in current_list:
+                  current_list.append(full_id)
         ps_property = getattr(base, '_categories', None)
-	if type(ps_property) in (type(()), type([])):
-	  cat_dict_list = []
-	  for category in ps_property:
-	    if category not in current_list:
+        if type(ps_property) in (type(()), type([])):
+          cat_dict_list = []
+          for category in ps_property:
+            if category not in current_list:
               current_list.append(category)
       return current_list
 
