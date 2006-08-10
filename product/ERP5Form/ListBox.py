@@ -26,33 +26,28 @@
 #
 ##############################################################################
 
-import string, types, sys
+import sys
 from OFS.Traversable import NotFound
 from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
-from Products.Formulator.Form import BasicForm
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from Products.Formulator.MethodField import BoundMethod
 from Selection import Selection, DomainSelection
-from DateTime import DateTime
-from Products.ERP5Type.Utils import getPath, convertToUpperCase
+from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
-from copy import copy
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+from Acquisition import aq_base, aq_self
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 
-from Globals import InitializeClass, Persistent, Acquisition, get_request
+from Globals import InitializeClass, Acquisition, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-import random
 import md5
 import cgi
 
@@ -1036,6 +1031,7 @@ class ListBoxRenderer:
   def getDomainSelection(self):
     """Return a DomainSelection object wrapped with the context.
     """
+    portal_object = self.getPortalObject()
     selection = self.getSelection()
     domain_list = selection.getDomainList()
 
@@ -1371,7 +1367,7 @@ class ListBoxRenderer:
     selection = self.getSelection()
     selection_tool = self.getSelectionTool()
     report_list = selection.getReportList()
-    stat_selection_expression = self.getStatSelectExpression()
+    stat_select_expression = self.getStatSelectExpression()
     stat_method = self.getStatMethod()
     count_method = self.getCountMethod()
     list_method = self.getListMethod()
@@ -1425,7 +1421,7 @@ class ListBoxRenderer:
           selection.edit(params = new_param_dict)
 
           # Query the stat.
-          stat_brain = selection(method = stat_method, context=here, REQUEST=REQUEST)
+          stat_brain = selection(method = stat_method, context = context, REQUEST = self.request)
 
           stat_result = {}
           for index, (k, v) in enumerate(self.getSelectedColumnList()):
@@ -1736,6 +1732,7 @@ class ListBoxRendererLine:
     _marker = []
     value_list = []
     selection = self.renderer.getSelection()
+    param_dict = self.getParamDict()
 
     # Embed the selection index.
     selection.edit(index = self.index)
