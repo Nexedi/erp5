@@ -70,8 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>resource = context.getResourceValue()\n
 if resource is not None:\n
-  #return resource.getBasePrice(0)/resource.getPricedQuantity()\n
-  return resource.getPrice(context=context) # calls a Resource_lookupPrice itself\n
+  return resource.getPrice(context=context)\n
 else:\n
   return None\n
 </string> </value>
