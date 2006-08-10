@@ -71,46 +71,12 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-transaction = state_change[\'object\']\n
-# Compute the source form the vault choosen by\n
-# the accountant and find the counter with the\n
-# user logged in\n
-user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-# context.log(\'validateVaultBalance site_list\',site_list)\n
-source = transaction.getSource()\n
-baobab_source = None\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
-    baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
-    break\n
-source = baobab_source\n
-source_object = context.portal_categories.getCategoryValue(source)\n
+txn = state_change[\'object\']\n
 \n
-# check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+account = txn.getDestinationPaymentValue()\n
 \n
-resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\', same_source=1)\n
-#transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
-\n
-# Get price and total_price.\n
-price = transaction.getSourceTotalAssetPrice()\n
-cash_detail = transaction.getTotalPrice(portal_type = \'Cash Delivery Cell\')\n
-#transaction.log("price vs cash detail", str((price, cash_detail)))\n
-if resource == 3:\n
-  msg = Message(domain="ui", message="No banknote or coin defined.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource == 2:\n
-  msg = Message(domain="ui", message="No resource defined.")\n
-  raise ValidationFailed, (msg,)\n
-elif price != cash_detail:\n
-  msg = Message(domain="ui", message="Amount differs from input.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource == 1:\n
-  msg = Message(domain="ui", message="Insufficient Balance in counter.")\n
+if not account.isOverdraftFacility():\n
+  msg = Message(domain=\'ui\', message="Can\'t sent to manual validation because of not averdraft facility for this bank account")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -121,14 +87,8 @@ elif resource == 1:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/check_payment_workflow/scripts/validateVaultBalance</string> </value>
+            <value> <string>Script (Python):/baobab/portal_workflow/check_payment_workflow/scripts/checkAccountIsOverdraftFacility</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -170,22 +130,10 @@ elif resource == 1:\n
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>txn</string>
                             <string>_getattr_</string>
-                            <string>user_id</string>
-                            <string>context</string>
-                            <string>site_list</string>
-                            <string>source</string>
-                            <string>None</string>
-                            <string>baobab_source</string>
-                            <string>_getiter_</string>
-                            <string>site</string>
-                            <string>site_value</string>
-                            <string>source_object</string>
+                            <string>account</string>
                             <string>msg</string>
-                            <string>resource</string>
-                            <string>price</string>
-                            <string>cash_detail</string>
                           </tuple>
                         </value>
                     </item>
@@ -202,33 +150,12 @@ elif resource == 1:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>checkAccountIsOverdraftFacility</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
