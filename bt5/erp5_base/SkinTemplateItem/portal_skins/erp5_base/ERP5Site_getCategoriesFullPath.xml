@@ -94,7 +94,7 @@ for category_name in category_dict.keys():\n
     result_dict[category_name]=result_cat_fullpath\n
   else:\n
     # XXX: this request does a LIKE "%xxxx%", We should find a way to remove the %%\n
-    result_list = context.portal_catalog(portal_type=\'Category\', title=str(subcat_code)+\'%\', relative_url=category_name+\'%\')\n
+    result_list = context.portal_catalog(portal_type=\'Category\', title=str(subcat_code), relative_url=category_name+\'%\')\n
     if len(result_list) != 0:\n
       result_cat_fullpath = \'/\'.join(result_list[0].getRelativeUrl().split(\'/\')[1:])\n
       result_dict[category_name]=result_cat_fullpath\n
