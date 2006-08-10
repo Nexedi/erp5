@@ -40,6 +40,10 @@ try:
   from Products.CMFCore import permissions
 except ImportError:
   from Products.CMFCore import CMFCorePermissions as permissions
+  # XXX "Change local roles" didn't exist at the time of CMF 1.4
+  permissions.ChangeLocalRoles = 'Change local roles'
+  permissions.setDefaultRoles(permissions.ChangeLocalRoles,
+                              ('Owner', 'Manager'))
 
 setDefaultRoles = permissions.setDefaultRoles
 
@@ -60,7 +64,7 @@ ModifyCookieCrumblers = permissions.ModifyCookieCrumblers
 ReplyToItem = permissions.ReplyToItem
 ManagePortal = permissions.ManagePortal
 ModifyPortalContent = permissions.ModifyPortalContent
-#ManageProperties = permissions.ManageProperties
+ChangeLocalRoles = permissions.ChangeLocalRoles
 ListPortalMembers = permissions.ListPortalMembers
 AddPortalFolders = permissions.AddPortalFolders
 AddPortalContent = permissions.AddPortalContent
