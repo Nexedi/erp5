@@ -89,7 +89,9 @@ return precision\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Base_getPreferredPrecision</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -126,7 +128,7 @@ return precision\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
                             <string>currency</string>

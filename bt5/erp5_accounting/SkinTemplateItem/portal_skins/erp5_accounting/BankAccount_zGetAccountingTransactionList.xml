@@ -134,18 +134,18 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>getUid</string>
-<string>getParentUid</string>
-<string>query</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>resource_uid</string>
-<string>from_date</string>
-<string>at_date</string>
-<string>to_date</string>
-<string>simulation_state</string>
-<string>node_uid</string>
-<string>stat</string>
+                            <string>getUid</string>
+                            <string>getParentUid</string>
+                            <string>query</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>resource_uid</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>to_date</string>
+                            <string>simulation_state</string>
+                            <string>node_uid</string>
+                            <string>stat</string>
                           </list>
                         </value>
                     </item>

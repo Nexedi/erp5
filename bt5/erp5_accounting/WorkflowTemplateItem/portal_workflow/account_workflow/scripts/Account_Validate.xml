@@ -86,7 +86,9 @@ if account.getGap() in (None, \'\') : \n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/hopital/portal_workflow/account_validation_workflow/scripts/Account_Validate</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

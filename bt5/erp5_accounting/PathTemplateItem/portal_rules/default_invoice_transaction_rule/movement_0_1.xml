@@ -124,20 +124,20 @@
                 <string>destination_region/region/europe/southern_europe/italy</string>
                 <string>destination_region/region/europe/western_europe/luxembourg</string>
                 <string>destination_region/region/europe/northern_europe/sweden</string>
-                <string>destination_region/region/europe/northern_europe/ireland</string>
+                <string>destination_region/region/europe/eastern_europe/poland</string>
                 <string>destination_region/region/europe/western_europe/france</string>
                 <string>destination_region/region/europe/northern_europe/united_kingdom_of_great_britain_and_northern_ireland</string>
-                <string>destination_region/region/europe/eastern_europe/poland</string>
                 <string>destination_region/region/europe/northern_europe/norway</string>
                 <string>destination_region/region/europe/western_europe/germany</string>
                 <string>destination_region/region/europe/northern_europe/finland</string>
                 <string>destination_region/region/europe/northern_europe/denmark</string>
-                <string>destination_region/region/europe/southern_europe/spain</string>
+                <string>destination_region/region/europe/northern_europe/ireland</string>
                 <string>destination_region/region/europe/southern_europe/greece</string>
+                <string>destination_region/region/europe/western_europe/netherlands</string>
                 <string>destination_region/region/europe/western_europe/belgium</string>
                 <string>destination_region/region/europe/southern_europe/portugal</string>
                 <string>destination_region/region/europe/western_europe/austria</string>
-                <string>destination_region/region/europe/western_europe/netherlands</string>
+                <string>destination_region/region/europe/southern_europe/spain</string>
               </tuple>
             </value>
         </item>
@@ -262,7 +262,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Transaction [\'storever\', \'EU with NO VAT\']</string> </value>
+            <value> <string>storever * EU with NO VAT</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

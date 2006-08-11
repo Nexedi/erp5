@@ -123,7 +123,9 @@ for transaction in transaction_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckTransactionsState</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

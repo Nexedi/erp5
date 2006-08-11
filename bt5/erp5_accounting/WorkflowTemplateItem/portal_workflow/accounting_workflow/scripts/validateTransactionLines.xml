@@ -194,7 +194,9 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/validateTransactionLines</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

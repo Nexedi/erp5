@@ -80,7 +80,9 @@ context.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_causality_workflow/scripts/PackingList_afterEdit</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

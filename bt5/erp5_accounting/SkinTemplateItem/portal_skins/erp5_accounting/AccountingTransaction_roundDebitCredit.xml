@@ -118,7 +118,9 @@ if abs(net_balance) > 0 or \\\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_roundDebitCredit</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

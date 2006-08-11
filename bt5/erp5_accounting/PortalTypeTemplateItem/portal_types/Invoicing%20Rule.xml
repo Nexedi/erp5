@@ -67,7 +67,7 @@
             <value> <string>\n
       Transformation Sourcing Rule object make sure\n
       items required in a Transformation are sourced\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

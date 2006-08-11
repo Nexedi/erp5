@@ -215,7 +215,9 @@ return context.Base_getRoundValue(row.total_price or 0.0, precision)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_statSourceBalance</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

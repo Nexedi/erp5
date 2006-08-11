@@ -280,7 +280,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Transaction [\'storever\', \'Rest of the World\']</string> </value>
+            <value> <string>storever * Rest of the World</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

@@ -97,7 +97,9 @@ transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/PurchaseInvoiceTransaction_init</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

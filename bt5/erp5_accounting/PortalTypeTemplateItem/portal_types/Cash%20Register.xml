@@ -73,7 +73,7 @@
     A Bank Account is owned by a Person or an Organisation. A Bank Account contain Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons. \n
 \n
     BankAccount inherits from Base and from the mix-in Coordinate.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -262,7 +262,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Transaction [\'storever\', \'EU with VAT\']</string> </value>
+            <value> <string>storever * EU with VAT</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

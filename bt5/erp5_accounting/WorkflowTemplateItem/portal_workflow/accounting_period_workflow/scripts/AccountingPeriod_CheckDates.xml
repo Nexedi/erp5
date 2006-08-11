@@ -134,7 +134,9 @@ if len(period_list) > 1 :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckDates</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

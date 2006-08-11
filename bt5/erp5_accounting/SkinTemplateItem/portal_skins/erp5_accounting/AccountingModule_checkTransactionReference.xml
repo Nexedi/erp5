@@ -74,7 +74,7 @@ AUTO_UPDATE = False\n
 STATE_LIST = [ \'confirmed\'\n
              , \'delivered\'\n
              , \'stopped\'\n
-             ]\n
+]\n
 \n
 print """<html>\n
 <head>\n
@@ -156,7 +156,9 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingModule_checkTransactionReference</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -199,7 +201,7 @@ return printed\n
                             <string>STATE_LIST</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>transaction</string>
                             <string>state</string>
                             <string>pt</string>

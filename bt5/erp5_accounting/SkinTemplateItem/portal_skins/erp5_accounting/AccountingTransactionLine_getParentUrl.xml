@@ -80,7 +80,9 @@ return "%s/view" % line.getParentValue().absolute_url()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionLine_getParentUrl</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

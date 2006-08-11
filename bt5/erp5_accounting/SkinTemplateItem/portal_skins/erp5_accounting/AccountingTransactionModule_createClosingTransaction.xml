@@ -231,7 +231,9 @@ context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_createClosingTransaction</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -326,7 +328,7 @@ context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                            <string>third_party</string>
+                <string>third_party</string>
               </tuple>
             </value>
         </item>

@@ -103,7 +103,9 @@ return movement_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/PurchaseInvoiceTransaction_selectPackingListMovement</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -145,7 +147,7 @@ return movement_list\n
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>movement_list</string>
                             <string>_getiter_</string>
                             <string>movement</string>

@@ -101,7 +101,9 @@ if transaction.getDestinationReference() in (None, \'\'):\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/setReferences</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
