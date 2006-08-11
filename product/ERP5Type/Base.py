@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import warnings
 import ExtensionClass
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from AccessControl import ClassSecurityInfo
@@ -141,14 +142,12 @@ def getClassPropertyList(klass):
   return ps_list
 
 def initializeClassDynamicProperties(self, klass):
-  id = ''
-  #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not Base.aq_method_generated.has_key(klass):
     # Recurse to superclasses
     for super_klass in klass.__bases__:
-      if getattr(super_klass, 'isRADContent', 0): initializeClassDynamicProperties(self, super_klass)
+      if getattr(super_klass, 'isRADContent', 0):
+        initializeClassDynamicProperties(self, super_klass)
     # Initialize default properties
-    #LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
     if not getattr(klass, 'isPortalContent', None):
       initializeDefaultProperties([klass], object=self)
@@ -163,7 +162,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     #prop_holder = Base.aq_portal_type[ptype] = PropertyHolder()
     prop_holder = PropertyHolder()
     # Recurse to parent object
-    parent_object = self.aq_parent
+    parent_object = self.aq_inner.aq_parent
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
     if getattr(parent_klass, 'isRADContent', 0) and \
@@ -1014,7 +1013,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Do not rename until everything flushed
     self.recursiveFlushActivity(invoke=1)
     tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
-        self.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
+        self.aq_inner.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
     if reindex:
       # Required if we wish that news ids appear instantly
       self.flushActivity(invoke=1)
@@ -1123,7 +1122,15 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the title or the id of the parent
     """
-    return self.aq_parent.getTitleOrId()
+    return self.aq_inner.aq_parent.getTitleOrId()
+  
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentRelativeUrl' )
+  def getParentRelativeUrl(self):
+    """
+      Returns the title or the id of the parent
+    """
+    return self.aq_inner.aq_parent.getRelativeUrl()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentId' )
@@ -1131,7 +1138,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the id of the parent
     """
-    return self.aq_parent.getId()
+    return self.aq_inner.aq_parent.getId()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentTitle' )
@@ -1139,7 +1146,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the title or of the parent
     """
-    return self.aq_parent.getTitle()
+    return self.aq_inner.aq_parent.getTitle()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentValue' )
@@ -1147,10 +1154,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the parent of the current object.
     """
-    return self.aq_parent
+    return self.aq_inner.aq_parent
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
-  getParent = getParentValue # Compatibility
+  def getParent(self):
+    """Returns the parent of the current object (whereas it should return the
+    relative_url of the parent for consistency with CMFCategory.
+
+    This method still uses this behaviour, because some part of the code still
+    uses getParent instead of getParentValue. This may change in the future.
+    """
+    warnings.warn("getParent implementation still returns the parent object, "\
+                  "which is inconsistant with CMFCategory API. "\
+                  "Use getParentValue instead", FutureWarning)
+    return self.getParentValue() # Compatibility
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getUid' )
   def getUid(self):
