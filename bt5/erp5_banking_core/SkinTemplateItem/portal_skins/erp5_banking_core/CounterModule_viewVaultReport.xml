@@ -102,6 +102,8 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_total_price</string>
+                        <string>listbox_total_quantity</string>
                       </list>
                     </value>
                 </item>

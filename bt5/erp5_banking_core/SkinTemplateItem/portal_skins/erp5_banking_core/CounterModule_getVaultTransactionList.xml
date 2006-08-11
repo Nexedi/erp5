@@ -77,12 +77,15 @@
 from Products.ERP5Type.Document import newTempBase\n
 \n
 #context.log(\'CounterModule_getVaultTransactionList vault:\',vault)\n
+def getTranslatedTitleFromCategoryUrl(category):\n
+  return context.portal_categories.getCategoryValue(category).getTranslatedTitle()\n
 \n
 def getTitleFromCategoryUrl(category):\n
   return context.portal_categories.getCategoryValue(category).getTitle()\n
 \n
 def getVariationTitleList(variation_text):\n
   return [getTitleFromCategoryUrl(x) for x in variation_text.split(\'\\n\')]\n
+\n
 \n
 resource_dict = {}\n
 vault_dict = {}\n
@@ -155,15 +158,20 @@ for resource in resource_dict.keys():\n
   for variation in variation_text.split(\'\\n\'):\n
     if variation.startswith(\'cash_status\'):\n
       tmp_dict[\'cash_status\'] = variation\n
+      tmp_dict[\'cash_status_title\'] = getTitleFromCategoryUrl(variation)\n
+      tmp_dict[\'cash_status_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
     elif variation.startswith(\'emission_letter\'):\n
       tmp_dict[\'emission_letter\'] = variation\n
+      tmp_dict[\'emission_letter_title\'] = getTitleFromCategoryUrl(variation)\n
     elif variation.startswith(\'variation\'):\n
       tmp_dict[\'variation\'] = variation\n
-  tmp_dict[\'variation_title\'] = \' \'.join(getVariationTitleList(resource[1]))\n
+      tmp_dict[\'variation_title\'] = getTitleFromCategoryUrl(variation)\n
+  tmp_dict[\'variation_text_title\'] = \' \'.join(getVariationTitleList(resource[1]))\n
   #resource = (vault_inventory.resource_uid, tuple(getVariationTitleList(vault_inventory.variation_text or \'\')))\n
   resource_value = context.portal_catalog.getObject(resource[0])\n
   tmp_dict[\'base_price\'] = resource_value.getBasePrice()\n
   tmp_dict[\'resource_title\'] = resource_value.getTitle()\n
+  tmp_dict[\'resource_translated_title\'] = resource_value.getTranslatedTitle()\n
   tmp_dict[\'price_currency_title\'] = resource_value.getPriceCurrencyTitle()\n
   tmp_dict[\'price_currency\'] = resource_value.getPriceCurrency()\n
   tmp_dict[\'resource_portal_type\'] = resource_value.getPortalType()\n
@@ -249,6 +257,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
+                            <string>getTranslatedTitleFromCategoryUrl</string>
                             <string>getTitleFromCategoryUrl</string>
                             <string>getVariationTitleList</string>
                             <string>resource_dict</string>

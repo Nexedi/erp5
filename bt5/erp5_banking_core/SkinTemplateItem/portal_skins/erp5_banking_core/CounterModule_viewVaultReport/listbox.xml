@@ -346,20 +346,24 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>path</string>
-                          <string>Operation</string>
-                        </tuple>
-                        <tuple>
-                          <string>date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>average_price</string>
-                          <string>Price</string>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>cash_status_translated_title</string>
+                          <string>Cash Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>emission_letter_title</string>
+                          <string>Emission Letter</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_title</string>
+                          <string>Variation</string>
                         </tuple>
                         <tuple>
                           <string>total_quantity</string>
@@ -368,14 +372,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_title</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
-                          <string>simulation_state</string>
-                          <string>Simulatin State</string>
                         </tuple>
                       </list>
                     </value>
@@ -419,7 +415,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -497,7 +502,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>resource_title</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -565,7 +575,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>CounterModule_getVaultTransactionList</string> </value>
+            <value> <string>CounterModule_getVaultInventoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
