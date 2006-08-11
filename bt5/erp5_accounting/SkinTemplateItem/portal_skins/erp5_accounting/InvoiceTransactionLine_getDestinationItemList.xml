@@ -68,20 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>category_dict = {\n
-  \'income\': \'account_type/expense\',\n
-  \'expense\': \'account_type/income\',\n
-  \'payable\': \'account_type/asset/receivable\',\n
-  \'receivable\': \'account_type/liability/payable\',\n
-  \'collected_vat\': \'account_type/asset/receivable/refundable_vat\',\n
-  \'refundable_vat\': \'account_type/liability/payable/collected_vat\',\n
-  \'bank\': \'account_type/asset/cash\',\n
-  \'cash\': \'account_type/asset/cash\',\n
-}\n
-\n
-return context.InvoiceTransactionLine_getSourceItemList(\n
-     category_dict=category_dict,\n
-     caching_method_id=\'InvoiceTransactionLine_getDestinationItemList\' )\n
+            <value> <string>context.log(\'erp5_accounting\',\n
+ \'InvoiceTransactionLine_getDestinationItemList is a deprecated compatibility\'\n
+ \' alias to AccountingTransactionLine_getNodeItemList(mirror=1)\')\n
+return context.AccountingTransactionLine_getNodeItemList(mirror=1)\n
 </string> </value>
         </item>
         <item>
@@ -130,7 +120,6 @@ return context.InvoiceTransactionLine_getSourceItemList(\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>category_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>

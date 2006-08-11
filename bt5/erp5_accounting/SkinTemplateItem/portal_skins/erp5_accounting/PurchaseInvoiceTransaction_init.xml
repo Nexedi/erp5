@@ -82,11 +82,11 @@ transaction.edit (\n
     resource = preference_tool.getPreferredAccountingTransactionCurrency())\n
 \n
 transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                       id=\'income\', )\n
+                       id=\'expense\', )\n
 transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                       id=\'receivable\', )\n
+                       id=\'payable\', )\n
 transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                       id=\'collected_vat\', )\n
+                       id=\'refundable_vat\', )\n
 </string> </value>
         </item>
         <item>

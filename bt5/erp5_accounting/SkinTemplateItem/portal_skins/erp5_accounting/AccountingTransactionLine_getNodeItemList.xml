@@ -68,10 +68,78 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(\'erp5_accounting\',\n
- \'InvoiceTransactionLine_getSourceItemList is a deprecated compatibility\'\n
- \' alias to AccountingTransactionLine_getNodeItemList()\')\n
-return context.AccountingTransactionLine_getNodeItemList()\n
+            <value> <string>"""Return item list of accounts that can be used as node for this accounting\n
+transaction line.\n
+The id of the line is used to filter the list. If `mirror` is set to a true\n
+value, the list will be filtered for the mirror node.\n
+"""\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+if not mirror:\n
+  category_dict = {\n
+    \'income\': \'account_type/income\',\n
+    \'expense\': \'account_type/expense\',\n
+    \'payable\': \'account_type/liability/payable\',\n
+    \'receivable\': \'account_type/asset/receivable\',\n
+    \'collected_vat\': \'account_type/liability/payable/collected_vat\',\n
+    \'refundable_vat\': \'account_type/asset/receivable/refundable_vat\',\n
+    \'bank\': \'account_type/asset/cash\',\n
+    \'cash\': \'account_type/asset/cash\', }\n
+else:\n
+   category_dict = {\n
+    \'income\': \'account_type/expense\',\n
+    \'expense\': \'account_type/income\',\n
+    \'payable\': \'account_type/asset/receivable\',\n
+    \'receivable\': \'account_type/liability/payable\',\n
+    \'collected_vat\': \'account_type/asset/receivable/refundable_vat\',\n
+    \'refundable_vat\': \'account_type/liability/payable/collected_vat\',\n
+    \'bank\': \'account_type/asset/cash\',\n
+    \'cash\': \'account_type/asset/cash\', }\n
+\n
+category = category_dict.get(context.getId(), \'account_type\')\n
+\n
+display_cache = {}\n
+display_funct = context.Account_getFormattedTitle\n
+\n
+def display(x):\n
+  if x not in display_cache:\n
+    display_cache[x] = display_funct(x)\n
+  return display_cache[x]\n
+\n
+def sort(x,y):\n
+  return cmp(display(x), display(y))\n
+\n
+def getItemList(category=None, portal_path=None, mirror=0,\n
+                user_name=None, simulation_state=None):\n
+  """Returns a list of Account path items. """\n
+  cat = context.portal_categories.resolveCategory(category)\n
+  filter_dict = {}\n
+\n
+  # we don\'t filter in existing transactions or report / search dialogs\n
+  if simulation_state not in (\'delivered\', \'cancelled\', \'no_simulation_state\'):\n
+    filter_dict[\'validation_state\'] = (\'draft\', \'validated\')\n
+  \n
+  item_list = cat.getCategoryMemberItemList(\n
+                              portal_type=\'Account\',\n
+                              base=0,\n
+                              display_method=display,\n
+                              sort_method=sort,\n
+                              strict_membership=1,\n
+                              filter=filter_dict)\n
+  return item_list\n
+\n
+# wrap the previous method in a cache\n
+getItemList = CachingMethod(getItemList,\n
+                            id=\'AccountingTransactionLine_getNodeItemList\')\n
+\n
+# the cache vary with the simulation state of the current transaction,\n
+# to display all accounts when the transaction is already delivered.\n
+return getItemList( category=category,\n
+                    portal_path=context.getPortalObject().getPhysicalPath(),\n
+                    mirror=mirror,\n
+                    user_name=context.REQUEST.AUTHENTICATED_USER,\n
+                    simulation_state=context.getProperty(\n
+                          \'simulation_state\', \'no_simulation_state\') )\n
 </string> </value>
         </item>
         <item>
@@ -93,8 +161,14 @@ return context.AccountingTransactionLine_getNodeItemList()\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>category_dict=None, caching_method_id=\'InvoiceTransactionLine_getSourceItemList\'</string> </value>
+            <value> <string>mirror=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,16 +188,25 @@ return context.AccountingTransactionLine_getNodeItemList()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>mirror</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>category_dict</string>
-                            <string>caching_method_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>category</string>
+                            <string>display_cache</string>
+                            <string>display_funct</string>
+                            <string>display</string>
+                            <string>sort</string>
+                            <string>None</string>
+                            <string>getItemList</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,14 +219,13 @@ return context.AccountingTransactionLine_getNodeItemList()\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <string>InvoiceTransactionLine_getSourceItemList</string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InvoiceTransactionLine_getSourceItemList</string> </value>
+            <value> <string>AccountingTransactionLine_getNodeItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
