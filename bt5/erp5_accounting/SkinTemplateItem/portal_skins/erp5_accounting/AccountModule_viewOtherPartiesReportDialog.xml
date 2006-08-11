@@ -61,9 +61,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
                 <string>left</string>
-                <string>bottom</string>
+                <string>right</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -72,7 +72,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_transaction_section_category</string>
@@ -84,13 +90,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_transaction_simulation_state</string>
