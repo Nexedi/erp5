@@ -22,5 +22,12 @@
 
 # This file is only for backward compatibility. Please use ZopePatch instead.
 
-from Products.ERP5Type.patches.ActionInformation import PatchedActionInformation
-from Products.ERP5Type.patches.CookieCrumbler import PatchedCookieCrumbler
+#from Products.ERP5Type.patches.ActionInformation import PatchedActionInformation
+#from Products.ERP5Type.patches.CookieCrumbler import PatchedCookieCrumbler
+
+# XXX some business templates contains some
+# 'Product.ERP5Type.CMFCorePatch.PatchedActionInformation' objects
+# so we keep this name for compatibility
+from Products.CMFCore.ActionInformation import ActionInformation\
+                                 as PatchedActionInformation
+
