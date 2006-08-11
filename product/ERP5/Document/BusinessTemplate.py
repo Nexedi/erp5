@@ -62,6 +62,7 @@ from OFS import XMLExportImport
 from cStringIO import StringIO
 from copy import deepcopy
 from App.config import getConfiguration
+from zExceptions import BadRequest
 import OFS.XMLExportImport
 customImporters={
     XMLExportImport.magic: XMLExportImport.importXML,
@@ -681,7 +682,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if trash and trashbin is not None:
           self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
         container.manage_delObjects([object_id])
-      except (NotFound, KeyError):
+      except (NotFound, KeyError, BadRequest):
         # object is already backup and/or removed
         pass
     BaseTemplateItem.uninstall(self, context, **kw)
