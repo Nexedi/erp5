@@ -340,7 +340,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>BankAccountInventoryLine_getBankAccountNumber</string>
+                          <string>destination_payment_reference</string>
                           <string>Bank Account Number</string>
                         </tuple>
                         <tuple>
@@ -348,7 +348,7 @@
                           <string>Amount</string>
                         </tuple>
                         <tuple>
-                          <string>BankAccountInventoryLine_getBankAccountCurrencyTitle</string>
+                          <string>resource_title</string>
                           <string>Currency</string>
                         </tuple>
                       </list>
