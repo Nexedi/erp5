@@ -493,7 +493,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       if 'erp5_geek' not in selection:
         selection.append('erp5_geek')
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
-      
+
   def stepCreateSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -3132,6 +3132,30 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        UseExportBusinessTemplate \
                        AddPathToBusinessTemplate \
                        BuildBusinessTemplateFail \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_29_CheckUninstallRemovedSkinFolder(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if uninstall works even when the skin folder has already been removed from the site'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+    		       CreatePortalType \
+                       CreateSkinFolder \
+                       CheckSkinFolderExists \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       InstallCurrentBusinessTemplate \
+                       RemoveSkinFolder \
+                       UninstallBusinessTemplate \
                        RemoveBusinessTemplate \
 		       RemovePortalType \
                        '
