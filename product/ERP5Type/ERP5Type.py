@@ -354,12 +354,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         id = id + "d"
       return factory_method(portal, id).propertyMap()
 
-    security.declareProtected(ERP5Permissions.ModifyPortalContent,
-                              'assignRoleToSecurityGroup')
-    def assignRoleToSecurityGroup(self, ob, user_name = None):
+    security.declarePrivate('updateLocalRolesOnSecurityGroups')
+    def updateLocalRolesOnSecurityGroups(self, ob, user_name = None):
       """
-        Assign Local Roles to Groups on object, based on Portal Type
-        Role Definitions
+        Assign Local Roles to Groups on object 'ob', based on Portal Type Role
+        Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
       """
       #FIXME We should check the type of the acl_users folder instead of
       #      checking which product is installed.
@@ -517,6 +516,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
           # We duplicate role settings to mimic PAS
           ob.manage_addLocalGroupRoles(group, role_list)
           ob.manage_addLocalRoles(group, role_list)
+
+    # XXX compat. alias
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'assignRoleToSecurityGroup')
+    assignRoleToSecurityGroup = updateLocalRolesOnSecurityGroups
 
     security.declarePublic('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None, **kw):

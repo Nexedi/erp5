@@ -2223,13 +2223,27 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return None
     return None
 
-  security.declareProtected(Permissions.ModifyPortalContent,'assignRoleToSecurityGroup')
+
+  security.declareProtected(Permissions.ChangeLocalRoles,
+                            'updateLocalRolesOnSecurityGroups')
+  def updateLocalRolesOnSecurityGroups(self, **kw):
+    """Assign Local Roles to Groups on self, based on Portal Type Role
+    Definitions and "ERP5 Role Definition" objects contained inside self.
+    """
+    self._getTypesTool().getTypeInfo(self)\
+                          .updateLocalRolesOnSecurityGroups(self, **kw)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'assignRoleToSecurityGroup')
   def assignRoleToSecurityGroup(self, **kw):
+    """This is basically the same as `updateLocalRolesOnSecurityGroups`, but
+    with a different permission.
     """
-      Set or reset local roles assignments based on local roles
-      definition in portal type.
-    """
-    self._getTypesTool()[self.getPortalType()].assignRoleToSecurityGroup(self, **kw)
+    warnings.warn('assignRoleToSecurityGroup is a deprecated alias to '
+                  'updateLocalRolesOnSecurityGroups. Please note that the '
+                  'permission changed to "Change Local Roles".',
+                  DeprecationWarning)
+    self.updateLocalRolesOnSecurityGroups(**kw)
 
   # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
