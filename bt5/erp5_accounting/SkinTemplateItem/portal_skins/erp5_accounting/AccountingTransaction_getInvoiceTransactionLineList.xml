@@ -80,16 +80,7 @@ def sortInvoiceTransactionLine(a, b):\n
   b_id = sort_dict.get(b.getId(), b.getId())\n
   return cmp(a_id, b_id)\n
 \n
-\n
-object_list = []\n
-for obj in context.objectValues() : \n
-  obj = obj.getObject()\n
-  if kw.has_key(\'portal_type\') : \n
-    if obj.getPortalType() in kw[\'portal_type\'] : \n
-      object_list.append(obj)\n
-  else : \n
-    object_list.append(obj)\n
-\n
+object_list = list(context.contentValues(portal_type=portal_type))\n
 object_list.sort(sortInvoiceTransactionLine)\n
 return object_list\n
 </string> </value>
@@ -108,7 +99,7 @@ return object_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>portal_type=[], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,21 +119,20 @@ return object_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>portal_type</string>
                             <string>kw</string>
                             <string>sort_dict</string>
                             <string>sortInvoiceTransactionLine</string>
-                            <string>object_list</string>
-                            <string>_getiter_</string>
+                            <string>list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>obj</string>
-                            <string>_getitem_</string>
+                            <string>object_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,7 +144,9 @@ return object_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <list/>
+              </tuple>
             </value>
         </item>
         <item>
