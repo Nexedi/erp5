@@ -188,6 +188,15 @@ class TestERP5Security(ERP5TypeTestCase):
     self._makePerson(reference='new_person')
     self.assertRaises(RuntimeError, self._makePerson, reference='new_person')
 
+  def test_PersonCopyAndPaste(self, run=RUN_ALL_TESTS):
+    """If we copy and paste a person, login must not be copyied."""
+    person = self._makePerson(reference='new_person')
+    person_module = self.getPersonModule()
+    copy_data = person_module.manage_copyObjects([person.getId()])
+    changed, = person_module.manage_pasteObjects(copy_data)
+    self.assertNotEquals(person_module[changed['new_id']].getReference(),
+                         person_module[changed['id']].getReference())
+
 if __name__ == '__main__':
   framework()
 else:
