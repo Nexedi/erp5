@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>help = context.getPortalType()\n
+            <value> <string>help = context.getPortalTypeName()\n
 if workflow_action is not None: # First, the workflow transition case.\n
   help = \'%s_%s\' % (help, workflow_action)\n
 elif current_action is not None: # Then, we are able to get the action.\n

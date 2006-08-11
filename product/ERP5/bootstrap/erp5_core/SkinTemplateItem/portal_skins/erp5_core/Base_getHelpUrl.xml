@@ -71,11 +71,11 @@
             <value> <string>if context.REQUEST.has_key(\'workflow_action\'): # We are on a workflow transition\n
   help = \'%s#%s\' % (getattr(getattr(context, form_id), \'form_action\'),context.REQUEST[\'workflow_action\'])\n
 elif action is not None:\n
-  help = \'%s#%s\' % (context.getPortalType(), action)\n
+  help = \'%s#%s\' % (context.getPortalTypeName(), action)\n
 elif form_id is not None:\n
-  help = \'%s_%s\' % (context.getPortalType(), form_id)\n
+  help = \'%s_%s\' % (context.getPortalTypeName(), form_id)\n
 else:\n
-  help = context.getPortalType()\n
+  help = context.getPortalTypeName()\n
 return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentationBaseUrl(), help)\n
 </string> </value>
         </item>
