@@ -94,7 +94,6 @@
                         <string>my_preferred_accounting_transaction_section_category</string>
                         <string>my_preferred_accounting_transaction_source_section</string>
                         <string>my_preferred_accounting_transaction_currency</string>
-                        <string>my_preferred_accounting_transaction_gap</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +108,7 @@
                     <value>
                       <list>
                         <string>my_preferred_accounting_transaction_simulation_state_list</string>
+                        <string>my_preferred_accounting_transaction_gap</string>
                       </list>
                     </value>
                 </item>
