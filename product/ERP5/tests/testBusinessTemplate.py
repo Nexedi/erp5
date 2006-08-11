@@ -47,9 +47,10 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url
 from Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
+from Products.CMFCore.tests.base.testcase import LogInterceptor
 import os
 
-class TestBusinessTemplate(ERP5TypeTestCase):
+class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   """
     Test these operations:
 
@@ -81,6 +82,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.login()
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
+    self._catch_log_errors()
 
   def beforeTearDown(self):
     """Remove objects created tests."""
@@ -93,6 +95,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     if 'geek_workflow' in self.getWorkflowTool().objectIds():
       self.getWorkflowTool().manage_delObjects(['geek_workflow'])
     get_transaction().commit()
+    self._ignore_log_errors()
     
   def login(self):
     uf = self.getPortal().acl_users
