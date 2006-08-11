@@ -25,14 +25,17 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 
 import Products.CMFCore.TypesTool
-from Products.CMFCore.TypesTool import TypeInformation, ScriptableTypeInformation, FactoryTypeInformation, TypesTool
-from Products.CMFCore.interfaces.portal_types import ContentTypeInformation as ITypeInformation
+from Products.CMFCore.TypesTool import TypeInformation
+from Products.CMFCore.TypesTool import FactoryTypeInformation
+from Products.CMFCore.TypesTool import TypesTool
+from Products.CMFCore.interfaces.portal_types import ContentTypeInformation\
+                                                as ITypeInformation
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.utils import SimpleItemWithProperties
 from Products.CMFCore.Expression import createExprContext
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
-from Products.ERP5Type import Permissions as ERP5Permissions
+from Products.ERP5Type import Permissions
 
 # Security uses ERP5Security by default
 try:
@@ -56,7 +59,9 @@ from zLOG import LOG
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
-class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, TranslationProviderBase ):
+class ERP5TypeInformation( FactoryTypeInformation,
+                           RoleProviderBase,
+                           TranslationProviderBase ):
     """
     ERP5 Types are based on FactoryTypeInformation
 
@@ -200,7 +205,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 
         return ob
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPropertySheetList')
     def getPropertySheetList( self ):
         """
@@ -212,7 +217,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         result.sort()
         return result
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getHiddenContentTypeList')
     def getHiddenContentTypeList( self ):
         """
@@ -220,14 +225,14 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         """
         return self.hidden_content_type_list
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategoryList')
     def getBaseCategoryList( self ):
         result = self.portal_categories.getBaseCategoryList()
         result.sort()
         return result
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getConstraintList')
     def getConstraintList( self ):
         from Products.ERP5Type import Constraint
@@ -237,12 +242,12 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         result.sort()
         return result
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getGroupList')
     def getGroupList( self ):
         return self.defined_group_list
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCategoryList')
     def getCategoryList(self):
       """
@@ -280,7 +285,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
               current_list.append(category)
       return current_list
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPropertyAndCategoryList')
     def getPropertyAndCategoryList(self):
       """
@@ -331,7 +336,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
               current_list.append(category)
       return current_list
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstancePropertyMap' )
     def getInstancePropertyMap(self):
       """
@@ -600,7 +605,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         _aq_reset() # XXX We should also call it whenever we change workflow defition
       return result
 
-    security.declareProtected( ERP5Permissions.ManagePortal, 'manage_editLocalRolesForm' )
+    security.declareProtected( Permissions.ManagePortal, 'manage_editLocalRolesForm' )
     def manage_editLocalRolesForm( self, REQUEST, manage_tabs_message=None ):
 
         """ Show the 'Local Roles' management tab.
