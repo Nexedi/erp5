@@ -1,3 +1,7 @@
+2006-08-12 jerome
+* Add foo_workflow for Foo objects
+* Add tests for passing workflow transitions
+
 2006-08-02 yo
 * Check for an empty report tree.
 
