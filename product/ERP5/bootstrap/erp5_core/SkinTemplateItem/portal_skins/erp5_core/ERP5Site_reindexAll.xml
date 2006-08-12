@@ -68,8 +68,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>print "#### Indexing person_module, stage 1 ####"\n
-person_module=getattr(context.getPortalObject(), \'person_module\', None)\n
+            <value> <string>portal = context.getPortalObject()\n
+if clear_catalog:\n
+  # clear the catalog before reindexing\n
+  catalog = portal.portal_catalog.getSQLCatalog(sql_catalog_id)\n
+  catalog.manage_catalogClear()\n
+  # redirect to commit transaction\n
+  from ZTUtils import make_query\n
+  query_kw={\'passive_commit\': passive_commit}\n
+  if sql_catalog_id:\n
+    # XXX make_query doesn\'t support None as an argument\n
+    query_kw[\'sql_catalog_id\'] = sql_catalog_id\n
+  qstring = make_query(**query_kw)\n
+  return context.REQUEST.RESPONSE.redirect(\n
+              \'%s?%s\' % (script.absolute_url(), qstring))\n
+\n
+print "#### Indexing person_module, stage 1 ####"\n
+person_module=getattr(portal, \'person_module\', None)\n
 if person_module is not None :\n
   person_module.reindexObject(tag=\'person_stage_1\',\n
                               sql_catalog_id=sql_catalog_id,\n
@@ -87,7 +102,7 @@ context.portal_categories.reindexObject(tag=\'module\',\n
                                         after_tag=(\'person_stage_1\', ),\n
                                         sql_catalog_id=sql_catalog_id,\n
                                         passive_commit=passive_commit)\n
-for o in list(context.portal_categories.objectValues()):\n
+for o in context.portal_categories.objectValues():\n
   o.recursiveReindexObject(after_tag=(\'module\', \'person_stage_1\', ),\n
                            tag=\'category\',\n
                            sql_catalog_id=sql_catalog_id,\n
@@ -98,7 +113,7 @@ context.portal_alarms.reindexObject(tag=\'module\',\n
                                     after_tag=(\'person_stage_1\', ),\n
                                     sql_catalog_id=sql_catalog_id,\n
                                     passive_commit=passive_commit)\n
-for o in list(context.portal_alarms.objectValues()):\n
+for o in context.portal_alarms.objectValues():\n
   o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
                            tag=\'document\',\n
                            priority=2,\n
@@ -110,7 +125,7 @@ context.portal_preferences.reindexObject(tag=\'module\',\n
                                          after_tag=(\'person_stage_1\', ),\n
                                          sql_catalog_id=sql_catalog_id,\n
                                          passive_commit=passive_commit)\n
-for o in list(context.portal_preferences.objectValues()):\n
+for o in context.portal_preferences.objectValues():\n
   o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
                            tag=\'document\',\n
                            priority=2,\n
@@ -124,7 +139,7 @@ context.portal_simulation.reindexObject(tag=\'module\',\n
                                         after_tag=(\'person_stage_1\', ),\n
                                         sql_catalog_id=sql_catalog_id,\n
                                         passive_commit=passive_commit)\n
-for o in list(context.portal_simulation.objectValues()):\n
+for o in context.portal_simulation.objectValues():\n
   o.recursiveReindexObject(after_tag=(\'module\', \'category\',\n
                                       \'document\', \'person_stage_1\'),\n
                            tag=\'simulation\',\n
@@ -138,7 +153,7 @@ context.portal_templates.reindexObject(tag=\'module\',\n
                                        after_tag=(\'person_stage_1\', ),\n
                                        sql_catalog_id=sql_catalog_id,\n
                                        passive_commit=passive_commit)\n
-for o in list(context.portal_templates.objectValues()):\n
+for o in context.portal_templates.objectValues():\n
   o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
@@ -151,7 +166,7 @@ context.portal_trash.reindexObject(tag=\'module\',\n
                                    after_tag=(\'person_stage_1\', ),\n
                                    sql_catalog_id=sql_catalog_id,\n
                                    passive_commit=passive_commit)\n
-for o in list(context.portal_trash.objectValues()):\n
+for o in context.portal_trash.objectValues():\n
   o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
@@ -164,7 +179,7 @@ context.portal_domains.reindexObject(tag=\'module\',\n
                                      after_tag=(\'person_stage_1\', ),\n
                                      sql_catalog_id=sql_catalog_id,\n
                                      passive_commit=passive_commit)\n
-for o in list(context.portal_domains.objectValues()):\n
+for o in context.portal_domains.objectValues():\n
   o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
@@ -177,7 +192,7 @@ context.portal_rules.reindexObject(tag=\'module\',\n
                                    after_tag=(\'person_stage_1\', ),\n
                                    sql_catalog_id=sql_catalog_id,\n
                                    passive_commit=passive_commit)\n
-for o in list(context.portal_rules.objectValues()):\n
+for o in context.portal_rules.objectValues():\n
   o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
                            tag=\'document\',\n
                            priority=2,\n
@@ -190,7 +205,7 @@ context.portal_deliveries.reindexObject(tag=\'module\',\n
                                         after_tag=(\'person_stage_1\', ),\n
                                         sql_catalog_id=sql_catalog_id,\n
                                         passive_commit=passive_commit)\n
-for o in list(context.portal_deliveries.objectValues()):\n
+for o in context.portal_deliveries.objectValues():\n
   o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
@@ -203,7 +218,7 @@ context.portal_orders.reindexObject(tag=\'module\',\n
                                     after_tag=(\'person_stage_1\', ),\n
                                     sql_catalog_id=sql_catalog_id,\n
                                     passive_commit=passive_commit)\n
-for o in list(context.portal_orders.objectValues()):\n
+for o in context.portal_orders.objectValues():\n
   o.reindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
@@ -211,15 +226,14 @@ for o in list(context.portal_orders.objectValues()):\n
                   passive_commit=passive_commit)\n
 \n
 # Then we index everything except inventories\n
-for folder in context.portal_url.getPortalObject()\\\n
-                                .objectValues(("ERP5 Folder",)):\n
+for folder in portal.objectValues(("ERP5 Folder",)):\n
   print "#### Indexing contents inside folder %s ####" % folder.id\n
   if folder.getId() not in (\'inventory_module\',):\n
     folder.reindexObject(tag=\'module\',\n
                          after_tag=(\'person_stage_1\', ),\n
                          sql_catalog_id=sql_catalog_id,\n
                          passive_commit=passive_commit)\n
-    for o in list(folder.objectValues()):\n
+    for o in folder.objectValues():\n
       try:\n
         o.recursiveReindexObject(after_tag=(\'module\', \'category\',\n
                                             \'person_stage_1\'),\n
@@ -233,15 +247,14 @@ for folder in context.portal_url.getPortalObject()\\\n
         raise\n
 \n
 # Then we index inventories\n
-for folder in context.portal_url.getPortalObject()\\\n
-                      .objectValues(("ERP5 Folder",)):\n
+for folder in portal.objectValues(("ERP5 Folder",)):\n
   if folder.getId() in (\'inventory_module\',):\n
     print "#### Indexing contents inside folder %s ####" % folder.id\n
     folder.reindexObject(tag=\'module\',\n
                          after_tag=(\'person_stage_1\', ),\n
                          sql_catalog_id=sql_catalog_id,\n
                          passive_commit=passive_commit)\n
-    for o in list(folder.objectValues()):\n
+    for o in folder.objectValues():\n
       o.recursiveReindexObject(after_tag=(\'module\', \'document\',\n
                                           \'category\', \'person_stage_1\'),\n
                               tag=\'inventory\',\n
@@ -267,6 +280,12 @@ return printed\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
@@ -274,7 +293,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, passive_commit=1</string> </value>
+            <value> <string>sql_catalog_id=None, passive_commit=1, clear_catalog=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -294,7 +313,7 @@ return printed\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -302,16 +321,25 @@ return printed\n
                           <tuple>
                             <string>sql_catalog_id</string>
                             <string>passive_commit</string>
+                            <string>clear_catalog</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>getattr</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>catalog</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>query_kw</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>qstring</string>
+                            <string>script</string>
+                            <string>getattr</string>
                             <string>None</string>
                             <string>person_module</string>
                             <string>_getiter_</string>
                             <string>o</string>
-                            <string>list</string>
                             <string>folder</string>
                             <string>repr</string>
                           </tuple>
@@ -328,6 +356,7 @@ return printed\n
               <tuple>
                 <none/>
                 <int>1</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
@@ -339,6 +368,27 @@ return printed\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
