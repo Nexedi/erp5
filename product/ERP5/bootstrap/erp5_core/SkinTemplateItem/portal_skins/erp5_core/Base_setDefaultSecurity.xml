@@ -93,6 +93,7 @@ author_permission_list = [p for p in [\n
 \n
 assignor_permission_list = [p for p in [\n
   \'Modify portal content\',\n
+  \'Change local roles\',\n
   \'Delete objects\',\n
 ] if p in permission_list]\n
 \n
