@@ -70,8 +70,9 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.Formulator.Errors import FormValidationError\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+N_ = lambda msg, **kwd: Message(\'erp5_ui\', msg, **kwd)\n
 portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
 request=context.REQUEST\n
 \n
 form = getattr(context, dialog_id)\n
@@ -84,21 +85,21 @@ except FormValidationError, validation_errors:\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
-except ValidationFailed, error_message:\n
-  if hasattr(error_message, \'msg\'):\n
-    # use of Message class to store message+mapping+domain\n
-    kw[\'portal_status_message\'] = error_message.msg\n
-  return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form_id), **kw)\n
 \n
 # XXX: this is a duplication from form validation code in Base_callDialogMethod\n
-# Correct fix is to factorise this script with Base_callDialogMethod, not to fix XXXs here.\n
+# Correct fix is to factorise this script with Base_callDialogMethod, not to\n
+# fix XXXs here.\n
 doaction_param_list = {}\n
 MARKER = []\n
 for f in form.get_fields():\n
   k = f.id\n
   v = getattr(request, k, MARKER)\n
   if v is not MARKER:\n
-    doaction_param_list[k[3:]] = v # XXX: k[:3] removing "my_" prefix ? What about checking if it\'s present before stripping ?\n
+    if k.startswith(\'your_\'):\n
+      k=k[5:]\n
+    elif k.startswith(\'my_\'): # compat\n
+      k=k[3:]\n
+    doaction_param_list[k] = v\n
 \n
 listbox = request.get(\'listbox\') # XXX: hardcoded field name\n
 if listbox is not None:\n
@@ -113,17 +114,36 @@ if listbox is not None:\n
   listbox_line_list = tuple(listbox_line_list)\n
   doaction_param_list[\'listbox\'] = listbox_line_list # XXX: hardcoded field name\n
 \n
-context.portal_workflow.doActionFor(\n
+try:\n
+  context.portal_workflow.doActionFor(\n
     context,\n
     doaction_param_list[\'workflow_action\'],\n
     **doaction_param_list)\n
-return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form_id),keep_items={\'portal_status_message\': N_(\'Status changed.\')})\n
+except ValidationFailed, error_message:\n
+  if hasattr(error_message, \'msg\'):\n
+    # use of Message class to store message+mapping+domain\n
+    message = error_message.msg\n
+  else:\n
+    message = str(error_message)\n
+  return context.ERP5XhtmlStyle_redirect(\n
+                  \'%s/%s\' % (context.absolute_url(), form_id),\n
+                  keep_items={\'portal_status_message\': message}, **kw)\n
+\n
+return context.ERP5XhtmlStyle_redirect(\n
+                \'%s/%s\' % (context.absolute_url(), form_id),\n
+                keep_items={\'portal_status_message\': N_(\'Status changed.\')})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -167,19 +187,17 @@ return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form
                             <string>FormValidationError</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
                             <string>request</string>
                             <string>getattr</string>
                             <string>form</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
-                            <string>error_message</string>
-                            <string>hasattr</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
                             <string>doaction_param_list</string>
                             <string>MARKER</string>
                             <string>_getiter_</string>
@@ -187,6 +205,7 @@ return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form
                             <string>k</string>
                             <string>v</string>
                             <string>_getitem_</string>
+                            <string>_write_</string>
                             <string>listbox</string>
                             <string>None</string>
                             <string>listbox_line_list</string>
@@ -194,6 +213,11 @@ return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form
                             <string>key</string>
                             <string>listbox_line</string>
                             <string>tuple</string>
+                            <string>_apply_</string>
+                            <string>error_message</string>
+                            <string>hasattr</string>
+                            <string>message</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -216,6 +240,27 @@ return context.ERP5XhtmlStyle_redirect(\'%s/%s\' % (context.absolute_url(), form
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
