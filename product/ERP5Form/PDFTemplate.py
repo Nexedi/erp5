@@ -305,7 +305,7 @@ class ERP5ReportTool(ReportTool):
 
     # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
     template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
-    document_xml = unicode(document_xml,encoding).encode('iso-8859-1')
+    document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
     encoding = 'iso-8859-1'
 
     # create the PDFTemplate from xml
