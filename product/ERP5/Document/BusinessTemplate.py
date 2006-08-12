@@ -1288,10 +1288,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           action = update_dict[path]
           if action == 'nothing':
             continue
-	path_splitted = path.split('/', 1)
-	# XXX: to avoid crashing when no portal_type
-	if len(path_splitted) < 2:
-	  continue
+        path_splitted = path.split('/', 1)
+        # XXX: to avoid crashing when no portal_type
+        if len(path_splitted) < 2:
+          continue
         portal_type = path_splitted[1]
         if chain_dict.has_key('chain_%s' % portal_type):
           old_chain_dict = chain_dict['chain_%s' % portal_type]
@@ -3727,14 +3727,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
                             'business_template_installation_workflow'] = None
 
     def updateRevisionNumber(self):
-	""" incremente bt revision number
-	"""
-	revision_number = self.getRevision()
-	if revision_number is None or revision_number.strip() == '':
-	  revision_number = 1
-	else:
-	  revision_number = int(revision_number)+1
-	self.setRevision(revision_number)
+        """Increment bt revision number.
+        """
+        revision_number = self.getRevision()
+        if revision_number is None or revision_number.strip() == '':
+          revision_number = 1
+        else:
+          revision_number = int(revision_number)+1
+        self.setRevision(revision_number)
 
     security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self, no_action=0):
