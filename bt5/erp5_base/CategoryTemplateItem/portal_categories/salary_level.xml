@@ -70,7 +70,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value>                 <string>salary_level</string> </value>
+            <value> <string>salary_level</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
