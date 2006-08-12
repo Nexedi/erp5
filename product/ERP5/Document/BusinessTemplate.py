@@ -378,7 +378,10 @@ class BaseTemplateItem(Implicit, Persistent):
     if hasattr(aq_base(obj), '_filepath'):
       obj._filepath = None
     if hasattr(aq_base(obj), 'workflow_history'):
-      obj.workflow_history = None
+      if hasattr(obj.__class__, 'workflow_history'):
+        obj.workflow_history = None
+      else:
+        del obj.workflow_history
     if getattr(obj, 'meta_type', None) == 'Script (Python)':
       if hasattr(aq_base(obj), '_code'):
         obj._code = None
