@@ -39,6 +39,7 @@ from DateTime import DateTime
 import xmlrpclib, base64, mimetypes
 # to overwrite WebDAV methods
 from Products.CMFDefault.File import File as CMFFile
+from Products.CMFCore.utils import getToolByName
 
 mimetypes.init()
 
@@ -147,10 +148,15 @@ class OOoDocument(XMLObject,File):
 
   def _getServerCoordinates(self):
     """
-    Returns OOo conversion server data from some
-    preferences. NOT IMPLEMENTED YET - XXX
+    Returns OOo conversion server data from 
+    preferences
     """
-    return '127.0.0.1',8080
+    pref=getToolByName(self,'portal_preferences')
+    adr=pref.getPreferredDmsOoodocServerAddress()
+    nr=pref.getPreferredDmsOoodocServerPortNumber()
+    if adr is None or nr is None:
+      raise Exception('you should set conversion server coordinates in preferences')
+    return adr,nr
 
   def _mkProxy(self):
     sp=xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinates(),allow_none=True)
@@ -165,13 +171,13 @@ class OOoDocument(XMLObject,File):
     return (code,m)
 
   security.declareProtected(Permissions.ModifyPortalContent,'convert')
-  def convert(self,REQUEST=None):
+  def convert(self,force=0,REQUEST=None):
     """
     Converts from the initial format to OOo format;
     communicates with the conversion server
     and gets converted file as well as metadata
     """
-    if not self.isFileUploaded():
+    if force==0 and not self.isFileUploaded():
       return self.returnMessage('OOo file is up do date')
     try:
       self._convert()
