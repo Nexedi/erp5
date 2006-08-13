@@ -36,9 +36,11 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
-import xmlrpclib, base64
+import xmlrpclib, base64, mimetypes
 # to overwrite WebDAV methods
 from Products.CMFDefault.File import File as CMFFile
+
+mimetypes.init()
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -494,6 +496,19 @@ class OOoDocument(XMLObject,File):
       s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),str(self.isFileChanged(f)))
     s+='</table>'
     return s
+
+  # this will go out after refactoring (will be inherited from DMS File
+  # and eventually from File
+  security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
+  def guessMimeType(self,fname=''):
+    '''get mime type from file name'''
+    if fname=='':fname=self.getOriginalFilename()
+    if fname:
+      content_type,enc=mimetypes.guess_type(fname)
+      if content_type is not None:
+	self.content_type=content_type
+	return content_type
+
 
   # make sure to call the right edit methods
   _edit=File._edit

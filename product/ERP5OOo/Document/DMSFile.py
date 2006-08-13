@@ -35,6 +35,10 @@ from Products.ERP5Type.XMLObject import XMLObject
 # to overwrite WebDAV methods
 from Products.CMFDefault.File import File as CMFFile
 
+import mimetypes
+mimetypes.init()
+
+
 class DMSFile(XMLObject,File):
   """
   Special base class, different from File only in that it can contain things 
@@ -81,6 +85,16 @@ class DMSFile(XMLObject,File):
     return searchable_text
 
   SearchableText=getSearchableText
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
+  def guessMimeType(self,fname=''):
+    '''get mime type from file name'''
+    if fname=='':fname=self.getOriginalFilename()
+    if fname:
+      content_type,enc=mimetypes.guess_type(fname)
+      if content_type is not None:
+	self.content_type=content_type
+	return content_type
 
 
   # BG copied from File in case
