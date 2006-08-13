@@ -51,12 +51,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -64,17 +58,17 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Bread Crumbs</title>\n
+<title>Test Pass Workflow Transition Keeps Selection</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Bread Crumb</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Pass Workflow Transition Keeps Selection</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td>/erp5/foo_module/FooModule_createObjects?num:int=2</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -94,25 +88,55 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/0/view</td>\n
+  <td>/erp5/foo_module/view</td>\n
   <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>breadcrumb</td>\n
-  <td>ERP5*/*Foos*/*Title 0*/</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//div[@id=\'breadcrumb\']/a[3]</td>\n
+  <td>link=Title 0</td>\n
+  <td></td>\n
+</tr>\n
+<!-- check that we have prev & next buttons for selection -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//div[@id=\'context_bar\']//a[@title=\'Previous\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertLocation</td>\n
-  <td>/erp5/foo_module/0/view</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//div[@id=\'context_bar\']//a[@title=\'Next\']</td>\n
   <td></td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Dummy Workflow Action</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//button[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td>Dummy Workflow Action</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Status changed.</td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//div[@id=\'context_bar\']//a[@title=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//div[@id=\'context_bar\']//a[@title=\'Next\']</td>\n
+  <td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>\n
@@ -130,7 +154,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testBreadCrumbs</string> </value>
+            <value> <string>testPassWorkflowTransitionKeepSelection</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

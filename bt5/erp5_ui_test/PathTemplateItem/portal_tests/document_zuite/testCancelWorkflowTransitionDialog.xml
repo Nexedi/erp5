@@ -51,12 +51,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -64,12 +58,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Bread Crumbs</title>\n
+<title>Test Click Cancel on Workflow Transition Dialog</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Bread Crumb</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Click Cancel on Workflow Transition Dialog</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -98,19 +92,46 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Dummy Workflow Action</td>\n
+</tr>\n
+<tr>\n
   <td>assertText</td>\n
-  <td>breadcrumb</td>\n
-  <td>ERP5*/*Foos*/*Title 0*/</td>\n
+  <td>//button[@name=\'Base_cancel:method\']</td>\n
+  <td>Cancel</td> <!-- XXX \'Cancel\' is probably not appropriate here; see #265 -->\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//div[@id=\'breadcrumb\']/a[3]</td>\n
+  <td>//button[@name=\'Base_cancel:method\']</td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td></td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
   <td>/erp5/foo_module/0/view</td>\n
   <td></td>\n
+</tr>\n
+<!-- We check that the transition has not been passed by looking at the\n
+workflow history. -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=History</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
 </tr>\n
 \n
 </tbody></table>\n
@@ -130,7 +151,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testBreadCrumbs</string> </value>
+            <value> <string>testCancelWorkflowTransitionDialog</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

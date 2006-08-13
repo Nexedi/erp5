@@ -1,3 +1,7 @@
+2006-08-14 jerome
+* More tests for workflow transitions / dialog forms
+* Tests for Prev / Next button from selection
+
 2006-08-12 jerome
 * Add foo_workflow for Foo objects
 * Add tests for passing workflow transitions
