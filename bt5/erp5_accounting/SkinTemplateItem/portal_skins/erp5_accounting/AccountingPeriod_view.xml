@@ -61,7 +61,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
                 <string>right</string>
                 <string>center</string>
               </list>
@@ -72,7 +72,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
@@ -82,15 +90,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_translated_simulation_state_title</string>

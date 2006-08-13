@@ -69,18 +69,21 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>if selection is not None:\n
-  params = selection.getParams()\n
-else:\n
-  params = {}\n
+  params.update(selection.getParams())\n
 kw = {}\n
 kw[\'section_category\'] = params.get(\'section_category\')\n
 kw[\'stat\'] = 1\n
 kw[\'omit_input\'] = 1\n
-kw[\'transaction\'] = context.getUid()\n
+kw[\'transaction_uid\'] = context.getUid()\n
 \n
-result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, selection_params=kw, **kw)\n
-row = result[0]\n
-return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
+result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
+                selection=selection, selection_params=kw, **kw)\n
+\n
+if result:\n
+  row = result[0]\n
+  # FIXME: No rounding should be done here\n
+  return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
+return 0.\n
 </string> </value>
         </item>
         <item>
@@ -103,7 +106,7 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kw</string> </value>
+            <value> <string>brain=None, selection=None, **params</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,10 +134,10 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
-                            <string>kw</string>
+                            <string>params</string>
                             <string>None</string>
                             <string>_getattr_</string>
-                            <string>params</string>
+                            <string>kw</string>
                             <string>_write_</string>
                             <string>context</string>
                             <string>_apply_</string>
