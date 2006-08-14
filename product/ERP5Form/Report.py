@@ -112,6 +112,9 @@ class ERP5Report(ERP5Form):
     # Special Settings
     settings_form = create_settings_form()
 
+    # Default Attributes
+    pt = 'report_view'
+
     def __init__(self, id, title, unicode_mode=0,
                   encoding='UTF-8', stored_encoding='UTF-8'):
         """Initialize form.
