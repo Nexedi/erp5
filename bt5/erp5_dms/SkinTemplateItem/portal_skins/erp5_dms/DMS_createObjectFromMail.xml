@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># determine content type\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# determine content type\n
 ctype=context.content_type_registry.findTypeName(fname,None,None)\n
 context.log(fname,ctype)\n
 if ctype is None:\n
@@ -78,9 +80,13 @@ if ctype is None:\n
 ob=context.document_module.newContent(portal_type=ctype,file=data)\n
 ob.setOriginalFilename(fname)\n
 ob.guessMimeType(fname)\n
-ob.convert() # to be changed - OOoDocument needs refactoring\n
+code,msg=ob.convert()\n
+if code>0:\n
+  raise Exception(msg)\n
 return ob\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -125,11 +131,14 @@ return ob\n
                             <string>fname</string>
                             <string>data</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>None</string>
                             <string>ctype</string>
                             <string>Exception</string>
                             <string>ob</string>
+                            <string>_getiter_</string>
+                            <string>code</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
