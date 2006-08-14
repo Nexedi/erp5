@@ -1091,7 +1091,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           (table, self.getUid(), table, base_category.getBaseCategoryUid())
     return sql_text
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentSqlExpression' )
   def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
     """
       Builds an SQL expression to search children and subclidren
@@ -1832,7 +1833,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     portal_workflow = self.portal_workflow
     return portal_workflow.getInfoFor(self, name, wf_id=wf_id)
 
-  security.declareProtected(Permissions.ManagePortal, 'View')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'objectCount')
   def objectCount(self):
     """
       Returns number of objects
@@ -2124,13 +2126,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _temp_getTitle(self):
     return getattr(self,'title',None)
 
-  def log(self, description, content):
-    """
-    Put a log message
-    """
-    LOG(description,0,content)
-
-  security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
+  def log(self, subsystem, message, level=INFO):
+    """Put a log message """
+    LOG(subsystem, level, message)
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility

@@ -77,7 +77,7 @@ class TranslationProviderBase:
         if type(ps_property) in (type(()), type([])):
           current_list += ps_property
     # create TranslationInformation object for each property
-    for prop in current_list:      
+    for prop in current_list:
       if prop.get('translatable', 0):
         prop_id = prop['id']
         if not property_domain_dict.has_key(prop_id):
@@ -92,7 +92,7 @@ class TranslationProviderBase:
     """
     property_domain_dict = getattr(aq_base(self), '_property_domain_dict', {})
     if len(property_domain_dict) == 0:
-      self.createInitialPropertyTranslationDomainDict()      
+      self.createInitialPropertyTranslationDomainDict()
     return self._property_domain_dict
 
   #
@@ -108,10 +108,10 @@ class TranslationProviderBase:
     keys.sort()
     for k in keys:
       prop = prop_domain_name_dict[k]
-      t = {}      
+      t = {}
       t['property_name'] = prop.getPropertyName()
       t['domain_name'] = prop.getDomainName()
-      translation_list.append(t)      
+      translation_list.append(t)
 
     # get list of Localizer catalog, add 'empty' one for no traduction
     catalog = self.getPortalObject().Localizer.objectIds() + ['']
@@ -125,7 +125,7 @@ class TranslationProviderBase:
                                    )
   
 
-  security.declareProtected( ManagePortal, 'changeRoles' )
+  security.declareProtected( ManagePortal, 'changeTranslations' )
   def changeTranslations( self, properties=None, REQUEST=None ):
     """
     Update our list of translations domain name
