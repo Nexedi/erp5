@@ -117,11 +117,7 @@
                     <value>
                       <list>
                         <string>my_source_project_title</string>
-                        <string>my_classification</string>
-                        <string>my_publication_section</string>
-                        <string>my_function</string>
-                        <string>my_group</string>
-                        <string>my_site</string>
+                        <string>my_dms_category_list</string>
                       </list>
                     </value>
                 </item>
