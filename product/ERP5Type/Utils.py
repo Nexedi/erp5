@@ -320,7 +320,7 @@ class DocumentConstructor(Method):
 
     def __call__(self, folder, id, REQUEST=None,
                  activate_kw=None, is_indexable=None, **kw):
-      o = self.klass(id)
+      o = self.klass(id, title=None)
       if activate_kw is not None:
         o._v_activate_kw = activate_kw
       if is_indexable is not None:
