@@ -200,7 +200,7 @@ else:\n
             break\n
         if ptype_object is None:\n
           raise \'Portal type %s not found in allowed content types\' % portal_type\n
-        category_list = ptype_object.getCategoryList()\n
+        category_list = ptype_object.getInstanceBaseCategoryList()\n
         new_object = module.newContent( portal_type       = portal_type\n
                                       , immediate_reindex = 1\n
                                       )\n

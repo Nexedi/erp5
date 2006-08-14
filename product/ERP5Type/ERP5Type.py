@@ -248,11 +248,9 @@ class ERP5TypeInformation( FactoryTypeInformation,
         return self.defined_group_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryList')
-    def getCategoryList(self):
-      """
-       Return all the categories of the portal type
-      """
+                              'getInstanceBaseCategoryList')
+    def getInstanceBaseCategoryList(self):
+      """ Return all base categories of the portal type """
       current_list = []
       ptype_object = self
       # get the klass of the object based on the constructor document
@@ -286,12 +284,9 @@ class ERP5TypeInformation( FactoryTypeInformation,
       return current_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPropertyAndCategoryList')
-    def getPropertyAndCategoryList(self):
-      """
-       Return all the properties and categories of
-       the portal type
-      """
+                              'getInstancePropertyAndBaseCategoryList')
+    def getInstancePropertyAndBaseCategoryList(self):
+      """Return all the properties and base categories of the portal type. """
       ptype_object = self
       # get the klass of the object based on the constructor document
       m = Products.ERP5Type._m

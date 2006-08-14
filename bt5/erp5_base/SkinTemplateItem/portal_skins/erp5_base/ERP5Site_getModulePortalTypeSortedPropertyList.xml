@@ -76,7 +76,7 @@ for portal_type in module.allowedContentTypes():\n
   #for property in portal_type.getInstancePropertyMap():\n
     #property_string = "%s.%s" % (portal_type.id, property[\'id\'])\n
     #property_list.append(property_string)\n
-  for property in portal_type.getPropertyAndCategoryList():\n
+  for property in portal_type.getInstancePropertyAndBaseCategoryList():\n
     property_string = "%s.%s" % (portal_type.id, property)\n
     property_list.append(property_string)\n
 \n
