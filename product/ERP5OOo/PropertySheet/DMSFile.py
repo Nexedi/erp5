@@ -37,7 +37,8 @@ class DMSFile:
     'mode'    : '' },
     )
 
-  _categories = ('destination','similar','source','source_project','publication_section')
+  _categories = ('destination','similar','source','source_project','publication_section','classification',
+      'function','group','site')
  
 
 # vim: shiftwidth=2

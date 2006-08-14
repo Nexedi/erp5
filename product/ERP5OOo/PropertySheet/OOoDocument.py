@@ -31,10 +31,6 @@ class OOoDocument:
   """
 
   _properties = (
-    { 'id'    : 'original_filename',
-    'description' : 'name of the uploaded file',
-    'type'    : 'string',
-    'mode'    : '' },
     { 'id'    : 'original_format',
     'description' : 'format of the uploaded file',
     'type'    : 'string',
@@ -65,8 +61,6 @@ class OOoDocument:
     'mode'    : ''},
   )
 
-  _categories = ('destination','similar','source','source_project','publication_section')
- 
 
 # vim: shiftwidth=2
 
