@@ -36,7 +36,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
-import xmlrpclib, base64, mimetypes
+import xmlrpclib, base64, mimetypes, re, zipfile, cStringIO
 # to overwrite WebDAV methods
 from Products.CMFDefault.File import File as CMFFile
 from Products.CMFCore.utils import getToolByName
@@ -104,6 +104,7 @@ class OOoDocument(XMLObject,File):
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.Document
+                    , PropertySheet.DMSFile
                     , PropertySheet.OOoDocument
                     )
 
@@ -116,10 +117,9 @@ class OOoDocument(XMLObject,File):
   # XXX the above craves for a separate class, but I'm not sure how to handle
   # it in ZODB, so for now let it be
 
-  #def __init__(self,*args,**kwargs):
-    #XMLObject.__init__(self,*args,**kwargs)
-    #File.__init__(self,*args,**kwargs)
-    #self.__dav_collection__=0
+  # regexps for stripping xml from docs
+  rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
+  rx_compr=re.compile('\s+')
 
   ### Content indexing methods
   security.declareProtected(Permissions.View, 'getSearchableText')
@@ -164,7 +164,7 @@ class OOoDocument(XMLObject,File):
 
   def returnMessage(self,msg,code=0):
     """
-    code may be used in the future to indicate a problem
+    code > 0 indicates a problem
     we distinguish data return from message by checking if it is a tuple
     """
     m=Message(domain='ui',message=msg)
@@ -178,11 +178,11 @@ class OOoDocument(XMLObject,File):
     and gets converted file as well as metadata
     """
     if force==0 and not self.isFileUploaded():
-      return self.returnMessage('OOo file is up do date')
+      return self.returnMessage('OOo file is up do date',1)
     try:
       self._convert()
     except xmlrpclib.Fault,e:
-      return self.returnMessage('Problem: %s' % str(e))
+      return self.returnMessage('Problem: %s' % str(e),2)
     self.setLastConvertTime(DateTime())
     return self.returnMessage('converted')
 
@@ -224,7 +224,7 @@ class OOoDocument(XMLObject,File):
     """
     if not self.hasOOfile(): return False
     allowed=self.getTargetFormatItemList()
-    self.log('allowed',allowed)
+    #self.log('allowed',allowed)
     if allowed is None: return False
     return (format in [x[1] for x in allowed])
 
@@ -235,15 +235,15 @@ class OOoDocument(XMLObject,File):
     based on the values provided by the user. This is implemented
     through the invocation of the conversion server.
     """
-    self.log('editMetadata',newmeta)
+    #self.log('editMetadata',newmeta)
     for k,v in newmeta.items():
       # OOo uses capitalized meta names
       newmeta[k.capitalize()]=v
       newmeta.pop(k)
-    self.log('newmeta',newmeta)
+    #self.log('newmeta',newmeta)
     sp=self._mkProxy()
     meta,oo_data=sp.run_setmetadata(self.getTitle(),enc(self._unpackData(self.oo_data)),newmeta)
-    self.log('res editMetadata',meta)
+    #self.log('res editMetadata',meta)
     self.oo_data=Pdata(dec(oo_data))
     self._setMetaData(meta)
     return True # XXX why return ? - why not?
@@ -256,13 +256,28 @@ class OOoDocument(XMLObject,File):
     on the object. Update metadata information.
     """
     sp=self._mkProxy()
-    self.log('_convert',enc(self._unpackData(self.data))[:500])
+    #self.log('_convert',enc(self._unpackData(self.data))[:500])
     meta,oo_data=sp.run_convert(self.getOriginalFilename(),enc(self._unpackData(self.data)))
     self.oo_data=Pdata(dec(oo_data))
     # now we get text content 
-    nic,text_data=sp.run_getplaintext(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)))
+    text_data=self.extractTextContent()
     self.setTextContent(dec(text_data))
     self._setMetaData(meta)
+
+  security.declareProtected(Permissions.View,'extractTextContent')
+  def extractTextContent(self):
+    """
+    extract plain text from ooo docs - the simplest way possible, works for all ODF formats
+    """
+    cs=cStringIO.StringIO()
+    cs.write(self._unpackData(self.oo_data))
+    z=zipfile.ZipFile(cs)
+    s=z.read('content.xml')
+    s=self.rx_strip.sub(" ",s) # strip xml
+    s=self.rx_compr.sub(" ",s) # compress multiple spaces
+    cs.close()
+    z.close()
+    return s
 
   security.declarePrivate('_setMetaData')
   def _setMetaData(self,meta):
@@ -277,10 +292,10 @@ class OOoDocument(XMLObject,File):
           could also support user fields in OOo
           (user fields are so useful actually...)
     """
-    self.log('meta',meta)
+    #self.log('meta',meta)
     for k,v in meta.items():
       meta[k]=v.encode('utf-8')
-    self.log('meta',meta)
+    #self.log('meta',meta)
     self.setTitle(meta.get('Title',''))
     self.setSubject(meta.get('Subject',''))
     self.setKeywords(meta.get('Keywords',''))
@@ -475,7 +490,7 @@ class OOoDocument(XMLObject,File):
     # real version:
     sp=self._mkProxy()
     mime,file=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),format)
-    self.log('_makeFile',mime)
+    #self.log('_makeFile',mime)
     return mime,Pdata(dec(file))
 
   security.declareProtected(Permissions.View,'getCacheInfo')
@@ -484,8 +499,8 @@ class OOoDocument(XMLObject,File):
     Get cache details as string (for debugging)
     """
     s='CACHE INFO:<br/><table><tr><td>format</td><td>size</td><td>time</td><td>is changed</td></tr>'
-    self.log('getCacheInfo',self.cached_time)
-    self.log('getCacheInfo',self.cached_data)
+    #self.log('getCacheInfo',self.cached_time)
+    #self.log('getCacheInfo',self.cached_data)
     for f in self.cached_time.keys():
       t=self.cached_time[f]
       data=self.cached_data.get(f)
