@@ -27,10 +27,18 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
-import os, re, string, sys
+import os
+import sys
+import re
+import string
+
 from Globals import package_home
+from Globals import DevelopmentMode
 from ZPublisher.HTTPRequest import FileUpload
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+from Acquisition import aq_base
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Acquisition import aq_self
 
 from Products.CMFCore import utils
 from Products.CMFCore.Expression import Expression
@@ -294,7 +302,7 @@ def updateGlobals(this_module, global_hook,
 # Modules Import
 #####################################################
 
-import imp, os, re
+import imp
 
 # Zope 2.6.x does not have App.Config
 try:
@@ -667,7 +675,6 @@ def importLocalDocument(class_id, document_path = None):
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
   from Products.ERP5Type import product_path as erp5_product_path
-  from Products.PythonScripts.Utility import allow_class
   temp_document_constructor = TempDocumentConstructor(document_class)
   temp_document_constructor_name = "newTemp%s" % class_id
   temp_document_constructor.__name__ = temp_document_constructor_name
@@ -749,11 +756,15 @@ def initializeLocalRegistry(directory_name, import_local_method,
         try:
           # XXX Arg are not consistent
           import_local_method(module_name, **{path_arg_name: document_path})
-          LOG('Added local %s to ERP5Type repository: %s (%s)' 
-              % (directory_name, module_name, document_path), 0, '')
+          LOG('ERP5Type', BLATHER,
+              'Added local %s to ERP5Type repository: %s (%s)' 
+              % (directory_name, module_name, document_path))
         except Exception, e:
-          LOG('Failed to add local %s to ERP5Type repository: %s (%s)'
-              % (directory_name, module_name, document_path), PROBLEM, '', e)
+          if DevelopmentMode:
+            raise
+          LOG('E5RP5Type', PROBLEM,
+              'Failed to add local %s to ERP5Type repository: %s (%s)'
+              % (directory_name, module_name, document_path), error=e)
 
 def initializeLocalDocumentRegistry():
   # XXX Arg are not consistent
@@ -845,22 +856,29 @@ def initializeProduct( context,
   try:
     registerDirectory('skins', global_hook)
   except:
-    LOG("ERP5Type:", BLATHER, "No skins directory for %s" % product_name)
+    LOG("ERP5Type", BLATHER, "No skins directory for %s" % product_name)
   try:
     registerDirectory('help', global_hook)
   except:
-    LOG("ERP5Type:", BLATHER, "No help directory for %s" % product_name)
+    LOG("ERP5Type", BLATHER, "No help directory for %s" % product_name)
 
   # Finish the initialization
   utils.initializeBasesPhase2( z_bases, context )
   utils.initializeBasesPhase2( z_tool_bases, context )
 
   if len(tools) > 0:
-    utils.ToolInit('%s Tool' % product_name,
-                    tools=tools,
-                    product_name=product_name,
-                    icon='tool.png',
-                    ).initialize( context )
+    try:
+      utils.ToolInit('%s Tool' % product_name,
+                      tools=tools,
+                      icon='tool.png',
+                      ).initialize( context )
+    except TypeError:
+      # product_name parameter is deprecated in CMF
+      utils.ToolInit('%s Tool' % product_name,
+                      tools=tools,
+                      product_name=product_name,
+                      icon='tool.png',
+                      ).initialize( context )
 
   for klass in content_classes:
     # This id the default add permission to all ojects
