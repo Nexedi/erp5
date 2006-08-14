@@ -154,7 +154,7 @@ class TestBase(ERP5TypeTestCase):
     object_instance = module.newContent(portal_type=self.object_portal_type)
     sequence.edit(
         object_instance=object_instance,
-        current_title='',
+        current_title=None,
         current_group_value=None
     )
 
@@ -860,6 +860,18 @@ class TestBase(ERP5TypeTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_08_emptyObjectHasNoTitle(self, quiet=0, run=run_all_test):
+    """
+    Test if edit update a tales expression.
+    """
+    if not run: return
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+    object = module.newContent(portal_type=portal_type)
+    self.assertEquals(None,
+                      object.getProperty("title"))
 
 if __name__ == '__main__':
     framework()
