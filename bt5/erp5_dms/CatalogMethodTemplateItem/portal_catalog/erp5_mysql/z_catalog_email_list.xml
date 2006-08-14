@@ -57,9 +57,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>getUrlString</string>
-<string>getPortalType</string>
+                            <string>uid</string>
+                            <string>getUrlString</string>
+                            <string>getPortalType</string>
                           </list>
                         </value>
                     </item>

@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value><string>state_change[\'object\'].aq_inner.aq_parent.assignRoleToSecurityGroup()\n
+            <value> <string>state_change[\'object\'].aq_inner.aq_parent.assignRoleToSecurityGroup()\n
 </string> </value>
         </item>
         <item>
@@ -113,6 +113,7 @@
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

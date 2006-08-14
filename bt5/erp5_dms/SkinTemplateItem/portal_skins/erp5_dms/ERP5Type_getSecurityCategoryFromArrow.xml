@@ -86,7 +86,7 @@ if object is None:\n
 \n
 for base_category in base_category_list:\n
   category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
-context.log(script.getId(),category_list)\n
+#context.log(script.getId(),category_list)\n
 return category_list\n
 </string> </value>
         </item>
@@ -147,8 +147,6 @@ return category_list\n
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>script</string>
                           </tuple>
                         </value>
                     </item>

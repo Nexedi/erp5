@@ -59,7 +59,7 @@ def asSecurityGroupId(self,**kw):
 
   # Return a list of users or a single group
   if user_list: 
-    self.log('user_list',user_list)
+    #self.log('user_list',user_list)
     return user_list
-  self.log('code_list',code_list)
+  #self.log('code_list',code_list)
   return '_'.join(code_list)
