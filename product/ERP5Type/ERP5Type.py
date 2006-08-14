@@ -343,7 +343,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       from Products.ERP5Type import Document
       # Access the factory method for temp object by guessing it
       # according to ERP5 naming conventions (not very nice)
-      factory_method_id = self.factory.replace('add', 'newTemp')
+      factory_method_id = self.factory.replace('add', 'newTemp', 1)
       if not factory_method_id.startswith('newTemp'):
         raise
       factory_method = getattr(Document, factory_method_id)
