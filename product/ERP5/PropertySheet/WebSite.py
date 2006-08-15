@@ -27,7 +27,7 @@
 
 class WebSite:
     """
-        PropertySheetTemplate properties for all ERP5 objects
+        WebSite properties for all ERP5 objects
     """
 
     _properties = (
@@ -48,4 +48,6 @@ class WebSite:
             'type'        : 'boolean',
             'mode'        : '' },
     )
+
+    _categories = ('aggregate', )
 
