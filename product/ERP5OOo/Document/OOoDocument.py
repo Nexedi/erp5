@@ -236,16 +236,11 @@ class OOoDocument(XMLObject,File):
     through the invocation of the conversion server.
     """
     #self.log('editMetadata',newmeta)
-    for k,v in newmeta.items():
-      # OOo uses capitalized meta names
-      newmeta[k.capitalize()]=v
-      newmeta.pop(k)
-    #self.log('newmeta',newmeta)
     sp=self._mkProxy()
-    meta,oo_data=sp.run_setmetadata(self.getTitle(),enc(self._unpackData(self.oo_data)),newmeta)
+    kw=sp.run_setmetadata(self.getTitle(),enc(self._unpackData(self.oo_data)),newmeta)
     #self.log('res editMetadata',meta)
-    self.oo_data=Pdata(dec(oo_data))
-    self._setMetaData(meta)
+    self.oo_data=Pdata(dec(kw['data']))
+    self._setMetaData(kw['meta'])
     return True # XXX why return ? - why not?
 
   security.declarePrivate('_convert')
@@ -257,12 +252,12 @@ class OOoDocument(XMLObject,File):
     """
     sp=self._mkProxy()
     #self.log('_convert',enc(self._unpackData(self.data))[:500])
-    meta,oo_data=sp.run_convert(self.getOriginalFilename(),enc(self._unpackData(self.data)))
-    self.oo_data=Pdata(dec(oo_data))
+    kw=sp.run_convert(self.getOriginalFilename(),enc(self._unpackData(self.data)))
+    self.oo_data=Pdata(dec(kw['data']))
     # now we get text content 
     text_data=self.extractTextContent()
-    self.setTextContent(dec(text_data))
-    self._setMetaData(meta)
+    self.setTextContent(text_data)
+    self._setMetaData(kw['meta'])
 
   security.declareProtected(Permissions.View,'extractTextContent')
   def extractTextContent(self):
@@ -291,18 +286,19 @@ class OOoDocument(XMLObject,File):
     XXX - it would be quite nice if the metadata structure
           could also support user fields in OOo
           (user fields are so useful actually...)
+          XXX - I think it does (BG)
     """
     #self.log('meta',meta)
     for k,v in meta.items():
       meta[k]=v.encode('utf-8')
     #self.log('meta',meta)
-    self.setTitle(meta.get('Title',''))
-    self.setSubject(meta.get('Subject',''))
-    self.setKeywords(meta.get('Keywords',''))
-    self.setDescription(meta.get('Description',''))
+    self.setTitle(meta.get('title',''))
+    self.setSubject(meta.get('subject',''))
+    self.setKeywords(meta.get('keywords',''))
+    self.setDescription(meta.get('description',''))
     if meta.get('MIMEType',False):
       self.setMimeType(meta['MIMEType'])
-    self.setReference(meta.get('Reference',''))
+    self.setReference(meta.get('reference',''))
 
   #security.declareProtected(Permissions.View,'getOOfile')
   def getOOfile(self):
@@ -489,9 +485,9 @@ class OOoDocument(XMLObject,File):
     """
     # real version:
     sp=self._mkProxy()
-    mime,file=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),format)
+    kw=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),None,format)
     #self.log('_makeFile',mime)
-    return mime,Pdata(dec(file))
+    return kw['mime'],Pdata(dec(kw['data']))
 
   security.declareProtected(Permissions.View,'getCacheInfo')
   def getCacheInfo(self):
