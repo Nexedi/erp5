@@ -71,6 +71,10 @@ UID_BUFFER_SIZE = 300
 
 valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
 
+full_text_search_modes = { 'natural': '',
+                           'in_boolean_mode': 'IN BOOLEAN MODE',
+                           'with_query_expansion': 'WITH QUERY EXPANSION' }
+
 manage_addSQLCatalogForm=DTMLFile('dtml/addSQLCatalog',globals())
 
 def manage_addSQLCatalog(self, id, title,
@@ -1396,7 +1400,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     keyword_search_keys = list(self.sql_catalog_keyword_search_keys)
     topic_search_keys = self.sql_catalog_topic_search_keys
     multivalue_keys = self.sql_catalog_multivalue_keys
-
+    
     # Define related maps
     # each tuple has the form (key, 'table1,table2,table3/column/where_expression')
     related_tuples = self.getSqlCatalogRelatedKeyList(**kw)
@@ -1585,8 +1589,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               if value != '' or not ignore_empty_string:
                 if '%' in value:
                   where_expression += ["%s LIKE '%s'" % (key, value)]
-		elif value.startswith('='):
-		  where_expression += ["%s = '%s'" % (key, value[1:])]
+                elif value.startswith('='):
+                  where_expression += ["%s = '%s'" % (key, value[1:])]
                 elif value.startswith('>='):
                   where_expression += ["%s >= '%s'" % (key, value[2:])]
                 elif value.startswith('<='):
@@ -1602,9 +1606,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   where_expression += ["%s LIKE '%%%s%%'" % (key, value)]
                 elif key in full_text_search_keys:
                   # We must add % in the request to simulate the catalog
-                  search_mode=kw.get('search_mode','natural').lower()
-                  modes={'natural':'','in_boolean_mode':'IN BOOLEAN MODE','with_query_expansion':'WITH QUERY EXPANSION'}
-                  mode=modes.get(search_mode,'')
+                  search_mode = kw.get('search_mode', 'natural').lower()
+                  mode = full_text_search_keys.get(search_mode,'')
                   where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
                 else:
                   where_expression += ["%s = '%s'" % (key, value)]
@@ -1628,9 +1631,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       query_item += ["%s LIKE '%%%s%%'" % (key, value_item)]
                     elif key in full_text_search_keys:
                       # We must add % in the request to simulate the catalog
-                      search_mode=kw.get('search_mode','natural').lower()
-                      modes={'natural':'','in_boolean_mode':'IN BOOLEAN MODE','with_query_expansion':'WITH QUERY EXPANSION'}
-                      mode=modes.get(search_mode,'')
+                      search_mode = kw.get('search_mode', 'natural').lower()
+                      mode = full_text_search_modes.get(search_mode, '')
                       query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value, mode)]
                     else:
                       query_item += ["%s = '%s'" % (key, value_item)]
