@@ -328,7 +328,9 @@ class DocumentConstructor(Method):
 
     def __call__(self, folder, id, REQUEST=None,
                  activate_kw=None, is_indexable=None, **kw):
-      o = self.klass(id, title=None)
+#       o = self.klass(id, title=None)
+      # XXX Is it safe to set the title to None ?
+      o = self.klass(id)
       if activate_kw is not None:
         o._v_activate_kw = activate_kw
       if is_indexable is not None:
