@@ -293,7 +293,7 @@ class OOoDocument(XMLObject,File):
       meta[k]=v.encode('utf-8')
     #self.log('meta',meta)
     self.setTitle(meta.get('title',''))
-    self.setSubject(meta.get('subject',''))
+    self.setSubject([meta.get('subject',''),])
     self.setKeywords(meta.get('keywords',''))
     self.setDescription(meta.get('description',''))
     if meta.get('MIMEType',False):
