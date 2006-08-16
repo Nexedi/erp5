@@ -1328,6 +1328,17 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           chain_dict['chain_%s' % portal_type] = self._objects[path]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
+  def uninstall(self, context, **kw):
+    (default_chain, chain_dict) = getChainByType(context)
+    for path in self._objects.keys():
+      path_splitted = path.split('/', 1)
+      if len(path_splitted) < 2:
+        continue
+      portal_type = path_splitted[1]
+      id = 'chain_%s' % portal_type
+      if id in chain_dict.keys():
+        del chain_dict[id]
+    context.portal_workflow.manage_changeWorkflows('', props=chain_dict)
 
   def _importFile(self, file_name, file):
     # import workflow chain for portal_type
