@@ -62,18 +62,3 @@ class Preference( Folder ):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, id) :
-    Folder.__init__(self, id)
-    self.priority = Priority.USER
-    
-  security.declareProtected(Permissions.ViewManagementScreens, 'setPriority')
-  def setPriority(self, priority) :
-    """ Sets the priority of the preference"""
-    self.priority = priority
-    self.reindexObjectSecurity()
-    
-  security.declareProtected(Permissions.View, 'getPriority')
-  def getPriority(self) :
-    """ Returns the priority of the preference """
-    return self.priority
-

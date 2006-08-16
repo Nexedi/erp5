@@ -26,12 +26,18 @@
 #
 ##############################################################################
 
-class Preference :
+class Preference:
   """
     User Preference PropertySheet
   """
   
   _properties = (
+    { 'id'          : 'priority',
+      'description' : 'Priority of the preference.',
+      'type'        : 'int',
+      'default'     : 3, # ( Priority.USER )
+      'mode'        : 'w',
+      'write_permission': 'View management screens', },
     { 'id'          : 'preferred_section_category',
       'description' : 'The section category for documents; '\
                          'usually something like group/nexedi.',

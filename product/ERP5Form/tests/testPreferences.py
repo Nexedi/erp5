@@ -44,7 +44,7 @@ from Products.ERP5Form.Document.Preference import Priority
 
 
 class TestPreferences(ERP5TypeTestCase):
-  quiet = 0
+  quiet = 1
   run_all_tests = 1
   
   def getTitle(self):
@@ -60,12 +60,14 @@ class TestPreferences(ERP5TypeTestCase):
     newSecurityManager(None, user)
     self.createPreferences()
   
+  def beforeTearDown(self):
+    portal_preferences = self.getPreferenceTool()
+    portal_preferences.manage_delObjects(list(portal_preferences.objectIds()))
+    get_transaction().commit()
+
   def createPreferences(self) :
     """ create some preferences objects  """
     portal_preferences = self.getPreferenceTool()
-    if getattr(portal_preferences, 'person1', None) is not None :
-      portal_preferences.manage_delObjects([
-                            'person1', 'person2', 'group', 'site'])
     ## create initial preferences
     person1 = portal_preferences.newContent(
         id='person1', portal_type='Preference')
