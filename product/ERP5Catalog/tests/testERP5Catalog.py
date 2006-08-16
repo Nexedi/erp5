@@ -39,13 +39,14 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
+from Products.CMFCore.tests.base.testcase import LogInterceptor
 
 try:
   from transaction import get as get_transaction
 except ImportError:
   pass
 
-class TestERP5Catalog(ERP5TypeTestCase):
+class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   """
     Tests for ERP5 Catalog.
   """
@@ -62,10 +63,15 @@ class TestERP5Catalog(ERP5TypeTestCase):
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
-    portal = self.getPortal()
-    catalog_tool = self.getCatalogTool()
-    # XXX This does not works
-    #catalog_tool.reindexObject(portal)
+
+  def beforeTearDown(self):
+    for module in [ self.getPersonModule(),
+                    self.getOrganisationModule(),
+                    self.getCategoryTool().region,
+                    self.getCategoryTool().group ]:
+      module.manage_delObjects(list(module.objectIds()))
+    self.getPortal().portal_activities.manageClearActivities()
+    get_transaction().commit()
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -739,4 +745,71 @@ class TestERP5Catalog(ERP5TypeTestCase):
     self.tic()
     self.assertNotEquals([], self.getCatalogTool().searchResults(
                                           portal_type='Person', title=u'A Person'))
+
+  def test_SortOn(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals('catalog.title',
+            self.getCatalogTool().buildSQLQuery(
+            sort_on=(('catalog.title', 'ascending'),))['order_by_expression'])
+
+  def test_SortOnDescending(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals('catalog.title DESC',
+            self.getCatalogTool().buildSQLQuery(
+            sort_on=(('catalog.title', 'descending'),))['order_by_expression'])
+    
+  def test_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals('',
+          self.getCatalogTool().buildSQLQuery(
+          sort_on=(('ignored', 'ascending'),))['order_by_expression'])
+  
+  def test_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    # if the sort key is found on the catalog table, it will use that catalog
+    # table.
+    self.assertEquals('catalog.title',
+          self.getCatalogTool().buildSQLQuery(
+          sort_on=(('title', 'ascending'),))['order_by_expression'])
+    
+    # if not found on catalog, it won't do any filtering
+    # in the above, start_date exists both in delivery and movement table.
+    self._catch_log_errors(ignored_level = sys.maxint)
+    self.assertEquals('',
+          self.getCatalogTool().buildSQLQuery(
+          sort_on=(('start_date', 'ascending'),))['order_by_expression'])
+    self._ignore_log_errors()
+    # buildSQLQuery will simply put a warning in the error log and ignore
+    # this key
+    logged_errors = [ logrecord for logrecord in self.logged
+                       if logrecord[0] == 'SQLCatalog' ]
+    self.failUnless(
+        'could not build the new sort index' in logged_errors[0][2])
+    
+    # of course, in that case, it's possible to prefix with table name
+    self.assertEquals('delivery.start_date',
+          self.getCatalogTool().buildSQLQuery(
+          sort_on=(('delivery.start_date', 'ascending'),
+                    ))['order_by_expression'])
+    
+  def test_SortOnMultipleKeys(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals('catalog.title,catalog.id',
+              self.getCatalogTool().buildSQLQuery(
+              sort_on=(('catalog.title', 'ascending'),
+                       ('catalog.id', 'asc')))
+                       ['order_by_expression'].replace(' ', ''))
+
+  def test_SortOnRelatedKey(self, quiet=quiet, run=run_all_test):
+    """Sort-on parameter and related key. (Assumes that region_title is a \
+    valid related key)"""
+    if not run: return
+    self.assertNotEquals('',
+              self.getCatalogTool().buildSQLQuery(region_title='',
+              sort_on=(('region_title', 'ascending'),))['order_by_expression'])
+    self.assertNotEquals('',
+              self.getCatalogTool().buildSQLQuery(
+              sort_on=(('region_title', 'ascending'),))['order_by_expression'],
+              'sort_on parameter must be taken into account even if related key '
+              'is not a parameter of the current query')
 

@@ -1380,7 +1380,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     return full_list
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
-                          ignore_empty_string=1,**kw):
+                          ignore_empty_string=1, **kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     # Get search arguments:
     if REQUEST is None and (kw is None or kw == {}):
@@ -1401,10 +1401,45 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     topic_search_keys = self.sql_catalog_topic_search_keys
     multivalue_keys = self.sql_catalog_multivalue_keys
     
+    
+    # Compute "sort_index", which is a sort index, or none:
+    if kw.has_key('sort-on'):
+      sort_index=kw['sort-on']
+    elif hasattr(self, 'sort-on'):
+      sort_index=getattr(self, 'sort-on')
+    elif kw.has_key('sort_on'):
+      sort_index=kw['sort_on']
+    else: sort_index=None
+
+    # Compute the sort order
+    if kw.has_key('sort-order'):
+      so=kw['sort-order']
+    elif hasattr(self, 'sort-order'):
+      so=getattr(self, 'sort-order')
+    elif kw.has_key('sort_order'):
+      so=kw['sort_order']
+    else: so=None
+
+    # We must now turn sort_index into
+    # a dict with keys as sort keys and values as sort order
+    if isinstance(sort_index, basestring):
+      sort_index = [(sort_index, so)]
+    elif not isinstance(sort_index, (list, tuple)):
+      sort_index = None
+    
+    # if we have a sort index, we must take it into account to get related
+    # keys.
+    if sort_index:
+      related_key_kw = dict(kw)
+      for sort_info in sort_index:
+        related_key_kw.setdefault(sort_info[0], '')
+      related_tuples = self.getSqlCatalogRelatedKeyList(**related_key_kw)
+    else:
+      related_tuples = self.getSqlCatalogRelatedKeyList(**kw)
+    
     # Define related maps
-    # each tuple has the form (key, 'table1,table2,table3/column/where_expression')
-    related_tuples = self.getSqlCatalogRelatedKeyList(**kw)
-    #LOG('related_tuples', 0, str(related_tuples))
+    # each tuple from `related_tuples` has the form (key,
+    # 'table1,table2,table3/column/where_expression')
     related_keys = []
     related_method = {}
     related_table_map = {}
@@ -1451,35 +1486,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       where_expression = []
       from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
 
-
-      # Compute "sort_index", which is a sort index, or none:
-      if kw.has_key('sort-on'):
-        sort_index=kw['sort-on']
-      elif hasattr(self, 'sort-on'):
-        sort_index=getattr(self, 'sort-on')
-      elif kw.has_key('sort_on'):
-        sort_index=kw['sort_on']
-      else: sort_index=None
-
-      # Compute the sort order
-      if kw.has_key('sort-order'):
-        so=kw['sort-order']
-      elif hasattr(self, 'sort-order'):
-        so=getattr(self, 'sort-order')
-      elif kw.has_key('sort_order'):
-        so=kw['sort_order']
-      else: so=None
-
-      # We must now turn sort_index into
-      # a dict with keys as sort keys and values as sort order
-      if isinstance(sort_index, basestring):
-        sort_index = [(sort_index, so)]
-      elif not isinstance(sort_index, (list, tuple)):
-        sort_index = None
-
-
-      # If sort_index is a dictionnary
-      # then parse it and change it
       sort_on = None
       if sort_index is not None:
         new_sort_index = []
@@ -1528,7 +1534,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           raise
         except:
           LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
-          pass
+          sort_on = ''
 
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
       new_kw = {}
@@ -1698,7 +1704,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         if k != query_table:
           where_expression.append('%s.uid = %s.uid' % (query_table, tid))
       # Calculate extra where_expressions based on related definition
-      for (table_list,method_id) in related_methods.keys():
+      for (table_list, method_id) in related_methods.keys():
         related_method = getattr(self, method_id, None)
         if related_method is not None:
           table_id = {'src__' : 1} # Return query source, do not evaluate
