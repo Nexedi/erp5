@@ -41,6 +41,11 @@ class DMSPreference:
     'type'    : 'int',
     'preference':1,
     'mode'    : '' },
+    { 'id'    : 'preferred_dms_base_category_list',
+    'description' : 'list of categories to choose from while classifying',
+    'type'    : 'lines',
+    'preference':1,
+    'mode'    : '' },
     )
 
  
