@@ -49,7 +49,7 @@ class TrashTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-  
+
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainTrashTool', _dtmldir )
 
@@ -116,10 +116,10 @@ class TrashTool(BaseTool):
         else:
           subobjects_dict['workflow_chain'] = ''
         return subobjects_dict
-        
+
     keep_sub = kw.get('keep_subobjects', 0)
     subobjects_dict = {}
-    
+
     if not keep_sub:
       # export subobjects
       if save:
@@ -141,21 +141,32 @@ class TrashTool(BaseTool):
     """
       Create a new trash bin at upgrade of bt
     """
-#     LOG('new Trash bin for', 0, bt_title)
     # construct date
     date = DateTime()
     start_date = date.strftime('%Y-%m-%d')
+
+    def getBaseTrashId():
+      ''' A little function to get an id without leading underscore
+      '''
+      base_id = '%s' % start_date
+      if bt_title not in ('', None):
+        base_id = '%s_%s' % (bt_title, base_id)
+      return base_id
+
     # generate id
     trash_ids = self.objectIds()
     n = 0
-    new_trash_id = bt_title+'_'+start_date
-    while  new_trash_id in trash_ids:
-      n = n + 1
-      new_trash_id = '%s_%s' %(bt_title+'_'+start_date, n)
+    new_trash_id = getBaseTrashId()
+    while new_trash_id in trash_ids:
+      n += 1
+      new_trash_id = '%s_%s' % (getBaseTrashId(), n)
     # create trash bin
-#     LOG('creating trash bin with id', 0, new_trash_id)
-    trashbin = self.newContent(portal_type='Trash Bin', id=new_trash_id, title=bt_title, start_date=start_date, causality_value=bt)
-#     LOG('trash item created', 0, trashbin)
+    trashbin = self.newContent( portal_type     = 'Trash Bin'
+                              , id              = new_trash_id
+                              , title           = bt_title
+                              , start_date      = start_date
+                              , causality_value = bt
+                              )
     return trashbin
 
   def getTrashBinObjectsList(self, trashbin):
@@ -171,11 +182,11 @@ class TrashTool(BaseTool):
           object_list.append(obj)
       if len(childObjects) > 0:
         for o in childObjects:
-          object_list.extend(getChildObjects(o))          
+          object_list.extend(getChildObjects(o))
       else:
         object_list.append(obj)
       return object_list
-              
+
     list = getChildObjects(trashbin)
     list.sort()
     return list
