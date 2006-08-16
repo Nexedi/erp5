@@ -68,56 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-#from Products.ERP5Type.Message import Message\n
-context.log(\'themail\',theMail)\n
-noSenderInHeaderMsg="no sender in headers"\n
-noSenderMsg="you are not in user database"\n
-manySendersMsg="very serious error: your address has multiple entries"\n
+            <value> <string>subjecttpl=\'ingested %(name)s\'\n
+msgtpl="""Your document "%(name)s" was successfully ingested.\n
 \n
-# get sender from headers\n
-fromraw=theMail[\'headers\'][\'from\']\n
+click here: %(url)s/view to proceed with your work.\n
+"""\n
+ob=kw[\'object\']\n
+subject=subjecttpl % {\'name\':ob.getOriginalFilename()}\n
+msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getOriginalFilename()}\n
+mto=kw[\'address\']\n
+mfro=\'dms@dms.nexedi.com\'\n
 \n
-senderemail=context.findAddress(fromraw)\n
-if senderemail is None:\n
-  print noSenderInHeaderMsg\n
-  return printed\n
-\n
-# find sender\n
-r=context.portal_catalog(portal_type=\'Email\',url_string=senderemail)\n
-if len(r)==0:\n
-  print noSenderMsg\n
-  return printed\n
-if len(r)>1:\n
-  print manySendersMsg\n
-senderm=r[0]\n
-person=senderm.getParent()\n
-context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUrl())\n
-\n
-# create objects from attachments\n
-try:\n
-  for fname,data in theMail[\'attachments\'].items():\n
-    obj=context.DMS_createObjectFromMail(fname,data)\n
-    obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
-    context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
-except Exception,e:\n
-  return str(e)\n
-return\n
-
-
-]]></string> </value>
+context.MailHost.send(msg,mto,mfro,subject)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -128,7 +96,7 @@ return\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>theMail</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -148,36 +116,23 @@ return\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>theMail</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>noSenderInHeaderMsg</string>
-                            <string>noSenderMsg</string>
-                            <string>manySendersMsg</string>
+                            <string>kw</string>
+                            <string>subjecttpl</string>
+                            <string>msgtpl</string>
                             <string>_getitem_</string>
-                            <string>fromraw</string>
-                            <string>senderemail</string>
-                            <string>None</string>
-                            <string>r</string>
-                            <string>len</string>
-                            <string>senderm</string>
-                            <string>person</string>
-                            <string>script</string>
-                            <string>_getiter_</string>
-                            <string>fname</string>
-                            <string>data</string>
-                            <string>obj</string>
-                            <string>Exception</string>
-                            <string>e</string>
-                            <string>str</string>
+                            <string>ob</string>
+                            <string>_getattr_</string>
+                            <string>subject</string>
+                            <string>msg</string>
+                            <string>mto</string>
+                            <string>mfro</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -194,33 +149,12 @@ return\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_handleMail</string> </value>
+            <value> <string>DMS_notifyByEmail</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
