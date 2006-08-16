@@ -296,6 +296,7 @@ class OOoDocument(XMLObject,File):
     self.setSubject([meta.get('subject',''),])
     self.setKeywords(meta.get('keywords',''))
     self.setDescription(meta.get('description',''))
+    self.setLanguage(meta.get('language',''))
     if meta.get('MIMEType',False):
       self.setMimeType(meta['MIMEType'])
     self.setReference(meta.get('reference',''))
