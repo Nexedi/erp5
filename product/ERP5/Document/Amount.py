@@ -365,7 +365,7 @@ class Amount(Base, Variated):
     pass
   
   
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalBasePrice')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
   def getTotalPrice(self):
     """
       Return total price for the number of items
