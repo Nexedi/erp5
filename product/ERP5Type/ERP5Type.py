@@ -255,8 +255,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       ptype_object = self
       # get the klass of the object based on the constructor document
       m = Products.ERP5Type._m
-      ptype_name = ''.join(ptype_object.id.split(' '))
-      constructor = 'add%s' %(ptype_name)
+      constructor = self.factory
       klass = None
       for method, doc in m.items():
         if method == constructor:
@@ -290,8 +289,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       ptype_object = self
       # get the klass of the object based on the constructor document
       m = Products.ERP5Type._m
-      ptype_name = ''.join(ptype_object.id.split(' '))
-      constructor = 'add%s' %(ptype_name)
+      constructor = self.factory
       klass = None
       for method, doc in m.items():
         if method == constructor:
