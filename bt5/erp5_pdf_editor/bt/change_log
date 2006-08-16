@@ -1,3 +1,6 @@
+2006-08-16 jerome
+* added missing form_render_PDFeForm
+
 2006-08-03 jerome
 * add global action
 
