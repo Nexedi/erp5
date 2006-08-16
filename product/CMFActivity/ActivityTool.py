@@ -363,7 +363,7 @@ class ActivityTool (Folder, UniqueObject):
         return self.REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'unsubscribe')
-    def unsubscribe(self):
+    def unsubscribe(self, REQUEST=None, RESPONSE=None):
         """ unsubscribe from the global Timer Service """
         service = getTimerService(self)
         url = '%s/manageLoadBalancing?manage_tabs_message=' %self.absolute_url()
@@ -373,7 +373,8 @@ class ActivityTool (Folder, UniqueObject):
         else:
             service.unsubscribe(self)
             url += urllib.quote("Unsubscribed from Timer Service")
-        return self.REQUEST.RESPONSE.redirect(url)
+        if RESPONSE is not None:
+            RESPONSE.redirect(url)
 
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
