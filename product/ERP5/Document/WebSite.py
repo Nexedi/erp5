@@ -35,6 +35,7 @@ from Products.ERP5.Document.Domain import Domain
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
 from Globals import get_request
+from Persistence import Persistent
 from Products.CMFCore.utils import UniqueObject, _checkPermission,\
                                    _getAuthenticatedUser
 from AccessControl.SecurityManagement import getSecurityManager
@@ -46,11 +47,12 @@ from ZPublisher import BeforeTraverse
 from zLOG import LOG
 
 website_key = 'web_site_value'
-class WebSiteTraversalHook:
+class WebSiteTraversalHook(Persistent):
   """This is used by WebSite to rewrite URLs in such way
   that once a user gets into a Web Site object, all
   documents referenced by the web site are accessed
   through the web site rather than directly.
+  We inherit for persistent, so that pickle mechanism ignores _v_request
   """
 
   def _physicalPathToVirtualPath(self, path):
@@ -61,7 +63,7 @@ class WebSiteTraversalHook:
     if type(path) is type(''):
       path = path.split( '/')
 
-    website_path = self.request.get(website_key, None)
+    website_path = self._v_request.get(website_key, None)
     if website_path:
       website_path = tuple(website_path)    # Make sure all path are tuples
       path = tuple(path)                    # Make sure all path are tuples
@@ -81,7 +83,7 @@ class WebSiteTraversalHook:
       if path_len > common_index + 1:
         path = website_path + path[common_index + 1:]
 
-    rpp = self.request.other.get('VirtualRootPhysicalPath', ('',))
+    rpp = self._v_request.other.get('VirtualRootPhysicalPath', ('',))
     i = 0
     for name in rpp[:len(path)]:
       if path[i] == name:
@@ -89,11 +91,11 @@ class WebSiteTraversalHook:
       else:
         break
     return path[i:]
-
+  
   def __call__(self, container, request):
     """Each time we are traversed, we patch the request instance with our
     rewritted version of physicalPathToVirtualPath"""
-    self.request = request
+    self._v_request = request
     request.physicalPathToVirtualPath = self._physicalPathToVirtualPath
 
 Domain_getattr = Domain.inheritedAttribute('__getattr__')
@@ -176,15 +178,14 @@ class WebSite(Domain):
     def manage_beforeDelete(self, item, container):
       if item is self:
         handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.unregisterBeforeTraverse(container, handle)
+        BeforeTraverse.unregisterBeforeTraverse(item, handle)
       Domain.manage_beforeDelete(self, item, container)
 
     security.declarePrivate( 'manage_afterAdd' )
     def manage_afterAdd(self, item, container):
       if item is self:
         handle = self.meta_type + '/' + self.getId()
-        container = container.this()
-        BeforeTraverse.registerBeforeTraverse(container,
+        BeforeTraverse.registerBeforeTraverse(item,
                                               WebSiteTraversalHook(),
                                               handle)
       Domain.manage_afterAdd(self, item, container)
