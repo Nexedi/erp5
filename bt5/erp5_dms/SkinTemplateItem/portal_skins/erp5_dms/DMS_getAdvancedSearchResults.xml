@@ -68,9 +68,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw.update(context.parseSearchString(kw.get(\'SearchableText\',\'\')))\n
+            <value> <string encoding="cdata"><![CDATA[
+
+kw.update(context.parseSearchString(kw.get(\'SearchableText\',\'\')))\n
+\n
+cf=kw.get(\'creation_from\')\n
+ct=kw.get(\'creation_to\')\n
+mf=kw.get(\'modification_from\')\n
+mt=kw.get(\'modification_to\')\n
+\n
+wheres=[]\n
+if cf:\n
+  wheres.append(\'creation_date>"\'+str(cf)+\'"\')\n
+if ct:\n
+  wheres.append(\'creation_date<"\'+str(ct)+\'"\')\n
+if mf:\n
+  wheres.append(\'modification_date>"\'+str(mf)+\'"\')\n
+if mt:\n
+  wheres.append(\'modification_date<"\'+str(mt)+\'"\')\n
+if wheres!=[]:\n
+  kw[\'where_expression\']=\' AND \'.join(wheres)\n
+context.log(\'wheres\',kw[\'where_expression\'])\n
 return context.portal_catalog(**kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -115,6 +137,14 @@ return context.portal_catalog(**kw)\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>cf</string>
+                            <string>ct</string>
+                            <string>mf</string>
+                            <string>mt</string>
+                            <string>wheres</string>
+                            <string>str</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
