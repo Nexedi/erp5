@@ -94,6 +94,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.getPortal().manage_delObjects(['geek_module'])
     if 'geek_workflow' in self.getWorkflowTool().objectIds():
       self.getWorkflowTool().manage_delObjects(['geek_workflow'])
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id != "Geek Object":
+          props['chain_%s' % id] = ','.join(wf_ids)
+    pw.manage_changeWorkflows('', props=props)
     get_transaction().commit()
     self._ignore_log_errors()
     
@@ -767,8 +775,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     if cbt is not None:
       for id, wf_ids in cbt.items():
         props['chain_%s' % id] = ','.join(wf_ids)
-    props['chain_geek'] = 'geek_workflow'
+    props['chain_Geek Object'] = 'geek_workflow'
     pw.manage_changeWorkflows('', props=props)
+
+  def stepCheckWorkflowChainRemoved(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if the workflowChain has been removed
+    """
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        self.failUnless(id!="Geek Object")
 
   def stepAddWorkflowToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -781,6 +799,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(wf_ids), 1)
     bt.edit(template_workflow_id_list=wf_ids)
 
+  def stepAddWorkflowChainToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    wf_chain_ids = ['Geek Object | %s' % sequence.get('workflow_id', '')]
+    bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
+
   def stepRemoveWorkflow(self, sequence=None, sequence_list=None, **kw):
     """
     Remove Workflow
@@ -790,6 +817,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pw.manage_delObjects([wf_id])
     workflow = pw._getOb(wf_id, None)
     self.failUnless(workflow is None)
+    # remove workflowChain
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id != "Geek Object":
+          props['chain_%s' % id] = ','.join(wf_ids)
+    pw.manage_changeWorkflows('', props=props)
 
   def stepCheckWorkflowExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1498,13 +1533,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
-  
-  def stepInstallCurrentBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
-    current_bt = sequence.get('current_bt')
-    current_bt.install(force=1)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1840,6 +1868,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
@@ -2447,6 +2476,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckPropertySheetRemoved \
+                       CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -2482,6 +2512,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2659,6 +2690,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2782,6 +2814,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2869,6 +2902,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -3034,19 +3068,23 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckMissingDependencies \
                        UseDependencyBusinessTemplate \
                        BuildBusinessTemplate \
-                       InstallCurrentBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemovePortalType \
+                       RemoveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
                        CheckInstalledInstallationState \
                        UseExportBusinessTemplate \
                        CheckNoMissingDependencies \
-                       UseDependencyBusinessTemplate \
+                       UseImportBusinessTemplate \
                        UninstallBusinessTemplate \
                        UseExportBusinessTemplate \
                        CheckMissingDependencies \
-                       UseDependencyBusinessTemplate \
+                       UseImportBusinessTemplate \
                        RemoveBusinessTemplate \
                        UseExportBusinessTemplate \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -3114,10 +3152,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
                        BuildBusinessTemplate \
-                       InstallCurrentBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemovePortalType \
+                       RemoveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
                        UninstallBusinessTemplate \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -3156,11 +3198,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
                        BuildBusinessTemplate \
-                       InstallCurrentBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveBusinessTemplate \
+		       RemovePortalType \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
                        RemoveSkinFolder \
                        UninstallBusinessTemplate \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
