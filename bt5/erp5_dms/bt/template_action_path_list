@@ -30,6 +30,7 @@ Graphic | view
 Image Module | list_ui
 Image Module | sort_on
 Image Module | view
+Preference | dms_preferences
 Presentation | convert
 Presentation | create_snapshot
 Presentation | download
