@@ -341,7 +341,9 @@ class TestProductionOrderMixin(TestOrderMixin):
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(2, len(simulation_movement_list))
     # Test consumed movement
-    consumed_movement = applied_rule.cr_1
+    transformation = sequence.get('transformation')
+    consumed_movement_id = 'cr_%s_1' % transformation.getId()
+    consumed_movement = applied_rule[consumed_movement_id]
     operation_resource = consumed_movement.portal_categories.resolveCategory(
                                               'operation/operation1')
     # FIXME

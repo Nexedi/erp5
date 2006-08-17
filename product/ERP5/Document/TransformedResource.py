@@ -178,7 +178,10 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         # must be true
         # Create temporary object to store amount
         from Products.ERP5Type.Document import newTempAmount
-        tmp_amount = newTempAmount(self.getPortalObject(), self.getId())
+        # XXX changed by TB getParentID()+getId() instead of getId()
+        # This might not be enough if we have different transformation
+        # with the same id (for example in several modules)
+        tmp_amount = newTempAmount(self.getPortalObject(), self.getParentId()+'_'+self.getId())
         # Create error string
         error_string = ''
         # Add resource relation
