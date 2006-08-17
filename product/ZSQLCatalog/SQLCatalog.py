@@ -1613,7 +1613,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 elif key in full_text_search_keys:
                   # We must add % in the request to simulate the catalog
                   search_mode = kw.get('search_mode', 'natural').lower()
-                  mode = full_text_search_keys.get(search_mode,'')
+                  mode = full_text_search_modes.get(search_mode,'')
                   where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
                 else:
                   where_expression += ["%s = '%s'" % (key, value)]
