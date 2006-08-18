@@ -89,7 +89,7 @@ if currency != \'XOF\':\n
 \n
 cash_detail_dict= { \'line_portal_type\'          : \'Incoming Cash Balance Regulation Line\'        # The portal type that the fastinput will create\n
                     , \'operation_currency\'       : currency                            # The operation currently\n
-                    , \'cash_status_list\'          : [\'valid\', \'cancelled\', \'to_sort\']                        # List of possible cashStatus or None if all\n
+                    , \'cash_status_list\'          : [\'valid\', \'cancelled\', \'to_sort\', \'new_emitted\']                        # List of possible cashStatus or None if all\n
                     , \'emission_letter_list\'      : None                                       # List of possible emissionLetter or None if all\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)      # List of possible variation or None if all\n
                     , \'currency_cash_portal_type\': None                                                   # \'Coin\' or \'Banknote\' or None if both\n

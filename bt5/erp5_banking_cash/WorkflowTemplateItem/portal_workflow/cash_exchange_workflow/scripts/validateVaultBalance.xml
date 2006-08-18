@@ -77,34 +77,20 @@ encaisse_billets_et_monnaies_sortante = "/encaisse_des_billets_et_monnaies/sorta
 encaisse_billets_et_monnaies_entrante = "/encaisse_des_billets_et_monnaies/entrante"\n
 \n
 \n
-# user logged in\n
-user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-\n
-\n
-caisse_incoming = None\n
-caisse_outgoing = None\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  \n
-  if site_value.getVaultType().endswith(\'guichet\') and ((\'banque_interne\' in site) or (\'operations_diverses\' in site)):\n
-    caisse_incoming = site + encaisse_billets_et_monnaies_entrante\n
-    caisse_outgoing = site + encaisse_billets_et_monnaies_sortante\n
-    break\n
+counter_site = transaction.getSource()\n
+caisse_incoming = counter_site + encaisse_billets_et_monnaies_entrante\n
+caisse_outgoing = counter_site + encaisse_billets_et_monnaies_sortante\n
 \n
 \n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=caisse_outgoing, date=transaction.getStartDate()):\n
+if not transaction.Baobab_checkCounterDateOpen(site=counter_site, date=transaction.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
 \n
 \n
-#resource_one = transaction.CashDelivery_checkCounterInventory(source = caisse_incoming, portal_type=\'Incoming Cash Exchange Line\')\n
 resource_two = transaction.CashDelivery_checkCounterInventory(caisse_outgoing, portal_type=\'Outgoing Cash Exchange Line\')\n
-\n
-#resource_two = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Purchase Line\')\n
 \n
 # Get total_price.\n
 incoming_total = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash Exchange Line\')\n
@@ -148,7 +134,7 @@ if amount_total != outgoing_total:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -175,6 +161,7 @@ if amount_total != outgoing_total:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
@@ -184,15 +171,9 @@ if amount_total != outgoing_total:\n
                             <string>currency</string>
                             <string>encaisse_billets_et_monnaies_sortante</string>
                             <string>encaisse_billets_et_monnaies_entrante</string>
-                            <string>user_id</string>
-                            <string>context</string>
-                            <string>site_list</string>
-                            <string>None</string>
+                            <string>counter_site</string>
                             <string>caisse_incoming</string>
                             <string>caisse_outgoing</string>
-                            <string>_getiter_</string>
-                            <string>site</string>
-                            <string>site_value</string>
                             <string>msg</string>
                             <string>resource_two</string>
                             <string>incoming_total</string>

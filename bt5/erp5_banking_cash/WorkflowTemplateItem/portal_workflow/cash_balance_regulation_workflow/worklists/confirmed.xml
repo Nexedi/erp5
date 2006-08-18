@@ -80,6 +80,14 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Cash Ex
             <value>
               <dictionary>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Cash Balance Regulation</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>

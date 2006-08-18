@@ -104,6 +104,14 @@ Base_viewSearchResultList?simulation_state=delivered&reset=1&portal_type=Cash Ex
             <value>
               <dictionary>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Cash Exchange</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>

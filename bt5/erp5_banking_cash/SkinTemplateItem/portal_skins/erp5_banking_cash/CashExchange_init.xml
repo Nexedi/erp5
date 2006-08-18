@@ -68,29 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>immediate_reindex=1\n
-\n
-# Definition des s\xc3\xa9curit\xc3\xa9s\n
-#return\n
-\n
-#context.Baobab_assignLocalRole(\n
-#     Assignor = ({\'site\': None, \n
-#                  \'group\':\'bceao/agence/principale/dakar/service/caisse\', # principale/dakar/ will be removed\n
-#                  \'function\':\'agence/principale/caissier_particulier\'},),\n
-#     Assignee = ({\'site\': None, \n
-#                  \'group\':\'bceao/agence/principale/dakar/service/caisse\', # principale/dakar/ will be removed\n
-#                  \'function\':\'agence/principale/caissier_principal\'},),\n
-#     Auditor =  ({\'site\': \'siege\', \n
-#                  \'group\':\'bceao/siege/direction/emission/service/caisse\', \n
-#                  \'function\':\'siege/caissier_principal\'},\n
-#                 {\'site\': \'siege\', \n
-#                  \'group\':\'bceao/siege/direction/comptabilite_et_du_budget/service/comptabilite_siege\', \n
-#                  \'function\':\'siege/chef_comptable\'},\n
-#                  {\'site\': None, \n
-#                  \'group\':\'bceao/agence/principale/dakar/service/comptabilite\', \n
-#                  \'function\':\'agence/principale/chef_comptable\'},\n
-#),\n
-#                )\n
+            <value> <string>context.setSource(context.getBaobabSource())\n
 </string> </value>
         </item>
         <item>
@@ -111,7 +89,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,7 +115,10 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>immediate_reindex</string>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

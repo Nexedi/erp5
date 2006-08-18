@@ -457,10 +457,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change user folder</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Manager</role>
   </permission>

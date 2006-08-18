@@ -68,38 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-source = context.getSource()\n
-if source != None:\n
-  source = source + \'/entrante\'\n
-  return source\n
-"""\n
-\n
-context.log(\'la_destination\',"")\n
-currency = context.getResourceTitle()\n
-encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/%s/entrante" %(context.getParentValue().getResourceTitle().lower())\n
-\n
-# OLD METHOD user logged in\n
-#user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
-\n
-# NEW METHOD must use owner to know site letter\n
-old_group_list = context.get_local_roles()\n
-for group, role_list in old_group_list:\n
-  if \'Owner\' in role_list:\n
-    user_id = group\n
-\n
-\n
-\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-context.log(\'site_list\',site_list)\n
-destination = None\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  context.log(\'site_value\',site_value)\n
-  if site_value.getVaultType().endswith(\'guichet\') and ((\'banque_interne\' in site) or (\'operations_diverses\' in site)):\n
-    destination = site + encaisse_billets_et_monnaies\n
-    break\n
-context.log(\'la_bonne_destination\',destination)\n
+            <value> <string>encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/entrante"\n
+counter_site = context.getSource()\n
+destination = counter_site + encaisse_billets_et_monnaies\n
 return destination\n
 </string> </value>
         </item>
@@ -149,20 +120,11 @@ return destination\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>encaisse_billets_et_monnaies</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>currency</string>
-                            <string>encaisse_billets_et_monnaies</string>
-                            <string>old_group_list</string>
-                            <string>_getiter_</string>
-                            <string>group</string>
-                            <string>role_list</string>
-                            <string>user_id</string>
-                            <string>site_list</string>
-                            <string>None</string>
+                            <string>counter_site</string>
                             <string>destination</string>
-                            <string>site</string>
-                            <string>site_value</string>
                           </tuple>
                         </value>
                     </item>

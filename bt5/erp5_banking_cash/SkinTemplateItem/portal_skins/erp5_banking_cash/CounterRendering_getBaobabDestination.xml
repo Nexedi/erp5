@@ -72,7 +72,8 @@
 if \'devise\' in source:\n
   return  "%s/caisse_courante/%s" %("/".join(source.split("/")[:-4]), "/".join(source.split("/")[-2:]))\n
 else:\n
-  return  "%s/caisse_courante/%s" %("/".join(source.split("/")[:-3]), "/".join(source.split("/")[-1:]))\n
+#  return  "%s/caisse_courante/%s" %("/".join(source.split("/")[:-3]), "/".join(source.split("/")[-1:]))\n
+  return  "%s/caisse_courante/encaisse_des_billets_et_monnaies" %("/".join(source.split("/")[:-4]))\n
 </string> </value>
         </item>
         <item>
