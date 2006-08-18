@@ -12,10 +12,34 @@
  <portal_type id="Check Payment Module">
   <item>Check Payment</item>
  </portal_type>
+ <portal_type id="Checkbook Delivery">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Delivery Module">
+  <item>Checkbook Delivery</item>
+ </portal_type>
+ <portal_type id="Checkbook Movement">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Movement Module">
+  <item>Checkbook Movement</item>
+ </portal_type>
  <portal_type id="Checkbook Reception">
   <item>Checkbook Reception Line</item>
  </portal_type>
  <portal_type id="Checkbook Reception Module">
   <item>Checkbook Reception</item>
+ </portal_type>
+ <portal_type id="Checkbook Usual Cash Transfer">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Usual Cash Transfer Module">
+  <item>Checkbook Usual Cash Transfer</item>
+ </portal_type>
+ <portal_type id="Checkbook Vault Transfer">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Vault Transfer Module">
+  <item>Checkbook Vault Transfer</item>
  </portal_type>
 </allowed_content_type_list>

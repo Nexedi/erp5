@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Documents in this state need the agreement of the Account manager because of potentially negative balance</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Balance Check Requested</string> </value>
+            <value> <string>Sent To Second Validation Level</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -48,8 +48,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>deliver</string>
-                <string>deliver_action</string>
+                <string>confirm</string>
+                <string>confirm_action</string>
               </tuple>
             </value>
         </item>
@@ -84,9 +84,15 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>DestinationAssignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -101,8 +107,8 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>DestinationAssignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

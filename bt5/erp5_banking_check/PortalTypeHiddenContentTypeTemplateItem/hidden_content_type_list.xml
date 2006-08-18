@@ -1,9 +1,21 @@
 <hidden_content_type_list>
  <portal_type id="Check Payment">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Delivery">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Movement">
+  <item>Checkbook Delivery Line</item>
  </portal_type>
  <portal_type id="Checkbook Reception">
   <item>Checkbook Reception Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Usual Cash Transfer">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Checkbook Vault Transfer">
+  <item>Checkbook Delivery Line</item>
  </portal_type>
 </hidden_content_type_list>

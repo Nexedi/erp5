@@ -334,36 +334,28 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>selected</string>
+                          <string>selection</string>
                           <string>Selection</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>type Paiement</string>
+                          <string>Payment Type</string>
                         </tuple>
                         <tuple>
-                          <string>checkbook_type</string>
-                          <string>Type</string>
+                          <string>check_amount_title</string>
+                          <string>Payment Variation</string>
                         </tuple>
                         <tuple>
-                          <string>check_number_range_start</string>
-                          <string encoding="base64">TnVtw6lybyBEw6lidXQ=</string>
+                          <string>reference_range_min</string>
+                          <string>Start Number</string>
                         </tuple>
                         <tuple>
-                          <string>check_number_range_stop</string>
-                          <string encoding="base64">TnVtw6lybyBGaW4=</string>
+                          <string>reference_range_max</string>
+                          <string>Stop Number</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>checkbook</string>
-<string></string>
-                        </tuple>
-                        <tuple>
-                          <string>portaltype</string>
-<string></string>
+                          <string>destination_trade</string>
+                          <string>Owner</string>
                         </tuple>
                       </list>
                     </value>
@@ -409,36 +401,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>selected</string>
+                          <string>selection</string>
                           <string>Selection</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>type Paiement</string>
-                        </tuple>
-                        <tuple>
-                          <string>checkbook_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>check_number_range_start</string>
-                          <string encoding="base64">TnVtw6lybyBEw6lidXQ=</string>
-                        </tuple>
-                        <tuple>
-                          <string>check_number_range_stop</string>
-                          <string encoding="base64">TnVtw6lybyBGaW4=</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>checkbook</string>
-<string></string>
-                        </tuple>
-                        <tuple>
-                          <string>portaltype</string>
-<string></string>
                         </tuple>
                       </list>
                     </value>
@@ -513,7 +477,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>Container_fastInputForm_selection</string> </value>
+                    <value> <string>checkbook_delivery_fast_input_form_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

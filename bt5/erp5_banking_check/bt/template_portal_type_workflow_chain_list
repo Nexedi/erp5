@@ -2,5 +2,13 @@ Check Deposit | check_deposit_workflow
 Check Deposit | edit_workflow
 Check Payment | check_payment_workflow
 Check Payment | edit_workflow
+Checkbook Delivery | checkbook_delivery_workflow
+Checkbook Delivery | edit_workflow
+Checkbook Movement | checkbook_movement_workflow
+Checkbook Movement | edit_workflow
 Checkbook Reception | checkbook_reception_workflow
 Checkbook Reception | edit_workflow
+Checkbook Usual Cash Transfer | checkbook_usual_cash_transfer_workflow
+Checkbook Usual Cash Transfer | edit_workflow
+Checkbook Vault Transfer | checkbook_vault_transfer_workflow
+Checkbook Vault Transfer | edit_workflow

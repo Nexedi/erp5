@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Request Balance Check</string> </value>
+            <value> <string>Order</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -90,7 +90,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignor</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>

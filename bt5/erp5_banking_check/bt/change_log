@@ -1,3 +1,9 @@
+2006-08-28 Seb
+* Added checkbook vault transfer
+* Added checkbook usual cash transfer
+* Added checkbook movement
+* Added checkbook delivery
+
 2006-08-10 aurel
 * improve check payment :
 - fix cash status in fast input
