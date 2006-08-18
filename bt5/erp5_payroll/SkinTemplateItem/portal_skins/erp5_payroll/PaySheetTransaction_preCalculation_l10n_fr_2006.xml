@@ -301,8 +301,12 @@ default[\'unemployment_insurance/salaire_brut\'] = \\\n
 }\n
 \n
 # FNGS\n
+# Employer rate has changed starting from jul, 1st 2006\n
+fngs_employer_rate = 0.25\n
+if stop_date < DateTime(2006, 7, 1):\n
+  fngs_employer_rate = 0.15\n
 default[\'fngs/salaire_brut\'] = \\\n
-{ \'employer_rate\' : 0.25\n
+{ \'employer_rate\' : fngs_employer_rate\n
 , \'employee_rate\' : None\n
 , \'base\'          : gross_salary\n
 }\n
@@ -592,6 +596,7 @@ return default\n
                             <string>new_name</string>
                             <string>employer_rate</string>
                             <string>employee_rate</string>
+                            <string>fngs_employer_rate</string>
                             <string>employee_share_rate</string>
                             <string>employer_share_rate</string>
                             <string>col_agr</string>
