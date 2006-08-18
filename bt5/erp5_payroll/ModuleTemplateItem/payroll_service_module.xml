@@ -20,9 +20,6 @@
    <name>Access session data</name>
   </permission>
   <permission type='list'>
-   <name>AccessContentsInformation</name>
-  </permission>
-  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
   <permission type='list'>
@@ -69,9 +66,6 @@
   </permission>
   <permission type='list'>
    <name>Add CMFMailIn Tools</name>
-  </permission>
-  <permission type='list'>
-   <name>Add CMFTranslation Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Configured CMF Sites</name>
@@ -239,9 +233,6 @@
    <name>Add Zope Tutorials</name>
   </permission>
   <permission type='list'>
-   <name>Add deprecated objects</name>
-  </permission>
-  <permission type='list'>
    <name>Add portal content</name>
   </permission>
   <permission type='list'>
@@ -399,9 +390,6 @@
   </permission>
   <permission type='list'>
    <name>Manage Transient Object Container</name>
-  </permission>
-  <permission type='list'>
-   <name>Manage Translation Services</name>
   </permission>
   <permission type='list'>
    <name>Manage Vocabulary</name>

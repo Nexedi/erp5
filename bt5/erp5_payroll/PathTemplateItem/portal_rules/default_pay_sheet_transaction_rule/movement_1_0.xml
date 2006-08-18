@@ -85,9 +85,9 @@
                 <string>tax_category/argic/employee_share</string>
                 <string>tax_category/syntec_insurance/employee_share</string>
                 <string>tax_category/social/employee_share</string>
+                <string>product_line/tax</string>
                 <string>tax_category/supplementary_pension/employee_share</string>
                 <string>tax_category/unemployment/employee_share</string>
-                <string>product_line/tax</string>
               </tuple>
             </value>
         </item>
