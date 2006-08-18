@@ -1106,6 +1106,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   keyword_key=keyword_key, full_text_key=full_text_key, request_key=request_key, \
                   multivalue_key=multivalue_key, topic_key=topic_key)
 
+  def stepModifyCatalogConfiguration(self, sequence, **kw):
+    """Modify the current configuration of the catalog.
+    """
+    catalog = self.getCatalogTool().getSQLCatalog()
+    # modify method related configuration
+    catalog.sql_getitem_by_uid = 'z_search_results'
+    # modify table related configuration
+    catalog.sql_search_tables = tuple( list(catalog.sql_search_tables) +
+                                     ['translation'] )
+    # modify column related configuration
+    catalog.sql_catalog_full_text_search_keys = ('catalog.portal_type',)
+
+  def stepCheckCatalogConfigurationKept(self, sequence, **kw):
+    """Check modification made in stepModifyCatalogConfiguration are still
+    present.
+    """
+    catalog = self.getCatalogTool().getSQLCatalog()
+    # method related configuration
+    self.assertEquals(catalog.sql_getitem_by_uid, 'z_search_results')
+    # table related configuration
+    self.failUnless('translation' in catalog.sql_search_tables)
+    # column related configuration
+    self.failUnless('catalog.portal_type' 
+                    in catalog.sql_catalog_full_text_search_keys)
+
   def stepAddKeysAndTableToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add some related, result key and tables to Business Temlpate
@@ -3211,6 +3236,34 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_30_CheckInstalledCatalogProperties(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if installing some new catalog properties overwrites '\
+                'existing ones'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       ModifyCatalogConfiguration \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckCatalogConfigurationKept \
+                       UninstallBusinessTemplate \
+                       CheckCatalogConfigurationKept \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 if __name__ == '__main__':
   framework()
 else:

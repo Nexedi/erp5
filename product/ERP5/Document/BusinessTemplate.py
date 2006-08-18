@@ -2836,7 +2836,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       for key in keys:
         if key not in sql_search_tables:
           sql_search_tables.append(key)
-      catalog.sql_search_tables = list(sql_search_tables)
+      catalog.sql_search_tables = tuple(sql_search_tables)
 
   def uninstall(self, context, **kw):
     try:
