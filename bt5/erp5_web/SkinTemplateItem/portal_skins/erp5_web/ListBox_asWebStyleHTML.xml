@@ -81,7 +81,7 @@
   <input type="hidden" name="reset" value="1"/>\n
   <input type="hidden" name="listbox_uid:list" value="" tal:attributes="name string:${field_id}_uid:list"/>\n
   <input type="hidden" name="total_size" value="" tal:attributes="value here/total_size"/>\n
-  <input id="listbox_select" tal:attributes="id string: ${field_id}_select"\n
+  <input id="listbox_select" tal:attributes="id string:${field_id}_select"\n
          title="Filter" alt="Filter" name="Base_doSelect:method"\n
          type="submit" style="visibility: hidden"/>\n
 \n
@@ -178,15 +178,15 @@
                     tal:attributes="colspan python: len(here.getSelectedColumnList())">\n
                   <tal:block tal:condition="python: current_page > 1">\n
                     <button title="First page: Page 1" name="portal_selections/firstPage:method"\n
-                            tal:attributes="id string: ${field_id}_first_page;">|&lt;</button>\n
+                            tal:attributes="id string:${field_id}_first_page;">|&lt;</button>\n
                     <button name="portal_selections/previousPage:method"\n
                             tal:attributes="title python: \'Previous Page: page %s\' % previous_page;\n
-                                            id    string: ${field_id}_previous_page;">&lt;&lt;</button>\n
+                                            id    string:${field_id}_previous_page;">&lt;&lt;</button>\n
                   </tal:block>\n
                   <select\n
                     name="list_start" title="Change Page" size="1"\n
-                    tal:attributes="id       string: ${field_id}_page_selection;\n
-                                    onChange string: submitAction(this.form, \'${context_url}/portal_selections/setPage\')"\n
+                    tal:attributes="id       string:${field_id}_page_selection;\n
+                                    onChange string:submitAction(this.form, \'${context_url}/portal_selections/setPage\')"\n
                     i18n:domain="ui" i18n:attributes="title">\n
                     <option\n
                       tal:repeat="p python: range(total_page)"\n
@@ -198,11 +198,11 @@
                     <button\n
                       name="portal_selections/nextPage:method"\n
                       tal:attributes="title python: \'Next page: Page %s\' % next_page;\n
-                                      id    string: ${field_id}_next_page;">&gt;&gt;</button>\n
+                                      id    string:${field_id}_next_page;">&gt;&gt;</button>\n
                     <button\n
                       name="portal_selections/lastPage:method"\n
                       tal:attributes="title python: \'Last page: Page %s\' % total_page;\n
-                                      id    string: ${field_id}_last_page;">&gt;|</button>\n
+                                      id    string:${field_id}_last_page;">&gt;|</button>\n
                   </tal:block>\n
                 </td>\n
               </tr>\n

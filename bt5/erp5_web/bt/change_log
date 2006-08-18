@@ -1,6 +1,7 @@
 2006-08-18 Kevin
 * Fix some Form's group to work with xhtml_style.
 * Fix default template on WebSection.
+* Fix ListBox Web Style strings.
 
 2006-07-27 Kevin
 * Some search result screen modifications.
