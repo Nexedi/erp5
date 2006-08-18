@@ -149,12 +149,13 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     """
     Create a cash inventory document and check it
     """
-    # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 50 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.foreign_cash_reception = self.foreign_cash_reception_module.newContent(id='foreign_cash_reception', portal_type='Foreign Cash Reception',
-                                                                        source_value=None, destination_value=self.reception,
-                                                                        resource_value=self.currency_1)
-    #     self.setDestinationValue(self.reception)
-    #     self.setResourceValue(self.currency_1)
+    #and a price cooreponding to the sum of banknote of 50 and 20 
+    #( (3) * 50 + (5) * 20 ) = 250
+    self.foreign_cash_reception = self.foreign_cash_reception_module.newContent(
+		    id='foreign_cash_reception', portal_type='Foreign Cash Reception',
+                    source_value=None, destination_value=self.reception,
+                    resource_value=self.currency_1,
+		    source_total_asset_price=250)
     # execute tic
     self.stepTic()
     # get the cash inventory document
