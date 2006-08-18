@@ -128,7 +128,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebSite_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -144,7 +144,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Site</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
