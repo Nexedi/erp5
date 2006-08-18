@@ -1,10 +1,4 @@
 <allowed_content_type_list>
- <portal_type id="Cash Container">
-  <item>Container Line</item>
- </portal_type>
- <portal_type id="Cash Container Item">
-  <item>Container Line</item>
- </portal_type>
  <portal_type id="Cash Delivery Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
@@ -13,9 +7,6 @@
  </portal_type>
  <portal_type id="Checkbook">
   <item>Check</item>
- </portal_type>
- <portal_type id="Checkbook Model">
-  <item>Checkbook Model Check Amount Variation</item>
  </portal_type>
  <portal_type id="Checkbook Model Module">
   <item>Checkbook Model</item>

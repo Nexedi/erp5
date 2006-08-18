@@ -68,27 +68,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># check that accounting date is opened for the site in which is the counter\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-transaction = state_change.object\n
-site = transaction.getSiteValue()\n
+object_to_check_list = [context]\n
+object_to_check_list.extend(context.getMovementList())\n
 \n
-while True:\n
-  if not hasattr(site, \'getVaultTypeList\'):\n
-    msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
-    raise ValidationFailed, (msg,)\n
-  if \'site\' in site.getVaultTypeList():\n
-    break\n
-  site = site.getParentValue()\n
+for object in object_to_check_list:\n
+  baobab_source = object.getBaobabSource()\n
+  baobab_destination = object.getBaobabDestination()\n
 \n
-kwd = {\'portal_type\' : \'Counter Date\', \'simulation_state\' : \'open\', \'site_uid\' : site.getUid()}\n
-date_list = [x.getObject() for x in context.portal_catalog(**kwd)]\n
-\n
-if len(date_list) == 0:\n
-  msg = Message(domain=\'ui\', message="Counter date is not opened.")\n
-  raise ValidationFailed, (msg,)\n
+  for node_url in (baobab_source,baobab_destination):\n
+    if node_url is not None:\n
+      try:\n
+        node = context.portal_categories.restrictedTraverse(node_url)\n
+      except KeyError:\n
+        msg = Message(domain=\'ui\',message=\'Sorry, wrong source or destination\')\n
+        raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -99,11 +95,17 @@ if len(date_list) == 0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/counter_workflow/scripts/checkDateOpened</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Base_checkBaobabSourceAndDestination</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, *args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,34 +125,29 @@ if len(date_list) == 0:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>args</string>
                             <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
-                            <string>transaction</string>
-                            <string>site</string>
-                            <string>True</string>
-                            <string>hasattr</string>
-                            <string>msg</string>
-                            <string>kwd</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
                             <string>context</string>
-                            <string>x</string>
-                            <string>date_list</string>
-                            <string>len</string>
+                            <string>object_to_check_list</string>
+                            <string>_getattr_</string>
+                            <string>_getiter_</string>
+                            <string>object</string>
+                            <string>baobab_source</string>
+                            <string>baobab_destination</string>
+                            <string>node_url</string>
+                            <string>None</string>
+                            <string>node</string>
+                            <string>KeyError</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
@@ -167,7 +164,7 @@ if len(date_list) == 0:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkDateOpened</string> </value>
+            <value> <string>Base_checkBaobabSourceAndDestination</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

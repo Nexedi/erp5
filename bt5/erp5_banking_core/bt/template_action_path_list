@@ -5,10 +5,6 @@ Banking Operation Line | view
 Banknote | history
 Banknote | metadata
 Banknote | view
-Cash Container Item | metadata
-Cash Container Item | view
-Cash Container | metadata
-Cash Container | view
 Cash Delivery Cell | metadata
 Cash Delivery Cell | view
 Cash Delivery Line | metadata
@@ -58,13 +54,7 @@ Counter Date | metadata
 Counter Date | view
 Counter Module | list_ui
 Counter Module | sort_on
-Counter Module | vaul_inventory
-Counter Module | vaul_situation
-Counter Module | vault_classification_result
-Counter Module | vault_currency_situation
-Counter Module | vault_extern_situation
 Counter Module | vault_report
-Counter Module | vault_to_sort_situation
 Counter Module | view
 Counter | history
 Counter | metadata

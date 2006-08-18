@@ -8,8 +8,16 @@
   <workflow>edit_workflow, check_workflow</workflow>
  </chain>
  <chain>
+  <type>Checkbook</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Checkbook Model</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Counter</type>
-  <workflow>counter_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, counter_workflow</workflow>
  </chain>
  <chain>
   <type>Counter Date</type>

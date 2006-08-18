@@ -100,6 +100,12 @@ inventory_kw[\'group_by_resource\'] = 1\n
 # add to get by portal type inventory\n
 if kw.has_key("portal_type"):\n
   inventory_kw[\'portal_type\'] = kw[\'portal_type\']\n
+if kw.has_key("omit_input"):\n
+  inventory_kw[\'omit_input\'] = kw[\'omit_input\']\n
+if kw.has_key("omit_output"):\n
+  inventory_kw[\'omit_output\'] = kw[\'omit_output\']\n
+if kw.has_key("explanation_portal_type"):\n
+  inventory_kw[\'explanation_portal_type\'] = kw[\'explanation_portal_type\']\n
 \n
 if at_date is not None:\n
   inventory_kw[\'at_date\'] = at_date\n
@@ -112,10 +118,10 @@ vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node_c
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
-# context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node_category=vault\n
-#                                                                 , ignore_variation=0,src__=1\n
-#                                                                ,**inventory_kw\n
-#                                                               ))\n
+context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node_category=vault\n
+                                                                , ignore_variation=0,src__=1\n
+                                                               ,**inventory_kw\n
+                                                              ))\n
 \n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n

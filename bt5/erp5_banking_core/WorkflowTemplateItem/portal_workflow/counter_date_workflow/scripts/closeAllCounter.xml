@@ -86,8 +86,6 @@ while True:\n
 current_date = transaction.getStartDate()\n
 counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", simulation_state = [\'open\', \'closing\'], site_uid = site.getUid())]\n
 \n
-context.log("Close Accounting Date", "current_date = %s, counter list = %s" %(current_date, counter_list))\n
-\n
 for counter in counter_list:\n
   # close the counter, this will cancel not finished operations automatically\n
   if counter.getSimulationState() == \'open\':\n
@@ -112,12 +110,6 @@ for counter in counter_list:\n
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_workflow/counter_date_workflow/scripts/closeAllCounter</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

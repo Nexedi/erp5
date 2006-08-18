@@ -93,12 +93,6 @@ for line in listbox:\n
             <value> <string>Script (Python):/baobab/portal_workflow/counter_date_workflow/scripts/openAllCounter</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, *args, **kw</string> </value>
         </item>

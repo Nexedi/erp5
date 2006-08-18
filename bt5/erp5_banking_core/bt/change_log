@@ -1,3 +1,6 @@
+2006-08-11 aurel
+* improve view for counter module inventory report
+
 2006-08-9 aurel
 * fix script that check counter is opened and comment useless log to prevent security problem
 

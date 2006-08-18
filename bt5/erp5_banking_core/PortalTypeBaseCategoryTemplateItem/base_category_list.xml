@@ -1,12 +1,6 @@
 <base_category_list>
- <portal_type id="Cash Container Item">
-  <item>aggregate</item>
- </portal_type>
  <portal_type id="Cash Delivery Cell">
   <item>variation</item>
- </portal_type>
- <portal_type id="Category">
-  <item>vault_type</item>
  </portal_type>
  <portal_type id="Checkbook">
   <item>resource</item>

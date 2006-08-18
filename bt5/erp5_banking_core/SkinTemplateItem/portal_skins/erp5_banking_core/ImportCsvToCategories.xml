@@ -187,7 +187,7 @@ elif import_type == \'assign_codification\' :\n
         if e_list[0].startswith(\'site\'):\n
           acquired_vault_code = {\'banque_interne\':\'BI\',\'operations_diverses\':\'OD\',\'gros_paiement\':\'GP\',\'gros_versement\':\'GV\',\n
                         \'guichet_1\':\'G1\',\'guichet_2\':\'G2\',\'guichet_3\':\'G3\'}\n
-          #context.log(\'category\',category.getPath())\n
+          context.log(\'category\',category.getPath())\n
           for sub_cat in category.getCategoryChildValueList(sort_id=\'path\'):\n
             print "    %s" % sub_cat.getRelativeUrl()\n
             if sub_cat.getId() in acquired_vault_code.keys():\n
@@ -216,7 +216,7 @@ elif import_type == \'create_subvaults\' :\n
 #Encaisse des Billets Recus pour Ventilation# seulement sur sites principaux\n
   subvault_dict = {}\n
   for e_list in line_list :\n
-    context.log(\'e_list\', e_list)\n
+    #context.log(\'e_list\', e_list)\n
     if len(e_list) in (2,3) :\n
       vault = lowerCase(e_list[0]) # ex : Vault_Type/Site/caveau/Auxiliaire\n
       subvault = upperCase(e_list[1]) # ex : Encaisse des Devises\n
@@ -224,8 +224,9 @@ elif import_type == \'create_subvaults\' :\n
       if len(e_list)==3:\n
         subvault_code = upperCase(e_list[2]) # ex : D\n
       counter_string_list = [] # the list of counters, like [\'guichet_1,entrant\',...]\n
-      one_way_counter_list = (\'gros_paiement\',\'gros_versement\')\n
-      two_way_counter_list = (\'banque_interne\',\'operations_diverses\')\n
+      #one_way_counter_list = (\'gros_paiement\',\'gros_versement\')\n
+      one_way_counter_list = ()\n
+      two_way_counter_list = (\'banque_interne\',\'operations_diverses\',\'gros_paiement\',\'gros_versement\')\n
       counter_list = one_way_counter_list + two_way_counter_list\n
       max_counter = 3 # we may not have always the same number of counters\n
       counter_name = vault.split(\'/\')[-1]\n
@@ -310,7 +311,7 @@ elif import_type == \'create_subvaults\' :\n
               print \'XXXXXXXX is itself, not creating\', subvault_path\n
               pass\n
             else :\n
-              print \'  creating\', subvault_path\n
+              print \'  creating (case1) \', subvault_path\n
               if \'guichet\' in subvault_path:\n
                 subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
               elif \'transit\' in subvault_path.lower():\n
@@ -319,11 +320,11 @@ elif import_type == \'create_subvaults\' :\n
                 subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])\n
               new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n
           else :\n
-            print \'  creating\', subvault_path\n
+            print \'  creating (case2)\', subvault_path\n
             if \'guichet\' in subvault_path:\n
               subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
-            #if \'devises\' in subvault_path.lower() and \'devises\' not in vault_type:\n
-            #  subcat_vault_type = \'%s/devises\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif \'retire\' in subvault_path.lower():\n
+              subcat_vault_type = \'%s/retire\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             else:\n
               subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])\n
             new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n

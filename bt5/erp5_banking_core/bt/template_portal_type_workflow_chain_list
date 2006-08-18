@@ -1,6 +1,8 @@
 Category | edit_workflow
 Check | check_workflow
 Check | edit_workflow
+Checkbook Model | edit_workflow
+Checkbook | edit_workflow
 Counter Date | counter_date_workflow
 Counter Date | edit_workflow
 Counter | counter_workflow

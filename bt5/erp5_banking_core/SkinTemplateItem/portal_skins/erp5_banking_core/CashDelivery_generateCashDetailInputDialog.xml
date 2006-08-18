@@ -143,7 +143,7 @@ if listbox is None:\n
   # Get the currency cash objects for a given currency.\n
   currency = \'currency_module/%s\' % operation_currency\n
   result = context.portal_catalog(portal_type = currency_cash_portal_type)\n
-  currency_cash_list = [x.getObject() for x in result if x.getObject().getPriceCurrency() == currency]\n
+  currency_cash_list = [x.getObject() for x in result if x.getObject().getPriceCurrency() == currency and len(x.getObject().getVariationList())>0]\n
   #context.log(\'CashDelivery_generateCashDetailInputDialog\', \'currency_list = %r, operation_cur = %s\' % (currency_cash_list, operation_currency))\n
 \n
   # If only one variation is specified, we want to display a part of cash currencies which\n
@@ -460,8 +460,8 @@ else :\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>currency_cash_list</string>
                             <string>len</string>
+                            <string>currency_cash_list</string>
                             <string>new_currency_cash_list</string>
                             <string>variation</string>
                             <string>currency_cash</string>
