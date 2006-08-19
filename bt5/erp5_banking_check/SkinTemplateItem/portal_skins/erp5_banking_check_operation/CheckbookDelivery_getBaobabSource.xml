@@ -72,32 +72,6 @@
 if source != None:\n
   source = "%s/%s" % (source,\'encaisse_des_billets_et_monnaies\')\n
 return source\n
-\n
-#  # calculate the source\n
-#  user_site = None\n
-#  # must use owner to know site letter\n
-#  group_list = context.get_local_roles()\n
-#  for group, role_list in group_list:\n
-#    if \'Owner\' in role_list:\n
-#      user_id = group\n
-#\n
-#  site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-#  for site in site_list:\n
-#    site_value = context.portal_categories.getCategoryValue(site)\n
-#    if site_value.getVaultType().endswith(\'guichet\'):\n
-#      user_site = site\n
-#  if user_site is None:\n
-#    # We assume in this case that the checkbook delivery will be delivered\n
-#    # from surface/caisse_courante\n
-#    root_user_site = context.Baobab_getUserAssignedRootSiteList(user_id=user_id)[0]\n
-#    context.log(\'CheckbookDelivery_getBaobabSource, user_site_value\',root_user_site)\n
-#    user_site = "%s/%s" % (root_user_site,\n
-#                    \'surface/caisse_courante\') \n
-#  if user_site is None:\n
-#    from Products.ERP5Type.Message import Message\n
-#    message = Message(domain="ui", message="The owner is not assigned.")\n
-#    raise ValueError,message\n
-#  return user_site\n
 </string> </value>
         </item>
         <item>

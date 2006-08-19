@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,16 +61,14 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
                 <string>left</string>
-                <string>rigth</string>
-                <string>center</string>
-                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -79,39 +77,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_start_date</string>
+                        <string>listbox_destination_logical_path</string>
+                        <string>listbox_source_logical_path</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                        <string>my_translated_simulation_state_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_source_reference</string>
-                        <string>my_source_logical_path</string>
-                        <string>my_start_date</string>
-                        <string>my_source</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>rigth</string> </key>
-                    <value>
-                      <list>
-                        <string>my_destination_section</string>
-                        <string>my_destination</string>
                       </list>
                     </value>
                 </item>
@@ -120,7 +99,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckbookDelivery_view</string> </value>
+            <value> <string>copy_of_CheckbookDeliveryModule_viewCheckbookDeliveryList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,11 +107,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CheckbookDelivery_view</string> </value>
+            <value> <string>CkeckbookDeliveryModule_viewCheckbookDeliveryList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -144,7 +123,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Checkbook Delivery</string> </value>
+            <value> <string>Checkbook Deliveries</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
