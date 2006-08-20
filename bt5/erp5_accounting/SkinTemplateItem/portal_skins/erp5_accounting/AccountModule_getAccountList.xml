@@ -71,6 +71,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 try:\n
+  # XXX not used !\n
   currency = kwd[\'accounting_transaction_line_currency\']\n
   id = currency.split(\'/\')[-1]\n
 except KeyError:\n
@@ -80,7 +81,19 @@ if not id:\n
   id = \'&nbsp;\'\n
 \n
 kwd[\'select_expression\'] = "\'%s\' AS accounting_transaction_line_currency" % id\n
-return context.portal_catalog(**kwd)\n
+\n
+# XXX workaround for #458, we rewrite sort_on id to sort_on using\n
+# strict_membership.\n
+new_sort_on = []\n
+if sort_on is not None:\n
+  for sort_on_item in sort_on:\n
+    if sort_on_item[0] == \'preferred_gap_id\':\n
+      new_sort_on.append(\n
+            (\'preferred_gap_strict_membership_id\', sort_on_item[1]))\n
+    else:\n
+      new_sort_on.append(sort_on_item)\n
+\n
+return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
 
 
 ]]></string> </value>
@@ -105,7 +118,7 @@ return context.portal_catalog(**kwd)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kwd</string> </value>
+            <value> <string>sort_on=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,12 +138,13 @@ return context.portal_catalog(**kwd)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>sort_on</string>
                             <string>kwd</string>
                             <string>_getitem_</string>
                             <string>currency</string>
@@ -138,6 +152,10 @@ return context.portal_catalog(**kwd)\n
                             <string>id</string>
                             <string>KeyError</string>
                             <string>_write_</string>
+                            <string>new_sort_on</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>sort_on_item</string>
                             <string>_apply_</string>
                             <string>context</string>
                           </tuple>
@@ -151,7 +169,9 @@ return context.portal_catalog(**kwd)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

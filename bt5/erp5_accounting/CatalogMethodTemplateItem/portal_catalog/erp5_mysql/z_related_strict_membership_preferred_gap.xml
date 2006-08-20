@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>table_0</string>
-                            <string>table_1</string>
+<string>table_0</string>
+<string>table_1</string>
                           </list>
                         </value>
                     </item>
@@ -78,15 +78,20 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_gap</string> </value>
+            <value> <string>z_related_strict_membership_preferred_gap</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
+<dtml-if expr="portal_preferences.getPreferredAccountingTransactionGap()">\n
+  AND <dtml-var table_1>.relative_url LIKE <dtml-sqlvar expr="portal_preferences.getPreferredAccountingTransactionGap()+\'%\'" type="string">\n
+</dtml-if>\n
 AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.gap.getUid()">\n
-AND <dtml-var table_0>.uid = catalog.uid
+AND <dtml-var table_0>.uid = catalog.uid\n
+AND <dtml-var table_0>.category_strict_membership = 1\n
+
 
 ]]></string> </value>
         </item>
@@ -125,8 +130,13 @@ AND <dtml-var table_0>.uid = catalog.uid
                         <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
+<dtml-if expr="portal_preferences.getPreferredAccountingTransactionGap()">\n
+  AND <dtml-var table_1>.relative_url LIKE <dtml-sqlvar expr="portal_preferences.getPreferredAccountingTransactionGap()+\'%\'" type="string">\n
+</dtml-if>\n
 AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.gap.getUid()">\n
-AND <dtml-var table_0>.uid = catalog.uid
+AND <dtml-var table_0>.uid = catalog.uid\n
+AND <dtml-var table_0>.category_strict_membership = 1\n
+
 
 ]]></string> </value>
                     </item>

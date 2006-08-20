@@ -1,3 +1,6 @@
+2006-08-21 jerome
+* filter GAP ID using strict_membership in account module  list.
+
 2006-08-11 jerome
 * remove InvoiceTransactionLine_getDestinationItemList and InvoiceTransactionLine_getSourceItemList in favor of AccountingTransactionLine_getNodeItemList, which fixes source/destination inversion on lines ids for Purchase Invoice Transactions.
 
