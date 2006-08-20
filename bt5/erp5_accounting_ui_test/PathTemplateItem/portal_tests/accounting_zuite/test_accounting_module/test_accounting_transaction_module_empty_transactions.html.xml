@@ -1,0 +1,536 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Accounting module main lisbox</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Accounting Transaction Module Displays empty Transactions\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+\n
+<!-- setup {{{ -->\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- empty transactions are displayed in the list -->\n
+<!-- Check default values {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- 4 item by default -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>4 record(s)</td>\n
+</tr>\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>33200.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[10]\n
+</td>\n
+  <td>33200.00</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Add empty transaction {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Add Accounting Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Object Created.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/AccountingZuite_markChanged</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/accounting_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Check new values (1 more item (values 0), same stats) {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>5 record(s)</td>\n
+</tr>\n
+<!-- column properties -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[2]\n
+</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[3]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[4]\n
+  </td>\n
+  <td>Accounting Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[5]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[6]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[7]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[8]\n
+  </td>\n
+  <td>Draft</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[9]\n
+  </td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[10]\n
+  </td>\n
+  <td>0.0</td>\n
+</tr>\n
+\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>33200.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[10]\n
+</td>\n
+  <td>33200.00</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- same but with deleting lines -->\n
+\n
+<!-- Add empty transaction and delete its lines {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Add Accounting Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Object Created.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>goBackAndWait</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Accounting Transaction Lines</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>listbox_check_all</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_deleteObjectList:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Delete The Objects</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+<!-- XXX not erp5_html_style compatible -->\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Folder Contents</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Deleted.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>0 record(s)</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/accounting_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Check new values (1 more item (values 0), same stats) {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>6 record(s)</td>\n
+</tr>\n
+<!-- column properties line 0 -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[2]\n
+</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[3]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[4]\n
+  </td>\n
+  <td>Accounting Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[5]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[6]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[7]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[8]\n
+  </td>\n
+  <td>Draft</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[9]\n
+  </td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[10]\n
+  </td>\n
+  <td>0.0</td>\n
+</tr>\n
+<!-- column properties line 1 (order for lines 0 and 1 is unknown as we sort on date) -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[2]\n
+</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[3]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[4]\n
+  </td>\n
+  <td>Accounting Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[5]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[6]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[7]\n
+  </td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[8]\n
+  </td>\n
+  <td>Draft</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[9]\n
+  </td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[10]\n
+  </td>\n
+  <td>0.0</td>\n
+</tr>\n
+\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>33200.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[10]\n
+</td>\n
+  <td>33200.00</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_accounting_transaction_module_empty_transactions.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
