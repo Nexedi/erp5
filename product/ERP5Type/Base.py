@@ -2210,11 +2210,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     current = self
     # First try to get a container layout
-    if hasattr(current, 'getContainerLayout') and current.hasContainerLayout():
+    if hasattr(current, 'getContainerLayout') and current.getContainerLayout() not in ('', None):
       return current.getContainerLayout()
     # First try to get a content layout
     while current is not None:
-      if hasattr(current, 'hasContentLayout') and current.hasContentLayout():
+      if hasattr(current, 'hasContentLayout') and current.getContentLayout() not in ('', None):
         return current.getContentLayout()
       current = current.getParentValue()
       if not hasattr(current, 'getApplicableLayout'):
