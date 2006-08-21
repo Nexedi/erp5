@@ -1,3 +1,6 @@
+2006-08-21 Chris
+* Made form_render code a lot lighter with same final result using a loop
+
 2006-08-02 Romain
 * Add documentation_view to fix Inspector with xhtml_style.
 

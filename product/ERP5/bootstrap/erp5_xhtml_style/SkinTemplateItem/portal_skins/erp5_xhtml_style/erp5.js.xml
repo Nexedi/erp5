@@ -36,7 +36,9 @@
         </item>
         <item>
             <key> <string>raw</string> </key>
-            <value> <string>/*\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
 Copyright (c) 20xx-2006 Nexedi SARL and Contributors. All Rights Reserved.\n
 \n
 This program is Free Software; you can redistribute it and/or\n
@@ -57,7 +59,22 @@ function submitAction(form,act) {\n
   form.action = act;\n
   form.submit();\n
 }\n
-</string> </value>
+\n
+function fixLeftRightHeight(){\n
+  var lh=document.getElementById(\'fieldset_left\').offsetHeight;\n
+  var rh=document.getElementById(\'fieldset_right\').offsetHeight;\n
+  document.getElementById(\'fieldset_left\').style.height=(lh>rh)? lh+"px" : rh+"px";\n
+  document.getElementById(\'fieldset_right\').style.height=(lh>rh)? lh+"px" : rh+"px";\n
+  document.getElementById(\'fieldset_left\').style.borderTop = \'1px solid #3D7474\'\n
+  document.getElementById(\'fieldset_left\').style.borderLeft = \'1px solid #3D7474\'\n
+  document.getElementById(\'fieldset_left\').style.borderBottom = \'1px solid #3D7474\'\n
+  document.getElementById(\'fieldset_right\').style.borderTop = \'1px solid #3D7474\'\n
+  document.getElementById(\'fieldset_right\').style.borderRight = \'1px solid #3D7474\'\n
+  document.getElementById(\'fieldset_right\').style.borderBottom = \'1px solid #3D7474\'\n
+}\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

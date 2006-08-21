@@ -137,7 +137,7 @@ IDEAS:\n
               type="text/javascript"></script>\n
     </tal:block>\n
   </head>\n
-  <body>\n
+  <body onload="fixLeftRightHeight()">\n
 <!--     <tal:block tal:replace="structure request"/> -->\n
     <form id="main_form"\n
           tal:attributes="enctype form/enctype | nothing;\n

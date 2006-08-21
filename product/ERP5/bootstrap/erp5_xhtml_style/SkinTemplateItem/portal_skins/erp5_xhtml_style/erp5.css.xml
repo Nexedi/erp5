@@ -361,7 +361,7 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
 \n
-input, textarea, select, button, body, div, span {\n
+input, textarea, select, button, body, div, span, fieldset {\n
   font-family: <dtml-var font_family>;\n
   font-size: <dtml-var font_size>;\n
   margin: 0;\n
@@ -381,11 +381,11 @@ img {\n
   border: 0;\n
 }\n
 \n
-body, div, span {\n
+body, div, span, fieldset {\n
   color: <dtml-var font_color>;\n
 }\n
 \n
-div, span {\n
+div, span, fieldset {\n
   background-color: inherit;\n
 }\n
 \n
@@ -418,6 +418,7 @@ a:hover {\n
   text-decoration: underline;\n
 }\n
 \n
+p.clear,\n
 h6.clear {\n
   height: 0;\n
   margin: 0;\n
@@ -505,21 +506,80 @@ div.index_html table {\n
 \n
 .content .field {\n
   position: relative;\n
+  clear: left;\n
 }\n
 \n
 .content .figure {\n
   text-align: right;\n
 }\n
 \n
-.content .left {\n
-  min-width: 50%;\n
-  clear: left;\n
-  float: left;\n
+.group_title {\n
+  display: none;\n
 }\n
 \n
-.content .right {\n
+div.left,\n
+fieldset.left {\n
+  width: 50%;\n
+  clear: left;\n
+  float: left;\n
+  border: 0;\n
+  height: 100%;\n
+  border-style: solid;\n
+  border-width: 0;\n
+/*  border-top-width: 1px;\n
+  border-left-width: 1px;\n
+  border-bottom-width: 1px;\n
+  border-right-width: 0;*/\n
+  border-color: <dtml-var document_border_color>;\n
+  padding-top: 5px;\n
+  padding-bottom: 2px;\n
+  padding-left: 8px;\n
+  margin-right: -9px;\n
+}\n
+\n
+div.right,\n
+fieldset.right {\n
   float: left;\n
   width: 50%;\n
+  border: 0;\n
+  margin-left: -1px;\n
+  height: 100%;\n
+  border-style: solid;\n
+  border-width: 0;\n
+/*  border-top-width: 1px;\n
+  border-left-width: 0;\n
+  border-bottom-width: 1px;\n
+  border-right-width: 1px;*/\n
+  border-color: <dtml-var document_border_color>;\n
+  padding-top: 5px;\n
+  padding-bottom: 2px;\n
+}\n
+\n
+div.center,\n
+fieldset.center {\n
+  margin-top: 5px;\n
+  margin-bottom: 5px;\n
+  padding-bottom: 5px;\n
+  padding-top: 5px;\n
+  border-style: solid;\n
+  border-color: <dtml-var document_border_color>;\n
+  border-width: 1px;\n
+}\n
+\n
+.document .content .top_group {\n
+ border-width: 1px;\n
+ border-style: solid;\n
+ padding: 5px;\n
+ margin-bottom: 5px;\n
+}\n
+\n
+\n
+fieldset.bottom {\n
+  border-width: 0;\n
+}\n
+\n
+fieldset.bottom .field label {\n
+  display: none;\n
 }\n
 \n
 .content .field {\n
@@ -844,14 +904,6 @@ div.index_html table {\n
   padding: 5px;\n
 }\n
 \n
-.document .content .top_group,\n
-.document .content .center {\n
- border-width: 1px;\n
- border-style: solid;\n
- padding: 5px;\n
- margin-bottom: 5px;\n
-}\n
-\n
 /* LISTBOX */\n
 /* FIXME:\n
   - listbox uses lots of IDs, but there can be more than one listbox in a page !\n
@@ -891,6 +943,7 @@ div.index_html table {\n
 .ListContent {\n
   color: #000;\n
   background-color: <dtml-var document_background_color>;\n
+  padding-left: 1px;\n
 }\n
 \n
 .ListContent table {\n
