@@ -95,7 +95,7 @@ Groups names becomes "left_group", "right_group", "left1_group", "right1_group",
 <tal:block metal:define-macro="master">\n
   <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
                          dummy python: request.set(\'here\', here);\n
-                         groups python: form.get_groups();">\n
+                         groups python: form.get_groups(include_empty=0);">\n
     <tal:block tal:define="template python: here.developper_shortcut_render">\n
       <tal:block metal:use-macro="template/macros/form" />\n
     </tal:block>\n
