@@ -424,10 +424,11 @@ class ManageModule:
           )
     object_portal_type_value.addAction( "print"
           , "Print"
-          , "string:${object_url}/%s" % object_names['view_pdf'] 
+          , "string:${object_url}/%s" % object_names['view_pdf']
           , ""
           , "View"
           , "object_print"
+          , priority=2.0
           )
     object_portal_type_value.addAction( "history"
           , "History"
@@ -435,6 +436,7 @@ class ManageModule:
           , ""
           , "View"
           , "object_view"
+          , priority=99.0
           )
     object_portal_type_value.addAction( "metadata"
           , "Metadata"
@@ -442,6 +444,7 @@ class ManageModule:
           , ""
           , "Manage properties"
           , "object_view"
+          , priority=100.0
           )
 
 
@@ -459,7 +462,7 @@ class ManageModule:
       title_module += str(word.capitalize() + ' ')
     portal.newContent( id          = str(module_id),
                        portal_type = str(module_portal_type),
-                       title       = title_module) 
+                       title       = title_module)
 
 
 class ManageFiles:
@@ -480,7 +483,7 @@ class ManageFiles:
     create an ERP5 Form by using the factory
     """
     factory.addERP5Form(form_name,
-                        form_title)    
+                        form_title)
 
 
 
