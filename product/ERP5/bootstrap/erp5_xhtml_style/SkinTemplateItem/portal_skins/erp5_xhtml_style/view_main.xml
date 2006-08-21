@@ -90,7 +90,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <div class="document"\n
               tal:define="actions actions/object_view | python: []">\n
           <div class="actions">\n
-            <tal:block tal:condition="editable_mode | python: 1">\n
+            <tal:block tal:condition="editable_mode">\n
               <button tal:condition="form_action"\n
                       type="submit" class="save" title="Save"\n
                       tal:attributes="name python: \'%s:method\' % (form_action, )"\n

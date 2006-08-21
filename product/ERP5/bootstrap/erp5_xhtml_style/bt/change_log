@@ -1,5 +1,6 @@
 2006-08-21 Kevin
 * Include support for editable_mode parameter in main_template.
+* Remove default value (by jp).
 
 2006-08-21 Chris
 * Made form_render code a lot lighter with same final result using a loop
