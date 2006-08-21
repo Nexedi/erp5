@@ -526,10 +526,6 @@ fieldset.left {\n
   height: 100%;\n
   border-style: solid;\n
   border-width: 0;\n
-/*  border-top-width: 1px;\n
-  border-left-width: 1px;\n
-  border-bottom-width: 1px;\n
-  border-right-width: 0;*/\n
   border-color: <dtml-var document_border_color>;\n
   padding-top: 5px;\n
   padding-bottom: 2px;\n
@@ -546,10 +542,6 @@ fieldset.right {\n
   height: 100%;\n
   border-style: solid;\n
   border-width: 0;\n
-/*  border-top-width: 1px;\n
-  border-left-width: 0;\n
-  border-bottom-width: 1px;\n
-  border-right-width: 1px;*/\n
   border-color: <dtml-var document_border_color>;\n
   padding-top: 5px;\n
   padding-bottom: 2px;\n
