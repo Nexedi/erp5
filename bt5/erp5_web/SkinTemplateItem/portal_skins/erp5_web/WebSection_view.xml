@@ -63,9 +63,8 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>content center</string>
-                <string>content bottom</string>
-                <string>hidden</string>
+                <string>center webcontent</string>
+                <string>bottom webcontent</string>
               </list>
             </value>
         </item>
@@ -74,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>content bottom</string> </key>
+                    <key>                 <string>bottom webcontent</string> </key>
                     <value>
                       <list>
                         <string>physical_subcontent_listbox</string>
@@ -82,7 +81,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>content center</string> </key>
+                    <key>                 <string>center webcontent</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
@@ -90,13 +89,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
@@ -129,11 +122,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebSection_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>section_form_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

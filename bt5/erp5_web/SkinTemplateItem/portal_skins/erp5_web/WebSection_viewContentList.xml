@@ -62,10 +62,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
-                <string>content center</string>
-                <string>content bottom</string>
-                <string>hidden</string>
+                <string>bottom webcontent</string>
               </list>
             </value>
         </item>
@@ -74,23 +71,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>content bottom</string> </key>
+                    <key>                 <string>bottom webcontent</string> </key>
                     <value>
                       <list>
                         <string>dynamic_subcontent_listbox</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>content center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -99,12 +84,6 @@
                       <list>
                         <string>my_title</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -120,11 +99,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebSection_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>section_form_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
