@@ -510,10 +510,5 @@ def optimize():
     self.text = text
   from Products.CMFCore.Expression import Expression
   Expression.__init__ = __init__
-  def _cloneActions(self):
-    # Don't clone actions but convert to list only
-    return list(self._actions)
-  from Products.CMFCore.ActionProviderBase import ActionProviderBase
-  ActionProviderBase._cloneActions = _cloneActions
 
 optimize()
