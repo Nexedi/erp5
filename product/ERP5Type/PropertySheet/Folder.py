@@ -44,5 +44,10 @@ class Folder:
             'type'        : 'string',
             'default'     : '1',
             'mode'        : 'w'},
+        {   'id'          : 'id_generator',
+            'description' : 'The name of the function to use to generate the Id of a new contained object. Default behaviour (when this value is not set or the function cannot be found) is to increment last_id and update it.',
+            'type'        : 'string',
+            'default'     : '',
+            'mode'        : 'w'},
     )
 

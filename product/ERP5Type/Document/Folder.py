@@ -45,6 +45,7 @@ except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 from AccessControl import getSecurityManager
 from Products.ERP5Type import Permissions
+from random import randint
 
 import os
 
@@ -113,6 +114,30 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
       raise TypeError, 'deleteContent only accepts string or list, '\
                        'not %s' % type(id)
 
+  def _generateRandomId(self):
+    """
+      Generate a random Id.
+      10000 factor makes the odd to generate an already existing Id of 1 out
+      of 10000, not depending on the number of objects present in this folder.
+      len(self)+1 to make sure generation works on an empty Folder.
+    """
+    return '%X' % (randint(1, 10000 * (len(self) + 1)), )
+ 
+  def _generateNextId(self):
+    """
+      Get the last generated Id, increment it until no object with generated
+      Id exist, then save the Id.
+    """
+    try:
+      my_id = int(self.getLastId())
+    except TypeError:
+      my_id = 1
+    while self.hasContent(str(my_id)):
+      my_id = my_id + 1
+    my_id = str(my_id)
+    self._setLastId(my_id) # Make sure no reindexing happens
+    return my_id
+
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
   def generateNewId(self,id_group=None,default=None,method=None):
@@ -122,24 +147,23 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
       can be found
 
       Permission is view because we may want to add content to a folder
-      without changing the folder content itself. XXXXXXXXXXX
-      XXXXXXXXXXXX
+      without changing the folder content itself.
+      XXX
     """
     my_id = None
     if id_group is None:
       id_group = self.getIdGroup()
-    if id_group is None or id_group=='None':
-      try:
-        my_id = int(self.getLastId())
-      except TypeError:
-        my_id = 1
-      while self.hasContent(str(my_id)):
-        my_id = my_id + 1
-      self._setLastId(str(my_id)) # Make sure no reindexing happens
+    if id_group in (None, 'None'):
+      idGenerator = getattr(self, self.getIdGenerator(), None)
+      if idGenerator is None:
+        idGenerator = self._generateNextId
+      my_id = idGenerator()
+      while self.hasContent(my_id):
+        my_id = _generateNextId()
     else:
-      my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
+      my_id = str(self.portal_ids.generateNewId(id_group=id_group,default=default,method=method))
 
-    return str(my_id)
+    return my_id
 
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
