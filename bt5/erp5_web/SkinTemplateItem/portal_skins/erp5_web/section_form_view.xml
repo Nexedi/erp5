@@ -72,7 +72,10 @@
       </tal:block>\n
 \n
       <tal:block tal:condition="python: not(default_content is None and not editable_mode)">\n
-        <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+        <tal:block tal:replace="nothing"><!--\n
+          Use here/form_view/macros/form_render macro with html style.\n
+        --></tal:block>\n
+        <tal:block metal:use-macro="here/form_render/macros/master"/>\n
       </tal:block>\n
 \n
       <tal:block tal:condition="python: default_content is None and not editable_mode">\n

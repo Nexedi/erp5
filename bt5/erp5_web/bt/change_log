@@ -1,3 +1,6 @@
+2006-08-21 Kevin
+* Fix section bad form rendering with xhtml_style.
+
 2006-08-18 Kevin
 * Fix some Form's group to work with xhtml_style.
 * Fix default template on WebSection.
