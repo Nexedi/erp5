@@ -2,6 +2,7 @@
 * Include support for editable_mode parameter in main_template.
 * Remove default value (by jp).
 * Do not render empty groups in forms.
+* Do not use <h6> tags to clear box flow.
 
 2006-08-21 Chris
 * Made form_render code a lot lighter with same final result using a loop
