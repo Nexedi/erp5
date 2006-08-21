@@ -3,6 +3,7 @@
 * Remove default value (by jp).
 * Do not render empty groups in forms.
 * Do not use <h6> tags to clear box flow.
+* Introduce widget_render page template (not used yet).
 
 2006-08-21 Chris
 * Made form_render code a lot lighter with same final result using a loop
