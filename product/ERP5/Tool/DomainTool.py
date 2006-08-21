@@ -189,12 +189,12 @@ class DomainTool(BaseTool):
     def generateMappedValue(self, context, test=1, predicate_list=None, **kw):
       """
       We will generate a mapped value with the list of all predicates 
-      founds. 
+      found. 
       Let's say we have 3 predicates (in the order we want) like this:
       Predicate 1   [ base_price1,           ,   ,   ,    ,    , ]
       Predicate 2   [ base_price2, quantity2 ,   ,   ,    ,    , ]
       Predicate 3   [ base_price3, quantity3 ,   ,   ,    ,    , ]
-      Our MappedValue generated will have the base_price of the 
+      Our generated MappedValue will have the base_price of the 
       predicate1, and the quantity of the Predicate2, because Predicate
       1 is the first one which defines a base_price and the Predicate2
       is the first one wich defines a quantity.
@@ -223,6 +223,55 @@ class DomainTool(BaseTool):
         mapped_value = mapped_value.asContext(**mapped_value_property_dict)
       return mapped_value
 
+    # XXX FIXME method should not be public 
+    # (some users are not able to see resource's price)
+    security.declarePublic('generateMultivaluedMappedValue')
+    def generateMultivaluedMappedValue(self, context, test=1, predicate_list=None, **kw):
+      """
+      We will generate a mapped value with the list of all predicates 
+      found. 
+      Let's say we have 3 predicates (in the order we want) like this:
+      Predicate 1   [ base_price1,           ,   ,   ,    ,    , ]
+      Predicate 2   [ base_price2, additional_price2 ,   ,   ,    ,    , ]
+      Predicate 3   [ base_price3, additional_price3 ,   ,   ,    ,    , ]
+      Our generated MappedValue will take all values for each property and put
+      them in lists, unless predicates define the same list of criterion categories
+      """
+      # First get the list of predicates
+      if predicate_list is None:
+        predicate_list = self.searchPredicateList(context, test=test, **kw)
+      if len(predicate_list)==0:
+        # No predicate, return None
+        mapped_value = None
+      else:
+        # Generate tempDeliveryCell
+        from Products.ERP5Type.Document import newTempSupplyCell
+        mapped_value = newTempSupplyCell(self.getPortalObject(),
+                                           'new_mapped_value')
+        mapped_value_property_dict = {}
+        processed_dict = {}
+        # Look for each property the first predicate with unique criterion
+        # categories which defines the property
+        for predicate in predicate_list:
+          predicate_category_list = \
+              tuple(predicate.getMembershipCriterionCategoryList())
+
+          for mapped_value_property in predicate.getMappedValuePropertyList():
+            prop_list = processed_dict.setdefault(predicate_category_list, [])
+            if mapped_value_property in prop_list:
+              # we already have one value for this (categories, property)
+              continue
+            prop_list.append(mapped_value_property)
+
+            value = predicate.getProperty(mapped_value_property)
+            if value is not None:
+              mv_prop_list = \
+                  mapped_value_property_dict.setdefault(
+                  mapped_value_property, [])
+              mv_prop_list.append(value)
+        # Update mapped value
+        mapped_value = mapped_value.asContext(**mapped_value_property_dict)
+      return mapped_value
 
 
     def getChildDomainValueList(self, parent, **kw):

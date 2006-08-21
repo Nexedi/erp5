@@ -544,10 +544,13 @@ class Resource(XMLMatrix, CoreResource, Variated):
       return p
 
     def _pricingSortMethod(self, a, b):
-      # Simple method : the one that matches the highest number
-      # of criterions wins
-      return cmp(len(b.getAcquiredCategoryList()),
-          len(a.getAcquiredCategoryList()))
+      # Simple method : the one that defines a destination wins
+      parent = a.getParentValue()
+      if parent.getPortalType().endswith(' Line'):
+        parent = parent.getParentValue()
+      if parent.getDestination():
+        return -1 # a has a destination and wins
+      return 1 # a has no destination ans loses
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               '_getPriceParameterDict')
@@ -567,43 +570,22 @@ class Resource(XMLMatrix, CoreResource, Variated):
       resource_category = 'resource/' + self.getRelativeUrl()
       if not resource_category in new_category_list:
         new_category_list += (resource_category, )
-      # Generate a mapped value without option, and one for each option
-      # Separate option from new_category_list
-      option_base_category_list = self.getPortalOptionBaseCategoryList()
-      option_category_list = []
-      no_option_category_list = []
-      for new_category in new_category_list:
-        is_option = 0
-        for option_base_category in option_base_category_list:
-          if new_category.startswith(option_base_category):
-            is_option = 1
-            break
-        if is_option:
-          option_category_list.append(new_category)
-        else:
-          no_option_category_list.append(new_category)
       # Generate the predicate mapped value
       # to get some price values.
-      mapped_value_list = []
       domain_tool = getToolByName(self,'portal_domains')
       portal_type_list = self.getPortalSupplyPathTypeList()
 
-      category_list_list = [no_option_category_list] + \
-          [no_option_category_list+[x] for x in option_category_list]
-      for category_list in category_list_list:
-        # Generate the fake context
-        tmp_context = self.asContext(context=context, 
-                                     categories=category_list,
-                                     REQUEST=REQUEST, **kw)
-        tmp_kw = kw.copy()
-        if 'sort_method' not in tmp_kw:
-          tmp_kw['sort_method'] = self._pricingSortMethod
-        mapped_value = domain_tool.generateMappedValue(
-                                               tmp_context,
-                                               portal_type=portal_type_list,
-                                               has_cell_content=0, **tmp_kw)
-        if mapped_value is not None:
-          mapped_value_list.append(mapped_value)
+      # Generate the fake context
+      tmp_context = self.asContext(context=context, 
+                                   categories=new_category_list,
+                                   REQUEST=REQUEST, **kw)
+      tmp_kw = kw.copy()
+      if 'sort_method' not in tmp_kw:
+        tmp_kw['sort_method'] = self._pricingSortMethod
+      mapped_value = domain_tool.generateMultivaluedMappedValue(
+                                             tmp_context,
+                                             portal_type=portal_type_list,
+                                             has_cell_content=0, **tmp_kw)
       # Get price parameters
       price_parameter_dict = {
         'base_price': None,
@@ -614,18 +596,23 @@ class Resource(XMLMatrix, CoreResource, Variated):
         'variable_additional_price': [],
         'non_discountable_additional_price': [],
       }
-      for mapped_value in mapped_value_list:
-        for price_parameter_name in price_parameter_dict.keys():
-          price_parameter_value = \
-            mapped_value.getProperty(price_parameter_name)
-          if price_parameter_value not in [None, '']:
-            try:
-              price_parameter_dict[price_parameter_name].append(
-                                              price_parameter_value)
-            except AttributeError:
-              if price_parameter_dict[price_parameter_name] is None:
+      if mapped_value is None:
+        return price_parameter_dict
+      for price_parameter_name in price_parameter_dict.keys():
+        price_parameter_value = \
+          mapped_value.getProperty(price_parameter_name)
+        if price_parameter_value not in [None, '']:
+          try:
+            price_parameter_dict[price_parameter_name].extend(
+                                            price_parameter_value)
+          except AttributeError:
+            if price_parameter_dict[price_parameter_name] is None:
+              if price_parameter_name == 'exclusive_discount_ratio':
                 price_parameter_dict[price_parameter_name] = \
-                                                price_parameter_value
+                    max(price_parameter_value)
+              else:
+                price_parameter_dict[price_parameter_name] = \
+                    price_parameter_value[0]
       return price_parameter_dict
       
     security.declareProtected(Permissions.AccessContentsInformation,
