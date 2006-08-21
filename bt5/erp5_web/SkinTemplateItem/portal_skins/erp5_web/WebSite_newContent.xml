@@ -87,7 +87,7 @@ IGNORED_FORM_ID_LIST = [ \\\n
                        , \'x\', \'y\'\n
                        # custom forms field ids\n
                        , \'new_portal_type\', \'destination_section\'\n
-                       ]\n
+]\n
 \n
 directory     = context.restrictedTraverse(context.getRelativeUrl()).getParent()\n
 creation_mode = form_data[\'document_action_mode\']\n

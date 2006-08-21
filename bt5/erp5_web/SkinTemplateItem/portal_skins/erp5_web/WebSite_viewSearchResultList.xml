@@ -71,7 +71,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_modification_date</string>

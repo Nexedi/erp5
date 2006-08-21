@@ -179,7 +179,7 @@ return site_map\n
                             <string>depth_limit</string>
                             <string>WebDocument_getURI</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>site_root</string>
                             <string>site_content</string>
                             <string>_getiter_</string>
