@@ -47,9 +47,6 @@ from Products.ERP5Type.Utils import DocumentConstructor,\
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 
-import Products.ERP5.Document
-from Products.ERP5.Document.Movement import Movement
-
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
   """
@@ -194,6 +191,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     return currency
+  _makeResource = _makeCurrency
   # }}}
 
   def _makeMovement(self, **kw):
@@ -216,6 +214,14 @@ class TestInventory(InventoryAPITestCase):
   """Tests getInventory methods.
   """
   RUN_ALL_TESTS = 1
+  
+  def testReturnedTypeIsList(self):
+    """getInventory returns a float"""
+    # XXX it may return a Decimal some day
+    getInventory = self.getSimulationTool().getInventory
+    self.assertEquals(type(getInventory()), type(0.1))
+    # default is 0
+    self.assertEquals(0, getInventory())
 
   def test_SectionCategory(self, quiet=0, run=RUN_ALL_TESTS):
     """Tests inventory on section category. """
@@ -419,10 +425,127 @@ class TestInventoryList(InventoryAPITestCase):
   """
   RUN_ALL_TESTS = 1
 
+
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
   """
   RUN_ALL_TESTS = 1
+  
+  def testReturnedTypeIsList(self):
+    """Movement History List returns a sequence object""" 
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt_history_list = getMovementHistoryList()
+    self.failUnless(str(mvt_history_list.__class__),
+                    'Shared.DC.ZRDB.Results.Results')
+    # default is an empty list
+    self.assertEquals(0, len(mvt_history_list))
+  
+  def testMovementBothSides(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100)
+    # we don't filter, so we have the same movement from both sides.
+    self.assertEquals(2, len(getMovementHistoryList()))
+
+  def testBrainClass(self):
+    """Movement History List uses InventoryListBrain for brains""" 
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100)
+    # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r) 
+    r_bases = getMovementHistoryList()._class.__bases__
+    brain_class = r_bases[2].__name__
+    self.assertEquals('InventoryListBrain', brain_class,
+      "unexpected brain class for getMovementHistoryList InventoryListBrain"
+      " != %s (bases %s)" % (brain_class, r_bases))
+  
+  def testSection(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement(quantity=100)
+    mvt_history_list = getMovementHistoryList(
+                            section_uid = self.section.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEquals(100, mvt_history_list[0].total_quantity)
+    self.assertEquals(self.section.getRelativeUrl(),
+                  mvt_history_list[0].section_relative_url)
+  
+  def testMirrorSection(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement(quantity=100)
+    mvt_history_list = getMovementHistoryList(
+                            mirror_section_uid = self.section.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEquals(-100, mvt_history_list[0].total_quantity)
+    self.assertEquals(self.mirror_section.getRelativeUrl(),
+                  mvt_history_list[0].section_relative_url)
+    self.assertEquals(self.mirror_node.getRelativeUrl(),
+                  mvt_history_list[0].node_relative_url)
+    
+    # if we look from the other side, everything is reverted
+    mvt_history_list = getMovementHistoryList(
+                            section_uid = self.section.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(100, mvt_history_list[0].total_quantity)
+    self.assertEquals(self.section.getRelativeUrl(),
+                  mvt_history_list[0].section_relative_url)
+    self.assertEquals(self.node.getRelativeUrl(),
+                  mvt_history_list[0].node_relative_url)
+  
+  def testDifferentDatesPerSection(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    start_date = DateTime(2001, 1, 1)
+    stop_date = DateTime(2002, 2, 2)
+    mvt = self._makeMovement(quantity=100,
+                             start_date=start_date,
+                             stop_date=stop_date)
+    # start_date is for source
+    self.assertEquals(start_date, getMovementHistoryList(
+                            section_uid=self.mirror_section.getUid())[0].date)
+    # stop_date is for destination
+    self.assertEquals(stop_date, getMovementHistoryList(
+                            section_uid=self.section.getUid())[0].date)
+    
+  def testNode(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement(quantity=100)
+    mvt_history_list = getMovementHistoryList(
+                            node_uid = self.node.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEquals(100, mvt_history_list[0].total_quantity)
+
+  def testMirrorNode(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement(quantity=100)
+    mvt_history_list = getMovementHistoryList(
+                            mirror_node_uid = self.node.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEquals(-100, mvt_history_list[0].total_quantity)
+
+  def testResource(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement(quantity=100)
+    another_resource = self._makeResource()
+    another_mvt = self._makeMovement(quantity=3,
+                                     resource_value=another_resource)
+    # we can query resource directly by uid
+    mvt_history_list = getMovementHistoryList(
+                            node_uid=self.node.getUid(),
+                            resource_uid=self.resource.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(100, mvt_history_list[0].total_quantity)
+    # getMovementHistoryList should return only movement for
+    mvt_history_list = getMovementHistoryList(
+                            node_uid=self.node.getUid(),
+                            resource_uid=another_resource.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(3, mvt_history_list[0].total_quantity)
+
+    # wrong value yields an empty list
+    self.assertEquals(0, len(getMovementHistoryList(
+                            resource_uid = self.node.getUid())))
+    
 
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
