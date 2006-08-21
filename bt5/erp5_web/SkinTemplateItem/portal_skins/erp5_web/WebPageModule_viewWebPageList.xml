@@ -61,9 +61,6 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -73,29 +70,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -103,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPageModule_viewContentList</string> </value>
+            <value> <string>WebPageModule_viewWebPageList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -111,7 +90,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewContentList</string> </value>
+            <value> <string>WebPageModule_viewWebPageList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -131,7 +110,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Folder Contents</string> </value>
+            <value> <string>Web Pages</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
