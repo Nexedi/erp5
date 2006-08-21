@@ -649,31 +649,21 @@ fieldset.bottom .field label {\n
   color: inherit;\n
 }\n
 \n
-#context_bar .tool_buttons a,\n
-#context_bar .separator,\n
-#main_bar .separator {\n
+#context_bar .tool_buttons a {\n
   float: left;\n
   margin-left: 2px;\n
   margin-right: 2px;\n
 }\n
 \n
-#context_bar .separator,\n
-#main_bar .separator {\n
+.separator {\n
   color: inherit;\n
   width: 0;\n
   height: 24px;\n
   display: block;\n
+  float: left;\n
   margin-left: 6px;\n
   margin-right: 6px;\n
   border-width: 1px;\n
-}\n
-\n
-#main_bar .separator {\n
-  border-color: <dtml-var context_bar_background_color>;\n
-  border-style: outset;\n
-}\n
-\n
-#context_bar .separator {\n
   border-color: <dtml-var navigation_bar_background_color>;\n
   border-style: inset;\n
 }\n
