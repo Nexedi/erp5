@@ -175,10 +175,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   uid -> the (local) universal ID of objects
   path -> the (local) path of objects
 
-  If you pass it a "SearchableText" argument, it does a MySQL full-text search.
+  If you pass it a keyword argument which is present in sql_catalog_full_text_search_keys
+  (in catalog properties), it does a MySQL full-text search.
   Additionally you can pass it a search_mode argument ('natural', 'in_boolean_mode'
   or 'with_query_expansion') to use an advanced search mode ('natural'
   is the default).
+  search_mode arg can be given for all full_text keys, or for a specific key by naming
+  the argument search_mode_KeyName, or even more specifically, search_mode_Table.Key
+  or search_mode_Table_Key
 
 
   bgrain defined in meyhods...
@@ -1612,7 +1616,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   where_expression += ["%s LIKE '%%%s%%'" % (key, value)]
                 elif key in full_text_search_keys:
                   # We must add % in the request to simulate the catalog
-                  search_mode = kw.get('search_mode', 'natural').lower()
+                  # we first check if there is a special search_mode for this key
+                  # incl. table name, or for all keys of that name,
+                  # or there is a search_mode supplied for all fulltext keys
+                  # or we fall back to natural mode
+                  search_mode=kw.get('search_mode_%s' % key) \
+                      or kw.get('search_mode_%s' % key.replace('.','_')) \
+                      or (key.find('.')>-1 and kw.get('search_mode_%s' % key.split('.')[1])) \
+                      or kw.get('search_mode', 'natural')
+                  if search_mode is not None:
+                    search_mode=search_mode.lower()
                   mode = full_text_search_modes.get(search_mode,'')
                   where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
                 else:
@@ -1637,7 +1650,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       query_item += ["%s LIKE '%%%s%%'" % (key, value_item)]
                     elif key in full_text_search_keys:
                       # We must add % in the request to simulate the catalog
-                      search_mode = kw.get('search_mode', 'natural').lower()
+                      # we first check if there is a special search_mode for this key
+                      # incl. table name, or for all keys of that name,
+                      # or there is a search_mode supplied for all fulltext keys
+                      # or we fall back to natural mode
+                      search_mode=kw.get('search_mode_%s' % key) \
+                          or kw.get('search_mode_%s' % key.replace('.','_')) \
+                          or (key.find('.')>-1 and kw.get('search_mode_%' % key.split('.')[1])) \
+                          or kw.get('search_mode', 'natural')
+                      if search_mode is not None:
+                        search_mode=search_mode.lower()
                       mode = full_text_search_modes.get(search_mode, '')
                       query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value, mode)]
                     else:
