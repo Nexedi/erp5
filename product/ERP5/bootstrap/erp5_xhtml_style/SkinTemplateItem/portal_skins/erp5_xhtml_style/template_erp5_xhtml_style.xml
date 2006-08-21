@@ -254,7 +254,7 @@ IDEAS:\n
               </button>\n
             </span>\n
           </span>\n
-          <h6 class="clear">&nbsp;</h6>\n
+          <p class="clear">&nbsp;</p>\n
         </div>\n
         <div id="context_bar">\n
           <tal:block metal:define-slot="context_bar" />\n
@@ -281,7 +281,7 @@ IDEAS:\n
             <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
           </tal:block>\n
         </div>\n
-        <h6 class="clear" style="height: 10px">&nbsp;</h6>\n
+        <p class="clear" style="height: 10px">&nbsp;</p>\n
         <div tal:content="structure here/REQUEST/portal_status_message | nothing"\n
              id="transition_message"></div>\n
       </div>\n

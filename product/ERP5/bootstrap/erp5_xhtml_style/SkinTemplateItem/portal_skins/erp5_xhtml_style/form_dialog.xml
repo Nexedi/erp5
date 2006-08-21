@@ -125,7 +125,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                   <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
                 </tal:block>\n
               </div>\n
-              <h6 class="clear">&nbsp;</h6>\n
+              <p class="clear">&nbsp;</p>\n
             </div>\n
             <div tal:condition="python: len(center_group) > 0"\n
                 class="center">\n
@@ -133,7 +133,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
               </tal:block>\n
             </div>\n
-          <h6 class="clear">&nbsp;</h6>\n
+          <p class="clear">&nbsp;</p>\n
           </div>\n
         </div>\n
       </tal:block>\n

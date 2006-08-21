@@ -418,8 +418,7 @@ a:hover {\n
   text-decoration: underline;\n
 }\n
 \n
-p.clear,\n
-h6.clear {\n
+p.clear {\n
   height: 0;\n
   margin: 0;\n
   padding: 0;\n

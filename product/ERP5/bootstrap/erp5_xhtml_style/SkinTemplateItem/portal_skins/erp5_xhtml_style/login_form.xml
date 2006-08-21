@@ -106,7 +106,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 <input type="text" name="__ac_name" id="name"\n
                        tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
               </div>\n
-              <h6 class="clear">&nbsp;</h6>\n
+              <p class="clear">&nbsp;</p>\n
             </div>\n
             <div class="field">\n
               <label for="password"\n
@@ -114,7 +114,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <div class="input">\n
                 <input type="password" name="__ac_password" id="password" />\n
               </div>\n
-              <h6 class="clear">&nbsp;</h6>\n
+              <p class="clear">&nbsp;</p>\n
             </div>\n
             <div class="field">\n
               <label for="cb_remember"\n
@@ -122,13 +122,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <div class="input">\n
                 <input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember" />\n
               </div>\n
-              <h6 class="clear">&nbsp;</h6>\n
+              <p class="clear">&nbsp;</p>\n
             </div>\n
           </div>\n
         </div>\n
       </div>\n
       <script type="text/javascript">setFocus()</script>\n
-      <h6 class="clear">&nbsp;</h6>\n
+      <p class="clear">&nbsp;</p>\n
       <input type="submit" value="Login" class="submit"\n
              tal:attributes="name python: \'%s:method\' % (form_action, )"\n
              i18n:attributes="value" i18n:domain="ui" />\n
