@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from ZODB import POSException
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl.Permission import Permission
@@ -68,7 +69,7 @@ customImporters={
     XMLExportImport.magic: XMLExportImport.importXML,
     }
 
-from zLOG import LOG, WARNING, ERROR, INFO
+from zLOG import LOG, WARNING, ERROR, INFO, PANIC
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
@@ -476,7 +477,13 @@ class ObjectTemplateItem(BaseTemplateItem):
     while connection is None:
       obj=obj.aq_parent
       connection=obj._p_jar
-    obj = connection.importFile(file, customImporters=customImporters)
+    try:
+      obj = connection.importFile(file, customImporters=customImporters)
+    except POSException.ExportError, e:
+      LOG('BusinessTemplate', PANIC, 'Failed importing %s' % file_name, error=e)
+      if e.args == ('Invalid export header',):
+        e.args = ('%s (filename: %s)' % (e.args[0], file_name), )
+      raise e
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
