@@ -1,8 +1,5 @@
-2006-08-11 jerome
-* when copy/paste a person, reset the login on the new person for ERP5Security.
-
-2006-08-06 jerome
-* remove skins to create module using a scribus file; they are now part of erp5_pdf_editor.
+2006-08-22 bartek
+* return select_expression from z_search_result
 
 2006-07-21 aurel
 * register checked uid in selection in Base_callDialogMethod
