@@ -595,6 +595,10 @@ fieldset.bottom .field label {\n
   font-weight: bold;\n
 }\n
 \n
+.content .field .invisible {\n
+  display: None;\n
+}\n
+\n
 .error,\n
 .content .field .reqerror {\n
   background-color: inherit;\n
@@ -879,7 +883,7 @@ fieldset.bottom .field label {\n
   border-width: 1px;\n
   border-style: solid;\n
   border-color: <dtml-var document_border_color>;\n
-  border-top: 0px none;\n
+  border-top: 0 none;\n
   color: inherit;\n
   background-color: <dtml-var document_background_color>;\n
   padding: 5px;\n

@@ -100,7 +100,7 @@ Groups names becomes "left_group", "right_group", "left1_group", "right1_group",
       <tal:block metal:use-macro="template/macros/form" />\n
     </tal:block>\n
     <tal:block tal:repeat="group groups">\n
-\t    <fieldset tal:attributes="class group; id python: \'fieldset_\'+group" tal:condition="python: group.find(\'hidden\') < 0">\n
+\t    <fieldset tal:attributes="class group; id python: \'fieldset_\'+group.replace(\' \', \'_\')" tal:condition="python: group.find(\'hidden\') < 0">\n
         <legend tal:content="group" class="group_title"/>\n
         <tal:block tal:repeat="field python:form.get_fields_in_group(group)">\n
           <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
