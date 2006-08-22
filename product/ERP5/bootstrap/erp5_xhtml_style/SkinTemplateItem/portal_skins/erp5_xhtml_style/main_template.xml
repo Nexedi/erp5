@@ -86,12 +86,14 @@ MISSING:\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-  <tal:block tal:define="ignore_layout          request/ignore_layout | nothing;\n
-                         layout_form_id         here/getApplicableLayout | nothing;\n
-                         editable_mode  python: layout_form_id and request.get(\'editable_mode\', ignore_layout) or 1;\n
-                         dummy          python: request.set(\'editable_mode\', editable_mode);\n
-                         layout_form    python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
-                         page_template  python: (layout_form and not(ignore_layout)) and getattr(layout_form, \'pt\', None) or \'template_erp5_xhtml_style\';">\n
+  <tal:block\n
+   tal:define="ignore_layout          request/ignore_layout | nothing;\n
+               layout_form_id         here/getApplicableLayout | nothing;\n
+               is_edit_mode   python: not (not(hasattr(context.REQUEST, \'editable_mode\')) or not(context.REQUEST[\'editable_mode\']));\n
+               editable_mode  python: layout_form_id in (\'\', None) and True or (is_edit_mode or ignore_layout);\n
+               dummy          python: request.set(\'editable_mode\', editable_mode);\n
+               layout_form    python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
+               page_template  python: (layout_form and not(ignore_layout)) and getattr(layout_form, \'pt\', None) or \'template_erp5_xhtml_style\';">\n
     <tal:block metal:use-macro="python: getattr(here, page_template).macros[\'master\']">\n
       <tal:block metal:fill-slot="context_bar">\n
         <tal:block metal:define-slot="context_bar"/>\n
