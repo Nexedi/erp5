@@ -105,7 +105,7 @@ class ReferCheckerBeforeTraverseHook:
     response = request.RESPONSE
     http_url = request.get('ACTUAL_URL', '').strip()
     http_referer = request.get('HTTP_REFERER', '').strip()
-    
+
     user_password = request._authUserPW()
     if user_password:
       user = container.acl_users.getUserById(user_password[0]) or\
@@ -113,7 +113,7 @@ class ReferCheckerBeforeTraverseHook:
       # Manager can do anything
       if user is not None and 'Manager' in user.getRoles():
         return
-    
+
     portal_url = container.portal_url.getPortalObject().absolute_url()
     if http_referer != '':
       # if HTTP_REFERER is set, user can acces the object if referer is ok
@@ -164,7 +164,7 @@ class ERP5Site(FolderMixIn, CMFSite):
       Implemented for consistency
     """
     return self.index_html()
-  
+
   security.declareProtected(Permissions.ManagePortal, 'enableRefererCheck')
   def enableRefererCheck(self):
     """Enable a ReferCheckerBeforeTraverseHook to check users have valid
@@ -175,7 +175,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                                         ReferCheckerBeforeTraverseHook.handle,
                              # we want to be registered _after_ CookieCrumbler
                                         100)
-  
+
   def _disableRefererCheck(self):
     """Disable the HTTP_REFERER check."""
     BeforeTraverse.unregisterBeforeTraverse(self,
@@ -1091,29 +1091,43 @@ class ERP5Generator(PortalGenerator):
 
   def setupDefaultSkins(self, p):
     from Products.CMFCore.DirectoryView import addDirectoryViews
-    from Products.CMFDefault import cmfdefault_globals
+    from Products.CMFDefault  import cmfdefault_globals
     from Products.CMFActivity import cmfactivity_globals
+    from Products.FCKeditor   import fckeditor_globals
     ps = getToolByName(p, 'portal_skins')
     addDirectoryViews(ps, 'skins', cmfdefault_globals)
     addDirectoryViews(ps, 'skins', cmfactivity_globals)
+    addDirectoryViews(ps, 'skins', fckeditor_globals)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
     ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
     # Set the 'custom' layer a high priority, so it remains the first
-    # layer when installing new business templates
-    ps['custom'].manage_addProperty(
-        "business_template_skin_layer_priority", 100.0, "float")
-    ps.addSkinSelection('View', 'custom, external_method, activity, '
-                              + 'zpt_content, zpt_generic,'
-                              + 'zpt_control, content, generic, control, Images',
-                        make_default=1)
-    ps.addSkinSelection('Print', 'custom, external_method, activity, '
-                              + 'zpt_content, zpt_generic,'
-                              + 'zpt_control, content, generic, control, Images',
-                        make_default=0)
-    ps.addSkinSelection('CSV', 'custom, external_method, activity, '
-                              + 'zpt_content, zpt_generic,'
-                              + 'zpt_control, content, generic, control, Images',
-                        make_default=0)
+    #   layer when installing new business templates.
+    ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
+    skin_folder_list = [ 'custom'
+                       , 'fckeditor'
+                       , 'external_method'
+                       , 'activity'
+                       , 'zpt_content'
+                       , 'zpt_generic'
+                       , 'zpt_control'
+                       , 'content'
+                       , 'generic'
+                       , 'control'
+                       , 'Images'
+                       ]
+    skin_folders = ', '.join(skin_folder_list)
+    ps.addSkinSelection( 'View'
+                       , skin_folders
+                       , make_default = 1
+                       )
+    ps.addSkinSelection( 'Print'
+                       , skin_folders
+                       , make_default = 0
+                       )
+    ps.addSkinSelection( 'CSV'
+                       , skin_folders
+                       , make_default = 0
+                       )
     p.setupCurrentSkin()
 
   def setupWorkflow(self, p):
