@@ -29,23 +29,26 @@
 """Unit Tests for Inventory API.
 """
 
-import os, sys
+import sys
+import random
+import os
+
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
-# Needed in order to have a log file inside the current folder
-os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
-os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
+from AccessControl.SecurityManagement import newSecurityManager
+from DateTime import DateTime
 
-import random
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Base import initializePortalTypeDynamicProperties, \
                                    _aq_reset
 from Products.ERP5Type.Utils import DocumentConstructor,\
                                     setDefaultClassProperties
-from AccessControl.SecurityManagement import newSecurityManager
-from DateTime import DateTime
+
+# Needed in order to have a log file inside the current folder
+os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
+os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -419,7 +422,6 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                         section_uid=self.section.getUid()), 100)
   
-
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
   """
@@ -545,7 +547,229 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # wrong value yields an empty list
     self.assertEquals(0, len(getMovementHistoryList(
                             resource_uid = self.node.getUid())))
+  
+  def testSectionCategory(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self.section.setGroup('level1/level2')
+    mvt = self._makeMovement(quantity=100)
+
+    # for section category, both exact category or any parent category works
+    # section_category can also be a list.
+    for section_category in [ 'group/level1',
+                              'group/level1/level2',
+                             ['group/level1', 'group/anotherlevel'],
+                             ['group/level1', 'group/level1'],
+                             ['group/level1', 'group/level1/level2'], ]:
+      movement_history_list = getMovementHistoryList(
+                                section_category=section_category)
+      self.assertEquals(len(movement_history_list), 1)
+      self.assertEquals(movement_history_list[0].total_quantity, 100)
     
+    # again, bad category raises an exception
+    self.assertRaises(ValueError,
+                      getMovementHistoryList,
+                      section_category='group/notexists')
+    # (but other arguments are ignored)
+    self.assertEquals(len(getMovementHistoryList(
+                        section_category='group/level1',
+                        ignored='argument')), 1)
+    
+  def testNodeCategoryAndSectionCategory(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self.section.setGroup('level1/level2')
+    self.node.setGroup('level1')
+    mvt = self._makeMovement(quantity=100)
+
+    valid_category_list = [ 'group/level1',
+                           ['group/level1', 'group/anotherlevel'],
+                           ['group/level1', 'group/level1'],
+                           ['group/level1', 'group/level1/level2'], ]
+    invalid_category_list = ['group/anotherlevel', 'product_line/level1']
+
+    # both valid
+    for section_category in valid_category_list:
+      for node_category in valid_category_list:
+        movement_history_list = getMovementHistoryList(
+                                  node_category=node_category,
+                                  section_category=section_category)
+        self.assertEquals(len(movement_history_list), 1)
+        self.assertEquals(movement_history_list[0].total_quantity, 100)
+
+    # if node category OR section category is not matched, no movement are
+    # returned.
+    for section_category in valid_category_list:
+      for node_category in invalid_category_list:
+        movement_history_list = getMovementHistoryList(
+                                  node_category=node_category,
+                                  section_category=section_category)
+        self.assertEquals(len(movement_history_list), 0)
+
+    for section_category in invalid_category_list:
+      for node_category in valid_category_list:
+        movement_history_list = getMovementHistoryList(
+                                  node_category=node_category,
+                                  section_category=section_category)
+        self.assertEquals(len(movement_history_list), 0)
+
+
+  # Date tests:
+  # ===========
+  #
+  # For all date tests, we create a list of movements with dates:
+  #     start_date (date for source)        stop_date(date for destination)
+  #              2006/01/01                       2006/01/02
+  #              2006/01/02                       2006/01/03
+  #              2006/01/03                       2006/01/04
+  #              2006/01/04                       2006/01/05
+  # in all those tests, we usually look from the destination, so the first
+  # movement is at 2006/01/02
+  #
+
+  def test_FromDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+      self._makeMovement(quantity=100,
+                         start_date=date,
+                         stop_date=date+1)
+    # from_date takes all movements >= 
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 2)
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 02),
+                        section_uid=self.mirror_section.getUid())), 2)
+
+  def test_AtDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+      self._makeMovement(quantity=100,
+                         start_date=date,
+                         stop_date=date+1)
+    # at_date takes all movements <=
+    self.assertEquals(len(getMovementHistoryList(
+                        at_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 2)
+    self.assertEquals(len(getMovementHistoryList(
+                        at_date=DateTime(2006, 01, 02),
+                        section_uid=self.mirror_section.getUid())), 2)
+
+  def test_ToDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+      self._makeMovement(quantity=100,
+                         start_date=date,
+                         stop_date=date+1)
+    # to_date takes all movements <
+    self.assertEquals(len(getMovementHistoryList(
+                        to_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 1)
+    self.assertEquals(len(getMovementHistoryList(
+                        to_date=DateTime(2006, 01, 02),
+                        section_uid=self.mirror_section.getUid())), 1)
+
+  def test_FromDateAtDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+      self._makeMovement(quantity=100,
+                         start_date=date,
+                         stop_date=date+1)
+    # both from_date and at_date
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 03),
+                        at_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 1)
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 02),
+                        at_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 2)
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2005, 01, 02),
+                        at_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 2)
+    # from other side
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 02),
+                        at_date=DateTime(2006, 01, 03),
+                        section_uid=self.mirror_section.getUid())), 2)
+
+  def test_FromDateToDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+      self._makeMovement(quantity=100,
+                         start_date=date,
+                         stop_date=date+1)
+    # both from_date and to_date
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 03),
+                        to_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 0)
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 02),
+                        to_date=DateTime(2006, 01, 03),
+                        section_uid=self.section.getUid())), 1)
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2005, 01, 02),
+                        to_date=DateTime(2007, 01, 02),
+                        section_uid=self.section.getUid())), 3)
+    # from other side
+    self.assertEquals(len(getMovementHistoryList(
+                        from_date=DateTime(2006, 01, 02),
+                        to_date=DateTime(2006, 01, 03),
+                        section_uid=self.mirror_section.getUid())), 1)
+
+  def test_SortOnDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    date_list = [DateTime(2006, 01, day) for day in range(1, 10)]
+    reverse_date_list = date_list[:]
+    reverse_date_list.reverse()
+
+    # we create movements with a random order on dates, to have an extra change
+    # that they are not sorted accidentally.
+    random_date_list = date_list[:]
+    random.shuffle(random_date_list)
+    for date in random_date_list:
+      self._makeMovement(quantity=100,
+                         start_date=date - 1,
+                         stop_date=date)
+    
+    movement_date_list = [ x.date for x in getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              sort_on=(('stock.date', 'ascending'),)) ]
+    self.assertEquals(movement_date_list, date_list)
+    movement_date_list = [ x.date for x in getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              sort_on=(('stock.date', 'descending'),)) ]
+    self.assertEquals(movement_date_list, reverse_date_list)
+    # minimum test for (('stock.date', 'ASC'), ('stock.uid', 'ASC')) which is
+    # what you want to make sure that the last line on a page precedes the
+    # first line on the previous page.
+    movement_date_list = [x.date for x in getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              sort_on=(('stock.date', 'ascending'),
+                                       ('stock.uid', 'ascending'),)) ]
+    self.assertEquals(movement_date_list, date_list)
+
+  def test_Limit(self):
+    pass
+    # TODO
+    # test limit argument, as used by listbox
+
+  def test_SimulationState(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=2, simulation_state="confirmed")
+    self._makeMovement(quantity=3, simulation_state="planned")
+    for simulation_state in ['confirmed', ['confirmed', 'stopped']]:
+      movement_history_list = getMovementHistoryList(
+                                simulation_state=simulation_state,
+                                section_uid=self.section.getUid())
+      self.assertEquals(len(movement_history_list), 1)
+      self.assertEquals(movement_history_list[0].total_quantity, 2)
+    
+    movement_history_list = getMovementHistoryList(
+                              simulation_state=["confirmed", "planned"],
+                              section_uid=self.section.getUid())
+    self.assertEquals(len(movement_history_list), 2)
+
 
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
