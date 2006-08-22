@@ -458,12 +458,9 @@ div.index_html table {\n
   vertical-align: middle;\n
 }\n
 \n
+#context_bar #jump,\n
 #main_bar .first{\n
   margin-left: 10px;\n
-}\n
-\n
-#context_bar #jump{\n
-  margin-left: 6px;\n
 }\n
 \n
 #context_bar select,\n
