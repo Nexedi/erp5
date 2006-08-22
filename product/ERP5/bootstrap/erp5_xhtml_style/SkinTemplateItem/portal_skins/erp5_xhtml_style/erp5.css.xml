@@ -456,6 +456,11 @@ div.index_html table {\n
   float: left;\n
 }\n
 \n
+#context_bar select,\n
+#main_bar select {\n
+  color: <dtml-var font_color>;\n
+}\n
+\n
 #main_bar .second,\n
 #context_bar .second {\n
   float: right;\n
