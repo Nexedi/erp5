@@ -449,11 +449,13 @@ div.index_html table {\n
   background-color: <dtml-var navigation_bar_background_color>;\n
   padding-top: 2px;\n
   padding-bottom: 2px;\n
+  vertical-align: middle;\n
 }\n
 \n
 #main_bar .first,\n
 #context_bar .first {\n
   float: left;\n
+  vertical-align: middle;\n
 }\n
 \n
 #main_bar .first{\n
@@ -472,6 +474,7 @@ div.index_html table {\n
 #main_bar .second,\n
 #context_bar .second {\n
   float: right;\n
+  vertical-align: middle;\n
 }\n
 \n
 #main_bar button,\n
@@ -487,6 +490,10 @@ div.index_html table {\n
   cursor: pointer;\n
   background-color: inherit;\n
   color: inherit;\n
+}\n
+\n
+#context_bar .tool_buttons {\n
+  vertical-align: middle;\n
 }\n
 \n
 #context_bar .tool_buttons a {\n
@@ -664,6 +671,7 @@ fieldset.bottom .field label {\n
   border-bottom-color: <dtml-var main_border_color>;\n
   background-color: <dtml-var context_bar_background_color>;\n
   color: inherit;\n
+  vertical-align: middle;\n
 }\n
 \n
 #context_bar .tool_buttons a {\n
@@ -673,16 +681,13 @@ fieldset.bottom .field label {\n
 }\n
 \n
 .separator {\n
-  color: inherit;\n
-  width: 0;\n
   height: 24px;\n
-  display: block;\n
-  float: left;\n
+  width: 2px;\n
   margin-left: 6px;\n
   margin-right: 6px;\n
-  border-width: 1px;\n
-  border-color: <dtml-var navigation_bar_background_color>;\n
-  border-style: inset;\n
+  display: block;\n
+  float: left;\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/sepafon.png\');\n
 }\n
 \n
 #context_bar .tool_buttons a .image,\n
