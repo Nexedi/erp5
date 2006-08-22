@@ -83,8 +83,8 @@ MISSING\n
       <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
         <div tal:repeat="html_tuple html_render" class="field"\n
              tal:attributes="title python: here.Localizer.translate(\'erp5_ui\', here.Base_getFieldDescription(field))">\n
-          <label tal:attributes="class python: {0: {0: None, 1: \'required\'},\n
-                                                1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()]">\n
+          <label tal:attributes="class python: ({0: {0: None, 1: \'required\'},\n
+                 1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()] or \'\') + \' \' + (field.get_value(\'css_class\') or \'\')">\n
             <tal:block tal:content="structure python: html_tuple[0]"\n
                        i18n:translate="" i18n:domain="ui" />\n
             <tal:block tal:define="template python: here.developper_shortcut_render">\n

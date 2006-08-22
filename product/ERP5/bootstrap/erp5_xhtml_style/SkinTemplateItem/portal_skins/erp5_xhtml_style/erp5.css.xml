@@ -595,7 +595,8 @@ fieldset.bottom .field label {\n
   font-weight: bold;\n
 }\n
 \n
-.content .field .invisible {\n
+\n
+.content .field label.invisible {\n
   display: None;\n
 }\n
 \n
