@@ -121,6 +121,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <tal:block tal:repeat="field python: form.get_fields_in_group(\'bottom\')">\n
             <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
         </tal:block>\n
+        <p class="clear"></p>\n
       </div>\n
     </tal:block>\n
   </tal:block>\n
