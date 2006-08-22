@@ -317,7 +317,7 @@
         </item>
         <item>
             <key> <string>link_color</string> </key>
-            <value> <string>#222</string> </value>
+            <value> <string>#002e3f</string> </value>
         </item>
         <item>
             <key> <string>link_hover_color</string> </key>
@@ -811,6 +811,10 @@ fieldset.bottom .field label {\n
 \n
 #breadcrumb {\n
   float: left;\n
+}\n
+\n
+#breadcrumb a {\n
+  color: <dtml-var link_color>;\n
 }\n
 \n
 #logged_in_as {\n
