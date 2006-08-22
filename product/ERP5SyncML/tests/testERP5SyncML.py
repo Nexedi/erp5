@@ -236,9 +236,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
     pub.setGidGenerator(getGid)
     sub1.setGidGenerator(getGid)
     sub2.setGidGenerator(getGid)
-    pub.setIdGenerator('generateNewId')
-    sub1.setIdGenerator('generateNewId')
-    sub2.setIdGenerator('generateNewId')
+    pub.setIdGenerator('_generateNextId')
+    sub1.setIdGenerator('_generateNextId')
+    sub2.setIdGenerator('_generateNextId')
 
   def test_05_GetSynchronizationList(self, quiet=0, run=run_all_test):
     # This test the getSynchronizationList, ie,
