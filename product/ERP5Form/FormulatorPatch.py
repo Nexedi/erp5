@@ -180,12 +180,10 @@ SelectionValidator.validate = SelectionValidator_validate
 from Products.Formulator.Validator import MultiSelectionValidator
 
 def MultiSelectionValidator_validate(self, field, key, REQUEST):
-    values = REQUEST.get(key)
-    if values is None:
-        if field.get_value('required'):
-          raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
-        else:
-          raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
+    if REQUEST.get('default_%s' % (key, )) is None:
+      LOG('MultiSelectionValidator_validate', 0, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key))
+      raise KeyError, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key)
+    values = REQUEST.get(key, [])
     # NOTE: a hack to deal with single item selections
     if type(values) is not type([]):
         # put whatever we got in a list
@@ -576,7 +574,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
   # XXX -yo
   selected_found = {}
 
-  items = field.get_value('items',REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None)) # The only thing changes, added request
+  items = field.get_value('items',REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None)) # Added request
   css_class = field.get_value('css_class')
   extra_item = field.get_value('extra_item')
   rendered_items = []
@@ -615,6 +613,8 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
                                                 css_class,
                                                 extra_item)
       rendered_items.append(rendered_item)
+
+  rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0")) # Added marker field
 
   return rendered_items
 
