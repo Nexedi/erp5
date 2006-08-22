@@ -1,5 +1,6 @@
 2006-08-22 Kevin
 * Unset editable_mode when viewing an object through Web Site object.
+* Let the website form be editable even if no form layout found.
 
 2006-08-21 Kevin
 * Include support for editable_mode parameter in main_template.
