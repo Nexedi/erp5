@@ -1486,8 +1486,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       #    kw[key] = REQUEST[key]
 
     # Let us start building the where_expression
+    # and select_expression
     if kw:
       where_expression = []
+      select_expression = []
+      if kw.has_key('select_expression'):
+        select_expression.append(kw['select_expression'])
       from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
 
       sort_on = None
@@ -1622,12 +1626,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   # or we fall back to natural mode
                   search_mode=kw.get('search_mode_%s' % key) \
                       or kw.get('search_mode_%s' % key.replace('.','_')) \
-                      or (key.find('.')>-1 and kw.get('search_mode_%s' % key.split('.')[1])) \
+                      or ('.' in key and kw.get('search_mode_%s' % key.split('.')[1])) \
                       or kw.get('search_mode', 'natural')
                   if search_mode is not None:
                     search_mode=search_mode.lower()
                   mode = full_text_search_modes.get(search_mode,'')
                   where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
+                  # we return relevance as Table_Key_relevance
+                  select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_'))]
+                  # and for simplicity as Key_relevance
+                  if '.' in key:
+                    select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1])]
                 else:
                   where_expression += ["%s = '%s'" % (key, value)]
             elif isinstance(value, (list, tuple)):
@@ -1656,12 +1665,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       # or we fall back to natural mode
                       search_mode=kw.get('search_mode_%s' % key) \
                           or kw.get('search_mode_%s' % key.replace('.','_')) \
-                          or (key.find('.')>-1 and kw.get('search_mode_%' % key.split('.')[1])) \
+                          or ('.' in key and kw.get('search_mode_%' % key.split('.')[1])) \
                           or kw.get('search_mode', 'natural')
                       if search_mode is not None:
                         search_mode=search_mode.lower()
                       mode = full_text_search_modes.get(search_mode, '')
                       query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value, mode)]
+                      # we return relevance as Table_Key_relevance
+                      select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_'))]
+                      # and for simplicity as Key_relevance
+                      if '.' in key:
+                        select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1])]
                     else:
                       query_item += ["%s = '%s'" % (key, value_item)]
               if len(query_item) > 0:
@@ -1737,12 +1751,13 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             from_table_dict[t_tuple[1]] = t_tuple[0]
             table_index += 1
           where_expression.append(related_method(**table_id))
-      # Concatenate where_expressions
+      # Concatenate expressions
       if kw.get('where_expression'):
         if len(where_expression) > 0:
           where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
       else:
         where_expression = join(where_expression, ' AND ')
+      select_expression= join(select_expression,',')
 
       limit_expression = kw.get('limit', None)
       if isinstance(limit_expression, (list, tuple)):
@@ -1754,7 +1769,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     return { 'from_table_list' : from_table_dict.items(),
              'order_by_expression' : sort_on,
              'where_expression' : where_expression,
-             'limit_expression' : limit_expression }
+             'limit_expression' : limit_expression,
+             'select_expression': select_expression}
 
   def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, **kw):
     """ Returns a list of brains from a set of constraints on variables """
@@ -1763,6 +1779,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']
     kw['limit_expression'] = query['limit_expression']
+    kw['select_expression'] = query['select_expression']
     # Return the result
 
     #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
