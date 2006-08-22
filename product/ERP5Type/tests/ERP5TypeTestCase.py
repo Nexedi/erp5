@@ -40,6 +40,7 @@ except ImportError:
 ZopeTestCase.installProduct('ExtFile')
 ZopeTestCase.installProduct('Photo')
 ZopeTestCase.installProduct('Formulator')
+ZopeTestCase.installProduct('FCKeditor')
 ZopeTestCase.installProduct('ZSQLMethods')
 ZopeTestCase.installProduct('ZMySQLDA')
 ZopeTestCase.installProduct('ZSQLCatalog')
