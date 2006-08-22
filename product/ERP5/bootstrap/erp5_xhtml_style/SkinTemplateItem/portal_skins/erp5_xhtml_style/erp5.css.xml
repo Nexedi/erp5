@@ -246,6 +246,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>alternate_font_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -254,6 +264,10 @@
             <value>
               <dictionary/>
             </value>
+        </item>
+        <item>
+            <key> <string>alternate_font_color</string> </key>
+            <value> <string>#597d9b</string> </value>
         </item>
         <item>
             <key> <string>background_color</string> </key>
@@ -465,7 +479,7 @@ div.index_html table {\n
 \n
 #context_bar select,\n
 #main_bar select {\n
-  color: <dtml-var font_color>;\n
+  color: <dtml-var alternate_font_color>;\n
 }\n
 \n
 #main_bar .second,\n
