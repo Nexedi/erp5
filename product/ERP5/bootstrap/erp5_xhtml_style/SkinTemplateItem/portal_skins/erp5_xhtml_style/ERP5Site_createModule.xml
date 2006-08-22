@@ -70,7 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
-request=context.REQUEST\n
+N_ = context.getPortalObject().Base_translateString\n
+request = context.REQUEST\n
 \n
 # TODO\n
 #   - Allow in the module only the new document, we must activate the filter\n
@@ -229,7 +230,7 @@ return context.ERP5XhtmlStyle_redirect(cancel_url, keep_items={\'portal_status_m
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>module_portal_type, portal_skins_folder, object_portal_type, object_title, module_id, module_title, **kw</string> </value>
+            <value> <string>cancel_url, module_portal_type, portal_skins_folder, object_portal_type, object_title, module_id, module_title, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -249,12 +250,13 @@ return context.ERP5XhtmlStyle_redirect(cancel_url, keep_items={\'portal_status_m
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>cancel_url</string>
                             <string>module_portal_type</string>
                             <string>portal_skins_folder</string>
                             <string>object_portal_type</string>
@@ -267,6 +269,7 @@ return context.ERP5XhtmlStyle_redirect(cancel_url, keep_items={\'portal_status_m
                             <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>N_</string>
                             <string>request</string>
                             <string>portal</string>
                             <string>portal_types</string>
@@ -292,8 +295,6 @@ return context.ERP5XhtmlStyle_redirect(cancel_url, keep_items={\'portal_status_m
                             <string>object_portal_type_value</string>
                             <string>module_object</string>
                             <string>_apply_</string>
-                            <string>cancel_url</string>
-                            <string>N_</string>
                           </tuple>
                         </value>
                     </item>
