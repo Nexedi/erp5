@@ -37,6 +37,7 @@ class RoleDefinition(XMLObject):
     portal_type = 'Role Definition'
     isPortalContent = 1
     isRADContent = 1
+    add_permission = Permissions.ChangeLocalRoles
 
     # Declarative security
     security = ClassSecurityInfo()
