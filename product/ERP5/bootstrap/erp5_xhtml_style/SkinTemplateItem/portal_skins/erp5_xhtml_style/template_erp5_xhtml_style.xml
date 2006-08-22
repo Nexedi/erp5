@@ -281,7 +281,7 @@ IDEAS:\n
             <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
           </tal:block>\n
         </div>\n
-        <p class="clear" style="height: 10px">&nbsp;</p>\n
+        <p class="clear" style="height: 10px"></p>\n
         <div tal:content="structure here/REQUEST/portal_status_message | nothing"\n
              id="transition_message"></div>\n
       </div>\n

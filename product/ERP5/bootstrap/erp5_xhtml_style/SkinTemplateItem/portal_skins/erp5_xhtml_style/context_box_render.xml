@@ -314,7 +314,7 @@ XXX: Folder_filter accesses selection directly\n
       </a>\n
     </span>\n
   </span>\n
-  <p class="clear">&nbsp;</p>\n
+  <p class="clear"></p>\n
 </tal:block>
 
 ]]></string> </value>

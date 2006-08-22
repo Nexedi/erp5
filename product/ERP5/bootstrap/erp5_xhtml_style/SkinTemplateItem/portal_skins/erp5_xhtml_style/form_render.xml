@@ -106,7 +106,7 @@ Groups names becomes "left_group", "right_group", "left1_group", "right1_group",
           <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
         </tal:block>\n
       </fieldset>\n
-      <p tal:condition="python: group.find(\'right\') >= 0 or (group.find(\'left\') >= 0 and \'right\' not in groups)" class="clear">&nbsp;</p>\n
+      <p tal:condition="python: group.find(\'right\') >= 0 or (group.find(\'left\') >= 0 and \'right\' not in groups)" class="clear"></p>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>
