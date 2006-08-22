@@ -88,24 +88,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <tal:block metal:define-slot="main" />\n
           <tal:block metal:define-slot="bottom" />\n
         </div>\n
-        <button type="submit" name="Base_cancel:method">\n
-          <span class="image"></span>\n
-          <span class="description"\n
-                i18n:translate="" i18n:domain="ui">Cancel</span>\n
-        </button>\n
-        <button tal:condition="python: form.update_action!=\'\'"\n
-                type="submit" name="Base_showUpdateDialog:method">\n
-          <span class="image"></span>\n
-          <span class="description"\n
-                i18n:translate="" i18n:domain="ui">Update</span>\n
-        </button>\n
-        <button type="submit"\n
-                tal:attributes="name python: \'%s:method\' % (form_action, )">\n
-          <span class="image"></span>\n
-          <span class="description"\n
-                tal:content="python: here.Base_getFormViewDialogActionButtonTitle(form)"\n
-                i18n:translate="" i18n:domain="ui"></span>\n
-        </button>\n
+        <input value="Cancel" name="Base_cancel:method" type="submit" i18n:translate="" i18n:domain="ui" />\n
+        <input tal:condition="python: form.update_action!=\'\'" value="Update" name="Base_showUpdateDialog:method" type="submit" i18n:translate="" i18n:domain="ui" />\n
+        <input tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(form); name python: \'%s:method\' % (form_action, )" type="submit" i18n:translate="" i18n:domain="ui" />\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
