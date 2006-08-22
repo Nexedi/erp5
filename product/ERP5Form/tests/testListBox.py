@@ -216,8 +216,8 @@ return []
     """
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
-
-    # We create a script to use as a list method 
+    
+    # We create a script to use as a list method
     list_method_id = 'ListBox_ParametersListMethod'
     createZODBPythonScript(
         portal.portal_skins.custom,
@@ -258,6 +258,42 @@ return []
       get_transaction().commit()
     except TypeError, e:
       self.fail('Unable to commit transaction: %s' % e)
+
+  def test_06_LineFields(self, quiet=0, run=run_all_test):
+    """
+       Line Fields are able to render a list parameter in the form
+       of lines. The same behaviour is expected for Line Fields used
+       in ListBox objects.
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # Reset listbox properties
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = 'portal_catalog',
+      field_columns = ['subject_list | Subjects',],
+      field_editable_columns = ['subject_list | Subjects',],
+    )
+
+    # Create an new empty object with a list property
+    foo_module = portal.foo_module
+    word = 'averycomplexwordwhichhaslittlechancetoexistinhtml'
+    o = foo_module.newContent(subject_list = [word])
+
+    # Make sure that word is the subject list
+    self.assertEqual(word in o.getSubjectList(), True)
+
+    # Reindex
+    o.immediateReindexObject()
+
+    # Render the module in html
+    request = get_request()
+    request['here'] = portal.foo_module
+    rendered_listbox = listbox.render(REQUEST=request)
+
+    # Make sure that word is there
+    self.assertEqual(rendered_listbox.find(word) > 0, True)
 
 if __name__ == '__main__':
   framework()
