@@ -154,15 +154,19 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
     if id_group is None:
       id_group = self.getIdGroup()
     if id_group in (None, 'None'):
-      idGenerator = getattr(self, self.getIdGenerator(), None)
-      if idGenerator is None:
+      id_generator = self.getIdGenerator()
+      if isinstance(id_generator, str):
+        idGenerator = getattr(self, id_generator, None)
+        if idGenerator is None:
+          idGenerator = self._generateNextId
+      else:
+        LOG('Folder.generateNewId', 0, '%s.id_generator is not a string. Falling back on default behaviour.' % (self.absolute_url(), ))
         idGenerator = self._generateNextId
       my_id = idGenerator()
       while self.hasContent(my_id):
         my_id = _generateNextId()
     else:
       my_id = str(self.portal_ids.generateNewId(id_group=id_group,default=default,method=method))
-
     return my_id
 
   security.declareProtected(Permissions.View, 'hasContent')
