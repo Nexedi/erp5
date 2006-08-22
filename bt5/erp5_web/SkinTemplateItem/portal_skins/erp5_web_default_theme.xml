@@ -26,11 +26,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_mockup</string> </value>
+            <value> <string>erp5_web_default_theme</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Experiments for Future Generic Concepts</string> </value>
+            <value> <string>Default Web Theme</string> </value>
         </item>
       </dictionary>
     </pickle>

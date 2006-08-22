@@ -1,3 +1,6 @@
+2006-08-22 Kevin
+* Add default web site theme.
+
 2006-08-21 Kevin
 * Fix section bad form rendering with xhtml_style.
 * Respect naming conventions.
