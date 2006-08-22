@@ -50,6 +50,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 import md5
 import cgi
+import types
 
 # For compatibility with Python 2.3.
 try:
@@ -1962,7 +1963,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # XXX (JPS) - render_view does not get REQUEST - this breaks so many possibilities
           REQUEST = get_request() # Dirtymax hack by JPS - render_view API update required
           REQUEST.cell = self.getObject()
-          cell_html = editable_field.render( value   = display_value
+          cell_html = editable_field.render( value   = original_value
                                            , REQUEST = brain
                                            , key     = key
                                            )
@@ -2905,6 +2906,9 @@ class ListBox(ZMIField):
   security.declareProtected('Access contents information', 'getListMethodName')
   def getListMethodName(self):
     """Return the name of the list method. If not defined, return None.
+
+       XXX - Is this method really necessary - I am not sure - JPS
+       Why not use Formulator API instead ?
     """
     list_method = self.get_value('list_method')
     try:
