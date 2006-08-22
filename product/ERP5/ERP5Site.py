@@ -1093,18 +1093,22 @@ class ERP5Generator(PortalGenerator):
     from Products.CMFCore.DirectoryView import addDirectoryViews
     from Products.CMFDefault  import cmfdefault_globals
     from Products.CMFActivity import cmfactivity_globals
-    from Products.FCKeditor   import fckeditor_globals
+    try:
+      from Products.FCKeditor   import fckeditor_globals
+      have_fckeditor = 1
+    except:
+      have_fckeditor = 0
     ps = getToolByName(p, 'portal_skins')
     addDirectoryViews(ps, 'skins', cmfdefault_globals)
     addDirectoryViews(ps, 'skins', cmfactivity_globals)
-    addDirectoryViews(ps, 'skins', fckeditor_globals)
+    if have_fckeditor:
+      addDirectoryViews(ps, 'skins', fckeditor_globals)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
     ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
     # Set the 'custom' layer a high priority, so it remains the first
     #   layer when installing new business templates.
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
     skin_folder_list = [ 'custom'
-                       , 'fckeditor'
                        , 'external_method'
                        , 'activity'
                        , 'zpt_content'
@@ -1115,6 +1119,8 @@ class ERP5Generator(PortalGenerator):
                        , 'control'
                        , 'Images'
                        ]
+    if have_fckeditor:
+      skin_folder_list.insert(1, 'fckeditor')
     skin_folders = ', '.join(skin_folder_list)
     ps.addSkinSelection( 'View'
                        , skin_folders
