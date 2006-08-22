@@ -349,6 +349,10 @@
                           <string>getQuantity</string>
                           <string>Quantity</string>
                         </tuple>
+                        <tuple>
+                          <string>subject_list</string>
+                          <string>Subject</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -393,7 +397,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>subject_list</string>
+                          <string>Subject</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

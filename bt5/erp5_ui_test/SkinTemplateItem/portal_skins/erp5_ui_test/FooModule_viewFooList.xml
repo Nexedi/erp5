@@ -89,6 +89,7 @@
                     <value>
                       <list>
                         <string>listbox_id</string>
+                        <string>listbox_subject_list</string>
                       </list>
                     </value>
                 </item>
