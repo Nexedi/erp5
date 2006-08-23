@@ -78,6 +78,15 @@ class Image (Base, Photo):
       elif self.store == 'ExtImage': from Products.Photo.ExtPhotoImage import PhotoImage
       self._original = PhotoImage(self.id, self.title, path=self.absolute_url(1))
 
+
+  security.declarePrivate('_setFile')
+  def _setFile(self, file):
+    """
+    This is used to set files
+    """
+    Photo.manage_editPhoto(self, file=file)
+    self.manage_purgeDisplays()
+
   security.declarePrivate('_edit')
   def _edit(self, **kw):
     """
@@ -87,8 +96,7 @@ class Image (Base, Photo):
     if kw.has_key('file'):
       file = kw.get('file')
       precondition = kw.get('precondition')
-      Photo.manage_editPhoto(self, file=file)
-      self.manage_purgeDisplays()
+      self._setFile(file)
       del kw['file']
     Base._edit(self, **kw)
 
