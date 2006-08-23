@@ -28,6 +28,7 @@
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from Products.ERP5Type.PsycoWrapper import psyco
+from zLOG import LOG
 
 class Getter(Method):
     """
@@ -103,7 +104,8 @@ DefaultGetter = Getter
 
 class Setter(Method):
     """
-      Gets the default reference of a relation
+      Sets a value of a property wich can be acquired.
+      Since we set here the property, we must not call acquisition.
     """
     _need__name__=1
 
@@ -150,21 +152,10 @@ class Setter(Method):
       self._reindex = reindex
 
     def __call__(self, instance, value, *args, **kw):
-      o = instance._getDefaultAcquiredProperty(self._key, None, self._null,
-            base_category=self._acquisition_base_category,
-            portal_type=self._acquisition_portal_type,
-            accessor_id=self._acquisition_accessor_id,
-            copy_value=self._acquisition_copy_value,
-            mask_value=self._acquisition_mask_value,
-            sync_value=self._acquisition_sync_value,
-            storage_id=self._storage_id,
-            alt_accessor_id=self._alt_accessor_id,
-            is_list_type=self._is_list_type,
-            is_tales_type=self._is_tales_type
-            )
+      from Products.ERP5Type.Utils import assertAttributePortalType
+      assertAttributePortalType(instance, self._storage_id, self._portal_type)
+      o = getattr(instance, self._storage_id, None)
       if o is None:
-        from Products.ERP5Type.Utils import assertAttributePortalType
-        assertAttributePortalType(instance, self._storage_id, self._portal_type)
         o = instance.newContent(id = self._storage_id, portal_type = self._portal_type[0])
       if self._reindex:
         o.setProperty(self._acquired_property, value, *args, **kw)
