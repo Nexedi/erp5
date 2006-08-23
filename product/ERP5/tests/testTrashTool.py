@@ -52,6 +52,7 @@ class TestTrashTool(ERP5TypeTestCase):
   Test some fonctionnality
   """
   run_all_test = 1
+  quiet = 1
   
   def getTitle(self):
     return "Trash Tool"
@@ -266,7 +267,7 @@ class TestTrashTool(ERP5TypeTestCase):
     self.assertEqual(len(backup_subobjects_ids), 0)
     
   # tests
-  def test_01_checkTrashBinCreation(self, quiet=0, run=run_all_test):
+  def test_01_checkTrashBinCreation(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check TrashBin Creation'
@@ -279,9 +280,9 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckTrashBinIndexable \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
     
-  def test_02_checkBackupWithoutSave(self, quiet=0, run=run_all_test):
+  def test_02_checkBackupWithoutSave(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Backup Without Save'
@@ -299,9 +300,9 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckObjectNotBackup \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_03_checkBackupWithSave(self, quiet=0, run=run_all_test):
+  def test_03_checkBackupWithSave(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Backup With Save'
@@ -320,9 +321,9 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckObjectBackupWithoutSubObjects \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_04_checkBackupWithSubObjects(self, quiet=0, run=run_all_test):
+  def test_04_checkBackupWithSubObjects(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Backup Without Subobjects'
@@ -341,7 +342,7 @@ class TestTrashTool(ERP5TypeTestCase):
                        CheckObjectBackupWithSubObjects \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
   framework()

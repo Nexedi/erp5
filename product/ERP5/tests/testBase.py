@@ -59,6 +59,8 @@ from Products.ERP5Type.Tool.ClassTool import _aq_reset
 class TestBase(ERP5TypeTestCase):
 
   run_all_test = 1
+  quiet = 1
+
   object_portal_type = "Organisation"
   not_defined_property_id = "azerty_qwerty"
   not_defined_property_value = "qwerty_azerty"
@@ -223,7 +225,7 @@ class TestBase(ERP5TypeTestCase):
     Organisation.immediateReindexObject = crashingMethod
     Organisation.recursiveImmediateReindexObject = crashingMethod
 
-  def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=0, 
+  def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=quiet,
                                                       run=run_all_test):
     """
       Test if setter does not call a activity if the attribute 
@@ -299,7 +301,7 @@ class TestBase(ERP5TypeTestCase):
               CheckIfMessageQueueIsEmpty \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCheckGroupValue(self, sequence=None, sequence_list=None, **kw):
     """
@@ -340,7 +342,7 @@ class TestBase(ERP5TypeTestCase):
     object_instance.edit(group_value=object_instance.getGroupValue())
 
 
-  def test_02_areActivitiesWellLaunchedByCategoryEdit(self, quiet=0, 
+  def test_02_areActivitiesWellLaunchedByCategoryEdit(self, quiet=quiet,
                                                       run=run_all_test):
     """
       Test if setter does not call a activity if the attribute 
@@ -414,7 +416,7 @@ class TestBase(ERP5TypeTestCase):
               CheckIfMessageQueueIsEmpty \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepSetDifferentTitleValueWithSetter(self, sequence=None, 
                                            sequence_list=None, **kw):
@@ -437,7 +439,7 @@ class TestBase(ERP5TypeTestCase):
     object_instance = sequence.get('object_instance')
     object_instance.setTitle(object_instance.getTitle())
 
-  def test_03_areActivitiesWellLaunchedByPropertySetter(self, quiet=0, 
+  def test_03_areActivitiesWellLaunchedByPropertySetter(self, quiet=quiet,
                                                         run=run_all_test):
     """
       Test if setter does not call a activity if the attribute 
@@ -493,7 +495,7 @@ class TestBase(ERP5TypeTestCase):
               CheckIfMessageQueueIsEmpty \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepSetDifferentGroupValueWithSetter(self, sequence=None, 
                                            sequence_list=None, **kw):
@@ -525,7 +527,7 @@ class TestBase(ERP5TypeTestCase):
     object_instance = sequence.get('object_instance')
     object_instance.setGroupValue(object_instance.getGroupValue())
 
-  def test_04_areActivitiesWellLaunchedByCategorySetter(self, quiet=0, 
+  def test_04_areActivitiesWellLaunchedByCategorySetter(self, quiet=quiet,
                                                         run=run_all_test):
     """
       Test if setter does not call a activity if the attribute 
@@ -581,7 +583,7 @@ class TestBase(ERP5TypeTestCase):
               CheckIfMessageQueueIsEmpty \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepSetObjectNotDefinedProperty(self, sequence=None, 
                                       sequence_list=None, **kw):
@@ -633,7 +635,7 @@ class TestBase(ERP5TypeTestCase):
         current_group_value=None
     )
 
-  def test_05_getPropertyWithoutPropertySheet(self, quiet=0, run=run_all_test):
+  def test_05_getPropertyWithoutPropertySheet(self, quiet=quiet, run=run_all_test):
     """
     Test if set/getProperty work without any property sheet.
     """
@@ -656,7 +658,7 @@ class TestBase(ERP5TypeTestCase):
               CheckGetNotDefinedProperty \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreateTempClass(self, sequence=None, sequence_list=None, **kw):
     """
@@ -741,7 +743,7 @@ class TestBase(ERP5TypeTestCase):
                     object_instance.getProperty(
                          self.not_related_to_temp_object_property_id))
 
-  def test_06_getPropertyOnTempClass(self, quiet=0, run=run_all_test):
+  def test_06_getPropertyOnTempClass(self, quiet=quiet, run=run_all_test):
     """
     Test if set/getProperty work in temp object without 
     a portal type with the same name.
@@ -763,7 +765,7 @@ class TestBase(ERP5TypeTestCase):
               CheckGetNotRelatedProperty \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCheckEditMethod(self, sequence=None, 
                           sequence_list=None, **kw):
@@ -786,7 +788,7 @@ class TestBase(ERP5TypeTestCase):
     object_instance = sequence.get('object_instance')
     object_instance.setProperty('edit', "now this object is 'read only !!!'")
 
-  def test_07_setEditProperty(self, quiet=0, run=run_all_test):
+  def test_07_setEditProperty(self, quiet=quiet, run=run_all_test):
     """
     Test if setProperty erase existing accessors/methods.
     """
@@ -800,7 +802,7 @@ class TestBase(ERP5TypeTestCase):
               CheckEditMethod \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreateBaseCategory(self, sequence=None, sequence_list=None, **kw):
     """
@@ -845,7 +847,7 @@ class TestBase(ERP5TypeTestCase):
         tales_expression=tales_expression,
     )
 
-  def test_07_setEditTalesExpression(self, quiet=0, run=run_all_test):
+  def test_07_setEditTalesExpression(self, quiet=quiet, run=run_all_test):
     """
     Test if edit update a tales expression.
     """
@@ -859,9 +861,9 @@ class TestBase(ERP5TypeTestCase):
               CheckTalesExpression \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_08_emptyObjectHasNoTitle(self, quiet=0, run=run_all_test):
+  def test_08_emptyObjectHasNoTitle(self, quiet=quiet, run=run_all_test):
     """
     Test if edit update a tales expression.
     """
