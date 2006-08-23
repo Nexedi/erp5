@@ -3747,6 +3747,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           self.workflow_history[
                             'business_template_installation_workflow'] = None
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRevision')
     def getRevision(self):
       """returns the revision property.
       This is a workaround for #461.
