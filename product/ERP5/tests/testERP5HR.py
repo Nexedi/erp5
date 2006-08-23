@@ -698,6 +698,19 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals( new_career_step.getSubordinationTitle(),
                        new_organisation_title )
     
+  def stepCheckChangePersonAddress(self, sequence=None, **kw) :
+    """
+    We must make sure that if we change the address of a person,
+    then it will not change the address of the organisation.
+    """
+    person = sequence.get('person')
+    organisation = sequence.get('organisation')
+    self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEquals(person.getDefaultAddressCity(),'Lille')
+    person.setDefaultAddressCity('La Garnache')
+    self.assertEquals(person.getDefaultAddressCity(),'La Garnache')
+    self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
+
   ##################################
   ##  Tests
   ##################################
@@ -744,6 +757,22 @@ class TestHR(ERP5TypeTestCase):
                 , 'SetPersonCareer'
                 , 'AddCareerStepInAnotherOrganisation'
                 , 'CheckCareerSubordination'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_04_SubordinationAndAddress(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Tests that career steps subordination properties behave correctly
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'CreatePerson'
+                , 'CreateOrganisation'
+                , 'SetOrganisationAddress'
+                , 'SetPersonCareer'
+                , 'CheckChangePersonAddress'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
