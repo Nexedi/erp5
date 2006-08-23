@@ -94,7 +94,6 @@
 # in each section if necessary\n
 \n
 portal_catalog = container.portal_catalog\n
-# New implementation.\n
 \n
 # First find the web section we are in\n
 current_node = context\n
@@ -105,7 +104,7 @@ while not current_node.getPortalType() in (\'Web Section\', \'Web Site\', \'Doma
 section_categories = current_node.getMembershipCriterionCategoryList()\n
 \n
 \n
-def membercheck(x):\n
+def checkMember(x):\n
   the_categories = x.getCategoriesList()\n
   if the_categories:\n
     for the_category in the_categories:\n
@@ -113,18 +112,26 @@ def membercheck(x):\n
         if x.getValidationState()==\'published\':\n
           return x\n
 \n
-# this is just for debugging purposes, not used at the moment\n
-def displaytitle(x):\n
-  return x.title\n
-\n
 # get all web pages and check if their publication category is in the category list of the web section\n
 #reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
 reference_list = map(lambda x:x.getReference(), portal_catalog(portal_type=(\'Web Page\',)))\n
 if reference_list:\n
-  li = filter(membercheck, list(context.portal_catalog(portal_type="Web Page")) )\n
-  #li = map (displaytitle,li)\n
-  return li\n
-return "[] Empty reference_list"\n
+  li = filter(checkMember, list(context.portal_catalog(portal_type="Web Page")) )\n
+  my_list=li\n
+else:\n
+  my_list=[]\n
+\n
+if hasattr(context,\'getAggregateList\'):\n
+  aggregate_values = context.getAggregateList()\n
+  aggregate_values = map(context.restrictedTraverse,aggregate_values)\n
+  li.extend(aggregate_values) # this causes a crash\n
+  context.log("AVVVVVV",aggregate_values)\n
+\n
+\n
+def abcd(x):\n
+  return x#.getPortalType()\n
+\n
+return map(abcd,my_list)\n
 \n
 \n
 ## FYI - old implementation - broken\n
@@ -228,13 +235,16 @@ return "[] Empty reference_list"\n
                             <string>context</string>
                             <string>current_node</string>
                             <string>section_categories</string>
-                            <string>membercheck</string>
-                            <string>displaytitle</string>
+                            <string>checkMember</string>
                             <string>map</string>
                             <string>reference_list</string>
                             <string>filter</string>
                             <string>list</string>
                             <string>li</string>
+                            <string>my_list</string>
+                            <string>hasattr</string>
+                            <string>aggregate_values</string>
+                            <string>abcd</string>
                           </tuple>
                         </value>
                     </item>

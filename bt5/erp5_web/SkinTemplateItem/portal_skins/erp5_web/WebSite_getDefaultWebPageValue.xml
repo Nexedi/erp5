@@ -68,9 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# This script is part of ERP5 Web\n
+            <value> <string># This script is part of ERP5 Web\n
 #\n
 # ERP5 Web is an extension to ERP5 which provides a way\n
 # to create web sites which can display selected\n
@@ -89,28 +87,22 @@
 # language rather than the latest version in a different\n
 # language)\n
 \n
-nextsection=context\n
-while hasattr(nextsection,\'getParent\') and hasattr(nextsection,\'getPortalType\'):\n
-  if nextsection.getPortalType() == \'Web Section\':\n
+next_section=context\n
+while hasattr(next_section,\'getParent\') and hasattr(next_section,\'getPortalType\'):\n
+  if next_section.getPortalType() == \'Web Section\':\n
     break\n
   else:\n
-    nextsection = nextsection.aq_parent\n
-context.log("krumb",nextsection)\n
+    next_section = next_section.aq_parent\n
 \n
+if not hasattr(next_section,\'getCategories\'):\n
+  return None # Context is not a Section, so no default Value available.\n
 \n
-if not hasattr(nextsection,\'getCategories\'):\n
-  return None # Context is not a Section. Changed later\n
-\n
-context.log("Kontexttitle",context.title)\n
-myaggregate = context.getAggregateValue()\n
-context.log("My Aggegate => ",myaggregate)\n
-if myaggregate==None:\n
-  context.log("No aggregate found","!!!")\n
+my_aggregate = next_section.getAggregateValue()\n
+if my_aggregate==None:\n
+  #context.log("No aggregate found","!!!")\n
   return None\n
-return myaggregate\n
-
-
-]]></string> </value>
+return my_aggregate\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -159,11 +151,11 @@ return myaggregate\n
                         <value>
                           <tuple>
                             <string>context</string>
-                            <string>nextsection</string>
+                            <string>next_section</string>
                             <string>hasattr</string>
                             <string>_getattr_</string>
                             <string>None</string>
-                            <string>myaggregate</string>
+                            <string>my_aggregate</string>
                           </tuple>
                         </value>
                     </item>

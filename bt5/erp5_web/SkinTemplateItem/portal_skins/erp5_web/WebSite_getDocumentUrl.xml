@@ -137,7 +137,8 @@ object = brain.getObject()\n
 if context.getPortalType()=="Web Page":\n
   billl=context.WebSite_getBreadcrumbItemList()\n
   billl=billl[1][1].WebSite_getDocumentUrl() #get the URL of the section\n
-  context.log("bc",billl)\n
+  if context.getReference() is None:\n
+    return "ERROR: Reference-Attribute Missing for"+repr(context)\n
   return billl+"/"+context.getReference()\n
 #context.log("hello",context.title+"==>"+context.aq_parent.WebSite_getDocumentUrl()+"--"+context.aq_inner.getUrl()+"--"+context.aq_inner.absolute_url()+"--"+context.aq_parent.absolute_url())\n
 \n
@@ -203,6 +204,7 @@ return "%s/%s" % (main_section_path, object.getRelativeUrl())\n
                             <string>object</string>
                             <string>billl</string>
                             <string>_getitem_</string>
+                            <string>repr</string>
                           </tuple>
                         </value>
                     </item>
