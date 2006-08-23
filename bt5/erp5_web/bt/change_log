@@ -1,3 +1,7 @@
+2006-08-23 Kevin
+* Multiple Publication Sections can be set on Web Pages.
+* One default page can be set on Web Section through agregate relation.
+
 2006-08-22 Kevin
 * Add default web site theme.
 * Set default web theme on newly created Web Sites.

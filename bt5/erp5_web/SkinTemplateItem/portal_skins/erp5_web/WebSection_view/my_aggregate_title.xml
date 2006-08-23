@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.MultiRelationField</string>
-          <string>MultiRelationStringField</string>
+          <string>Products.ERP5Form.RelationField</string>
+          <string>RelationStringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_title_list</string> </value>
+            <value> <string>my_aggregate_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,15 +84,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -129,10 +129,6 @@
                 </item>
                 <item>
                     <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -192,6 +188,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -200,15 +200,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -243,15 +235,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -288,10 +280,6 @@
                 </item>
                 <item>
                     <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -351,6 +339,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -359,15 +351,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -391,7 +375,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
+                    <value> <string>aggregate</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -418,12 +402,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>web_page_module</string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Link to the Web Page to display as default content of the current section</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -431,7 +411,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>40</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -456,10 +436,6 @@
                 <item>
                     <key> <string>first_item</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -505,14 +481,6 @@
                           <string>Web Page</string>
                           <string>Web Page</string>
                         </tuple>
-                        <tuple>
-                          <string>Image</string>
-                          <string>Image</string>
-                        </tuple>
-                        <tuple>
-                          <string>File</string>
-                          <string>File</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -536,7 +504,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Additional Content</string> </value>
+                    <value> <string>Default Page</string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -547,20 +519,8 @@
                     <value> <string>Base_validateRelation</string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>

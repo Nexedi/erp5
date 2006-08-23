@@ -94,7 +94,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_id</string>
-                        <string>my_int_index</string>
+                        <string>my_container_layout</string>
+                        <string>my_content_layout</string>
                         <string>my_visible</string>
                       </list>
                     </value>
@@ -103,8 +104,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_container_layout</string>
-                        <string>my_content_layout</string>
+                        <string>my_int_index</string>
+                        <string>my_aggregate_title</string>
                         <string>my_source_title_list</string>
                       </list>
                     </value>
