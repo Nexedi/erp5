@@ -808,45 +808,6 @@ def initialize( context ):
         dochelper.setStaticPropertyList(property_list)
         return dochelper
 
-  from Products.ERP5Type.Base import TempBase
-  from Products.ERP5Type import PropertySheet
-
-  def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
-    o = TempDocumentationHelper(id)
-    o = o.__of__(folder)
-    if kw is not None:
-      o._edit(force_update=1, **kw)
-    return o
-
-  class TempDocumentationHelper(TempBase):
-    """
-      Contains information about a documentable item.
-      Documentable item can be any python type, instanciated or not.
-    """
-
-    meta_type = "ERP5 Documentation Helper"
-    portal_type = "Documentation Helper"
-
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.DublinCore
-                      , PropertySheet.DocumentationHelper
-                      , )
-
-    def _funcname_cmp_prepare(self, funcname):
-      for pos in range(len(funcname)):
-        if funcname[pos] != '_':
-          break
-      return '%s%s' % (funcname[pos:], funcname[:pos])
-
-    def __cmp__(self, documentationhelper):
-      my_title = self._funcname_cmp_prepare(self.getTitle())
-      his_title = self._funcname_cmp_prepare(documentationhelper.getTitle())
-      if my_title < his_title:
-        return -1
-      if my_title > his_title:
-        return 1
-      return 0
-
 else:
 
   class ClassTool(BaseTool):
