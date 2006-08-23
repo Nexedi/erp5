@@ -68,53 +68,49 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script is part of ERP5 Web\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script is part of ERP5 Web\n
 #\n
 # ERP5 Web is an extension to ERP5 which provides a way\n
 # to create web sites which can display selected\n
 # ERP5 contents through multiple custom web layouts.\n
 #\n
-# This script returns the document which is being displayed\n
-# in the current in the form of a value (object).\n
+# This script returns the default document to display\n
+# as the front page of a given section.\n
 #\n
-# If a name parameter is provided, it will lookup\n
-# the catalog to find a document. If no name parameter\n
-# is provided, it will analyse the current context\n
-# (ex. Section, Web Page, etc.) and try to find out\n
-# which document is being displayed. For example,\n
-# sections which define a default document may \n
-# actually display that document rather than \n
-# themselves when asked to render.\n
+# The default implementation should look at published\n
+# documents which are associated to the section\n
+# through aggregate relation and try to display those\n
+# which are in the closest possible language.\n
 #\n
-# NOTE: portal param probably useless\n
+# This behaviour can be overriden to implemet more complex\n
+# policies (ex. display the last version in the appropriate\n
+# language rather than the latest version in a different\n
+# language)\n
 \n
-\n
-portal_catalog = container.portal_catalog\n
-\n
-if name is None:\n
-  if context.getPortalType() == \'Web Page\':\n
-    return context\n
-  elif context.getPortalType() in (\'Web Site\', \'Web Section\'):\n
-    return context.WebSite_getDefaultWebPageValue()\n
+nextsection=context\n
+while hasattr(nextsection,\'getParent\') and hasattr(nextsection,\'getPortalType\'):\n
+  if nextsection.getPortalType() == \'Web Section\':\n
+    break\n
   else:\n
-    return None\n
+    nextsection = nextsection.aq_parent\n
+context.log("krumb",nextsection)\n
 \n
-#"else:" (mostly code from the old implementation)\n
 \n
-#from Products.ERP5Type.Cache import CachingMethod\n
-def getDocument(name):\n
-  # First try to get a published document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',), validation_state=\'published\')\n
-  if len(matching_document_list):\n
-    return matching_document_list[0].getObject()\n
-  # Then try to get any document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',))\n
-  if len(matching_document_list):\n
-    return matching_document_list[0].getObject()\n
-  return None \n
+if not hasattr(nextsection,\'getCategories\'):\n
+  return None # Context is not a Section. Changed later\n
 \n
-return getDocument(name)\n
-</string> </value>
+context.log("Kontexttitle",context.title)\n
+myaggregate = context.getAggregateValue()\n
+context.log("My Aggegate => ",myaggregate)\n
+if myaggregate==None:\n
+  context.log("No aggregate found","!!!")\n
+  return None\n
+return myaggregate\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,7 +132,7 @@ return getDocument(name)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal=None, name=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,20 +152,18 @@ return getDocument(name)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>portal</string>
-                            <string>name</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>portal_catalog</string>
-                            <string>None</string>
                             <string>context</string>
-                            <string>getDocument</string>
+                            <string>nextsection</string>
+                            <string>hasattr</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
+                            <string>myaggregate</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,15 +175,12 @@ return getDocument(name)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDocumentValue</string> </value>
+            <value> <string>WebSite_getDefaultWebPageValue</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

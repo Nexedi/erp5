@@ -1,3 +1,6 @@
+2006-08-23 Stefan
+* First rework of Web API scripts.
+
 2006-08-23 Kevin
 * Multiple Publication Sections can be set on Web Pages.
 * One default page can be set on Web Section through agregate relation.

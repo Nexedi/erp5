@@ -74,46 +74,105 @@
 # to create web sites which can display selected\n
 # ERP5 contents through multiple custom web layouts.\n
 #\n
-# This script returns the document which is being displayed\n
-# in the current in the form of a value (object).\n
+# This script returns a list of document values (ie. objects or brains)\n
+# which are considered as part of this section. It can be\n
+# a list of web pages (usual case), a list of products\n
+# (online catalog), a list of tenders (e-government), etc.\n
+# \n
+# This script shows an implementation which consists in\n
+# listing documents which are either associated to this section\n
+# through \'aggregate\' or which are meet the predicate define\n
+# by the section (ex. which are part of a given publication_section)\n
+# and which are in "published" state and of a "Web Page" portal_type\n
 #\n
-# If a name parameter is provided, it will lookup\n
-# the catalog to find a document. If no name parameter\n
-# is provided, it will analyse the current context\n
-# (ex. Section, Web Page, etc.) and try to find out\n
-# which document is being displayed. For example,\n
-# sections which define a default document may \n
-# actually display that document rather than \n
-# themselves when asked to render.\n
+# This script can be changed to meet other requirements. For example\n
+# one may want to display a list of products in a section. In this case,\n
+# this script must return a list of documents of type "Product"\n
+# with a "validated" state and in the appropriate product family.\n
 #\n
-# NOTE: portal param probably useless\n
-\n
+# This script is intended to be overriden by creating an instance \n
+# in each section if necessary\n
 \n
 portal_catalog = container.portal_catalog\n
+# New implementation.\n
 \n
-if name is None:\n
-  if context.getPortalType() == \'Web Page\':\n
-    return context\n
-  elif context.getPortalType() in (\'Web Site\', \'Web Section\'):\n
-    return context.WebSite_getDefaultWebPageValue()\n
-  else:\n
-    return None\n
+# First find the web section we are in\n
+current_node = context\n
+while not current_node.getPortalType() in (\'Web Section\', \'Web Site\', \'Domain\'):\n
+  current_node = current_node.aq_parent\n
 \n
-#"else:" (mostly code from the old implementation)\n
+# Then find the publication categories referenced by the web section\n
+section_categories = current_node.getMembershipCriterionCategoryList()\n
 \n
-#from Products.ERP5Type.Cache import CachingMethod\n
-def getDocument(name):\n
-  # First try to get a published document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',), validation_state=\'published\')\n
-  if len(matching_document_list):\n
-    return matching_document_list[0].getObject()\n
-  # Then try to get any document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',))\n
-  if len(matching_document_list):\n
-    return matching_document_list[0].getObject()\n
-  return None \n
 \n
-return getDocument(name)\n
+def membercheck(x):\n
+  the_categories = x.getCategoriesList()\n
+  if the_categories:\n
+    for the_category in the_categories:\n
+      if the_category in section_categories:\n
+        if x.getValidationState()==\'published\':\n
+          return x\n
+\n
+# this is just for debugging purposes, not used at the moment\n
+def displaytitle(x):\n
+  return x.title\n
+\n
+# get all web pages and check if their publication category is in the category list of the web section\n
+#reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
+reference_list = map(lambda x:x.getReference(), portal_catalog(portal_type=(\'Web Page\',)))\n
+if reference_list:\n
+  li = filter(membercheck, list(context.portal_catalog(portal_type="Web Page")) )\n
+  #li = map (displaytitle,li)\n
+  return li\n
+return "[] Empty reference_list"\n
+\n
+\n
+## FYI - old implementation - broken\n
+#from Products.ERP5Form.Selection import DomainSelection\n
+#\n
+#if not context.getMembershipCriterionCategoryList() and not context.getSourceList():\n
+#  return []\n
+#\n
+#def content_cmp(c1, c2):\n
+#  c1_value = c1.getObject()  \n
+#  c2_value = c2.getObject()  \n
+#  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex()) \n
+#\n
+#if context.getMembershipCriterionCategoryList():\n
+#  domain = DomainSelection(domain_dict = {\'web_site\': context})\n
+#  kw[\'selection_domain\'] = domain\n
+#  kw[\'portal_type\'] = \'Web Page\'\n
+#  kw[\'validation_state\'] = \'published\'\n
+#  if not kw.has_key(\'sort_on\'): kw[\'sort_on\'] = \'int_index\'\n
+#  brain_list = list(context.portal_catalog(**kw))\n
+#else:\n
+#  brain_list = []\n
+#\n
+## Make a new search with local documents\n
+#reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
+#if reference_list:\n
+#  brain_list.extend(list(context.portal_catalog(reference= reference_list, portal_type="Web Page")))\n
+#\n
+## Make sure a single reference is counted once only\n
+#brain_dict = {}\n
+#none_list = []\n
+#for b in brain_list:\n
+#  o = b.getObject()\n
+#  if o is not None:\n
+#    reference = o.getReference()\n
+#    if reference is None:\n
+#      none_list.append(b)\n
+#    else:\n
+#      brain_dict[reference] = b\n
+#\n
+#brain_list = brain_dict.values() + none_list\n
+#for bee in brain_list:\n
+#  bee = bee.title\n
+#\n
+## Sort documents\n
+#brain_list.sort(content_cmp)\n
+#\n
+#return brain_list\n
 </string> </value>
         </item>
         <item>
@@ -136,7 +195,7 @@ return getDocument(name)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal=None, name=None</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,20 +215,26 @@ return getDocument(name)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>portal</string>
-                            <string>name</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>portal_catalog</string>
-                            <string>None</string>
                             <string>context</string>
-                            <string>getDocument</string>
+                            <string>current_node</string>
+                            <string>section_categories</string>
+                            <string>membercheck</string>
+                            <string>displaytitle</string>
+                            <string>map</string>
+                            <string>reference_list</string>
+                            <string>filter</string>
+                            <string>list</string>
+                            <string>li</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,15 +246,12 @@ return getDocument(name)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDocumentValue</string> </value>
+            <value> <string>WebSection_getDocumentValueList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

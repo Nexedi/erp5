@@ -68,19 +68,83 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#XXX This script should be named WebSite_getDocument\n
-document = context.WebSite_getDocumentValue()\n
-if document is not None:\n
-  section_url = context.WebSite_getSection()\n
-  if section_url is not None:\n
-    doc_ref = document.getReference()\n
-    if doc_ref is not None:\n
-      return \'%s/%s\' % (section_url, doc_ref)\n
-    return section_url\n
-  else:\n
-    return document.absolute_url()\n
-return context.WebSite_getUrl()\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script is part of ERP5 Web\n
+#\n
+# ERP5 Web is an extension to ERP5 which provides a way\n
+# to create web sites which can display selected\n
+# ERP5 contents through multiple custom web layouts.\n
+#\n
+# This script returns the absolute URL of the current \n
+# document in a pretty way and taking into account\n
+# virtual hosting. The purpose of this script is to be\n
+# able to access documents through a URL such as:\n
+#\n
+# www.mysite.com/mysection/a-document-reference\n
+#\n
+# even if the physical path of the document is\n
+#\n
+# /erp5/web_page_module/33\n
+#\n
+# The default script looks in the acquisition context\n
+# for the first relevant section and build a URL\n
+# based on the section absolute_url and on the \n
+# document reference. \n
+#\n
+# More sophisticated behaviours are possible.\n
+#\n
+# It may be useful to change the behaviour\n
+# of WebSite_getDocumentUrl for non anonymous\n
+# users or for documents which are not published.\n
+#\n
+# NOTE: it is still unknown whether this script\n
+# needs to be integrated or not to the absolute_url API\n
+\n
+# FYI old implementation\n
+\n
+# First build the main section URL\n
+main_section = context\n
+main_section_path = None\n
+#while main_section_path is None and main_section is not None:\n
+#  if hasattr(main_section, \'getPortalType\'):\n
+#    if main_section.getPortalType() == \'Web Section\':\n
+#      main_section_path = str(main_section.getObject().absolute_url())\n
+#    elif main_section.getPortalType() == \'Web Site\':\n
+#      main_section_path = str(main_section.getObject().absolute_url())\n
+#  main_section = main_section.aq_parent\n
+while hasattr(main_section,\'aq_parent\'):\n
+  main_section_path = str(main_section.absolute_url())\n
+  main_section = main_section.aq_parent\n
+\n
+\n
+\n
+# Then get the object\n
+brain=None\n
+if brain is None: brain=context\n
+object = brain.getObject()\n
+#if object is not None:\n
+#  if object.hasReference():\n
+#    reference = object.getReference()\n
+#  else:\n
+#    reference = None\n
+#else:\n
+#  return ""\n
+\n
+#if reference:\n
+#  return "%s/%s" % (main_section_path, reference)\n
+\n
+if context.getPortalType()=="Web Page":\n
+  billl=context.WebSite_getBreadcrumbItemList()\n
+  billl=billl[1][1].WebSite_getDocumentUrl() #get the URL of the section\n
+  context.log("bc",billl)\n
+  return billl+"/"+context.getReference()\n
+#context.log("hello",context.title+"==>"+context.aq_parent.WebSite_getDocumentUrl()+"--"+context.aq_inner.getUrl()+"--"+context.aq_inner.absolute_url()+"--"+context.aq_parent.absolute_url())\n
+\n
+return "%s/%s" % (main_section_path, object.getRelativeUrl())\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -90,6 +154,12 @@ return context.WebSite_getUrl()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -122,12 +192,17 @@ return context.WebSite_getUrl()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>document</string>
+                            <string>main_section</string>
                             <string>None</string>
-                            <string>section_url</string>
-                            <string>doc_ref</string>
+                            <string>main_section_path</string>
+                            <string>hasattr</string>
+                            <string>str</string>
+                            <string>_getattr_</string>
+                            <string>brain</string>
+                            <string>object</string>
+                            <string>billl</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

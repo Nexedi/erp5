@@ -68,53 +68,60 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script is part of ERP5 Web\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script is part of ERP5 Web\n
 #\n
 # ERP5 Web is an extension to ERP5 which provides a way\n
 # to create web sites which can display selected\n
 # ERP5 contents through multiple custom web layouts.\n
 #\n
-# This script returns the document which is being displayed\n
-# in the current in the form of a value (object).\n
+# This script returns a list of tuples in the form\n
+# (title, value) where title is the title of the \n
+# document provided as value. The document value\n
+# must be wrapped in the acquisition context \n
+# (ex. Web Site / Section / Module / Document).\n
 #\n
-# If a name parameter is provided, it will lookup\n
-# the catalog to find a document. If no name parameter\n
-# is provided, it will analyse the current context\n
-# (ex. Section, Web Page, etc.) and try to find out\n
-# which document is being displayed. For example,\n
-# sections which define a default document may \n
-# actually display that document rather than \n
-# themselves when asked to render.\n
+# Scripts of page templates which use this script\n
+# and need to generate the URLs of document values\n
+# should must use the WebSite_getDocumentUrl API \n
+# or eventually the absolute_url API in order\n
+# to benefit from virtual hosting features. \n
+# (ie. do not use getUrl)\n
+# NOTE: Clarification needed when to use which ?\n
 #\n
-# NOTE: portal param probably useless\n
+# This script can be used to produce breadcrumbs\n
+# in page templates or in widgets. It can be customised\n
+# to implement different behaviours such as\n
+#\n
+# - CMS like breadcrumb (hierarchy of contents)\n
+# - Wiki like breadcrumb (history of navigation)\n
+# - or any other behaviour\n
+#\n
+# The default implementation is hierarchical\n
+#\n
+# WebSite_getBreadcrumbValue=[<WebSite at /erp5/web_site_module/1>, <Domain at /erp5/web_site_module/1/1>, <Document at /erp5/web_page_module/1 used for /erp5/web_site_module/1/1>]\n
 \n
+crumb = context\n
+crumb_list = []\n
 \n
-portal_catalog = container.portal_catalog\n
-\n
-if name is None:\n
-  if context.getPortalType() == \'Web Page\':\n
-    return context\n
-  elif context.getPortalType() in (\'Web Site\', \'Web Section\'):\n
-    return context.WebSite_getDefaultWebPageValue()\n
+while hasattr(crumb,\'getParent\'): #\'getPortalType\'):\n
+  crumb_list.append((crumb.title,crumb ))\n
+  if crumb.getPortalType() == \'Web Site\':\n
+    crumb = None # Don\'t go higher than the first Web Site found\n
   else:\n
-    return None\n
+    ###context.log(\'KevLog 1 >>>>>\', repr(crumb))\n
+    ####context.log(\'KevLog 2 >>>>>\', repr(crumb.getParent()))\n
+    ###context.log(\'KevLog 3 >>>>>\', repr(crumb.getParentValue()))\n
 \n
-#"else:" (mostly code from the old implementation)\n
+    crumb = crumb.aq_parent#getParentValue()\n
 \n
-#from Products.ERP5Type.Cache import CachingMethod\n
-def getDocument(name):\n
-  # First try to get a published document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',), validation_state=\'published\')\n
-  if len(matching_document_list):\n
-    return matching_document_list[0].getObject()\n
-  # Then try to get any document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',))\n
-  if len(matching_document_list):\n
-    return matching_document_list[0].getObject()\n
-  return None \n
+crumb_list.reverse()\n
 \n
-return getDocument(name)\n
-</string> </value>
+return crumb_list\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,7 +143,7 @@ return getDocument(name)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal=None, name=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,20 +163,18 @@ return getDocument(name)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>portal</string>
-                            <string>name</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>portal_catalog</string>
-                            <string>None</string>
                             <string>context</string>
-                            <string>getDocument</string>
+                            <string>crumb</string>
+                            <string>crumb_list</string>
+                            <string>hasattr</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,15 +186,12 @@ return getDocument(name)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDocumentValue</string> </value>
+            <value> <string>WebSite_getBreadcrumbItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
