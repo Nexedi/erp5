@@ -975,7 +975,7 @@ fieldset.bottom .field label {\n
 }\n
 \n
 .ListContent #listbox_label_line {\n
-  color: inherit;\n
+  color: <dtml-var font_color>;\n
   background-color: <dtml-var listbox_label_background_color>;\n
 }\n
 \n
