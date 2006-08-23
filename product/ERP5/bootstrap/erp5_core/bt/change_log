@@ -1,3 +1,6 @@
+2006-08-23 jerome
+* remove Base_TranslateString
+
 2006-08-22 bartek
 * return select_expression from z_search_result
 
