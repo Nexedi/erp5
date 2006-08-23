@@ -997,6 +997,11 @@ fieldset.bottom .field label {\n
   background-color: <dtml-var listbox_even_background_color>;\n
 }\n
 \n
+.ListSummary #listbox_title_line #listbox_item_number,\n
+.ListSummary #listbox_title_line #listbox_record_number {\n
+  vertical-align: middle;\n
+}\n
+\n
 .ListContent tr.DataA:hover,\n
 .ListContent tr.DataB:hover {\n
   color: inherit;\n
