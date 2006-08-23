@@ -32,6 +32,13 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     def afterSetUp(self):
       self.login()
 
+    def beforeTearDown(self):
+      for module in [ self.getPersonModule(),
+                      self.getOrganisationModule(),
+                      self.getCategoryTool().region ]:
+        module.manage_delObjects(list(module.objectIds()))
+      get_transaction().commit()
+
     def getRandomString(self):
       return str(randint(-10000000,100000000))
 
@@ -293,7 +300,32 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       # call an accessor, _aq_dynamic will generate accessors
       orga.getId()
       self._ignore_log_errors()
+    
+    def test_RenameObjects(self):
+      """Test object renaming.
+      As we overloaded some parts of OFS, it's better to test again some basic
+      features.
+      """
+      folder = self.getOrganisationModule()
+      id_list = [chr(x) for x in range(ord('a'), ord('z')+1)]
+      for id_ in id_list:
+        folder.newContent(portal_type='Organisation', id=id_)
+      # commit a subtransaction, so that we can rename objecs (see
+      # OFS.ObjectManager._getCopy)
+      get_transaction().commit(1)
 
+      for obj in folder.objectValues():
+        new_id = '%s_new' % obj.getId()
+        folder.manage_renameObjects([obj.getId()], [new_id])
+        self.assertEquals(obj.getId(), new_id)
+
+      for obj_id in folder.objectIds():
+        self.failUnless(obj_id.endswith('_new'),
+                        'bad object id: %s' % obj_id)
+      for id_ in id_list:
+        new_id = '%s_new' % id_
+        self.assertEquals(folder._getOb(new_id).getId(), new_id)
+      
 if __name__ == '__main__':
     framework()
 else:
