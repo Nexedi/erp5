@@ -104,7 +104,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <tal:block tal:repeat="action actions">\n
                 <li tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
                   <a tal:attributes="href python: here.ERP5XhtmlStyle_renderLink(action[\'url\'], http_parameters)"\n
-                      tal:content="action/name"></a>\n
+                     tal:content="action/name"\n
+                     i18n:translate="" i18n:domain="ui"></a>\n
                 </li>\n
               </tal:block>\n
             </ul>\n
