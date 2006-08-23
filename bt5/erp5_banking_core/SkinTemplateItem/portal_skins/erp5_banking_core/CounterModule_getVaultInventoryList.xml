@@ -86,6 +86,10 @@
 \n
     # Last, compare the variations (such as the years 1994 and 2003).\n
     result = cmp(a.variation_text_title, b.variation_text_title)\n
+    if result != 0:\n
+      return result\n
+\n
+    result = cmp(a.date,b.date)\n
     return result\n
 \n
   currency_cash_list.sort(sortLines)\n
@@ -93,8 +97,6 @@
 \n
 returned_value = context.CounterModule_getVaultTransactionList(**kw)\n
 returned_value = sortCurrencyCashList(returned_value)\n
-\n
-context.log("CounterModule_getVaultInventoryList", "returned_value = %s" %(returned_value[0],))\n
 \n
 \n
 return returned_value\n
@@ -156,7 +158,6 @@ return returned_value\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>returned_value</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

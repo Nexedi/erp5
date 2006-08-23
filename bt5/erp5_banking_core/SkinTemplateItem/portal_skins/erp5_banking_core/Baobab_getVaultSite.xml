@@ -72,9 +72,11 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 site = vault\n
 if same_type(site, \'\'):\n
+  if site.startswith(\'site/\'):\n
+    site = site[len(\'site/\'):]\n
   site = context.restrictedTraverse(\'portal_categories/site/%s\' %(site,))\n
 \n
-#context.log(\'site\', site)\n
+context.log(\'site\', site)\n
 while True:\n
   if not hasattr(site, \'getVaultTypeList\'):\n
     msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
@@ -137,6 +139,8 @@ return site\n
                             <string>site</string>
                             <string>same_type</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>len</string>
                             <string>context</string>
                             <string>True</string>
                             <string>hasattr</string>

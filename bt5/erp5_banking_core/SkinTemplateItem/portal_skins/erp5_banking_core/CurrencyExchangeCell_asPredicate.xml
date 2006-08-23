@@ -68,36 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return 1 if the counter date is open/closing for the given date and the given site\n
-\n
-if date is None:\n
-  # get current date\n
-  from DateTime import DateTime\n
-  date = DateTime()\n
-  date = date.Date()\n
-\n
-if site is None:\n
-  # get site from user assignment\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
-  if len(site_list) == 0:\n
-    context.log(\'Baobab_checkCounterDateOpen\', \'No site found for the user\')\n
-    return 0\n
-  else:\n
-    site = site_list[0]\n
-\n
-# get only the office, not need of vault\n
-#context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
-site = context.Baobab_getVaultSite(site)\n
-\n
-kw = {"portal_type" : \'Counter Date\', "delivery.start_date" : str(date), "site_id" : site.getId(), "simulation_state" : "open"}\n
-context.log(\'Baobab_checkCounterDateOpen\', \'kw = %s\' %(kw,))\n
-counter_date_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-context.log(\'Baobab_checkCounterDateOpen\', \'counter_date_list = %s, requete = %s\' %(counter_date_list, context.portal_catalog(src__=1, **kw)))\n
-\n
-if len(counter_date_list) == 0:\n
-  return 0\n
-else:\n
-  return 1\n
+            <value> <string>parent = context.getParentValue()\n
+start_date = parent.getStartDate()\n
+stop_date = parent.getStopDate()\n
+identity_criterion = {\'start_date\':(start_date,stop_date)}\n
+return context.asContext(_range_criterion=identity_criterion)\n
 </string> </value>
         </item>
         <item>
@@ -107,14 +82,8 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_checkCounterDateOpen</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchangeCell_asPredicate</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -124,15 +93,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None, date=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -152,29 +113,19 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>date</string>
-                            <string>None</string>
-                            <string>DateTime</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>site_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>str</string>
                             <string>kw</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>x</string>
-                            <string>counter_date_list</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>parent</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>identity_criterion</string>
                           </tuple>
                         </value>
                     </item>
@@ -186,41 +137,17 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_checkCounterDateOpen</string> </value>
+            <value> <string>CurrencyExchangeCell_asPredicate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -13,12 +13,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -194,9 +188,7 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>count_method</string> </key>
@@ -346,40 +338,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>resource_translated_title</string>
-                          <string>Resource</string>
+                          <string>currency_exchange_type_title</string>
+                          <string>Exchange Type</string>
                         </tuple>
                         <tuple>
-                          <string>price_currency_title</string>
-                          <string>Currency</string>
-                        </tuple>
-                        <tuple>
-                          <string>cash_status_translated_title</string>
-                          <string>Cash Status</string>
-                        </tuple>
-                        <tuple>
-                          <string>emission_letter_title</string>
-                          <string>Emission Letter</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_title</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
-                          <string>date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>explanation_relative_url</string>
-                          <string>Explanation</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
+                          <string>base_price</string>
+                          <string>Price</string>
                         </tuple>
                       </list>
                     </value>
@@ -425,12 +389,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>total_quantity</string>
-                          <string>Quantity</string>
+                          <string>base_price</string>
+                          <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
+                          <string>discount</string>
+                          <string>Manual Price</string>
                         </tuple>
                       </list>
                     </value>
@@ -455,16 +419,16 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>list</string> </value>
+                    <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -491,7 +455,7 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -501,21 +465,16 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>counter_report_selection</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>resource_title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -536,7 +495,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>Currency Exchange Cells</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -554,25 +513,6 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.CounterModule_getVaultTransactionList(column_names=1)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
           <string>Products.Formulator.MethodField</string>
           <string>Method</string>
         </tuple>
@@ -583,7 +523,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>CounterModule_getVaultInventoryList</string> </value>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

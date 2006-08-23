@@ -92,6 +92,46 @@
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
+def calculateNewTitle(title_path_list,path_len=0):\n
+  if \'Encaisse\' in title_path_list[-1]:\n
+    id = title_path_list[-1].lstrip("Encaisse des ")\n
+  else:\n
+    id = title_path_list[-1]\n
+  # get a counter if there is\n
+  counter_name = None\n
+  for counter in [\'Guichet 1\', \'Guichet 2\', \'Guichet 3\']:\n
+    if counter in title_path_list:\n
+      # produce a shorter name for the counter\n
+      counter_name = \'%s%s\' %(counter[0], counter[-1])\n
+      # remove counter to construct the list as if there is none\n
+      title_path_list.remove(counter)\n
+      path_len = path_len - 1\n
+\n
+  new_title_list = []\n
+  # create new title\n
+  if \'Siege\' in title_path_list:\n
+    new_title_list.append(title_path_list[0]) # ie Siege\n
+    if path_len > 2:\n
+      new_title_list.append(title_path_list[2]) # ie Auxiliaire, Devise...\n
+    if id not in new_title_list: # ie last part of path\n
+      new_title_list.append(id)\n
+  else:\n
+    if path_len <= 2:\n
+      new_title_list = title_path_list[:]\n
+    for i in xrange(path_len):\n
+      if i%2 == 0 and i != 0:\n
+        new_title_list.append(title_path_list[i])\n
+      elif \'Ventilation\' in title_path_list[i]:\n
+        new_title_list.append(\'Ventilation\')\n
+      elif \'Transit\' in title_path_list[i]:\n
+        new_title_list.append(\'Transit\')\n
+    if id not in new_title_list: # ie last part of path\n
+      new_title_list.append(id)\n
+  # put back the counter name into the list\n
+  if counter_name is not None:\n
+    new_title_list.insert(2, counter_name)\n
+  return new_title_list\n
+\n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, site_list=None, with_base=1, all=0):\n
 \n
@@ -168,43 +208,8 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
       title_path_list = title_path_list[:-1]\n
       id_path_list = id_path_list[:-1]\n
       path_len = path_len - 1\n
-    if \'Encaisse\' in title_path_list[-1]:\n
-      id = title_path_list[-1].lstrip("Encaisse des ")\n
-    else:\n
-      id = title_path_list[-1]\n
-    # get a counter if there is\n
-    counter_name = None\n
-    for counter in [\'Guichet 1\', \'Guichet 2\', \'Guichet 3\']:\n
-      if counter in title_path_list:\n
-        # produce a shorter name for the counter\n
-        counter_name = \'%s%s\' %(counter[0], counter[-1])\n
-        # remove counter to construct the list as if there is none\n
-        title_path_list.remove(counter)\n
-        path_len = path_len - 1\n
 \n
-    new_title_list = []\n
-    # create new title\n
-    if \'Siege\' in title_path_list:\n
-      new_title_list.append(title_path_list[0]) # ie Siege\n
-      if path_len > 2:\n
-        new_title_list.append(title_path_list[2]) # ie Auxiliaire, Devise...\n
-      if id not in new_title_list: # ie last part of path\n
-        new_title_list.append(id)\n
-    else:\n
-      if path_len <= 2:\n
-        new_title_list = title_path_list[:]\n
-      for i in xrange(path_len):\n
-        if i%2 == 0 and i != 0:\n
-          new_title_list.append(title_path_list[i])\n
-        elif \'Ventilation\' in title_path_list[i]:\n
-          new_title_list.append(\'Ventilation\')\n
-        elif \'Transit\' in title_path_list[i]:\n
-          new_title_list.append(\'Transit\')\n
-      if id not in new_title_list: # ie last part of path\n
-        new_title_list.append(id)\n
-    # put back the counter name into the list\n
-    if counter_name is not None:\n
-      new_title_list.insert(2, counter_name)\n
+    new_title_list = calculateNewTitle(title_path_list,path_len=path_len)\n
 \n
     new_id = \'/\'.join(new_title_list)\n
     if with_base:\n
@@ -255,7 +260,10 @@ if current_url != None :\n
   current_category = context.portal_categories.getCategoryValue(current_url)\n
   if current_category is not None :\n
     if current_category.getRelativeUrl() not in [x[1] for x in vault_list] :\n
-      return [(\'\', \'\'), (current_category.getRelativeUrl(), current_url)] + list(vault_list)\n
+      # Get the logical path of the current category\n
+      logical_path_list = current_category.getLogicalPath().split(\'/\')\n
+      title = \'/\'.join(calculateNewTitle(logical_path_list,path_len=len(logical_path_list)))\n
+      return [(\'\', \'\'), (title, current_url)] + list(vault_list)\n
   else :\n
     return [(\'\', \'\'), (context.Localizer.erp5_ui.gettext(\'Unknown Vault\')+\' : %s\' % current_url, current_url)] + list(vault_list)\n
 return [(\'\', \'\')] + list(vault_list)\n
@@ -333,6 +341,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>owner_site</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>calculateNewTitle</string>
                             <string>None</string>
                             <string>getVaultItemList</string>
                             <string>_getattr_</string>
@@ -348,6 +357,9 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
+                            <string>logical_path_list</string>
+                            <string>len</string>
+                            <string>title</string>
                             <string>list</string>
                           </tuple>
                         </value>
