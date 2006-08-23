@@ -4,6 +4,7 @@
 2006-08-23 Kevin
 * Multiple Publication Sections can be set on Web Pages.
 * One default page can be set on Web Section through agregate relation.
+* Add a new folder to store web widget library.
 
 2006-08-22 Kevin
 * Add default web site theme.
