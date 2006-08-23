@@ -53,10 +53,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
   """
   Tests the Cell API
   """
-
-  # Some helper methods
-
-  #def afterSetUp(self):
+  quiet = 1
 
   def getBusinessTemplateList(self):
     """
@@ -74,7 +71,6 @@ class TestXMLMatrix(ERP5TypeTestCase):
     """
     Some pre-configuration
     """
-    LOG('afterSetUp', 0, 'Called')
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager'], [])
     user = uf.getUserById('manager').__of__(uf)
@@ -84,11 +80,12 @@ class TestXMLMatrix(ERP5TypeTestCase):
     if '1' not in module.objectIds():
       order = module.newContent(id='1', portal_type='Purchase Order')
 
-  def test_01_RenameCellRange(self):
+  def test_01_RenameCellRange(self, quiet=quiet):
     """
     tests renameCellRange behaviour
     """
-    ZopeTestCase._print('\nTest Rename Cell Range ')
+    if not quiet:
+      ZopeTestCase._print('\nTest Rename Cell Range ')
     portal = self.getPortal()
     module = portal.purchase_order_module
     order = module._getOb('1')
@@ -262,22 +259,23 @@ class TestXMLMatrix(ERP5TypeTestCase):
       cell_path = url + '/' + id
       self.assertEquals(catalog.hasPath(cell_path),False)
 
-  def test_02_SetCellRangeAndCatalogWithActivities(self):
+  def test_02_SetCellRangeAndCatalogWithActivities(self, quiet=quiet):
     """
     Tests if set Cell range do well catalog and uncatalog, using activities
     """
-    ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
+    if not quiet:
+      ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
     self.checkSetCellRangeAndCatalog(active=1)
 
-  def test_03_SetCellRangeAndCatalogWithoutActivities(self):
+  def test_03_SetCellRangeAndCatalogWithoutActivities(self, quiet=quiet):
     """
     Tests if set Cell range do well catalog and uncatalog, not using
     activities
     """
-    ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
+    if not quiet:
+      ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
     self.checkSetCellRangeAndCatalog(active=0)
-
-
+  
 if __name__ == '__main__':
     framework()
 else:

@@ -41,6 +41,8 @@ from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 class TestConstraint(ERP5TypeTestCase):
 
   run_all_test = 1
+  quiet = 1
+
   object_portal_type = "Organisation"
   object_title = "Title test"
 
@@ -292,7 +294,7 @@ class TestConstraint(ERP5TypeTestCase):
                                   id='default_constraint',
                                   description='constraint test')
 
-  def test_01_Constraint(self, quiet=0, run=run_all_test):
+  def test_01_Constraint(self, quiet=quiet, run=run_all_test):
     """
       Test default Constraint class
     """
@@ -306,7 +308,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreatePropertyExistence0(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -340,7 +342,7 @@ class TestConstraint(ERP5TypeTestCase):
                                   description='propertyExistence test',
                                   title=None)
 
-  def test_02_PropertyExistence(self, quiet=0, run=run_all_test):
+  def test_02_PropertyExistence(self, quiet=quiet, run=run_all_test):
     """
       Test property existence
     """
@@ -393,7 +395,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreatePropertyTypeValidity(self, sequence=None, 
                                      sequence_list=None, **kw):
@@ -405,7 +407,7 @@ class TestConstraint(ERP5TypeTestCase):
                                   id='property_type_validity',
                                   description='propertyTypeValidity test')
 
-  def test_03_PropertyTypeValidity(self, quiet=0, run=run_all_test):
+  def test_03_PropertyTypeValidity(self, quiet=quiet, run=run_all_test):
     """
       Test property type validity
     """
@@ -494,7 +496,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreateAttributeEquality0(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -517,7 +519,7 @@ class TestConstraint(ERP5TypeTestCase):
                                   description='AttributeEquality test',
                                   title=self.object_title)
 
-  def test_04_AttributeEquality(self, quiet=0, run=run_all_test):
+  def test_04_AttributeEquality(self, quiet=quiet, run=run_all_test):
     """
       Test attribute equality
     """
@@ -560,7 +562,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreateCategoryExistence0(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -606,7 +608,7 @@ class TestConstraint(ERP5TypeTestCase):
                                   group=None,
                                   portal_type = ('Organisation', ))
 
-  def test_05_CategoryExistence(self, quiet=0, run=run_all_test):
+  def test_05_CategoryExistence(self, quiet=quiet, run=run_all_test):
     """
       Test category existence
     """
@@ -676,7 +678,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreateCategoryMembershipArity0(self, sequence=None, 
                                          sequence_list=None, **kw):
@@ -748,7 +750,7 @@ class TestConstraint(ERP5TypeTestCase):
                                   portal_type=('Category', ),
                                   base_category=('group', ))
 
-  def test_06_CategoryMembershipArity(self, quiet=0, run=run_all_test):
+  def test_06_CategoryMembershipArity(self, quiet=quiet, run=run_all_test):
     """
       Test category existence
     """
@@ -899,7 +901,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def stepCreateCategoryRelatedMembershipArity0(self, sequence=None, 
                                                 sequence_list=None, **kw):
@@ -946,7 +948,7 @@ class TestConstraint(ERP5TypeTestCase):
                             portal_type=('Organisation', ),
                             base_category=('group', ))
 
-  def test_07_CategoryRelatedMembershipArity(self, quiet=0, run=run_all_test):
+  def test_07_CategoryRelatedMembershipArity(self, quiet=quiet, run=run_all_test):
     """
       Test related category existence
     """
@@ -1015,7 +1017,7 @@ class TestConstraint(ERP5TypeTestCase):
               CheckIfConstraintFailed \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
     framework()
