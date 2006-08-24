@@ -867,6 +867,19 @@ class ActivityTool (Folder, UniqueObject):
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list
 
+    security.declarePublic('countMessageWithTag')
+    def countMessageWithTag(self, value):
+      """
+        Return the number of messages which match the given tag.
+      """
+      message_count = 0
+      for activity in activity_list:
+        try:
+          message_count += activity.countMessageWithTag(self, value)
+        except AttributeError:
+          LOG('getMessageList, could not get message from Activity:', 0, activity)
+      return message_count
+
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, **kw):
       from ActiveProcess import addActiveProcess

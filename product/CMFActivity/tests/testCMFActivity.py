@@ -625,7 +625,30 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
 
     self.assertEquals(o.getTitle(), 'foo')
-    
+
+  def CheckCountMessageWithTag(self, activity):
+    """
+      Check countMessageWithTag function.
+    """
+    portal = self.getPortal()
+    portal_activities = portal.portal_activities
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = portal.organisation._getOb(self.company_id)
+    o.setTitle('?')
+    get_transaction().commit()
+    self.tic()
+
+    o.activate(tag = 'toto', activity = activity).setTitle('a')
+    get_transaction().commit()
+    self.assertEquals(o.getTitle(), '?')
+    self.assertEquals(portal_activities.countMessageWithTag('toto'), 1)
+    self.tic()
+    self.assertEquals(o.getTitle(), 'a')
+    self.assertEquals(portal_activities.countMessageWithTag('toto'), 0)
+
+
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1304,6 +1327,28 @@ class TestCMFActivity(ERP5TypeTestCase):
 
     # restore notification
     Message.notifyUser = originalNotifyUser
+
+  def test_66_TestCountMessageWithTagWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Test new countMessageWithTag function with SQLDict.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck countMessageWithTag'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.CheckCountMessageWithTag('SQLDict')
+
+  def test_67_TestCountMessageWithTagWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Test new countMessageWithTag function with SQLQueue.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck countMessageWithTag'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.CheckCountMessageWithTag('SQLQueue')
 
 if __name__ == '__main__':
     framework()
