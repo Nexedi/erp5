@@ -110,13 +110,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               </tal:block>\n
             </ul>\n
           </div>\n
-          <div class="content"><tal:block metal:define-slot="main" /></div>\n
+          <div class="content" tal:attributes="class python: editable_mode and \'content editable\' or \'content\'">\n
+            <tal:block metal:define-slot="main"/>\n
+          </div>\n
         </div>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
