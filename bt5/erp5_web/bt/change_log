@@ -1,3 +1,6 @@
+2006-08-24 Kevin
+* Add default CSS to default theme.
+
 2006-08-24 Stefan
 * URLs work with and without virtual hosting.
 * No duplicate entries in WebSection_getDocumentValueList() if a page is associated by aggregate and also in a relevant publication section.

@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+\n
+  Default ERP5 Web module CSS.\n
+\n
+*/\n
+\n
+* {\n
+  padding: 0;\n
+  margin: 0;\n
+}\n
+\n
+.left  {float: left}\n
+.right {float: right}\n
+.clear {clear: both}\n
+\n
+img {\n
+  border: 0;\n
+}\n
+\n
+a img, h3 img, button img {\n
+  vertical-align: middle;\n
+}\n
+\n
+.doNotDisplay {\n
+  display: none;\n
+}\n
+\n
+.centeredInner {\n
+  text-align: center;\n
+}\n
+\n
+blockquote {\n
+  margin: .5em;\n
+  padding: .5em;\n
+  border-left: 2px #ddd solid;\n
+  background: #f9f9f9;\n
+}\n
+\n
+\n
+/* layout\n
+----------------------------------------------- */\n
+\n
+\n
+\n
+\n
+\n
+/* typography & colors (fonts, color, background)\n
+----------------------------------------------- */\n
+\n
+body, input, textarea, select, table {\n
+  color: #333;\n
+  font-family: Sans, Verdana, Tahoma, Georgia, Geneva, Arial, sans-serif;\n
+  font-size: 8pt;\n
+  line-height: 1.75em;\n
+}\n
+\n
+.code, code {\n
+  font-family: "Courier New", Courier, monospace;\n
+}\n
+\n
+.warning, .error {\n
+  color: #f00;\n
+  font-weight: bold;\n
+}\n
+\n
+\n
+/* forms styling\n
+----------------------------------------------- */\n
+\n
+div.fieldgroup {\n
+  border: 1px solid #ccc;\n
+  padding: .5em;\n
+}\n
+\n
+fieldset {\n
+  padding: 0 .5em 1em;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+fieldset > legend {\n
+  padding: .5em;\n
+  margin: 0 0 1em;\n
+  text-transform: capitalize;\n
+  font-weight: bold;\n
+}\n
+\n
+input, textarea {\n
+  background-color: #fff;\n
+  background-repeat: repeat-x;\n
+  border: 1px solid #999;\n
+  margin: 1px;\n
+}\n
+\n
+input.text, input[type="password"], input[type="text"], textarea {\n
+  background-image: url(field.png);\n
+  background-position: top;\n
+  padding: 1px;\n
+}\n
+\n
+input.button, input[type="submit"] {\n
+  background-image: url(button.png);\n
+  background-position: bottom;\n
+}\n
+\n
+input[type="image"] {\n
+  border: 0;\n
+  vertical-align: bottom;\n
+  background-color: transparent;\n
+}\n
+\n
+button {\n
+  margin: .8em .5em;\n
+  border: 1px #ddd solid;\n
+  padding: 3px;\n
+  color: #999;\n
+  background: #eee;\n
+  cursor: pointer;\n
+}\n
+\n
+button:hover {\n
+  color: #333;\n
+  background: #b0cfcb;\n
+  border-color: #9abdb7;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_web_default.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

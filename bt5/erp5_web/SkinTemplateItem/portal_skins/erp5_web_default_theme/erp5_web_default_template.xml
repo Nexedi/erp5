@@ -52,10 +52,11 @@
 <html>\n
   <head>\n
     <title tal:content="here/title"/>\n
+    <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_default.css"/>\n
   </head>\n
 \n
   <body>\n
-    <h1 tal:content="python: \'%s - %s\' % (here.getTitle(), repr(here))"/>\n
+    <h1 tal:content="here/getTitle"/>\n
     <tal:block metal:define-slot="main"/>\n
   </body>\n
 \n
