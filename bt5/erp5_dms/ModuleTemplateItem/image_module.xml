@@ -502,33 +502,6 @@
   <permission type='list'>
    <name>WebDAV access</name>
   </permission>
-  <permission type='list'>
-   <name>Zwiki: Add comments</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Add pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Add wikis</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Change page types</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Delete pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Edit pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Rate pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Rename pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Reparent pages</name>
-  </permission>
  </permission_list>
  <portal_type>Image Module</portal_type>
  <title>Images</title>
