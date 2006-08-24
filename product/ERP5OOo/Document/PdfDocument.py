@@ -83,6 +83,22 @@ class PdfDocument(DMSFile):
 
   SearchableText=getSearchableText
 
+  def getHtmlRepresentation(self):
+    '''
+    get simplified html version to display
+    '''
+    # XXX use caching method
+    if not hasattr(self,'data'):
+      return 'no data'
+    tmp=tempfile.NamedTemporaryFile()
+    tmp.write(self._unpackData(self.data))
+    tmp.seek(0)
+    cmd='pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
+    r=os.popen(cmd)
+    h=r.read()
+    tmp.close()
+    r.close()
+    return h
 
 # vim: syntax=python shiftwidth=2 
 

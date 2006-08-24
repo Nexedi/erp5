@@ -376,6 +376,30 @@ class OOoDocument(DMSFile):
     except AttributeError:
       pass
 
+  def getHtmlRepresentation(self):
+    '''
+    get simplified html version to display
+    '''
+    # XXX use caching method
+    # we have to figure out which html format to use
+    tgts=[x[1] for x in self.getTargetFormatItemList() if x[1].startswith('html')]
+    if len(tgts)==0:
+      return 'no html representation available'
+    fmt=tgts[0]
+    fmt,data=self.getTargetFile(fmt)
+    cs=cStringIO.StringIO()
+    cs.write(self._unpackData(data))
+    z=zipfile.ZipFile(cs)
+    h='could not extract anything'
+    for f in z.infolist():
+      fn=f.filename
+      if fn.endswith('html'):
+        h=z.read(fn)
+        break
+    z.close()
+    cs.close()
+    return h
+
   security.declareProtected(Permissions.View,'getTargetFile')
   def getTargetFile(self,format,REQUEST=None):
     """
