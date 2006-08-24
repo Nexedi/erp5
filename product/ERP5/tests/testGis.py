@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              noSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 class TestGis(ERP5TypeTestCase):
 
@@ -155,6 +156,46 @@ class TestGis(ERP5TypeTestCase):
               CreateAddress \
               SetTextAddressValue \
               CheckAddressText \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCreateAsTextScript(self, sequence=None, **kw) :
+    """
+    This script returns a different adress format.
+    """
+    createZODBPythonScript(self.getPortal().portal_skins.custom,
+                           'Address_asText', '', """
+return '%s\\n%s %s' % \\
+       (context.getStreetAddress(),
+        context.getZipCode(), context.getCity())
+""")
+  
+  def stepCheckAddressAsTextScript(self, sequence=None,
+                                   sequence_list=None, **kw):
+    """
+    Check getAddressText
+    """
+    address = sequence.get('address')
+    self.assertEquals(address.asText(),
+        "%s %s\n%s %s" % (self.street_address_number,
+                          self.street_address_text,
+                          self.zip_code_text,
+                          self.city_text))
+
+  def test_02_asTextScript(self, quiet=0, run=run_all_test):
+    """
+      Test property existence
+    """
+    if not run: return
+    
+    sequence_list = SequenceList()
+    sequence_string = '\
+              CreateEntity \
+              CreateAddress \
+              SetTextAddressValue \
+              CreateAsTextScript \
+              CheckAddressAsTextScript \
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
