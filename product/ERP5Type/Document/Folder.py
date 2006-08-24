@@ -49,7 +49,7 @@ from random import randint
 
 import os
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
@@ -160,7 +160,9 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
         if idGenerator is None:
           idGenerator = self._generateNextId
       else:
-        LOG('Folder.generateNewId', 0, '%s.id_generator is not a string. Falling back on default behaviour.' % (self.absolute_url(), ))
+        LOG('Folder.generateNewId', PROBLEM,
+          '%s.id_generator is not a string. Falling back on default behaviour.'
+          % (self.getPath(), ))
         idGenerator = self._generateNextId
       my_id = idGenerator()
       while self.hasContent(my_id):
