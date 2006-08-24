@@ -82,7 +82,7 @@ if form.meta_type != \'ERP5 Form\':\n
 \n
 # we start with \'bottom\' because most of the time\n
 # the listbox is there.\n
-for group in (\'bottom\', \'center\', \'left\', \'right\'):\n
+for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
   for field in form.get_fields_in_group(group):\n
      if field.meta_type == \'ListBox\' and not(field[\'hidden\']) and field[\'enabled\']:\n
        return field\n
