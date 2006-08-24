@@ -72,12 +72,14 @@ class GeographicAddress(Coordinate, Base):
           Returns the address as a complete formatted string
           with street address, zip, city and region
         """
-        if country=='France' or country=='france' or country=='fr' :
-          return ('%s\n%s %s') % (self.getStreetAddress() or '', 
-                          self.getZipCode() or '', self.getCity() or '')
-        else :
-          return ('%s\n%s %s') % (self.getStreetAddress() or '', 
-                        self.getCity() or '', self.getZipCode() or '')
+        result = Coordinate.asText(self)
+        if result is None:
+          if country=='France' or country=='france' or country=='fr' :
+            return ('%s\n%s %s') % (self.getStreetAddress() or '', 
+                            self.getZipCode() or '', self.getCity() or '')
+          else :
+            return ('%s\n%s %s') % (self.getStreetAddress() or '', 
+                          self.getCity() or '', self.getZipCode() or '')
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
     def fromText(self, coordinate_text):
