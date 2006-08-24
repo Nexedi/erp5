@@ -1038,6 +1038,18 @@ class ERP5Generator(PortalGenerator):
         addSQLConnection('cmf_activity_sql_connection',
                          'CMF Activity SQL Server Connection',
                          p.cmf_activity_sql_connection_string)
+      # Warning : This transactionless connection is created with
+      # the activity connection string and not the catalog's because
+      # it's not compatible with the hot reindexing feature.
+      # Though, it has nothing to do with activities.
+      # The only difference compared to activity connection is the
+      # minux prepended to the conneciton string.
+      if not p.hasObject('erp5_sql_transactionless_connection'):
+        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
+                                     manage_addZMySQLConnection
+        addSQLConnection('erp5_sql_transactionless_connection',
+                         'ERP5 Transactionless SQL Server Connection',
+                         '-%s' % p.cmf_activity_sql__connection_string)
     elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
       pass
 
