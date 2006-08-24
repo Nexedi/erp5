@@ -1,3 +1,7 @@
+2006-08-24 BG
+Changed DMS Pdf File into PdfDocument (with another base class)
+Done a number of small fixtures.
+
 2008-08-17 BG
 Parsing search string for extra tricks
 

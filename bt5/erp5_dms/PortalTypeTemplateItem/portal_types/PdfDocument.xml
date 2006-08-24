@@ -58,19 +58,16 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 DMS File</string> </value>
+            <value> <string>ERP5 Pdf Document</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>  Special base class, different from File only in that it can contain things \n
-  (like Role Definition, for example)\n
-  Could (perhaps should) be a parent class for OOoDocument\n
-  Should probably be located somewhere else\n
-</string> </value>
+            <value> <string>  PdfDocument - same as DMS File, but has its own getSearchableText method\n
+  (converts via pdftotext)</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDMSFile</string> </value>
+            <value> <string>addPdfDocument</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -90,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS Pdf File</string> </value>
+            <value> <string>PdfDocument</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

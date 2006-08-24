@@ -4,12 +4,12 @@
   <workflow>document_publication_workflow, edit_workflow, local_permission_interaction_workflow, dms_file_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>DMS Pdf File</type>
-  <workflow>document_publication_workflow, edit_workflow, dms_file_interaction_workflow, local_permission_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Graphic</type>
   <workflow>ooo_interaction_workflow, edit_workflow, local_permission_interaction_workflow, dms_file_interaction_workflow, document_publication_workflow</workflow>
+ </chain>
+ <chain>
+  <type>PdfDocument</type>
+  <workflow>dms_file_interaction_workflow, edit_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Presentation</type>

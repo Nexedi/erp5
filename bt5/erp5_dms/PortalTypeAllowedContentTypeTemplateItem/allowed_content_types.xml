@@ -2,16 +2,13 @@
  <portal_type id="DMS File">
   <item>Role Definition</item>
  </portal_type>
- <portal_type id="DMS Pdf File">
-  <item>Role Definition</item>
- </portal_type>
  <portal_type id="Document Module">
   <item>Text</item>
   <item>Spreadsheet</item>
-  <item>DMS Pdf File</item>
   <item>Presentation</item>
   <item>DMS File</item>
   <item>Graphic</item>
+  <item>PdfDocument</item>
  </portal_type>
  <portal_type id="File">
   <item>Role Definition</item>
@@ -21,6 +18,9 @@
  </portal_type>
  <portal_type id="Image Module">
   <item>Image</item>
+ </portal_type>
+ <portal_type id="PdfDocument">
+  <item>Role Definition</item>
  </portal_type>
  <portal_type id="Presentation">
   <item>Role Definition</item>
