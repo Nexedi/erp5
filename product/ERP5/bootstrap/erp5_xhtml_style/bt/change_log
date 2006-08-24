@@ -1,5 +1,6 @@
 2006-08-24 Kevin
 * Add a specific div wrapper class to differenciate editable mode.
+* Fix generator xhtml tag.
 
 2006-08-23 Romain
 * Translate tab name.
