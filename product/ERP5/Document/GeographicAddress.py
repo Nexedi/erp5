@@ -73,11 +73,11 @@ class GeographicAddress(Coordinate, Base):
           with street address, zip, city and region
         """
         if country=='France' or country=='france' or country=='fr' :
-          return ('%s\n%s %s') % (self.street_address or '', 
-                          self.zip_code or '', self.city or '')
+          return ('%s\n%s %s') % (self.getStreetAddress() or '', 
+                          self.getZipCode() or '', self.getCity() or '')
         else :
-          return ('%s\n%s %s') % (self.street_address or '', 
-                        self.city or '', self.zip_code or '')
+          return ('%s\n%s %s') % (self.getStreetAddress() or '', 
+                        self.getCity() or '', self.getZipCode() or '')
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
     def fromText(self, coordinate_text):
@@ -86,21 +86,21 @@ class GeographicAddress(Coordinate, Base):
           this address
         """
         lines = string.split(coordinate_text, '\n')
-        self.street_address = ''
-        self.zip_code = ''
-        self.city = ''
+        self.setStreetAddress('')
+        self.setZipCode('')
+        self.setCity('')
         zip_city = None
         if len(lines ) > 1:
-          self.street_address = lines[0:-1]
+          self.setStreetAddress(lines[0:-1])
           zip_city = string.split(lines[-1])
         elif len(lines ) > 0:
-          self.street_address = ''
+          self.setStreetAddress('')
           zip_city = string.split(lines[-1])
         if zip_city:
-          self.zip_code = zip_city[0]
+          self.setZipCode(zip_city[0])
           if len(zip_city) > 1:
-            self.city = string.join(zip_city[1:])
-        self.reindexObject()
+            self.setCity(string.join(zip_city[1:]))
+#         self.reindexObject()
 
     security.declareProtected(Permissions.View, 'standardTextFormat')
     def standardTextFormat(self):
