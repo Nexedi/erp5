@@ -1,3 +1,6 @@
+2006-08-24 jerome
+* empty default_invoice_transaction_rule. It's part of the configuration and should not be included in this BT.
+
 2006-08-21 jerome
 * filter GAP ID using strict_membership in account module  list.
 
