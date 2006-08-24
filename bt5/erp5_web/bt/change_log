@@ -1,3 +1,9 @@
+2006-08-24 Stefan
+* URLs work with and without virtual hosting.
+* No duplicate entries in WebSection_getDocumentValueList() if a page is associated by aggregate and also in a relevant publication section.
+* Problem with WebSection_getDocumentValueList() fixed (aggregated pages were not in the list form this context).
+* Removed some context.log() entries.
+
 2006-08-23 Stefan
 * First rework of Web API scripts.
 

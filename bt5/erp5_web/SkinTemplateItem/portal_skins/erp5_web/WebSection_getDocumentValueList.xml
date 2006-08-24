@@ -97,7 +97,7 @@ portal_catalog = container.portal_catalog\n
 \n
 # First find the web section we are in\n
 current_node = context\n
-while not current_node.getPortalType() in (\'Web Section\', \'Web Site\', \'Domain\'):\n
+while not current_node.getPortalType() in (\'Web Section\', \'Web Site\'):\n
   current_node = current_node.aq_parent\n
 \n
 # Then find the publication categories referenced by the web section\n
@@ -113,7 +113,7 @@ def checkMember(x):\n
           return x\n
 \n
 # get all web pages and check if their publication category is in the category list of the web section\n
-#reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
+# reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
 reference_list = map(lambda x:x.getReference(), portal_catalog(portal_type=(\'Web Page\',)))\n
 if reference_list:\n
   li = filter(checkMember, list(context.portal_catalog(portal_type="Web Page")) )\n
@@ -121,17 +121,21 @@ if reference_list:\n
 else:\n
   my_list=[]\n
 \n
-if hasattr(context,\'getAggregateList\'):\n
-  aggregate_values = context.getAggregateList()\n
+# get al web pages associated to the section by aggregate-relation\n
+if hasattr(current_node,\'getAggregateList\'):\n
+  aggregate_values = current_node.getAggregateList()\n
   aggregate_values = map(context.restrictedTraverse,aggregate_values)\n
-  li.extend(aggregate_values) # this causes a crash\n
-  context.log("AVVVVVV",aggregate_values)\n
+  li.extend(aggregate_values) \n
 \n
+# Remove Duplicate entries in my_list\n
+my_clean_list=[]\n
+my_reference_list=[]\n
+for my_element in my_list:\n
+  if not my_element.getReference() in my_reference_list:\n
+    my_clean_list.append(my_element)\n
+    my_reference_list.append(my_element.getReference())\n
 \n
-def abcd(x):\n
-  return x#.getPortalType()\n
-\n
-return map(abcd,my_list)\n
+return my_clean_list\n
 \n
 \n
 ## FYI - old implementation - broken\n
@@ -244,7 +248,10 @@ return map(abcd,my_list)\n
                             <string>my_list</string>
                             <string>hasattr</string>
                             <string>aggregate_values</string>
-                            <string>abcd</string>
+                            <string>my_clean_list</string>
+                            <string>my_reference_list</string>
+                            <string>_getiter_</string>
+                            <string>my_element</string>
                           </tuple>
                         </value>
                     </item>
