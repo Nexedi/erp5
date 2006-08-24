@@ -75,11 +75,12 @@ class GeographicAddress(Coordinate, Base):
         result = Coordinate.asText(self)
         if result is None:
           if country=='France' or country=='france' or country=='fr' :
-            return ('%s\n%s %s') % (self.getStreetAddress() or '', 
+            result = ('%s\n%s %s') % (self.getStreetAddress() or '', 
                             self.getZipCode() or '', self.getCity() or '')
           else :
-            return ('%s\n%s %s') % (self.getStreetAddress() or '', 
+            result = ('%s\n%s %s') % (self.getStreetAddress() or '', 
                           self.getCity() or '', self.getZipCode() or '')
+        return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
     def fromText(self, coordinate_text):
