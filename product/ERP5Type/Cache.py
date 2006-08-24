@@ -77,7 +77,8 @@ class CachingMethod:
     """
       callable_object must be callable.
       id is used to identify what call should be treated as the same call.
-      cache_duration is specified in seconds.
+      cache_duration is specified in seconds, None to last untill zope process
+        is stopped.
     """
     if not callable(callable_object):
       raise CachedMethodError, "callable_object %s is not callable" % str(callable_object)
