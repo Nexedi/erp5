@@ -76,7 +76,6 @@ if same_type(site, \'\'):\n
     site = site[len(\'site/\'):]\n
   site = context.restrictedTraverse(\'portal_categories/site/%s\' %(site,))\n
 \n
-context.log(\'site\', site)\n
 while True:\n
   if not hasattr(site, \'getVaultTypeList\'):\n
     msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
@@ -91,6 +90,12 @@ return site\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -167,6 +172,27 @@ return site\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
