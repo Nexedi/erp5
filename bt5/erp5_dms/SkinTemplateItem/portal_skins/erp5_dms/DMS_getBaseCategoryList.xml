@@ -73,7 +73,7 @@
 # and to add a base category add it in DMSFile property sheets\n
 # or manuall for all these portal_types\n
 \n
-types=(\'Spreadsheet\',\'Text\',\'Presentation\',\'Graphic\',\'DMS File\',\'DMS Pdf File\')\n
+types=(\'Spreadsheet\',\'Text\',\'Presentation\',\'Graphic\',\'DMS File\',\'PdfDocument\')\n
 nrtypes=len(types)\n
 basecatdict={}\n
 for t in types:\n

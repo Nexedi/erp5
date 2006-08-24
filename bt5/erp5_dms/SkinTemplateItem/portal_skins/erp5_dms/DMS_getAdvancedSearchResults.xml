@@ -88,7 +88,7 @@ if mt:\n
   wheres.append(\'modification_date<"\'+str(mt)+\'"\')\n
 if wheres!=[]:\n
   kw[\'where_expression\']=\' AND \'.join(wheres)\n
-context.log(\'wheres\',kw[\'where_expression\'])\n
+context.log(\'wheres\',kw.get(\'where_expression\',\'x\'))\n
 return context.portal_catalog(**kw)\n
 
 
@@ -144,7 +144,6 @@ return context.portal_catalog(**kw)\n
                             <string>wheres</string>
                             <string>str</string>
                             <string>_write_</string>
-                            <string>_getitem_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
