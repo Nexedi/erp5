@@ -261,10 +261,10 @@ class DomainTool(BaseTool):
             if mapped_value_property in prop_list:
               # we already have one value for this (categories, property)
               continue
-            prop_list.append(mapped_value_property)
 
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
+              prop_list.append(mapped_value_property)
               mv_prop_list = \
                   mapped_value_property_dict.setdefault(
                   mapped_value_property, [])
