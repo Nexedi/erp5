@@ -37,7 +37,7 @@ class DMSFile:
     'mode'    : '' },
     )
 
-  _categories = ('destination','similar','source','source_project','publication_section','classification',
+  _categories = ('destination','similar','predecessor','successor','source_project','publication_section','classification',
       'function','group','site')
  
 
