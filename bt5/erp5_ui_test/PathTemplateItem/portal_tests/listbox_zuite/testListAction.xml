@@ -73,7 +73,7 @@
 <tr>\n
 \t<td>assertText</td>\n
 \t<td>id=listbox_title</td>\n
-\t<td>Contents</td>\n
+\t<td>exact:Contents:</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -104,7 +104,7 @@
 <tr>\n
 \t<td>assertText</td>\n
 \t<td>id=listbox_title</td>\n
-\t<td>Foos</td>\n
+\t<td>exact:Foos:</td>\n
 </tr>\n
 \n
 </tbody></table>\n

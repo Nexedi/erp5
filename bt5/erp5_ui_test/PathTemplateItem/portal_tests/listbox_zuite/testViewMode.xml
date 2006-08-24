@@ -103,7 +103,7 @@
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>id=listbox_title</td>\n
-\t<td>Foo Lines</td>\n
+\t<td>Foo Lines:</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -113,7 +113,7 @@
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>id=listbox_item_number</td>\n
-\t<td>0 item(s) selected</td>\n
+\t<td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifySelected</td>\n
