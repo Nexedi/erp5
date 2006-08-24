@@ -155,14 +155,14 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
       id_group = self.getIdGroup()
     if id_group in (None, 'None'):
       id_generator = self.getIdGenerator()
-      if isinstance(id_generator, str) and id_generator != '': # Custom aq_dynamic function (like the one defined on WebSite objects) can find an object which has no name. So we must recognise the default value of id_generator.
+      if not isinstance(id_generator, str):
+        LOG('Folder.generateNewId', 0, '%s.id_generator is not a string. Falling back on default behaviour.' % (self.absolute_url(), ))
+        id_generator = ''
+      if id_generator != '': # Custom aq_dynamic function (like the one defined on WebSite objects) can find an object which has no name. So we must recognise the default value of id_generator and force safe fallback in this case.
         idGenerator = getattr(self, id_generator, None)
         if idGenerator is None:
           idGenerator = self._generateNextId
       else:
-        LOG('Folder.generateNewId', PROBLEM,
-          '%s.id_generator is not a string. Falling back on default behaviour.'
-          % (self.getPath(), ))
         idGenerator = self._generateNextId
       my_id = idGenerator()
       while self.hasContent(my_id):
