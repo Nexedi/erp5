@@ -69,6 +69,7 @@ class SupplyLine(DeliveryLine, Path):
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
                       , PropertySheet.Predicate
+                      , PropertySheet.Comment
                       )
 
     #############################################
