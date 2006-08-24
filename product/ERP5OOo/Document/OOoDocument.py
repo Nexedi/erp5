@@ -35,13 +35,12 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5OOo.Document.DMSFile import DMSFile
 from DateTime import DateTime
-import xmlrpclib, base64, mimetypes, re, zipfile, cStringIO
+import xmlrpclib, base64, re, zipfile, cStringIO
 # to overwrite WebDAV methods
 from Products.CMFDefault.File import File as CMFFile
 from Products.CMFCore.utils import getToolByName
-
-mimetypes.init()
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -49,7 +48,7 @@ dec=base64.decodestring
 class ConvertionError(Exception):pass
 
 #class OOoDocument(File):
-class OOoDocument(XMLObject,File):
+class OOoDocument(DMSFile):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -121,20 +120,7 @@ class OOoDocument(XMLObject,File):
   rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
   rx_compr=re.compile('\s+')
 
-  ### Content indexing methods
-  security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None):
-    """\
-    Used by the catalog for basic full text indexing
-    And so we end up with a strange hybrid of File and Document
-    """
-    searchable_attrs=('title','description','id','text_content','reference','version',
-        'short_title','keywords','subject','original_filename','source_project_title')
-    searchable_text = ' '.join(map(lambda x: self.getProperty(x) or ' ',searchable_attrs))
-    return searchable_text
-
-  SearchableText=getSearchableText
-
+  searchable_attrs=DMSFile.searchable_attrs+('text_content',)
 
   security.declareProtected(Permissions.ModifyPortalContent,'clearCache')
   def clearCache(self):
@@ -313,20 +299,6 @@ class OOoDocument(XMLObject,File):
     data=self.oo_data
     return data
 
-  security.declarePrivate('_unpackData')
-  def _unpackData(self,data):
-    """
-    Unpack Pdata into string
-    """
-    if isinstance(data,str):
-      return data
-    else:
-      data_list=[]
-      while data is not None:
-        data_list.append(data.data)
-        data=data.next
-      return ''.join(data_list)
-
   security.declareProtected(Permissions.View,'hasFile')
   def hasFile(self):
     """
@@ -373,8 +345,15 @@ class OOoDocument(XMLObject,File):
         return self.returnMessage('already has a snapshot')
       raise ConvertionError('already has a snapshot')
     # making snapshot
-    self.makeFile('pdf')
-    self.snapshot=Pdata(self._unpackData(self.cached_data['pdf']))  # XXX - use propertysheet accessors
+    # we have to figure out which pdf format to use
+    tgts=[x[1] for x in self.getTargetFormatItemList() if x[1].endswith('pdf')]
+    if len(tgts)>1:
+      return self.returnMessage('multiple pdf formats found - this shouldnt happen')
+    if len(tgts)==0:
+      return self.returnMessage('no pdf format found')
+    fmt=tgts[0]
+    self.makeFile(fmt)
+    self.snapshot=Pdata(self._unpackData(self.cached_data[fmt]))  # XXX - use propertysheet accessors
     return self.returnMessage('snapshot created')
 
   security.declareProtected(Permissions.View,'getSnapshot')
@@ -514,19 +493,6 @@ class OOoDocument(XMLObject,File):
       s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),str(self.isFileChanged(f)))
     s+='</table>'
     return s
-
-  # this will go out after refactoring (will be inherited from DMS File
-  # and eventually from File
-  security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
-  def guessMimeType(self,fname=''):
-    '''get mime type from file name'''
-    if fname=='':fname=self.getOriginalFilename()
-    if fname:
-      content_type,enc=mimetypes.guess_type(fname)
-      if content_type is not None:
-	self.content_type=content_type
-	return content_type
-
 
   # make sure to call the right edit methods
   _edit=File._edit

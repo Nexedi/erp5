@@ -30,24 +30,19 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5.Document.File import File
-from Products.ERP5Type.XMLObject import XMLObject
-# to overwrite WebDAV methods
-from Products.CMFDefault.File import File as CMFFile
+from Products.ERP5OOo.Document.DMSFile import DMSFile
 
-import mimetypes
-mimetypes.init()
+import tempfile, os
 
 
-class DMSFile(XMLObject,File):
+class PdfDocument(DMSFile):
   """
-  Special base class, different from File only in that it can contain things 
-  (like Role Definition, for example)
-  will be merged with File when WebDAV issues are solved
+  PdfDocument - same as file, but has its own getSearchableText method
+  (converts via pdftotext)
   """
   # CMF Type Definition
-  meta_type = 'ERP5 DMS File'
-  portal_type = 'DMS File'
+  meta_type = 'ERP5 Pdf Document'
+  portal_type = 'Pdf Document'
   isPortalContent = 1
   isRADContent = 1
 
@@ -62,59 +57,31 @@ class DMSFile(XMLObject,File):
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.DMSFile
+                    , PropertySheet.Document
                     )
 
-
-  # make sure to call the right edit methods
-  _edit=File._edit
-  edit=File.edit
-
-  searchable_attrs=('title','description','id','reference','version',
-      'short_title','keywords','subject','original_filename','source_project_title')
+  searchable_attrs=DMSFile.searchable_attrs+('text_content',)
 
   ### Content indexing methods
   security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None):
+  def getSearchableText(self, md=None, force=0):
     """
     Used by the catalog for basic full text indexing
+    we get text content by using pdftotext
+    but we have to do it only once
     """
-    searchable_text = ' '.join(map(lambda x: self.getProperty(x) or ' ',self.searchable_attrs))
-    return searchable_text
-
-  security.declarePrivate('_unpackData')
-  def _unpackData(self,data):
-    """
-    Unpack Pdata into string
-    """
-    if isinstance(data,str):
-      return data
-    else:
-      data_list=[]
-      while data is not None:
-        data_list.append(data.data)
-        data=data.next
-      return ''.join(data_list)
+    if hasattr(self,'data') and (force==1 or self.getTextContent() is None):
+      tmp=tempfile.NamedTemporaryFile()
+      tmp.write(self._unpackData(self.data))
+      tmp.seek(0)
+      cmd='pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
+      r=os.popen(cmd)
+      self.setTextContent(r.read().replace('\n',' '))
+      tmp.close()
+      r.close()
+    return DMSFile.getSearchableText(self,md)
 
   SearchableText=getSearchableText
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
-  def guessMimeType(self,fname=''):
-    '''get mime type from file name'''
-    if fname=='':fname=self.getOriginalFilename()
-    if fname:
-      content_type,enc=mimetypes.guess_type(fname)
-      if content_type is not None:
-        self.content_type=content_type
-    return content_type
-
-
-  # BG copied from File in case
-  index_html = CMFFile.index_html
-  PUT = CMFFile.PUT
-  security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
-  manage_FTPget = CMFFile.manage_FTPget
-  manage_FTPlist = CMFFile.manage_FTPlist
-  manage_FTPstat = CMFFile.manage_FTPstat
 
 
 # vim: syntax=python shiftwidth=2 
