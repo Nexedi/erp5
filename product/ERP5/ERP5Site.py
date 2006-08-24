@@ -1049,7 +1049,7 @@ class ERP5Generator(PortalGenerator):
                                      manage_addZMySQLConnection
         addSQLConnection('erp5_sql_transactionless_connection',
                          'ERP5 Transactionless SQL Server Connection',
-                         '-%s' % p.cmf_activity_sql__connection_string)
+                         '-%s' % p.cmf_activity_sql_connection_string)
     elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
       pass
 
