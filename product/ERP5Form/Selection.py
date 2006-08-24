@@ -179,7 +179,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         kw = self.params.copy()
         if self.invert_mode is not 0:
           kw['uid'] = self.uids
-        if method is None or type(method) is type('a'):
+        if method is None or isinstance(method, str):
           method_path = method or self.method_path
           method = context.unrestrictedTraverse(method_path)
         if type(method) is type('a'):
