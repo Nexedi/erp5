@@ -97,13 +97,13 @@
   <td>Dummy Failing Workflow Action</td>\n
 </tr>\n
 <tr>\n
-  <td>assertText</td>\n
-  <td>//button[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td>assertValue</td>\n
+  <td>id=dialog_submit_button</td>\n
   <td>Dummy Failing Workflow Action</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td>id=dialog_submit_button</td>\n
   <td/>\n
 </tr>\n
 <!-- If the workflow script raises a DCWorkflow.DCWorkflow.ValidationFailed\n

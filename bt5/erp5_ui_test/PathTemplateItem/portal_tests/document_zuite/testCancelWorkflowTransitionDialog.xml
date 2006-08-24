@@ -97,13 +97,13 @@
   <td>Dummy Workflow Action</td>\n
 </tr>\n
 <tr>\n
-  <td>assertText</td>\n
-  <td>//button[@name=\'Base_cancel:method\']</td>\n
+  <td>assertValue</td>\n
+  <td>name=Base_cancel:method</td>\n
   <td>Cancel</td> <!-- XXX \'Cancel\' is probably not appropriate here; see #265 -->\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_cancel:method\']</td>\n
+  <td>name=Base_cancel:method</td>\n
   <td/>\n
 </tr>\n
 <tr>\n
