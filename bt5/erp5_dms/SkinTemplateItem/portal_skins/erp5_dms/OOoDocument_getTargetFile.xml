@@ -69,12 +69,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># ZMI level interface for getting file converted to a desired format\n
-res=context.getTargetFile(format)\n
+type,data=context.getTargetFile(format)\n
 request=context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', res[0])\n
+request.RESPONSE.setHeader(\'Content-type\', type)\n
 context.log(\'format\',format)\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.%s"\' % ((filename or context.title_or_id(), format)))\n
-return res[1]\n
+filename=\'%s.%s\' % ((filename or context.title_or_id(), format))\n
+if type==\'application/zip\':\n
+  filename+=\'.zip\'\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % filename)\n
+return data\n
 </string> </value>
         </item>
         <item>
@@ -121,9 +124,10 @@ return res[1]\n
                             <string>format</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>res</string>
+                            <string>_getiter_</string>
+                            <string>type</string>
+                            <string>data</string>
                             <string>request</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
