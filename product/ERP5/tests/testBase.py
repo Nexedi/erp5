@@ -156,7 +156,7 @@ class TestBase(ERP5TypeTestCase):
     object_instance = module.newContent(portal_type=self.object_portal_type)
     sequence.edit(
         object_instance=object_instance,
-        current_title=None,
+        current_title='',
         current_group_value=None
     )
 
@@ -862,18 +862,19 @@ class TestBase(ERP5TypeTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-
+  
   def test_08_emptyObjectHasNoTitle(self, quiet=quiet, run=run_all_test):
-    """
-    Test if edit update a tales expression.
+    """Test that an empty object has no title.
     """
     if not run: return
     portal = self.getPortal()
     portal_type = "Organisation"
     module = portal.getDefaultModule(portal_type=portal_type)
-    object = module.newContent(portal_type=portal_type)
-    self.assertEquals(None,
-                      object.getProperty("title"))
+    obj = module.newContent(portal_type=portal_type)
+    # XXX title is an empty string by default, but it's still unsure wether it
+    # should be None or ''
+    self.assertEquals('', obj.getProperty("title"))
+    self.assertEquals('', obj.getTitle())
 
 if __name__ == '__main__':
     framework()
