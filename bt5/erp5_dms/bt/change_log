@@ -1,4 +1,7 @@
 2006-08-24 BG
+html display for Text, Spreadsheet and PdfDocument
+
+2006-08-24 BG
 Changed DMS Pdf File into PdfDocument (with another base class)
 Done a number of small fixtures.
 
