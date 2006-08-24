@@ -2125,6 +2125,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _temp_getTitle(self):
     return getattr(self,'title',None)
 
+  security.declarePublic('log')
   def log(self, subsystem, message, level=INFO):
     """Put a log message """
     LOG(subsystem, level, message)
