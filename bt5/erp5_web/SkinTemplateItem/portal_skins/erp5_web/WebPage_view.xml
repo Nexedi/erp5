@@ -64,7 +64,7 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>bottom</string>
+                <string>bottom doNotDisplay</string>
               </list>
             </value>
         </item>
@@ -73,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom doNotDisplay</string> </key>
                     <value>
                       <list>
                         <string>my_text_content</string>

@@ -1,5 +1,6 @@
 2006-08-24 Kevin
 * Add default CSS to default theme.
+* Use aggregate relations everywhere to define default content.
 
 2006-08-24 Stefan
 * URLs work with and without virtual hosting.

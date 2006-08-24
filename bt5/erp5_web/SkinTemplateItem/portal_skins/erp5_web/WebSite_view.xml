@@ -111,7 +111,7 @@
                     <value>
                       <list>
                         <string>my_webmaster</string>
-                        <string>my_source_title_list</string>
+                        <string>my_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>

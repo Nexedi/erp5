@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.RelationField</string>
-          <string>RelationStringField</string>
+          <string>Products.ERP5Form.MultiRelationField</string>
+          <string>MultiRelationStringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_aggregate_title</string> </value>
+            <value> <string>my_aggregate_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -132,6 +132,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -188,10 +192,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -200,7 +200,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -283,6 +291,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -339,10 +351,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -351,7 +359,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -403,7 +419,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Link to the Web Page to display as default content of the current section</string> </value>
+                    <value> <string>Links to Web Pages to display as default content of the current section</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -411,7 +427,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -436,6 +452,10 @@
                 <item>
                     <key> <string>first_item</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -494,7 +514,7 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -504,11 +524,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Default Page</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Default Pages</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -519,8 +535,20 @@
                     <value> <string>Base_validateRelation</string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>

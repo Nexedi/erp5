@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_title_list</string> </value>
+            <value> <string>my_aggregate_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,15 +84,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -243,15 +243,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -391,7 +391,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
+                    <value> <string>aggregate</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -418,12 +418,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>web_page_module</string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Links to Web Pages to display as default content of the current section</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -505,14 +501,6 @@
                           <string>Web Page</string>
                           <string>Web Page</string>
                         </tuple>
-                        <tuple>
-                          <string>Image</string>
-                          <string>Image</string>
-                        </tuple>
-                        <tuple>
-                          <string>File</string>
-                          <string>File</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -526,7 +514,7 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -536,7 +524,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Additional Content</string> </value>
+                    <value> <string>Default Pages</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
