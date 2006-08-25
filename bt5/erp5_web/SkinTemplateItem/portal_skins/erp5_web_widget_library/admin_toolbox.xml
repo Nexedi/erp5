@@ -26,11 +26,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_widget_library</string> </value>
+            <value> <string>admin_toolbox</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>a collection of ready-to-use widgets to build up a rich web site</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
