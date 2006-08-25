@@ -25,34 +25,38 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from AccessControl import getSecurityManager
-from Acquisition import aq_base
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet,\
-                              Constraint, Interface, Cache
-from Products.ERP5.Document.Domain import Domain
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
-from Products.ERP5Type.Base import TempBase
-from Globals import get_request
-from Persistence import Persistent
-from Products.CMFCore.utils import UniqueObject, _checkPermission,\
-                                   _getAuthenticatedUser
-from AccessControl.SecurityManagement import getSecurityManager
+
+from AccessControl import ClassSecurityInfo
 from AccessControl.User import emergency_user
-from AccessControl.SecurityManagement import newSecurityManager,\
-                                             setSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager, newSecurityManager, setSecurityManager
+
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5.Document.Domain import Domain
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface, Cache
+from Products.ERP5Type.Base import TempBase
+
+from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
+
+from Globals import get_request
+
+from Persistence import Persistent
+
 from ZPublisher import BeforeTraverse
 
 from zLOG import LOG
 
-website_key = 'web_site_value'
+
+
+WEBSITE_KEY = 'web_site_value'
+
 class WebSiteTraversalHook(Persistent):
-  """This is used by WebSite to rewrite URLs in such way
-  that once a user gets into a Web Site object, all
-  documents referenced by the web site are accessed
-  through the web site rather than directly.
-  We inherit for persistent, so that pickle mechanism ignores _v_request
+  """
+    This is used by WebSite to rewrite URLs in such way
+    that once a user gets into a Web Site object, all
+    documents referenced by the web site are accessed
+    through the web site rather than directly.
+    We inherit for persistent, so that pickle mechanism ignores _v_request .
   """
 
   def _physicalPathToVirtualPath(self, path):
@@ -63,7 +67,7 @@ class WebSiteTraversalHook(Persistent):
     if type(path) is type(''):
       path = path.split( '/')
 
-    website_path = self._v_request.get(website_key, None)
+    website_path = self._v_request.get(WEBSITE_KEY, None)
     if website_path:
       website_path = tuple(website_path)    # Make sure all path are tuples
       path = tuple(path)                    # Make sure all path are tuples
@@ -75,15 +79,15 @@ class WebSiteTraversalHook(Persistent):
       i = 0
       path_len = len(path)
       for name in website_path:
-        if i >= path_len: break
+        if i >= path_len:
+          break
         if path[i] == name:
           common_index = i
         i += 1
       # Insert the web site path after the common part of the path
       if path_len > common_index + 1:
         path = website_path + path[common_index + 1:]
-
-    rpp = self._v_request.other.get('VirtualRootPhysicalPath', ('',))
+    rpp = self._v_request.other.get('VirtualRootPhysicalPath', ('', ))
     i = 0
     for name in rpp[:len(path)]:
       if path[i] == name:
@@ -91,17 +95,21 @@ class WebSiteTraversalHook(Persistent):
       else:
         break
     return path[i:]
-  
+
   def __call__(self, container, request):
-    """Each time we are traversed, we patch the request instance with our
-    rewritted version of physicalPathToVirtualPath"""
+    """
+      Each time we are traversed, we patch the request instance with our
+      rewritted version of physicalPathToVirtualPath
+    """
     self._v_request = request
     request.physicalPathToVirtualPath = self._physicalPathToVirtualPath
+
+
 
 Domain_getattr = Domain.inheritedAttribute('__getattr__')
 
 # Use a request key to store access attributes and prevent infinite recursion
-cache_key = 'web_site_aq_cache'
+CACHE_KEY = 'web_site_aq_cache'
 
 class WebSite(Domain):
     """
@@ -116,10 +124,10 @@ class WebSite(Domain):
         - fix missing REQUEST information in aq_dynamic documents
     """
     # CMF Type Definition
-    meta_type = 'ERP5 Web Site'
-    portal_type = 'Web Site'
+    meta_type       = 'ERP5 Web Site'
+    portal_type     = 'Web Site'
     isPortalContent = 1
-    isRADContent = 1
+    isRADContent    = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -141,10 +149,11 @@ class WebSite(Domain):
       """
       request = self.REQUEST
       # Register current web site physical path for later URL generation
-      if not request.has_key(website_key): request[website_key] = self.getPhysicalPath()
+      if not request.has_key(WEBSITE_KEY):
+        request[WEBSITE_KEY] = self.getPhysicalPath()
       # First let us call the super method
       dynamic = Domain._aq_dynamic(self, name)
-      if dynamic is not None :
+      if dynamic is not None:
         return dynamic
       # Do some optimisation here for names which can not be names of documents
       if name.startswith('_') or name.startswith('portal_')\
@@ -152,10 +161,10 @@ class WebSite(Domain):
           or name.startswith('sort-') or name == 'getLayout' \
           or name == 'getListItemUrl' or name.startswith('WebSite_'):
         return None
-      if not request.has_key(cache_key):
-        request[cache_key] = {}
-      elif request[cache_key].has_key(name):
-        return request[cache_key][name]
+      if not request.has_key(CACHE_KEY):
+        request[CACHE_KEY] = {}
+      elif request[CACHE_KEY].has_key(name):
+        return request[CACHE_KEY][name]
       try:
         portal = self.getPortalObject()
         # Use the webmaster identity to find documents
@@ -163,14 +172,14 @@ class WebSite(Domain):
         if user is not None:
           old_manager = getSecurityManager()
           newSecurityManager(get_request(), user)
-        document = self.WebSite_getDocument(portal, name)
-        request[cache_key][name] = document
+        document = self.WebSite_getDocumentValue(portal, name)
+        request[CACHE_KEY][name] = document
         if user is not None:
           setSecurityManager(old_manager)
       except:
         # Cleanup non recursion dict in case of exception
-        if request[cache_key].has_key(name):
-          del request[cache_key][name]
+        if request[CACHE_KEY].has_key(name):
+          del request[CACHE_KEY][name]
         raise
       return document
 
@@ -185,8 +194,5 @@ class WebSite(Domain):
     def manage_afterAdd(self, item, container):
       if item is self:
         handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.registerBeforeTraverse(item,
-                                              WebSiteTraversalHook(),
-                                              handle)
+        BeforeTraverse.registerBeforeTraverse(item, WebSiteTraversalHook(), handle)
       Domain.manage_afterAdd(self, item, container)
-
