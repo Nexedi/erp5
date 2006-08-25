@@ -1,3 +1,7 @@
+2006-08-25 Kevin
+* Move all scripts and forms in uncertain state to erp5_web_old skin folder.
+* Move all specific scripts and forms from erp5_web skin folder to brand new web widget libray folder.
+
 2006-08-24 Stefan
 * Update fields name to match naming convention.
 
