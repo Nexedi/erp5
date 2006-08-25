@@ -445,6 +445,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -516,7 +520,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Dynamic SubContent</string> </value>
+                    <value> <string>Dynamic Sub Content</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
