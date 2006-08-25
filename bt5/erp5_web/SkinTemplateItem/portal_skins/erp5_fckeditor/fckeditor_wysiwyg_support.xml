@@ -133,7 +133,7 @@ oFCKeditor.Create();\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX don\'t commit: contain hard-coded customer-related variables</string> </value>
+            <value> <string>XXX contain hard-coded variables</string> </value>
         </item>
       </dictionary>
     </pickle>
