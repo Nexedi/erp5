@@ -650,12 +650,24 @@ be a problem)."""
   # Optimized Menu System
   security.declarePublic('allowedContentTypes')
   def allowedContentTypes( self ):
+    """ List portal_types which can be added in this folder / object.
+    Cache results.
     """
-      List portal_types which can be added in this folder / object.
-      Cache results. This requires restarting Zope to update values.
-    """ 
+    # if we don't have add portal content permission, return directly.
+    # this prevents returning cached allowed types when the user no longer have
+    # the permission to any content type. (security definitions in workflows
+    # usually remove some permission once an object is "Valid")
+    # This also prevents filling the cache with an empty list, when the user
+    # does not have the permission to add any content yet.
+
+    # XXX this works just fine, unless some objects can be added with another
+    # permission that "Add portal content". For now, this is only the case for
+    # Role Definition objects, but this shows that generally speaking, this is
+    # not the right approach.
     if not getSecurityManager().checkPermission(
-                      Permissions.AddPortalContent, self):
+                      Permissions.AddPortalContent, self) and\
+       not getSecurityManager().checkPermission(
+                      Permissions.ChangeLocalRoles, self):
       return []
     
     def _allowedContentTypes( portal_type=None, user=None, portal_path=None ):
