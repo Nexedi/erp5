@@ -127,7 +127,7 @@ if None not in (selection_name, uids, listbox_uid):\n
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
