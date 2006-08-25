@@ -59,8 +59,10 @@
   margin: 0;\n
 }\n
 \n
-.left  {float: left}\n
-.right {float: right}\n
+html {\n
+  margin: 1em 10em;\n
+}\n
+\n
 .clear {clear: both}\n
 \n
 img {\n
@@ -90,8 +92,15 @@ blockquote {\n
 /* layout\n
 ----------------------------------------------- */\n
 \n
+fieldset {\n
+  float: left;\n
+}\n
 \n
-\n
+/* temp colors for debugging */\n
+fieldset.center {background: #0eeeee}\n
+fieldset.right  {background: #ee0eee}\n
+fieldset.left   {background: #eeee0e}\n
+fieldset.bottom {background: #eeeee0}\n
 \n
 \n
 /* typography & colors (fonts, color, background)\n
@@ -113,6 +122,10 @@ body, input, textarea, select, table {\n
   font-weight: bold;\n
 }\n
 \n
+h1 {\n
+  margin: 1em 0;\n
+}\n
+\n
 \n
 /* forms styling\n
 ----------------------------------------------- */\n
@@ -129,7 +142,7 @@ fieldset {\n
   border-style: dotted none none;\n
 }\n
 \n
-fieldset > legend {\n
+fieldset legend {\n
   padding: .5em;\n
   margin: 0 0 1em;\n
   text-transform: capitalize;\n
