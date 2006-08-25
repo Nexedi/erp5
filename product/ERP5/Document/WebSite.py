@@ -145,7 +145,7 @@ class WebSite(Domain):
       """
         Try to find a suitable document based on the
         web site local naming policies as defined by
-        the WebSite_getDocument script
+        the WebSite_getDocumentValue script
       """
       request = self.REQUEST
       # Register current web site physical path for later URL generation
