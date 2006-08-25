@@ -147,6 +147,12 @@ return site_map\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>show_pages=True, include_site=True, depth_limit=None</string> </value>
         </item>
