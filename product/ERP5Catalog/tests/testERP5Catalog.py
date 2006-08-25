@@ -732,7 +732,51 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                  module.searchFolder(group_uid=group_nexedi_category.getUid())]
     self.assertEquals(organisation_list, [organisation])
 
-  def test_21_SearchingWithUnicode(self, quiet=quiet, run=run_all_test):
+  def test_21_SearchFolderWithDynamicStrictRelatedKey(self,
+                                  quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Strict Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create some objects
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    portal_category.group.manage_delObjects([x for x in
+        portal_category.group.objectIds()])
+    group_nexedi_category = portal_category.group\
+                                .newContent( id = 'nexedi', title='Nexedi',
+                                             description='a')
+    sub_group_nexedi = group_nexedi_category\
+                                .newContent( id = 'erp5', title='ERP5',
+                                             description='b')
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',)
+    organisation.setGroup('nexedi/erp5')
+    self.assertEquals(organisation.getGroupValue(), sub_group_nexedi)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+
+    # Try to get the organisation with the group title Nexedi
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(strict_group_title='Nexedi')]
+    self.assertEquals(organisation_list,[])
+    # Try to get the organisation with the group title ERP5
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(strict_group_title='ERP5')]
+    self.assertEquals(organisation_list,[organisation])
+    # Try to get the organisation with the group description a
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(strict_group_description='a')]
+    self.assertEquals(organisation_list,[])
+    # Try to get the organisation with the group description b
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(strict_group_description='b')]
+    self.assertEquals(organisation_list,[organisation])
+
+  def test_22_SearchingWithUnicode(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test searching with unicode'
