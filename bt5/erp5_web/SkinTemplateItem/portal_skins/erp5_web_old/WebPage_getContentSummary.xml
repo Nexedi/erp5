@@ -68,15 +68,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if action is not None:\n
-  for pos in range(len(action)):\n
-    if action[pos].has_key(\'url\'):\n
-      #context.log(\'WebSite_replaceActionUrl\',\'before : %s\' % action[pos][\'url\'])\n
-      action[pos].update({\'url\' : action[pos][\'url\'].replace(context.absolute_url(),context.WebSite_getUrl())})\n
-      #context.log(\'WebSite_replaceActionUrl\',\'after : %s\' % action[pos][\'url\'])\n
+            <value> <string encoding="cdata"><![CDATA[
+
+if full_text in [None, \'\']:\n
+  return "News vide !"\n
 \n
-return action\n
-</string> </value>
+# XXX ! Big Security issue here !!!\n
+# Must be replaced by http://www.zope.org/Members/itamar/striphtml ? \n
+\n
+# Other Alternative:\n
+#    from stripogram import html2text\n
+#    return html2text(full_text)\n
+\n
+def StripTags(text):\n
+  finished = 0\n
+  while not finished:\n
+    finished = 1\n
+    # check if there is an open tag left\n
+    start = text.find("<")\n
+    if start >= 0:\n
+      # if there is, check if the tag gets closed\n
+      stop = text[start:].find(">")\n
+      if stop >= 0:\n
+        # if it does, strip it, and continue loop\n
+        text = text[:start] + text[start+stop+1:]\n
+        finished = 0\n
+  return text\n
+\n
+# End of bad HTML tag stripping\n
+\n
+word_list = StripTags(full_text).split(\' \')\n
+\n
+# Get the first 30 words of the news\n
+word_count = 30\n
+summary = \'\'\n
+for word in word_list:\n
+  if len(word) > 0:\n
+    summary += word + \' \'\n
+  word_count -= 1\n
+  if word_count == 0:\n
+    break\n
+    \n
+return summary\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -91,8 +127,14 @@ return action\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>action</string> </value>
+            <value> <string>full_text=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,15 +160,16 @@ return action\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>action</string>
+                            <string>full_text</string>
                             <string>None</string>
-                            <string>_getiter_</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>pos</string>
+                            <string>StripTags</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
-                            <string>context</string>
+                            <string>word_list</string>
+                            <string>word_count</string>
+                            <string>summary</string>
+                            <string>_getiter_</string>
+                            <string>word</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,12 +181,14 @@ return action\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_replaceActionUrl</string> </value>
+            <value> <string>WebPage_getContentSummary</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -68,51 +68,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if full_text in [None, \'\']:\n
-  return "News vide !"\n
+            <value> <string>"""\n
+  This method return short or long title. If both are available, priority is given to one of\n
+    them via the \'priority\' parameter (long title is chosen by default).\n
 \n
-# XXX ! Big Security issue here !!!\n
-# Must be replaced by http://www.zope.org/Members/itamar/striphtml ? \n
+  If both of them are empty, we return a generic string containing the id. The previous behaviour\n
+    can be de-activated via \'pure_id\' parameters.\n
 \n
-# Other Alternative:\n
-#    from stripogram import html2text\n
-#    return html2text(full_text)\n
+  ERP5 Web rule:\n
+    Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...)\n
+    with a higher priority than long title, except in Site Map.\n
+"""\n
 \n
-def StripTags(text):\n
-  finished = 0\n
-  while not finished:\n
-    finished = 1\n
-    # check if there is an open tag left\n
-    start = text.find("<")\n
-    if start >= 0:\n
-      # if there is, check if the tag gets closed\n
-      stop = text[start:].find(">")\n
-      if stop >= 0:\n
-        # if it does, strip it, and continue loop\n
-        text = text[:start] + text[start+stop+1:]\n
-        finished = 0\n
-  return text\n
+portal_type = context.getPortalType()\n
 \n
-# End of bad HTML tag stripping\n
+property_list = [\'title\', \'short_title\', \'id\']\n
+if priority == \'short_title\':\n
+  property_list = [\'short_title\', \'title\', \'id\']\n
 \n
-word_list = StripTags(full_text).split(\' \')\n
-\n
-# Get the first 30 words of the news\n
-word_count = 30\n
-summary = \'\'\n
-for word in word_list:\n
-  if len(word) > 0:\n
-    summary += word + \' \'\n
-  word_count -= 1\n
-  if word_count == 0:\n
-    break\n
-    \n
-return summary\n
-
-
-]]></string> </value>
+for property in property_list:\n
+  if hasattr(context, property):\n
+    value = getattr(context, property)\n
+    if value not in (None, \'\'):\n
+      if property == \'id\' and pure_id == False:\n
+        return "Untitled %s (id: %s)" % (context.getPortalType(), value)\n
+      return value\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -127,8 +108,14 @@ return summary\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>full_text=None</string> </value>
+            <value> <string>priority=\'long_title\', pure_id=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -148,22 +135,25 @@ return summary\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>full_text</string>
-                            <string>None</string>
-                            <string>StripTags</string>
+                            <string>priority</string>
+                            <string>pure_id</string>
                             <string>_getattr_</string>
-                            <string>word_list</string>
-                            <string>word_count</string>
-                            <string>summary</string>
+                            <string>context</string>
+                            <string>portal_type</string>
+                            <string>property_list</string>
                             <string>_getiter_</string>
-                            <string>word</string>
-                            <string>len</string>
+                            <string>property</string>
+                            <string>hasattr</string>
+                            <string>getattr</string>
+                            <string>value</string>
+                            <string>None</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -176,13 +166,14 @@ return summary\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <string>long_title</string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_getContentSummary</string> </value>
+            <value> <string>ERP5Web_getVerboseTitle</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

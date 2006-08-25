@@ -68,11 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># TODO: i18n-ization of the date format\n
-try:\n
-  return context.getModificationDate().Date()\n
-except AttributeError:\n
-  return None\n
+            <value> <string>url = None\n
+if brain is not None:\n
+  o = brain.getObject()\n
+#  context.log(\'WebSite_getListboxUrl\',\'context : %s\' % context.vincent_context())\n
+#  context.log(\'WebSite_getListboxUrl\',\'brain : %s\' % brain.vincent_context())\n
+#  context.log(\'WebSite_getListboxUrl\',\'URL1 : %s\' % context.REQUEST[\'URL1\'])\n
+  url = \'%s/%s\' % (context.REQUEST[\'URL1\'], o.getRelativeUrl())\n
+  if getattr(context.REQUEST, \'editable_mode\', None):\n
+    url = \'%s/view?editable_mode=%s\' % (url, context.REQUEST[\'editable_mode\'])\n
+return url\n
 </string> </value>
         </item>
         <item>
@@ -88,8 +93,14 @@ except AttributeError:\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>brain=None, selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,16 +120,21 @@ except AttributeError:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>AttributeError</string>
+                            <string>brain</string>
+                            <string>selection</string>
                             <string>None</string>
+                            <string>url</string>
+                            <string>_getattr_</string>
+                            <string>o</string>
+                            <string>_getitem_</string>
+                            <string>context</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
@@ -130,12 +146,15 @@ except AttributeError:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_getModificationDate</string> </value>
+            <value> <string>WebSite_getListboxUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

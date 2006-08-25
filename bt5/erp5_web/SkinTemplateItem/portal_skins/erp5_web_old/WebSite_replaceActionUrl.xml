@@ -68,9 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>base_value = context.Base_edit(form_id, **kw)\n
-context.REQUEST[\'RESPONSE\'].redirect(context.WebSite_getDocumentPhysicalPath())\n
-return base_value\n
+            <value> <string>if action is not None:\n
+  for pos in range(len(action)):\n
+    if action[pos].has_key(\'url\'):\n
+      #context.log(\'WebSite_replaceActionUrl\',\'before : %s\' % action[pos][\'url\'])\n
+      action[pos].update({\'url\' : action[pos][\'url\'].replace(context.absolute_url(),context.WebSite_getUrl())})\n
+      #context.log(\'WebSite_replaceActionUrl\',\'after : %s\' % action[pos][\'url\'])\n
+\n
+return action\n
 </string> </value>
         </item>
         <item>
@@ -86,8 +91,14 @@ return base_value\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, **kw</string> </value>
+            <value> <string>action</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,13 +124,15 @@ return base_value\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>kw</string>
-                            <string>_apply_</string>
+                            <string>action</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>pos</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>base_value</string>
                             <string>_getitem_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,7 +149,7 @@ return base_value\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_editAndView</string> </value>
+            <value> <string>WebSite_replaceActionUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
