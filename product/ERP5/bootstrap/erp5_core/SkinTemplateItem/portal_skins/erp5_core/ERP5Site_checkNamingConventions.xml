@@ -81,7 +81,7 @@
 # - Check skin names.\n
 # - Check script names (from skin folders and workflows).\n
 \n
-ABBRIVIATION_WORD_LIST = ( \'ID\', \'URL\', \'VAT\', \'FAX\', \'GAP\', \'IBAN\', \'BBAN\', \'EAN\', \'BOM\', \'BIC\'\n
+ABBRIVIATION_WORD_LIST = ( \'ID\', \'URL\', \'URI\', \'VAT\', \'FAX\', \'GAP\', \'IBAN\', \'BBAN\', \'EAN\', \'BOM\', \'BIC\'\n
                          , \'CSV\', \'SVN\', \'UBM\', \'VPN\', \'CAD\', \'ERP5\'\n
                          )\n
 ABBRIVIATION_WORD_DICT = dict([(word, 1) for word in ABBRIVIATION_WORD_LIST])\n
@@ -233,6 +233,12 @@ return ("%d problems found :\\n\\n" % len(message_list)) + \'\\n\'.join(message_
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
