@@ -17,6 +17,7 @@ from zLOG import LOG, INFO
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+from Products.ERP5Type.Cache import clearCache
 
 class TestFolder(ERP5TypeTestCase, LogInterceptor):
 
@@ -36,13 +37,17 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         Executed before each test_*.
       """
       self.login()
-      self.folder = self.getPortal().newContent(id='TestFolder', portal_type='Folder')
+      self.folder = self.getPortal().newContent(id='TestFolder',
+                                                portal_type='Folder')
+      self.other_folder = self.getPortal().newContent(
+                    id='OtherTestFolder', portal_type='Folder')
 
     def beforeTearDown(self):
       """
         Executed after each test_*.
       """
       self.getPortal().manage_delObjects(ids=[self.folder.getId()])
+      clearCache()
 
     def newContent(self):
       """
@@ -95,7 +100,51 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         self.assertEquals(len(self.folder), expected_length)
         object = self.newContent()
         self.assertEquals(object.getId(), id_generator_id_list[expected_length])
+ 
+    def _setAllowedContentTypesForFolderType(self, allowed_content_types):
+      """Set allowed content types for Folder portal type."""
+      folder_ti = self.getTypesTool()['Folder']
+      folder_ti.allowed_content_types = allowed_content_types
+      folder_ti.filter_content_types = True
     
+    def _assertAllowedContentTypes(self, obj, expected_allowed_content_types):
+      """Asserts that allowed content types for obj are exactly what we
+      have in expected_allowed_content_types."""
+      allowed_content_types_id_list = [x.getId() for
+                                       x in obj.allowedContentTypes()]
+      self.assertEquals(len(expected_allowed_content_types),
+                        len(allowed_content_types_id_list),
+                       'expected %s and actual %s have different length' % (
+                        expected_allowed_content_types,
+                        allowed_content_types_id_list
+                       ))
+      for portal_type_name in expected_allowed_content_types:
+        self.failUnless(portal_type_name in allowed_content_types_id_list)
+
+    def test_AllowedContentTypes(self):
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      self._assertAllowedContentTypes(self.folder, type_list)
+
+    def test_AllowedContentTypesCacheExpiration(self):
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      self.folder.manage_permission(
+                    'Add portal content', roles=[], acquire=0)
+      self._assertAllowedContentTypes(self.folder, [])
+      self.folder.manage_permission(
+                    'Add portal content', roles=['Manager'], acquire=0)
+      self._assertAllowedContentTypes(self.folder, type_list)
+
+    def test_AllowedContentTypesObjectIndependance(self):
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      self._assertAllowedContentTypes(self.folder, type_list)
+      self.other_folder.manage_permission(
+                    'Add portal content', roles=[], acquire=0)
+      self._assertAllowedContentTypes(self.other_folder, [])
+      self._assertAllowedContentTypes(self.folder, type_list)
+
 if __name__ == '__main__':
     framework()
 else:
