@@ -64,13 +64,14 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AddPortalContent, 'newContent')
+  security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
           container=None, created_by_builder=0, activate_kw=None,
           is_indexable=None, **kw):
-    """
-      Creates a new content
+    """Creates a new content.
+    This method is public, since TypeInformation.constructInstance will perform
+    the security check.
     """
     if container is None:
       container = self
