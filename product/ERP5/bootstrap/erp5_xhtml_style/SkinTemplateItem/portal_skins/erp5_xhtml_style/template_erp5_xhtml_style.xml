@@ -75,29 +75,11 @@ IDEAS:\n
  - Add callbacks to ERP5Form object (selection ?) to gather needed fields -> put them in http_parameter_list.\n
 -->\n
 </tal:block>\n
+\n
 <tal:block metal:define-macro="master">\n
-<tal:block tal:define="\n
-                       cancel_url request/cancel_url | request/ACTUAL_URL;\n
-                       local_parameter_list local_parameter_list | python: {};\n
-                       dummy python: local_parameter_list.update({\'cancel_url\': cancel_url});\n
 \n
-                       global actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
-                       global url python: \'%s%s\' % (request[\'SERVER_URL\'], here.getPath(), );\n
-                       global current_form_id python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
-                       global current_url python: \'%s/%s\' % (url, current_form_id);\n
-                       global current_action python: here.ERP5XhtmlStyle_getCurrentAction(current_url, actions);\n
-                       dummy python: request.set(\'here\', here);\n
-                       global css_list css_list | python: [];\n
-                       dummy python: css_list.append(\'%s/erp5.css\' % (here.portal_url.getPortalPath(), ));\n
-                       global js_list js_list | python: [];\n
-                       dummy python: js_list.append(\'%s/erp5.js\' % (here.portal_url.getPortalPath(), ));\n
+<tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
 \n
-\n
-                       global http_parameter_list request/form/copy;\n
-                       http_parameter_list python: here.ERP5XhtmlStyle_filterParameterList(http_parameter_list);\n
-                       dummy python: http_parameter_list.update(local_parameter_list);\n
-                       global http_parameters python: here.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list);\n
-                       " />\n
 <?xml version="1.0" encoding="UTF-8"?>\n
 <!DOCTYPE html\n
      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
@@ -149,20 +131,10 @@ IDEAS:\n
         <input tal:condition="form_action | nothing"\n
                id="hidden_button" type="submit" value="dummy"\n
                tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
-        <!-- Generic way of specifying http parameters -->\n
-        <tal:block tal:repeat="parameter http_parameter_list/items">\n
-          <tal:block tal:condition="python: same_type(parameter[1], [])">\n
-            <tal:block tal:repeat="list_item python: parameter[1]">\n
-              <input tal:condition="python: list_item is not None"\n
-                     tal:attributes="name python: \'%s:list\' % (parameter[0], );\n
-                                     value python: list_item;" type="hidden" />\n
-            </tal:block>\n
-          </tal:block>\n
-          <input tal:condition="python: not same_type(parameter[1], []) and parameter[1] is not None"\n
-                 tal:attributes="name python: parameter[0];\n
-                                 value python: parameter[1];" type="hidden" />\n
 \n
-        </tal:block>\n
+        <!-- Generic way of specifying http parameters -->\n
+        <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
+\n
         <div id="main_bar">\n
           <span class="first">\n
             <span id="favourites">\n
