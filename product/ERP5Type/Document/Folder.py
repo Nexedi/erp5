@@ -603,11 +603,12 @@ be a problem)."""
       return Base.getCategoryMembershipList(self, category,
           spec=spec, filter=filter, portal_type=portal_type,  base=base)
 
-  # Alias - class inheritance resolutino
+  # Alias - class inheritance resolution
   security.declareProtected( Permissions.View, 'Title' )
   Title = Base.Title
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'checkConsistency')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'checkConsistency')
   def checkConsistency(self, fixit=0):
     """
     Check the consistency of this object, then
@@ -619,30 +620,23 @@ be a problem)."""
       btree_ok = self._cleanup()
       if not btree_ok:
         # We must commit if we want to keep on recursing
-        get_transaction().commit()
+        get_transaction().commit(1)
         error_list += [(self.getRelativeUrl(), 'BTree Inconsistency',
                        199, '(fixed)')]
     # Call superclass
     error_list += Base.checkConsistency(self, fixit=fixit)
     # We must commit before listing folder contents
     # in case we erased some data
-    if fixit: get_transaction().commit()
+    if fixit:
+      get_transaction().commit(1)
     # Then check the consistency on all sub objects
-    for object in self.contentValues():
+    for obj in self.contentValues():
       if fixit:
-        extra_errors = object.fixConsistency()
+        extra_errors = obj.fixConsistency()
       else:
-        extra_errors = object.checkConsistency()
+        extra_errors = obj.checkConsistency()
       if len(extra_errors) > 0:
         error_list += extra_errors
-        # Commit after each subobject
-        #if fixit:
-        # XXX it is bad to use except without exception name !
-#         try:
-        get_transaction().commit()
-#         except:
-#           LOG("Folder WARNING",0,
-#             "Could not commit checkConsistency transaction for object %s" % object.getRelativeUrl())
     # We should also return an error if any
     return error_list
 
