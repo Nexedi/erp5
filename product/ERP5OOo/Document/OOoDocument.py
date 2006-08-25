@@ -35,7 +35,7 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5OOo.Document.DMSFile import DMSFile
+from Products.ERP5OOo.Document.DMSFile import DMSFile, CachingMixin, stripHtml
 from DateTime import DateTime
 import xmlrpclib, base64, re, zipfile, cStringIO
 # to overwrite WebDAV methods
@@ -48,7 +48,7 @@ dec=base64.decodestring
 class ConvertionError(Exception):pass
 
 #class OOoDocument(File):
-class OOoDocument(DMSFile):
+class OOoDocument(DMSFile, CachingMixin):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -107,30 +107,11 @@ class OOoDocument(DMSFile):
                     , PropertySheet.OOoDocument
                     )
 
-  # time of generation of various formats
-  cached_time={}
-  # generated files (cache)
-  cached_data={}
-  # mime types for cached formats XXX to be refactored
-  cached_mime={}
-  # XXX the above craves for a separate class, but I'm not sure how to handle
-  # it in ZODB, so for now let it be
-
   # regexps for stripping xml from docs
   rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
   rx_compr=re.compile('\s+')
 
   searchable_attrs=DMSFile.searchable_attrs+('text_content',)
-
-  security.declareProtected(Permissions.ModifyPortalContent,'clearCache')
-  def clearCache(self):
-    """
-    Clear cache (invoked by interaction workflow upon file upload
-    needed here to overwrite class attribute with instance attrs
-    """
-    self.cached_time={}
-    self.cached_data={}
-    self.cached_mime={}
 
   def _getServerCoordinates(self):
     """
@@ -353,7 +334,8 @@ class OOoDocument(DMSFile):
       return self.returnMessage('no pdf format found')
     fmt=tgts[0]
     self.makeFile(fmt)
-    self.snapshot=Pdata(self._unpackData(self.cached_data[fmt]))  # XXX - use propertysheet accessors
+    #self.snapshot=Pdata(self._unpackData(self.cached_data[fmt]))
+    self.snapshot=Pdata(self._unpackData(self.cacheGet(format)[1]))
     return self.returnMessage('snapshot created')
 
   security.declareProtected(Permissions.View,'getSnapshot')
@@ -364,7 +346,7 @@ class OOoDocument(DMSFile):
     '''getSnapshot'''
     if not self.hasSnapshot():
       self.createSnapshot()
-    return self.snapshot # XXX - use propertysheet accessors
+    return self.snapshot
 
   security.declareProtected(Permissions.ManagePortal,'deleteSnapshot')
   def deleteSnapshot(self):
@@ -380,7 +362,6 @@ class OOoDocument(DMSFile):
     '''
     get simplified html version to display
     '''
-    # XXX use caching method
     # we have to figure out which html format to use
     tgts=[x[1] for x in self.getTargetFormatItemList() if x[1].startswith('html')]
     if len(tgts)==0:
@@ -398,7 +379,7 @@ class OOoDocument(DMSFile):
         break
     z.close()
     cs.close()
-    return h
+    return stripHtml(h)
 
   security.declareProtected(Permissions.View,'getTargetFile')
   def getTargetFile(self,format,REQUEST=None):
@@ -409,7 +390,7 @@ class OOoDocument(DMSFile):
       return self.returnMessage('can not convert to '+format+' for some reason')
     try:
       self.makeFile(format)
-      return self.cached_mime[format],self.cached_data[format]
+      return self.cacheGet(format)
     except ConvertionError,e:
       return self.returnMessage(str(e))
 
@@ -420,19 +401,6 @@ class OOoDocument(DMSFile):
     """
     if not self.hasOOfile():return True
     return self.getLastUploadTime() > self.getLastConvertTime()
-
-  security.declareProtected(Permissions.View,'hasFileCache')
-  def hasFileCache(self,format):
-    """
-    Checks whether we have a version in this format
-    """
-    return self.cached_data.has_key(format)
-
-  def getCacheTime(self,format):
-    """
-    Checks when if ever was the file produced
-    """
-    return self.cached_time.get(format,0)
 
   security.declareProtected(Permissions.View,'isFileChanged')
   def isFileChanged(self,format):
@@ -467,14 +435,15 @@ class OOoDocument(DMSFile):
       raise ConvertionError('needs conversion')
     if self.isFileChanged(format):
       try:
-        self.cached_mime[format],self.cached_data[format]=self._makeFile(format)
+        mime,data=self._makeFile(format)
+        self.cacheSet(format,mime,data)
         self._p_changed=1 # XXX not sure it is necessary
       except xmlrpclib.Fault,e:
         if REQUEST is not None:
           return self.returnMessage('Problem: %s' % str(e))
         else:
           raise ConvertionError(str(e))
-      self.cached_time[format]=DateTime()
+      self.cacheUpdate(format)
       if REQUEST is not None:
         return self.returnMessage('%s created' % format)
     else:
@@ -492,31 +461,6 @@ class OOoDocument(DMSFile):
     kw=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),None,format)
     #self.log('_makeFile',mime)
     return kw['mime'],Pdata(dec(kw['data']))
-
-  security.declareProtected(Permissions.View,'getCacheInfo')
-  def getCacheInfo(self):
-    """
-    Get cache details as string (for debugging)
-    """
-    s='CACHE INFO:<br/><table><tr><td>format</td><td>size</td><td>time</td><td>is changed</td></tr>'
-    #self.log('getCacheInfo',self.cached_time)
-    #self.log('getCacheInfo',self.cached_data)
-    for f in self.cached_time.keys():
-      t=self.cached_time[f]
-      data=self.cached_data.get(f)
-      if data:
-        if isinstance(data,str):
-          ln=len(data)
-        else:
-          ln=0
-          while data is not None:
-            ln+=len(data.data)
-            data=data.next
-      else:
-        ln='no data!!!'
-      s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),str(self.isFileChanged(f)))
-    s+='</table>'
-    return s
 
   # make sure to call the right edit methods
   _edit=File._edit

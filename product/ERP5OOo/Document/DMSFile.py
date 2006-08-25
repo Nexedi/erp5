@@ -35,9 +35,97 @@ from Products.ERP5Type.XMLObject import XMLObject
 # to overwrite WebDAV methods
 from Products.CMFDefault.File import File as CMFFile
 
-import mimetypes
+import mimetypes, re
+from DateTime import DateTime
 mimetypes.init()
 
+
+rs=[]
+rs.append(re.compile('<!.*>'))
+rs.append(re.compile('<HEAD>.*</HEAD>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
+rs.append(re.compile('<.?(HTML|BODY)[^>]*>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
+
+def stripHtml(txt):
+  for r in rs:
+    txt=r.sub('',txt)
+  return txt
+
+
+class CachingMixin:
+  # time of generation of various formats
+  cached_time={}
+  # generated files (cache)
+  cached_data={}
+  # mime types for cached formats XXX to be refactored
+  cached_mime={}
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.ModifyPortalContent,'clearCache')
+  def clearCache(self):
+    """
+    Clear cache (invoked by interaction workflow upon file upload
+    needed here to overwrite class attribute with instance attrs
+    """
+    self.cached_time={}
+    self.cached_data={}
+    self.cached_mime={}
+
+  security.declareProtected(Permissions.View,'hasFileCache')
+  def hasFileCache(self,format):
+    """
+    Checks whether we have a version in this format
+    """
+    return self.cached_data.has_key(format)
+
+  def getCacheTime(self,format):
+    """
+    Checks when if ever was the file produced
+    """
+    return self.cached_time.get(format,0)
+
+  def cacheUpdate(self,format):
+      self.cached_time[format]=DateTime()
+
+  def cacheSet(self,format,mime=None,data=None):
+    if mime is not None:
+      self.cached_mime[format]=mime
+    if data is not None:
+      self.cached_data[format]=data
+
+  def cacheGet(self,format):
+    '''
+    we could be much cooler here - pass testing and updating methods to this function
+    so that it does it all by itself; this'd eliminate the need for cacheSet public method
+    '''
+    return self.cached_mime.get(format,''),self.cached_data.get(format,'')
+
+  security.declareProtected(Permissions.View,'getCacheInfo')
+  def getCacheInfo(self):
+    """
+    Get cache details as string (for debugging)
+    """
+    s='CACHE INFO:<br/><table><tr><td>format</td><td>size</td><td>time</td><td>is changed</td></tr>'
+    #self.log('getCacheInfo',self.cached_time)
+    #self.log('getCacheInfo',self.cached_data)
+    for f in self.cached_time.keys():
+      t=self.cached_time[f]
+      data=self.cached_data.get(f)
+      if data:
+        if isinstance(data,str):
+          ln=len(data)
+        else:
+          ln=0
+          while data is not None:
+            ln+=len(data.data)
+            data=data.next
+      else:
+        ln='no data!!!'
+      s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),str(self.isFileChanged(f)))
+    s+='</table>'
+    return s
 
 class DMSFile(XMLObject,File):
   """

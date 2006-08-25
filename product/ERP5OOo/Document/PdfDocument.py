@@ -30,12 +30,12 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5OOo.Document.DMSFile import DMSFile
+from Products.ERP5OOo.Document.DMSFile import DMSFile, CachingMixin, stripHtml
 
 import tempfile, os
 
 
-class PdfDocument(DMSFile):
+class PdfDocument(DMSFile, CachingMixin):
   """
   PdfDocument - same as file, but has its own getSearchableText method
   (converts via pdftotext)
@@ -68,9 +68,12 @@ class PdfDocument(DMSFile):
     """
     Used by the catalog for basic full text indexing
     we get text content by using pdftotext
-    but we have to do it only once
+    but we have to do it only once after uplad
+    for simplicity we check only modification_date, which means we rebuild txt and html after every edit
+    but that shouldn't hurt too much
     """
-    if hasattr(self,'data') and (force==1 or self.getTextContent() is None):
+    if hasattr(self,'data') and (force==1 or self.getCacheTime('txt')<self.getModificationDate() or self.getTextContent() is None):
+      self.log('PdfDocument','regenerating txt')
       tmp=tempfile.NamedTemporaryFile()
       tmp.write(self._unpackData(self.data))
       tmp.seek(0)
@@ -79,26 +82,31 @@ class PdfDocument(DMSFile):
       self.setTextContent(r.read().replace('\n',' '))
       tmp.close()
       r.close()
+      self.cacheUpdate('txt')
     return DMSFile.getSearchableText(self,md)
 
   SearchableText=getSearchableText
 
-  def getHtmlRepresentation(self):
+  def getHtmlRepresentation(self, force=0):
     '''
     get simplified html version to display
     '''
-    # XXX use caching method
     if not hasattr(self,'data'):
       return 'no data'
-    tmp=tempfile.NamedTemporaryFile()
-    tmp.write(self._unpackData(self.data))
-    tmp.seek(0)
-    cmd='pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
-    r=os.popen(cmd)
-    h=r.read()
-    tmp.close()
-    r.close()
-    return h
+    if force==1 or self.getCacheTime('html')<self.getModificationDate():
+      self.log('PdfDocument','regenerating html')
+      tmp=tempfile.NamedTemporaryFile()
+      tmp.write(self._unpackData(self.data))
+      tmp.seek(0)
+      cmd='pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
+      r=os.popen(cmd)
+      h=r.read()
+      tmp.close()
+      r.close()
+      h=stripHtml(h)
+      self.cacheSet('html',data=h)
+      self.cacheUpdate('html')
+    return self.cacheGet('html')[1]
 
 # vim: syntax=python shiftwidth=2 
 
