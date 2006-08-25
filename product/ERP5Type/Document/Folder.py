@@ -665,9 +665,7 @@ be a problem)."""
     # Role Definition objects, but this shows that generally speaking, this is
     # not the right approach.
     if not getSecurityManager().checkPermission(
-                      Permissions.AddPortalContent, self) and\
-       not getSecurityManager().checkPermission(
-                      Permissions.ChangeLocalRoles, self):
+                      Permissions.AddPortalContent, self):
       return []
     
     def _allowedContentTypes( portal_type=None, user=None, portal_path=None ):
