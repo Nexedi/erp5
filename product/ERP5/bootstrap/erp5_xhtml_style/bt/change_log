@@ -6,6 +6,7 @@
 * Always return default erp5 xhtml_style template if not in web_mode.
 * One liner editable_mode setter.
 * Delete &nbsp; in dummy <p> tags used to clear.
+* Don't show actions tabs in web_mode.
 
 2006-08-24 Kevin
 * Add a specific div wrapper class to differenciate editable mode.
