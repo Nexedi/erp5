@@ -143,8 +143,8 @@ class TemplateTool (BaseTool):
       return built_bts
 
     security.declareProtected(Permissions.ManagePortal,
-                              'getDefaultBusinessTemplateDownladURL')
-    def getDefaultBusinessTemplateDownladURL(self):
+                              'getDefaultBusinessTemplateDownloadURL')
+    def getDefaultBusinessTemplateDownloadURL(self):
       """Returns the default download URL for business templates.
       """
       return "file://%s/" % pathname2url(

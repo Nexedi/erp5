@@ -263,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getDefaultBusinessTemplateDownladURL</string> </value>
+            <value> <string>here/getDefaultBusinessTemplateDownloadURL</string> </value>
         </item>
       </dictionary>
     </pickle>
