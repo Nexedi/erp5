@@ -78,16 +78,7 @@ if f is not None and f:\n
   # if file uploaded, then:\n
   ob.log(\'file\',f)\n
   fname=f.filename\n
-  # we check for appropriate file type (by extension, using content_type_registry)\n
-  ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-  context.log(context.getPortalType(),ctype)\n
-  if ctype is None:\n
-    raise Exception(\'This file should be created as DMS File\')\n
-  if ctype!=ob.getPortalType():\n
-    raise Exception(\'This file should be created as \'+ctype)\n
-  ob.setSourceReference(fname)\n
-  if not ob.getTitle():\n
-    ob.setTitle(fname)\n
+  ob.setPropertiesFromFilename(fname)\n
 </string> </value>
         </item>
         <item>
@@ -137,9 +128,6 @@ if f is not None and f:\n
                             <string>None</string>
                             <string>f</string>
                             <string>fname</string>
-                            <string>context</string>
-                            <string>ctype</string>
-                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
@@ -156,7 +144,7 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Pdf_File_edit</string> </value>
+            <value> <string>SetReferenceFromFilename</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

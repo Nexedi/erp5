@@ -83,11 +83,9 @@ if f is not None and f:\n
   context.log(context.getPortalType(),ctype)\n
   if ctype is not None:\n
     raise Exception(\'This file should be created as \'+ctype)\n
-  ob.setOriginalFilename(fname)\n
+  ob.setSourceReference(fname)\n
   if not ob.getTitle():\n
     ob.setTitle(fname)\n
-  if not ob.getReference():\n
-    ob.setReference(fname)\n
 </string> </value>
         </item>
         <item>

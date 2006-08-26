@@ -41,6 +41,7 @@
             <value>
               <list>
                 <string>AssignCategories</string>
+                <string>SetReferenceFromFilename</string>
               </list>
             </value>
         </item>
@@ -71,8 +72,8 @@
             <value>
               <list>
                 <string>DMS File</string>
-                <string>DMS Pdf File</string>
                 <string>Graphic</string>
+                <string>PdfDocument</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>
                 <string>Text</string>
