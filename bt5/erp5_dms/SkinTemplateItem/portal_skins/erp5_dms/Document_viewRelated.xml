@@ -68,6 +68,7 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
               </list>
             </value>
         </item>
@@ -82,6 +83,15 @@
                         <string>my_destination_title_list</string>
                         <string>my_similar_title_list</string>
                         <string>my_source_title_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>wiki_predecessors</string>
+                        <string>wiki_successors</string>
                       </list>
                     </value>
                 </item>
