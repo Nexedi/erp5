@@ -142,6 +142,14 @@ class TemplateTool (BaseTool):
           built_bts.append(bt)
       return built_bts
 
+    security.declareProtected(Permissions.ManagePortal,
+                              'getDefaultBusinessTemplateDownladURL')
+    def getDefaultBusinessTemplateDownladURL(self):
+      """Returns the default download URL for business templates.
+      """
+      return "file://%s/" % pathname2url(
+                  os.path.join(getConfiguration().instancehome, 'bt5'))
+
     def updateLocalConfiguration(self, template, **kw):
       """
         Call the update method on the configuration, create if it doesn't

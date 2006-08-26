@@ -125,6 +125,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -150,6 +158,14 @@
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -247,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:\'http://erp5.org/mybuysinestemplate\'</string> </value>
+            <value> <string>here/getDefaultBusinessTemplateDownladURL</string> </value>
         </item>
       </dictionary>
     </pickle>
