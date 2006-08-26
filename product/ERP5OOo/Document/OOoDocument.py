@@ -219,7 +219,7 @@ class OOoDocument(DMSFile, CachingMixin):
     """
     sp=self._mkProxy()
     #self.log('_convert',enc(self._unpackData(self.data))[:500])
-    kw=sp.run_convert(self.getOriginalFilename(),enc(self._unpackData(self.data)))
+    kw=sp.run_convert(self.getSourceReference(),enc(self._unpackData(self.data)))
     self.oo_data=Pdata(dec(kw['data']))
     # now we get text content 
     text_data=self.extractTextContent()
@@ -266,7 +266,7 @@ class OOoDocument(DMSFile, CachingMixin):
     self.setLanguage(meta.get('language',''))
     if meta.get('MIMEType',False):
       self.setMimeType(meta['MIMEType'])
-    self.setReference(meta.get('reference',''))
+    #self.setReference(meta.get('reference',''))
 
   #security.declareProtected(Permissions.View,'getOOfile')
   def getOOfile(self):
@@ -285,8 +285,6 @@ class OOoDocument(DMSFile, CachingMixin):
     """
     Checks whether we have an initial file
     """
-    print 'IS INSTANCE'
-    print isinstance(self,object)
     _marker=[]
     if getattr(self,'data',_marker) is not _marker: # XXX - use propertysheet accessors
       return getattr(self,'data') is not None
@@ -458,7 +456,7 @@ class OOoDocument(DMSFile, CachingMixin):
     """
     # real version:
     sp=self._mkProxy()
-    kw=sp.run_generate(self.getOriginalFilename(),enc(self._unpackData(self.oo_data)),None,format)
+    kw=sp.run_generate(self.getSourceReference(),enc(self._unpackData(self.oo_data)),None,format)
     #self.log('_makeFile',mime)
     return kw['mime'],Pdata(dec(kw['data']))
 

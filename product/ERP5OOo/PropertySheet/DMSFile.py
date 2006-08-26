@@ -31,10 +31,6 @@ class DMSFile:
   """
 
   _properties = (
-    { 'id'    : 'original_filename',
-    'description' : 'name of the uploaded file',
-    'type'    : 'string',
-    'mode'    : '' },
     )
 
   _categories = ('destination','similar','predecessor','successor','source_project','publication_section','classification',

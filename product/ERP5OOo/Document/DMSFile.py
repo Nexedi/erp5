@@ -158,7 +158,7 @@ class DMSFile(XMLObject,File):
   edit=File.edit
 
   searchable_attrs=('title','description','id','reference','version',
-      'short_title','keywords','subject','original_filename','source_project_title')
+      'short_title','keywords','subject','source_reference','source_project_title')
 
   ### Content indexing methods
   security.declareProtected(Permissions.View, 'getSearchableText')
@@ -194,6 +194,20 @@ class DMSFile(XMLObject,File):
       if content_type is not None:
         self.content_type=content_type
     return content_type
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setPropertiesFromFilename')
+  def setPropertiesFromFilename(self,fname):
+    rx_parse=re.compile(self.portal_preferences.getPreferredDmsFilenameRegexp())
+    if rx_parse is None:
+      self.setReference(fname)
+      return
+    m=rx_parse.match(fname)
+    if m is None:
+      self.setReference(fname)
+      return
+    for k,v in m.groupdict().items():
+      self.setProperty(k,v)
+
 
 
   # BG copied from File in case
