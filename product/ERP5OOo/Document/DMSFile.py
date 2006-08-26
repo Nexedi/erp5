@@ -208,7 +208,45 @@ class DMSFile(XMLObject,File):
     for k,v in m.groupdict().items():
       self.setProperty(k,v)
 
+  security.declareProtected(Permissions.View, 'getWikiSuccessorReferenceList')
+  def getWikiSuccessorReferenceList(self):
+    '''
+    find references in text_content, return matches
+    with this we can then find objects
+    '''
+    rx_search=re.compile(self.portal_preferences.getPreferredDmsReferenceRegexp())
+    try:
+      res=rx_search.finditer(self.getTextContent())
+    except AttributeError:
+      return []
+    res=[(r.group(),r.groupdict()) for r in res]
+    return res
 
+  security.declareProtected(Permissions.View, 'getWikiSuccessorValueList')
+  def getWikiSuccessorValueList(self):
+    '''
+    getWikiSuccessorValueList - the way to find objects is on 
+    implementation level
+    '''
+    lst=[]
+    for ref in self.getWikiSuccessorReferenceList():
+      res=self.DMS_findDocument(ref)
+      if len(res)>0:
+        lst.append(res[0].getObject())
+    return lst
+
+  security.declareProtected(Permissions.View, 'getWikiPredecessorValueList')
+  def getWikiPredecessorValueList(self):
+    '''
+    it is mostly implementation level - depends on what parameters we use to identify
+    document, and on how a doc must reference me to be my predecessor (reference only,
+    or with a language, etc
+    '''
+    lst=self.DMS_findPredecessors()
+    lst=[r.getObject() for r in lst]
+    di=dict.fromkeys(lst) # make it unique
+    ref=self.getReference()
+    return [o for o in di.keys() if o.getReference()!=ref] # every object has its own reference in SearchableText
 
   # BG copied from File in case
   index_html = CMFFile.index_html
