@@ -3,8 +3,8 @@ import re
 
 # parsing defined here
 r=re.compile('(\w+:"[^"]+"|\w+:[\w\-.]+)')
-filetyper=lambda s:('original_filename','%%.%s' % s)
-filestripper=lambda s: ('original_filename',s.replace('"',''))
+filetyper=lambda s:('source_reference','%%.%s' % s)
+filestripper=lambda s: ('source_reference',s.replace('"',''))
 paramsmap=dict(file=filestripper,type='portal_type',reference='reference',filetype=filetyper)
 
 def analyze(params):

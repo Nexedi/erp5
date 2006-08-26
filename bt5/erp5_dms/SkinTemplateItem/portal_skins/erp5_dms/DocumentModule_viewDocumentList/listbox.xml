@@ -354,8 +354,8 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>original_filename</string>
-                          <string>original_filename</string>
+                          <string>source_reference</string>
+                          <string>source_reference</string>
                         </tuple>
                       </list>
                     </value>

@@ -80,7 +80,6 @@
                         <string>my_description</string>
                         <string>my_keywords</string>
                         <string>my_subject</string>
-                        <string>my_original_filename</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +108,7 @@
                         <string>my_int_index</string>
                         <string>my_validation_state</string>
                         <string>my_file</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>

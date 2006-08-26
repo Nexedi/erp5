@@ -100,7 +100,7 @@ if f is not None and f:\n
     raise Exception(\'File type of \'+fname+\' is not registered\')\n
   if ctype!=ob.getPortalType():\n
     raise Exception(\'This file should be created as \'+ctype)\n
-  ob.setOriginalFilename(fname)\n
+  ob.setSourceReference(fname)\n
   ob.setTitle(fname)\n
   ob.setLastUploadTime(DateTime())\n
   ob.clearCache()\n
