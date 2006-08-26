@@ -482,7 +482,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Wiki successors</string> </value>
+                    <value> <string>Wiki predecessors</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
