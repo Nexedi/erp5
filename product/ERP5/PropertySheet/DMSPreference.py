@@ -46,6 +46,21 @@ class DMSPreference:
     'type'    : 'lines',
     'preference':1,
     'mode'    : '' },
+    { 'id'    : 'preferred_dms_reference_regexp',
+    'description' : 'a regular expression to find and verify doc references',
+    'type'    : 'string',
+    'preference':1,
+    'mode'    : '' },
+    { 'id'    : 'preferred_dms_filename_regexp',
+    'description' : 'a regular expression to parse file names',
+    'type'    : 'string',
+    'preference':1,
+    'mode'    : '' },
+    { 'id'    : 'preferred_dms_reference_function',
+    'description' : 'function for parsing, finding and verifying doc reference',
+    'type'    : 'string',
+    'preference':1,
+    'mode'    : '' },
     )
 
  
