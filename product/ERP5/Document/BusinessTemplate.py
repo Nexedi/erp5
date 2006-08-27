@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from ZODB import POSException
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl.Permission import Permission
@@ -69,7 +68,7 @@ customImporters={
     XMLExportImport.magic: XMLExportImport.importXML,
     }
 
-from zLOG import LOG, WARNING, ERROR, INFO, PANIC
+from zLOG import LOG, WARNING, ERROR
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
