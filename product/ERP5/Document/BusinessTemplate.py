@@ -477,13 +477,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     while connection is None:
       obj=obj.aq_parent
       connection=obj._p_jar
-    try:
-      obj = connection.importFile(file, customImporters=customImporters)
-    except POSException.ExportError, e:
-      LOG('BusinessTemplate', PANIC, 'Failed importing %s' % file_name, error=e)
-      if e.args == ('Invalid export header',):
-        e.args = ('%s (filename: %s)' % (e.args[0], file_name), )
-      raise e
+    __traceback_info__ = 'Importing %s' % file_name
+    obj = connection.importFile(file, customImporters=customImporters)
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
