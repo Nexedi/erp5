@@ -31,6 +31,7 @@ from Acquisition import aq_base, aq_self
 import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
+from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.CopySupport import CopyContainer
@@ -290,7 +291,10 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
+  
+  manage_options = ( CMFBTreeFolder.manage_options +
+                     CMFCatalogAware.manage_options
+                   )
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
