@@ -104,7 +104,9 @@ if len(assignment_site_list) != 1:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/assignment_workflow/scripts/Assignment_checkActiveAssignmentConsistency</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

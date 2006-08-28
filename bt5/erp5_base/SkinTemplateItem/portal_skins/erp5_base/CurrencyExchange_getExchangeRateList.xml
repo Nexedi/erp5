@@ -90,7 +90,9 @@ return [getattr(mapped_value, \'base_price\', None), getattr(mapped_value, \'dis
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_base/CurrencyExchange_getExchangeRateList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

@@ -127,7 +127,9 @@ user_folder.setGroupsOfUser(security_group_list, user_name)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_base/Person_updateUserSecurityGroup</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

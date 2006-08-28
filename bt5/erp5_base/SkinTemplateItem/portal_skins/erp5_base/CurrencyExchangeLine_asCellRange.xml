@@ -83,7 +83,9 @@ return (currency_exchange_type_list, resource_list, price_currency_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_base/CurrencyExchangeLine_asCellRange</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -126,7 +128,7 @@ return (currency_exchange_type_list, resource_list, price_currency_list)\n
                             <string>_getiter_</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>x</string>
                             <string>currency_exchange_type_list</string>
                             <string>resource_list</string>

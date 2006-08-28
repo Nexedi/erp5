@@ -91,7 +91,9 @@ if person_security_script is not None:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/assignment_workflow/scripts/Assignment_updateUserSecurityGroup</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
