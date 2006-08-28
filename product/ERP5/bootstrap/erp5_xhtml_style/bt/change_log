@@ -1,8 +1,9 @@
-2006-08-28 JP
-* Trash widget_render. field_render should be used instead.
-
 2006-08-28 Kevin
 * Test form accessibility earlier in developper_shortcut_render to let login_form be rendered in erp5_web when anonymous.
+* Try to get form from 'form' variable before 'current_form_id'.
+
+2006-08-28 JP
+* Trash widget_render. field_render should be used instead.
 
 2006-08-25 Kevin
 * Move hidden input and globals definition code to separate file.
