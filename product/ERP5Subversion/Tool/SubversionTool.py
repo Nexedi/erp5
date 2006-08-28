@@ -618,7 +618,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def fileHTML(self, business_template, file_path):
     """ Display a file content in HTML with syntax highlighting
     """
-    file_path = self.relativeToAbsolute(file_path, business_template)
+    file_path = self._getWorkingPath(self.relativeToAbsolute(file_path, business_template))
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
         text = "<span style='font-weight: bold; color: black;'>"+file_path+"</span><hr/>"
