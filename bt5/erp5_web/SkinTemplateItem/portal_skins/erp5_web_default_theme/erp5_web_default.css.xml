@@ -41,6 +41,13 @@
 /*____________________________________\n
 \n
   Default ERP5 Web module CSS.\n
+\n
+Guidelines (how-to create a good css):\n
+   * All measurements should be expressed with scalable units like em, ex, %.\n
+   * pt, px must be avoid expect for box borders.\n
+   * Test your design and layout against font size increasing/decreasing.\n
+   * Test your html code semantics value by disabling all your css.\n
+   * Don\'t put styling directives in xhtml code.\n
 ____________________________________*/\n
 \n
 \n
@@ -50,7 +57,7 @@ ____________________________________*/\n
 }\n
 \n
 html {\n
-  margin: 1em 10em;\n
+  margin: 0;\n
 }\n
 \n
 .clear {clear: both}\n
@@ -84,17 +91,100 @@ blockquote {\n
 \n
 \n
 /* layout\n
+Layout technic based on http://en.wikipedia.org/skins-1.5/monobook/main.css?9\n
 ----------------------------------------------- */\n
 \n
-fieldset {\n
-  float: left;\n
+/* The first global form can be used as a global wrapper */\n
+body > form#main_form {\n
+  /*background: #fcd;*/\n
+\n
+  padding: 0 1em;\n
+  margin-left: 16.2em;\n
+  position: relative;\n
+  z-index: 2;\n
 }\n
 \n
-/* temp colors for debugging */\n
-fieldset.center {background: #0eeeee}\n
-fieldset.right  {background: #ee0eee}\n
-fieldset.left   {background: #eeee0e}\n
-fieldset.bottom {background: #eeeee0}\n
+\n
+/* The two sub content are web widgets and main page rendering */\n
+form#main_form > div {\n
+  border: 1px solid #666;\n
+}\n
+\n
+\n
+form#main_form > div.main_content {\n
+  /*background: #368;*/\n
+\n
+  margin-top: 4em;\n
+  width: 100%;\n
+  float: right;\n
+}\n
+\n
+\n
+/* erp5_web_default_layout form groups */\n
+form#main_form > div {\n
+  /*background: #098;*/\n
+\n
+  border: 1px solid #aaa;\n
+  margin: 0 0 .5em -16.2em;\n
+  width: 15.1em\n
+}\n
+\n
+\n
+/********************************/\n
+/* Special layout for search_bar web widget group: move it top right */\n
+form#main_form > div#search_bar {\n
+  background: #ff9;\n
+\n
+  position: absolute;\n
+  z-index: 200;\n
+  top: .3em;\n
+  right: 1em; /* Same as "body > form#main_form[padding-right]".\n
+                 TODO: use dtml code to make this more flexible.\n
+               */\n
+  width: 20em; /* XXX Must be adapted dynamiccaly to let several web widget be diplayed inline.\n
+                  TODO: find the appropriate CSS trick to do hit without pain.\n
+                */\n
+}\n
+\n
+div#search_bar > div.field {\n
+ float: right;\n
+}\n
+\n
+div#search_bar > div.field > label {\n
+ float: left;\n
+}\n
+\n
+div#search_bar > div.field > div.input {\n
+ float: left;\n
+}\n
+\n
+\n
+/********************************/\n
+/* Special layout for websiteLogo web widget group */\n
+form#main_form > div#websiteLogo {\n
+ border:0;\n
+ padding: 1em 0 0;\n
+}\n
+\n
+form#main_form > div#websiteLogo label {\n
+ display: none;\n
+}\n
+\n
+form#main_form > div#websiteLogo .field {\n
+ border: 0;\n
+ text-align: center;\n
+}\n
+\n
+\n
+\n
+/********************************/\n
+/* erp5_web_default_layout form web widgets */\n
+form#main_form > div > div.field {\n
+  border: 1px solid #ccc;\n
+  margin: .3em;\n
+  padding: .3em;\n
+}\n
+\n
 \n
 \n
 /* typography & colors (fonts, color, background)\n
@@ -103,7 +193,7 @@ fieldset.bottom {background: #eeeee0}\n
 body, input, textarea, select, table {\n
   color: #333;\n
   font-family: Sans, Verdana, Tahoma, Georgia, Geneva, Arial, sans-serif;\n
-  font-size: 8pt;\n
+  font-size: 8pt; /* XXX font-size should not be expressed in pt unit */\n
   line-height: 1.75em;\n
 }\n
 \n
@@ -117,8 +207,9 @@ body, input, textarea, select, table {\n
 }\n
 \n
 h1 {\n
-  margin: 1em 0;\n
+  margin: 1.3em 0;\n
 }\n
+\n
 \n
 \n
 /* forms styling\n
@@ -151,13 +242,13 @@ input, textarea {\n
 }\n
 \n
 input.text, input[type="password"], input[type="text"], textarea {\n
-  background-image: url(field.png);\n
+  background-image: url(field.png); /* TODO missing image in erp5_web_default_theme */\n
   background-position: top;\n
   padding: 1px;\n
 }\n
 \n
 input.button, input[type="submit"] {\n
-  background-image: url(button.png);\n
+  background-image: url(button.png); /* TODO missing image in erp5_web_default_theme */\n
   background-position: bottom;\n
 }\n
 \n
@@ -180,8 +271,7 @@ button:hover {\n
   color: #333;\n
   background: #b0cfcb;\n
   border-color: #9abdb7;\n
-}\n
-
+}
 
 ]]></string> </value>
         </item>
