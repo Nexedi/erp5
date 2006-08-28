@@ -73,10 +73,6 @@
            dummy                python: http_parameter_list.update(local_parameter_list);\n
     global http_parameters      python: here.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list);\n
   "/>\n
-\n
-<!--p tal:content="python: repr( local_parameter_list.get(\'form_id\', \'view\') )"/>\n
-<p tal:content="python: repr( local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\')) )"/-->\n
-\n
 </tal:block>\n
 \n
 <!-- ============================================================== -->\n
