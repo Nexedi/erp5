@@ -67,7 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
@@ -79,16 +79,6 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>Default</string> </key>
-                    <value>
-                      <list>
-                        <string>my_min_delay</string>
-                        <string>my_max_delay</string>
-                        <string>my_min_flow</string>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
@@ -105,6 +95,16 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_min_delay</string>
+                        <string>my_max_delay</string>
+                        <string>my_min_flow</string>
+                      </list>
                     </value>
                 </item>
                 <item>
