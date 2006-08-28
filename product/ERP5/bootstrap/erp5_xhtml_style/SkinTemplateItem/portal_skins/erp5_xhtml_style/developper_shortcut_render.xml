@@ -84,15 +84,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                      title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
                                                        alt info;"/></a>\n
 </tal:block>\n
-<tal:block metal:define-macro="form">\n
+<tal:block metal:define-macro="form"\n
+           tal:define="form python: getattr(here, current_form_id, None)"\n
+           tal:condition="python: context.Base_getSourceVisibility(form)">\n
   <tal:block tal:define="image python: \'editform.png\';\n
                          info python: \'Edit this form\';\n
                          object python: form;\n
                          manage python: \'manage\'">\n
     <tal:block metal:use-macro="template/macros/edit_link"/>\n
   </tal:block>\n
-  <tal:block tal:define="image python: \'editformrenderer.png\';\n
-                         info python: \'Edit this form\\\'s renderer\';\n
+  <tal:block tal:define="image  python: \'editformrenderer.png\';\n
+                         info   python: \'Edit this form\\\'s renderer\';\n
                          object python: getattr(here, form.pt, None);\n
                          manage python: \'manage_main\'">\n
     <tal:block metal:use-macro="template/macros/edit_link"/>\n
