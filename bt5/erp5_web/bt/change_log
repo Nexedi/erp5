@@ -2,6 +2,8 @@
 * Render extra widgets in the default template.
 * Add dummy widgets in the default layout.
 * Firefox don't like CSS rendered via a Page Template.
+* Enhance default theme's CSS.
+* Delete div wrapper for web widget rendering in erp5_web_default_template.
 
 2006-08-25 Stefan
 * Membership and Multimembership can be used simultaneously. The corresponding
