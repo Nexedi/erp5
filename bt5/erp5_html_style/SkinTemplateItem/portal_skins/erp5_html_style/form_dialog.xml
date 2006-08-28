@@ -105,7 +105,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                     , \'object_search\'  : \'Select Search\'\n
                                     , \'object_report\'  : \'Select Report\'\n
                                     }.get(dialog_category, \'Select\')">Search Type</td>\n
-            <td valign="middle" align="right" nowrap\n
+            <td valign="middle" align="right" nowrap="nowrap"\n
                 tal:define="actions python:filtered_actions[dialog_category]">\n
               <input type="hidden" name="dialog_category" value="dialog_category"\n
                  tal:attributes="value dialog_category" />\n
@@ -120,10 +120,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                    tal:condition="python: action[\'url\'].find(form.id) >= 0"\n
                    i18n:translate="" i18n:domain="ui"\n
                    tal:attributes="value action/url"\n
-                   selected>Saut</option>\n
+                   selected="selected">Saut</option>\n
                 </span>\n
               </select></td>\n
-            <td valign="bottom" align="left" nowrap> &nbsp;\n
+            <td valign="bottom" align="left" nowrap="nowrap"> &nbsp;\n
               <input type="image" src="/images/erp5_html_style/images/exec16.png" title="Action"\n
                 alt="Action" name="Base_doDialog:method"\n
                 i18n:attributes="title" i18n:domain="ui"\n
