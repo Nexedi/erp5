@@ -884,7 +884,7 @@ class FloatWidget(TextWidget):
           percent = 0
           if input_style.find('%')>=0:
             percent=1
-            value = value * 100
+            value = float(value) * 100
           try :
             value = str(float(value))
           except ValueError:
