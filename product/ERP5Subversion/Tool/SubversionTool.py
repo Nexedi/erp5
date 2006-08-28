@@ -1070,8 +1070,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # Get subversion path without business template name at the end
     bt_path = self._getWorkingPath(self.getSubversionPath(business_template, \
     False))
-    if bt_path[-1] != '/':
-      bt_path += '/'
+    if bt_path[-1] != os.sep:
+      bt_path += os.sep
     # Business template root directory is the root of the tree
     root = Dir(business_template.getTitle(), "normal")
     something_modified = False
