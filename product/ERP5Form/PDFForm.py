@@ -368,7 +368,7 @@ class PDFForm(File):
     """Return true if there is an enclosed PDF in this PDF Form."""
     return self.data is not None and len(self.data) > 0
 
-  security.declareProtected(Permissions.ManagePortal, 'downloadPDFContent')
+  security.declareProtected(Permissions.ManagePortal, 'downloadPdfContent')
   def downloadPdfContent(self, REQUEST=None) :
     """Download the pdf content from one of `download_url` URL """
     for url in self.getProperty('download_url') :
