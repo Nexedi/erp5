@@ -577,7 +577,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     return None, None
       
   def getHeader(self, business_template, file_path):
-    file_path = self.relativeToAbsolute(file_path, business_template)
+    file_path = self._getWorkingPath(self.relativeToAbsolute(file_path, business_template))
     header = '<a style="font-weight: bold" href="BusinessTemplate_viewSvnShowFile?file=' + \
     file_path + '">' + file_path + '</a>'
     edit_path = self.editPath(business_template, file_path)
@@ -1057,7 +1057,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """Remove all files and folders in list
     """
     for file_path in path_list:
-      removeAll(file_path)
+      removeAll(self._getWorkingPath(file_path))
     
   def getModifiedTree(self, business_template, show_unmodified=False) :
     """ Return tree of files returned by svn status
