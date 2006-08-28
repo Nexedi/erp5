@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
+          <string>OFS.DTMLDocument</string>
+          <string>DTMLDocument</string>
         </tuple>
         <none/>
       </tuple>
@@ -19,40 +19,30 @@
             </value>
         </item>
         <item>
-            <key> <string>_bind_names</string> </key>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_web_default.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>name_subpath</string> </key>
-                                <value> <string>traverse_subpath</string> </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
+              <dictionary/>
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*\n
+/*____________________________________\n
 \n
   Default ERP5 Web module CSS.\n
+____________________________________*/\n
 \n
-*/\n
 \n
 * {\n
   padding: 0;\n
@@ -71,6 +61,10 @@ img {\n
 \n
 a img, h3 img, button img {\n
   vertical-align: middle;\n
+}\n
+\n
+ul {\n
+  list-style-position: inside;\n
 }\n
 \n
 .doNotDisplay {\n
@@ -192,8 +186,8 @@ button:hover {\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>erp5_web_default.css</string> </value>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
