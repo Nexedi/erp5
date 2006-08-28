@@ -68,7 +68,7 @@
   <head tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
     <meta name="generator" content="ERP5"/>\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n
-    <title tal:content="template/title_or_id" i18n:translate="" i18n:domain="ui"/>\n
+    <title tal:content="python: \'%s | %s\' % (here.getTitleOrId(), here.getPortalObject().getTitle() or here.getPortalObject().getId())"/>\n
 \n
     <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_default.css"/>\n
     <tal:block tal:repeat="css css_list">\n
@@ -87,14 +87,32 @@
           tal:attributes="enctype form/enctype | nothing;\n
                           action url;\n
                           method form/method | string:post">\n
+\n
       <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
 \n
-      <div id="#header">Website header</div>\n
-\n
-      <h1 tal:content="here/getTitle"/>\n
-      <tal:block metal:define-slot="main"/>\n
-\n
-      <div id="#footer">Website footer</div>\n
+      <div class="main_content">\n
+        <tal:block metal:define-slot="main"/>\n
+      </div>\n
+  \n
+      <div id="main_widget" tal:condition="python: layout_form is not None">\n
+        <!-- Go to each group of the form and call the field -->\n
+        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                               dummy        python: request.set(\'editable_mode\', 1);\n
+                               groups       python: layout_form.get_groups(include_empty=0)">\n
+          <tal:block tal:define="template python: here.developper_shortcut_render">\n
+            <tal:block metal:use-macro="template/macros/form"/>\n
+          </tal:block>\n
+          <tal:block>\n
+            <tal:block tal:repeat="group groups">\n
+              <div tal:attributes="class group" tal:condition="python:group.find(\'hidden\') < 0">\n
+                <tal:block tal:repeat="field python:layout_form.get_fields_in_group(group)">\n
+                  <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+                </tal:block>\n
+              </div>\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
+      </div>\n
 \n
     </form>\n
   </body>\n
