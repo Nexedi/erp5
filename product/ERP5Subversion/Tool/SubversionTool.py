@@ -139,6 +139,8 @@ class SubversionConflictError(Exception):
   """
   pass
 
+class SubversionSecurityError(Exception): pass
+
 class SubversionBusinessTemplateNotInstalled(Exception):
   """ Exception called when the business template is not installed
   """
@@ -1053,9 +1055,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     return conflicted_list
 
   security.declareProtected('Import/Export objects', 'removeAllInList')
-  def removeAllInList(self, path_list):
+  def removeAllInList(self, path_list, REQUEST=None):
     """Remove all files and folders in list
     """
+    if REQUEST is not None:
+      # Security hole fix
+      raise SubversionSecurityError, 'You are not allowed to delete these files'
     for file_path in path_list:
       removeAll(self._getWorkingPath(file_path))
     
