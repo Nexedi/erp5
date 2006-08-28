@@ -94,6 +94,7 @@ class CachingMixin:
       self.cached_mime[format]=mime
     if data is not None:
       self.cached_data[format]=data
+    self._p_changed=1
 
   def cacheGet(self,format):
     '''
@@ -123,7 +124,7 @@ class CachingMixin:
             data=data.next
       else:
         ln='no data!!!'
-      s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),str(self.isFileChanged(f)))
+      s+='<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (f,str(ln),str(t),'-')
     s+='</table>'
     return s
 

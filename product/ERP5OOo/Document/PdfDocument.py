@@ -87,6 +87,7 @@ class PdfDocument(DMSFile, CachingMixin):
 
   SearchableText=getSearchableText
 
+  security.declareProtected(Permissions.View, 'getHtmlRepresentation')
   def getHtmlRepresentation(self, force=0):
     '''
     get simplified html version to display
