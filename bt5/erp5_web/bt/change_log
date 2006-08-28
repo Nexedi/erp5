@@ -1,3 +1,7 @@
+2006-08-28 Kevin
+* Render extra widgets in the default template.
+* Add dummy widgets in the default layout.
+
 2006-08-25 Stefan
 * Membership and Multimembership can be used simultaneously. The corresponding
 base categories may not overlap. The results of both memberships are unified.
@@ -5,6 +9,7 @@ base categories may not overlap. The results of both memberships are unified.
 2006-08-25 Kevin
 * Move all scripts and forms in uncertain state to erp5_web_old skin folder.
 * Move all specific scripts and forms from erp5_web skin folder to brand new web widget libray folder.
+* Update default web theme to use latests xhtml_style generic macros.
 
 2006-08-24 Stefan
 * Update fields name to match naming convention.
