@@ -97,9 +97,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
     <div metal:define-macro="menu_box" tal:define="absolute_url here/absolute_url">\n
       <table border="0" cellpadding="0" cellspacing="0" width="100%">\n
         <tr>\n
-          <td valign="middle" align="left" nowrap>&nbsp;\n
+          <td valign="middle" align="left" nowrap="nowrap">&nbsp;\n
              <select name="jump_select" size="1" tal:attributes="onChange string:submitAction(this.form,\'${absolute_url}/Base_doJump\')">\n
-              <option selected="selected" value="1" disabled i18n:translate="" i18n:domain="ui">Jump...</option>\n
+              <option selected="selected" value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">Jump...</option>\n
               <tal:block tal:repeat="action jump_actions">\n
                <option tal:content="action/name"\n
                        i18n:translate="" i18n:domain="ui"\n
@@ -117,7 +117,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
                 </tal:block>\n
               </tal:block>\n
              </select></td>\n
-          <td valign="bottom" align="center" nowrap>\n
+          <td valign="bottom" align="center" nowrap="nowrap">\n
             <input type="image" src="/images/erp5_html_style/images/jump.png" title="Jump"\n
               alt="Jump" name="Base_doJump:method"\n
               i18n:attributes="title" i18n:domain="ui"\n
@@ -125,9 +125,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
             <img src="/images/erp5_html_style/images/sepacla.png" alt="|"\n
                  tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;&nbsp;\n
           </td>\n
-          <td valign="middle" align="right" nowrap>\n
+          <td valign="middle" align="right" nowrap="nowrap">\n
             <select name="action_select" size="1" tal:attributes="onChange string:submitAction(this.form,\'${absolute_url}/Base_doAction\')">\n
-              <option selected value="" i18n:translate="" i18n:domain="ui">Action...</option>\n
+              <option selected="selected" value="" i18n:translate="" i18n:domain="ui">Action...</option>\n
               <tal:block tal:repeat="content here/allowedContentTypes | nothing">\n
                <tal:block tal:condition="python: not content.id in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">\n
                  <option value="" tal:attributes="value python: \'add \' + content.id"\n
@@ -135,20 +135,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
                 </tal:block>\n
               </tal:block>\n
               <tal:block tal:condition="document_template_list">\n
-                <option disabled>-- <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --</option>\n
+                <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --</option>\n
                 <tal:block tal:repeat="document_template document_template_list">\n
                 <option value="1"\n
                   tal:attributes="value python:\'template \' + document_template.getRelativeUrl()">\n
                   <tal:block i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="document_template/getTitle" i18n:name="document_template">Document Template</tal:block></tal:block></option>\n
                 </tal:block>\n
               </tal:block>\n
-              <option disabled>-- <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --</option>\n
+              <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --</option>\n
               <tal:block tal:repeat="action workflow_actions">\n
                <option value="1" tal:content="action/name"\n
                  i18n:translate="" i18n:domain="ui"\n
                  tal:attributes="value python: \'workflow \' + action[\'url\']">Saut</option>\n
               </tal:block>\n
-              <option disabled>-- <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --</option>\n
+              <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --</option>\n
               <tal:block tal:repeat="action object_actions">\n
                <option value="1" tal:content="action/name"\n
                  i18n:translate="" i18n:domain="ui"\n
@@ -156,28 +156,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
               </tal:block>\n
               <tal:block tal:replace=\'nothing\'>\n
                 <!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) -->\n
-                <option disabled>-- <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --</option>\n
+                <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --</option>\n
                 <tal:block tal:repeat="action folder_actions">\n
                  <option value="1" tal:content="action/name"\n
                    tal:attributes="value python: \'folder \' + action[\'url\']">Saut</option>\n
                 </tal:block>\n
               </tal:block>\n
             </select></td>\n
-          <td valign="bottom" align="left" nowrap> &nbsp;\n
+          <td valign="bottom" align="left" nowrap="nowrap"> &nbsp;\n
             <input type="image" src="/images/erp5_html_style/images/exec16.png" title="Action"\n
               alt="Action" name="Base_doAction:method"\n
               i18n:attributes="title" i18n:domain="ui"\n
               tal:attributes="src string:$portal_url/images/exec16.png"/> &nbsp;\n
           </td>\n
           <td width="100%"><tal:block metal:define-slot="buttons"/></td>\n
-          <!-- URL target is invalid for now. -->\n
-          <!--td align="right" valign="center"\n
-           tal:define="form_id form/id|nothing">\n
-            <a title="Help" tal:attributes="href python: here.Base_getHelpUrl(form_id=form_id)"><img src="images/userhelp.png" alt="Help"></a>\n
-          </td-->\n
           <td align="right" valign="center"\n
            tal:condition="here/portal_preferences/getPreferredHtmlStyleDevelopperMode">\n
-            <a title="Inspect object" tal:attributes="href python: \'%s/Base_viewInspectionReport\' % (here.absolute_url(),)"><img src="images/inspect.png" alt="Inspect object"></a>\n
+            <a title="Inspect object" tal:attributes="href python: \'%s/Base_viewInspectionReport\' % (here.absolute_url(),)"><img src="images/inspect.png" alt="Inspect object"/></a>\n
           </td>\n
           <td aligh="right" valign="center"\n
            tal:condition="here/hasActivity | nothing">\n

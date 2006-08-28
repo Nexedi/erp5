@@ -121,7 +121,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
            <img src="/images/erp5_html_style/images/Left.png" border="0" alt="left"\n
            tal:attributes="src string:$portal_url/images/Left.png"/>\n
           </td>\n
-          <td nowrap class="BorderTop" valign="bottom">\n
+          <td nowrap="nowrap" class="BorderTop" valign="bottom">\n
            <img src="/images/erp5_html_style/images/spacer.png" width="5" height="5" border="0"\n
                 alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>\n
           </td>\n
@@ -158,7 +158,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
              alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>\n
            </td>\n
           </tal:block>\n
-          <td nowrap align="center" valign="bottom"\n
+          <td nowrap="nowrap" align="center" valign="bottom"\n
              tal:attributes="class python: is_action_selected and \'On\' or \'Off\'"\n
              tal:define="url action/url">\n
            <a tal:content="action/name"\n

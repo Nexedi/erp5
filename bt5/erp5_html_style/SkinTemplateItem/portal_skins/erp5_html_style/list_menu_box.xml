@@ -95,9 +95,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
                          list_method_id request/list_method_id | nothing;\n
                          selection_name form/listbox/selection_name | string:">\n
           <input type="hidden" name="selection_name" value="selection_name"\n
-              tal:attributes="value selection_name">\n
+              tal:attributes="value selection_name"/>\n
           <input type="hidden" name="list_method_id" value="list_method_id"\n
-              tal:attributes="value list_method_id" tal:condition="list_method_id">\n
+              tal:attributes="value list_method_id" tal:condition="list_method_id"/>\n
           <img src="/images/erp5_html_style/images/sepacla.png" alt="|"\n
                tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;\n
           <input type="image" src="/images/erp5_html_style/images/editcut.png" title="Cut"\n

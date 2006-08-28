@@ -92,7 +92,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <table>\n
               <tr tal:condition="request/dialog_category | nothing">\n
                 <td i18n:translate="" i18n:domain="ui">Search Type:</td>\n
-                <td valign="middle" align="right" nowrap\n
+                <td valign="middle" align="right" nowrap="nowrap"\n
                     tal:define="dialog_category request/dialog_category;\n
                                 actions python:filtered_actions[dialog_category]">\n
                   <input type="hidden" name="dialog_category" value="dialog_category"\n
@@ -108,11 +108,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                       tal:condition="python: action[\'url\'].find(form.id) >= 0"\n
                       i18n:translate="" i18n:domain="ui"\n
                       tal:attributes="value action/url"\n
-                      selected></option>\n
+                      selected="selected"></option>\n
                     </span>\n
                   </select>\n
                 </td>\n
-                <td valign="bottom" align="left" nowrap> &nbsp;\n
+                <td valign="bottom" align="left" nowrap="nowrap"> &nbsp;\n
                   <input type="image" src="/images/erp5_html_style/images/exec16.png" title="Action"\n
                   i18n:attributes="title" i18n:domain="ui"\n
                   alt="Action" name="Base_doDialog:method" /> &nbsp;\n

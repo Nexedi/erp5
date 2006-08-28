@@ -87,7 +87,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     <div metal:define-macro="small_breadcrumb">\n
     <table width="100%">\n
       <tr>\n
-        <td nowrap align="left">\n
+        <td nowrap="nowrap" align="left">\n
           <tal:block tal:repeat="item here/breadcrumbs">\n
             <tal:block tal:replace="nothing">\n
               Breadcrumbs are like Site / Module / Document / Subdocument.\n
@@ -120,7 +120,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     <div metal:define-macro="full_breadcrumb">\n
       <table width="100%">\n
         <tr>\n
-          <td nowrap align="left">\n
+          <td nowrap="nowrap" align="left">\n
             <tal:block tal:repeat="item here/breadcrumbs">\n
               <tal:block tal:condition="python: repeat[\'item\'].index < 2">\n
                 <a href="url goes here"\n

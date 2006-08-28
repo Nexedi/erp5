@@ -94,11 +94,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 selection_url python:here.portal_selections.getSelectionListUrlFor(selection_name,REQUEST=request)\n
                 ">\n
    <input type="hidden" name="selection_name" value="selection_name"\n
-    tal:attributes="value selection_name">\n
+    tal:attributes="value selection_name"/>\n
    <input type="hidden" name="selection_index" value="selection_index"\n
-    tal:attributes="value selection_index">\n
+    tal:attributes="value selection_index"/>\n
    <input type="hidden" name="selection_url" value="selection_url"\n
-    tal:attributes="value selection_url">\n
+    tal:attributes="value selection_url"/>\n
    <div metal:use-macro="here/menu_box/macros/menu_box">\n
     <div metal:fill-slot="buttons">\n
      <img src="/images/erp5_html_style/images/sepacla.png" alt="|"\n

@@ -108,7 +108,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                  i18n:translate="" i18n:domain="ui"\n
                  tal:attributes="value python:option[0]"\n
                  value="None"\n
-                 selected></option>\n
+                 selected="selected"></option>\n
               <option tal:condition="python:option[0]!=item[0]"\n
                  tal:content="python:option[1]"\n
                  i18n:translate="" i18n:domain="ui"\n
@@ -130,7 +130,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </td>\n
           <td id="sort_on_0" tal:attributes=\'id python:"sort_on_%d" % row_index\'>\n
             <select name="field_sort_on">\n
-              <option selected value="None">None</option>\n
+              <option selected="selected" value="None">None</option>\n
               <option tal:repeat="option all_columns"\n
                  tal:content="python:option[1]"\n
                  i18n:translate="" i18n:domain="ui"\n

@@ -94,20 +94,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <body>\n
     <table width="100%" metal:define-macro="navigation_box">\n
       <tr>\n
-        <td valign="middle" align="center" nowrap>\n
+        <td valign="middle" align="center" nowrap="nowrap">\n
           <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n
           <!-- We should probably call the default method instead -->\n
           <input class="input_image" type="image" src="/images/erp5_html_style/images/spacer.png" width="3" height="3" border="0"\n
                  alt="dummy" name="Base_doSelect:method"\n
                  tal:define="form_action form_action | form/action | form/id | template/action | template/id | script/id"\n
                  tal:attributes="name python:form_action + \':method\';\n
-                                 src string:$portal_url/images/spacer.png">\n
+                                 src string:$portal_url/images/spacer.png"/>\n
           <select name="favorite_select" size="1"\n
               tal:attributes="onChange string:submitAction(this.form,\'${here/absolute_url}/Base_doFavorite\')">\n
-            <option selected value="" i18n:translate="" i18n:domain="ui" disabled>My favourites</option>\n
+            <option selected="selected" value="" i18n:translate="" i18n:domain="ui" disabled="disabled">My favourites</option>\n
             <tal:block tal:condition="ordered_global_actions">\n
               <tal:block tal:repeat="action ordered_global_actions">\n
-                <option disabled tal:condition="action/disabled">\n
+                <option disabled="disabled" tal:condition="action/disabled">\n
                   -- <tal:block i18n:translate="" i18n:domain="ui" tal:content="action/title" /> --\n
                 </option>\n
                 <tal:block tal:condition="not:action/disabled"\n
@@ -137,7 +137,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               </tal:block>\n
             </tal:block>\n
             <tal:block tal:condition="user_actions">\n
-              <option disabled> -- <tal:block i18n:translate="" i18n:domain="ui">User</tal:block> -- </option>\n
+              <option disabled="disabled"> -- <tal:block i18n:translate="" i18n:domain="ui">User</tal:block> -- </option>\n
               <tal:block tal:repeat="action user_actions">\n
                  <option value="1"\n
                    i18n:translate="" i18n:domain="ui"\n
@@ -147,18 +147,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             </tal:block>\n
           </select>\n
         </td>\n
-        <td valign="middle" align="left" nowrap>\n
+        <td valign="middle" align="left" nowrap="nowrap">\n
           <input class="input_image" type="image" src="/images/erp5_html_style/images/favourite.png" title="Select Favorite"\n
               i18n:attributes="title" i18n:domain="ui"\n
               alt="Select Favorite" name="Base_doFavorite:method"\n
               tal:attributes="src string:$portal_url/images/favourite.png"/>&nbsp;\n
           <img src="/images/erp5_html_style/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;\n
         </td>\n
-        <td align="center" valign="middle" nowrap>\n
+        <td align="center" valign="middle" nowrap="nowrap">\n
             <select name="module_select" size="1"\n
                     tal:attributes="onChange string:submitAction(this.form,\'${here/absolute_url}/Base_doModule\')"\n
                     tal:define="module_list here/ERP5Site_getModuleItemList">\n
-                <option selected value="" i18n:translate="" i18n:domain="ui" disabled>ERP5 Modules</option>\n
+                <option selected="selected" value="" i18n:translate="" i18n:domain="ui" disabled="disabled">ERP5 Modules</option>\n
                 <tal:block tal:repeat="module module_list">\n
                   <option value="something"\n
                           tal:attributes="value python: module[1]"\n
@@ -166,7 +166,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 </tal:block>\n
             </select>\n
         </td>\n
-        <td align="left" valign="middle" nowrap>\n
+        <td align="left" valign="middle" nowrap="nowrap">\n
           <input class="input_image" type="image" src="/images/erp5_html_style/images/appearance.png" title="Select Module"\n
               i18n:attributes="title" i18n:domain="ui"\n
               alt="Select Module" name="Base_doModule:method" tal:attributes="src string:$portal_url/images/appearance.png"/>&nbsp;\n
@@ -176,7 +176,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </a>\n
           <img src="/images/erp5_html_style/images/reload.png"  alt="img"/-->\n
         </td>\n
-        <td valign="middle" align="center" nowrap width="100%">\n
+        <td valign="middle" align="center" nowrap="nowrap" width="100%">\n
           <div align="center">\n
             <!--img src="/images/erp5_html_style/images/mail.png"  alt="Email" title="Email"\n
                  i18n:attributes="title"/>\n
@@ -194,11 +194,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <select name="language_select" size="1"\n
                   tal:attributes="onChange string:submitAction(this.form,\'${here/absolute_url}/Base_doLanguage\')"\n
                   tal:define="language_map python: here.Localizer.get_languages_map()">\n
-            <option selected value="" i18n:translate="" i18n:domain="ui" disabled>My language</option>\n
+            <option selected="selected" value="" i18n:translate="" i18n:domain="ui" disabled="disabled">My language</option>\n
             <tal:block tal:repeat="language language_map">\n
               <tal:block tal:condition="language/selected">\n
                 <option value="en"\n
-                        selected\n
+                        selected="selected"\n
                         tal:attributes="value language/id"\n
                         tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])">\n
                   English\n
@@ -214,7 +214,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             </tal:block>\n
           </select>\n
         </td>\n
-        <td  align="right" valign="middle" nowrap>\n
+        <td  align="right" valign="middle" nowrap="nowrap">\n
           <input class="input_image" type="image"\n
 src="/images/erp5_html_style/images/info.png"\n
                  title="Change Language" alt="Change Language"  name="Base_doLanguage:method"\n
@@ -223,7 +223,7 @@ src="/images/erp5_html_style/images/info.png"\n
           <img src="/images/erp5_html_style/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;\n
         </td>\n
         <td  align="right" valign="middle">\n
-            <input type="text" name="SearchableText">\n
+            <input type="text" name="SearchableText"/>\n
         </td>\n
         <td  align="right" valign="middle">\n
           <input class="input_image" type="image"\n

@@ -102,24 +102,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
     <div metal:use-macro="here/global_definition/macros/global_definition" />\n
     <span tal:condition="request/form_id | nothing">\n
     <input type="hidden" name="form_id" value="form"\n
-       tal:attributes="value request/form_id">\n
+       tal:attributes="value request/form_id"/>\n
     </span>\n
     <input type="hidden" name="dialog_id" value="form"\n
-       tal:attributes="value form/id">\n
+       tal:attributes="value form/id"/>\n
     <span tal:condition="request/pickle_string | nothing">\n
     <input type="hidden" name="pickle_string" value="form"\n
-       tal:attributes="value request/pickle_string">\n
+       tal:attributes="value request/pickle_string"/>\n
     </span>\n
     <input type="hidden" name="selection_name" value="selection_name"\n
-              tal:attributes="value selection_name">\n
+              tal:attributes="value selection_name"/>\n
     <!-- Menu Boxes -->\n
     <table cellpadding="0" cellspacing="0" border="0" width="100%">\n
       <tr>\n
         <td>\n
           <!-- Navigation Box Goes Here -->\n
           <div class="NavigationBox" tal:define=\'global form_action string:Base_callDialogMethod\'>\n
-            <div metal:use-macro="here/navigation_box/macros/navigation_box"\n
-              >Navigation Box</div>\n
+            <div metal:use-macro="here/navigation_box/macros/navigation_box">Navigation Box</div>\n
           </div>\n
         </td>\n
       </tr>\n
@@ -128,16 +127,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
           <!-- Menu Box Goes Here -->\n
 \n
           <div class="MenuBox">\n
-            <!--<div metal:use-macro="here/list_menu_box/macros/list_menu_box"\n
-              >MenuBox</div> -->\n
+            <!--<div metal:use-macro="here/list_menu_box/macros/list_menu_box">MenuBox</div> -->\n
           </div>\n
         </td>\n
       </tr>\n
     </table>\n
     <!-- Breadcrumb, owner and date-->\n
     <div class="Breadcrumb">\n
-      <div metal:use-macro="here/breadcrumb/macros/small_breadcrumb"\n
-        >Breadcrumb</div>\n
+      <div metal:use-macro="here/breadcrumb/macros/small_breadcrumb">Breadcrumb</div>\n
     </div>\n
     <!-- Optional Portal Status Message -->\n
     <div class="Main"\n
@@ -185,12 +182,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
           <input type="hidden" name="dialog_method" value="cancel_url"\n
                 tal:attributes="value python: form.action"/>\n
           <input type="hidden" name="cancel_url" value="cancel_url"\n
-                tal:attributes="value cancel_url">\n
+                tal:attributes="value cancel_url"/>\n
           <input type="hidden" name="previous_form_id" value="previous_form_id"\n
-                tal:attributes="value previous_form_id">\n
+                tal:attributes="value previous_form_id"/>\n
           <input type="Submit"  value="Cancel" name="Base_cancel:method"\n
-                i18n:attributes="value" i18n:domain="ui"\n
-                />&nbsp;\n
+                i18n:attributes="value" i18n:domain="ui"/>&nbsp;\n
           <span tal:condition="python: form.update_action!=\'\'">\n
           <input type="hidden" name="update_method" value="cancel_url"\n
                 tal:attributes="value python: form.update_action"/>\n
