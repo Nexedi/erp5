@@ -1,3 +1,6 @@
+2006-08-29 Kevin
+* Clean-up group naming.
+
 2006-08-28 Kevin
 * Render extra widgets in the default template.
 * Add dummy widgets in the default layout.

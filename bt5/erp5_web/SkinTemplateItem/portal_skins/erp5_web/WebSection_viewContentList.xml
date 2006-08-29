@@ -62,7 +62,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>bottom webcontent</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -71,7 +71,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom webcontent</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>dynamic_subcontent_listbox</string>
