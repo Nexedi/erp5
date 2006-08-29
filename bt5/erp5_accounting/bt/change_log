@@ -1,3 +1,6 @@
+2006-08-29 jerome
+* set resource editable on accounting transaction lines.
+
 2006-08-24 jerome
 * empty default_invoice_transaction_rule. It's part of the configuration and should not be included in this BT.
 
