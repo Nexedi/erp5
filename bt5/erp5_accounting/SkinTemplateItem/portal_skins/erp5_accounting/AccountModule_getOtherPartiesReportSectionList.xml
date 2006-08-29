@@ -153,7 +153,7 @@ for party in context.Account_zDistinctSectionList():\n
         title += \' (%s)\' % o.getRoleTitle()\n
       result.append(\n
                  ReportSection(title=title,\n
-                               level=2,\n
+                               level=1,\n
                                path=o.getPhysicalPath(),\n
                                form_id=\'Entity_viewAccountingTransactionList\',\n
                                selection_name = \'accounting_selection\',\n
