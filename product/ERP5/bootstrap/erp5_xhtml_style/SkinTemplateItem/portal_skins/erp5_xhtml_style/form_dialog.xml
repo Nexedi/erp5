@@ -131,6 +131,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 class="center">\n
               <tal:block tal:repeat="field center_group">\n
                 <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+                <p class="clear"></p>\n
               </tal:block>\n
             </div>\n
           <p class="clear"></p>\n
