@@ -540,7 +540,7 @@ div.index_html table {\n
   clear: left;\n
 }\n
 \n
-.content .figure {\n
+.content .figure .input {\n
   text-align: right;\n
 }\n
 \n
