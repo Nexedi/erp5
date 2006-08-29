@@ -147,7 +147,7 @@ class PDFTemplate(ZopePageTemplate):
       doc_xml = ZopePageTemplate.pt_render(self, source=source, extra_context=extra_context)
 
       # Unmarshall arguments to __call__ API
-      args = extra_context.get('options', None)
+      args = extra_context.get('options', [])
       kwargs = extra_context.copy()
       if kwargs.has_key('options'): del kwargs['options']
       if kwargs.has_key('context'): del kwargs['context']
