@@ -1,3 +1,6 @@
+2006-08-29 Chris
+* Added an easy way to customize erp5 using new CSS/JS files. You just need to redefine ERP5Site_getCSSList and ERP5Site_getJSList to return your new files too.
+
 2006-08-29 Kevin
 * erp5.css and erp5.js are not authoritative over others CSS and JS (this let let user override default CSS and JS definitions).
 
