@@ -178,10 +178,11 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash transfer document and check it
     """
     # Cash transfer has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_incident = self.cash_incident_module.newContent(id='cash_incident_1', portal_type='Cash Incident', source_total_asset_price=52400.0,
-                                                              source_value=self.counter)
+    self.cash_incident = self.cash_incident_module.newContent(id='cash_incident_1', portal_type='Cash Incident', source_total_asset_price=52400.0,)
     # execute tic
     self.stepTic()
+    # set source here
+    self.cash_incident._setSource(self.counter.getRelativeUrl())
     # check we have only one cash transfer
     self.assertEqual(len(self.cash_incident_module.objectValues()), 1)
     # get the cash transfer document
