@@ -79,11 +79,11 @@ class ERP5TypeInformation( FactoryTypeInformation,
     meta_type = 'ERP5 Type Information'
     security = ClassSecurityInfo()
 
-    manage_options = ( FactoryTypeInformation.manage_options[:1]
+    manage_options = ( SimpleItemWithProperties.manage_options[:1]
                      + ActionProviderBase.manage_options
                      + RoleProviderBase.manage_options
                      + TranslationProviderBase.manage_options
-                     + FactoryTypeInformation.manage_options[1:]
+                     + SimpleItemWithProperties.manage_options[1:]
                      )
 
     _properties = (TypeInformation._basic_properties + (
