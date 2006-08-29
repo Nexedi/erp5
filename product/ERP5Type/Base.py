@@ -34,8 +34,9 @@ from AccessControl.Permission import pname, Permission
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.PortalContent import PortalContent
-from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
+from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import _getViewFor
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
@@ -45,7 +46,6 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext
-from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
@@ -1123,7 +1123,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Returns the title or the id of the parent
     """
     return self.aq_inner.aq_parent.getTitleOrId()
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentRelativeUrl' )
   def getParentRelativeUrl(self):
@@ -1666,7 +1666,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         '''
         Returns the default list even if folder_contents is overridden.
         '''
-        list_action = _getListFor(self)
+        list_action = _getViewFor(self, view='list')
         if getattr(aq_base(list_action), 'isDocTemp', 0):
             return apply(list_action, (self, self.REQUEST),reset=reset)
         else:
