@@ -110,7 +110,7 @@
                     <value>
                       <list>
                         <string>my_source_credit</string>
-                        <string>my_resource_id</string>
+                        <string>my_resource</string>
                       </list>
                     </value>
                 </item>
