@@ -101,36 +101,24 @@ portal_catalog = container.portal_catalog\n
 current_node = context\n
 while not current_node.getPortalType() in (\'Web Section\', \'Web Site\'):\n
   current_node = current_node.aq_parent\n
-\n
 # Then find the publication categories referenced by the web section\n
 section_categories = current_node.getMembershipCriterionCategoryList()\n
 section_base_categories_conjunctive = current_node.getMembershipCriterionBaseCategoryList()\n
 section_base_categories_disjunctive = current_node.getMultimembershipCriterionBaseCategoryList()\n
 \n
 def checkMember(x):\n
-  the_categories = x.getCategoriesList()\n
-  if the_categories:\n
-    for the_category in the_categories:\n
-      if the_category in section_categories:\n
-        if split(the_category,"/")[0] in section_base_categories_disjunctive:\n
-          if x.getValidationState()==\'published\':\n
-            return True # one disjunctive category was found\n
-    checker=False\n
-    for one_category in section_categories:\n
-      if split(one_category,"/")[0] in section_base_categories_conjunctive:\n
-        if one_category not in the_categories:\n
-          return False # one conjunctive category was not found\n
-        else:\n
-          checker=True\n
-    return checker  # loop ends, so all conjunctive categories were found - If there were any.\n
-  else:\n
-    return False\n
+  if x.getValidationState()==\'published\' or x.getValidationState()==\'validated\':\n
+    return current_node.test(x)\n
 \n
-# get all web pages and check if their publication category is in the category list of the web section\n
-# reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
-reference_list = map(lambda x:x.getReference(), portal_catalog(portal_type=(\'Web Page\',)))\n
-if reference_list:\n
-  li = filter(checkMember, list(context.portal_catalog(portal_type="Web Page")) )\n
+# get all web pages and products and check if they match the predicates of the web section,\n
+# except if there is no membership category in the section.\n
+if not section_categories:\n
+  li = []\n
+else:\n
+  li = list(context.portal_catalog(portal_type="Product"))\n
+  li.extend(list(context.portal_catalog(portal_type="Web Page")))\n
+  li = filter(checkMember, li )\n
+if li:\n
   my_list=li\n
 else:\n
   my_list=[]\n
@@ -139,9 +127,9 @@ else:\n
 if hasattr(current_node,\'getAggregateList\'):\n
   aggregate_values = current_node.getAggregateList()\n
   aggregate_values = map(context.restrictedTraverse,aggregate_values)\n
-  li.extend(aggregate_values) \n
+  my_list.extend(aggregate_values) \n
 \n
-# Remove Duplicate entries in my_list\n
+# Remove duplicate entries in my_list\n
 my_clean_list=[]\n
 my_reference_list=[]\n
 for my_element in my_list:\n
@@ -149,6 +137,13 @@ for my_element in my_list:\n
     my_clean_list.append(my_element)\n
     my_reference_list.append(my_element.getReference())\n
 \n
+\n
+def compareIndex(c1, c2):\n
+  c1_value = c1.getObject()  \n
+  c2_value = c2.getObject()  \n
+  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex()) \n
+\n
+my_clean_list.sort(compareIndex)\n
 return my_clean_list\n
 \n
 \n
@@ -258,18 +253,18 @@ return my_clean_list\n
                             <string>section_base_categories_conjunctive</string>
                             <string>section_base_categories_disjunctive</string>
                             <string>checkMember</string>
-                            <string>map</string>
-                            <string>reference_list</string>
-                            <string>filter</string>
-                            <string>list</string>
                             <string>li</string>
+                            <string>list</string>
+                            <string>filter</string>
                             <string>my_list</string>
                             <string>hasattr</string>
                             <string>aggregate_values</string>
+                            <string>map</string>
                             <string>my_clean_list</string>
                             <string>my_reference_list</string>
                             <string>_getiter_</string>
                             <string>my_element</string>
+                            <string>compareIndex</string>
                           </tuple>
                         </value>
                     </item>

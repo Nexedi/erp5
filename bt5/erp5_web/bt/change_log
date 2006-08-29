@@ -1,3 +1,7 @@
+2006-08-29 Stefan
+* WebSection_getDocumentValueList uses Predicate API.
+* Sorts result by order Index.
+
 2006-08-29 Kevin
 * Clean-up group naming.
 
