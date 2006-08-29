@@ -68,23 +68,43 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = [] \n
-if include_empty : \n
-  result = [[\'\', \'\'],]\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-portal = context.getPortalObject() \n
-currency_module = getattr(portal, \'currency_module\', getattr(portal, \'currency\', None))\n
+def getCurrencyItemList(include_empty=1, portal_path=""):\n
+  result = []\n
+  if include_empty :\n
+    result = [[\'\', \'\'],]\n
+  currency_module = getattr(portal, \'currency_module\',\n
+                        getattr(portal, \'currency\', None))\n
 \n
-for currency in currency_module.objectValues() : \n
-  # for currency, we intentionaly use reference (EUR) not title (Euros).\n
-  result.append((currency.getReference(), currency.getRelativeUrl()))\n
-return result\n
+  for currency in currency_module.contentValues():\n
+    # for currency, we intentionaly use reference (EUR) not title (Euros).\n
+    result.append((currency.getReference() or currency.getTitleOrId(),\n
+                   currency.getRelativeUrl()))\n
+  \n
+  result.sort(lambda x,y: cmp(x[0], y[0]))\n
+  return result\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+getCurrencyItemList = CachingMethod(\n
+                          getCurrencyItemList,\n
+                          id=\'CurrencyModule_getCurrencyItemList\',\n
+                          cache_duration=30000, )\n
+                                      \n
+return getCurrencyItemList( include_empty=include_empty,\n
+                            portal_path=portal.getPath() )\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -101,7 +121,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_empty = 1</string> </value>
+            <value> <string>include_empty=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,15 +148,12 @@ return result\n
                         <value>
                           <tuple>
                             <string>include_empty</string>
-                            <string>result</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>currency_module</string>
-                            <string>_getiter_</string>
-                            <string>currency</string>
+                            <string>getCurrencyItemList</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                           </tuple>
                         </value>
                     </item>
@@ -161,6 +178,27 @@ return result\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
