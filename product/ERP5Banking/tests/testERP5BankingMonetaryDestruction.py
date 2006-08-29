@@ -101,11 +101,11 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
       need to be installed to run the test on.
     """
     return ('erp5_base'
-           , 'erp5_trade'
-           , 'erp5_accounting'
-           , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
-           , 'erp5_banking_inventory'
-           , 'erp5_banking_cash'
+            , 'erp5_trade'
+            , 'erp5_accounting'
+            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
+            , 'erp5_banking_inventory'
+            , 'erp5_banking_cash'
            )
 
   def getMonetaryDestructionModule(self):
@@ -179,7 +179,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.organisation_externe = self.organisation_module.newContent(id='baobab_org_externe', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/madrid')
 
-    
     # define the user
     user_dict = {
         'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris']
@@ -264,7 +263,8 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     #print self.portal.portal_categories.objectIds()
     # Monetary Destruction has source(serre) for source, destinat (serre) for destination, and a price coresponding to the sum of banknote of 10000 and of 5000 ( (2*3) * 10000 + (5*7) * 5000 )
-    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1', portal_type='Monetary Destruction', source_value=self.source, destination_value=None, source_total_asset_price=110000.0)
+    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1', portal_type='Monetary Destruction', source_value=self.source, destination_value=None,
+                                                                            source_total_asset_price=110000.0, source_section_value=self.paris)
     # execute tic
     self.stepTic()
     # check we have only one monetary destruction
@@ -284,7 +284,8 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Create a monetary destruction document and check it
     """
     # Monetary Destruction has source(serre) for source, destinat (serre) for destination, and a price coresponding to the sum of banknote of 10000 and of 5000 ( (2*3) * 10000 + (5*7) * 5000 )
-    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1', portal_type='Monetary Destruction', source_value=self.source_for_externe, destination_value=None, source_total_asset_price=110000.0)
+    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1', portal_type='Monetary Destruction', source_value=self.source_for_externe, destination_value=None,
+                                                                            source_total_asset_price=110000.0, source_section_value=self.madrid)
     # execute tic
     self.stepTic()
     # check we have only one monetary destruction
@@ -766,8 +767,8 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CreateInvalidLine ' \
                     + 'TryPlannedMonetaryDestructionWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
-		    + 'PlanMonetaryDestruction ' \
-		    + 'CheckSourceDebitPlannedForExterne ' \
+                    + 'PlanMonetaryDestruction ' \
+                    + 'CheckSourceDebitPlannedForExterne ' \
                     + 'OrderMonetaryDestruction ' \
                     + 'ConfirmMonetaryDestruction ' \
                     + 'ConfirmToDeliverMonetaryDestruction ' \
