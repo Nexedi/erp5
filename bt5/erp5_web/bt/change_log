@@ -1,9 +1,10 @@
+2006-08-29 Kevin
+* Clean-up group naming.
+* Fix bad selection name.
+
 2006-08-29 Stefan
 * WebSection_getDocumentValueList uses Predicate API.
 * Sorts result by order Index.
-
-2006-08-29 Kevin
-* Clean-up group naming.
 
 2006-08-28 Kevin
 * Render extra widgets in the default template.
