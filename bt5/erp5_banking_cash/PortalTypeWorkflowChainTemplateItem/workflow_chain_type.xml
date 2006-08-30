@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Cash Balance Regulation</type>
-  <workflow>cash_balance_regulation_workflow</workflow>
+  <workflow>edit_workflow, cash_balance_regulation_workflow</workflow>
  </chain>
  <chain>
   <type>Cash Exchange</type>
@@ -26,6 +26,14 @@
  <chain>
   <type>Classification Survey</type>
   <workflow>classification_survey_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Container Cell</type>
+  <workflow>packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Container Line</type>
+  <workflow>edit_workflow, packing_list_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Counter Rendering</type>
