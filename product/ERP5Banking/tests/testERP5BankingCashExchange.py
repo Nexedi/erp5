@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2005-2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                   Aurelien Calonne <aurel@nexedi.com>
+#                   Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -152,15 +153,9 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     line_list_guichet_2 = [inventory_dict_line_3, inventory_dict_line_4]
-    """
-    self.encaisse_tri= self.paris.surface.salle_de_tri.encaisse_des_billets_et_monnaies
-    self.guichet_1 = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
-    self.guichet_1 = self.paris.caveau.externes.encaisse_des_externes
-    self.guichet_1 = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
-    """
     self.guichet_1 = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.guichet_2 = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
-    self.guichet = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
+    self.guichet = self.paris.surface.banque_interne.guichet_1
 
     self.createCashInventory(source=self.guichet_1, destination=self.guichet_1, currency=self.currency_1,
                              line_list=line_list)
@@ -229,31 +224,6 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_2.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
 
 
-  def stepCheckGuichet_1(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check inventory in source vault (cash) before a confirm
-    """
-    # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 12 coin of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-
-
-  def stepCheckGuichet_2(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check inventory in destination vault (counter) before confirm
-    """
-    # check we don't have banknotes of 5000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_2.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 10.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_2.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 10.0)
-    # check we don't have coins of 100
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_2.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_2.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-
-
-
   def stepCreateCashExchange(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash sorting document and check it
@@ -269,12 +239,10 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     # check its portal type
     self.assertEqual(self.cash_exchange.getPortalType(), 'Cash Exchange')
     # check that its source is encaisse_paris
-    self.assertEqual(self.cash_exchange.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.cash_exchange.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1')
     # check that its destination is guichet_1
     self.assertEqual(self.cash_exchange.getDestination(), None)
 
-
-  #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
   def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the cash exchange incoming line  with banknotes of 10000 and check it has been well created
@@ -310,7 +278,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is guichet_1
-      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/euro/entrante')
+      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/entrante')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 2.0)
@@ -350,7 +318,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is guichet_1
-      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/euro/entrante')
+      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/entrante')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 5.0)
@@ -502,12 +470,12 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
 
-    # check we have 0 banknote of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 0 coin of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    # check we have 10 banknote of 10000
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
+    # check we ahve 24 coins of 200
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 24.0)
 
 
 
@@ -515,10 +483,10 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
-    # check we have 14 coin of 5000
+    # check we have no banknote any more
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_2.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_2.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-    # check we have 12 coins of 100
+    # check no coins any more
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_2.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_2.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
@@ -529,7 +497,6 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     Delete the invalid vault_transfer line previously create
     """
     self.cash_exchange_module.deleteContent('cash_exchange_1')
-
 
 
   ##################################
@@ -545,7 +512,6 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventoryGuichet_1 ' \
                     + 'CheckInitialInventoryGuichet_2 ' \
-		    + 'CheckGuichet_1 CheckGuichet_2 ' \
 		    + 'CreateCashExchange ' \
                     + 'CreateValidIncomingLine CheckSubTotal ' \
                     + 'CreateValidOutgoingLine ' \
