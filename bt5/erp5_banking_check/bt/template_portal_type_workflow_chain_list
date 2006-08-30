@@ -1,5 +1,3 @@
-Check Deposit | check_deposit_workflow
-Check Deposit | edit_workflow
 Check Payment | check_payment_workflow
 Check Payment | edit_workflow
 Checkbook Delivery | checkbook_delivery_workflow

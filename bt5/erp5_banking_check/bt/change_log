@@ -1,3 +1,6 @@
+2006-08-30 aurel
+* remove check deposit as it is now too specific
+
 2006-08-28 Seb
 * Added checkbook vault transfer
 * Added checkbook usual cash transfer
