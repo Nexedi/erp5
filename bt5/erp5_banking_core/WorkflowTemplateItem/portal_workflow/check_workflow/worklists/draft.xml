@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=draft&portal_type=Check&reset=1
+Base_viewWorklist?simulation_state=draft&portal_type=Check&reset=1
 
 ]]></string> </value>
         </item>
@@ -84,6 +84,14 @@ Base_viewSearchResultList?simulation_state=draft&portal_type=Check&reset=1
                     <value>
                       <tuple>
                         <string>draft</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Check</string>
                       </tuple>
                     </value>
                 </item>
