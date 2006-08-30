@@ -85,7 +85,6 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookUsualCashTransfer
     return ('erp5_base',
             'erp5_trade',
             'erp5_accounting',
-            'baobab_unit_test',
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_check',
