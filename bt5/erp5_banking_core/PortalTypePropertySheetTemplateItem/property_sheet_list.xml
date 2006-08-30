@@ -33,12 +33,6 @@
  <portal_type id="Checkbook Model Check Amount Variation">
   <item>Amount</item>
  </portal_type>
- <portal_type id="Container Cell">
-  <item>CashContainer</item>
- </portal_type>
- <portal_type id="Container Line">
-  <item>CashContainer</item>
- </portal_type>
  <portal_type id="Counter Date">
   <item>Task</item>
  </portal_type>
