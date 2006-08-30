@@ -1,3 +1,4 @@
+Account Incident Module | list_ui
 Account Incident Module | print_pdf
 Account Incident Module | sort_on
 Account Incident Module | view
@@ -21,6 +22,10 @@ Cash Balance Regulation | metadata
 Cash Balance Regulation | outgoing_fastinput
 Cash Balance Regulation | print
 Cash Balance Regulation | view
+Cash Container Item | metadata
+Cash Container Item | view
+Cash Container | metadata
+Cash Container | view
 Cash Exchange Module | list
 Cash Exchange Module | list_sort_on
 Cash Exchange Module | list_ui
@@ -44,6 +49,7 @@ Cash Incident | out_view
 Cash Incident | outgoing_input
 Cash Incident | view
 Cash Sorting Incident Module | list_ui
+Cash Sorting Incident Module | show_operations
 Cash Sorting Incident Module | sort_on
 Cash Sorting Incident Module | view
 Cash Sorting Incident | history
@@ -52,6 +58,7 @@ Cash Sorting Incident | incoming_input
 Cash Sorting Incident | metadata
 Cash Sorting Incident | out_view
 Cash Sorting Incident | outgoing_input
+Cash Sorting Incident | post
 Cash Sorting Incident | view
 Cash Sorting Module | list
 Cash Sorting Module | list_ui
@@ -76,6 +83,14 @@ Classification Survey | print
 Classification Survey | result
 Classification Survey | supply
 Classification Survey | view
+Container Cell | metadata
+Container Cell | print
+Container Cell | view
+Container Line | metadata
+Container Line | print
+Container Line | view
+Container Line | view_history
+Container Line | view_quantity
 Counter Rendering Module | list_ui
 Counter Rendering Module | print_pdf
 Counter Rendering Module | sort_on

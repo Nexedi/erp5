@@ -2,6 +2,9 @@
  <portal_type id="Account Incident">
   <item>source_decision</item>
  </portal_type>
+ <portal_type id="Cash Container Item">
+  <item>aggregate</item>
+ </portal_type>
  <portal_type id="Cash Incident">
   <item>source_decision</item>
   <item>responsible</item>
@@ -9,6 +12,19 @@
  <portal_type id="Cash Sorting Incident">
   <item>source_decision</item>
   <item>responsible</item>
+ </portal_type>
+ <portal_type id="Container Cell">
+  <item>variation</item>
+  <item>cash_status</item>
+  <item>emission_letter</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>emission_letter</item>
+  <item>cash_status</item>
+  <item>variation</item>
+ </portal_type>
+ <portal_type id="Monetary Recall Cell">
+  <item>variation</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>

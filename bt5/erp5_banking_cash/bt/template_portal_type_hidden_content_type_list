@@ -2,6 +2,8 @@ Account Incident | Incoming Account Incident Line
 Account Incident | Outgoing Account Incident Line
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
+Cash Container Item | Container Line
+Cash Container | Container Line
 Cash Exchange | Incoming Cash Exchange Line
 Cash Exchange | Outgoing Cash Exchange Line
 Cash Incident | Incoming Cash Incident Line
@@ -12,6 +14,7 @@ Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line
+Container Line | Container Cell
 Counter Rendering | Amount
 Counter Rendering | Cash Delivery Line
 Counter Rendering | Price

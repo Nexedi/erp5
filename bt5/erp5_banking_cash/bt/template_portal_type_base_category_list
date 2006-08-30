@@ -1,8 +1,16 @@
 Account Incident | source_decision
+Cash Container Item | aggregate
 Cash Incident | responsible
 Cash Incident | source_decision
 Cash Sorting Incident | responsible
 Cash Sorting Incident | source_decision
+Container Cell | cash_status
+Container Cell | emission_letter
+Container Cell | variation
+Container Line | cash_status
+Container Line | emission_letter
+Container Line | variation
+Monetary Recall Cell | variation
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation
 Usual Cash Incident | incident_type

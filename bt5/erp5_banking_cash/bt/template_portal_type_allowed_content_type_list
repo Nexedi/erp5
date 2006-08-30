@@ -4,7 +4,8 @@ Account Incident | Outgoing Account Incident Line
 Cash Balance Regulation Module | Cash Balance Regulation
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
-Cash Delivery Line | Cash Delivery Cell
+Cash Container Item | Container Line
+Cash Container | Container Line
 Cash Exchange Module | Cash Exchange
 Cash Exchange | Incoming Cash Exchange Line
 Cash Exchange | Outgoing Cash Exchange Line
@@ -20,6 +21,7 @@ Cash Sorting | Outgoing Cash Sorting Line
 Classification Survey Module | Classification Survey
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line
+Container Line | Container Cell
 Counter Rendering Module | Counter Rendering
 Counter Rendering | Cash Delivery Line
 Foreign Cash Reception Module | Foreign Cash Reception

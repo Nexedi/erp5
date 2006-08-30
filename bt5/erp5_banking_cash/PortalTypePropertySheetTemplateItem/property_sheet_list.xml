@@ -4,8 +4,8 @@
   <item>Amount</item>
  </portal_type>
  <portal_type id="Cash Balance Regulation">
-  <item>Amount</item>
   <item>Resource</item>
+  <item>Amount</item>
   <item>Price</item>
   <item>Simulation</item>
  </portal_type>
@@ -23,6 +23,17 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Cash Sorting Incident">
+  <item>Amount</item>
+  <item>AccountingEvent</item>
+  <item>Price</item>
+ </portal_type>
+ <portal_type id="Container Cell">
+  <item>CashContainer</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>CashContainer</item>
+ </portal_type>
+ <portal_type id="Counter Rendering">
   <item>Amount</item>
   <item>Price</item>
  </portal_type>

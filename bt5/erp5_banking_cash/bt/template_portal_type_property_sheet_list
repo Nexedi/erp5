@@ -10,9 +10,14 @@ Cash Exchange | Resource
 Cash Exchange | Simulation
 Cash Incident | Amount
 Cash Incident | Price
+Cash Sorting Incident | AccountingEvent
 Cash Sorting Incident | Amount
 Cash Sorting Incident | Price
 Cash Sorting | Price
+Container Cell | CashContainer
+Container Line | CashContainer
+Counter Rendering | Amount
+Counter Rendering | Price
 Incoming Account Incident Line | CashDeliveryLine
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
