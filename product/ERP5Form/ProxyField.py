@@ -57,6 +57,7 @@ class ProxyWidget(Widget.Widget):
   property_names = [
     'form_id',
     'field_id',
+    'target',
     'extra_context',
   ]
 
@@ -83,6 +84,14 @@ class ProxyWidget(Widget.Widget):
                                 title='Extra Context', 
                                 description='Additional context variables.',
                                 default=(), 
+                                required=0)
+
+  target = fields.HyperLinkField(
+                                'target',
+                                title='Proxy Target',
+                                description="Link to the master field edit form",
+                                default='Click to edit the target',
+                                href='manage_edit_target',
                                 required=0)
 
   def render(self, field, key, value, REQUEST):
@@ -170,6 +179,18 @@ class ProxyField(ZMIField):
       extra_context[k] = v
     REQUEST.other['erp5_extra_context'] = extra_context
     return REQUEST
+
+  security.declareProtected('Edit target', 'manage_edit_target')
+  def manage_edit_target(self, REQUEST):
+      """ Edit target field of this proxy
+      """
+      proxy_field = self.getTemplateField()
+      if proxy_field:
+          url='/'.join((self.absolute_url(),self.get_value('form_id'),self.get_value('field_id'),'manage_main'))
+          REQUEST.RESPONSE.redirect(url)
+      else:
+          # FIXME: should show some error message ("form_id and field_id don't define a valid template")
+          pass
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):

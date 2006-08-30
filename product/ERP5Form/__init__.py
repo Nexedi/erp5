@@ -146,6 +146,9 @@ def initialize( context ):
     FieldRegistry.registerField(HelperFields.MethodField)
     FieldRegistry.registerField(HelperFields.TALESField)
 
+    import HyperLinkField
+    FieldRegistry.registerField(HyperLinkField.HyperLinkField)
+
     # register help for the product
     context.registerHelp()
     # register field help for all fields
