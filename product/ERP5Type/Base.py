@@ -326,6 +326,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                     method = WorkflowMethod(method, method_id)
                     setattr(prop_holder, method_id, method)
 
+
 class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
@@ -381,6 +382,21 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
+
+  def __call__(self):
+    """
+      This method override PortalContent.__call__() method to get an altenate
+      default view if we have Web Site in the acquisition path.
+      If object is called within a Web Site object, try to use 'web_view' action
+      as default view. Else, use the default 'view' action as returned by the
+      default __call__ method of Portal Content objects.
+    """
+    rq = self.REQUEST
+    if hasattr(rq, 'web_site_value') and not (hasattr(rq, 'ignore_layout') or hasattr(rq, 'editable_mode')):
+      return _getViewFor(self, view='web_view')()
+    else:
+      call_method = getattr(PortalContent, '__call__', None)
+      return call_method(self)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
   def setTitle(self, value):
