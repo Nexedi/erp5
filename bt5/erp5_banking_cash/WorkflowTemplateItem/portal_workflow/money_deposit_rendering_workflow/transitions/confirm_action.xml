@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign To Vault Controler</string> </value>
+            <value> <string>Assigned To Vault Controler</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -85,7 +85,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>

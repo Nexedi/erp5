@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Counter Rendering
+Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Counter Rendering
 
 ]]></string> </value>
         </item>

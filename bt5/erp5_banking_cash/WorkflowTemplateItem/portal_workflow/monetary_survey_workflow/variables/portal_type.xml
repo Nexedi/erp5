@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string>Monetary Survey</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>for_status</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>update_always</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

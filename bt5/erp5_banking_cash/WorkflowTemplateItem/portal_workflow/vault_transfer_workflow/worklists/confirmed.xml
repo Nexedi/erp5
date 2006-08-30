@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Vault Transfer
+Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Vault Transfer
 
 ]]></string> </value>
         </item>

@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=planned&reset=1&portal_type=Usual Cash Rendering
+Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Usual Cash Rendering
 
 ]]></string> </value>
         </item>

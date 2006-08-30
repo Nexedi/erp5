@@ -76,11 +76,8 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -90,7 +87,6 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -100,7 +96,6 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,11 +103,8 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

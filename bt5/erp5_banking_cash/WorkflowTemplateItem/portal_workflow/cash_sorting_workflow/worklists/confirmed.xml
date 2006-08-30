@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?cash_sorting_state=confimed&portal_type=Cash Sorting&reset=1
+Base_viewWorklist?cash_sorting_state=confimed&portal_type=Cash Sorting&reset=1
 
 ]]></string> </value>
         </item>
