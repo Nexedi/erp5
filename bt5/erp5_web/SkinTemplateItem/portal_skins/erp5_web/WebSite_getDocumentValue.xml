@@ -88,8 +88,7 @@
 #\n
 # NOTE: portal param probably useless\n
 \n
-\n
-portal_catalog = container.portal_catalog\n
+portal_catalog = portal.portal_catalog\n
 \n
 if name is None:\n
   if context.getPortalType() == \'Web Page\':\n
@@ -99,16 +98,20 @@ if name is None:\n
   else:\n
     return None\n
 \n
-#"else:" (mostly code from the old implementation)\n
+#If name is not None, it has to be searched for it in the catalog.\n
 \n
 #from Products.ERP5Type.Cache import CachingMethod\n
 def getDocument(name):\n
   # First try to get a published document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',), validation_state=\'published\')\n
+  matching_document_list = portal_catalog(reference = \'%s\' % name, validation_state=\'published\')\n
+  if len(matching_document_list):\n
+    return matching_document_list[0].getObject()\n
+  # Then try to get a validated document (Product)\n
+  matching_document_list = portal_catalog(reference = \'%s\' % name, validation_state=\'validated\')\n
   if len(matching_document_list):\n
     return matching_document_list[0].getObject()\n
   # Then try to get any document\n
-  matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',))\n
+  matching_document_list = portal_catalog(reference = \'%s\' % name)\n
   if len(matching_document_list):\n
     return matching_document_list[0].getObject()\n
   return None \n
@@ -136,7 +139,7 @@ return getDocument(name)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal=None, name=None</string> </value>
+            <value> <string>portal, name=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -165,7 +168,6 @@ return getDocument(name)\n
                             <string>portal</string>
                             <string>name</string>
                             <string>_getattr_</string>
-                            <string>container</string>
                             <string>portal_catalog</string>
                             <string>None</string>
                             <string>context</string>
@@ -182,7 +184,6 @@ return getDocument(name)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
                 <none/>
               </tuple>
             </value>
