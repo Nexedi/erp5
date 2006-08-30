@@ -41,6 +41,7 @@
             <value>
               <list>
                 <string>AssignCategories</string>
+                <string>ClearCacheUponUpload</string>
                 <string>SetReferenceFromFilename</string>
               </list>
             </value>
@@ -73,6 +74,7 @@
               <list>
                 <string>DMS File</string>
                 <string>Graphic</string>
+                <string>ImageDocument</string>
                 <string>PdfDocument</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>

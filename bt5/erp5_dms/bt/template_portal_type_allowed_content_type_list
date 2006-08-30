@@ -8,6 +8,7 @@ Document Module | Text
 File | Role Definition
 Graphic | Role Definition
 Image Module | Image
+ImageDocument | Role Definition
 PdfDocument | Role Definition
 Presentation | Role Definition
 Spreadsheet | Role Definition

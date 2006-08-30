@@ -24,6 +24,14 @@ Graphic | view
 Image Module | list_ui
 Image Module | sort_on
 Image Module | view
+ImageDocument | export
+ImageDocument | fullsize_view
+ImageDocument | history
+ImageDocument | local_permission
+ImageDocument | metadata
+ImageDocument | print
+ImageDocument | related_document
+ImageDocument | view
 PdfDocument | download
 PdfDocument | history
 PdfDocument | html_view

@@ -1,3 +1,6 @@
+2006-08-30 BG
+Added ImageDocument type; assigned types to group dms_document.
+
 2006-08-26 BG
 Changed way to store original filename;
 Implemented listing wiki predecessors and successors

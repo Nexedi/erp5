@@ -85,9 +85,6 @@ if f is not None and f:\n
     raise Exception(\'This file should be created as DMS File\')\n
   if ctype!=ob.getPortalType():\n
     raise Exception(\'This file should be created as \'+ctype)\n
-  ob.setSourceReference(fname)\n
-  if not ob.getTitle():\n
-    ob.setTitle(fname)\n
 </string> </value>
         </item>
         <item>

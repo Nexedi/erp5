@@ -68,11 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>txt1=context.getReference()\n
-txt2=context.getReference()+\'-\'+context.getLanguage()\n
-txt3=context.getReference()+\'-\'+context.getLanguage()+\'-\'+context.getVersion()\n
+            <value> <string># we search for docs that reference us in any way (reference only or more specific)\n
+# we can return raw set, the class will get objects and make the records unique\n
+# if you want only the most recent versions, filter the result and apply DMS_findDocument \n
+ss=[]\n
+ss.append(context.getReference())\n
+if context.getLanguage() is not None:\n
+  ss.append(context.getReference()+\'-\'+context.getLanguage())\n
+  if context.getVersion() is not None:\n
+    ss.append(context.getReference()+\'-\'+context.getLanguage()+\'-\'+context.getVersion())\n
 lst=[]\n
-for t in (txt1,txt2,txt3):\n
+for t in ss:\n
   lst+=context.portal_catalog(SearchableText=\'%\'+t+\'%\')\n
 return lst\n
 </string> </value>
@@ -119,11 +125,10 @@ return lst\n
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
+                            <string>ss</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>txt1</string>
-                            <string>txt2</string>
-                            <string>txt3</string>
+                            <string>None</string>
                             <string>lst</string>
                             <string>_getiter_</string>
                             <string>t</string>

@@ -68,9 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># dummy simple implementation\n
+            <value> <string># dummy simple implementation - return the newest in the chosen language\n
+# or in any language if not specified\n
+\n
+# ref arg is a tuple\n
+# ref[0] is a complete reference string\n
+# ref[1] is a dict of values from parsed reference string\n
+\n
 reference=ref[1][\'reference\']\n
-return context.portal_catalog(reference=reference)\n
+res=context.portal_catalog(reference=reference)\n
+res=[r.getObject() for r in res]\n
+lng=ref[1].get(\'language\')\n
+if lng is not None:\n
+  res=filter(lambda o:o.getLanguage()==lng,res)\n
+res.sort(key=lambda o:o.getVersion(),reverse=True)\n
+return res\n
 </string> </value>
         </item>
         <item>
@@ -117,7 +129,16 @@ return context.portal_catalog(reference=reference)\n
                             <string>_getitem_</string>
                             <string>reference</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>res</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>r</string>
+                            <string>lng</string>
+                            <string>None</string>
+                            <string>filter</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>

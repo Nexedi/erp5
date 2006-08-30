@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
+          <string>Products.ERP5Form.ImageField</string>
+          <string>ImageField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_reference</string> </value>
+            <value> <string>image_view</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,6 +84,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_resolution</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -146,7 +158,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -158,6 +172,18 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_resolution</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -217,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -236,6 +262,18 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string>thumbnail</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string>jpg</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_resolution</string> </key>
+                    <value> <int>75</int> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -245,7 +283,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Original filename</string> </value>
+                    <value> <string>Thumbnail</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +317,26 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getSourceReference</string> </value>
+            <value> <string>here/absolute_url</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getPortalType()==\'ImageDocument\'</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -103,7 +103,6 @@ if f is not None and f:\n
   ob.setSourceReference(fname)\n
   ob.setTitle(fname)\n
   ob.setLastUploadTime(DateTime())\n
-  ob.clearCache()\n
 </string> </value>
         </item>
         <item>

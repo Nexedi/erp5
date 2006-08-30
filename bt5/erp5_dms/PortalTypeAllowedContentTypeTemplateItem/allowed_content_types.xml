@@ -19,6 +19,9 @@
  <portal_type id="Image Module">
   <item>Image</item>
  </portal_type>
+ <portal_type id="ImageDocument">
+  <item>Role Definition</item>
+ </portal_type>
  <portal_type id="PdfDocument">
   <item>Role Definition</item>
  </portal_type>
