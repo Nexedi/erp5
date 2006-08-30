@@ -69,11 +69,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source = context.getSource()\n
-if \'devise\' in source:\n
-  return  "%s/caisse_courante/%s" %("/".join(source.split("/")[:-4]), "/".join(source.split("/")[-2:]))\n
-else:\n
-#  return  "%s/caisse_courante/%s" %("/".join(source.split("/")[:-3]), "/".join(source.split("/")[-1:]))\n
-  return  "%s/caisse_courante/encaisse_des_billets_et_monnaies" %("/".join(source.split("/")[:-4]))\n
+if source is not None:\n
+  if source.endswith(\'/entrante\'):\n
+    source = source[:-len(\'/entrante\')]\n
+  if source.endswith(\'/sortante\'):\n
+    source = source[:-len(\'/sortante\')]\n
+  site = context.Baobab_getVaultSite(source).getRelativeUrl()\n
+  if \'devise\' in source:\n
+    return  "%s/surface/caisse_courante/%s" % (site, "/".join(source.split("/")[-2:]))\n
+  else:\n
+    return  "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" % site\n
+return source\n
 </string> </value>
         </item>
         <item>
@@ -131,7 +137,10 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>source</string>
+                            <string>None</string>
                             <string>_getitem_</string>
+                            <string>len</string>
+                            <string>site</string>
                           </tuple>
                         </value>
                     </item>
