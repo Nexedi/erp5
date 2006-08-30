@@ -89,8 +89,11 @@
 #                         utilis\xc3\xa9 en m\xc3\xaame temps que leaf_node\n
 # with_base = 1 : D\xc3\xa9finie si on renvoie la base categorie \'site\' dans la liste de valeur\n
 # all = 0 : Affiche aussi entrante/sortante, utile pour les inventaires\n
+# first_level = 0 : Ne prend que le premier niveau pour un vault type, meme si les sous categories\n
+#                   ont le meme vault_type\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
+from DateTime import DateTime\n
 \n
 def calculateNewTitle(title_path_list,path_len=0):\n
   if \'Encaisse\' in title_path_list[-1]:\n
@@ -125,7 +128,7 @@ def calculateNewTitle(title_path_list,path_len=0):\n
         new_title_list.append(\'Ventilation\')\n
       elif \'Transit\' in title_path_list[i]:\n
         new_title_list.append(\'Transit\')\n
-    if id not in new_title_list: # ie last part of path\n
+    if id not in new_title_list and not id.startswith(\'Guichet\'): # ie last part of path\n
       new_title_list.append(id)\n
   # put back the counter name into the list\n
   if counter_name is not None:\n
@@ -133,7 +136,8 @@ def calculateNewTitle(title_path_list,path_len=0):\n
   return new_title_list\n
 \n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
-    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, site_list=None, with_base=1, all=0):\n
+    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, \n
+    site_list=None, with_base=1, all=0, first_level=0):\n
 \n
   if vault_type is None:\n
     organisation_list = []\n
@@ -175,22 +179,38 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
   vault_dict = {}\n
   is_member_of = context.portal_categories.isMemberOf\n
   get_cat_value = context.portal_categories.getCategoryValue\n
+  end = DateTime()\n
   for site in site_list:\n
     site_object = get_cat_value(site, base_category=\'site\')\n
-    site_member_list = site_object.getCategoryChildLogicalPathItemList(base=1)[1:]\n
+    \n
+    vault_type_value_list = [context.portal_categories.restrictedTraverse(\'vault_type/%s\' % x) for x in vault_type]\n
+    vault_type_uid_list = [x.getUid() for x in vault_type_value_list]\n
+    catalog_kw = {}\n
+    if strict_membership:\n
+      catalog_kw[\'strict_vault_type_uid\']=vault_type_uid_list\n
+    else:\n
+      catalog_kw[\'vault_type_uid\']=vault_type_uid_list\n
+    site_member_list = context.portal_catalog(portal_type=\'Category\',\n
+                             relative_url=\'%s%%\' % site_object.getRelativeUrl(),\n
+                             **catalog_kw\n
+                             )\n
     for site_member in site_member_list:\n
-      site_member_object = get_cat_value(site_member[1])\n
-      for vault_type_item in vault_type:\n
-        if is_member_of(site_member_object, vault_type_item, strict=strict_membership):\n
-          for exclude_vault_type_item in exclude_vault_type:\n
-            if is_member_of(site_member_object, exclude_vault_type_item, strict=0) :\n
-              break\n
-          else:\n
-            if leaf_node == 1:\n
-              if len(site_member_object.contentValues()) == 0:\n
-                vault_dict[site_member[1]] = site_member\n
-            else:\n
-              vault_dict[site_member[1]] = site_member\n
+      site_member_object = site_member.getObject()\n
+      site_member_relative_url = site_member_object.getRelativeUrl()\n
+      for exclude_vault_type_item in exclude_vault_type:\n
+        if is_member_of(site_member_object, exclude_vault_type_item, strict=0) :\n
+          break\n
+      else:\n
+        if first_level == 1 and site_member_object.getParentValue().getVaultType()==site_member_object.getVaultType():\n
+          pass\n
+        elif leaf_node == 1:\n
+          if len(site_member_object) == 0:\n
+            site_member_logical_path = site_member_object.getLogicalPath()\n
+            vault_dict[site_member_relative_url] = [site_member_logical_path,site_member_relative_url]\n
+        else:\n
+          site_member_logical_path = site_member_object.getLogicalPath()\n
+          vault_dict[site_member_relative_url] = [site_member_logical_path,site_member_relative_url]\n
+\n
 \n
   vault_list = vault_dict.values()\n
 \n
@@ -252,7 +272,8 @@ else:\n
 \n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
-  assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all)\n
+  assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all,\n
+  first_level=first_level)\n
 \n
 if current_url != None :\n
   if \'site\' not in current_url:\n
@@ -295,7 +316,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -323,7 +344,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>11</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -339,8 +360,10 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>all</string>
                             <string>base_site</string>
                             <string>owner_site</string>
+                            <string>first_level</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>DateTime</string>
                             <string>calculateNewTitle</string>
                             <string>None</string>
                             <string>getVaultItemList</string>
@@ -382,6 +405,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>1</int>
                 <int>0</int>
                 <none/>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>

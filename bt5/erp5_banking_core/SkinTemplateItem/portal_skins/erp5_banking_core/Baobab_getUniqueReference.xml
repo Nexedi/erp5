@@ -81,8 +81,10 @@ except AttributeError:\n
 # if it\'s not defined, try to generate it\n
 if reference in (None, \'\') or not str(reference).startswith(application_id):\n
   # codification\n
-  source = context.getSourceValue()\n
-  if source not in (None, \'\'):\n
+  source_url = context.getSource()\n
+  # Make sure we do not get the codification of a counter\n
+  if source_url not in (None, \'\'):\n
+    source = context.Baobab_getVaultSite(source_url)\n
     codification = source.getCodification()\n
     if codification in (None, \'\'):\n
       return \'\'\n
@@ -173,6 +175,7 @@ return reference\n
                             <string>AttributeError</string>
                             <string>None</string>
                             <string>str</string>
+                            <string>source_url</string>
                             <string>source</string>
                             <string>codification</string>
                             <string>site_list</string>

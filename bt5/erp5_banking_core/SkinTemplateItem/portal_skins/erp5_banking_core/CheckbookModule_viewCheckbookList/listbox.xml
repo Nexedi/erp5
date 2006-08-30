@@ -352,8 +352,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>Holder</string>
+                          <string>destination_payment_reference</string>
+                          <string>Account</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>

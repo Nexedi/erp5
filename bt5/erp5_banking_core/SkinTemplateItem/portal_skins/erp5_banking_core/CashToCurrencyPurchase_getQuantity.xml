@@ -68,39 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-rate_list = context.CurrencyExchange_getExchangeRateList()\n
-rate = None\n
-if len(rate_list) > 0:\n
- rate = rate_list[1]\n
-if rate is None:\n
-  return None\n
-\n
-base_price = context.getSourceTotalAssetPrice()\n
-if base_price is None:\n
-  return None\n
-\n
-price = rate * base_price\n
-\n
-commission_ratio = context.getDiscountRatio()\n
-commission_price = context.getDiscount()\n
-if commission_ratio is not None and commission_ratio !=0 and commission_price is not None and commission_price !=0:\n
-  return None\n
-# Do not return if commission_ratio and comission_price is 0 or Null, sometimes we have no commission\n
-\n
-if commission_ratio is not None:\n
-  commission_value = commission_ratio * price\n
-\n
-if commission_price is not None:\n
-  commission_value = commission_price\n
-\n
-quantity = price - commission_value\n
-context.setQuantity(quantity)\n
-return quantity\n
-
-
-]]></string> </value>
+            <value> <string>return context.CurrencyPurchase_getQuantity(**kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -120,7 +89,7 @@ return quantity\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -146,19 +115,10 @@ return quantity\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>rate_list</string>
-                            <string>None</string>
-                            <string>rate</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>base_price</string>
-                            <string>price</string>
-                            <string>commission_ratio</string>
-                            <string>commission_price</string>
-                            <string>commission_value</string>
-                            <string>quantity</string>
                           </tuple>
                         </value>
                     </item>

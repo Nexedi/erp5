@@ -86,7 +86,9 @@ if commission_price is not None:\n
   commission_value = commission_price\n
 \n
 quantity = price + commission_value\n
-context.setQuantity(quantity)\n
+quantity = round(quantity+0.5,0)\n
+if quantity!=context.getQuantity():\n
+  context.setQuantity(quantity)\n
 return quantity\n
 </string> </value>
         </item>
@@ -148,6 +150,7 @@ return quantity\n
                             <string>None</string>
                             <string>commission_value</string>
                             <string>quantity</string>
+                            <string>round</string>
                           </tuple>
                         </value>
                     </item>

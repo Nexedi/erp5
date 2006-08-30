@@ -73,7 +73,7 @@
 rate_list = context.CurrencyExchange_getExchangeRateList()\n
 rate = None\n
 if len(rate_list) > 0:\n
-  rate = rate_list[1]\n
+  rate = rate_list[0]\n
 \n
 price = context.getSourceTotalAssetPrice()\n
 \n
