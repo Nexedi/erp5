@@ -148,6 +148,14 @@ class WebSite(Domain):
         the WebSite_getDocumentValue script
       """
       request = self.REQUEST
+      # Normalize web parameter in the request
+      # Fix common user mistake and transform '1' string to boolean
+      for web_param in ['ignore_layout', 'editable_mode']:
+        if hasattr(request, web_param):
+          if getattr(request, web_param, None) in ('1', 1, True):
+            request.set(web_param, True)
+          else:
+            request.set(web_param, False)
       # Register current web site physical path for later URL generation
       if not request.has_key(WEBSITE_KEY):
         request[WEBSITE_KEY] = self.getPhysicalPath()
