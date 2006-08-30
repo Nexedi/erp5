@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CheckbookVaultTransfer_viewCheckbookInputDialog</string> </value>
+            <value> <string>string:${object_url}/CheckbookUsualCashTransfer_viewCheckbookInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

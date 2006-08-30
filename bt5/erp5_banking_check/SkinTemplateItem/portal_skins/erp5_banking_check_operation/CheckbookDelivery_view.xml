@@ -110,8 +110,8 @@
                     <key>                 <string>rigth</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_section</string>
-                        <string>my_destination</string>
+                        <string>my_destination_payment_reference</string>
+                        <string>my_destination_payment_title</string>
                       </list>
                     </value>
                 </item>

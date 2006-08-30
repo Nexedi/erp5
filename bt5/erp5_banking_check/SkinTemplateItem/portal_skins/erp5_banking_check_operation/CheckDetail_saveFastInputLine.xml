@@ -118,12 +118,24 @@ for line in listbox:\n
   reference_range_min = line.get(\'reference_range_min\',None)\n
   if reference_range_min not in (None,\'\'):\n
     line_kw_dict[\'reference_range_min\'] = reference_range_min\n
+    add_line = 1\n
   reference_range_max = line.get(\'reference_range_max\',None)\n
   if reference_range_max not in (None,\'\'):\n
     line_kw_dict[\'reference_range_max\'] = reference_range_max\n
-  check_amount_relative_url = line.get(\'check_amount_relative_url\',None)\n
+    add_line = 1\n
+  check_amount_relative_url = line.get(\'check_amount\',None)\n
   if check_amount_relative_url not in (None,\'\'):\n
+    if check_amount_relative_url.startswith(\'check_amount\'):\n
+      check_amount_relative_url = check_amount_relative_url[len(\'check_amount/\'):]\n
     line_kw_dict[\'check_amount\'] = check_amount_relative_url\n
+  check_type_relative_url = line.get(\'check_type\',None)\n
+  if check_type_relative_url not in (None,\'\'):\n
+    if check_type_relative_url.startswith(\'check_type\'):\n
+      check_type_relative_url = check_type_relative_url[len(\'check_type/\'):]\n
+    line_kw_dict[\'check_type\'] = check_type_relative_url\n
+    check_type = context.getPortalObject().restrictedTraverse(check_type_relative_url)\n
+    line_kw_dict[\'price\'] = check_type.getQuantity()\n
+    line_kw_dict[\'price_currency\'] = check_type.getParentValue().getPriceCurrency()\n
   if add_line:\n
     number_of_line_created += 1\n
     context.newContent(portal_type=line_portal_type,**line_kw_dict)\n
@@ -231,6 +243,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>reference_range_min</string>
                             <string>reference_range_max</string>
                             <string>check_amount_relative_url</string>
+                            <string>len</string>
+                            <string>check_type_relative_url</string>
+                            <string>check_type</string>
                             <string>message</string>
                             <string>redirect_url</string>
                           </tuple>

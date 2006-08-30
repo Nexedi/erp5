@@ -115,7 +115,9 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_price_currency</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

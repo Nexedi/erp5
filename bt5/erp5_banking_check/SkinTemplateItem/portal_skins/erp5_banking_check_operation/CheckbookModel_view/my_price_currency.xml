@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_check_amount</string> </value>
+            <value> <string>my_price_currency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -209,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -243,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -251,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Checkbook Type</string> </value>
+                    <value> <string>Currency</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: [x.getTitle(), x.getRelativeUrl()], [here.portal_categories.getCategoryValue(x) for x in here.getVariationRangeCategoryList()])</string> </value>
+            <value> <string>python: here.CurrencyExchange_getCurrencyList()</string> </value>
         </item>
       </dictionary>
     </pickle>

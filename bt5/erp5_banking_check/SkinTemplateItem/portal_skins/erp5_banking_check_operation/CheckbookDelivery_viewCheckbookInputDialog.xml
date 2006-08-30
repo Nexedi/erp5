@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.Delivery_viewCheckbookInputDialog(**kw)\n
+            <value> <string>account = context.getDestinationPayment()\n
+return context.Delivery_viewCheckbookInputDialog(destination_payment=account,**kw)\n
 </string> </value>
         </item>
         <item>
@@ -122,9 +123,10 @@
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>account</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

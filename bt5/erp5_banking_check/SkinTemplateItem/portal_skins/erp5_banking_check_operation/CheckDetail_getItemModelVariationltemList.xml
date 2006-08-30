@@ -73,7 +73,6 @@ resource = request.get(\'resource\',None)\n
 if resource in (None,\'None\'):\n
   resource = request.get(\'field_my_resource\',None)\n
 item_model = context.getPortalObject().restrictedTraverse(resource)\n
-context.log(\'CheckDetail_getItemModelVariationltemList item_model\',item_model)\n
 \n
 return item_model.getVariationRangeCategoryItemList(display_id=\'title\',display_base_category=0)\n
 </string> </value>

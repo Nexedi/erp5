@@ -30,19 +30,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>En attente de delivrance (%(count)s)</string> </value>
+            <value> <string>Draft to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=confirmed&reset=1
+Base_viewWorklist?simulation_state=draft&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Reception de formule</string> </value>
+            <value> <string>Draft to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -80,10 +80,18 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1
             <value>
               <dictionary>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Checkbook Delivery</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>

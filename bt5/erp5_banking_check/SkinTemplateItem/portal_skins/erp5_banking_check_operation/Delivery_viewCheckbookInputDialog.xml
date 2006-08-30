@@ -73,7 +73,8 @@
 # to select them\n
 from DateTime import DateTime\n
 \n
-item_portal_type_list = ["Checkbook","Check"]\n
+if item_portal_type_list is None:\n
+  item_portal_type_list = ["Checkbook","Check"]\n
 \n
 if listbox is None:\n
 \n
@@ -81,34 +82,39 @@ if listbox is None:\n
   reference_date = DateTime()\n
   item_list = []\n
   listbox = []\n
-  context.log(\'CheckbookVaultTransfer_viewCheckbookInputDialog, source:\',node)\n
   getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
   current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
                                                 at_date=reference_date, node=node)]\n
-  context.log(\'CheckbookVaultTransfer_viewCheckbookInputDialog,current_tracking_list:\',current_tracking_list)\n
-  context.log(\'CheckbookVaultTransfer_viewCheckbookInputDialog,sql:\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1))\n
   for item in current_tracking_list:\n
-    item_portal_type = item.getPortalType()\n
-    if item_portal_type  in item_portal_type_list:\n
-      item_dict = {}\n
-      if item_portal_type==\'Check\':\n
-        item_dict[\'reference_range_max\'] = item.getReference()\n
-        item_dict[\'reference_range_min\'] = item.getReference()\n
-      else:\n
-        item_dict[\'reference_range_max\'] = item.getReferenceRangeMin()\n
-        item_dict[\'reference_range_min\'] = item.getReferenceRangeMax()\n
-      item_dict[\'resource_title\'] = item.getResourceTitle()\n
-      item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
-      item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
-      item_dict[\'selection\'] = 0\n
-      item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
+    exclude=0\n
+    if model_filter_dict is not None:\n
+      resource = item.getResourceValue()\n
+      for property,value in model_filter_dict.items():\n
+        if resource.getProperty(property)!=value:\n
+          exclude=1\n
+    if destination_payment is not None:\n
+      if destination_payment!=item.getDestinationPayment():\n
+        exclude=1\n
+    if not exclude:\n
+      item_portal_type = item.getPortalType()\n
+      if item_portal_type  in item_portal_type_list:\n
+        item_dict = {}\n
+        if item_portal_type==\'Check\':\n
+          item_dict[\'reference_range_max\'] = item.getReference()\n
+          item_dict[\'reference_range_min\'] = item.getReference()\n
+        else:\n
+          item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
+          item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
+        item_dict[\'resource_title\'] = item.getResourceTitle()\n
+        item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
+        item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
+        item_dict[\'selection\'] = 0\n
+        item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
 \n
-      listbox.append(item_dict)\n
+        listbox.append(item_dict)\n
 \n
   context.Base_updateDialogForm(listbox=listbox\n
                                 )\n
-\n
-  context.log(\'CheckbookVaultTransfer_viewCheckbookInputDialog,listbox before end:\',listbox)\n
   return context.asContext(context=None\n
                            , portal_type=context.getPortalType()\n
                            ).CheckbookDelivery_fastInputForm(**kw)\n
@@ -138,7 +144,7 @@ if listbox is None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, cash_detail_dict=None, **kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -158,17 +164,18 @@ if listbox is None:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>listbox</string>
-                            <string>cash_detail_dict</string>
+                            <string>item_portal_type_list</string>
+                            <string>destination_payment</string>
+                            <string>model_filter_dict</string>
                             <string>kw</string>
                             <string>DateTime</string>
-                            <string>item_portal_type_list</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -182,6 +189,10 @@ if listbox is None:\n
                             <string>x</string>
                             <string>current_tracking_list</string>
                             <string>item</string>
+                            <string>exclude</string>
+                            <string>resource</string>
+                            <string>property</string>
+                            <string>value</string>
                             <string>item_portal_type</string>
                             <string>item_dict</string>
                             <string>_write_</string>
@@ -198,6 +209,8 @@ if listbox is None:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <none/>
                 <none/>
                 <none/>
               </tuple>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_section</string> </value>
+            <value> <string>my_destination_payment_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,32 +25,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
-                </item>
-                <item>
-                    <key> <string>relation_result_ambiguous</string> </key>
-                    <value> <string>Select appropriate document in the list.</string> </value>
-                </item>
-                <item>
-                    <key> <string>relation_result_empty</string> </key>
-                    <value> <string>No such document was found.</string> </value>
-                </item>
-                <item>
-                    <key> <string>relation_result_too_long</string> </key>
-                    <value> <string>Too many documents were found.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
                     <key> <string>too_long</string> </key>
                     <value> <string>Too much input was given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -59,14 +39,6 @@
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>allow_creation</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>allow_jump</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
@@ -80,19 +52,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>container_getter_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -124,19 +92,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -144,23 +100,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>parameter_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -173,14 +113,6 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -211,14 +143,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_creation</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>allow_jump</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -231,19 +155,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>container_getter_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -275,14 +195,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -297,23 +209,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>parameter_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -326,14 +222,6 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -365,7 +253,7 @@
               <dictionary>
                 <item>
                     <key> <string>allow_creation</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>allow_jump</string> </key>
@@ -377,11 +265,11 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>destination_section</string> </value>
+                    <value> <string>destination_payment</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
+                    <value> <string>reference</string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -399,9 +287,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -466,14 +352,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
@@ -510,7 +388,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Owner</string> </value>
+                    <value> <string>Account Number</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

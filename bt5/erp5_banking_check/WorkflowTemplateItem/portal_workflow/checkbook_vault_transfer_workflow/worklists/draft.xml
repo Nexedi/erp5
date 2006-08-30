@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=draft&portal_type=Vault Transfer&reset=1
+Base_viewWorklist?simulation_state=draft&portal_type=Checkbook Vault Transfer&reset=1
 
 ]]></string> </value>
         </item>
@@ -41,7 +41,7 @@ Base_viewSearchResultList?simulation_state=draft&portal_type=Vault Transfer&rese
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -51,37 +51,13 @@ Base_viewSearchResultList?simulation_state=draft&portal_type=Vault Transfer&rese
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -101,7 +77,7 @@ Base_viewSearchResultList?simulation_state=draft&portal_type=Vault Transfer&rese
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Vault Transfer</string>
+                        <string>Checkbook Vault Transfer</string>
                       </tuple>
                     </value>
                 </item>

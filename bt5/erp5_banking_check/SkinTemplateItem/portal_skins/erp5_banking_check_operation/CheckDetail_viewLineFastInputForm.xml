@@ -105,6 +105,7 @@
                         <string>listbox_destination_payment_reference</string>
                         <string>listbox_check_amount</string>
                         <string>listbox_price_currency</string>
+                        <string>listbox_check_type</string>
                       </list>
                     </value>
                 </item>

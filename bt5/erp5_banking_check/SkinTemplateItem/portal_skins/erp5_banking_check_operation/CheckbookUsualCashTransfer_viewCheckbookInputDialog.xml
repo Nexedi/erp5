@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.Delivery_viewCheckbookInputDialog(**kw)\n
+            <value> <string>filter_dict = {}\n
+filter_dict[\'account_number_enabled\']=0\n
+filter_dict[\'quantity_required\']=0\n
+return context.Delivery_viewCheckbookInputDialog(item_portal_type_list=(\'Check\',),model_filter_dict=filter_dict,**kw)\n
 </string> </value>
         </item>
         <item>
@@ -122,6 +125,8 @@
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>filter_dict</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>

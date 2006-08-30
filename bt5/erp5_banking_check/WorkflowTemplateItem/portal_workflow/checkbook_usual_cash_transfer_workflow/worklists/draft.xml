@@ -19,75 +19,45 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Checkbook Reception to Validate (%(count)s)</string> </value>
+            <value> <string>Draft  To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=confirmed&reset=1
+Base_viewWorklist?simulation_state=draftd&reset=1&portal_type=Checkbook Usual Cash Transfer
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Checkbook Reception to Validate</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkbook_delivery_worklist</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -107,7 +77,7 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Checkbook Reception</string>
+                        <string>Checkbook Usual Cash Transfer</string>
                       </tuple>
                     </value>
                 </item>
@@ -115,7 +85,7 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>

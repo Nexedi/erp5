@@ -24,24 +24,24 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Vault Transfers To Validate (%(count)s)</string> </value>
+            <value> <string>Checkbooks Vault Transfers  To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Vault Transfer
+Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Vault Transfer
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Vault Transfers To Validate</string> </value>
+            <value> <string>Checkbooks Vault Transfers To Deliver</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -51,37 +51,13 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Vault T
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>DestinationAssignee</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -101,7 +77,7 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Vault T
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Vault Transfer</string>
+                        <string>Checkbook Usual Cash Transfer</string>
                       </tuple>
                     </value>
                 </item>

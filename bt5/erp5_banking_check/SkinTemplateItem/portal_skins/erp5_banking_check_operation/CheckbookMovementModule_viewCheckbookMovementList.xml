@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CheckbookVaultTransferModule_viewCheckbookVaultransferList</string> </value>
+            <value> <string>CheckbookMovementModule_viewCheckbookMovementList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -123,7 +123,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Checkbook Vault Transfers</string> </value>
+            <value> <string>Checkbook Movements</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
