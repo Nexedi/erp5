@@ -4703,7 +4703,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           if action_id not in bt_action_list:
             bt_action_list.append(action_id)
 
-        for workflow_id in [chain in wtool.getChainFor(id)
+        for workflow_id in [chain for chain in wtool.getChainFor(id)
                                     if chain != '(Default)']:
           wf_id = id+' | '+workflow_id
           if wf_id not in bt_wf_chain_list:
