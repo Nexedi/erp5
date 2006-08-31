@@ -1,3 +1,11 @@
+2006-08-31 Kevin
+* Add portal status message.
+* Add default generic layout for web editable_mode.
+* Set the default Webmaster User ID at Web Site creation.
+* Webmaster and ID are now required.
+Rename "Webmaster" to "Webmaster User ID" to avoid confusion.
+* Add alternate Web Page view with dummy guards.
+
 2006-08-31 Stefan
 * WebSection_getDocumentValueList now returns the newest version for each
 document if there are multiple versions.
