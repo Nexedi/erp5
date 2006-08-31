@@ -1,3 +1,7 @@
+2006-08-31 Kevin
+* Render non editable field in a span.
+* Display edit tabs in web editable_mode.
+
 2006-08-29 Chris
 * Added an easy way to customize erp5 using new CSS/JS files. You just need to redefine ERP5Site_getCSSList and ERP5Site_getJSList to return your new files too.
 
