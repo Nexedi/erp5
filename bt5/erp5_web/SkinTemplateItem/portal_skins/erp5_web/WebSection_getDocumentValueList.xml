@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script is part of ERP5 Web\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script is part of ERP5 Web\n
 #\n
 # ERP5 Web is an extension to ERP5 which provides a way\n
 # to create web sites which can display selected\n
@@ -132,10 +134,25 @@ if hasattr(current_node,\'getAggregateList\'):\n
 # Remove duplicate entries in my_list\n
 my_clean_list=[]\n
 my_reference_list=[]\n
+my_version_list={}\n
 for my_element in my_list:\n
   if not my_element.getReference() in my_reference_list:\n
     my_clean_list.append(my_element)\n
     my_reference_list.append(my_element.getReference())\n
+    if hasattr(my_element,\'getVersion\'):\n
+      my_version_list[my_element.getReference()] = my_element.getVersion()\n
+    else:\n
+      my_version_list[my_element.getReference()] = 0\n
+  else:\n
+    if hasattr(my_element,\'getVersion\'):\n
+      if my_version_list[my_element.getReference()] < my_element.getVersion():\n
+        my_version_list[my_element.getReference()] = my_element.getVersion()\n
+        for clean_item in my_clean_list:\n
+          if clean_item.getReference()==my_element.getReference():\n
+            my_clean_list.remove(clean_item)\n
+            break\n
+        my_clean_list.append(my_element)\n
+    \n
 \n
 \n
 def compareIndex(c1, c2):\n
@@ -193,7 +210,9 @@ return my_clean_list\n
 #brain_list.sort(content_cmp)\n
 #\n
 #return brain_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -262,8 +281,12 @@ return my_clean_list\n
                             <string>map</string>
                             <string>my_clean_list</string>
                             <string>my_reference_list</string>
+                            <string>my_version_list</string>
                             <string>_getiter_</string>
                             <string>my_element</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>clean_item</string>
                             <string>compareIndex</string>
                           </tuple>
                         </value>
