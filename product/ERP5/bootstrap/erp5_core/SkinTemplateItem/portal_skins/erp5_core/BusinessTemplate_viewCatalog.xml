@@ -100,10 +100,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_template_catalog_full_text_key</string>
-                        <string>my_template_catalog_request_key</string>
-                        <string>my_template_catalog_multivalue_key</string>
-                        <string>my_template_catalog_topic_key</string>
+                        <string>my_template_catalog_full_text_key_list</string>
+                        <string>my_template_catalog_request_key_list</string>
+                        <string>my_template_catalog_multivalue_key_list</string>
+                        <string>my_template_catalog_topic_key_list</string>
                       </list>
                     </value>
                 </item>

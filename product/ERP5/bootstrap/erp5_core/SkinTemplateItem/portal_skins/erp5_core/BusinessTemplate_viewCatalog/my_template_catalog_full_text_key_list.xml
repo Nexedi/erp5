@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_template_catalog_full_text_key</string> </value>
+            <value> <string>my_template_catalog_full_text_key_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
