@@ -70,9 +70,12 @@
             <key> <string>_body</string> </key>
             <value> <string># Set Web Site layout to default one\n
 default_layout = \'erp5_web_default_layout\'\n
-\n
 context.setContainerLayout(default_layout)\n
 context.setContentLayout(default_layout)\n
+\n
+# Set default webmaster to current user\n
+user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
+context.setWebmaster(user_id)\n
 </string> </value>
         </item>
         <item>
@@ -119,7 +122,8 @@ context.setContentLayout(default_layout)\n
                             <string>kw</string>
                             <string>default_layout</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>user_id</string>
                           </tuple>
                         </value>
                     </item>
