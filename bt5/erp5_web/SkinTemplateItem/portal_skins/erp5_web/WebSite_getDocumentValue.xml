@@ -88,6 +88,9 @@
 #\n
 # NOTE: portal param probably useless\n
 \n
+# Use the following Variable to determine which\n
+# \n
+\n
 portal_catalog = portal.portal_catalog\n
 \n
 if name is None:\n
@@ -100,19 +103,31 @@ if name is None:\n
 \n
 #If name is not None, it has to be searched for it in the catalog.\n
 \n
+# This Function helps do sort different Versions of the same Document.\n
+def compareVersion(c1, c2):\n
+  c1_value = c1.getObject()  \n
+  c2_value = c2.getObject()\n
+  return cmp(c2_value.getVersion(), c1_value.getVersion()) \n
+\n
 #from Products.ERP5Type.Cache import CachingMethod\n
 def getDocument(name):\n
   # First try to get a published document\n
   matching_document_list = portal_catalog(reference = \'%s\' % name, validation_state=\'published\')\n
   if len(matching_document_list):\n
+    matching_document_list=list(matching_document_list)\n
+    matching_document_list.sort(compareVersion)\n
     return matching_document_list[0].getObject()\n
   # Then try to get a validated document (Product)\n
   matching_document_list = portal_catalog(reference = \'%s\' % name, validation_state=\'validated\')\n
   if len(matching_document_list):\n
+    matching_document_list=list(matching_document_list)\n
+    matching_document_list.sort(compareVersion)\n
     return matching_document_list[0].getObject()\n
   # Then try to get any document\n
   matching_document_list = portal_catalog(reference = \'%s\' % name)\n
   if len(matching_document_list):\n
+    matching_document_list=list(matching_document_list)\n
+    matching_document_list.sort(compareVersion)\n
     return matching_document_list[0].getObject()\n
   return None \n
 \n
@@ -171,6 +186,7 @@ return getDocument(name)\n
                             <string>portal_catalog</string>
                             <string>None</string>
                             <string>context</string>
+                            <string>compareVersion</string>
                             <string>getDocument</string>
                           </tuple>
                         </value>
