@@ -40,7 +40,7 @@
 
 /*____________________________________\n
 \n
-  Default ERP5 Web module CSS.\n
+  Default ERP5 Web CSS.\n
 \n
 Guidelines (how-to create a good css):\n
    * All measurements should be expressed with scalable units like em, ex, %.\n
@@ -50,13 +50,11 @@ Guidelines (how-to create a good css):\n
    * Don\'t put styling directives in xhtml code.\n
 ____________________________________*/\n
 \n
+/* General stuff that are good to include in every website.\n
+----------------------------------------------- */\n
 \n
 * {\n
   padding: 0;\n
-  margin: 0;\n
-}\n
-\n
-html {\n
   margin: 0;\n
 }\n
 \n
@@ -92,6 +90,7 @@ blockquote {\n
 \n
 /* layout\n
 Layout technic based on http://en.wikipedia.org/skins-1.5/monobook/main.css?9\n
+Layout technic used here doesn\'t depend of content ordering, but will not work with IE (because of poor CSS support).\n
 ----------------------------------------------- */\n
 \n
 /* The first global form can be used as a global wrapper */\n
@@ -108,6 +107,10 @@ body > form#main_form {\n
 /* The two sub content are web widgets and main page rendering */\n
 form#main_form > div {\n
   border: 1px solid #666;\n
+}\n
+/* Undo border styling for main content */\n
+form#main_form > div.main_content {\n
+  border: 0;\n
 }\n
 \n
 \n
@@ -141,7 +144,7 @@ form#main_form > div#search_bar {\n
   right: 1em; /* Same as "body > form#main_form[padding-right]".\n
                  TODO: use dtml code to make this more flexible.\n
                */\n
-  width: 20em; /* XXX Must be adapted dynamiccaly to let several web widget be diplayed inline.\n
+  width: 28em; /* XXX Must be adapted dynamiccaly to let several web widget be diplayed inline.\n
                   TODO: find the appropriate CSS trick to do hit without pain.\n
                 */\n
 }\n
@@ -163,7 +166,7 @@ div#search_bar > div.field > div.input {\n
 /* Special layout for websiteLogo web widget group */\n
 form#main_form > div#websiteLogo {\n
  border:0;\n
- padding: 1em 0 0;\n
+ padding: 2em 0 0;\n
 }\n
 \n
 form#main_form > div#websiteLogo label {\n
@@ -201,7 +204,7 @@ body, input, textarea, select, table {\n
   font-family: "Courier New", Courier, monospace;\n
 }\n
 \n
-.warning, .error {\n
+#transition_message, .warning, .error {\n
   color: #f00;\n
   font-weight: bold;\n
 }\n
@@ -212,33 +215,115 @@ h1 {\n
 \n
 \n
 \n
-/* forms styling\n
+/* Edit tabs styling.\n
+   Edit tabs are another part of admin stuffs and\n
+   should respect other admin stuff design convention\n
+   (colors, etc...) to keep the UI consistent.\n
 ----------------------------------------------- */\n
 \n
-div.fieldgroup {\n
+div.document > div.editable {\n
   border: 1px solid #ccc;\n
-  padding: .5em;\n
 }\n
 \n
-fieldset {\n
-  padding: 0 .5em 1em;\n
+div.actions {\n
+  position: relative;\n
+  width: 100%;\n
+  height: 3em;\n
+}\n
+\n
+div.actions ul {\n
+  position: absolute;\n
+  bottom: -1px;\n
+  list-style: none;\n
+  margin: 0;\n
+}\n
+\n
+div.actions ul li  {\n
+  display: inline;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div.actions ul a, div.actions ul li.selected a {\n
+  display: block;\n
+  float: left;\n
+  padding: 4px 1em;\n
+  margin: 1px 2px 0 0;\n
+  text-align: center;\n
+  text-decoration: none;\n
+}\n
+\n
+div.actions ul a {\n
+  background: #fffae1;\n
+  border: 1px solid #ccc;\n
+}\n
+\n
+div.actions ul li.selected a, div.actions ul li.selected a:hover {\n
+  border-bottom: none;\n
+  padding-bottom: 6px;\n
+  margin-top: 0;\n
+  background: #fff;\n
+}\n
+\n
+div.actions ul a:hover {\n
+  margin-top: 0;\n
+  border-color: #666;\n
+  border-bottom: none;\n
+  padding-bottom: 5px;\n
+}\n
+\n
+\n
+\n
+/* editable forms styling\n
+----------------------------------------------- */\n
+\n
+div.editable fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
   border-color: #ccc;\n
   border-width: 1px 0 0;\n
   border-style: dotted none none;\n
 }\n
 \n
-fieldset legend {\n
-  padding: .5em;\n
-  margin: 0 0 1em;\n
-  text-transform: capitalize;\n
-  font-weight: bold;\n
+div.editable legend {\n
+  padding: .2em .5em;\n
+}\n
+\n
+div.editable fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+div.editable label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 13em;\n
+  text-align: right;\n
+  float: left;\n
+}\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+  position: absolute;\n
+  z-index: 300;\n
+  top: -.5em;\n
+  right: 0;\n
+}\n
+\n
+\n
+/* general form styling\n
+----------------------------------------------- */\n
+\n
+/* "div.input span" is for field renders as non-editable */\n
+div.input span, input, select, textarea {\n
+  margin: 0 .5em;\n
 }\n
 \n
 input, textarea {\n
   background-color: #fff;\n
   background-repeat: repeat-x;\n
   border: 1px solid #999;\n
-  margin: 1px;\n
 }\n
 \n
 input.text, input[type="password"], input[type="text"], textarea {\n
