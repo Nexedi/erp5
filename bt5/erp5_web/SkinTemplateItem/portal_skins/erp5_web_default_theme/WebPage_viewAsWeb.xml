@@ -104,7 +104,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebPage_viewAsWeb</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
