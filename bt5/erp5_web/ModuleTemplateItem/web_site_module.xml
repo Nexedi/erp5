@@ -358,6 +358,9 @@
    <name>Edit ReStructuredText</name>
   </permission>
   <permission type='list'>
+   <name>Edit target</name>
+  </permission>
+  <permission type='list'>
    <name>FTP access</name>
   </permission>
   <permission type='list'>
