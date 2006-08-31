@@ -1,3 +1,15 @@
+2006-08-31 Stefan
+* WebSection_getDocumentValueList now returns the newest version for each
+document if there are multiple versions.
+* WebSite_getDocumentValue returns the newest Version of a Document if it
+is called with a reference (name parameter).
+
+2006-08-30 Stefan
+* WebSite_getDocumentValue is now be able to display any object with a refernce property.
+
+2006-08-30 Kevin
+* Add default custom render of Web Page for web sites.
+
 2006-08-29 Kevin
 * Clean-up group naming.
 * Fix bad selection name.
