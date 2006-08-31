@@ -74,6 +74,12 @@
 transaction = state_change[\'object\']\n
 bank_account = transaction.getDestinationPaymentValue()\n
 check_number = transaction.getAggregateFreeText()\n
+message_tag = \'check_%s\' % (check_number, )\n
+\n
+# XXX: no need to handle this cleanly for now, so just raise an error.\n
+if context.portal_activities.countMessageWithTag(message_tag) != 0:\n
+  msg = Message(domain=\'ui\', message="This check number is already being indexed.")\n
+  raise ValidationFailed, (msg,)\n
 \n
 result = context.portal_catalog(portal_type = \'Check\', reference = check_number)\n
 if len(result) == 0:\n
@@ -81,7 +87,7 @@ if len(result) == 0:\n
 \n
   # Get a checkbook for this bank account.\n
   checkbook = None\n
-  generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', id = \'generic_checkbook\')[0].getObject()\n
+  generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', title = \'Generic\')[0].getObject()\n
   # XXX it would be better to use a related key for this, but z_related_resource is too specific to\n
   # movement at the moment.\n
   for brain in context.portal_catalog(portal_type = \'Checkbook\',\n
@@ -99,9 +105,7 @@ if len(result) == 0:\n
                                                     destination_payment_value = bank_account,\n
                                                     immediate_reindex = 1)\n
   # Create a check.\n
-  # To prevent duplicated checks for a single check number, index this new check immediately.\n
-  # This has a performance penalty, but this part of the script will rarely be called (once per check number).\n
-  check = checkbook.newContent(portal_type = \'Check\', reference = check_number, immediate_reindex = 1)\n
+  check = checkbook.newContent(portal_type = \'Check\', reference = check_number, activate_kw={\'tag\': message_tag})\n
   # Automatically issue this check.\n
   check.confirm()\n
 else:\n
@@ -179,7 +183,11 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                             <string>_getattr_</string>
                             <string>bank_account</string>
                             <string>check_number</string>
+                            <string>message_tag</string>
                             <string>context</string>
+                            <string>Message</string>
+                            <string>msg</string>
+                            <string>ValidationFailed</string>
                             <string>result</string>
                             <string>len</string>
                             <string>None</string>

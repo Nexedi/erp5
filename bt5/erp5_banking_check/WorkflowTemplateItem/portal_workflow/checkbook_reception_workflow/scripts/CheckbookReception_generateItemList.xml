@@ -104,7 +104,7 @@ for line in line_list:\n
       item = module.newContent()\n
       if checkbook:\n
         item.setReferenceRangeMin(reference_range_min)\n
-        reference_range_max = str(int(float(reference_range_min)) + int(check_quantity))\n
+        reference_range_max = str(int(float(reference_range_min)) + int(check_quantity)-1)\n
         item.setReferenceRangeMax(reference_range_max)\n
         item.setTitle(\'%s - %s\' % (reference_range_min, reference_range_max))\n
         reference_range_min = reference_range_max\n

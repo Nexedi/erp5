@@ -94,15 +94,21 @@ context.validateConsistency(state_change)\n
 \n
 line = transaction.movement\n
 bank_account = transaction.getDestinationPaymentValue()\n
-price = transaction.getSourceTotalAssetPrice() \n
+price = transaction.getSourceTotalAssetPrice()\n
 \n
-# immediate reindex is required to make this operation atomic.\n
-line.immediateReindexObject()\n
 # this prevents multiple transactions from being committed at the same time for this bank account.\n
 bank_account.serialize()\n
 \n
-# Check if the banking operation is correct.\n
-if - price != transaction.getTotalPrice(portal_type = \'Banking Operation Line\'):\n
+# Make sure there are no other operations pending for this account\n
+if context.BankAccount_isMessagePending(bank_account):\n
+  msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Index the banking operation line so it impacts account position\n
+context.BankingOperationLine_index(line)\n
+\n
+# Check if the banking operation is correct. Do not depend on catalog because line might not be indexed immediatelly.\n
+if - price != (line.getPrice() * line.getQuantity()):\n
   msg = Message(domain=\'ui\', message=\'Banking operation and check payment price do not match.\')\n
   raise ValidationFailed, (msg,)\n
 \n

@@ -342,6 +342,14 @@
                           <string>Stop Number</string>
                         </tuple>
                         <tuple>
+                          <string>check_amount_title</string>
+                          <string>Number of checks</string>
+                        </tuple>
+                        <tuple>
+                          <string>check_type_title</string>
+                          <string>Value of check</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_section</string>
                           <string>Owner</string>
                         </tuple>
