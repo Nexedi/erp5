@@ -4642,6 +4642,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       Fill field about properties for each portal type
       """
+      wtool = self.getPortalObject().portal_workflow
+      ttool = self.getPortalObject().portal_types
       bt_allowed_content_type_list = list(getattr(self, 'template_portal_type_allowed_content_type', []) or [])
       bt_hidden_content_type_list = list(getattr(self, 'template_portal_type_hidden_content_type', []) or [])
       bt_property_sheet_list = list(getattr(self, 'template_portal_type_property_sheet', []) or [])
@@ -4651,17 +4653,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_portal_type_roles_list =  list(getattr(self, 'template_portal_type_roles', []) or [])
       bt_wf_chain_list = list(getattr(self, 'template_portal_type_workflow_chain', []) or [])
 
-      pt_wf_item = getattr(self, '_portal_type_workflow_chain_item', None)
-      if pt_wf_item is not None:
-        chain_dict = getChainByType(self.getPortalObject())[1]
-      else:
-        chain_dict = {}
-
       p = self.getPortalObject()
       for id in bt_portal_types_id_list:
-        try:
-          portal_type = p.unrestrictedTraverse('portal_types/'+id)
-        except KeyError:
+        portal_type = ttool.getTypeInfo(id)
+        if portal_type is None:
           continue
         if len(getattr(portal_type, '_roles', ())) > 0:
           if id not in bt_portal_type_roles_list:
@@ -4672,7 +4667,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         property_sheet_list = []
         base_category_list = []
         action_list = []
-        wf_list = []
         if hasattr(portal_type, 'allowed_content_types'):
           allowed_content_type_list = portal_type.allowed_content_types
         if hasattr(portal_type, 'hidden_content_type_list'):
@@ -4683,10 +4677,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           base_category_list = portal_type.base_category_list
         if hasattr(portal_type, 'listActions'):
           action_list = [x.getId() for x in portal_type.listActions()]
-        if chain_dict.has_key('chain_%s' % id):
-          chain = chain_dict['chain_%s' % id]
-          if chain != '' and chain != '(Default)':
-            wf_list = chain.split(', ')
 
         for a_id in allowed_content_type_list:
           allowed_id = id+' | '+a_id
@@ -4713,7 +4703,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           if action_id not in bt_action_list:
             bt_action_list.append(action_id)
 
-        for workflow_id in wf_list:
+        for workflow_id in [chain in wtool.getChainFor(id)
+                                    if chain != '(Default)']:
           wf_id = id+' | '+workflow_id
           if wf_id not in bt_wf_chain_list:
             bt_wf_chain_list.append(wf_id)
@@ -4725,13 +4716,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_action_list.sort()
       bt_wf_chain_list.sort()
 
-      setattr(self, 'template_portal_type_workflow_chain', bt_wf_chain_list)
-      setattr(self, 'template_portal_type_roles', bt_portal_type_roles_list)
-      setattr(self, 'template_portal_type_allowed_content_type', bt_allowed_content_type_list)
-      setattr(self, 'template_portal_type_hidden_content_type', bt_hidden_content_type_list)
-      setattr(self, 'template_portal_type_property_sheet', bt_property_sheet_list)
-      setattr(self, 'template_portal_type_base_category', bt_base_category_list)
-      setattr(self, 'template_action_path', bt_action_list)
+      self.setProperty('template_portal_type_workflow_chain', bt_wf_chain_list)
+      self.setProperty('template_portal_type_roles', bt_portal_type_roles_list)
+      self.setProperty('template_portal_type_allowed_content_type', bt_allowed_content_type_list)
+      self.setProperty('template_portal_type_hidden_content_type', bt_hidden_content_type_list)
+      self.setProperty('template_portal_type_property_sheet', bt_property_sheet_list)
+      self.setProperty('template_portal_type_base_category', bt_base_category_list)
+      self.setProperty('template_action_path', bt_action_list)
       return
 
 
