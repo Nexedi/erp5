@@ -49,8 +49,11 @@ def createPreferenceMethods(portal) :
   This method must be called on startup.
   """
   attr_list = []
-  pref_portal_type = getToolByName(portal,
-                                  'portal_types')['Preference']
+  typestool = getToolByName(portal, 'portal_types')
+  pref_portal_type = typestool.getTypeInfo('Preference')
+  if pref_portal_type is None:
+    LOG('createPreferenceMethods', PROBLEM,
+           'Preference type information is not installed.')
   # 'Dynamic' property sheets added through ZMI
   zmi_property_sheet_list = []
   for property_sheet in pref_portal_type.property_sheet_list :
