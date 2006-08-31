@@ -35,8 +35,7 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.utils import _getViewFor
+from Products.CMFCore.utils import getToolByName, _getViewFor
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
@@ -377,8 +376,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   security = ClassSecurityInfo()
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                      , )
+  property_sheets = ( PropertySheet.Base, )
 
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
