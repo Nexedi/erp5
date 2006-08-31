@@ -87,6 +87,12 @@ blockquote {\n
   background: #f9f9f9;\n
 }\n
 \n
+/* general style stuff */\n
+body {\n
+  background: #e6e6e6 url(erp5-website-background.png) top left no-repeat;\n
+}\n
+\n
+\n
 \n
 /* layout\n
 Layout technic based on http://en.wikipedia.org/skins-1.5/monobook/main.css?9\n
@@ -95,14 +101,11 @@ Layout technic used here doesn\'t depend of content ordering, but will not work 
 \n
 /* The first global form can be used as a global wrapper */\n
 body > form#main_form {\n
-  /*background: #fcd;*/\n
-\n
   padding: 0 1em;\n
   margin-left: 16.2em;\n
   position: relative;\n
   z-index: 2;\n
 }\n
-\n
 \n
 /* The two sub content are web widgets and main page rendering */\n
 form#main_form > div {\n
@@ -113,20 +116,14 @@ form#main_form > div.main_content {\n
   border: 0;\n
 }\n
 \n
-\n
 form#main_form > div.main_content {\n
-  /*background: #368;*/\n
-\n
   margin-top: 4em;\n
   width: 100%;\n
   float: right;\n
 }\n
 \n
-\n
 /* erp5_web_default_layout form groups */\n
 form#main_form > div {\n
-  /*background: #098;*/\n
-\n
   border: 1px solid #aaa;\n
   margin: 0 0 .5em -16.2em;\n
   width: 15.1em\n
@@ -136,8 +133,7 @@ form#main_form > div {\n
 /********************************/\n
 /* Special layout for search_bar web widget group: move it top right */\n
 form#main_form > div#search_bar {\n
-  background: #ff9;\n
-\n
+  /*background: #ff9;*/\n
   position: absolute;\n
   z-index: 200;\n
   top: .3em;\n
@@ -147,37 +143,35 @@ form#main_form > div#search_bar {\n
   width: 28em; /* XXX Must be adapted dynamiccaly to let several web widget be diplayed inline.\n
                   TODO: find the appropriate CSS trick to do hit without pain.\n
                 */\n
+  border: 0;\n
 }\n
-\n
+form#main_form > div#search_bar div.field > label {\n
+  display: inherit;\n
+}\n
 div#search_bar > div.field {\n
- float: right;\n
+  float: right;\n
 }\n
-\n
-div#search_bar > div.field > label {\n
- float: left;\n
+div#search_bar > div.field:hover {\n
+  background: #f3f3f3;\n
 }\n
-\n
+div#search_bar > div.field > label,\n
 div#search_bar > div.field > div.input {\n
- float: left;\n
+  float: left;\n
+  margin: 0 .5em;\n
 }\n
 \n
 \n
 /********************************/\n
 /* Special layout for websiteLogo web widget group */\n
 form#main_form > div#websiteLogo {\n
- border:0;\n
- padding: 2em 0 0;\n
-}\n
-\n
-form#main_form > div#websiteLogo label {\n
- display: none;\n
+  border: 0;\n
+  padding: 2em 0 0;\n
 }\n
 \n
 form#main_form > div#websiteLogo .field {\n
- border: 0;\n
- text-align: center;\n
+  border: 0;\n
+  text-align: center;\n
 }\n
-\n
 \n
 \n
 /********************************/\n
@@ -197,7 +191,7 @@ body, input, textarea, select, table {\n
   color: #333;\n
   font-family: Sans, Verdana, Tahoma, Georgia, Geneva, Arial, sans-serif;\n
   font-size: 8pt; /* XXX font-size should not be expressed in pt unit */\n
-  line-height: 1.75em;\n
+  line-height: 1.3em;\n
 }\n
 \n
 .code, code {\n
@@ -215,6 +209,25 @@ h1 {\n
 \n
 \n
 \n
+/* default read only content styling\n
+----------------------------------------------- */\n
+\n
+fieldset {\n
+  border: 0;\n
+  background: #fff;\n
+  padding: 1em;\n
+}\n
+\n
+fieldset > legend {\n
+  display: none;\n
+}\n
+\n
+div.field > label {\n
+  display: none;\n
+}\n
+\n
+\n
+\n
 /* Edit tabs styling.\n
    Edit tabs are another part of admin stuffs and\n
    should respect other admin stuff design convention\n
@@ -223,6 +236,7 @@ h1 {\n
 \n
 div.document > div.editable {\n
   border: 1px solid #ccc;\n
+  background: #fff;\n
 }\n
 \n
 div.actions {\n
@@ -274,51 +288,8 @@ div.actions ul a:hover {\n
 \n
 \n
 \n
-/* editable forms styling\n
------------------------------------------------ */\n
-\n
-div.editable fieldset {\n
-  margin: 1em 0;\n
-  padding: .5em;\n
-  border-color: #ccc;\n
-  border-width: 1px 0 0;\n
-  border-style: dotted none none;\n
-}\n
-\n
-div.editable legend {\n
-  padding: .2em .5em;\n
-}\n
-\n
-div.editable fieldset > div {\n
-  clear: both;\n
-  margin: .1em 0;\n
-  position: relative;\n
-}\n
-\n
-div.editable label {\n
-  margin: 0;\n
-  display: block;\n
-  width: 13em;\n
-  text-align: right;\n
-  float: left;\n
-}\n
-\n
-/* Save button styling */\n
-div.actions button {\n
-  position: absolute;\n
-  z-index: 300;\n
-  top: -.5em;\n
-  right: 0;\n
-}\n
-\n
-\n
 /* general form styling\n
 ----------------------------------------------- */\n
-\n
-/* "div.input span" is for field renders as non-editable */\n
-div.input span, input, select, textarea {\n
-  margin: 0 .5em;\n
-}\n
 \n
 input, textarea {\n
   background-color: #fff;\n
@@ -356,7 +327,57 @@ button:hover {\n
   color: #333;\n
   background: #b0cfcb;\n
   border-color: #9abdb7;\n
-}
+}\n
+\n
+\n
+\n
+/* editable forms styling\n
+----------------------------------------------- */\n
+\n
+/* "div.input span" is for field rendered as non-editable */\n
+div.editable div.input span, div.editable input, div.editable select, div.editable textarea {\n
+  margin: 0 .5em;\n
+}\n
+\n
+/* reactivate legends for editable mode */\n
+div.editable fieldset > legend {\n
+  display: inherit;\n
+}\n
+\n
+div.editable fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+div.editable legend {\n
+  padding: .2em .5em;\n
+}\n
+\n
+div.editable fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+div.editable label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 13em;\n
+  text-align: right;\n
+  float: left;\n
+}\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+  position: absolute;\n
+  z-index: 300;\n
+  top: -.5em;\n
+  right: 0;\n
+}\n
+
 
 ]]></string> </value>
         </item>
