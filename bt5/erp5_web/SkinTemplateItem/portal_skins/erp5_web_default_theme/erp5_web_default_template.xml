@@ -91,6 +91,8 @@
       <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
 \n
       <div class="main_content">\n
+        <!-- XXX Why no portal message displayed here on save through web interface ??? -->\n
+        <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
         <tal:block metal:define-slot="main"/>\n
       </div>\n
   \n
