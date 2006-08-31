@@ -79,10 +79,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 IDEAS:\n
  - Add callbacks to ERP5Form object (selection ?) to gather needed fields -> put them in http_parameter_list.\n
-\n
-MISSING:\n
- (jp) - Support for layout through page template (without form)\n
- (jp) - hidden parameters (where should they be defined ?) - see layout form\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
