@@ -136,18 +136,6 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
                                                  currency=self.currency_1,
                                                  amount=100000)
 
-    # create a check
-    self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
-                                            vault=self.bi_counter,
-                                            bank_account=self.bank_account_1,
-                                            min=50,
-                                            max=100,
-                                            )
-
-    self.check_1 = self.createCheck(id='check_1',
-                                    reference='50',
-                                    checkbook=self.checkbook_1)
-
     # open counter date and counter
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.bi_counter_vault)
@@ -166,6 +154,18 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+
+    # create a check
+    self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
+                                            vault=self.bi_counter,
+                                            bank_account=self.bank_account_1,
+                                            min=50,
+                                            max=100,
+                                            )
+
+    self.check_1 = self.createCheck(id='check_1',
+                                    reference='50',
+                                    checkbook=self.checkbook_1)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
