@@ -115,8 +115,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_quantity</string>
-                        <string>my_quantity_string</string>
+                        <string>my_price</string>
+                        <string>my_price_string</string>
                       </list>
                     </value>
                 </item>

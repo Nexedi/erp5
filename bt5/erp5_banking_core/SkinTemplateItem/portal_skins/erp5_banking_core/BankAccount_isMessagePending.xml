@@ -68,45 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# check that the amount of `resource` in account `payment` is greater than or equal to `quantity`\n
-\n
-# returns a dictionnary like : {\'error_code\', \'balance\'}\n
-\n
-#workflow_id = \'bank_account_workflow\'\n
-workflow_correct_state_list = (\'valid\', \'being_modified\', \'validating_modification\')\n
-manual_validation_account_category_list = (\'test\',)\n
-\n
-# First check that the payment account is in an acceptable state\n
-#payment_state = context.portal_workflow.getInfoFor(ob=payment, name=\'simulation_state\', wf_id=workflow_id)\n
-payment_value = context.restrictedTraverse(payment)\n
-payment_state = payment_value.getValidationState()\n
-\n
-if payment_state not in workflow_correct_state_list :\n
-  return {\'error_code\':2} # closed account\n
-\n
-resource = payment_value.getPriceCurrencyValue()\n
-\n
-if resource is None :\n
-  raise AttributeError, \'No currency defined on %s\' % payment\n
-\n
-# Next, check the balance of the account\n
-account_balance = resource.getFutureInventory(payment=payment, src__=src__)\n
-#context.log("account balance",account_balance)\n
-if src__ :\n
-  return account_balance \n
-\n
-if account_balance - quantity < 0 :\n
-#  if payment.getBankAccountType() in manual_validation_account_category_list :\n
-#    return {\'error_code\':3, \'balance\':account_balance} # manual_validation\n
-\n
-  return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
-\n
-return {\'error_code\':0, \'balance\':account_balance} # ok\n
-
-
-]]></string> </value>
+            <value> <string>return context.portal_activities.countMessageWithTag(context.BankAccount_getMessageTag(bank_account))\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -115,14 +78,8 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/BankAccount_checkBalance</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/BankAccount_isMessagePending</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -132,15 +89,7 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>payment, quantity, src__=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>bank_account</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,25 +109,15 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>payment</string>
-                            <string>quantity</string>
-                            <string>src__</string>
-                            <string>workflow_correct_state_list</string>
-                            <string>manual_validation_account_category_list</string>
+                            <string>bank_account</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>payment_value</string>
-                            <string>payment_state</string>
-                            <string>resource</string>
-                            <string>None</string>
-                            <string>AttributeError</string>
-                            <string>account_balance</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -190,40 +129,17 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankAccount_checkBalance</string> </value>
+            <value> <string>BankAccount_isMessagePending</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

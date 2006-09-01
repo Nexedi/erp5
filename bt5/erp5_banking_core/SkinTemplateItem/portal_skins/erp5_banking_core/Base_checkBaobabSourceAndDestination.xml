@@ -80,6 +80,7 @@ for object in object_to_check_list:\n
 \n
   for node_url in (baobab_source,baobab_destination):\n
     if node_url is not None:\n
+      context.log(\'node_url\', node_url)\n
       try:\n
         node = context.portal_categories.restrictedTraverse(node_url)\n
       except KeyError:\n

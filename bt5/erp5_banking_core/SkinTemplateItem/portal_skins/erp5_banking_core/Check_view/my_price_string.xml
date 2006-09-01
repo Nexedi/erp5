@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity_string</string> </value>
+            <value> <string>my_price_string</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
