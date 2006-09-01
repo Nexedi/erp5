@@ -1,3 +1,6 @@
+2006-09-01 Kevin
+* Allow people who started to work within the current year to appear in the employee list returned by Organisation_getEmployeeList.
+
 2006-08-23 Kevin
 * Fix bad comparison on pre_calculation.
 

@@ -77,38 +77,56 @@
 company = context\n
 subordinate_list = company.getSubordinationRelatedValueList()\n
 \n
-# If no period given, set the current year as the whole period\n
+period_given = True\n
+\n
+\n
+# If no period given, just check that the employee is still working tommorow\n
 if start_date == None and stop_date == None:\n
+  period_given = False\n
   from DateTime import DateTime\n
-  current_year = DateTime().year()\n
-  start_date   = DateTime(current_year, 1, 1)\n
-  stop_date    = DateTime(current_year + 1, 1, 1) - 1\n
+  tomorrow = DateTime() + 1\n
+\n
 \n
 # Get persons\n
 person_list = []\n
 for subordinate in subordinate_list:\n
   sub_obj  = subordinate \n
   sub_type = subordinate.getPortalType()\n
+\n
   # The parent of Assignments and Careers objects are Persons\n
   if sub_type in (\'Assignment\', \'Career\'):\n
     sub_obj  = subordinate.getParent()\n
     sub_type = sub_obj.getPortalType()\n
+\n
   # Last check to be sure we only include persons in person_list\n
   if sub_type == \'Person\':\n
     person_list.append(sub_obj)\n
 \n
+\n
 # Filter person list to only get employees\n
 employees = []\n
 for person in person_list:\n
+\n
   if person.getValidationState()        == \'validated\' and \\\n
-     person.getDefaultCareerStopDate()  >= stop_date   and \\\n
-     person.getDefaultCareerStartDate() <= start_date  and \\\n
+     person.getRole() not in (None, \'\')                and \\\n
      person.getRole().endswith(\'internal\')             and \\\n
      person.getDefaultCareerGrade() not in (None, \'\')  and \\\n
      not person.getDefaultCareerGrade().endswith(\'trainee\'):\n
+\n
+    # If period given, check that the employee was working full\n
+    #   time (without any discontinuity) within the period.\n
+    # If no period given, just check that the employee is still\n
+    #   working tommorow.\n
     # TODO: take car of discontinued career step period\n
-    if person not in employees:\n
-      employees.append(person)\n
+    if (period_given and \\\n
+        person.getDefaultCareerStopDate()  >= stop_date   and \\\n
+        person.getDefaultCareerStartDate() <= start_date) or \\\n
+       (not period_given and \\\n
+        person.getDefaultCareerStopDate() >= tomorrow):\n
+\n
+      if person not in employees:\n
+        employees.append(person)\n
+\n
 \n
 return employees\n
 
@@ -161,9 +179,12 @@ return employees\n
                             <string>company</string>
                             <string>_getattr_</string>
                             <string>subordinate_list</string>
+                            <string>True</string>
+                            <string>period_given</string>
                             <string>None</string>
+                            <string>False</string>
                             <string>DateTime</string>
-                            <string>current_year</string>
+                            <string>tomorrow</string>
                             <string>person_list</string>
                             <string>_getiter_</string>
                             <string>subordinate</string>
