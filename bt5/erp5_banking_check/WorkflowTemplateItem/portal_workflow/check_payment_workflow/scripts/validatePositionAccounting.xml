@@ -105,7 +105,7 @@ if transaction.BankAccount_isMessagePending(bank_account):\n
   raise ValidationFailed, (msg,)\n
 \n
 # Index the banking operation line so it impacts account position\n
-transaxtion.BankingOperationLine_index(line)\n
+transaction.BankingOperationLine_index(line)\n
 \n
 # Check if the banking operation is correct. Do not depend on catalog because line might not be indexed immediatelly.\n
 if - price != (line.getPrice() * line.getQuantity()):\n
@@ -192,7 +192,6 @@ elif error[\'error_code\'] != 0:\n
                             <string>line</string>
                             <string>bank_account</string>
                             <string>price</string>
-                            <string>transaxtion</string>
                             <string>error</string>
                           </tuple>
                         </value>
