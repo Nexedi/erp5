@@ -62,7 +62,7 @@
             <value>
               <list>
                 <string>webcontent</string>
-                <string>extra webcontent</string>
+                <string>extra webcontent (Document Status)</string>
               </list>
             </value>
         </item>
@@ -71,7 +71,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>extra webcontent</string> </key>
+                    <key>                 <string>extra webcontent (Document Status)</string> </key>
                     <value>
                       <list>
                         <string>my_short_title</string>
