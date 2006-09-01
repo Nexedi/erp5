@@ -61,7 +61,7 @@
 <!--\n
 Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
                    Vincent Pelletier <vincent@nexedi.com>\n
-                   Christophe Dumez <christophe@nexedi.com>\n
+                   Christophe Dumez  <christophe@nexedi.com>\n
 \n
 This program is Free Software; you can redistribute it and/or\n
 modify it under the terms of the GNU General Public License\n
@@ -87,27 +87,48 @@ XXX: each case must be handled separatelly in this precise representation :\n
 This leads to minor code duplication, but it\'s still code duplication.\n
 \n
 Breaks strict compatibility:\n
-Groups must be named one of "left", "right", "center", "bottom" otherwise they will not be rendered.\n
-Group order doesn\'t matter. Case is sensitive.\n
-Groups names becomes "left_group", "right_group", "left1_group", "right1_group", "bottom_group" for quad_form_view macro.\n
+  * Groups must be named one of "left", "right", "center", "bottom" otherwise they will not\n
+      be rendered.\n
+  * Group order doesn\'t matter. Case is sensitive.\n
+  * Groups names becomes "left_group", "right_group", "left1_group", "right1_group",\n
+      "bottom_group" for quad_form_view macro.\n
+\n
+It is possible to specify a group id and a group title by naming a group following the\n
+  "group id (Group Title)" pattern. In this case the group id will be used as fieldset css\n
+  class and as tag id. The group title will be used as a legend for the fieldset. If no group\n
+  title is found, we use group id as title.\n
 -->\n
 </tal:block>\n
+\n
+\n
 <tal:block metal:define-macro="master">\n
-  <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                         dummy python: request.set(\'here\', here);\n
-                         groups python: form.get_groups(include_empty=0);">\n
+  <tal:block\n
+    tal:define="field_errors python: request.get(\'field_errors\', {});\n
+                dummy        python: request.set(\'here\', here);\n
+                group_list   python: [];\n
+                dummy        python: group_list.extend([here.ERP5XhtmlStyle_getFormGroupTitleAndId(x) for x in form.get_groups(include_empty=0)]);\n
+                gid_list     python: \' \'.join([x[0] for x in group_list]);">\n
+\n
     <tal:block tal:define="template python: here.developper_shortcut_render">\n
-      <tal:block metal:use-macro="template/macros/form" />\n
+      <tal:block metal:use-macro="template/macros/form"/>\n
     </tal:block>\n
-    <tal:block tal:repeat="group groups">\n
-\t    <fieldset tal:attributes="class group; id python: \'fieldset_\'+group.replace(\' \', \'_\')" tal:condition="python: group.find(\'hidden\') < 0">\n
-        <legend tal:content="group" class="group_title"/>\n
-        <tal:block tal:repeat="field python:form.get_fields_in_group(group)">\n
-          <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
-        </tal:block>\n
-      </fieldset>\n
-      <p tal:condition="python: group.find(\'right\') >= 0 or (group.find(\'left\') >= 0 and \'right\' not in groups)" class="clear"></p>\n
+\n
+    <tal:block tal:repeat="group group_list">\n
+      <tal:block tal:define="gid     python: group[0];\n
+                             gtitle  python: group[1];\n
+                             goid    python: group[2];">\n
+        <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
+          tal:attributes="class python: gid;\n
+                          id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
+          <legend tal:content="python: gtitle" class="group_title"/>\n
+          <tal:block tal:repeat="field python: form.get_fields_in_group(goid)">\n
+            <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+          </tal:block>\n
+        </fieldset>\n
+        <p tal:condition="python: gid.find(\'right\') >= 0 or (gid.find(\'left\') >= 0 and \'right\' not in gid_list)" class="clear"/>\n
+      </tal:block>\n
     </tal:block>\n
+\n
   </tal:block>\n
 </tal:block>
 
