@@ -44,7 +44,7 @@
 \n
 Guidelines (how-to create a good css):\n
    * All measurements should be expressed with scalable units like em, ex, %.\n
-   * pt, px must be avoid expect for box borders.\n
+   * pt, px must be avoid expect for box borders and tricks related to borders (like position popup of Edit Tabs)\n
    * Test your design and layout against font size increasing/decreasing.\n
    * Test your html code semantics value by disabling all your css.\n
    * Don\'t put styling directives in xhtml code.\n
@@ -80,21 +80,9 @@ ul {\n
   text-align: center;\n
 }\n
 \n
-blockquote {\n
-  margin: .5em;\n
-  padding: .5em;\n
-  border-left: 2px #ddd solid;\n
-  background: #f9f9f9;\n
-}\n
-\n
-/* general style stuff */\n
-body {\n
-  background: #e6e6e6 url(erp5-website-background.png) top left no-repeat;\n
-}\n
 \n
 \n
-\n
-/* layout\n
+/* Layout\n
 Layout technic based on http://en.wikipedia.org/skins-1.5/monobook/main.css?9\n
 Layout technic used here doesn\'t depend of content ordering, but will not work with IE (because of poor CSS support).\n
 ----------------------------------------------- */\n
@@ -145,14 +133,14 @@ form#main_form > div#search_bar {\n
                 */\n
   border: 0;\n
 }\n
-form#main_form > div#search_bar div.field > label {\n
-  display: inherit;\n
-}\n
 div#search_bar > div.field {\n
   float: right;\n
 }\n
 div#search_bar > div.field:hover {\n
   background: #f3f3f3;\n
+}\n
+div#search_bar div.field > label {\n
+  display: inherit;\n
 }\n
 div#search_bar > div.field > label,\n
 div#search_bar > div.field > div.input {\n
@@ -167,10 +155,12 @@ form#main_form > div#websiteLogo {\n
   border: 0;\n
   padding: 2em 0 0;\n
 }\n
-\n
 form#main_form > div#websiteLogo .field {\n
   border: 0;\n
   text-align: center;\n
+}\n
+div#websiteLogo div.field > label {\n
+  display: none;\n
 }\n
 \n
 \n
@@ -184,8 +174,13 @@ form#main_form > div > div.field {\n
 \n
 \n
 \n
-/* typography & colors (fonts, color, background)\n
+/* Default content styling (apply to everything, site wide);\n
+   Typography & colors (fonts, color, background).\n
 ----------------------------------------------- */\n
+\n
+body {\n
+  background: #e6e6e6 url(erp5-website-background.png) top left no-repeat;\n
+}\n
 \n
 body, input, textarea, select, table {\n
   color: #333;\n
@@ -207,37 +202,103 @@ h1 {\n
   margin: 1.3em 0;\n
 }\n
 \n
+blockquote {\n
+  margin: .5em;\n
+  padding: .5em;\n
+  border-left: 2px #ddd solid;\n
+  background: #f9f9f9;\n
+}\n
 \n
 \n
-/* default read only content styling\n
+\n
+/* General form styling\n
 ----------------------------------------------- */\n
 \n
-fieldset {\n
+input, textarea {\n
+  background-color: #fff;\n
+  background-repeat: repeat-x;\n
+  border: 1px solid #999;\n
+}\n
+\n
+input.text, input[type="password"], input[type="text"], textarea {\n
+  background-image: url(field.png); /* TODO missing image in erp5_web_default_theme */\n
+  background-position: top;\n
+  padding: 1px;\n
+}\n
+\n
+input.button, input[type="submit"] {\n
+  background-image: url(button.png); /* TODO missing image in erp5_web_default_theme */\n
+  background-position: bottom;\n
+}\n
+\n
+input[type="image"] {\n
   border: 0;\n
+  vertical-align: bottom;\n
+  background-color: transparent;\n
+}\n
+\n
+button {\n
+  margin: .8em .5em;\n
+  border: 1px #ddd solid;\n
+  padding: .3em;\n
+  color: #999;\n
+  background: #eee;\n
+  cursor: pointer;\n
+}\n
+\n
+button:hover {\n
+  color: #333;\n
+  background: #b0cfcb;\n
+  border-color: #9abdb7;\n
+}\n
+\n
+\n
+\n
+/* Content zone form styling (apply for editable mode and read only mode within the content zone)\n
+----------------------------------------------- */\n
+\n
+div.content {\n
   background: #fff;\n
-  padding: 1em;\n
 }\n
 \n
-fieldset > legend {\n
-  display: none;\n
+/* "div.input span" is for field rendered as non-editable */\n
+div.content div.input span, div.content input, div.content select, div.content textarea {\n
+  margin: 0 .5em;\n
 }\n
 \n
-div.field > label {\n
-  display: none;\n
+div.content fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+div.content fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+div.content legend {\n
+  padding: .2em .5em;\n
+}\n
+\n
+div.content label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 13em;\n
+  text-align: right;\n
+  float: left;\n
 }\n
 \n
 \n
 \n
 /* Edit tabs styling.\n
    Edit tabs are another part of admin stuffs and\n
-   should respect other admin stuff design convention\n
+   should respect other admin design convention\n
    (colors, etc...) to keep the UI consistent.\n
 ----------------------------------------------- */\n
-\n
-div.document > div.editable {\n
-  border: 1px solid #ccc;\n
-  background: #fff;\n
-}\n
 \n
 div.actions {\n
   position: relative;\n
@@ -288,94 +349,34 @@ div.actions ul a:hover {\n
 \n
 \n
 \n
-/* general form styling\n
+/* Editable mode forms styling\n
 ----------------------------------------------- */\n
 \n
-input, textarea {\n
-  background-color: #fff;\n
-  background-repeat: repeat-x;\n
-  border: 1px solid #999;\n
-}\n
-\n
-input.text, input[type="password"], input[type="text"], textarea {\n
-  background-image: url(field.png); /* TODO missing image in erp5_web_default_theme */\n
-  background-position: top;\n
-  padding: 1px;\n
-}\n
-\n
-input.button, input[type="submit"] {\n
-  background-image: url(button.png); /* TODO missing image in erp5_web_default_theme */\n
-  background-position: bottom;\n
-}\n
-\n
-input[type="image"] {\n
-  border: 0;\n
-  vertical-align: bottom;\n
-  background-color: transparent;\n
-}\n
-\n
-button {\n
-  margin: .8em .5em;\n
-  border: 1px #ddd solid;\n
-  padding: 3px;\n
-  color: #999;\n
-  background: #eee;\n
-  cursor: pointer;\n
-}\n
-\n
-button:hover {\n
-  color: #333;\n
-  background: #b0cfcb;\n
-  border-color: #9abdb7;\n
-}\n
-\n
-\n
-\n
-/* editable forms styling\n
------------------------------------------------ */\n
-\n
-/* "div.input span" is for field rendered as non-editable */\n
-div.editable div.input span, div.editable input, div.editable select, div.editable textarea {\n
-  margin: 0 .5em;\n
-}\n
-\n
-/* reactivate legends for editable mode */\n
-div.editable fieldset > legend {\n
-  display: inherit;\n
-}\n
-\n
-div.editable fieldset {\n
-  margin: 1em 0;\n
-  padding: .5em;\n
-  border-color: #ccc;\n
-  border-width: 1px 0 0;\n
-  border-style: dotted none none;\n
-}\n
-\n
-div.editable legend {\n
-  padding: .2em .5em;\n
-}\n
-\n
-div.editable fieldset > div {\n
-  clear: both;\n
-  margin: .1em 0;\n
-  position: relative;\n
-}\n
-\n
-div.editable label {\n
-  margin: 0;\n
-  display: block;\n
-  width: 13em;\n
-  text-align: right;\n
-  float: left;\n
+div.document > div.editable {\n
+  border: 1px solid #ccc;\n
 }\n
 \n
 /* Save button styling */\n
 div.actions button {\n
-  position: absolute;\n
+  position: absolute; /* XXX bad location: should be at the bottom of the form */\n
   z-index: 300;\n
   top: -.5em;\n
   right: 0;\n
+}\n
+\n
+\n
+\n
+/* Special rendering for read-only webcontent (used in WebPage_viewAsWeb)\n
+----------------------------------------------- */\n
+\n
+div.content > fieldset.webcontent {\n
+  margin: 0;\n
+  border: 0;\n
+}\n
+\n
+fieldset.webcontent > legend,\n
+fieldset.webcontent div.field > label {\n
+  display: none;\n
 }\n
 
 

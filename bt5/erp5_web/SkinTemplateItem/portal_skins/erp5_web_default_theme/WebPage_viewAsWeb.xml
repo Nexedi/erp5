@@ -61,8 +61,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>content</string>
-                <string>extra_content</string>
+                <string>webcontent</string>
+                <string>extra webcontent</string>
               </list>
             </value>
         </item>
@@ -71,23 +71,23 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>content</string> </key>
-                    <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_description</string>
-                        <string>my_text_content</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>extra_content</string> </key>
+                    <key>                 <string>extra webcontent</string> </key>
                     <value>
                       <list>
                         <string>my_short_title</string>
                         <string>my_language</string>
                         <string>my_version</string>
                         <string>my_translated_validation_state_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>webcontent</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_description</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
