@@ -98,6 +98,7 @@ class Item(XMLObject, Amount, ImmobilisableItem):
       local_price = self._baseGetPrice()
       if local_price is None:
         # We must find a price for this movement
+        # XXX we should not set a resource on item
         resource = self.getResourceValue()
         if resource is not None:
           local_price = resource.getPrice(self.asContext( context=context, **kw))
