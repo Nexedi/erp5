@@ -1,3 +1,6 @@
+2006-09-01 Romain
+* Modify some field's titles.
+
 2006-08-29 jerome
 * add a field to change id on currencies, only enabled for manager (because changing a currency id may reindex many related objects)
 * sort and cache in CurrencyModule_getCurrencyItemList
