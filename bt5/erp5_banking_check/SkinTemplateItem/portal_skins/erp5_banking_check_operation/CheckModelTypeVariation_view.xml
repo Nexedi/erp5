@@ -102,7 +102,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_quantity</string>
+                        <string>my_price</string>
                         <string>my_description</string>
                       </list>
                     </value>

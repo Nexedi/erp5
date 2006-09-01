@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 delivery = state_change.object\n
 portal = context.getPortalObject()\n
@@ -113,9 +115,10 @@ for line in line_list:\n
         item.setReference(reference_range_min)\n
         item.setTitle(reference_range_min)\n
         reference_range_min = str(int(float(reference_range_min)) + 1)\n
-      if resource.isQuantityRequired():\n
-        item.setQuantity(line.getPrice())\n
-        item.setPriceCurrency(line.getPriceCurrency())\n
+        if len(resource.objectValues())>0:\n
+          item_type = line.getCheckTypeValue()\n
+          item.setPrice(item_type.getPrice())\n
+          item.setPriceCurrency(line.getPriceCurrency())\n
       item.setDestinationPayment(line.getDestinationPayment())\n
       item.setDestinationTrade(line.getDestinationTrade())\n
       item.setResourceValue(resource)\n
@@ -126,7 +129,9 @@ for line in line_list:\n
 \n
     # Finally set the aggregate list on the line\n
     line.setAggregateValueList(aggregate_list)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -205,6 +210,8 @@ for line in line_list:\n
                             <string>str</string>
                             <string>int</string>
                             <string>float</string>
+                            <string>len</string>
+                            <string>item_type</string>
                           </tuple>
                         </value>
                     </item>

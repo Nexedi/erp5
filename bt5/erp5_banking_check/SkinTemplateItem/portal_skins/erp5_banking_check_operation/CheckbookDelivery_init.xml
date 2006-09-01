@@ -69,6 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.setSource(context.getBaobabSource())\n
+reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
+context.setPriceCurrency(\'currency_module/%s\' %(reference_currency,))\n
+context.setCurrencyExchangeType(\'transfer\')\n
 </string> </value>
         </item>
         <item>
@@ -118,6 +121,7 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>reference_currency</string>
                           </tuple>
                         </value>
                     </item>

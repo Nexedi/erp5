@@ -85,7 +85,7 @@ if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
 \n
 site = transaction.getSourceValue()\n
 \n
-if not context.Baobab_checkCounterOpened(site):\n
+if not transaction.Baobab_checkCounterOpened(site):\n
   msg = Message(domain = "ui", message="Counter is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
@@ -100,12 +100,12 @@ price = transaction.getSourceTotalAssetPrice()\n
 bank_account.serialize()\n
 \n
 # Make sure there are no other operations pending for this account\n
-if context.BankAccount_isMessagePending(bank_account):\n
+if transaction.BankAccount_isMessagePending(bank_account):\n
   msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
   raise ValidationFailed, (msg,)\n
 \n
 # Index the banking operation line so it impacts account position\n
-context.BankingOperationLine_index(line)\n
+transaxtion.BankingOperationLine_index(line)\n
 \n
 # Check if the banking operation is correct. Do not depend on catalog because line might not be indexed immediatelly.\n
 if - price != (line.getPrice() * line.getQuantity()):\n
@@ -113,7 +113,7 @@ if - price != (line.getPrice() * line.getQuantity()):\n
   raise ValidationFailed, (msg,)\n
 \n
 # Test if the account balance is sufficient.\n
-error = context.BankAccount_checkBalance(bank_account.getRelativeUrl(), price)\n
+error = transaction.BankAccount_checkBalance(bank_account.getRelativeUrl(), price)\n
 if error[\'error_code\'] == 1:\n
   msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
   raise ValidationFailed, (msg,)\n
@@ -192,6 +192,7 @@ elif error[\'error_code\'] != 0:\n
                             <string>line</string>
                             <string>bank_account</string>
                             <string>price</string>
+                            <string>transaxtion</string>
                             <string>error</string>
                           </tuple>
                         </value>

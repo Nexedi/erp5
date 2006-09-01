@@ -134,7 +134,7 @@ for line in listbox:\n
       check_type_relative_url = check_type_relative_url[len(\'check_type/\'):]\n
     line_kw_dict[\'check_type\'] = check_type_relative_url\n
     check_type = context.getPortalObject().restrictedTraverse(check_type_relative_url)\n
-    line_kw_dict[\'price\'] = check_type.getQuantity()\n
+    line_kw_dict[\'price\'] = check_type.getPrice()\n
     line_kw_dict[\'price_currency\'] = check_type.getParentValue().getPriceCurrency()\n
   if add_line:\n
     number_of_line_created += 1\n

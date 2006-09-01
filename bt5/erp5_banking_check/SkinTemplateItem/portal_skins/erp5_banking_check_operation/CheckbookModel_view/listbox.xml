@@ -346,6 +346,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>price</string>
+                          <string>Amount</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
