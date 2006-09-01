@@ -27,6 +27,8 @@
 ##############################################################################
 
 import time
+import threading
+
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager
 from Globals import InitializeClass, DTMLFile, PersistentMapping
@@ -34,7 +36,6 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from Products.CMFCore import CMFCorePermissions
 from DateTime import DateTime
 
 from zLOG import LOG, INFO
@@ -44,6 +45,9 @@ try:
 except ImportError:
   def getTimerService(self):
     pass
+
+last_tic = time.time()
+last_tic_lock = threading.Lock()
 
 class AlarmTool(BaseTool):
   """
@@ -57,7 +61,6 @@ class AlarmTool(BaseTool):
   id = 'portal_alarms'
   meta_type = 'ERP5 Alarm Tool'
   portal_type = 'Alarm Tool'
-  allowed_types = ('Supply Alarm Line',)
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -86,8 +89,8 @@ class AlarmTool(BaseTool):
                      + Folder.manage_options
                    )
 
+  _properties = ( {'id': 'interval', 'type': 'int', 'mode': 'w', }, )
   interval = 60 # Default interval for alarms is 60 seconds
-  last_tic = time.time()
 
   # API to manage alarms
   # Aim of this API:
@@ -194,13 +197,19 @@ class AlarmTool(BaseTool):
     self.subscribe()
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
+  security.declarePrivate('process_timer')
   def process_timer(self, interval, tick, prev="", next=""):
     """
       Call tic() every x seconds. x is defined in self.interval
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
     """
-    if tick.timeTime() - self.last_tic >= self.interval:
-      self.tic()
-      self.last_tic = tick.timeTime()
+    global last_tic
+    last_tic_lock.acquire(1)
+    try:
+      if tick.timeTime() - last_tic >= self.interval:
+        self.tic()
+        last_tic = tick.timeTime()
+    finally:
+      last_tic_lock.release()
 
