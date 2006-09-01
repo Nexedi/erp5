@@ -396,12 +396,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _propertyMap(self):
     """ Method overload - properties are now defined on the ptype """
     ptype = self.portal_type
-    #LOG('_propertyMap',0,ptype)
     self._aq_dynamic('id') # Make sure aq_dynamic has been called once
     if Base.aq_portal_type.has_key(ptype):
-      #LOG('_propertyMap ptype',0,list(getattr(aq_portal_type[ptype], '_properties', ())))
       return tuple(list(getattr(Base.aq_portal_type[ptype], '_properties', ())) +
-                   list(getattr(self, '_local_properties', ())))
+                   list(getattr(self, '_local_properties', ())) +
+                   list(ERP5PropertyManager._propertyMap(self)))
     return ERP5PropertyManager._propertyMap(self)
 
   def _aq_dynamic_pmethod(self, id):
