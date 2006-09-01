@@ -72,21 +72,25 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
+\n
+\n
 <tal:block metal:define-macro="edit_link">\n
   <a tal:condition="python: hasattr(object, \'meta_type\') and context.Base_getSourceVisibility(object)"\n
      tal:attributes="href python: \'%s/%s\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):]), manage) # XXX: quick hack to get path;\n
                      title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
                                                        alt info;"/></a>\n
 </tal:block>\n
+\n
+\n
 <tal:block metal:define-macro="translate_link" tal:define="image image | python: \'translate.png\'">\n
   <a tal:condition="python: here.Base_getTranslationVisibility()"\n
      tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, here.Localizer.get_selected_language());\n
                      title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
                                                        alt info;"/></a>\n
 </tal:block>\n
-<tal:block metal:define-macro="form"\n
-           tal:define="form python: (hasattr(here, \'form\') and here.form) or (hasattr(here, \'current_form_id\') and getattr(here, current_form_id, None))"\n
-           tal:condition="python: context.Base_getSourceVisibility(form)">\n
+\n
+\n
+<tal:block metal:define-macro="form" tal:condition="python: not is_web_mode">\n
   <tal:block tal:define="image python: \'editform.png\';\n
                          info python: \'Edit this form\';\n
                          object python: form;\n
@@ -106,7 +110,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     <tal:block metal:use-macro="template/macros/edit_link"/>\n
   </tal:block>\n
 </tal:block>\n
-<tal:block metal:define-macro="field">\n
+\n
+\n
+<tal:block metal:define-macro="field" tal:condition="python: not is_web_mode">\n
   <tal:block tal:define="image python: \'editfield.png\';\n
                          info python: \'Edit this field\';\n
                          object python: field;\n

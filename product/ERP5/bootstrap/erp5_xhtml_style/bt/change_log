@@ -1,3 +1,6 @@
+2006-09-01 Kevin
+* Fix hidden developper shortcuts.
+
 2006-08-31 Kevin
 * Render non editable field in a span.
 * Display edit tabs in web editable_mode.
