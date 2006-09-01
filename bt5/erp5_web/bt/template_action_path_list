@@ -13,6 +13,8 @@ Web Section | metadata
 Web Section | predicate
 Web Section | section_content
 Web Section | view
+Web Section | web_view
+Web Section | web_view_default_page
 Web Site Module | list_ui
 Web Site Module | sort_on
 Web Site Module | view
