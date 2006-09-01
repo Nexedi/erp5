@@ -89,3 +89,18 @@ class Item(XMLObject, Amount, ImmobilisableItem):
         """
         return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
 
+    def getPrice(self,**kw):
+      """
+        Get the Price in the context.
+
+        If price is not stored locally, lookup a price
+      """
+      local_price = self._baseGetPrice()
+      if local_price is None:
+        # We must find a price for this movement
+        resource = self.getResourceValue()
+        if resource is not None:
+          local_price = resource.getPrice(self.asContext( context=context, **kw))
+      return local_price
+  
+  
