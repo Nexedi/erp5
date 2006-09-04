@@ -1,3 +1,12 @@
+2006-09-04 Kevin
+* Use a custom script to render consistent and nice title depending of the context.
+* Add a big comment about why I think this script should not return what it currently return (comments welcomed).
+* Add a new login box web widget.
+* Add new navigation related widgets : breadcrumb and different flavours of subcontent menus.
+* Enhance CSS layout and general webdesign.
+* Lots of renaming to match generic CSS classes.
+* Add About box, breadcrumb, login box and navigation boxes to default layout.
+
 2006-09-01 Stefan
 * Add missing **kw in WebSite_getDocumentUrl to accept parameters submitted by the Listbox.
 * Add two section views in default theme to display either the section title, description and
