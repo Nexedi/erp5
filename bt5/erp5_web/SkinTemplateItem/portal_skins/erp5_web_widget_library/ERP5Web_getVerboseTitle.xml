@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   This method return short or long title. If both are available, priority is given to one of\n
-    them via the \'priority\' parameter (long title is chosen by default).\n
+    them via the \'priority\' parameter (long title is chosen by default, for verbosity).\n
 \n
   If both of them are empty, we return a generic string containing the id. The previous behaviour\n
     can be de-activated via \'pure_id\' parameters.\n
