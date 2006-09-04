@@ -23,6 +23,23 @@
             <value> <string>erp5_web_default.css</string> </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>sidebar-em-width</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_vars</string> </key>
             <value>
               <dictionary/>
@@ -58,13 +75,18 @@ ____________________________________*/\n
   margin: 0;\n
 }\n
 \n
+body {\n
+  width: 80%;\n
+  margin: 0 auto;\n
+}\n
+\n
 .clear {clear: both}\n
 \n
 img {\n
   border: 0;\n
 }\n
 \n
-a img, h3 img, button img {\n
+a img, h3 img, button img, li img {\n
   vertical-align: middle;\n
 }\n
 \n
@@ -76,10 +98,20 @@ ul {\n
   display: none;\n
 }\n
 \n
-.centeredInner {\n
+/* emulate <center> */\n
+.centeredContent {\n
+  width: 100%;\n
   text-align: center;\n
 }\n
+*.centeredContent * {\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
 \n
+p {\n
+  margin: 1em 0;\n
+  text-align: justify;\n
+}\n
 \n
 \n
 /* Layout\n
@@ -95,32 +127,53 @@ body > form#main_form {\n
   z-index: 2;\n
 }\n
 \n
-/* The two sub content are web widgets and main page rendering */\n
+/* erp5_web_default_layout form groups */\n
 form#main_form > div {\n
-  border: 1px solid #666;\n
+  border: .1em solid #aaa;\n
+  margin: 0 0 .5em -16.2em;\n
+  width: 15.1em;\n
 }\n
+\n
 /* Undo border styling for main content */\n
 form#main_form > div.main_content {\n
   border: 0;\n
-}\n
-\n
-form#main_form > div.main_content {\n
   margin-top: 4em;\n
   width: 100%;\n
   float: right;\n
 }\n
 \n
-/* erp5_web_default_layout form groups */\n
-form#main_form > div {\n
-  border: 1px solid #aaa;\n
-  margin: 0 0 .5em -16.2em;\n
-  width: 15.1em\n
+/* erp5_web_default_layout form web widgets */\n
+form#main_form > div > div.field {\n
+  background: #fff url(erp5-website-field.png) top repeat-x;\n
+  border: 1px solid #ccc;\n
+  color: #666;\n
+  margin: .3em;\n
+  padding: .5em;\n
+}\n
+\n
+form#main_form > div > div.field label {\n
+  font-weight: bold;\n
+}\n
+\n
+\n
+/********************************/\n
+/* Special layout for logo web widget group */\n
+form#main_form > div.logo {\n
+  border: 0;\n
+  padding: 2em 0 0;\n
+}\n
+form#main_form > div.logo .field {\n
+  border: 0;\n
+  background: transparent;\n
+}\n
+div.logo div.field > label {\n
+  display: none;\n
 }\n
 \n
 \n
 /********************************/\n
 /* Special layout for search_bar web widget group: move it top right */\n
-form#main_form > div#search_bar {\n
+form#main_form > div.searchBar {\n
   /*background: #ff9;*/\n
   position: absolute;\n
   z-index: 200;\n
@@ -133,44 +186,43 @@ form#main_form > div#search_bar {\n
                 */\n
   border: 0;\n
 }\n
-div#search_bar > div.field {\n
+div.searchBar > div.field {\n
   float: right;\n
 }\n
-div#search_bar > div.field:hover {\n
-  background: #f3f3f3;\n
-}\n
-div#search_bar div.field > label {\n
+div.searchBar div.field > label {\n
   display: inherit;\n
 }\n
-div#search_bar > div.field > label,\n
-div#search_bar > div.field > div.input {\n
+div.searchBar > div.field > label,\n
+div.searchBar > div.field > div.input {\n
   float: left;\n
   margin: 0 .5em;\n
 }\n
 \n
-\n
 /********************************/\n
-/* Special layout for websiteLogo web widget group */\n
-form#main_form > div#websiteLogo {\n
-  border: 0;\n
-  padding: 2em 0 0;\n
-}\n
-form#main_form > div#websiteLogo .field {\n
-  border: 0;\n
-  text-align: center;\n
-}\n
-div#websiteLogo div.field > label {\n
-  display: none;\n
-}\n
+/* Content header (title + description) position in above the main_content zone.\n
+** This div should stick above main_content.\n
+*/\n
+/*form#main_form > div.contentHeader {\n
+  background: #ff9;\n
+  position: absolute;\n
+  z-index: 100;\n
+\n
+  top: 7em; */ /* = header-total-height */\n
+/*  width: 100%;\n
 \n
 \n
-/********************************/\n
-/* erp5_web_default_layout form web widgets */\n
-form#main_form > div > div.field {\n
-  border: 1px solid #ccc;\n
-  margin: .3em;\n
-  padding: .3em;\n
+  margin: 0;\n
+\n
+\n
+  border: 0;\n
 }\n
+\n
+body > form#main_form {\n
+  padding: 0 1em;\n
+  margin-left: 16.2em;\n
+\n
+*/\n
+\n
 \n
 \n
 \n
@@ -186,7 +238,7 @@ body, input, textarea, select, table {\n
   color: #333;\n
   font-family: Sans, Verdana, Tahoma, Georgia, Geneva, Arial, sans-serif;\n
   font-size: 8pt; /* XXX font-size should not be expressed in pt unit */\n
-  line-height: 1.3em;\n
+  line-height: 1.5em;\n
 }\n
 \n
 .code, code {\n
@@ -215,20 +267,13 @@ blockquote {\n
 ----------------------------------------------- */\n
 \n
 input, textarea {\n
-  background-color: #fff;\n
-  background-repeat: repeat-x;\n
   border: 1px solid #999;\n
-}\n
-\n
-input.text, input[type="password"], input[type="text"], textarea {\n
-  background-image: url(field.png); /* TODO missing image in erp5_web_default_theme */\n
-  background-position: top;\n
   padding: 1px;\n
 }\n
 \n
 input.button, input[type="submit"] {\n
-  background-image: url(button.png); /* TODO missing image in erp5_web_default_theme */\n
-  background-position: bottom;\n
+  /* XXX is this case happend in current web implementation ? */\n
+  background-color: #fff url(erp5-website-button.png) bottom repeat-x;\n
 }\n
 \n
 input[type="image"] {\n
@@ -259,11 +304,11 @@ button:hover {\n
 \n
 div.content {\n
   background: #fff;\n
+  border: 1px solid #ccc;\n
 }\n
 \n
-/* "div.input span" is for field rendered as non-editable */\n
-div.content div.input span, div.content input, div.content select, div.content textarea {\n
-  margin: 0 .5em;\n
+div.content div.input {\n
+  margin-left: 11.5em;   /* = div.content label width + 0.5 of margin */\n
 }\n
 \n
 div.content fieldset {\n
@@ -276,20 +321,40 @@ div.content fieldset {\n
 \n
 div.content fieldset > div {\n
   clear: both;\n
+  /*background: #0ff;*/\n
   margin: .1em 0;\n
   position: relative;\n
 }\n
 \n
 div.content legend {\n
   padding: .2em .5em;\n
+  font-weight: bold;\n
+  color: #666;\n
 }\n
 \n
 div.content label {\n
   margin: 0;\n
   display: block;\n
-  width: 13em;\n
+  width: 11em;\n
   text-align: right;\n
   float: left;\n
+}\n
+\n
+\n
+/* Reset common fieldset styling:\n
+     - no need to let some free space in the left side\n
+     - no need to display label\n
+     - no need to display fieldset legend\n
+   TODO: Because thoses properties are used for generic ".bottom" fieldset\n
+         and webcontent custom forms, we can add a new CSS class with a better\n
+         name to enhance semantics.\n
+*/\n
+div.content fieldset.bottom legend,\n
+div.content fieldset.bottom label {\n
+  display: none;\n
+}\n
+div.content fieldset.bottom div.input {\n
+  margin-left: inherit;\n
 }\n
 \n
 \n
@@ -330,7 +395,7 @@ div.actions ul a, div.actions ul li.selected a {\n
 \n
 div.actions ul a {\n
   background: #fffae1;\n
-  border: 1px solid #ccc;\n
+  border: 1px solid #999;\n
 }\n
 \n
 div.actions ul li.selected a, div.actions ul li.selected a:hover {\n
@@ -342,7 +407,7 @@ div.actions ul li.selected a, div.actions ul li.selected a:hover {\n
 \n
 div.actions ul a:hover {\n
   margin-top: 0;\n
-  border-color: #666;\n
+  border-color: #000;\n
   border-bottom: none;\n
   padding-bottom: 5px;\n
 }\n
@@ -353,7 +418,7 @@ div.actions ul a:hover {\n
 ----------------------------------------------- */\n
 \n
 div.document > div.editable {\n
-  border: 1px solid #ccc;\n
+  border: 1px solid #999;\n
 }\n
 \n
 /* Save button styling */\n
@@ -366,7 +431,8 @@ div.actions button {\n
 \n
 \n
 \n
-/* Special rendering for read-only webcontent (used in WebPage_viewAsWeb)\n
+/* Special rendering for read-only webcontent\n
+     (used in WebPage_viewAsWeb and so on).\n
 ----------------------------------------------- */\n
 \n
 div.content > fieldset.webcontent {\n
@@ -374,13 +440,44 @@ div.content > fieldset.webcontent {\n
   border: 0;\n
 }\n
 \n
-fieldset.webcontent > legend,\n
-fieldset.webcontent div.field > label {\n
-  display: none;\n
+\n
+/* Content header (title + description) position in above the main_content zone.\n
+----------------------------------------------- */\n
+\n
+/* TODO: redo webcontent header spacing policy because lack of consistency\n
+         (not tested with huge titles) */\n
+\n
+div.content > fieldset#fieldset_webcontent {\n
+  padding: 2em;\n
 }\n
-
+\n
+div.content > fieldset.header {\n
+  padding-bottom: 1em;\n
+  border-bottom: .3em solid #999;\n
+}\n
+\n
+div.content > fieldset.webcontent span.headline {\n
+  display: block;\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 200%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+}\n
+\n
+div.content > fieldset.webcontent span.summary {\n
+  display: block;\n
+  font-size: 120%;\n
+  padding: 0 2em;\n
+  font-style: italic;\n
+}
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>sidebar-em-width</string> </key>
+            <value> <string>16.2</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
