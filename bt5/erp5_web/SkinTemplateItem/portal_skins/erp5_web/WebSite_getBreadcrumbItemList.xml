@@ -99,22 +99,29 @@
 # - or any other behaviour\n
 #\n
 # The default implementation is hierarchical\n
-#\n
-# WebSite_getBreadcrumbValue=[<WebSite at /erp5/web_site_module/1>, <Domain at /erp5/web_site_module/1/1>, <Document at /erp5/web_page_module/1 used for /erp5/web_site_module/1/1>]\n
+\n
+# (kev): I think the current implementation must change to just return the list of object like\n
+#          [ <WebSite at /erp5/web_site_module/1>\n
+#          , <Domain at /erp5/web_site_module/1/1>\n
+#          , <Document at /erp5/web_page_module/1 used for /erp5/web_site_module/1/1>\n
+#          ]\n
+#        and not a list of tuples like (title, object). Thanks to this modification I will be able\n
+#        to choose how to render the link string of the breadcrumb item in the page template of my\n
+#        widget. Because this kind of feature is related to rendering and presentation and because\n
+#        it is not part of core logic of the web API, the title should not be returned by the\n
+#        current script.\n
 \n
 crumb = context\n
 crumb_list = []\n
 \n
-while hasattr(crumb,\'getParent\'): #\'getPortalType\'):\n
-  crumb_list.append((crumb.title,crumb ))\n
+while hasattr(crumb, \'getParent\'):\n
+  crumb_list.append(( crumb.ERP5Web_getVerboseTitle(priority = \'short_title\')\n
+                    , crumb\n
+                    ))\n
   if crumb.getPortalType() == \'Web Site\':\n
-    crumb = None # Don\'t go higher than the first Web Site found\n
+    crumb = None   # Don\'t go higher than the first Web Site found\n
   else:\n
-    ###context.log(\'KevLog 1 >>>>>\', repr(crumb))\n
-    ####context.log(\'KevLog 2 >>>>>\', repr(crumb.getParent()))\n
-    ###context.log(\'KevLog 3 >>>>>\', repr(crumb.getParentValue()))\n
-\n
-    crumb = crumb.aq_parent#getParentValue()\n
+    crumb = crumb.aq_parent\n
 \n
 crumb_list.reverse()\n
 \n
