@@ -188,7 +188,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
+            <value> <string>"Modified version for ERP5 to append the default action (/view) in the URL."\n
+\n
+from Products.CMFCore.utils import getToolByName\n
 ptool = getToolByName(script, \'portal_properties\')\n
 utool = getToolByName(script, \'portal_url\')\n
 portal_url = utool()\n
@@ -197,7 +199,7 @@ result = []\n
 if include_root:\n
     result.append( { \'id\'      : \'root\'\n
                    , \'title\'   : ptool.title()\n
-                   , \'url\'     : portal_url\n
+                   , \'url\'     : \'%s/view\' % portal_url\n
                    }\n
                  )\n
 \n
@@ -221,6 +223,12 @@ return result\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -316,6 +324,27 @@ return result\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
