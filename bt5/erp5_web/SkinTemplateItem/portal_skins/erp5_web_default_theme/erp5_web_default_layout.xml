@@ -61,10 +61,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>websiteLogo</string>
+                <string>logo centeredContent</string>
                 <string>sidebar</string>
-                <string>sidebar2</string>
-                <string>search_bar</string>
+                <string>searchBar</string>
+                <string>contentHeader</string>
               </list>
             </value>
         </item>
@@ -73,7 +73,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>search_bar</string> </key>
+                    <key>                 <string>contentHeader</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>logo centeredContent</string> </key>
+                    <value>
+                      <list>
+                        <string>website_logo</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>searchBar</string> </key>
                     <value>
                       <list>
                         <string>your_searchable_text</string>
@@ -84,25 +98,12 @@
                     <key>                 <string>sidebar</string> </key>
                     <value>
                       <list>
-                        <string>page_title</string>
-                        <string>page_summary</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>sidebar2</string> </key>
-                    <value>
-                      <list>
-                        <string>latest_memos</string>
+                        <string>breadcrumb</string>
+                        <string>about_box</string>
+                        <string>login_box</string>
+                        <string>sub_web_object_list</string>
+                        <string>sub_document_list</string>
                         <string>latest_news</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>websiteLogo</string> </key>
-                    <value>
-                      <list>
-                        <string>website_logo</string>
                       </list>
                     </value>
                 </item>
