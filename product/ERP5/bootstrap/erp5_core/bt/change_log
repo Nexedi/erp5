@@ -1,3 +1,6 @@
+2006-09-04 jerome
+* remove omit_simulation parameter in all inventory API ZSQLMethods.
+
 2006-08-25 Stefan
 * Update naming convention script.
 
