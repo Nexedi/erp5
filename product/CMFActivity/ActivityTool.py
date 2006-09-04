@@ -501,6 +501,14 @@ class ActivityTool (Folder, UniqueObject):
               self.distribute(1)
               #LOG('CMFActivity:', INFO, 'distributingNodes empty! Calling distribute(1)')
           
+          # SkinsTool uses a REQUEST cache to store skin objects, as
+          # with TimerService we have the same REQUEST over multiple
+          # portals, we clear this cache to make sure the cache doesn't
+          # contains skins from another portal.
+          stool = getToolByName(self, 'portal_skins', None)
+          if stool is not None:
+            stool.changeSkin(None)
+          
           # call tic for the current processing_node
           # the processing_node numbers are the indices of the elements in the node tuple +1
           # because processing_node starts form 1
