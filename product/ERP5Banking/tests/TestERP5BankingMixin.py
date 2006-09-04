@@ -297,8 +297,8 @@ class TestERP5BankingMixin:
       cell_list = exchange_line.objectValues()
       self.assertEquals(len(cell_list),2)
       for cell in cell_list:
-        cell.setBasePrice(2.1)
-        cell.setDiscount(0.1)
+        cell.setBasePrice(650.0)
+        cell.setDiscount(650.0)
     return currency
 
 
