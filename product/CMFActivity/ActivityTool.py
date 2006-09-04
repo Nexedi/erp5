@@ -885,7 +885,7 @@ class ActivityTool (Folder, UniqueObject):
         try:
           message_count += activity.countMessageWithTag(self, value)
         except AttributeError:
-          LOG('getMessageList, could not get message from Activity:', 0, activity)
+          LOG('getMessageList, could not get count message from Activity:', 0, activity)
       return message_count
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )

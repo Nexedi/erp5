@@ -1339,17 +1339,6 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     self.CheckCountMessageWithTag('SQLDict')
 
-  def test_67_TestCountMessageWithTagWithSQLQueue(self, quiet=0, run=run_all_test):
-    """
-      Test new countMessageWithTag function with SQLQueue.
-    """
-    if not run: return
-    if not quiet:
-      message = '\nCheck countMessageWithTag'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    self.CheckCountMessageWithTag('SQLQueue')
-
 if __name__ == '__main__':
     framework()
 else:
