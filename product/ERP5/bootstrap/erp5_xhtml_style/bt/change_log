@@ -1,3 +1,6 @@
+2006-09-04 Kevin
+* Don't render non-editable fields in span.
+
 2006-09-01 Kevin
 * Fix hidden developper shortcuts.
 * Add support for title _and_ id on groups (see form_render and ERP5XhtmlStyle_getFormGroupTitleAndId comments for details).

@@ -91,12 +91,7 @@ MISSING\n
               <tal:block metal:use-macro="template/macros/field" />\n
             </tal:block>\n
           </label>\n
-          <div class="input"\n
-               tal:define="editable    python: field.get_value(\'editable\');\n
-                           html_field  python: html_tuple[1]">\n
-            <tal:block tal:condition="python:     editable" tal:content="structure python: html_field"/>\n
-            <span      tal:condition="python: not editable" tal:content="structure python: html_field"/>\n
-          </div>\n
+          <div class="input" tal:content="structure python: html_tuple[1]"/>\n
           <span tal:condition="python: field_errors.has_key(field.id)"\n
                 class="error"\n
                 tal:content="python: field_errors[field.id].error_text"\n
