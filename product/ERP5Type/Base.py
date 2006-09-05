@@ -171,7 +171,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     # Initiatise portal_type properties (XXX)
     ptype_object = getattr(aq_base(self.portal_types), ptype, None)
     cat_list = []
-    prop_list = []
+    prop_list = list(getattr(klass, '_properties', []))
     constraint_list = []
     if (ptype_object is not None) and \
        (ptype_object.meta_type == 'ERP5 Type Information'):
@@ -399,8 +399,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     self._aq_dynamic('id') # Make sure aq_dynamic has been called once
     if Base.aq_portal_type.has_key(ptype):
       return tuple(list(getattr(Base.aq_portal_type[ptype], '_properties', ())) +
-                   list(getattr(self, '_local_properties', ())) +
-                   list(ERP5PropertyManager._propertyMap(self)))
+                   list(getattr(self, '_local_properties', ())))
     return ERP5PropertyManager._propertyMap(self)
 
   def _aq_dynamic_pmethod(self, id):
