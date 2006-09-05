@@ -249,6 +249,24 @@ class DMSFile(XMLObject,File):
     ref=self.getReference()
     return [o for o in di.keys() if o.getReference()!=ref] # every object has its own reference in SearchableText
 
+  security.declareProtected(Permissions.View,'getContributors')
+  def getContributorList(self):
+    #'''
+    #override
+    #'''
+    return (self.getContributorRelatedTitleList() or [])+(self.getContributorNameList() or [])
+  
+  getContributorsList=getContributorList
+  getContributorTitleList=getContributorList
+
+  security.declarePrivate('setContributorList')
+  def setContributorList(self,*args,**kwargs):
+    '''
+    just in case
+    '''
+    pass
+  setContributorsList=setContributorList
+
   # BG copied from File in case
   index_html = CMFFile.index_html
   PUT = CMFFile.PUT

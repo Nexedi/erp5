@@ -31,10 +31,23 @@ class DMSFile:
   """
 
   _properties = (
+        {   'id'          : 'contributor_related_title',
+            'description' : 'Contributors linked by relation',
+            'type'        : 'string',
+            'acquisition_base_category'     : ('contributor_related',),
+            'acquisition_portal_type'       : ('Person','Organisation'),
+            'acquisition_copy_value'        : 0,
+            'acquisition_accessor_id'       : 'getTitle',
+            'acquisition_depends'           : None,
+            'mode'        : 'r' },
+        {   'id'          : 'contributor_name',
+            'description' : 'contributors entered by hand',
+            'type'        : 'lines',
+            'mode'        : ''},
     )
 
   _categories = ('destination','similar','predecessor','successor','source_project','publication_section','classification',
-      'function','group','site')
+      'contributor_related','function','group','site')
  
 
 # vim: shiftwidth=2

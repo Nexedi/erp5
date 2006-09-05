@@ -80,6 +80,9 @@
                         <string>my_description</string>
                         <string>my_keywords</string>
                         <string>my_subject</string>
+                        <string>my_contributor_name_list</string>
+                        <string>my_contributor_related_title_list</string>
+                        <string>my_contributor_list</string>
                       </list>
                     </value>
                 </item>
