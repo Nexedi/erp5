@@ -50,6 +50,7 @@ from Acquisition import aq_base, aq_inner
 from zLOG import LOG
 from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from zExceptions import BadRequest
 import time
 import os
 from Products.ERP5Type import product_path
@@ -68,7 +69,7 @@ class TestBase(ERP5TypeTestCase):
   temp_class = "Amount"
   defined_property_id = "title"
   defined_property_value = "a_wonderful_title"
-  not_related_to_temp_object_property_id = "int_index"
+  not_related_to_temp_object_property_id = "string_index"
   not_related_to_temp_object_property_value = "a_great_index"
 
   def getTitle(self):
@@ -743,7 +744,7 @@ class TestBase(ERP5TypeTestCase):
                     object_instance.getProperty(
                          self.not_related_to_temp_object_property_id))
 
-  def test_06_getPropertyOnTempClass(self, quiet=quiet, run=run_all_test):
+  def test_06_getPropertyOnTempClass(self, quiet=quiet, run=1):
     """
     Test if set/getProperty work in temp object without 
     a portal type with the same name.
@@ -773,12 +774,10 @@ class TestBase(ERP5TypeTestCase):
     Check if edit method works.
     """
     object_instance = sequence.get('object_instance')
-    old_edit_method = sequence.get('edit_method')
-    edit_method = object_instance.edit
-    if old_edit_method is None:
-      sequence.edit(edit_method=edit_method)
-    else:
-      self.assertEquals(old_edit_method, edit_method)
+    object_instance.edit(title='toto')
+    self.assertEquals(object_instance.getTitle(),'toto')
+    object_instance.edit(title='tutu')
+    self.assertEquals(object_instance.getTitle(),'tutu')
 
   def stepSetEditProperty(self, sequence=None, 
                           sequence_list=None, **kw):
@@ -786,7 +785,8 @@ class TestBase(ERP5TypeTestCase):
     Check if edit method works.
     """
     object_instance = sequence.get('object_instance')
-    object_instance.setProperty('edit', "now this object is 'read only !!!'")
+    self.assertRaises(BadRequest,object_instance.setProperty, 'edit', 
+                      "now this object is 'read only !!!'")
 
   def test_07_setEditProperty(self, quiet=quiet, run=run_all_test):
     """

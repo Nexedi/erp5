@@ -878,9 +878,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       ERP5PropertyManager._setProperty(self, key, value, type=type)
     except ConflictError:
       raise
-    except:
-      # This should be removed if we want strict property checking
-      setattr(self, key, value)
+    # This should not be there, because this ignore all checks made by
+    # the PropertyManager. If there is problems, please complain to 
+    # seb@nexedi.com
+    #except:
+    #  # This should be removed if we want strict property checking
+    #  setattr(self, key, value)
 
   def _setPropValue(self, key, value, **kw):
     #LOG('_setPropValue', 0, 'self = %r, key = %r, value = %r, kw = %r' % (self, key, value, kw))

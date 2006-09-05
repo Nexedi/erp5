@@ -20,6 +20,7 @@ from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
+from Acquisition import aq_base
 from zExceptions import BadRequest
 
 class ERP5PropertyManager(PropertyManager):
@@ -116,6 +117,18 @@ def PropertyManager_setProperty(self, id, value, type=None):
                 '_local_properties', ()) + ({'id':id, 'type':type},)
         self._setPropValue(id, value)
 
+def PropertyManager_valid_property_id(self, id):
+    # This is required because in order to disable acquisition
+    # we set all properties with a None value on the class Base,
+    # so wee need to check if the property is not on Base.__dict__
+
+    from Products.ERP5Type.Base import Base
+    if not id or id[:1]=='_' or (id[:3]=='aq_') \
+       or (' ' in id) or (hasattr(aq_base(self), id) and \
+       not (Base.__dict__.has_key(id) and Base.__dict__[id] is None)) or escape(id) != id:
+        return 0
+    return 1
+
 def PropertyManager_delProperty(self, id):
     if not self.hasProperty(id):
         raise ValueError, 'The property %s does not exist' % escape(id)
@@ -168,6 +181,7 @@ def PropertyManager_manage_addProperty(self, id, value, type, REQUEST=None):
 PropertyManager.manage_addProperty = PropertyManager_manage_addProperty
 PropertyManager.manage_propertiesForm = PropertyManager_manage_propertiesForm
 PropertyManager._updateProperty = PropertyManager_updateProperty
+PropertyManager.valid_property_id = PropertyManager_valid_property_id
 PropertyManager.getPropertyType = PropertyManager_getPropertyType
 PropertyManager._setProperty = PropertyManager_setProperty
 PropertyManager._delProperty = PropertyManager_delProperty
