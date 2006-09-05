@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from warnings import warn
+
 from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
@@ -45,6 +47,8 @@ from DateTime import DateTime
 
 from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
+
+_marker_for_depreacated_argument = []
 
 class SimulationTool (BaseTool):
     """
@@ -458,7 +462,8 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventory')
     def getInventory(self, src__=0, ignore_variation=0, standardise=0,
-                     omit_simulation=0, omit_input=0, omit_output=0,
+                     omit_simulation=_marker_for_depreacated_argument,
+                     omit_input=0, omit_output=0,
                      selection_domain=None, selection_report=None, **kw):
       """
       Returns an inventory of a single or multiple resources on a single or multiple
@@ -513,8 +518,6 @@ class SimulationTool (BaseTool):
 
       standardise - provide a standard quantity rather than an SKU (XXX not implemented yet)
 
-      omit_simulation
-
       omit_input
 
       omit_output
@@ -535,11 +538,14 @@ class SimulationTool (BaseTool):
       NOTE: we may want to define a parameter so that we can select the kind of inventory
       statistics we want to display (ex. sum, average, cost, etc.)
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+
       sql_kw = self._generateSQLKeywordDict(**kw)
 
       result = self.Resource_zGetInventory(
           src__=src__, ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
+          standardise=standardise,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report,
           **sql_kw)
@@ -592,7 +598,8 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
     def getInventoryList(self, src__=0, ignore_variation=0, standardise=0,
-                         omit_simulation=0, omit_input=0, omit_output=0,
+                         omit_simulation=_marker_for_depreacated_argument,
+                         omit_input=0, omit_output=0,
                          selection_domain=None, selection_report=None, **kw):
       """
         Returns a list of inventories for a single or multiple
@@ -603,10 +610,13 @@ class SimulationTool (BaseTool):
         the kind of inventory statistics we want to display (ex. sum,
         average, cost, etc.)
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventoryList(
                     src__=src__, ignore_variation=ignore_variation,
-                    standardise=standardise, omit_simulation=omit_simulation,
+                    standardise=standardise,
                     omit_input=omit_input, omit_output=omit_output,
                     selection_domain=selection_domain,
                     selection_report=selection_report, **sql_kw)
@@ -646,7 +656,8 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryStat')
     def getInventoryStat(self, src__=0, ignore_variation=0, standardise=0,
-                         omit_simulation=0, omit_input=0, omit_output=0,
+                         omit_simulation=_marker_for_depreacated_argument,
+                         omit_input=0, omit_output=0,
                          selection_domain=None, selection_report=None, **kw):
       """
       getInventoryStat is the pending to getInventoryList in order to
@@ -654,11 +665,14 @@ class SimulationTool (BaseTool):
       total of inventories, number of variations, number of different
       nodes, etc.
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+
       kw['group_by_variation'] = 0
       sql_kw = self._generateSQLKeywordDict(**kw)
       result = self.Resource_zGetInventory(
           src__=src__, ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
+          standardise=standardise,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain,
           selection_report=selection_report, **sql_kw)
@@ -737,7 +751,9 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryAssetPrice')
     def getInventoryAssetPrice(self, src__=0, ignore_variation=0,
-                               standardise=0, omit_simulation=0, omit_input=0,
+                               standardise=0,
+                               omit_simulation=_marker_for_depreacated_argument,
+                               omit_input=0,
                                omit_output=0, selection_domain=None,
                                selection_report=None, **kw):
       """
@@ -745,10 +761,13 @@ class SimulationTool (BaseTool):
       price rather than an inventory.
 
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+
       sql_kw = self._generateSQLKeywordDict(**kw)
       result = self.Resource_zGetInventory(
           src__=src__, ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
+          standardise=standardise,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report,
           **sql_kw)
@@ -799,7 +818,9 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryList')
     def getInventoryHistoryList(self, src__=0, ignore_variation=0,
-                                standardise=0, omit_simulation=0, omit_input=0,
+                                standardise=0,
+                                omit_simulation=_marker_for_depreacated_argument,
+                                omit_input=0,
                                 omit_output=0, selection_domain=None,
                                 selection_report=None, **kw):
       """
@@ -807,10 +828,13 @@ class SimulationTool (BaseTool):
       for a single or a group of resource, node, section, etc. This is useful
       to list the evolution with time of inventory values (quantity, asset price).
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_getInventoryHistoryList(
                       src__=src__, ignore_variation=ignore_variation,
-                      standardise=standardise, omit_simulation=omit_simulation,
+                      standardise=standardise,
                       omit_input=omit_input, omit_output=omit_output,
                       selection_domain=selection_domain,
                       selection_report=selection_report, **sql_kw)
@@ -818,7 +842,8 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, src__=0, ignore_variation=0,
-                                 standardise=0, omit_simulation=0,
+                                 standardise=0,
+                                 omit_simulation=_marker_for_depreacated_argument,
                                  omit_input=0, omit_output=0,
                                  selection_domain=None,
                                  selection_report=None, **kw):
@@ -829,11 +854,14 @@ class SimulationTool (BaseTool):
       time, value and "colour" (multiple graphs can be drawn for example
       for each variation of a resource)
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+
       sql_kw = self._generateSQLKeywordDict(**kw)
 
       return self.Resource_getInventoryHistoryChart(
                     src__=src__, ignore_variation=ignore_variation,
-                    standardise=standardise, omit_simulation=omit_simulation,
+                    standardise=standardise,
                     omit_input=omit_input, omit_output=omit_output,
                     selection_domain=selection_domain,
                     selection_report=selection_report, **sql_kw)
@@ -841,7 +869,8 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryList')
     def getMovementHistoryList(self, src__=0, ignore_variation=0,
-                               standardise=0, omit_simulation=0,
+                               standardise=0,
+                               omit_simulation=_marker_for_depreacated_argument,
                                omit_input=0, omit_output=0,
                                selection_domain=None, selection_report=None,
                                **kw):
@@ -849,11 +878,13 @@ class SimulationTool (BaseTool):
       Returns a list of movements which modify the inventory
       for a single or a group of resource, node, section, etc.
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+      
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetMovementHistoryList(
                          src__=src__, ignore_variation=ignore_variation,
                          standardise=standardise,
-                         omit_simulation=omit_simulation,
                          omit_input=omit_input, omit_output=omit_output,
                          selection_domain=selection_domain,
                          selection_report=selection_report, **sql_kw)
@@ -861,35 +892,48 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
     def getMovementHistoryStat(self, src__=0, ignore_variation=0,
-                               standardise=0, omit_simulation=0, omit_input=0,
+                               standardise=0,
+                               omit_simulation=_marker_for_depreacated_argument,
+                               omit_input=0,
                                omit_output=0, selection_domain=None,
                                selection_report=None, **kw):
       """
       getMovementHistoryStat is the pending to getMovementHistoryList
       for ListBox stat
       """
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+      
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise,
-          omit_simulation=omit_simulation, omit_input=omit_input,
+          omit_input=omit_input,
           omit_output=omit_output, selection_domain=selection_domain,
           selection_report=selection_report, **sql_kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        ignore_variation=0, standardise=0,
+        omit_simulation=_marker_for_depreacated_argument,
+        omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      sql_kw = self._generateSQLKeywordDict(order_by_expression='stock.date', **kw)
+      if omit_simulation is not _marker_for_depreacated_argument:
+        warn('omit_simulation parameter is ignored', DeprecationWarning)
+      
+      sql_kw = self._generateSQLKeywordDict(
+                        order_by_expression='stock.date', **kw)
       sql_kw['group_by_expression'] = 'stock.uid'
       sql_kw['order_by_expression'] = 'stock.date'
 
       result = self.Resource_zGetInventory(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          ignore_variation=ignore_variation, standardise=standardise,
           omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+          selection_domain=selection_domain,
+          selection_report=selection_report, **sql_kw)
       if src__ :
         return result
 
@@ -904,7 +948,8 @@ class SimulationTool (BaseTool):
 
     #######################################################
     # Traceability management
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTrackingList')
     def getTrackingList(self, src__=0,
         selection_domain=None, selection_report=None,
         strict_simulation_state=1, **kw) :
@@ -982,14 +1027,17 @@ class SimulationTool (BaseTool):
                delivered for the last time before at_date or to_date". Cannot be used with input
 
       """
-      new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
+      new_kw = self._generateSQLKeywordDict(table='item',
+                            strict_simulation_state=strict_simulation_state,
+                            **kw)
       new_kw['at_date'] = kw.get('at_date')
 
       # Extra parameters for the SQL Method
       new_kw['join_on_item'] = new_kw.get('at_date') or \
                                new_kw.get('input') or \
                                new_kw.get('output')
-      new_kw['date_condition_in_join'] = not (new_kw.get('input') or new_kw.get('output'))
+      new_kw['date_condition_in_join'] = not (new_kw.get('input')
+                                              or new_kw.get('output'))
 
       # Pass simulation state to request
       if kw.has_key('item.simulation_state'):
