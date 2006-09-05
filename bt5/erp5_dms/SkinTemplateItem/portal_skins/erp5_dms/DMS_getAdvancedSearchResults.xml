@@ -70,7 +70,17 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-kw.update(context.parseSearchString(kw.get(\'SearchableText\',\'\')))\n
+args=context.parseSearchString(kw.get(\'SearchableText\',\'\'))\n
+args[\'portal_type\']=context.getPortalDocumentTypeList()\n
+cats=[]\n
+bases=context.portal_categories.getBaseCategoryList()\n
+for k,v in args.items():\n
+  if k in bases:\n
+    cats.append(\'/\'.join((k,v)))\n
+if cats!=[]:\n
+  args[\'category\']=cats\n
+context.log(\'args\',args)\n
+kw.update(args)\n
 \n
 cf=kw.get(\'creation_from\')\n
 ct=kw.get(\'creation_to\')\n
@@ -137,13 +147,19 @@ return context.portal_catalog(**kw)\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>args</string>
+                            <string>_write_</string>
+                            <string>cats</string>
+                            <string>bases</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>
                             <string>mt</string>
                             <string>wheres</string>
                             <string>str</string>
-                            <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

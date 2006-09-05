@@ -1,3 +1,6 @@
+2006-09-05 BG
+Extended search functions (requires SQLCatalog patch)
+
 2006-08-30 BG
 Added ImageDocument type; assigned types to group dms_document.
 
