@@ -1704,7 +1704,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   query_item += ["%s <= '%s'" % (key, query_max) ]
               else :
                 for query_value_item in query_value :
-                  query_item += ['%s = %s' % (key, self._quoteSQLString(query_value_item))]
+                  query_item += ["%s = '%s'" % (key, self._quoteSQLString(query_value_item))]
               if len(query_item) > 0:
                 where_expression += ['(%s)' % join(query_item, ' %s ' % operator_value)]
             else:

@@ -857,3 +857,139 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
 
+  def _makeOrganisation(self, **kw):
+    """Creates an Organisation in it's default module and reindex it.
+    By default, it creates a group/nexedi category, and make the organisation a
+    member of this category.
+    """
+    group_cat = self.getCategoryTool().group
+    if not hasattr(group_cat, 'nexedi'):
+      group_cat.newContent(id='nexedi', title='Nexedi Group',)
+    module = self.getPortal().getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation')
+    kw.setdefault('group', 'group/nexedi')
+    organisation.edit(**kw)
+    get_transaction().commit()
+    self.tic()
+    return organisation
+    
+  def test_SimpleQueryDict(self, quiet=quiet, run=run_all_test):
+    """use a dict as a keyword parameter.
+    """
+    if not run: return
+    organisation_title = 'Nexedi Organisation'
+    organisation = self._makeOrganisation(title=organisation_title)
+    self.assertEquals([organisation.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                title={'query': organisation_title})])
+
+  def test_RelatedKeySimpleQueryDict(self, quiet=quiet, run=run_all_test):
+    """use a dict as a keyword parameter, but using a related key
+    """
+    if not run: return
+    organisation = self._makeOrganisation()
+    self.assertEquals([organisation.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                group_title={'query': 'Nexedi Group'},
+                # have to filter on portal type, because the group category is
+                # also member of itself
+                portal_type=organisation.getPortalTypeName())])
+
+  def test_SimpleQueryDictWithOrOperator(self, quiet=quiet,
+                                                    run=run_all_test):
+    """use a dict as a keyword parameter, with OR operator.
+    """
+    if not run: return
+    organisation_title = 'Nexedi Organisation'
+    organisation = self._makeOrganisation(title=organisation_title)
+  
+    self.assertEquals([organisation.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                title={'query': (organisation_title, 'something else'),
+                       'operator': 'or'})])
+
+  def test_SimpleQueryDictWithAndOperator(self, quiet=quiet,
+                                                     run=run_all_test):
+    """use a dict as a keyword parameter, with AND operator.
+    """
+    if not run: return
+    organisation_title = 'Nexedi Organisation'
+    organisation = self._makeOrganisation(title=organisation_title)
+  
+    self.assertEquals([organisation.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                # this is useless, we must find a better use case
+                title={'query': (organisation_title, organisation_title),
+                       'operator': 'and'})])
+
+  def test_SimpleQueryDictWithMaxRangeParameter(self, quiet=quiet,
+                                                     run=run_all_test):
+    """use a dict as a keyword parameter, with max range parameter ( < )
+    """
+    if not run: return
+    org_a = self._makeOrganisation(title='A')
+    org_b = self._makeOrganisation(title='B')
+    org_c = self._makeOrganisation(title='C')
+  
+    self.assertEquals([org_a.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',
+                title={'query': 'B', 'range': 'max'})])
+  
+  def test_SimpleQueryDictWithMinRangeParameter(self, quiet=quiet,
+                                                     run=run_all_test):
+    """use a dict as a keyword parameter, with min range parameter ( >= )
+    """
+    if not run: return
+    org_a = self._makeOrganisation(title='A')
+    org_b = self._makeOrganisation(title='B')
+    org_c = self._makeOrganisation(title='C')
+  
+    self.failIfDifferentSet([org_b.getPath(), org_c.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',
+                title={'query': 'B', 'range': 'min'})])
+
+
+  def test_SimpleQueryDictWithNgtRangeParameter(self, quiet=quiet,
+                                                     run=run_all_test):
+    """use a dict as a keyword parameter, with ngt range parameter ( <= )
+    """
+    if not run: return
+    org_a = self._makeOrganisation(title='A')
+    org_b = self._makeOrganisation(title='B')
+    org_c = self._makeOrganisation(title='C')
+  
+    self.failIfDifferentSet([org_a.getPath(), org_b.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',
+                title={'query': 'B', 'range': 'ngt'})])
+
+  def test_SimpleQueryDictWithMinMaxRangeParameter(self, quiet=quiet,
+                                                     run=run_all_test):
+    """use a dict as a keyword parameter, with minmax range parameter ( >=  < )
+    """
+    if not run: return
+    org_a = self._makeOrganisation(title='A')
+    org_b = self._makeOrganisation(title='B')
+    org_c = self._makeOrganisation(title='C')
+  
+    self.assertEquals([org_b.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',
+                title={'query': ('B', 'C'), 'range': 'minmax'})])
+  
+  def test_SimpleQueryDictWithMinNgtRangeParameter(self, quiet=quiet,
+                                                     run=run_all_test):
+    """use a dict as a keyword parameter, with minngt range parameter ( >= <= )
+    """
+    if not run: return
+    org_a = self._makeOrganisation(title='A')
+    org_b = self._makeOrganisation(title='B')
+    org_c = self._makeOrganisation(title='C')
+  
+    self.failIfDifferentSet([org_b.getPath(), org_c.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',
+                title={'query': ('B', 'C'), 'range': 'minngt'})])
+
