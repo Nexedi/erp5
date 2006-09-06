@@ -41,6 +41,7 @@ from Products.CMFCore.PortalFolder import PortalFolder
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Document import newTempBase
+from Products.ERP5Type.Cache import CachingMethod
 
 from zLOG import LOG
 
@@ -120,6 +121,16 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getUids')
     getUids = getCategoryParentUidList
+
+    def getBaseCategoryDict(self):
+      """
+        Cached method to which resturns a dict with category names as keys, and None as values.
+        This allows to search for an element existence in the list faster.
+        ie: if x in self.getPortalObject().portal_categories.getBaseCategoryDict()
+      """
+      def getBaseCategoryDict(self):
+        return dict.fromkeys(self.getBaseCategoryList(), None)
+      return CachingMethod(getBaseCategoryDict, 'portal_categories.getBaseCategoryDict', cache_duration=None)(self)
 
     def updateRelatedContent(self, context,
                              previous_category_url, new_category_url):
