@@ -80,6 +80,7 @@ def Field_validate_sub_field(self, id, REQUEST, key=None):
 
 def Field_render_helper(self, key, value, REQUEST):
     value = self._get_default(key, value, REQUEST)
+    __traceback_info__ = ('key=%s value=%r' % (key, value))
     if self.get_value('hidden'):
         return self.widget.render_hidden(self, key, value, REQUEST)
     elif (not self.get_value('editable',REQUEST=REQUEST)):
