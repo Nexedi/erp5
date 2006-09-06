@@ -562,7 +562,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       default_destination_title | category,catalog/title/z_related_destination
       """
       related_key_list = []
-      base_cat_id_list = self.portal_categories.getBaseCategoryList()
+      base_cat_id_list = self.portal_categories.getBaseCategoryDict()
       default_string = 'default_'
       strict_string = 'strict_'
       for key in kw.keys():
