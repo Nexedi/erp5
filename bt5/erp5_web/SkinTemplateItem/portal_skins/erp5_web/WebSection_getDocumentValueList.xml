@@ -158,7 +158,10 @@ for my_element in my_list:\n
 def compareIndex(c1, c2):\n
   c1_value = c1.getObject()  \n
   c2_value = c2.getObject()  \n
-  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex()) \n
+  if hasattr(c1_value,\'getIntIndex\') and hasattr(c2_value,\'getIntIndex\') :\n
+    return cmp(c1_value.getIntIndex(), c2_value.getIntIndex()) \n
+  else:\n
+    return 0\n
 \n
 my_clean_list.sort(compareIndex)\n
 return my_clean_list\n
