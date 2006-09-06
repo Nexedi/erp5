@@ -443,13 +443,13 @@ class ERP5TypeInformation( FactoryTypeInformation,
           for role in role_text.split(';'):
             role = role.strip()
             role_category_list = role_category_list_dict.setdefault(role, [])
+            category_value_dict = {'category_order':category_order_list}
             for category_dict in category_result:
-              category_value_dict = {'category_order':category_order_list}
               category_value_dict.update(category_dict)
               for c in definition['category']:
                 bc, value = c.split('/', 1)
                 category_value_dict[bc] = value
-              role_category_list.append(category_value_dict)
+            role_category_list.append(category_value_dict)
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
