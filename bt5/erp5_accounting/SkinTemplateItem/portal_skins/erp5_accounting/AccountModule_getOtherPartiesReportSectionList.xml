@@ -70,8 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-"""\n
-  Client & vendors accounts.\n
+"""Client & vendors accounts.\n
 """\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
@@ -83,6 +82,8 @@ transaction_simulation_state = request[\'transaction_simulation_state\']\n
 role_filter_list = request.get(\'entity_role\', None)\n
 omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
 from_date = request.get(\'from_date\', None)\n
+\n
+request.other[\'is_accounting_report\'] = True\n
 \n
 # role_filter_list == None means no filter on the role\n
 if role_filter_list == [\'\'] :\n
@@ -126,11 +127,17 @@ entity_columns = [\n
 # will tell wether this third party account is balanced or not.\n
 valid_node_uids = []\n
 if omit_balanced_accounts :\n
-  for account in portal.portal_categories.resolveCategory(\'account_type/asset/receivable\'\n
-                ).getAccountTypeRelatedValueList(strict_membership = 1, portal_type = "Account") :\n
+  for account in portal.portal_categories.resolveCategory(\n
+                    \'account_type/asset/receivable\'\n
+                ).getAccountTypeRelatedValueList(\n
+                    strict_membership=1,\n
+                    portal_type=\'Account\'):\n
     valid_node_uids.append(account.getUid())\n
-  for account in portal.portal_categories.resolveCategory(\'account_type/liability/payable\'\n
-                ).getAccountTypeRelatedValueList(strict_membership = 1, portal_type = "Account") :\n
+  for account in portal.portal_categories.resolveCategory(\n
+                    \'account_type/liability/payable\'\n
+                ).getAccountTypeRelatedValueList(\n
+                    strict_membership=1,\n
+                    portal_type=\'Account\'):\n
     valid_node_uids.append(account.getUid())\n
 \n
 if not params[\'hide_grouping\']  :\n
@@ -142,12 +149,15 @@ for party in context.Account_zDistinctSectionList():\n
   if role_filter_list and o.getProperty(\'role\', []) not in role_filter_list:\n
     continue\n
 \n
-  if o.getPortalType() == \'Person\' or not o.isMemberOf(transaction_section_category):\n
+  if o.getPortalType() == \'Person\' or\\\n
+      not o.isMemberOf(transaction_section_category):\n
         # don\'t show entities belonging to the group we are reporting\n
-    if omit_balanced_accounts and (simulation_tool.getInventoryAssetPrice(\n
-                    mirror_section_uid=o.uid, node_uid = valid_node_uids, **params) == 0) :\n
+    if omit_balanced_accounts and (\n
+            simulation_tool.getInventoryAssetPrice(\n
+                    mirror_section_uid=o.uid,\n
+                    node_uid=valid_node_uids, **params) == 0):\n
       pass\n
-    else :\n
+    else:\n
       title = o.getTitle()\n
       if o.getProperty(\'role\', None):\n
         title += \' (%s)\' % o.getRoleTitle()\n
@@ -234,9 +244,10 @@ return result\n
                             <string>role_filter_list</string>
                             <string>omit_balanced_accounts</string>
                             <string>from_date</string>
+                            <string>True</string>
+                            <string>_write_</string>
                             <string>result</string>
                             <string>params</string>
-                            <string>_write_</string>
                             <string>portal</string>
                             <string>simulation_tool</string>
                             <string>entity_columns</string>

@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Trial balance.\n
+            <value> <string>""" Trial balance.\n
 """\n
 from Products.ERP5Form.Report import ReportSection\n
 \n
@@ -84,6 +83,8 @@ gap_list             = request.get(\'gap_list\'            , [])\n
 from_date            = request.get(\'from_date\'           , None)\n
 expand_accounts      = request.get(\'expand_accounts\'     , False)\n
 show_parent_accounts = request.get(\'show_parent_accounts\', False)\n
+\n
+request.other[\'is_accounting_report\'] = True\n
 \n
 # flat_mode is a boolean that indicate wether we should use a report tree\n
 #   or a flat list of all accounts.\n
@@ -209,8 +210,9 @@ return result\n
                             <string>False</string>
                             <string>expand_accounts</string>
                             <string>show_parent_accounts</string>
-                            <string>result</string>
                             <string>True</string>
+                            <string>_write_</string>
+                            <string>result</string>
                             <string>params</string>
                             <string>balance_columns</string>
                           </tuple>

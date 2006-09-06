@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Get the report sections for account statement.\n
+            <value> <string>"""Get the report sections for account statement.\n
 Account is the combination of :\n
    - node (the Account in account module)\n
    - destination_section (the Entity in organisation / person module)\n
@@ -89,6 +88,8 @@ transaction_simulation_state = request[\'transaction_simulation_state\']\n
 from_date = request.get(\'from_date\', None)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
 \n
+request.other[\'is_accounting_report\'] = True\n
+\n
 params = {\n
   \'at_date\'                      : at_date,\n
   \'section_category\'             : transaction_section_category,\n
@@ -97,16 +98,6 @@ params = {\n
   \'accounting_transaction_line_currency\' : None,\n
   \'omit_grouping_reference\'      : omit_grouping_reference,\n
   \'from_date_summary\' : 1\n
-}\n
-\n
-preferences = {\n
-  \'preferred_accounting_transaction_at_date\'          : at_date,\n
-  \'preferred_accounting_transaction_simulation_state\' :\n
-                    transaction_simulation_state,\n
-  \'preferred_accounting_transaction_section_category\' :\n
-                    transaction_section_category,\n
-  # XXX put omit_grouping_reference in preferences ?\n
-  \'preferred_accounting_omit_grouping_reference\' : omit_grouping_reference,\n
 }\n
 \n
 if from_date:\n
@@ -120,9 +111,6 @@ if destination_section :\n
   params[\'mirror_section_uid\'] = context.restrictedTraverse(destination_section).getUid()\n
 if account:\n
   params[\'node_uid\'] = context.restrictedTraverse(account).getUid()\n
-\n
-from Products.ERP5Type.Cache import clearCache\n
-clearCache() # for preferences\n
 \n
 result = []\n
 portal = context.portal_url.getPortalObject()\n
@@ -147,8 +135,8 @@ return [ReportSection(\n
               selection_params = params,\n
               selection_columns = account_columns,\n
               listbox_display_mode = \'FlatListMode\',\n
-              selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
-              preferences = preferences )]\n
+              selection_sort_order = [(\'delivery.stop_date\',\n
+                                       \'ascending\')],)]\n
 # vim: syntax=python\n
 </string> </value>
         </item>
@@ -213,11 +201,10 @@ return [ReportSection(\n
                             <string>transaction_simulation_state</string>
                             <string>from_date</string>
                             <string>omit_grouping_reference</string>
+                            <string>True</string>
+                            <string>_write_</string>
                             <string>params</string>
                             <string>preferences</string>
-                            <string>_write_</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
                             <string>result</string>
                             <string>portal</string>
                             <string>account_columns</string>

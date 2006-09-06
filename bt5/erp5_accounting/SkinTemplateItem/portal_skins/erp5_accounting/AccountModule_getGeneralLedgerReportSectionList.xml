@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get the report sections for general ledger\n
+            <value> <string>"""Get the report sections for general ledger\n
 """\n
 from Products.ERP5Form.Report import ReportSection\n
 request  = context.REQUEST\n
@@ -87,13 +86,14 @@ display_categories  = request.get(\'display_categories\', False)\n
 # TODO\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', False)\n
 \n
+request.other[\'is_accounting_report\'] = True\n
+\n
 params = { \'at_date\'                             : at_date\n
          , \'section_category\'                    : section_category\n
          , \'simulation_state\'                    : simulation_state\n
          , \'accounting_transaction_line_currency\': None\n
          , \'omit_grouping_reference\'             : omit_grouping_reference\n
          , \'from_date_summary\'                   : True\n
-         , \'is_accounting_report\'                : True\n
          }\n
 \n
 if from_date:\n
@@ -116,12 +116,13 @@ account_columns = ( (\'date\', \'Date\')\n
 \n
 if gap:\n
   gap_value_list = [cat_tool.gap.restrictedTraverse(gap)] + \\\n
-                    cat_tool.gap.restrictedTraverse(gap).Category_getSortedCategoryChildValueList()\n
+              cat_tool.gap.restrictedTraverse(gap).getCategoryChildValueList()\n
 else:\n
-  cat = \'gap/%s\' %  context.portal_preferences.getPreferredAccountingTransactionGap() \\\n
-                 or context.getPortalDefaultGapRoot()\n
+  cat = \'gap/%s\' % (\n
+    context.portal_preferences.getPreferredAccountingTransactionGap()\n
+       or context.getPortalDefaultGapRoot())\n
 \n
-  gap_value_list = cat_tool.resolveCategory(cat).Category_getSortedCategoryChildValueList()\n
+  gap_value_list = cat_tool.resolveCategory(cat).getCategoryChildValueList()\n
 \n
 # we don\'t want to display accounts that don\'t have any transactions associated,\n
 # so we use a cache to see if the account contains transaction or not ( regardless\n
@@ -133,13 +134,17 @@ if account_inventory_list_cache_params.has_key(\'from_date\'):\n
 \n
 for c in gap_value_list:\n
   account_list = c.getGapRelatedValueList(portal_type="Account")\n
-  strict_account_list = c.getGapRelatedValueList(portal_type="Account", strict_membership=1)\n
+  strict_account_list = c.getGapRelatedValueList(portal_type="Account",\n
+                                                 strict_membership=1)\n
 \n
   skip_branch = 1\n
   for account in account_list:\n
     if account.getUid() not in account_inventory_list_cache:\n
-      account_inventory_list_cache[account.getUid()] = len(sim_tool.getInventoryList( omit_simulation = 1,\n
-          node_uid = account.getUid(), **account_inventory_list_cache_params))\n
+      account_inventory_list_cache[account.getUid()] = len(\n
+                      sim_tool.getMovementHistoryList(\n
+                          omit_simulation=1,\n
+                          node_uid=account.getUid(),\n
+                          **account_inventory_list_cache_params))\n
     if account_inventory_list_cache[account.getUid()] != 0:\n
       skip_branch = 0\n
 \n
@@ -158,8 +163,9 @@ for c in gap_value_list:\n
   if len(strict_account_list):\n
     for account in strict_account_list:\n
       if account.getAccountTypeId() in (\'payable\', \'receivable\'):\n
-        for third_party_brain in context.Account_zDistinctSectionList( at_date = at_date\n
-                                                                     , simulation_state = simulation_state):\n
+        for third_party_brain in context.Account_zDistinctSectionList(\n
+                                      at_date=at_date,\n
+                                      simulation_state=simulation_state):\n
           third_party_params = params.copy()\n
           third_party_params[\'mirror_section_uid\'] = third_party_brain.uid\n
           third_party_uid = third_party_brain.uid or " = NULL"\n
@@ -167,26 +173,27 @@ for c in gap_value_list:\n
                                   , account.getTitle()\n
                                   , third_party_brain.title\n
                                   )\n
-          if len(sim_tool.getInventoryList( mirror_section_uid = third_party_uid\n
-                                          , node_uid           = account.getUid()\n
-                                          , **account_inventory_list_cache_params\n
-                                          )):\n
-            result.append(ReportSection( path                 = account.getPhysicalPath()\n
-                                       , title                = title\n
-                                       , level                = 9\n
-                                       , form_id              = \'Account_viewAccountingTransactionList\'\n
-                                       , selection_name       = \'acount_preference_selection\'\n
-                                       , selection_params     = third_party_params.copy()\n
-                                       , selection_columns    = account_columns\n
-                                       , listbox_display_mode = \'FlatListMode\'\n
-                                       , selection_sort_order = [(\'delivery.stop_date\', \'ascending\')]\n
-                                       ))\n
+          if len(sim_tool.getMovementHistoryList(\n
+                        mirror_section_uid=third_party_uid,\n
+                        node_uid=account.getUid(),\n
+                        **account_inventory_list_cache_params)):\n
+            result.append(ReportSection(\n
+                      path=account.getPhysicalPath(),\n
+                      title=title,\n
+                      level=9,\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'acount_preference_selection\',\n
+                      selection_params=third_party_params.copy(),\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'delivery.stop_date\',\n
+                                             \'ascending\')]))\n
 \n
       elif account.isMemberOf(\'account_type/asset/cash/bank\'):\n
         # Bank Account\n
-        for bank_account_brain in account.Account_zGetDistinctPaymentList( at_date = at_date\n
-                                                                         , simulation_state = simulation_state\n
-                                                                         ):\n
+        for bank_account_brain in account.Account_zGetDistinctPaymentList(\n
+                                      at_date=at_date,\n
+                                      simulation_state=simulation_state):\n
           bank_params = params.copy()\n
           if bank_account_brain.path is not None:\n
             bank_params[\'payment_uid\'] = bank_account_brain.uid\n
@@ -198,34 +205,35 @@ for c in gap_value_list:\n
           else :\n
             bank_params[\'no_payment_uid\'] = 1\n
             title = "%s: %s" % ( c.getId(), account.getTitle())\n
-          if len(sim_tool.getInventoryList( payment_uid = bank_account_uid\n
-                                          , node_uid = account.getUid()\n
-                                          , **account_inventory_list_cache_params\n
-                                          )):\n
-            result.append(ReportSection( path                 = account.getPhysicalPath()\n
-                                       , title                = title\n
-                                       , level                = 9\n
-                                       , form_id              = \'Account_viewAccountingTransactionList\'\n
-                                       , selection_name       = \'acount_preference_selection\'\n
-                                       , selection_params     = bank_params.copy()\n
-                                       , selection_columns    = account_columns\n
-                                       , listbox_display_mode = \'FlatListMode\'\n
-                                       , selection_sort_order = [(\'delivery.stop_date\', \'ascending\')]\n
-                                       ))\n
-      else:\n
-        if len(sim_tool.getInventoryList( node_uid = account.getUid()\n
-                                        , **account_inventory_list_cache_params\n
-                                        )):\n
-          result.append(ReportSection( path                 = account.getPhysicalPath()\n
-                                     , title                = "%s: %s" % (c.getId(), account.getTitle())\n
-                                     , level                = 9\n
-                                     , form_id              = \'Account_viewAccountingTransactionList\'\n
-                                     , selection_name       = \'acount_preference_selection\'\n
-                                     , selection_params     = params\n
-                                     , selection_columns    = account_columns\n
-                                     , listbox_display_mode = \'FlatListMode\'\n
-                                     , selection_sort_order = [(\'delivery.stop_date\', \'ascending\')]\n
-                                     ))\n
+          if len(sim_tool.getMovementHistoryList(\n
+                          payment_uid=bank_account_uid,\n
+                          node_uid=account.getUid(),\n
+                          **account_inventory_list_cache_params)):\n
+            result.append(ReportSection(\n
+                      path=account.getPhysicalPath(),\n
+                      title=title,\n
+                      level=9,\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'accounting_report_selection\',\n
+                      selection_params=bank_params.copy(),\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'delivery.stop_date\',\n
+                                             \'ascending\')]))\n
+      elif len(sim_tool.getMovementHistoryList(\n
+                                node_uid=account.getUid(),\n
+                                **account_inventory_list_cache_params)):\n
+          result.append(ReportSection(\n
+                        path=account.getPhysicalPath(),\n
+                        title="%s: %s" % (c.getId(), account.getTitle()),\n
+                        level=9,\n
+                        form_id=\'Account_viewAccountingTransactionList\',\n
+                        selection_name=\'accounting_report_selection\',\n
+                        selection_params=params,\n
+                        selection_columns=account_columns,\n
+                        listbox_display_mode=\'FlatListMode\',\n
+                        selection_sort_order=[(\'delivery.stop_date\',\n
+                                               \'ascending\')]))\n
 \n
 return result\n
 </string> </value>
@@ -296,8 +304,8 @@ return result\n
                             <string>False</string>
                             <string>display_categories</string>
                             <string>omit_grouping_reference</string>
-                            <string>params</string>
                             <string>_write_</string>
+                            <string>params</string>
                             <string>result</string>
                             <string>account_columns</string>
                             <string>gap_value_list</string>
