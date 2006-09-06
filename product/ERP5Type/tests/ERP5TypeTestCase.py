@@ -410,30 +410,33 @@ def setupERP5Site( business_template_list=(),
           if not quiet:
             ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
           
-          sql_connections_dict = {}
+          extra_constructor_kw = {}
           erp5_sql_connection_string = os.environ.get(
                                         'erp5_sql_connection_string')
           if erp5_sql_connection_string:
-            sql_connections_dict['erp5_sql_connection_string'] = \
+            extra_constructor_kw['erp5_sql_connection_string'] = \
                                         erp5_sql_connection_string
           cmf_activity_sql_connection_string = os.environ.get(
                                     'cmf_activity_sql_connection_string',
                                     os.environ.get('erp5_sql_connection_string'))
           if cmf_activity_sql_connection_string:
-            sql_connections_dict['cmf_activity_sql_connection_string'] = \
+            extra_constructor_kw['cmf_activity_sql_connection_string'] = \
                                         cmf_activity_sql_connection_string
           erp5_sql_deferred_connection_string = os.environ.get(
                                     'erp5_sql_deferred_connection_string',
                                     os.environ.get('erp5_sql_connection_string'))
           if erp5_sql_deferred_connection_string:
-            sql_connections_dict['erp5_sql_deferred_connection_string'] = \
+            extra_constructor_kw['erp5_sql_deferred_connection_string'] = \
                                         erp5_sql_deferred_connection_string
+          email_from_address = os.environ.get('email_from_address')
+          if email_from_address is not None:
+            extra_constructor_kw['email_from_address'] = email_from_address
           factory = app.manage_addProduct['ERP5']
           factory.manage_addERP5Site(portal_name,
                                      light_install=light_install,
                                      reindex=reindex,
                                      create_activities=create_activities,
-                                     **sql_connections_dict )
+                                     **extra_constructor_kw )
 
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))

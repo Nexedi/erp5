@@ -21,6 +21,10 @@ Options:
                              ZSQL Connection string for
                              erp5_sql_deferred_connection (if unset, defaults
                              to erp5_sql_connection_string)
+  --email_from_address=STRING 
+                             Initialize the email_from_address property of the
+                             portal, by defaults, CMFActivity failures are sent
+                             on localhost from this address, to this address
  
 """
 
@@ -170,7 +174,9 @@ def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
         "hv", ["help", "verbose", "erp5_sql_connection_string=",
-        "cmf_activity_sql_connection_string=", "erp5_deferred_sql_connection_string="] )
+        "cmf_activity_sql_connection_string=",
+        "erp5_deferred_sql_connection_string=",
+        "email_from_address="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -187,6 +193,8 @@ def main():
       os.environ["cmf_activity_sql_connection_string"] = arg
     elif opt == "--erp5_sql_deferred_connection_string":
       os.environ["erp5_sql_deferred_connection_string"] = arg
+    elif opt == "--email_from_address":
+      os.environ["email_from_address"] = arg
 
   test_list = args
   if not test_list:
