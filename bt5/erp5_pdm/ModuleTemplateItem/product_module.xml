@@ -21,9 +21,6 @@
    <name>Access session data</name>
   </permission>
   <permission type='list'>
-   <name>AccessContentsInformation</name>
-  </permission>
-  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
   <permission type='list'>
@@ -180,9 +177,6 @@
    <name>Add Plugin Registrys</name>
   </permission>
   <permission type='list'>
-   <name>Add Portal ZSyncer Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -235,9 +229,6 @@
   </permission>
   <permission type='list'>
    <name>Add ZODB Mount Points</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ZSyncers</name>
   </permission>
   <permission type='list'>
    <name>Add Zope Tutorials</name>
@@ -397,6 +388,9 @@
    <name>Manage Groups</name>
   </permission>
   <permission type='list'>
+   <name>Manage Selenium test cases</name>
+  </permission>
+  <permission type='list'>
    <name>Manage Transient Object Container</name>
   </permission>
   <permission type='list'>
@@ -413,6 +407,9 @@
   </permission>
   <permission type='list'>
    <name>Manage ZCatalogIndex Entries</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='list'>
    <name>Manage languages</name>
@@ -512,15 +509,6 @@
   </permission>
   <permission type='list'>
    <name>WebDAV access</name>
-  </permission>
-  <permission type='list'>
-   <name>ZSyncer: Use ZSyncer</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Product Module</portal_type>
