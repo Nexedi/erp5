@@ -171,8 +171,15 @@ Test `preferred_gap_id` column of Account Module\n
   <td>//tr[@id=\'listbox_data_line_3\']/td[2]/a</td>\n
   <td>40</td>\n
 </tr>\n
-\n
 <!-- }}} -->\n
+\n
+<tr>\n
+  <!-- make sure we end up sorting in ASCENDING-->\n
+  <td>clickAndWait</td>\n
+  <td>link=GAP No</td>\n
+  <td></td>\n
+</tr>\n
+\n
 \n
 </tbody></table>\n
 </body>\n
