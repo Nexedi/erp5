@@ -1,3 +1,6 @@
+2006-09-06 aurel
+* reference currency id is now defined as a property
+
 2006-08-11 aurel
 * improve view for counter module inventory report
 

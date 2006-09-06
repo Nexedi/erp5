@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string># in this script you must return the default value of the currency for the site\n
 # this must correspond to the id of the currency in the currency_module\n
-return \'EUR\'\n
+return context.getPortalObject().getProperty(\'reference_currency_id\')\n
 </string> </value>
         </item>
         <item>
@@ -116,7 +116,10 @@ return \'EUR\'\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>

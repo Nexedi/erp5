@@ -63,12 +63,3 @@ Currency Cash Module | list
 Currency Cash Module | list_sort_on
 Currency Cash Module | list_ui
 Currency Cash Module | view
-Foreign Check Module | list
-Foreign Check Module | localroles
-Foreign Check Module | metadata
-Foreign Check Module | syndication
-Foreign Check Module | view
-Foreign Check | metadata
-Foreign Check | print
-Foreign Check | translate
-Foreign Check | view

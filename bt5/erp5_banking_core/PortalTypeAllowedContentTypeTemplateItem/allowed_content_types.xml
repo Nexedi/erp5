@@ -28,7 +28,4 @@
   <item>Banknote</item>
   <item>Coin</item>
  </portal_type>
- <portal_type id="Foreign Check Module">
-  <item>Foreign Check</item>
- </portal_type>
 </allowed_content_type_list>

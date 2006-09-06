@@ -36,8 +36,4 @@
  <portal_type id="Counter Date">
   <item>Task</item>
  </portal_type>
- <portal_type id="Foreign Check">
-  <item>Arrow</item>
-  <item>Task</item>
- </portal_type>
 </property_sheet_list>
