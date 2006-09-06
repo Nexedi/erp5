@@ -92,7 +92,7 @@ def PropertyManager_setProperty(self, id, value, type=None):
       elif isinstance(value, float):
         type = 'float'
       elif isinstance(value, basestring):
-        if len(value_type.split('\n')) > 1:
+        if len(value.split('\n')) > 1:
           type = 'text'
         else:
           type = 'string'
