@@ -113,6 +113,12 @@ p {\n
   text-align: justify;\n
 }\n
 \n
+span.draft       {color: #be854d}\n
+span.published,\n
+span.validated   {color: #078307}\n
+span.invalidated {color: #ab0303}\n
+span.cancelled   {color: #ccc}\n
+\n
 \n
 /* Layout\n
 Layout technic based on http://en.wikipedia.org/skins-1.5/monobook/main.css?9\n
@@ -127,7 +133,7 @@ body > form#main_form {\n
   z-index: 2;\n
 }\n
 \n
-/* erp5_web_default_layout form groups */\n
+/* Default layout for form groups (sidebar actually) */\n
 form#main_form > div {\n
   border: .1em solid #aaa;\n
   margin: 0 0 .5em -16.2em;\n
@@ -142,7 +148,7 @@ form#main_form > div.main_content {\n
   float: right;\n
 }\n
 \n
-/* erp5_web_default_layout form web widgets */\n
+/* Default layout for form web widgets */\n
 form#main_form > div > div.field {\n
   background: #fff url(erp5-website-field.png) top repeat-x;\n
   border: 1px solid #ccc;\n
@@ -157,7 +163,7 @@ form#main_form > div > div.field label {\n
 \n
 \n
 /********************************/\n
-/* Special layout for logo web widget group */\n
+/* Special layout for logo group */\n
 form#main_form > div.logo {\n
   border: 0;\n
   padding: 2em 0 0;\n
@@ -172,9 +178,8 @@ div.logo div.field > label {\n
 \n
 \n
 /********************************/\n
-/* Special layout for search_bar web widget group: move it top right */\n
+/* Special layout for search bar group: move it top right */\n
 form#main_form > div.searchBar {\n
-  /*background: #ff9;*/\n
   position: absolute;\n
   z-index: 200;\n
   top: .3em;\n
@@ -197,32 +202,6 @@ div.searchBar > div.field > div.input {\n
   float: left;\n
   margin: 0 .5em;\n
 }\n
-\n
-/********************************/\n
-/* Content header (title + description) position in above the main_content zone.\n
-** This div should stick above main_content.\n
-*/\n
-/*form#main_form > div.contentHeader {\n
-  background: #ff9;\n
-  position: absolute;\n
-  z-index: 100;\n
-\n
-  top: 7em; */ /* = header-total-height */\n
-/*  width: 100%;\n
-\n
-\n
-  margin: 0;\n
-\n
-\n
-  border: 0;\n
-}\n
-\n
-body > form#main_form {\n
-  padding: 0 1em;\n
-  margin-left: 16.2em;\n
-\n
-*/\n
-\n
 \n
 \n
 \n
@@ -321,7 +300,6 @@ div.content fieldset {\n
 \n
 div.content fieldset > div {\n
   clear: both;\n
-  /*background: #0ff;*/\n
   margin: .1em 0;\n
   position: relative;\n
 }\n
@@ -330,6 +308,7 @@ div.content legend {\n
   padding: .2em .5em;\n
   font-weight: bold;\n
   color: #666;\n
+  text-transform: capitalize;\n
 }\n
 \n
 div.content label {\n
@@ -338,6 +317,7 @@ div.content label {\n
   width: 11em;\n
   text-align: right;\n
   float: left;\n
+  text-transform: capitalize;\n
 }\n
 \n
 \n
@@ -440,10 +420,6 @@ div.content > fieldset.webcontent {\n
   border: 0;\n
 }\n
 \n
-\n
-/* Content header (title + description) position in above the main_content zone.\n
------------------------------------------------ */\n
-\n
 /* TODO: redo webcontent header spacing policy because lack of consistency\n
          (not tested with huge titles) */\n
 \n
@@ -471,7 +447,67 @@ div.content > fieldset.webcontent span.summary {\n
   font-size: 120%;\n
   padding: 0 2em;\n
   font-style: italic;\n
-}
+}\n
+\n
+/* Extra content (metadata, related document box, etc...) styling */\n
+\n
+/* Technic 1 : absolute positionning\n
+\n
+div.content {\n
+ position:relative;\n
+}\n
+\n
+div.content > fieldset.webcontent.extra {\n
+ position: absolute;\n
+ top: 0;\n
+ right: 0;\n
+ background: #ff0;\n
+}*/\n
+\n
+\n
+/* Technic 2 : float positionning */\n
+\n
+/*div.content {\n
+  position:relative;\n
+}*/\n
+\n
+/*div.content > fieldset.webcontent.bottom {\n
+  position: relative;\n
+}*/\n
+\n
+\n
+/*div.content > fieldset.webcontent.bottom,*/\n
+\n
+div.content > fieldset.webcontent.bottom div {\n
+ display: inline;\n
+}\n
+\n
+\n
+div.content > fieldset.webcontent.extra {\n
+  float: right;\n
+  clear: right;\n
+  background-color: #f9f9f9;\n
+  display: inline;\n
+  border: 1px solid #ccc;\n
+  border-right: none;\n
+  margin: 1em 0 1em 1em;\n
+}\n
+\n
+div.content > fieldset.webcontent.extra label:after {\n
+  content: ":";\n
+}\n
+\n
+span.published {\n
+  color:\n
+}\n
+\n
+div.content > fieldset.webcontent.extra > legend {\n
+  /*margin: -2em 0 0;*/\n
+}\n
+\n
+\n
+\n
+
 
 ]]></string> </value>
         </item>
