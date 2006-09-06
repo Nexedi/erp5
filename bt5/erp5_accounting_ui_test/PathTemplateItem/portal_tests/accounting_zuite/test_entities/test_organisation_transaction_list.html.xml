@@ -183,7 +183,7 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 <!-- Jump to Accounting Module {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Transactions Related To This Entity</td>\n
+  <td>link=Transactions Related To This Entity:</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

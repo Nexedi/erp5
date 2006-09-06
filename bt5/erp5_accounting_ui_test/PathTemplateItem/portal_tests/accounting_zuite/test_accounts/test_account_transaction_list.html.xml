@@ -205,7 +205,7 @@ Test Transactions related to an account\n
 <!-- Jump to Accounting Module {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Transactions Related To This Account</td>\n
+  <td>link=Transactions Related To This Account:</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
