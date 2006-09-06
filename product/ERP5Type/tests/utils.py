@@ -47,3 +47,8 @@ def createZODBPythonScript(container, script_id, script_params,
   container.portal_url.getPortalObject().changeSkin(None)
   return script
 
+def removeZODBPythonScript(container, script_id):
+  """
+  Removes a Python script `script_id` in the given `container`.
+  """
+  container.manage_delObjects([script_id])
