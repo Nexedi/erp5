@@ -60,10 +60,18 @@ except ImportError:
   psyco = None
 
 try:
-  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
+  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, disableReadOnlyTransactionCache, CachingMethod
 except ImportError:
   def doNothing(context):
     pass
+  class CachingMethod:
+    """
+      Dummy CachingMethod class.
+    """
+    def __init__(self, callable, **kw):
+      self.function = callable
+    def __call__(*opts, **kw):
+      return self.function(*opts, **kw)
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
 
@@ -476,14 +484,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     for property in property_list:
       property_id = property[0]
       value       = property[1]
-      if type(value) in (type(''), type(u'')):
+      if isinstance(value, basestring):
         f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(property_id), escape(value)))
-      elif type(value) in (type(()), type([])):
+      elif isinstance(value, (tuple, list)):
         f.write('  <property id=%s type="tuple">\n' % quoteattr(property_id))
         # Sort for easy diff
         item_list = []
         for item in value:
-          if type(item) in (type(""), type(u"")):
+          if isinstance(item, basestring):
             item_list.append(item)
         item_list.sort()
         for item in item_list:
@@ -730,41 +738,41 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
-
-    XXX This should be cached
     """
-    keys = {}
-    for table in self.getCatalogSearchTableIds():
-      field_list = self._getCatalogSchema(table=table)
-      for field in field_list:
-        keys[field] = 1
-        keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
-    for related in self.getSqlCatalogRelatedKeyList():
-      related_tuple = related.split('|')
-      related_key = related_tuple[0].strip()
-      keys[related_key] = 1
-    keys = keys.keys()
-    keys.sort()
-    return keys
+    def _getColumnIds(self):
+      keys = {}
+      for table in self.getCatalogSearchTableIds():
+        field_list = self._getCatalogSchema(table=table)
+        for field in field_list:
+          keys[field] = 1
+          keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
+      for related in self.getSqlCatalogRelatedKeyList():
+        related_tuple = related.split('|')
+        related_key = related_tuple[0].strip()
+        keys[related_key] = 1
+      keys = keys.keys()
+      keys.sort()
+      return keys
+    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_duration=None)(self)
 
   def getColumnMap(self):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
-
-    XXX This should be cached
     """
-    keys = {}
-    for table in self.getCatalogSearchTableIds():
-      field_list = self._getCatalogSchema(table=table)
-      for field in field_list:
-        key = field
-        if not keys.has_key(key): keys[key] = []
-        keys[key].append(table)
-        key = '%s.%s' % (table, key)
-        if not keys.has_key(key): keys[key] = []
-        keys[key].append(table) # Is this inconsistent ?
-    return keys
+    def _getColumnMap(self):
+      keys = {}
+      for table in self.getCatalogSearchTableIds():
+        field_list = self._getCatalogSchema(table=table)
+        for field in field_list:
+          key = field
+          if not keys.has_key(key): keys[key] = []
+          keys[key].append(table)
+          key = '%s.%s' % (table, key)
+          if not keys.has_key(key): keys[key] = []
+          keys[key].append(table) # Is this inconsistent ?
+      return keys
+    return CachingMethod(_getColumnMap, id='SQLCatalog.getColumnMap', cache_duration=None)(self)
 
   def getResultColumnIds(self):
     """
@@ -1335,14 +1343,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     ids={}
     have_id=ids.has_key
-    StringType=type('')
 
     while self is not None:
       if hasattr(self, 'objectValues'):
         for o in self.objectValues(valid_method_meta_type_list):
           if hasattr(o,'id'):
             id=o.id
-            if type(id) is not StringType: id=id()
+            if not isinstance(id, str):
+              id=id()
             if not have_id(id):
               if hasattr(o,'title_and_id'): o=o.title_and_id()
               else: o=id
@@ -1531,11 +1539,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 # Add table to table dict
                 from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
               if as_type == 'int':
-                key = 'CAST(' + key + ' AS SIGNED)'
+                key = 'CAST(%s AS SIGNED)' % key
               if so in ('descending', 'reverse', 'DESC'):
-                new_sort_index += ['%s DESC' % key]
+                new_sort_index.append('%s DESC' % key)
               else:
-                new_sort_index += ['%s' % key]
+                new_sort_index.append('%s' % key)
           sort_index = join(new_sort_index,',')
           sort_on = str(sort_index)
         except ConflictError:
@@ -1550,8 +1558,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       for k, v in kw.items():
         if k.endswith('_usage'):
           new_k = k[0:-usage_len]
-          if not new_kw.has_key(new_k): new_kw[new_k] = {}
-          if type(new_kw[new_k]) is not type({}): new_kw[new_k] = {'query': new_kw[new_k]}
+          if not new_kw.has_key(new_k):
+            new_kw[new_k] = {}
+          if not isinstance(new_kw[new_k], dict):
+            new_kw[new_k] = {'query': new_kw[new_k]}
           split_v = v.split(':')
           new_kw[new_k] = {split_v[0]: split_v[1]}
         else:
@@ -1590,7 +1600,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 # query_table specifies what table name should be used by default
                 elif query_table and \
                     '%s.%s' % (query_table, key) in acceptable_keys:
-                  key = query_table + '.' + key
+                  key = '%s.%s' % (query_table, key)
                 elif key == 'uid':
                   # uid is always ambiguous so we can only change it here
                   key = 'catalog.uid'
@@ -1602,22 +1612,22 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               value = self._quoteSQLString(value)
               if value != '' or not ignore_empty_string:
                 if '%' in value:
-                  where_expression += ["%s LIKE '%s'" % (key, value)]
+                  where_expression.append("%s LIKE '%s'" % (key, value))
                 elif value.startswith('='):
-                  where_expression += ["%s = '%s'" % (key, value[1:])]
+                  where_expression.append("%s = '%s'" % (key, value[1:]))
                 elif value.startswith('>='):
-                  where_expression += ["%s >= '%s'" % (key, value[2:])]
+                  where_expression.append("%s >= '%s'" % (key, value[2:]))
                 elif value.startswith('<='):
-                  where_expression += ["%s <= '%s'" % (key, value[2:])]
+                  where_expression.append("%s <= '%s'" % (key, value[2:]))
                 elif value.startswith('>'):
-                  where_expression += ["%s > '%s'" % (key, value[1:])]
+                  where_expression.append("%s > '%s'" % (key, value[1:]))
                 elif value.startswith('<'):
-                  where_expression += ["%s < '%s'" % (key, value[1:])]
+                  where_expression.append("%s < '%s'" % (key, value[1:]))
                 elif value.startswith('!='):
-                  where_expression += ["%s != '%s'" % (key, value[2:])]
+                  where_expression.append("%s != '%s'" % (key, value[2:]))
                 elif key in keyword_search_keys:
                   # We must add % in the request to simulate the catalog
-                  where_expression += ["%s LIKE '%%%s%%'" % (key, value)]
+                  where_expression.append("%s LIKE '%%%s%%'" % (key, value))
                 elif key in full_text_search_keys:
                   # We must add % in the request to simulate the catalog
                   # we first check if there is a special search_mode for this key
@@ -1631,14 +1641,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   if search_mode is not None:
                     search_mode=search_mode.lower()
                   mode = full_text_search_modes.get(search_mode,'')
-                  where_expression += ["MATCH %s AGAINST ('%s' %s)" % (key, value, mode)]
+                  where_expression.append("MATCH %s AGAINST ('%s' %s)" % (key, value, mode))
                   # we return relevance as Table_Key_relevance
-                  select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_'))]
+                  select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_')))
                   # and for simplicity as Key_relevance
                   if '.' in key:
-                    select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1])]
+                    select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
                 else:
-                  where_expression += ["%s = '%s'" % (key, value)]
+                  where_expression.append("%s = '%s'" % (key, value))
             elif isinstance(value, (list, tuple)):
               # We have to create an OR from tuple or list
               query_item = []
@@ -1646,17 +1656,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if value_item != '' or not ignore_empty_string:
                   # we consider empty string as Non Significant
                   # also for lists
-                  if type(value_item) in (type(1), type(1.0),
-                                          type(1991643034L)):
-                    query_item += ["%s = %s" % (key, value_item)]
+                  if isinstance(value_item, (int, float, long)):
+                    query_item.append("%s = %s" % (key, value_item))
                   else:
                     # For security.
                     value_item = self._quoteSQLString(value_item)
                     if '%' in value_item:
-                      query_item += ["%s LIKE '%s'" % (key, value_item)]
+                      query_item.append("%s LIKE '%s'" % (key, value_item))
                     elif key in keyword_search_keys:
                       # We must add % in the request to simulate the catalog
-                      query_item += ["%s LIKE '%%%s%%'" % (key, value_item)]
+                      query_item.append("%s LIKE '%%%s%%'" % (key, value_item))
                     elif key in full_text_search_keys:
                       # We must add % in the request to simulate the catalog
                       # we first check if there is a special search_mode for this key
@@ -1670,16 +1679,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       if search_mode is not None:
                         search_mode=search_mode.lower()
                       mode = full_text_search_modes.get(search_mode, '')
-                      query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value, mode)]
+                      query_item.append("MATCH %s AGAINST ('%s')" % (key, value, mode))
                       # we return relevance as Table_Key_relevance
-                      select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_'))]
+                      select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_')))
                       # and for simplicity as Key_relevance
                       if '.' in key:
-                        select_expression += ["MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1])]
+                        select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
                     else:
-                      query_item += ["%s = '%s'" % (key, value_item)]
+                      query_item.append("%s = '%s'" % (key, value_item))
               if len(query_item) > 0:
-                where_expression += ['(%s)' % join(query_item, ' OR ')]
+                where_expression.append('(%s)' % join(query_item, ' OR '))
             elif isinstance(value, dict):
               # We are in the case of a complex query
               query_item = []
@@ -1693,22 +1702,22 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 query_min = self._quoteSQLString(min(query_value))
                 query_max = self._quoteSQLString(max(query_value))
                 if range_value == 'min' :
-                  query_item += ["%s >= '%s'" % (key, query_min) ]
+                  query_item.append("%s >= '%s'" % (key, query_min))
                 elif range_value == 'max' :
-                  query_item += ["%s < '%s'" % (key, query_max) ]
+                  query_item.append("%s < '%s'" % (key, query_max))
                 elif range_value == 'minmax' :
-                  query_item += ["%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max) ]
+                  query_item.append("%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max))
                 elif range_value == 'minngt' :
-                  query_item += ["%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max) ]
+                  query_item.append("%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max))
                 elif range_value == 'ngt' :
-                  query_item += ["%s <= '%s'" % (key, query_max) ]
+                  query_item.append("%s <= '%s'" % (key, query_max))
               else :
                 for query_value_item in query_value :
-                  query_item += ["%s = '%s'" % (key, self._quoteSQLString(query_value_item))]
+                  query_item.append("%s = '%s'" % (key, self._quoteSQLString(query_value_item)))
               if len(query_item) > 0:
-                where_expression += ['(%s)' % join(query_item, ' %s ' % operator_value)]
+                where_expression.append('(%s)' % join(query_item, ' %s ' % operator_value))
             else:
-              where_expression += ["%s = %s" % (key, self._quoteSQLString(value))]
+              where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
           elif key in topic_search_keys:
             # ERP5 CPS compatibility
             topic_operator = 'or'
@@ -1731,10 +1740,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                     topic_key = '%s.%s' % (query_table, topic_key)
                 # Add table to table dict
                 from_table_dict[acceptable_key_map[topic_key][0]] = acceptable_key_map[topic_key][0] # We use catalog by default
-                query_item += ["%s = 1" % topic_key]
+                query_item.append("%s = 1" % topic_key)
             # Join
             if len(query_item) > 0:
-              where_expression += ['(%s)' % join(query_item, ' %s ' % topic_operator)]
+              where_expression.append('(%s)' % join(query_item, ' %s ' % topic_operator))
       # Calculate extra where_expression based on required joins
       for k, tid in from_table_dict.items():
         if k != query_table:
@@ -1886,7 +1895,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
         if REQUEST.has_key('%s_type' % id):
           list_type = REQUEST['%s_type' % id]
-          if type(list_type) is type('a'):
+          if isinstance(list_type, str):
             list_type = [list_type]
           self.filter_dict[id]['type'] = list_type
         else:
