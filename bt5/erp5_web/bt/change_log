@@ -1,3 +1,10 @@
+2006-09-06 Stefan
+* WebSection_getDocumentValueList now checks if section Items have a
+getIntIndex()-Method while trying to sort them.
+
+2006-09-05 Kevin
+* Add extra web-content widget box support.
+
 2006-09-04 Kevin
 * Use a custom script to render consistent and nice title depending of the context.
 * Add a big comment about why I think this script should not return what it currently return (comments welcomed).
