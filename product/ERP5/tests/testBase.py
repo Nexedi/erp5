@@ -911,6 +911,26 @@ class TestBase(ERP5TypeTestCase):
     obj.edit(**{property_name: property_value})
     self.assertEquals(obj.getProperty(property_name), property_value)
   
+  def test_11_setPropertyPropertyDefinedOnInstance(self,
+                                        quiet=quiet, run=run_all_test):
+    """Test for setProperty on Base, when the property is defined on the
+    instance, the typical example is 'workflow_history' property.
+    """
+    if not run: return
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+    obj = module.newContent(portal_type=portal_type)
+    
+    property_value = 'Property value'
+    property_name = 'a_dummy_object_property'
+    setattr(obj, property_name, property_value)
+    self.assertRaises(BadRequest, obj.setProperty,
+                     property_name, property_value)
+
+    self.assertRaises(BadRequest, obj.setProperty,
+                     'workflow_history', property_value)
+  
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
   """
