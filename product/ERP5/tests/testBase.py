@@ -877,6 +877,40 @@ class TestBase(ERP5TypeTestCase):
     self.assertEquals('', obj.getProperty("title"))
     self.assertEquals('', obj.getTitle())
 
+  def test_09_setPropertyDefinedProperty(self, quiet=quiet, run=run_all_test):
+    """Test for setProperty on Base, when the property is defined.
+    """
+    if not run: return
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+    obj = module.newContent(portal_type=portal_type)
+    title = 'Object title'
+    obj.setProperty('title', title)
+    self.assertEquals(obj.getProperty('title'), title)
+    obj.setProperty('title', title)
+    self.assertEquals(obj.getProperty('title'), title)
+    obj.edit(title=title)
+    self.assertEquals(obj.getProperty('title'), title)
+
+  def test_10_setPropertyNotDefinedProperty(self, quiet=quiet,
+                                            run=run_all_test):
+    """Test for setProperty on Base, when the property is not defined.
+    """
+    if not run: return
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+    obj = module.newContent(portal_type=portal_type)
+    property_value = 'Object title'
+    property_name = 'a_dummy_not_exising_property'
+    obj.setProperty(property_name, property_value)
+    self.assertEquals(obj.getProperty(property_name), property_value)
+    obj.setProperty(property_name, property_value)
+    self.assertEquals(obj.getProperty(property_name), property_value)
+    obj.edit(**{property_name: property_value})
+    self.assertEquals(obj.getProperty(property_name), property_value)
+  
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
   """
