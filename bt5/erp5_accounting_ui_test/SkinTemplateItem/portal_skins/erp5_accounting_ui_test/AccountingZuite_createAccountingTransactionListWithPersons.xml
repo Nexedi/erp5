@@ -234,12 +234,12 @@ return "Accounting Transactions Created."\n
                             <string>month_count</string>
                             <string>section_title</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>accounting_module</string>
                             <string>DateTime</string>
                             <string>year</string>
-<string>script</string>
+                            <string>script</string>
                             <string>current_script_data_id</string>
                             <string>append</string>
                             <string>$append0</string>
