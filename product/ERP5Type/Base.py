@@ -873,10 +873,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       return
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
-    try:
+    # If we are here, this means we do not use a property that
+    # comes from an ERP5 PropertySheet, we should use the
+    # PropertyManager
+    if ERP5PropertyManager.hasProperty(self,key):
+      ERP5PropertyManager._updateProperty(self, key, value)
+    else:
       ERP5PropertyManager._setProperty(self, key, value, type=type)
-    except ConflictError:
-      raise
     # This should not be there, because this ignore all checks made by
     # the PropertyManager. If there is problems, please complain to 
     # seb@nexedi.com
@@ -885,7 +888,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     #  setattr(self, key, value)
 
   def _setPropValue(self, key, value, **kw):
-    #LOG('_setPropValue', 0, 'self = %r, key = %r, value = %r, kw = %r' % (self, key, value, kw))
     self._wrapperCheck(value)
     if isinstance(value, list):
       value = tuple(value)
@@ -916,13 +918,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       return
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
-    try:
-      ERP5PropertyManager._setPropValue(self, key, value)
-    except ConflictError:
-      raise
-    except:
-      # This should be removed if we want strict property checking
-      setattr(self, key, value)
+    #try:
+    ERP5PropertyManager._setPropValue(self, key, value)
+    #except ConflictError:
+    #  raise
+    # This should not be there, because this ignore all checks made by
+    # the PropertyManager. If there is problems, please complain to 
+    # seb@nexedi.com
+    #except:
+    #  # This should be removed if we want strict property checking
+    #  setattr(self, key, value)
 
   security.declareProtected( Permissions.View, 'hasProperty' )
   def hasProperty(self, key):
