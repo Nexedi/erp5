@@ -565,7 +565,7 @@ class TestERP5BankingMixin:
     # the erp5 site
     self.portal = self.getPortal()
     # the default currency for the site
-    self.portal.setProperty('reference_currency_id', 'EUR', type='string')
+    self.portal.manage_addProperty('reference_currency_id', 'EUR', type='string')
     # the person module
     self.person_module = self.getPersonModule()
     # the organisation module
