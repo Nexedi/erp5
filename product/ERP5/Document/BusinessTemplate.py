@@ -1236,7 +1236,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           workflow_name = workflow[1:]
         else:
           workflow_name = workflow
-        if workflow_name not in chain_dict['chain_%s' % portal_type]:
+        if workflow[0]!= '-' and \
+            workflow_name not in chain_dict['chain_%s' % portal_type]:
           raise NotFound, 'workflow %s not found in chain for portal_type %s'\
                 % (workflow, portal_type)
         if self._objects.has_key(portal_type):
