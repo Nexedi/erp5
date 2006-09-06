@@ -76,7 +76,7 @@ ____________________________________*/\n
 }\n
 \n
 body {\n
-  width: 80%;\n
+/*  width: 85%;*/\n
   margin: 0 auto;\n
 }\n
 \n
@@ -120,15 +120,16 @@ span.invalidated {color: #ab0303}\n
 span.cancelled   {color: #ccc}\n
 \n
 \n
-/* Layout\n
+/* General Layout\n
 Layout technic based on http://en.wikipedia.org/skins-1.5/monobook/main.css?9\n
 Layout technic used here doesn\'t depend of content ordering, but will not work with IE (because of poor CSS support).\n
 ----------------------------------------------- */\n
 \n
 /* The first global form can be used as a global wrapper */\n
 body > form#main_form {\n
-  padding: 0 1em;\n
-  margin-left: 16.2em;\n
+  padding-right: 1em;  /* inter-column space */\n
+  padding-left: 1em;   /* inter-column space */\n
+  margin-left: 16em; /* form#main_form > div column margin-left */\n
   position: relative;\n
   z-index: 2;\n
 }\n
@@ -136,17 +137,35 @@ body > form#main_form {\n
 /* Default layout for form groups (sidebar actually) */\n
 form#main_form > div {\n
   border: .1em solid #aaa;\n
-  margin: 0 0 .5em -16.2em;\n
-  width: 15.1em;\n
+  margin-bottom: 1em; /* space between groups */\n
+  margin-left: -16em; /* = -(div.width + 1.1 ?) */\n
+  width: 15em;  /* XXX CONSTANT !! */\n
 }\n
 \n
 /* Undo border styling for main content */\n
 form#main_form > div.main_content {\n
   border: 0;\n
-  margin-top: 4em;\n
+  /*margin-top: 4em; not needed normally */\n
   width: 100%;\n
   float: right;\n
 }\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+/* Widget default styling\n
+----------------------------------------------- */\n
 \n
 /* Default layout for form web widgets */\n
 form#main_form > div > div.field {\n
@@ -162,8 +181,8 @@ form#main_form > div > div.field label {\n
 }\n
 \n
 \n
-/********************************/\n
 /* Special layout for logo group */\n
+\n
 form#main_form > div.logo {\n
   border: 0;\n
   padding: 2em 0 0;\n
@@ -177,8 +196,8 @@ div.logo div.field > label {\n
 }\n
 \n
 \n
-/********************************/\n
-/* Special layout for search bar group: move it top right */\n
+/* Special layout for search bar group: move it top right\n
+*/\n
 form#main_form > div.searchBar {\n
   position: absolute;\n
   z-index: 200;\n
@@ -275,6 +294,28 @@ button:hover {\n
   background: #b0cfcb;\n
   border-color: #9abdb7;\n
 }\n
+\n
+/* Default Listbox styling\n
+----------------------------------------------- */\n
+.ListSummary table {\n
+  display: none;\n
+}\n
+\n
+.ListContent table {\n
+ margin-bottom: 2em;\n
+ border-collapse: collapse;\n
+ width: 100%;\n
+}\n
+\n
+.ListContent td {\n
+ padding: .1em;\n
+ border: 1pt solid #adb9cc;\n
+ vertical-align: top;\n
+}\n
+\n
+.ListContent td.Data  {background-color: #adb9cc}\n
+.ListContent td.DataA {background-color: #fff}\n
+.ListContent td.DataB {background-color: #eee}\n
 \n
 \n
 \n
@@ -411,6 +452,110 @@ div.actions button {\n
 \n
 \n
 \n
+/* Custom web Listbox styling\n
+----------------------------------------------- */\n
+\n
+table.listbox, table.listbox tr, table.listbox td, table.listbox th {\n
+ border: 0;\n
+ color: #000;\n
+ line-height: 1.5em;\n
+ margin: 0;\n
+ padding: 0;\n
+ border-spacing: 0;\n
+ border-collapse: collapse;\n
+}\n
+\n
+table.listbox {\n
+ margin-bottom: 3em;\n
+ width: 100%;\n
+}\n
+\n
+table.listbox .right {float: right}\n
+table.listbox .left  {float: left}\n
+\n
+table.listbox caption, div.searchResultHeader {\n
+ border-top: 1px #3366CC solid;\n
+ background-color: #c3e3df;\n
+ padding: .2em;\n
+ color: #000;\n
+}\n
+\n
+table.listbox caption em, div.searchResultHeader em {\n
+ font-weight: bold;\n
+ font-style: normal;\n
+}\n
+\n
+table.listbox thead th,\n
+table.listbox thead td {\n
+ border-right: 1px #ccc solid;\n
+ text-align: center;\n
+ color: #666;\n
+ background: #ddd;\n
+}\n
+\n
+table.listbox thead th {\n
+ text-transform: capitalize;\n
+ font-variant: small-caps;\n
+}\n
+\n
+table.listbox tbody td.externalLink a, table.listbox tbody th.externalLink a {\n
+ text-decoration: none;\n
+ background: transparent url(\'pictures/external-link.png\') center right no-repeat;\n
+ padding-right: 15px;\n
+ color: #637dc1;\n
+}\n
+\n
+table.listbox tbody td.externalLink a:hover,\n
+table.listbox tbody th.externalLink a:hover {\n
+ text-decoration: underline;\n
+ color: #637dc1;\n
+}\n
+\n
+table.listbox tbody td, table.listbox tbody th {\n
+ border-top: 1px solid #ddd;\n
+}\n
+\n
+table.listbox td, table.listbox th {\n
+ text-align: left;\n
+ padding: .2em .5em;\n
+}\n
+\n
+table.listbox tbody td a,\n
+table.listbox tbody td a:hover,\n
+table.listbox tbody td a:visited {color: #4343D9}\n
+\n
+table.listbox tbody tr:hover {background: #f6f6f6}\n
+\n
+table.listbox tbody span.number, tbody span.date {float: right}\n
+\n
+table.listbox tbody .mainLink {\n
+  font-weight: bold;\n
+  display: block;\n
+}\n
+\n
+table.listbox tfoot th, table.listbox tfoot td {\n
+ border-top: 1px solid #999;\n
+}\n
+\n
+table.listbox tfoot td {\n
+ text-align: right;\n
+}\n
+\n
+table.listbox tfoot .pageNavigation button {\n
+ border: 1px #eee solid;\n
+ background: #fff;\n
+ padding: .2em .4em;\n
+ margin: 0 .1em;\n
+}\n
+\n
+table.listbox tfoot .pageNavigation button:hover {\n
+ border: 1px #999 solid;\n
+ text-decoration: none;\n
+ background: #eee;\n
+}\n
+\n
+\n
+\n
 /* Special rendering for read-only webcontent\n
      (used in WebPage_viewAsWeb and so on).\n
 ----------------------------------------------- */\n
@@ -491,22 +636,12 @@ div.content > fieldset.webcontent.extra {\n
   border: 1px solid #ccc;\n
   border-right: none;\n
   margin: 1em 0 1em 1em;\n
+  width: 20em; /* XXX CONSTANT !! */\n
 }\n
 \n
 div.content > fieldset.webcontent.extra label:after {\n
   content: ":";\n
 }\n
-\n
-span.published {\n
-  color:\n
-}\n
-\n
-div.content > fieldset.webcontent.extra > legend {\n
-  /*margin: -2em 0 0;*/\n
-}\n
-\n
-\n
-\n
 
 
 ]]></string> </value>
