@@ -1,3 +1,8 @@
+2006-09-06 Kevin
+* Add default listbox erp5 styling and and web styling.
+* Listbox rendering in web style seems to work: mark it as upgraded and ready to be used.
+* Divide sidebar in two groups: one left, one right.
+
 2006-09-06 Stefan
 * WebSection_getDocumentValueList now checks if section Items have a
 getIntIndex()-Method while trying to sort them.
