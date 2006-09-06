@@ -62,8 +62,9 @@
             <value>
               <list>
                 <string>webcontent header bottom</string>
-                <string>webcontent bottom</string>
                 <string>webcontent extra (Document Metadata)</string>
+                <string>webcontent extra related (Related Documents)</string>
+                <string>webcontent bottom</string>
               </list>
             </value>
         </item>
@@ -86,6 +87,14 @@
                         <string>my_language</string>
                         <string>my_version</string>
                         <string>my_translated_validation_state_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>webcontent extra related (Related Documents)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_destination_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -119,7 +128,7 @@
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>4</int> </value>
+            <value> <int>3</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
