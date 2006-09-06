@@ -32,8 +32,11 @@
 #
 
 from random import randint
+import os
+import sys
+import unittest
+import time
 
-import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -51,8 +54,6 @@ from zLOG import LOG
 from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from zExceptions import BadRequest
-import time
-import os
 from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
@@ -876,6 +877,83 @@ class TestBase(ERP5TypeTestCase):
     self.assertEquals('', obj.getProperty("title"))
     self.assertEquals('', obj.getTitle())
 
+class TestERP5PropertyManager(unittest.TestCase):
+  """Tests for ERP5PropertyManager.
+  """
+  def _makeOne(self, *args, **kw):
+    from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
+    ob = ERP5PropertyManager(*args, **kw)
+    # add missing methods for createExpressionContext
+    ob.getPortalObject = lambda : None
+    ob.absolute_url = lambda: ''
+    return ob
+
+  def test_setProperty(self):
+    """_setProperty adds a new property if not present."""
+    ob = self._makeOne('ob')
+    dummy_property_value = 'test string value'
+    ob._setProperty('a_dummy_property', dummy_property_value)
+
+    # the property appears in property map
+    self.failUnless('a_dummy_property' in [x['id'] for x in ob.propertyMap()])
+    # the value and can be retrieved using getProperty
+    self.assertEquals(ob.getProperty('a_dummy_property'), dummy_property_value)
+    # the value is also stored as a class attribute
+    self.assertEquals(ob.a_dummy_property, dummy_property_value)
+
+  def test_setPropertyExistingProperty(self):
+    """_setProperty raises an error if the property already exists."""
+    ob = self._makeOne('ob')
+    # make sure that title property exists
+    self.failUnless('title' in [x['id'] for x in ob.propertyMap()])
+    # trying to call _setProperty will with an existing property raises:
+    #         BadRequest: Invalid or duplicate property id: title
+    self.assertRaises(BadRequest, ob._setProperty, 'title', 'property value')
+
+  def test_updatePropertyExistingProperty(self):
+    """_updateProperty should be used if the existing property already exists.
+    """
+    ob = self._makeOne('ob')
+    # make sure that title property exists
+    self.failUnless('title' in [x['id'] for x in ob.propertyMap()])
+    prop_value = 'title value'
+    ob._updateProperty('title', prop_value)
+    self.assertEquals(ob.getProperty('title'), prop_value)
+    self.assertEquals(ob.title, prop_value)
+
+  def test_setPropertyTypeInt(self):
+    """You can specify the type of the property in _setProperty"""
+    ob = self._makeOne('ob')
+    dummy_property_value = 3
+    ob._setProperty('a_dummy_property', dummy_property_value, type='int')
+    self.assertEquals(['int'], [x['type'] for x in ob.propertyMap()
+                                        if x['id'] == 'a_dummy_property'])
+    self.assertEquals(type(ob.getProperty('a_dummy_property')), type(1))
+
+  def test_setPropertyTALESType(self):
+    """ERP5PropertyManager can use TALES Type for properties, TALES will then
+    be evaluated in getProperty.
+    """
+    ob = self._makeOne('ob')
+    dummy_property_value = 'python: 1+2'
+    ob._setProperty('a_dummy_property', dummy_property_value, type='tales')
+    self.assertEquals(ob.getProperty('a_dummy_property'), 1+2)
+
+  def test_getPropertyNonExistantProps(self):
+    """getProperty return None if the value is not found.
+    """
+    ob = self._makeOne('ob')
+    self.assertEquals(ob.getProperty('a_dummy_property'), None)
+
+  def test_getPropertyDefaultValue(self):
+    """getProperty accepts a default value, if the property is not defined.
+    """
+    ob = self._makeOne('ob')
+    self.assertEquals(ob.getProperty('a_dummy_property', 100), 100)
+    prop_value = 3
+    ob._setProperty('a_dummy_property', prop_value)
+    self.assertEquals(ob.getProperty('a_dummy_property', 100), prop_value)
+
 if __name__ == '__main__':
     framework()
 else:
@@ -883,4 +961,5 @@ else:
     def test_suite():
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(TestBase))
+        suite.addTest(unittest.makeSuite(TestERP5PropertyManager))
         return suite
