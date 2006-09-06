@@ -972,6 +972,46 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.filter_dict[method_id]['expression_instance'] = expr_instance
     catalog.filter_dict[method_id]['type'] = []
 
+  def stepCreateNewCatalogMethod(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create ZSQL Method into catalog
+    """
+    pc = self.getCatalogTool()
+    catalog = pc._getOb('erp5_mysql', None)
+    method_id = "z_another_fake_method"
+    addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
+    addSQLMethod(id=method_id,title='', connection_id='test test', arguments='', template='')
+    zsql_method = catalog._getOb(method_id, None)
+    self.failUnless(zsql_method is not None)
+    sequence.edit(another_zsql_method_id = method_id)
+    # set this method in update_object properties of catalog
+    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+    sql_uncatalog_object.append(method_id)
+    sql_uncatalog_object.sort()
+    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+
+  def stepChangePreviousCatalogMethod(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create ZSQL Method into catalog
+    """
+    pc = self.getCatalogTool()
+    catalog = pc._getOb('erp5_mysql', None)
+    method_id = sequence.get('zsql_method_id')
+    previous_method = catalog._getOb(method_id,None)
+    self.assertEquals(previous_method.title,'')
+    previous_method.title='toto'
+    self.assertEquals(previous_method.title,'toto')
+
+  def stepCheckCatalogMethodChangeKept(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create ZSQL Method into catalog
+    """
+    pc = self.getCatalogTool()
+    catalog = pc._getOb('erp5_mysql', None)
+    method_id = sequence.get('zsql_method_id')
+    previous_method = catalog._getOb(method_id,None)
+    self.assertEquals(previous_method.title,'toto')
+
   def stepAddCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add catalog method into the business template
@@ -981,6 +1021,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     method_id = sequence.get('zsql_method_id', None)
     self.failUnless(method_id is not None)
     bt.edit(template_catalog_method_id_list=['erp5_mysql/'+method_id])
+
+  def stepAddNewCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add catalog method into the business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    method_id = sequence.get('zsql_method_id', None)
+    self.failUnless(method_id is not None)
+    another_method_id = sequence.get('another_zsql_method_id', None)
+    bt.edit(template_catalog_method_id_list=['erp5_mysql/'+method_id,
+            'erp5_mysql/'+another_method_id])
 
   def stepCheckCatalogMethodExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1558,6 +1610,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
+
+  def stepPartialCatalogMethodInstall(self, sequence=None, sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    import_bt = sequence.get('import_bt')
+    object_to_update = {'portal_catalog/erp5_mysql/z_another_fake_method':'install'}
+    import_bt.install(object_to_update=object_to_update)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -3264,6 +3324,50 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_31_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test that we keep local changes if we specify a list of objects to update'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveCatalogMethod \
+                       RemoveKeysAndTable \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CreateNewCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddNewCatalogMethodToBusinessTemplate \
+                       CheckCatalogMethodExists \
+                       AddKeysAndTableToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       ChangePreviousCatalogMethod \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       PartialCatalogMethodInstall \
+                       CheckCatalogMethodChangeKept \
+                       Tic \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 if __name__ == '__main__':
   framework()
 else:

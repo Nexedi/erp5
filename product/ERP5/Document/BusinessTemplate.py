@@ -3943,11 +3943,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       return modified_object_list
 
-    def _install(self, force=1, object_to_update={}, **kw):
+    def _install(self, force=1, object_to_update=None, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
       """
+      if object_to_update is not None:
+        force=0
+      else:
+        object_to_update = {}
 
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
