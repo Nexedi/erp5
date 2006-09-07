@@ -68,20 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># we search for docs that reference us in any way (reference only or more specific)\n
-# we can return raw set, the class will get objects and make the records unique\n
-# if you want only the most recent versions, filter the result and apply DMS_findDocument \n
-ss=[]\n
-context.log(script.getId(),\'running\')\n
-ss.append(context.getReference())\n
-if context.getLanguage() is not None:\n
-  ss.append(context.getReference()+\'-\'+context.getLanguage())\n
-  if context.getVersion() is not None:\n
-    ss.append(context.getReference()+\'-\'+context.getLanguage()+\'-\'+context.getVersion())\n
-lst=[]\n
-for t in ss:\n
-  lst+=context.portal_catalog(SearchableText=\'%\'+t+\'%\')\n
-return lst\n
+            <value> <string>request=context.REQUEST\n
+fname=request.get(\'filename\')\n
+format=request.get(\'format\')\n
+context.log(\'format\',format)\n
+if fname is None or format is None:\n
+  return\n
+if not fname.endswith(\'.zip\'):\n
+  fname+=\'.zip\'\n
+request.RESPONSE.setHeader(\'Content-type\', \'application/zip\')\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % fname)\n
+return context.getTargetFile(format=format)[1]\n
 </string> </value>
         </item>
         <item>
@@ -98,7 +95,7 @@ return lst\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a,**kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,16 +121,14 @@ return lst\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
                             <string>kw</string>
-                            <string>ss</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>script</string>
+                            <string>request</string>
+                            <string>fname</string>
+                            <string>format</string>
                             <string>None</string>
-                            <string>lst</string>
-                            <string>_getiter_</string>
-                            <string>t</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,7 +145,7 @@ return lst\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_findPredecessors</string> </value>
+            <value> <string>PdfDocument_getTargetFile</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

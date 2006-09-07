@@ -74,14 +74,18 @@
 # ref arg is a tuple\n
 # ref[0] is a complete reference string\n
 # ref[1] is a dict of values from parsed reference string\n
-\n
+context.log(script.getId(),ref)\n
 reference=ref[1][\'reference\']\n
-res=context.portal_catalog(reference=reference)\n
+res=context.portal_catalog(reference=reference,portal_type=context.getPortalDocumentTypeList())\n
 res=[r.getObject() for r in res]\n
+context.log(\'res\',res)\n
 lng=ref[1].get(\'language\')\n
+context.log(\'lng\',lng)\n
 if lng is not None:\n
   res=filter(lambda o:o.getLanguage()==lng,res)\n
+context.log(\'res\',res)\n
 res.sort(key=lambda o:o.getVersion(),reverse=True)\n
+context.log(\'res\',res)\n
 return res\n
 </string> </value>
         </item>
@@ -126,10 +130,11 @@ return res\n
                         <value>
                           <tuple>
                             <string>ref</string>
-                            <string>_getitem_</string>
-                            <string>reference</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>script</string>
+                            <string>_getitem_</string>
+                            <string>reference</string>
                             <string>res</string>
                             <string>append</string>
                             <string>$append0</string>
