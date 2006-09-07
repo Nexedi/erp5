@@ -94,6 +94,7 @@ class CachingMixin:
       self.cached_mime[format]=mime
     if data is not None:
       self.cached_data[format]=data
+      self.cacheUpdate(format)
     self._p_changed=1
 
   def cacheGet(self,format):

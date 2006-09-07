@@ -30,15 +30,19 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5.Document.Image import Image
 from Products.ERP5OOo.Document.DMSFile import DMSFile, CachingMixin, stripHtml
+from zLOG import LOG
 
-import tempfile, os
+import tempfile, os, glob, zipfile, cStringIO, re
 
 
 class PdfDocument(DMSFile, CachingMixin):
   """
   PdfDocument - same as file, but has its own getSearchableText method
   (converts via pdftotext)
+  in effect it has two separate caches - from CachingMixin for txt and html
+  and for image formats from Image
   """
   # CMF Type Definition
   meta_type = 'ERP5 Pdf Document'
@@ -60,6 +64,45 @@ class PdfDocument(DMSFile, CachingMixin):
                     , PropertySheet.Document
                     )
 
+  def getTargetFile(self,format):
+    '''
+    we need to make our own, because Photo's methods are not
+    sufficient (we have to zip etc)
+    '''
+    if not self.hasFileCache(format):
+      self.cacheSet(format,data=self._makeFile(format),mime='application/zip')
+    return self.cacheGet(format)
+
+
+  def _makeFile(self,format):
+    tempfile.tempdir=os.path.join(os.getenv('INSTANCE_HOME'),'tmp')
+    os.putenv('TMPDIR','/tmp') # because if we run zope as root, we have /root/tmp here and convert goes berserk
+    if not os.path.exists(tempfile.tempdir):
+      os.mkdir(tempfile.tempdir,0775)
+    fr=tempfile.mktemp(suffix='.pdf')
+    to=tempfile.mktemp(suffix='.'+format)
+    file_fr=open(fr,'w')
+    file_fr.write(self._unpackData(self.data))
+    file_fr.close()
+    cmd='convert %s %s' % (fr,to)
+    os.system(cmd)
+    # pack it
+    f=cStringIO.StringIO()
+    z=zipfile.ZipFile(f,'a')
+    print to.replace('.','*')
+    for fname in glob.glob(to.replace('.','*')):
+      base=os.path.basename(fname)
+      pg=re.match('.*(\d+)\.'+format,base).groups()
+      if pg:
+        pg=pg[0]
+        arcname='%s/page-%s.%s' % (format,pg,format)
+      else:
+        arcname=base
+      z.write(fname,arcname)
+    z.close()
+    f.seek(0)
+    return f.read()
+
   searchable_attrs=DMSFile.searchable_attrs+('text_content',)
 
   ### Content indexing methods
@@ -72,7 +115,7 @@ class PdfDocument(DMSFile, CachingMixin):
     for simplicity we check only modification_date, which means we rebuild txt and html after every edit
     but that shouldn't hurt too much
     """
-    if hasattr(self,'data') and (force==1 or self.getCacheTime('txt')<self.getModificationDate() or self.getTextContent() is None):
+    if hasattr(self,'data') and (force==1 or not self.hasFileCache('txt') or self.getTextContent() is None):
       self.log('PdfDocument','regenerating txt')
       tmp=tempfile.NamedTemporaryFile()
       tmp.write(self._unpackData(self.data))
@@ -82,7 +125,7 @@ class PdfDocument(DMSFile, CachingMixin):
       self.setTextContent(r.read().replace('\n',' '))
       tmp.close()
       r.close()
-      self.cacheUpdate('txt')
+      self.cacheSet('txt',data='-') # we don't need to store it twice, just mark we have it
     return DMSFile.getSearchableText(self,md)
 
   SearchableText=getSearchableText
@@ -94,7 +137,7 @@ class PdfDocument(DMSFile, CachingMixin):
     '''
     if not hasattr(self,'data'):
       return 'no data'
-    if force==1 or self.getCacheTime('html')<self.getModificationDate():
+    if force==1 or not self.hasFileCache('html'):
       self.log('PdfDocument','regenerating html')
       tmp=tempfile.NamedTemporaryFile()
       tmp.write(self._unpackData(self.data))
