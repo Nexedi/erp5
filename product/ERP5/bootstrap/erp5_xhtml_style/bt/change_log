@@ -1,3 +1,6 @@
+2006-09-07 jerome
+* fix <title>s
+
 2006-09-07 Kevin
 * Render field CSS classes on the div.field instead on the label for better styling.
 * Fix JP "missing" statement.
