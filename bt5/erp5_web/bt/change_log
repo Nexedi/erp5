@@ -1,3 +1,8 @@
+2006-09-07 Kevin
+* Brand new 3-column flexible layout.
+* Define the logo CSS class on the field, not on the field group.
+* Add missing picture.
+
 2006-09-06 Kevin
 * Add default listbox erp5 styling and and web styling.
 * Listbox rendering in web style seems to work: mark it as upgraded and ready to be used.
