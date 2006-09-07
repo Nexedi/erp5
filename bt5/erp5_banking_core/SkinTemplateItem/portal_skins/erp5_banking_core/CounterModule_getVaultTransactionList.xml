@@ -130,8 +130,8 @@ if column_names == 1:\n
   column_list.append((\'general_total_price\', \'General TotalPrice\'))\n
   return column_list\n
 \n
-context.log(\'node_category\',vault)\n
-context.log(\'inventory_kw\',inventory_kw)\n
+#context.log(\'node_category\',vault)\n
+#context.log(\'inventory_kw\',inventory_kw)\n
 vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node_category=vault\n
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
@@ -155,6 +155,9 @@ for vault_inventory in vault_inventory_list:\n
     total_price = vault_inventory.total_price\n
     if total_price is None:\n
       total_price = 0\n
+    if only_positive:\n
+      total_price = abs(total_price)\n
+      total_quantity = abs(total_quantity)\n
 #     context.log(\'type\',type(total_price))\n
 #     context.log(\'sql total_price\',total_price)\n
     vault_inventory_dict[vault_url][resource] = {\'quantity\':total_quantity, \'total_price\':total_price,\n
@@ -257,7 +260,7 @@ return repr([x for x in total_inventory_list])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'),**kw</string> </value>
+            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -277,7 +280,7 @@ return repr([x for x in total_inventory_list])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -289,6 +292,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>vault_report_type</string>
                             <string>column_names</string>
                             <string>resource_portal_type</string>
+                            <string>only_positive</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
@@ -306,13 +310,14 @@ return repr([x for x in total_inventory_list])\n
                             <string>_getitem_</string>
                             <string>column_list</string>
                             <string>_getiter_</string>
-                            <string>context</string>
                             <string>_apply_</string>
+                            <string>context</string>
                             <string>vault_inventory_list</string>
                             <string>vault_inventory</string>
                             <string>resource</string>
                             <string>total_quantity</string>
                             <string>total_price</string>
+                            <string>abs</string>
                             <string>total_inventory_list</string>
                             <string>i</string>
                             <string>variation_text</string>
@@ -352,6 +357,7 @@ return repr([x for x in total_inventory_list])\n
                   <string>Banknote</string>
                   <string>Coin</string>
                 </tuple>
+                <int>0</int>
               </tuple>
             </value>
         </item>

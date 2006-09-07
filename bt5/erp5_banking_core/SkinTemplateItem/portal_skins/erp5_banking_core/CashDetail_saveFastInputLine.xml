@@ -95,7 +95,7 @@ base_category_list = (\'emission_letter\', \'cash_status\', \'variation\')\n
 per_resource_dict = {}\n
 \n
 # remove previous line\n
-old_line = [x.getObject() for x in context.searchFolder(portal_type=[line_portal_type,])]\n
+old_line = context.objectValues(portal_type=[line_portal_type,])\n
 #context.log("will erease old line", old_line)\n
 if len(old_line)>0:\n
   for object_list in old_line:\n
@@ -266,7 +266,7 @@ if variation_not_defined:\n
 else:\n
   request  = context.REQUEST\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                  , \'portal_status_message=Lines%%20Created\'\n
+                                  , \'portal_status_message=Lines%20Created\'\n
                                   )\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
 
@@ -349,14 +349,11 @@ else:\n
                             <string>column_base_list</string>
                             <string>base_category_list</string>
                             <string>per_resource_dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>x</string>
                             <string>old_line</string>
                             <string>len</string>
+                            <string>_getiter_</string>
                             <string>object_list</string>
                             <string>line</string>
                             <string>xrange</string>
@@ -389,6 +386,9 @@ else:\n
                             <string>mapped_value_list</string>
                             <string>variation_item</string>
                             <string>cell</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>request</string>
                             <string>redirect_url</string>
                           </tuple>

@@ -82,7 +82,7 @@ if None in (rate, price):\n
 \n
 price = float(price)\n
 \n
-return rate * price\n
+return round(rate * price)\n
 
 
 ]]></string> </value>
@@ -140,6 +140,7 @@ return rate * price\n
                             <string>_getitem_</string>
                             <string>price</string>
                             <string>float</string>
+                            <string>round</string>
                           </tuple>
                         </value>
                     </item>

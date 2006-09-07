@@ -68,39 +68,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return 1 if the counter date is open/closing for the given date and the given site\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that the amount of `resource` in account `payment` is greater than or equal to `quantity`\n
 \n
-if date is None:\n
-  # get current date\n
-  from DateTime import DateTime\n
-  date = DateTime()\n
+# returns a dictionnary like : {\'error_code\', \'balance\'}\n
 \n
-# Make sure we have a date with no hours\n
-date = date.Date()\n
+#workflow_id = \'bank_account_workflow\'\n
+workflow_correct_state_list = (\'valid\', \'being_modified\', \'validating_modification\')\n
+manual_validation_account_category_list = (\'test\',)\n
 \n
-if site is None:\n
-  # get site from user assignment\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
-  if len(site_list) == 0:\n
-    context.log(\'Baobab_checkCounterDateOpen\', \'No site found for the user\')\n
-    return 0\n
-  else:\n
-    site = site_list[0]\n
+# First check that the payment account is in an acceptable state\n
+#payment_state = context.portal_workflow.getInfoFor(ob=payment, name=\'simulation_state\', wf_id=workflow_id)\n
+payment_value = context.restrictedTraverse(payment)\n
+payment_state = payment_value.getValidationState()\n
 \n
-# get only the office, not need of vault\n
-#context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
-site = context.Baobab_getVaultSite(site)\n
+if payment_state not in workflow_correct_state_list :\n
+  return {\'error_code\':2} # closed account\n
 \n
-kw = {"portal_type" : \'Counter Date\', "delivery.start_date" : str(date), "site_id" : site.getId(), "simulation_state" : "open"}\n
-context.log(\'Baobab_checkCounterDateOpen\', \'kw = %s\' %(kw,))\n
-counter_date_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-context.log(\'Baobab_checkCounterDateOpen\', \'counter_date_list = %s, requete = %s\' %(counter_date_list, context.portal_catalog(src__=1, **kw)))\n
+resource = payment_value.getPriceCurrencyValue()\n
 \n
-if len(counter_date_list) == 0:\n
-  return 0\n
-else:\n
-  return 1\n
-</string> </value>
+if resource is None :\n
+  raise AttributeError, \'No currency defined on %s\' % payment\n
+\n
+# Next, check the balance of the account\n
+account_balance = resource.getAvailableInventory(payment=payment, src__=src__)\n
+context.log("account balance",account_balance)\n
+context.log("resource payement", str((resource,payment)))\n
+if src__ :\n
+  return account_balance \n
+\n
+if account_balance - quantity < 0 :\n
+#  if payment.getBankAccountType() in manual_validation_account_category_list :\n
+#    return {\'error_code\':3, \'balance\':account_balance} # manual_validation\n
+\n
+  return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
+\n
+return {\'error_code\':0, \'balance\':account_balance} # ok\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -116,7 +123,7 @@ else:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_checkCounterDateOpen</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/BankAccount_checkAvailableBalance</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -126,7 +133,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None, date=None</string> </value>
+            <value> <string>payment, quantity, src__=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -154,29 +161,26 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>date</string>
-                            <string>None</string>
-                            <string>DateTime</string>
+                            <string>payment</string>
+                            <string>quantity</string>
+                            <string>src__</string>
+                            <string>workflow_correct_state_list</string>
+                            <string>manual_validation_account_category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>site_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
+                            <string>payment_value</string>
+                            <string>payment_state</string>
+                            <string>resource</string>
+                            <string>None</string>
+                            <string>AttributeError</string>
+                            <string>account_balance</string>
                             <string>str</string>
-                            <string>kw</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>x</string>
-                            <string>counter_date_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -189,14 +193,13 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_checkCounterDateOpen</string> </value>
+            <value> <string>BankAccount_checkAvailableBalance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
