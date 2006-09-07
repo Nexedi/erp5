@@ -1,5 +1,6 @@
 2006-09-07 Kevin
 * Brand new 3-column flexible layout.
+* Add custom view for Web Site module.
 * Define the logo CSS class on the field, not on the field group.
 * Add missing picture.
 
