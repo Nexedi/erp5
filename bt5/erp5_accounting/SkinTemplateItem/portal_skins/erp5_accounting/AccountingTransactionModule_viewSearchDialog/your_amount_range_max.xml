@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_amount_range_min</string> </value>
+            <value> <string>your_amount_range_max</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -215,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Min Amount</string> </value>
+                    <value> <string>Max Amount</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

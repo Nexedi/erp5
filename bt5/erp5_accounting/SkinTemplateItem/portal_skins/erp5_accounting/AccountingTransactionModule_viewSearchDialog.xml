@@ -74,10 +74,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_source_reference</string>
-                        <string>my_Title</string>
-                        <string>my_simulation_state</string>
-                        <string>my_node</string>
+                        <string>your_reference</string>
+                        <string>your_title</string>
+                        <string>your_simulation_state</string>
+                        <string>your_node</string>
                       </list>
                     </value>
                 </item>
@@ -85,15 +85,15 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_from_date</string>
-                        <string>my_to_date</string>
-                        <string>my_resource</string>
-                        <string>my_section_category</string>
-                        <string>my_amount</string>
-                        <string>my_amount_range_min</string>
-                        <string>my_amount_range_max</string>
-                        <string>my_creation_date_range_max</string>
-                        <string>my_creation_date_range_min</string>
+                        <string>your_from_date</string>
+                        <string>your_to_date</string>
+                        <string>your_resource</string>
+                        <string>your_section_category</string>
+                        <string>your_amount</string>
+                        <string>your_amount_range_min</string>
+                        <string>your_amount_range_max</string>
+                        <string>your_creation_date_range_max</string>
+                        <string>your_creation_date_range_min</string>
                       </list>
                     </value>
                 </item>

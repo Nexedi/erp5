@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_node</string> </value>
+            <value> <string>your_simulation_state</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -237,11 +237,11 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>6</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Account</string> </value>
+                    <value> <string>State</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/AccountingTransactionLine_getNodeItemList</string> </value>
+            <value> <string>python:here.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')</string> </value>
         </item>
       </dictionary>
     </pickle>
