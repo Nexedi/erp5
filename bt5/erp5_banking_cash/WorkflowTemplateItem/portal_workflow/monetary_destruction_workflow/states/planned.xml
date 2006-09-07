@@ -46,12 +46,12 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>cancel</string>
-                <string>cancel_action</string>
                 <string>deliver</string>
                 <string>order</string>
                 <string>order_action</string>
                 <string>plan_to_deliver_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

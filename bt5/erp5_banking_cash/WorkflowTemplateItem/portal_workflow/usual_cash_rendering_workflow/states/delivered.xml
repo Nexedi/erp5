@@ -67,6 +67,8 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>DestinationAssignee</string>
+                        <string>DestinationAssignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -93,6 +95,8 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>DestinationAssignee</string>
+                        <string>DestinationAssignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
