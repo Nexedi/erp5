@@ -69,16 +69,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source = context.getSource()\n
+\n
 if \'devise\' in source:\n
-  return  "%s/caveau/auxiliaire/%s" %("/".join(source.split("/")[:-5]), "/".join(source.split("/")[-2:]))\n
+  return  "%s/caveau/auxiliaire/%s" %("/".join(source.split("/")[:-6]), source.split("/")[-2])\n
 else:\n
-  return  "%s/caveau/auxiliaire/%s" %("/".join(source.split("/")[:-4]), "/".join(source.split("/")[-1:]))\n
+  return  "%s/caveau/auxiliaire/%s" %("/".join(source.split("/")[:-5]), source.split("/")[-2])\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -147,6 +154,27 @@ else:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

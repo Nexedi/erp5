@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
                     , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'         : [\'not_defined\']\n
+                    , \'cash_status_list\'         : [\'to_sort\']\n
                     , \'emission_letter_list\'     : [\'not_defined\']\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1)\n
                     , \'currency_cash_portal_type\': \'Banknote\'\n

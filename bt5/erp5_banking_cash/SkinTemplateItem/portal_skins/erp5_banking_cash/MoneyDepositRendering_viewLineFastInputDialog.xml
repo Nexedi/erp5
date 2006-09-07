@@ -83,7 +83,7 @@ if currency != context.Baobab_getPortalReferenceCurrencyID():\n
   emission_letter = [\'not_defined\']\n
   variation = [\'not_defined\']\n
 else:\n
-  cash_status = [\'not_defined\']\n
+  cash_status = [\'to_sort\']\n
   emission_letter = [\'not_defined\']\n
   variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
