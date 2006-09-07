@@ -1,3 +1,6 @@
+2006-09-07 aurel
+* remove foreign check module
+
 2006-09-06 aurel
 * reference currency id is now defined as a property
 
