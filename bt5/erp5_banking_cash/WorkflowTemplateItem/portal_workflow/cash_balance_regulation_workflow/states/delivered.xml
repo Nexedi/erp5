@@ -79,18 +79,16 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
-                        <string>Author</string>
-                        <string>DestinationAssignee</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -107,11 +105,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
-                        <string>Author</string>
-                        <string>DestinationAssignee</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

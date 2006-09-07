@@ -19,26 +19,20 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign To Controler Action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=confirm_action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>confirm</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -52,23 +46,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_action</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assign To Controler Action</string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -89,7 +83,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
+                <string>Assignee</string>
                 <string>Manager</string>
               </tuple>
             </value>

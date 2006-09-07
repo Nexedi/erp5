@@ -70,8 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 \n
-currency = context.Baobab_getPortalReferenceCurrencyID()\n
-\n
+currency = context.getResourceId()\n
 vcurrency = context.getResource()\n
 \n
 if vcurrency is None :\n
@@ -84,19 +83,21 @@ if vcurrency is None :\n
 if currency != \'XOF\':\n
   cashStatus = [\'not_defined\']\n
   emissionLetter = [\'not_defined\']\n
-  variation = \'not_defined\'\n
-\n
+  variation = [\'not_defined\']\n
+else:\n
+  cashStatus = [\'valid\', \'cancelled\', \'to_sort\', \'new_emitted\']\n
+  emissionLetter = None\n
+  variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
 cash_detail_dict= { \'line_portal_type\'          : \'Incoming Cash Balance Regulation Line\'        # The portal type that the fastinput will create\n
                     , \'operation_currency\'       : currency                            # The operation currently\n
-                    , \'cash_status_list\'          : [\'valid\', \'cancelled\', \'to_sort\', \'new_emitted\']                        # List of possible cashStatus or None if all\n
-                    , \'emission_letter_list\'      : None                                       # List of possible emissionLetter or None if all\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)      # List of possible variation or None if all\n
+                    , \'cash_status_list\'          : cashStatus                      # List of possible cashStatus or None if all\n
+                    , \'emission_letter_list\'      : emissionLetter                                       # List of possible emissionLetter or None if all\n
+                    , \'variation_list\'           : variation      # List of possible variation or None if all\n
                     , \'currency_cash_portal_type\': None                                                   # \'Coin\' or \'Banknote\' or None if both\n
-                    , \'read_only\'           : True                           # If true, the fastinput will not allow change\n
+                    , \'read_only\'           : False                          # If true, the fastinput will not allow change\n
                     , \'column_base_category\'     : \'variation\'                    # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
                  }\n
-\n
 \n
 return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                                                           , cash_detail_dict = cash_detail_dict\n
@@ -107,6 +108,12 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -157,7 +164,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>cashStatus</string>
                             <string>emissionLetter</string>
                             <string>variation</string>
-                            <string>True</string>
+                            <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>
                         </value>
@@ -181,6 +188,27 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
