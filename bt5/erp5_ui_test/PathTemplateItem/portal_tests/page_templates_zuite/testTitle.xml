@@ -118,7 +118,7 @@
   <td></td>\n
 </tr>\n
 \n
-<!-- Report mode: title of the form -->\n
+<!-- Dialog mode: title of the form -->\n
 <tr>\n
   <td>open</td>\n
   <td>/erp5/foo_module/0/view</td>\n
@@ -135,6 +135,30 @@
   <td></td>\n
 </tr>\n
 \n
+<!-- Report view mode: title of the form - title of the object -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/0/Base_viewHistory</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>History - Title 0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- quad_form_view mode: title of the form - title of the object -->\n
+<!-- assumes that BusinessTemplate_view uses quad_form_view as a page template. -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/0/BusinessTemplate_view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Business Template Definition - Title 0</td>\n
+  <td></td>\n
+</tr>\n
 \n
 <!-- portal: title of the portal -->\n
 <tr>\n
