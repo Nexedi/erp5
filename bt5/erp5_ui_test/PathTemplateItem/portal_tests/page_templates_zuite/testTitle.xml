@@ -45,6 +45,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -52,73 +64,88 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Change Id</title>\n
+<title>Test title</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Change Id</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test title</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_createObjects?num:int=1</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- View mode: title of the form - title of the object -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/0/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>/erp5/foo_module/view</td>\n
-\t<td></td>\n
+  <td>assertTitle</td>\n
+  <td>Foo - Title 0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<!-- List mode: title of the form -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Title 0</td>\n
-\t<td></td>\n
+  <td>assertTitle</td>\n
+  <td>Foos</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Report mode: title of the form -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/foo_module/0/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Foo - Title 0</td>\n
-\t<td></td>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Dummy Workflow Action</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertValue</td>\n
-\t<td>field_my_id</td>\n
-\t<td>0</td>\n
+  <td>assertTitle</td>\n
+  <td>Validate Workflow Action</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<!-- portal: title of the portal -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>/erp5/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_id</td>\n
-\t<td>a</td>\n
-</tr>\n
-<tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_edit:method</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Foo - Title 0</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertValue</td>\n
-\t<td>field_my_id</td>\n
-\t<td>a</td>\n
+  <td>assertTitle</td>\n
+  <td>ERP5</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n
@@ -138,11 +165,32 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testChangeId</string> </value>
+            <value> <string>testTitle</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
