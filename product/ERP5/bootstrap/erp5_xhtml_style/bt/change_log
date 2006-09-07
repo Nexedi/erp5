@@ -1,3 +1,7 @@
+2006-09-07 Kevin
+* Render field CSS classes on the div.field instead on the label for better styling.
+* Fix JP "missing" statement.
+
 2006-09-04 Kevin
 * Don't render non-editable fields in span.
 

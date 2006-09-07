@@ -70,35 +70,30 @@ GNU General Public License for more details.\n
 You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+--></tal:block>\n
 \n
-MISSING\n
-  (jp) - way to decide when to display and when not to display a label\n
-  (jp) - is CSS really handled ?\n
--->\n
-</tal:block>\n
 <tal:block metal:define-macro="field_render">\n
-  <tal:block tal:define="value python:request.get(field.id, None);\n
-                         field_errors python: request.get(\'field_errors\',{})">\n
-    <tal:block tal:define="html_render python: field.render_htmlgrid(value, request)">\n
-      <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
-        <div tal:repeat="html_tuple html_render" class="field"\n
-             tal:attributes="title python: here.Localizer.translate(\'erp5_ui\', here.Base_getFieldDescription(field))">\n
-          <label tal:attributes="class python: ({0: {0: None, 1: \'required\'},\n
-                 1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()] or \'\') + \' \' + (field.get_value(\'css_class\') or \'\')">\n
-            <tal:block tal:content="structure python: html_tuple[0]"\n
-                       i18n:translate="" i18n:domain="ui" />\n
-            <tal:block tal:define="template python: here.developper_shortcut_render">\n
-              <tal:block metal:use-macro="template/macros/field" />\n
-            </tal:block>\n
-          </label>\n
-          <div class="input" tal:content="structure python: html_tuple[1]"/>\n
-          <span tal:condition="python: field_errors.has_key(field.id)"\n
-                class="error"\n
-                tal:content="python: field_errors[field.id].error_text"\n
-                i18n:translate="" i18n:domain="ui"/>\n
-        </div>\n
-      </tal:block>\n
-    </tal:block>\n
+  <tal:block tal:condition="python: field.meta_type != \'HiddenStringField\'"\n
+             tal:define="value        python: request.get(field.id, None);\n
+                         field_errors python: request.get(\'field_errors\', {});\n
+                         html_render  python: field.render_htmlgrid(value, request)">\n
+    <div tal:repeat="html_tuple html_render"\n
+         tal:attributes="title python: here.Localizer.translate(\'erp5_ui\', here.Base_getFieldDescription(field));\n
+                         class python: \'field \' + ({0: {0: None   , 1: \'required\'},\n
+                                                    1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()] or \'\') + \' \' + (field.get_value(\'css_class\') or \'\')">\n
+      <label>\n
+        <tal:block tal:content="structure python: html_tuple[0]"\n
+                   i18n:translate="" i18n:domain="ui"/>\n
+        <tal:block tal:define="template python: here.developper_shortcut_render">\n
+          <tal:block metal:use-macro="template/macros/field"/>\n
+        </tal:block>\n
+      </label>\n
+      <div class="input" tal:content="structure python: html_tuple[1]"/>\n
+      <span tal:condition="python: field_errors.has_key(field.id)"\n
+            class="error"\n
+            tal:content="python: field_errors[field.id].error_text"\n
+            i18n:translate="" i18n:domain="ui"/>\n
+    </div>\n
   </tal:block>\n
 </tal:block>
 

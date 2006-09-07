@@ -618,24 +618,23 @@ fieldset.bottom .field label {\n
   float: left;\n
 }\n
 \n
-.content .field .input a{\n
+.content .field .input a {\n
   vertical-align: middle;\n
 }\n
 \n
-.content .field .required,\n
-.content .field .reqerror {\n
+.content .field.reqerror label,\n
+.content .field.required label,\n
+.content .field .error {\n
   font-weight: bold;\n
 }\n
 \n
-\n
-.content .field label.invisible {\n
-  display: None;\n
+.content .field .error {\n
+  background-color: inherit;\n
+  color: #f00;\n
 }\n
 \n
-.error,\n
-.content .field .reqerror {\n
-  background-color: inherit;\n
-  color: #F00;\n
+.content .field.invisible label {\n
+  display: None;\n
 }\n
 \n
 .login .submit {\n
@@ -669,8 +668,8 @@ fieldset.bottom .field label {\n
 \n
 #status,\n
 #master {\n
-  padding-left: 0.5em;\n
-  padding-right: 0.5em;\n
+  padding-left: .5em;\n
+  padding-right: .5em;\n
 }\n
 \n
 /* Context bar */\n
@@ -828,7 +827,7 @@ fieldset.bottom .field label {\n
 \n
 #transition_message {\n
   margin-left: 1em;\n
-  color: #F00;\n
+  color: #f00;\n
   background-color: inherit;\n
   font-weight: bold;\n
 }\n
@@ -841,12 +840,12 @@ fieldset.bottom .field label {\n
   border-width: 1px;\n
   border-style: solid;\n
   border-color: <dtml-var dialog_border_color>;\n
-  padding: 0.5em;\n
+  padding: .5em;\n
   margin-bottom: 1em;\n
 }\n
 \n
 .list_dialog {\n
-  margin-bottom: 0.5em;\n
+  margin-bottom: .5em;\n
 }\n
 \n
 .dialog_selector button .description {\n
