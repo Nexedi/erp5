@@ -37,6 +37,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_property_domain_dict</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
