@@ -30,6 +30,7 @@ payroll_service_module/lodging_helps
 payroll_service_module/oldage_insurance
 payroll_service_module/oldage_unlimited
 payroll_service_module/primes
+payroll_service_module/reduction_fillon_forfait
 payroll_service_module/retenue_maladie
 payroll_service_module/sickness_insurance
 payroll_service_module/syntec_insurance
@@ -41,6 +42,8 @@ portal_categories/product_line/salary
 portal_categories/product_line/social_service
 portal_categories/product_line/social_service/**
 portal_categories/product_line/tax
+portal_categories/quantity_unit/time
+portal_categories/quantity_unit/time/month
 portal_categories/salary_range
 portal_categories/salary_range/**
 portal_categories/tax_category
