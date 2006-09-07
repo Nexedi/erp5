@@ -68,46 +68,61 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kwd = context.ERP5Accounting_getParams(selection)\n
+            <value> <string>"""Returns all parameters from preferences or selection.\n
 \n
-# XXX missing :(\n
-# this may fail if we have movements on something else than accounts\n
-#kwd[\'where_expression\'] = \'node.parent_uid = %s\' context.account_module.getUid()\n
+This script gives priority to selection, and if not found in selection, it\n
+tries to get the parameters from preference tool.\n
+All parameters are stored/retrieved in a REQUEST cache, unless ignore_cache\n
+argument is True.\n
 \n
-if kw.get(\'stat\'):\n
+caveats:\n
+  * wants_from_date parameter is not taken into account in the cache.\n
+"""\n
+\n
+# do we have a cache already?\n
+# XXX take selection into account ?\n
+if not ignore_cache:\n
+  params_cache = context.REQUEST.other.get(\n
+          \'ERP5Accounting_getParams\', None)\n
+  if params_cache is not None:\n
+    return dict(params_cache)\n
+\n
+params = {}\n
+selection_params = {}\n
+if selection is not None:\n
   selection_params = selection.getParams()\n
-  if selection.getDomain():\n
-    kwd[\'selection_domain\'] = selection.getDomain()\n
-  if selection.getReport():\n
-    kwd[\'selection_report\'] = selection.getReport()\n
-  if selection_params.get(\'closed_summary\'):\n
-    kwd[\'closed_summary\'] = selection_params[\'closed_summary\']\n
-  if selection.isInvertMode():\n
-    kwd[\'selection_uids\'] = selection.getInvertModeUidList()\n
-  # is list filtered ?\n
-  if \'title\' in selection_params or \\\n
-     \'preferred_gap_id\' in selection_params or\\\n
-     \'transalated_validation_state_title\' in selection_params:\n
-    # if yes, apply the same filter here\n
-    kwd[\'stock.node_uid\'] = [x.uid for x in\n
-                         context.portal_catalog(**selection.getParams())]\n
-  return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
+preference = context.getPortalObject().portal_preferences\n
 \n
-kwd[\'stock.node_uid\'] = brain.uid\n
-return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
-# vim: syntax=python\n
+if wants_from_date:\n
+  from_date = selection_params.get(\'from_date\',\n
+                preference.getPreferredAccountingTransactionFromDate())\n
+  if from_date :\n
+    params[\'from_date\'] = from_date\n
+\n
+at_date = params.get(\'at_date\',\n
+              preference.getPreferredAccountingTransactionAtDate())\n
+if at_date:\n
+  params[\'at_date\'] = at_date\n
+\n
+section_category = params.get(\'section_category\',\n
+                 preference.getPreferredAccountingTransactionSectionCategory())\n
+if section_category:\n
+  params[\'section_category\'] = section_category\n
+\n
+simulation_state = params.get(\'simulation_state\',\n
+             preference.getPreferredAccountingTransactionSimulationStateList())\n
+if simulation_state:\n
+  params[\'simulation_state\'] = simulation_state\n
+\n
+if not ignore_cache:\n
+  context.REQUEST.other[\'ERP5Accounting_getParams\'] = params\n
+return dict(params)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -118,7 +133,7 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, brain, **kw</string> </value>
+            <value> <string>selection=None, wants_from_date=0, ignore_cache=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -138,26 +153,28 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>selection</string>
-                            <string>brain</string>
-                            <string>kw</string>
+                            <string>wants_from_date</string>
+                            <string>ignore_cache</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>kwd</string>
+<string>context</string>
+                            <string>None</string>
+                            <string>params_cache</string>
+                            <string>dict</string>
+                            <string>params</string>
                             <string>selection_params</string>
+                            <string>preference</string>
+                            <string>from_date</string>
                             <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>x</string>
+                            <string>at_date</string>
+                            <string>section_category</string>
+                            <string>simulation_state</string>
                           </tuple>
                         </value>
                     </item>
@@ -169,42 +186,21 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountModule_getAccountingTransactionCount</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ERP5Accounting_getParams</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
