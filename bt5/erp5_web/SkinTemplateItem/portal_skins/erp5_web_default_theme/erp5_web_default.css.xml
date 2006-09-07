@@ -129,38 +129,9 @@ span.cancelled   {color: #ccc}\n
 ** Layout technic based on http://alistapart.com/articles/holygrail/\n
 -----------------------------------------------*/\n
 \n
-<tal:block tal:replace="nothing">\n
-/* The first global form can be used as a global wrapper */\n
-body > form#main_form {\n
-  padding-right: 1em;  /* inter-column space */\n
-  padding-left: 1em;   /* inter-column space */\n
-  margin-left: 16.4em; /* form#main_form > div column margin-left +  inter column space + 4 *border width (.1em) */\n
-  position: relative;\n
-  z-index: 2;\n
-}\n
-\n
-/* Default layout for form groups (sidebar actually) */\n
-form#main_form > div {\n
-  border: .1em solid #aaa; /* here is a border width (.1em) used to calculate positionning */\n
-  margin-bottom: 1em; /* space between groups */\n
-  margin-left: -16.4em; /* = -(div.width + inter column space + 4 *border width (.1em) ) */\n
-  width: 15em;  /* XXX CONSTANT !! */\n
-}\n
-\n
-/* Undo border styling for main content */\n
-form#main_form > div.main_content {\n
-  border: 0;\n
-  /*margin-top: 4em; not needed normally: this is part of the header. (and this cause some bottom hidding in konqueror) */\n
-  width: 100%;\n
-  float: right;\n
-}\n
-\n
-</tal:block>\n
-\n
-\n
 div.content {\n
   background: #fff;\n
-  /* XXX is this border an issue ? border: .1em solid #ccc;  here is a border width (.1em) used to calculate positionning */\n
+  border: .1em solid #ccc;\n
 }\n
 \n
 \n
