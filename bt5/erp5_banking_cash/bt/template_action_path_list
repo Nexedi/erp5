@@ -49,7 +49,6 @@ Cash Incident | out_view
 Cash Incident | outgoing_input
 Cash Incident | view
 Cash Sorting Incident Module | list_ui
-Cash Sorting Incident Module | show_operations
 Cash Sorting Incident Module | sort_on
 Cash Sorting Incident Module | view
 Cash Sorting Incident | history
@@ -58,7 +57,6 @@ Cash Sorting Incident | incoming_input
 Cash Sorting Incident | metadata
 Cash Sorting Incident | out_view
 Cash Sorting Incident | outgoing_input
-Cash Sorting Incident | post
 Cash Sorting Incident | view
 Cash Sorting Module | list
 Cash Sorting Module | list_ui
