@@ -94,7 +94,7 @@ class Rule(XMLObject, Predicate):
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'constructNewAppliedRule')
-    def constructNewAppliedRule(self, context, id=None,**kw):
+    def constructNewAppliedRule(self, context, id=None,activate_kw=None,**kw):
       """
         Creates a new applied rule which points to self
       """
@@ -105,7 +105,8 @@ class Rule(XMLObject, Predicate):
         context.newContent(id=id,
                            portal_type='Applied Rule',
                            specialise_value=self,
-                           **kw)
+                           activate_kw=activate_kw,
+                           )
       return context.get(id)
 
     # Simulation workflow

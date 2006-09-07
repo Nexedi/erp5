@@ -67,7 +67,6 @@ class AppliedRule(XMLObject):
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
                       , PropertySheet.AppliedRule
-                      , PropertySheet.Arrow
                       )
 
     def tpValues(self) :
