@@ -2732,7 +2732,10 @@ class ListBoxValidator(Validator.Validator):
 
         result = {}
         error_result = {}
-        listbox_uids = REQUEST.get('%s_uid' % field.id, [])
+        MARKER = []
+        listbox_uids = REQUEST.get('%s_uid' % field.id, MARKER)
+        if listbox_uids is MARKER:
+          raise KeyError, 'Field %s is not present in request object.' % (field.id, )
         #LOG('ListBox.validate: REQUEST',0,REQUEST)
         errors = []
         object_list = []
