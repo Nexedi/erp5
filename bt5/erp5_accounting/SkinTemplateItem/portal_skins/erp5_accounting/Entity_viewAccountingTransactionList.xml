@@ -107,7 +107,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>entity</string>
+                        <string>my_title</string>
                         <string>preferred_from_date</string>
                         <string>preferred_at_date</string>
                       </list>

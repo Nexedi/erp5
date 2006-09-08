@@ -207,7 +207,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>This field must mimic the behaviour of the "Preference" action defined on the portal_membership tool.</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -283,7 +283,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: here.Localizer.translate(\'erp5_ui\', "The values above are the parameters of the transaction list displayed below. Those parameters are portal-wide and can be edited in the <a href=\'${url}\'>preference screen</a>.",mapping={\'url\': here.portal_url()+\'/personalize_form\'})
+python: here.Localizer.translate(\'erp5_ui\', "The values above are the parameters of the transaction list displayed below.<br/>Those parameters have a portal wide scope and can be edited in the <a href=\'${url}\'>preference screen</a>.",mapping={\'url\': here.portal_url() + \'/AccountingTransactionModule_jumpToActiveAccountingPreference\'})
 
 ]]></string> </value>
         </item>
@@ -304,7 +304,7 @@ python: here.Localizer.translate(\'erp5_ui\', "The values above are the paramete
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.REQUEST.get(\'portal_skin\', \'\') != \'Print\'</string> </value>
+            <value> <string>python: request.get(\'portal_skin\', \'\') != \'Print\'</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_preferences.getPreferredAccountingTransactionSimulationStateList()</string> </value>
+            <value> <string>preferences/getPreferredAccountingTransactionSimulationStateList</string> </value>
         </item>
       </dictionary>
     </pickle>

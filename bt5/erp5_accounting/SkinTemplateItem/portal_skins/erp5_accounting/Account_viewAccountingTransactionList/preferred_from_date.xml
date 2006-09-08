@@ -466,7 +466,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_preferences.getPreferredAccountingTransactionFromDate()</string> </value>
+            <value> <string>preferences/getPreferredAccountingTransactionFromDate</string> </value>
         </item>
       </dictionary>
     </pickle>
