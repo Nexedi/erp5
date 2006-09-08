@@ -93,7 +93,7 @@ Test jumps from Accounting Transaction Module\n
 <!-- same for destination section -->\n
 <tr>\n
   <td>selectAndWait</td>\n
-  <td>module_select</td>\n
+  <td>select_module</td>\n
   <td>Accounting</td>\n
 </tr>\n
 <tr>\n
