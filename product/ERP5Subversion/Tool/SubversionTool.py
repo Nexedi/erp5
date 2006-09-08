@@ -39,7 +39,7 @@ import os, re
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
-from tempfile import mktemp
+from tempfile import gettempdir, mktemp
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
 from xml.sax.saxutils import escape
@@ -733,7 +733,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def _getWorkingPath(self, path):
     """ Check if the given path is reachable (allowed)
     """
-    if not path.startswith(self.top_working_path):
+    if not path.startswith(self.top_working_path) and \
+        not path.startswith(gettempdir()):
       raise UnauthorizedAccessToPath, 'Unauthorized access to path %s. It is NOT in your Zope home instance.' % path
     return path
     
