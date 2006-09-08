@@ -58,8 +58,13 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
   <tal:block metal:define-macro="init">\n
     <tr>\n
+      <td>store</td>\n
+      <td tal:content="python: \'/\' + here.getPortalObject().getId()">erp5</td>\n
+      <td>base_url</td>\n
+    </tr>\n
+    <tr>\n
       <td>open</td>\n
-      <td>/erp5/foo_module/ListBoxZuite_reset</td>\n
+      <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
@@ -69,7 +74,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+      <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
@@ -79,7 +84,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td>/erp5/foo_module/view</td>\n
+      <td>${base_url}/foo_module/view</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n

@@ -68,7 +68,7 @@
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange&cancel_url=http%3A//127.0.0.1%3A9080/erp5/portal_templates/&selection_index:int=0&form_id=TemplateTool_viewBusinessTemplateList&selection_name=business_template_selection</td>\n
+\t<td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange&cancel_url=http%3A//127.0.0.1%3A9080/erp5/portal_templates/&selection_index:int=0&form_id=TemplateTool_viewBusinessTemplateList&selection_name=business_template_selection</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -83,7 +83,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -133,7 +133,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -158,7 +158,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -193,7 +193,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
