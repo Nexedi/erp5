@@ -849,7 +849,73 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                     omit_simulation=1)
     self.assertEquals(1, len(movement_history_list))
     self.assertEquals(100, movement_history_list[0].quantity)
-    
+  
+  def test_RunningTotalQuantity(self):
+    """Test that a running_total_quantity attribute is set on brains
+    """
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    date_and_qty_list = [(DateTime(2006, 01, day), day) for day in range(1, 10)]
+    for date, quantity in date_and_qty_list:
+      self._makeMovement(stop_date=date, quantity=quantity)
+    movement_history_list = getMovementHistoryList(
+                                    section_uid=self.section.getUid(),
+                                    sort_on=[('stock.date', 'asc'),
+                                             ('stock.uid', 'asc')])
+    running_total_quantity=0
+    for idx, (date, quantity) in enumerate(date_and_qty_list):
+      brain = movement_history_list[idx]
+      running_total_quantity += quantity
+      self.assertEquals(running_total_quantity, brain.running_total_quantity)
+      self.assertEquals(date, brain.date)
+      self.assertEquals(quantity, brain.quantity)
+  
+  def test_RunningTotalPrice(self):
+    """Test that a running_total_price attribute is set on brains
+    """
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    date_and_price_list = [(DateTime(2006, 01, day), day) for day in range(1, 10)]
+    for date, price in date_and_price_list:
+      self._makeMovement(stop_date=date, quantity=1, price=price)
+    movement_history_list = getMovementHistoryList(
+                                    section_uid=self.section.getUid(),
+                                    sort_on=[('stock.date', 'asc'),
+                                             ('stock.uid', 'asc')])
+    running_total_price=0
+    for idx, (date, price) in enumerate(date_and_price_list):
+      brain = movement_history_list[idx]
+      running_total_price += price
+      self.assertEquals(running_total_price, brain.running_total_price)
+      self.assertEquals(date, brain.date)
+      self.assertEquals(price, brain.total_price)
+
+  def test_RunningTotalWithInitialValue(self):
+    """Test running_total_price and running_total_quantity with an initial
+    value.
+    """
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    date_and_qty_list = [(DateTime(2006, 01, day), day) for day in range(1, 10)]
+    for date, quantity in date_and_qty_list:
+      self._makeMovement(stop_date=date, price=quantity, quantity=quantity)
+    initial_running_total_price=100
+    initial_running_total_quantity=-10
+    movement_history_list = getMovementHistoryList(
+                                    initial_running_total_quantity=
+                                            initial_running_total_quantity,
+                                    initial_running_total_price=
+                                            initial_running_total_price,
+                                    section_uid=self.section.getUid(),
+                                    sort_on=[('stock.date', 'asc'),
+                                             ('stock.uid', 'asc')])
+    running_total_price=initial_running_total_price
+    running_total_quantity=initial_running_total_quantity
+    for idx, (date, quantity) in enumerate(date_and_qty_list):
+      brain = movement_history_list[idx]
+      self.assertEquals(date, brain.date)
+      running_total_quantity += quantity
+      self.assertEquals(running_total_quantity, brain.running_total_quantity)
+      running_total_price += quantity * quantity # we've set price=quantity
+      self.assertEquals(running_total_price, brain.running_total_price)
+
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
   """

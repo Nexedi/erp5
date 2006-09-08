@@ -56,6 +56,18 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>initial_running_total_price</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>initial_running_total_quantity</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>input_simulation_state</string> </key>
                                 <value>
                                   <dictionary>
@@ -143,6 +155,8 @@
 <string>omit_simulation</string>
 <string>omit_input</string>
 <string>omit_output</string>
+<string>initial_running_total_quantity</string>
+<string>initial_running_total_price</string>
 <string>input_simulation_state</string>
 <string>output_simulation_state</string>
                           </list>
@@ -587,6 +601,8 @@ standardize\r\n
 omit_simulation\r\n
 omit_input\r\n
 omit_output\r\n
+initial_running_total_quantity\r\n
+initial_running_total_price\r\n
 input_simulation_state:list\r\n
 output_simulation_state:list</string> </value>
         </item>
@@ -628,14 +644,29 @@ output_simulation_state:list</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+SET @running_total_quantity := <dtml-var initial_running_total_quantity>,\n
+    @running_total_price := <dtml-var initial_running_total_price>;\n
+\n
+<dtml-var sql_delimiter>\n
+\n
+SELECT \n
+  q1.*,\n
+  @running_total_quantity := q1.total_quantity + \n
+            @running_total_quantity AS running_total_quantity,\n
+  @running_total_price := q1.total_price + \n
+            @running_total_price AS running_total_price\n
+FROM (\n
 SELECT\n
   catalog.path as path,\n
   catalog.uid as uid,\n
   catalog.relative_url as relative_url,\n
   stock.date AS date,\n
   stock.quantity AS total_quantity,\n
+  stock.total_price AS total_price,\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
+  stock.mirror_section_uid AS mirror_section_uid,\n
+  stock.mirror_node_uid AS mirror_node_uid,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
@@ -714,16 +745,19 @@ WHERE\n
 <dtml-if selection_report>\n
   AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
 </dtml-if>\n
+\n
 GROUP BY\n
   <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
   <dtml-else>\n
     stock.uid, stock.node_uid, stock.resource_uid\n
   </dtml-if>\n
+\n
 <dtml-if order_by_expression>\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
+) AS q1\n
 
 
 ]]></string> </value>
@@ -762,14 +796,29 @@ ORDER BY\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+SET @running_total_quantity := <dtml-var initial_running_total_quantity>,\n
+    @running_total_price := <dtml-var initial_running_total_price>;\n
+\n
+<dtml-var sql_delimiter>\n
+\n
+SELECT \n
+  q1.*,\n
+  @running_total_quantity := q1.total_quantity + \n
+            @running_total_quantity AS running_total_quantity,\n
+  @running_total_price := q1.total_price + \n
+            @running_total_price AS running_total_price\n
+FROM (\n
 SELECT\n
   catalog.path as path,\n
   catalog.uid as uid,\n
   catalog.relative_url as relative_url,\n
   stock.date AS date,\n
   stock.quantity AS total_quantity,\n
+  stock.total_price AS total_price,\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
+  stock.mirror_section_uid AS mirror_section_uid,\n
+  stock.mirror_node_uid AS mirror_node_uid,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
@@ -848,16 +897,19 @@ WHERE\n
 <dtml-if selection_report>\n
   AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
 </dtml-if>\n
+\n
 GROUP BY\n
   <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
   <dtml-else>\n
     stock.uid, stock.node_uid, stock.resource_uid\n
   </dtml-if>\n
+\n
 <dtml-if order_by_expression>\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
+) AS q1\n
 
 
 ]]></string> </value>

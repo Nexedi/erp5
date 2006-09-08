@@ -865,10 +865,14 @@ class SimulationTool (BaseTool):
                                standardise=0, omit_simulation=0,
                                omit_input=0, omit_output=0,
                                selection_domain=None, selection_report=None,
+                               initial_running_total_quantity=0,
+                               initial_running_total_price=0,
                                **kw):
-      """
-      Returns a list of movements which modify the inventory
+      """Returns a list of movements which modify the inventory
       for a single or a group of resource, node, section, etc.
+      A running total quantity and a running total price are available on
+      brains. The initial values can be passed, in case you want to have an
+      "initial summary line".
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetMovementHistoryList(
@@ -877,7 +881,12 @@ class SimulationTool (BaseTool):
                          omit_simulation=omit_simulation,
                          omit_input=omit_input, omit_output=omit_output,
                          selection_domain=selection_domain,
-                         selection_report=selection_report, **sql_kw)
+                         selection_report=selection_report,
+                         initial_running_total_quantity=
+                                  initial_running_total_quantity,
+                         initial_running_total_price=
+                                  initial_running_total_price,
+                         **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
