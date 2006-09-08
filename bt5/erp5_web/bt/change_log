@@ -1,3 +1,13 @@
+2006-09-08 Kevin
+* Use group id for the layout.
+* Fix css layout to support ie6.
+* Delete xml type declaration to let IE 6 parse the web page.
+* Tag columns in the layout via 'column' css class.
+* Show transition_message only when one is found.
+* New way of generating tag id, css class and title of groups.
+* Reduce search box size.
+* Add list of tested browser.
+
 2006-09-07 Kevin
 * Brand new 3-column flexible layout.
 * Add custom view for Web Site module.
