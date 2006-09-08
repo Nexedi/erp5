@@ -72,7 +72,6 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block tal:define="title string:${template/title_or_id} - ${here/Title}">\n
 <tal:block metal:use-macro="here/view_main/macros/master">\n
   <tal:block metal:fill-slot="main">\n
     <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
@@ -126,7 +125,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       </div>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
 </tal:block>
 
 ]]></string> </value>

@@ -80,8 +80,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          global dialog_category request/dialog_category | nothing;\n
 \n
                          local_parameter_list local_parameter_list | python: {};\n
-                         dummy python: local_parameter_list.update({\'dialog_id\': dialog_id, \'dialog_method\': dialog_method, \'update_action\': update_action, \'dialog_category\': dialog_category});\n
-                         ">\n
+                         dummy python: local_parameter_list.update({\'dialog_id\': dialog_id, \'dialog_method\': dialog_method, \'update_method\': update_action, \'dialog_category\': dialog_category});\n
+                         title form/title">\n
     <tal:block metal:use-macro="here/main_template/macros/master">\n
       <tal:block metal:fill-slot="main">\n
         <div class="list_dialog">\n
