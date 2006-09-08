@@ -52,6 +52,7 @@
            xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 /*____________________________________\n
@@ -59,12 +60,19 @@
   Default ERP5 Web CSS.\n
 \n
   Guidelines (how-to create a good css):\n
-   * All measurements should be expressed with scalable units like em, ex, %.\n
-   * pt, px must be avoid expect for box borders (not sure) and tricks related to borders (like position popup of Edit Tabs)\n
-   * Test your design and layout against font size increasing/decreasing.\n
-   * Test your html code semantics value by disabling all your css.\n
-   * Don\'t put styling directives in xhtml code.\n
+    * All measurements should be expressed with scalable units like em, ex, %.\n
+    * pt, px must be avoid expect for box borders (not sure) and tricks related to borders (like position popup of Edit Tabs)\n
+    * Test your design and layout against font size increasing/decreasing.\n
+    * Test your html code semantics value by disabling all your css.\n
+    * Don\'t put styling directives in xhtml code.\n
+\n
+  Tested Browser:\n
+    * Firefox 1.5.0.6\n
+    * Konqueror 3.4.2\n
+    * Opera 9.01\n
+    * Internet Explorer 6 (Layout: OK; Style: not OK)\n
 ____________________________________*/\n
+\n
 \n
 /* General stuff that are good to include in every website.\n
 ----------------------------------------------- */\n
@@ -80,7 +88,9 @@ html {\n
   margin-left: auto;\n
 }\n
 \n
-.clear {clear: both}\n
+.clear {\n
+  clear: both;\n
+}\n
 \n
 img {\n
   border: 0;\n
@@ -134,7 +144,6 @@ div.content {\n
   border: .1em solid #ccc;\n
 }\n
 \n
-\n
 /* Define some constant to make the css flexible without pain */\n
 <tal:block\n
   define="unit          python: \'px\';\n
@@ -146,46 +155,51 @@ div.content {\n
           RC_width      python: 130;\n
           RC_padding    python:  10;\n
 ">\n
-body {\n
+form#main_form {\n
   padding-left: <tal:block  replace="python: (\'%s%s\') % (LC_fullwidth, unit)"/>;\n
   padding-right: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
   min-width: <tal:block     replace="python: (\'%s%s\') % (LC_fullwidth + CC_padding, unit)"/>;\n
 }\n
 \n
-form#main_form > div#footer,\n
-form#main_form > div#header   /* XXX Is header working ?? */\n
+form#main_form div#footer,\n
+form#main_form div#header   /* XXX Is header working ?? */\n
 {\n
   margin-left: <tal:block  replace="python: (\'-%s%s\') % (LC_fullwidth, unit)"/>;\n
   margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
 }\n
 \n
-form#main_form > div.sidebar,\n
-form#main_form > div.main_content {\n
+form#main_form div.column {\n
   position: relative;\n
   float: left;\n
 }\n
 \n
-form#main_form > div.main_content {\n
+form#main_form div#main_content {\n
   padding: 0 20px;\n
   width: 100%;\n
 }\n
 \n
-form#main_form > div.left {\n
+form#main_form div#left_column {\n
   width: <tal:block     replace="python: (\'%s%s\') % (LC_width, unit)"/>;\n
   padding: 0 <tal:block replace="python: (\'%s%s\') % (LC_padding, unit)"/>;\n
   right: <tal:block     replace="python: (\'%s%s\') % (LC_fullwidth + CC_padding, unit)"/>;\n
   margin-left: -100%;\n
 }\n
 \n
-form#main_form > div.right {\n
+form#main_form div#right_column {\n
   width: <tal:block     replace="python: (\'%s%s\') % (RC_width, unit)"/>;\n
   padding: 0 <tal:block replace="python: (\'%s%s\') % (RC_padding, unit)"/>;\n
   margin-right: -100%;\n
 }\n
 \n
-form#main_form > div.footer {\n
+form#main_form div#footer {\n
   clear: both;\n
 }\n
+\n
+/*** IE Fix ***/\n
+* html form#main_form div#left_column {\n
+  left: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth, unit)"/>;\n
+}\n
+\n
 </tal:block>\n
 \n
 \n
@@ -208,6 +222,7 @@ form#main_form > div > div.field label {\n
 }\n
 \n
 \n
+\n
 /* Special layout for logo group */\n
 \n
 form#main_form div.field.logo {\n
@@ -216,12 +231,13 @@ form#main_form div.field.logo {\n
   background: transparent;\n
 }\n
 \n
-div.field.logo > label {\n
+div.field.logo label {\n
   display: none;\n
 }\n
 \n
 \n
-<tal:block tal:replace="nothing">\n
+\n
+<tal:block replace="nothing">\n
 /* Special layout for search bar group: move it top right */\n
 form#main_form > div.searchBar {\n
   position: absolute;\n
@@ -633,22 +649,27 @@ div.content > fieldset.webcontent span.summary {\n
 /* Extra content (metadata, related document box, etc...) styling.\n
 ----------------------------------------------- */\n
 \n
-div.content > fieldset.webcontent.bottom div {\n
+div.content fieldset.webcontent.bottom div {\n
  display: inline;\n
 }\n
 \n
-div.content > fieldset.webcontent.extra {\n
-  float: right;\n
-  clear: right;\n
+div.content fieldset.webcontent.extra {\n
+  color: #999;\n
   background-color: #f9f9f9;\n
-  display: inline;\n
-  border: 1px solid #ccc;\n
+  border: 1px solid #eee;\n
   border-right: none;\n
   margin: 1em 0 1em 1em;\n
   width: 20em; /* XXX CONSTANT !! */\n
+  float: right;\n
+  clear: right;\n
+  display: inline;\n
 }\n
 \n
-div.content > fieldset.webcontent.extra label:after {\n
+div.content fieldset.webcontent.extra legend {\n
+  color: #999;\n
+}\n
+\n
+div.content fieldset.webcontent.extra label:after {\n
   content: ":";\n
 }
 
