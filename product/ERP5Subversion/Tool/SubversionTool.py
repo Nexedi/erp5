@@ -736,8 +736,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     real_path = os.path.abspath(path)
     if not real_path.startswith(self.top_working_path) and \
         not real_path.startswith(gettempdir()):
-      raise UnauthorizedAccessToPath, 'Unauthorized access to path %s. It is '
-        'NOT in your Zope home instance.' % real_path
+      raise UnauthorizedAccessToPath, 'Unauthorized access to path %s.' \
+          'It is NOT in your Zope home instance.' % real_path
     return real_path
     
   security.declareProtected('Import/Export objects', 'update')
