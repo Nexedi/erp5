@@ -68,7 +68,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>rigth</string>
+                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
@@ -94,9 +94,7 @@
                 <item>
                     <key>                 <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>my_aggregate_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -106,11 +104,12 @@
                         <string>my_resource_title</string>
                         <string>my_checkbook_type</string>
                         <string>my_quantity</string>
+                        <string>my_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>rigth</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list/>
                     </value>

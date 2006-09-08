@@ -68,26 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># We will need to create all checks for all checkbooks\n
-# Then all of them should be set as confirmed\n
-transaction = state_change[\'object\']\n
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
 \n
-line_list = transaction.getMovementList()\n
+if vault is not None:\n
+  if not vault.endswith(\'encaisse_des_billets_et_monnaies\'):\n
+    vault = "%s/%s" % (vault,\'encaisse_des_billets_et_monnaies\')\n
 \n
-for line in line_list:\n
-  aggregate_list = line.getAggregateValueList()\n
-  for aggregate in aggregate_list:\n
-    if aggregate.getPortalType()==\'Checkbook\':\n
-      aggregate.setStartDate(transaction.getStartDate())\n
-      aggregate.Checkbook_createCheckList(\n
-                    start_number=aggregate.getReferenceRangeMin(),\n
-                    stop_number=aggregate.getReferenceRangeMax())\n
-      for check in aggregate.objectValues(portal_type=\'Check\'):\n
-        check.confirm()\n
-        check.setStartDate(transaction.getStartDate())\n
-    elif aggregate.getPortalType()==\'Check\':\n
-      aggregate.setStartDate(transaction.getStartDate())\n
-      aggregate.confirm()\n
+listbox_data = context.Delivery_viewCheckbookInputDialog(batch_mode=1,node=vault)\n
+\n
+result_list = []\n
+i=0\n
+for line in listbox_data:\n
+  result_list.append(newTempBase(context, "new_%3i" % i, **line))\n
+  i+=1\n
+return result_list\n
 </string> </value>
         </item>
         <item>
@@ -104,11 +98,17 @@ for line in line_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/checkbook_delivery_workflow/scripts/updateCheckAndCheckbook</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/Base_getItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, **kw</string> </value>
+            <value> <string>vault=None,at_date=None,from_date=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,23 +128,27 @@ for line in line_list:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
+                            <string>vault</string>
+                            <string>at_date</string>
+                            <string>from_date</string>
                             <string>kw</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>None</string>
                             <string>_getattr_</string>
-                            <string>line_list</string>
+                            <string>context</string>
+                            <string>listbox_data</string>
+                            <string>result_list</string>
+                            <string>i</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>aggregate_list</string>
-                            <string>aggregate</string>
-                            <string>check</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -156,12 +160,16 @@ for line in line_list:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateCheckAndCheckbook</string> </value>
+            <value> <string>Base_getItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

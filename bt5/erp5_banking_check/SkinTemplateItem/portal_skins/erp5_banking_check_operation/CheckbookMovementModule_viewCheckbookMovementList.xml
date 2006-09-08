@@ -67,7 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -77,20 +77,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_source_logical_path</string>
                         <string>listbox_destination_logical_path</string>
                         <string>listbox_delivery_start_date</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

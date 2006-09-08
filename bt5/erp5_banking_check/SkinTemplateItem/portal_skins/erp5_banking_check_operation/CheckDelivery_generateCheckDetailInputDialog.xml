@@ -137,26 +137,26 @@ else:\n
       if reference_range_min in (None,\'\'):\n
         message = \'Please set a start number\'\n
         generate_error(line,\'reference_range_min\',message)\n
-      if reference_range_max in (None,\'\'):\n
-        if quantity!=1:\n
-          message = \'Please set a stop number\'\n
-          generate_error(line,\'reference_range_max\',message)\n
-        else:\n
-          reference_range_max = reference_range_min\n
-          line[\'reference_range_max\'] = reference_range_max\n
-      if reference_range_min not in (None,\'\') and reference_range_max not in (None,\'\'):\n
-        reference_range_min = int(reference_range_min)\n
-        reference_range_max = int(reference_range_max)\n
-        check_quantity = 1\n
-        if check_amount is not None: # In the case of a check book\n
-          check_amount_relative_url = \'/\'.join(check_amount.split(\'/\')[1:])\n
-          line[\'check_amount_relative_url\'] = check_amount_relative_url\n
-          check_amount_value = context.getPortalObject().restrictedTraverse(check_amount_relative_url)\n
-          check_quantity = int(check_amount_value.getQuantity())\n
-        if (reference_range_max-reference_range_min+1)!=(check_quantity*quantity):\n
-          message = \'The range is not valid\'\n
-          generate_error(line,\'reference_range_min\',message)\n
-          generate_error(line,\'reference_range_max\',message)\n
+    if reference_range_max in (None,\'\') and reference_range_min not in (None,\'\'):\n
+      if quantity!=1:\n
+        message = \'Please set a stop number\'\n
+        generate_error(line,\'reference_range_max\',message)\n
+      else:\n
+        reference_range_max = reference_range_min\n
+        line[\'reference_range_max\'] = reference_range_max\n
+    if reference_range_min not in (None,\'\') and reference_range_max not in (None,\'\'):\n
+      reference_range_min = int(reference_range_min)\n
+      reference_range_max = int(reference_range_max)\n
+      check_quantity = 1\n
+      if check_amount is not None: # In the case of a check book\n
+        check_amount_relative_url = \'/\'.join(check_amount.split(\'/\')[1:])\n
+        line[\'check_amount_relative_url\'] = check_amount_relative_url\n
+        check_amount_value = context.getPortalObject().restrictedTraverse(check_amount_relative_url)\n
+        check_quantity = int(check_amount_value.getQuantity())\n
+      if (reference_range_max-reference_range_min+1)!=(check_quantity*quantity):\n
+        message = \'The range is not valid\'\n
+        generate_error(line,\'reference_range_min\',message)\n
+        generate_error(line,\'reference_range_max\',message)\n
 \n
 if batch_mode:\n
   return error_value\n

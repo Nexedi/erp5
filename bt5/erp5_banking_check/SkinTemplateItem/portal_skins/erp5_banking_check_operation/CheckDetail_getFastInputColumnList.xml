@@ -82,9 +82,9 @@ item_model = context.getPortalObject().restrictedTraverse(resource)\n
 if item_model.getPortalType()== \'Check Model\':\n
   if item_model.isAccountNumberEnabled():\n
     return_list.append([\'destination_payment_reference\',\'Account Reference\'])\n
-  if item_model.isQuantityRequired():\n
-    return_list.append([\'price\',\'Amount\'])\n
-    return_list.append([\'price_currency\',\'Currency\'])\n
+  #if item_model.isQuantityRequired():\n
+  #  return_list.append([\'price\',\'Amount\'])\n
+  #  return_list.append([\'price_currency\',\'Currency\'])\n
   if len(item_model.getVariationRangeCategoryList())>0:\n
     return_list.append([\'check_type\',\'Check Value\'])\n
   return_list.append([\'reference_range_min\',\'Start Number\'])\n

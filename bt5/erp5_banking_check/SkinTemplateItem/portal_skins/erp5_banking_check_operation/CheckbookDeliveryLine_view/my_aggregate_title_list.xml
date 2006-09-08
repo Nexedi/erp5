@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.RelationField</string>
-          <string>RelationStringField</string>
+          <string>Products.ERP5Form.MultiRelationField</string>
+          <string>MultiRelationStringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource_title</string> </value>
+            <value> <string>my_aggregate_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -46,7 +46,7 @@
                 </item>
                 <item>
                     <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <value> <string>You entered too many characters.</string> </value>
                 </item>
                 <item>
                     <key> <string>too_many_lines</string> </key>
@@ -132,6 +132,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -188,10 +192,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -200,7 +200,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -283,6 +291,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -339,10 +351,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -351,7 +359,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -375,7 +391,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>resource</string> </value>
+                    <value> <string>aggregate</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -400,10 +416,6 @@
                     <value>
                       <list/>
                     </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>Checkbook_Type_Module</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -440,6 +452,10 @@
                 <item>
                     <key> <string>first_item</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -482,12 +498,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Checkbook Model</string>
-                          <string>Checkbook Model</string>
+                          <string>Check</string>
+                          <string>Check</string>
                         </tuple>
                         <tuple>
-                          <string>Check Model</string>
-                          <string>Check Model</string>
+                          <string>Checkbook</string>
+                          <string>Checkbook</string>
                         </tuple>
                       </list>
                     </value>
@@ -512,11 +528,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Moyen de Paiement</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Check and Checkbooks</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -527,8 +539,20 @@
                     <value> <string>Base_validateRelation</string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>

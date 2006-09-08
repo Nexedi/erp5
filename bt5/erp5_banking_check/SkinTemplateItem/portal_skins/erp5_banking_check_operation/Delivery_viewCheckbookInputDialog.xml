@@ -78,11 +78,13 @@ if item_portal_type_list is None:\n
 \n
 if listbox is None:\n
 \n
-  node = context.getBaobabSource()\n
+  if node is None:\n
+    node = context.getBaobabSource()\n
   reference_date = DateTime()\n
   item_list = []\n
   listbox = []\n
   getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
+  context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node))\n
   current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
                                                 at_date=reference_date, node=node)]\n
   for item in current_tracking_list:\n
@@ -93,8 +95,9 @@ if listbox is None:\n
         if resource.getProperty(property)!=value:\n
           exclude=1\n
     if destination_payment is not None:\n
-      if destination_payment!=item.getDestinationPayment():\n
-        exclude=1\n
+      if item.getDestinationPayment() is not None:\n
+        if destination_payment!=item.getDestinationPayment():\n
+          exclude=1\n
     if not exclude:\n
       item_portal_type = item.getPortalType()\n
       if item_portal_type  in item_portal_type_list:\n
@@ -113,11 +116,13 @@ if listbox is None:\n
 \n
         listbox.append(item_dict)\n
 \n
-  context.Base_updateDialogForm(listbox=listbox\n
-                                )\n
-  return context.asContext(context=None\n
-                           , portal_type=context.getPortalType()\n
-                           ).CheckbookDelivery_fastInputForm(**kw)\n
+if batch_mode:\n
+  return listbox\n
+context.Base_updateDialogForm(listbox=listbox\n
+                              )\n
+return context.asContext(context=None\n
+                         , portal_type=context.getPortalType()\n
+                         ).CheckbookDelivery_fastInputForm(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -144,7 +149,7 @@ if listbox is None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,node=None,batch_mode=0,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,7 +169,7 @@ if listbox is None:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -174,12 +179,13 @@ if listbox is None:\n
                             <string>item_portal_type_list</string>
                             <string>destination_payment</string>
                             <string>model_filter_dict</string>
+                            <string>node</string>
+                            <string>batch_mode</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>node</string>
                             <string>reference_date</string>
                             <string>item_list</string>
                             <string>getCurrentTrackingList</string>
@@ -213,6 +219,8 @@ if listbox is None:\n
                 <none/>
                 <none/>
                 <none/>
+                <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

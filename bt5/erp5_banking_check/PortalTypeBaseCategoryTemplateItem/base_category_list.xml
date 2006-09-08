@@ -1,4 +1,8 @@
 <base_category_list>
+ <portal_type id="Checkbook Delivery Line">
+  <item>currency_exchange_type</item>
+  <item>check_amount</item>
+ </portal_type>
  <portal_type id="Checkbook Reception Line">
   <item>check_amount</item>
  </portal_type>

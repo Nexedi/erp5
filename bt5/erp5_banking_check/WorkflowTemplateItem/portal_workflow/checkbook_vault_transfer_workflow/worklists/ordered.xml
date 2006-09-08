@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Checkbook Vault Transfer
+Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Checkbook Vault Transfer
 
 ]]></string> </value>
         </item>
