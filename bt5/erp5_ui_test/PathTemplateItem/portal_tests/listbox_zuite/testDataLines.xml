@@ -67,7 +67,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_createObjects</td>\n
+\t<td>${base_url}/foo_module/FooModule_createObjects</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -77,7 +77,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+\t<td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -87,7 +87,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/view</td>\n
+\t<td>${base_url}/foo_module/view</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -157,7 +157,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>\n
+\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -167,7 +167,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/view</td>\n
+\t<td>${base_url}/foo_module/view</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

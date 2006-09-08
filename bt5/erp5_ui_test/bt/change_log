@@ -1,3 +1,6 @@
+2006-09-08 Seb
+* Define a new variable so we can user ${base_url} instead of /erp5/
+
 2006-08-14 jerome
 * More tests for workflow transitions / dialog forms
 * Tests for Prev / Next button from selection

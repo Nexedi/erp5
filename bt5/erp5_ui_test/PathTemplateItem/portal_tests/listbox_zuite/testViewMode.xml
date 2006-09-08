@@ -62,7 +62,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_createObjects?num:int=1</td>\n
+\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -72,7 +72,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/0/Foo_createObjects</td>\n
+\t<td>${base_url}/foo_module/0/Foo_createObjects</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -82,7 +82,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+\t<td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -92,7 +92,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/0/view</td>\n
+\t<td>${base_url}/foo_module/0/view</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

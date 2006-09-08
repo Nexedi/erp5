@@ -74,7 +74,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -84,7 +84,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -96,7 +96,7 @@
 <!-- View mode: title of the form - title of the object -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/0/view</td>\n
+  <td>${base_url}/foo_module/0/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -109,7 +109,7 @@
 <!-- List mode: title of the form -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/view</td>\n
+  <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -121,7 +121,7 @@
 <!-- Dialog mode: title of the form -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/0/view</td>\n
+  <td>${base_url}/foo_module/0/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -138,7 +138,7 @@
 <!-- Report view mode: title of the form - title of the object -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/0/Base_viewHistory</td>\n
+  <td>${base_url}/foo_module/0/Base_viewHistory</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -151,7 +151,7 @@
 <!-- assumes that BusinessTemplate_view uses quad_form_view as a page template. -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/0/BusinessTemplate_view</td>\n
+  <td>${base_url}/foo_module/0/BusinessTemplate_view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -163,7 +163,7 @@
 <!-- portal: title of the portal -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/view</td>\n
+  <td>${base_url}/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

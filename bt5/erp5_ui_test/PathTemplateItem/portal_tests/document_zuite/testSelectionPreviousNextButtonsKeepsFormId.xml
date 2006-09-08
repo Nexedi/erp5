@@ -69,7 +69,7 @@ keeps `form_id`. This test doesn\'t test problems from #217</td></tr>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/FooModule_createObjects?num:int=2</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -79,7 +79,7 @@ keeps `form_id`. This test doesn\'t test problems from #217</td></tr>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -89,7 +89,7 @@ keeps `form_id`. This test doesn\'t test problems from #217</td></tr>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/foo_module/view</td>\n
+  <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -110,7 +110,7 @@ keeps `form_id`. This test doesn\'t test problems from #217</td></tr>\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td>/erp5/foo_module/0/Base_viewHistory</td>\n
+  <td>${base_url}/foo_module/0/Base_viewHistory</td>\n
   <td></td>\n
 </tr>\n
 \n

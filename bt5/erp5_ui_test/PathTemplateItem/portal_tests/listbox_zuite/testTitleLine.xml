@@ -108,7 +108,7 @@
 \n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked&amp;field_domain_root_list=source</td>\n
+\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked&amp;field_domain_root_list=source</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -118,7 +118,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/view</td>\n
+\t<td>${base_url}/foo_module/view</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -139,7 +139,7 @@
 \n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked&amp;field_report_root_list=source</td>\n
+\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked&amp;field_report_root_list=source</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -149,7 +149,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>/erp5/foo_module/view</td>\n
+\t<td>${base_url}/foo_module/view</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

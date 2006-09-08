@@ -59,6 +59,11 @@
   <tal:block metal:define-macro="init">\n
     <!-- reuse listbox suite reset to clear modules. -->\n
     <tr>\n
+      <td>store</td>\n
+      <td tal:content="python: \'/\' + here.getPortalObject().getId()">erp5</td>\n
+      <td>base_url</td>\n
+    </tr>\n
+    <tr>\n
       <td>open</td>\n
       <td tal:content="string: ${here/portal_url}/foo_module/ListBoxZuite_reset"/>\n
       <td></td>\n
@@ -81,7 +86,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td>/erp5/foo_module/ListBoxZuite_waitForActivities</td>\n
+      <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
