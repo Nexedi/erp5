@@ -61,8 +61,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left sidebar</string>
-                <string>right sidebar</string>
+                <string>left column</string>
+                <string>right column</string>
                 <string>footer</string>
               </list>
             </value>
@@ -80,7 +80,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left sidebar</string> </key>
+                    <key>                 <string>left column</string> </key>
                     <value>
                       <list>
                         <string>website_logo</string>
@@ -91,7 +91,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right sidebar</string> </key>
+                    <key>                 <string>right column</string> </key>
                     <value>
                       <list>
                         <string>your_searchable_text</string>
