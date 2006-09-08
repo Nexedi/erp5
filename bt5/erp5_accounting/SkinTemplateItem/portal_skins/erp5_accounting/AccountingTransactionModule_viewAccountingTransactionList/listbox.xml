@@ -334,8 +334,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>Destination</string>
+                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>Third Party</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
@@ -403,8 +403,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>Destination</string>
+                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>Third Party</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
@@ -540,6 +540,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -601,8 +605,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>Destination</string>
+                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>Third Party</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
@@ -682,8 +686,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>AccountingTransactionModule_getDestinationSectionUrl</string>
+                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>AccountingTransactionModule_getThirdPartyUrl</string>
                         </tuple>
                       </list>
                     </value>

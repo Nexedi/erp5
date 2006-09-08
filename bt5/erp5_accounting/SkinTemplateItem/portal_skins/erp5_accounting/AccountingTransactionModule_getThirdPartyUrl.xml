@@ -68,23 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
+            <value> <string>section_category=selection.getParams().get(\'section_category\')\n
+if not section_category:\n
+  return\n
 \n
-index = selection.getIndex()\n
-name = selection.getName()\n
-object = brain.getObject()\n
-if object is None:\n
-  return None\n
-destination_section = object.getDestinationSectionValue()\n
-if destination_section is None:\n
-  return None\n
-url = destination_section.absolute_url()\n
-method = \'Entity_viewAccountingTransactionList\'\n
-kw = { \n
-       \'reset\' : \'1\', \n
-     }\n
+transaction = brain.getObject()\n
+source_section = transaction.getSourceSectionValue()\n
 \n
-return url + \'/\' + method + \'?\' + make_query(kw)\n
+if source_section is not None and source_section.isMemberOf(section_category):\n
+  mirror_section = transaction.getDestinationSectionValue()\n
+else:\n
+  mirror_section = transaction.getSourceSectionValue()\n
+\n
+if mirror_section is not None:\n
+  return "%s/Entity_viewAccountingTransactionList?reset:int=1" %\\\n
+                     mirror_section.absolute_url()\n
 </string> </value>
         </item>
         <item>
@@ -101,7 +99,7 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kwd</string> </value>
+            <value> <string>brain, selection=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,17 +128,12 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
                             <string>brain</string>
                             <string>selection</string>
                             <string>kwd</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
                             <string>_getattr_</string>
-                            <string>index</string>
-                            <string>name</string>
-                            <string>object</string>
+                            <string>section_category</string>
+                            <string>transaction</string>
+                            <string>source_section</string>
                             <string>None</string>
-                            <string>destination_section</string>
-                            <string>url</string>
-                            <string>method</string>
-                            <string>kw</string>
+                            <string>mirror_section</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,13 +147,12 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
             <value>
               <tuple>
                 <none/>
-                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_getDestinationSectionUrl</string> </value>
+            <value> <string>AccountingTransactionModule_getThirdPartyUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
