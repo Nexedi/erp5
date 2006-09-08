@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Amount import Amount
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 class Movement(XMLObject, Amount):
   """
@@ -393,6 +393,25 @@ class Movement(XMLObject, Amount):
       if simulation_movement.isDivergent():
         return 1
     return 0
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isFrozen')
+  def isFrozen(self):
+    """
+    Returns the frozen status of this movemnt.
+    a movement in started, stopped, delivered is automatically frozen.
+    If frozen is locally set to '0', we must check for a parent set to '1', in
+    which case, we want the children to be frozen as well.
+    """
+    # XXX Hardcoded
+    # Maybe, we should use getPortalCurrentInventoryStateList
+    # and another portal method for cancelled (and deleted)
+    LOG("Movement, isFrozen", WARNING, "Hardcoded state list")
+    if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
+      return 1
+    if self._baseIsFrozen() == 0:
+      self._baseSetFrozen(None)
+    return self._baseGetFrozen() or 0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanation')

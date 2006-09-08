@@ -31,105 +31,141 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.DeliveryRule import DeliveryRule
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 class OrderRule(DeliveryRule):
+  """
+  Order Rule object make sure an Order in the similation
+  is consistent with the real order
+
+  WARNING: what to do with movement split ?
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Order Rule'
+  portal_type = 'Order Rule'
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  
+  __implements__ = ( Interface.Predicate,
+                     Interface.Rule )
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    )
+
+  # Simulation workflow
+  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+  def expand(self, applied_rule, force=0, **kw):
     """
-      Order Rule object make sure an Order in the similation
-      is consistent with the real order
+      Expands the Order to a new simulation tree.
+      expand is only allowed to modify a simulation movement if it doesn't
+      have a delivery relation yet.
 
-      WARNING: what to do with movement split ?
+      If the movement is in ordered or planned state, has no delivered
+      child, and is not in order, it can be deleted.
+      Else, if the movement is in ordered or planned state, has no
+      delivered child, and is in order, it can be modified.
+      Else, it cannot be modified.
     """
-
-    # CMF Type Definition
-    meta_type = 'ERP5 Order Rule'
-    portal_type = 'Order Rule'
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
     
-    __implements__ = ( Interface.Predicate,
-                       Interface.Rule )
+    movement_type = 'Simulation Movement'
+    existing_movement_list = []
+    immutable_movement_list = []
+    order = applied_rule.getDefaultCausalityValue()
+    if order is not None:
+      order_movement_list = order.getMovementList()
+      # check existing movements
+      for movement in applied_rule.contentValues(portal_type=movement_type):
+        if (not movement.getLastExpandSimulationState() in
+            order.getPortalReservedInventoryStateList() and
+            not movement.getLastExpandSimulationState() in
+            order.getPortalCurrentInventoryStateList()) and \
+            not self._isTreeDelivered([movement]):
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      )
+          movement_order = movement.getOrderValue()
+          if movement_order in order_movement_list:
+            existing_movement_list.append(movement)
+          else:
+            applied_rule._delObject(movement.getId())
+        else:
+          existing_movement_list.append(movement)
+          immutable_movement_list.append(movement)
+      
+      # Create or modify movements
+      for movement in order_movement_list:
+        related_order = movement.getOrderRelatedValue()
+        if related_order is None:
+          if movement.getParentUid() == movement.getExplanationUid():
+            # We are on a line
+            new_id = movement.getId()
+          else:
+            # We are on a cell
+            new_id = "%s_%s" % (movement.getParentId(), movement.getId())
+          # Generate a simulation movement
+          LOG("OrderRule, expand", WARNING, "Hardcoded state list")
+          applied_rule.newContent(
+              portal_type=movement_type,
+              id=new_id,
+              order_value=movement,
+              order_ratio=1,
+              delivery_ratio=1,
+              deliverable=1,
+#               source=movement.getSource(),
+#               source_section=movement.getSourceSection(),
+#               destination=movement.getDestination(),
+#               destination_section=movement.getDestinationSection(),
+#               quantity=movement.getQuantity(),
+#               resource=movement.getResource(),
+#               variation_category_list=movement.getVariationCategoryList(),
+#               variation_property_dict=movement.getVariationPropertyDict(),
+#               start_date=movement.getStartDate(),
+#               stop_date=movement.getStopDate(),
+              **kw)
+        
+        elif related_order in existing_movement_list:
+          if related_order not in immutable_movement_list:
+            # modification allowed
+            related_order.edit(
+              order_value=movement,
+#               source=movement.getSource(),
+#               source_section=movement.getSourceSection(),
+#               destination=movement.getDestination(),
+#               destination_section=movement.getDestinationSection(),
+#               quantity=movement.getQuantity(),
+#               resource=movement.getResource(),
+#               variation_category_list=movement.getVariationCategoryList(),
+#               variation_property_dict=movement.getVariationPropertyDict(),
+#               start_date=movement.getStartDate(),
+#               stop_date=movement.getStopDate(),
+              **kw)
+            #related_order.setLastExpandSimulationState(order.getSimulationState())
+            
+          else:
+            # modification disallowed, must compensate
+            pass
 
-    # Simulation workflow
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, force=0, **kw):
-      """
-        Expands the current movement downward.
-        -> new status -> expanded
-        An applied rule can be expanded only if its parent movement
-        is expanded.
-      """
-      delivery_line_type = 'Simulation Movement'
-      # Get the order when we come from
-      my_order = applied_rule.getDefaultCausalityValue()
-      # Only expand if my_order is not None and state is not 'confirmed'
-      if my_order is not None:
-        # Only expand order rule if order not yet confirmed (This is consistent
-        # with the fact that once simulation is launched, we stick to it)
-        state = applied_rule.getLastExpandSimulationState()
-        if force or \
-           (state not in applied_rule.getPortalReservedInventoryStateList()\
-           and state not in applied_rule.getPortalCurrentInventoryStateList()):
-          # First, check each contained movement and make
-          # a list of order ids which do not need to be copied
-          # eventually delete movement which do not exist anylonger
-          existing_uid_list = []
-          existing_uid_list_append = existing_uid_list.append
-          movement_type_list = applied_rule.getPortalMovementTypeList()
-          order_movement_type_list = \
-                                 applied_rule.getPortalOrderMovementTypeList()
-          # Calculate existing simulation movement to delete
-          for movement in applied_rule.contentValues(
-                                filter={'portal_type': movement_type_list}):
-            order_value = movement.getOrderValue(\
-                                         portal_type=order_movement_type_list)
-            if (order_value is None) or\
-               (order_value.hasCellContent()):
-              # XXX Make sure this is not deleted if already in delivery
-              applied_rule._delObject(movement.getId())  
-            else:
-              existing_uid_list_append(order_value.getUid())
-          # Build simulation movement if necessary
-          for order_movement in my_order.getMovementList():
-            try:
-              if order_movement.getUid() not in existing_uid_list:
-                # Generate a nicer ID
-                if order_movement.getParentUid() ==\
-                                      order_movement.getExplanationUid():
-                  # We are on a line
-                  new_id = order_movement.getId()
-                else:
-                  # On a cell
-                  new_id = "%s_%s" % (order_movement.getParentId(),
-                                      order_movement.getId())
-                # Generate the simulation movement
-                # Source, Destination, Quantity, Date, etc. are
-                # acquired from the order and need not to be copied.
-                new_sim_mvt = applied_rule.newContent(
-                                portal_type=delivery_line_type,
-                                id=new_id,
-                                order_value=order_movement,
-                                delivery_ratio=1,
-                                deliverable=1,
-                                **kw)
-                                # No acquisition on variation_category_list 
-                                # in this case to prevent user failure
-            except AttributeError:
-              LOG('ERP5: WARNING', 0,\
-                  'AttributeError during expand on order movement %s'\
-                  % order_movement.absolute_url())
-          # Now we can set the last expand simulation state 
-          # to the current state
-          applied_rule.setLastExpandSimulationState(\
-                                               my_order.getSimulationState())
-      # Pass to base class
-      Rule.expand(self, applied_rule, force=force, **kw)
+          # Now we can set the last expand simulation state to the current state
+          applied_rule.setLastExpandSimulationState(order.getSimulationState())
+    # Pass to base class
+    Rule.expand(self, applied_rule, force=force, **kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isStable')
+  def isStable(self, applied_rule):
+    """
+    Checks that the applied_rule is stable
+    """
+    LOG('OrderRule.isStable', WARNING, 'Not Implemented')
+    return 1
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isDivergent')
+  def isDivergent(self, movement):
+    """
+    Checks that the movement is divergent
+    """
+    return Rule.isDivergent(self, movement)

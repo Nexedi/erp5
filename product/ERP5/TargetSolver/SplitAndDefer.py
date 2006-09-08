@@ -76,6 +76,10 @@ class SplitAndDefer(CopyToTarget):
                         **self.additional_parameters
       )
       new_movement.activate(**self.additional_parameters).expand()
+      # adopt new quantity on original simulation movement
+      simulation_movement.edit(quantity=new_movement_quantity)
     simulation_movement._v_activate_kw = self.activate_kw
     simulation_movement.activate(**self.additional_parameters).expand()
-    CopyToTarget.solve(self, simulation_movement)
+
+    # SplitAndDefer solves the divergence at the current level, no need to
+    # backtrack.

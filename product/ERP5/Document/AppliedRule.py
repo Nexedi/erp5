@@ -28,7 +28,6 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -37,20 +36,21 @@ from zLOG import LOG
 
 class AppliedRule(XMLObject):
     """
-      An applied rule holds a list of simulation movements
+      An applied rule holds a list of simulation movements.
 
-      An applied rule points to an instance of Rule
-      (which defines the actual rule to apply with its parameters)
+      An applied rule points to an instance of Rule (which defines the actual
+      rule to apply with its parameters) through the specialise relation.
 
-      An applied rule can expand itself (look at its direct parent
-      and take conclusions on what should be inside). This is similar
-      to the base_fix_consistency mechanism
+      An applied rule can expand itself (look at its direct parent and take
+      conclusions on what should be inside).
 
-      An applied rule can "solve" or "backtrack". In this case
-      it looks at its children, looks at the difference between
-      target and actual, and takes conclusions on its parent
+      An applied rule can tell if it is stable (if its children are consistent
+      with what would be expanded from its direct parent).
 
-      All algorithms are implemented by the rule
+      An applied rule can tell if any of his direct children is divergent (not
+      consistent with the delivery).
+
+      All algorithms are implemented by the rule.
     """
 
     # CMF Type Definition
@@ -76,21 +76,21 @@ class AppliedRule(XMLObject):
     security.declareProtected(Permissions.AccessContentsInformation, 'test')
     def test(self):
       """
-        Tests if the rule (still) applies
+      Tests if the rule (still) applies
       """
-      my_parent = self.aq_parent
-      if my_parent is None: # Should be is portal_simulation
+      if self.isRootAppliedRule():
         return 1
       else:
+        parent_value = self.aq_parent
         rule = self.getSpecialiseValue()
-        return rule.test(my_parent)
+        return rule.test(parent_value)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'isAccountable')
+        'isAccountable')
     def isAccountable(self, movement):
-      """Tells wether generated movement needs to be accounted or not."""
+      """Tells whether generated movement needs to be accounted or not."""
       return self.getSpecialiseValue().isAccountable(movement)
-    
+
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, **kw):
       """
@@ -110,11 +110,9 @@ class AppliedRule(XMLObject):
         # XXX This part must be done with a interaction workflow is needed.
 #       if self.isRootAppliedRule():
 #         self.activate(
-#                after_method_id=["immediateReindexObject", 
+#                after_method_id=["immediateReindexObject",
 #                                 "recursiveImmediateReindexObject"]).\
 #                                   notifySimulationChange(rule._v_notify_dict)
-        
-    #expand = WorkflowMethod(expand)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, solution_list):
@@ -133,8 +131,6 @@ class AppliedRule(XMLObject):
       if rule is not None:
         rule.solve(self)
 
-    #solve = WorkflowMethod(solve)
-
     security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
     def diverge(self):
       """
@@ -147,41 +143,41 @@ class AppliedRule(XMLObject):
       if rule is not None:
         rule.diverge(self)
 
-    #diverge = WorkflowMethod(diverge)
-
     # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self):
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'isStable')
+    def isStable(self):
       """
-        Returns 1 if divergent rule
+      Tells whether the rule is stable or not.
       """
-      rule = self.getSpecialiseValue()
-      if rule is not None:
-        return rule.isDivergent(self)
-      return 0
-
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self):
-      """
-        Returns a list Divergence descriptors
-      """
-      rule = self.getSpecialiseValue()
-      if rule is not None:
-        return rule.getDivergenceList(self)
-      return ()
-
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self):
-      """
-        Returns a list Divergence solvers
-      """
-      rule = self.getSpecialiseValue()
-      if rule is not None:
-        return rule.getSolverList(self)
-      return ()
+      return self.getSpecialiseValue().isStable(self)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'isRootAppliedRule')
+        'isDivergent')
+    def isDivergent(self, movement):
+      """
+      Tells whether generated movement is divergent or not.
+      """
+      return self.getSpecialiseValue().isDivergent(movement)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getDivergenceList')
+    def getDivergenceList(self, movement):
+      """
+      Returns a list Divergence descriptors
+      """
+      return self.getSpecialiseValue().getDivergenceList(movement)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getSolverList')
+    def getSolverList(self, movement):
+      """
+      Returns a list Divergence solvers
+      """
+      return self.getSpecialiseValue().getSolverList(movement)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'isRootAppliedRule')
     def isRootAppliedRule(self):
       """
         Returns 1 is this is a root applied rule
@@ -189,7 +185,7 @@ class AppliedRule(XMLObject):
       return self.getParentValue().getMetaType() == "ERP5 Simulation Tool"
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getRootAppliedRule')
+        'getRootAppliedRule')
     def getRootAppliedRule(self):
       """Return the root applied rule.
       useful if some reindexing is needed from inside

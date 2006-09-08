@@ -39,6 +39,15 @@ class AppliedRule:
             'description' : 'Contains the id of the simulation state when the '\
                             'object was last expanded (in order to avoid '\
                             'recalculation)',
+            
+            'acquisition_base_category'     : ( 'parent',),
+            'acquisition_portal_type'       : ('Applied Rule', ),
+            'acquisition_copy_value'        : 0,
+            'acquisition_mask_value'        : 1,
+            'acquisition_accessor_id'       : 'getLastExpandSimulationState',
+            'acquisition_depends'           : None,
+            'alt_accessor_id'               : ('getLastExpandSimulationState', ),
+
             'type'        : 'string',
             'mode'        : 'w' },
   )

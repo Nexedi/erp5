@@ -34,175 +34,187 @@ from Products.ERP5.Document.Rule import Rule
 from zLOG import LOG
 
 class DeliveryRule(Rule):
+  """
+    Delivery Rule object make sure orphaned movements in a Delivery
+    (ie. movements which have no explanation in terms of order)
+    are part of the simulation process
+  """
+
+  # CMF Type Definition
+  meta_type = 'ERP5 Delivery Rule'
+  portal_type = 'Delivery Rule'
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  __implements__ = ( Interface.Predicate,
+                     Interface.Rule )
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    )
+
+  def _test(self, movement):
     """
-      Delivery Rule object make sure orphaned movements in a Delivery
-      (ie. movements which have no explanation in terms of order)
-      are part of the simulation process
+    Default behaviour of DeliveryRule.test
+    Tests if the rule (still) applies
     """
+    # A delivery rule never applies 
+    # since it is always explicitely instanciated
+    return 0
 
-    # CMF Type Definition
-    meta_type = 'ERP5 Delivery Rule'
-    portal_type = 'Delivery Rule'
+  # Simulation workflow
+  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+  def expand(self, applied_rule, **kw):
+    """
+    Expands the additional Delivery movements to a new simulation tree.
+    Expand is only allowed to create or modify simulation movements for
+    delivery lines which are not already linked to another simulation
+    movement.
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    If the movement is not in current state, has no delivered child, and not
+    in delivery movements, it can be deleted.
+    Else if the movement is not in current state, it can be modified.
+    Else, it cannot be modified.
+    """
+    movement_type = 'Simulation Movement'
+    existing_movement_list = []
+    immutable_movement_list = []
+    delivery = applied_rule.getDefaultCausalityValue()
+    if delivery is not None:
+      delivery_movement_list = delivery.getMovementList()
+      # Check existing movements
+      for movement in applied_rule.contentValues(portal_type=movement_type):
+        if movement.getLastExpandSimulationState() not in \
+            delivery.getPortalCurrentInventoryStateList():
 
-    __implements__ = ( Interface.Predicate,
-                       Interface.Rule )
-
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      )
-
-    def test(self, movement):
-      """
-        Tests if the rule (still) applies
-      """
-      # A delivery rule never applies 
-      # since it is always explicitely instanciated
-      return 0
-
-    # Simulation workflow
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule,
-               movement_type_method='getPortalOrderMovementTypeList', **kw):
-      """
-        Expands the current movement downwards.
-        -> new status -> expanded
-        An applied rule can be expanded only if its parent movement
-        is expanded.
-      """
-      delivery_line_type = 'Simulation Movement'
-      # Get the delivery where we come from
-      # Causality is a kind of Delivery (ex. Packing List)
-      my_delivery = applied_rule.getDefaultCausalityValue()
-      # Only expand if my_delivery is not None 
-      if my_delivery is not None:
-        #if my_delivery.getSimulationState() not in ('delivered', ):
-        # Even if delivered, we should always calculate consequences
-
-        # First, check each contained movement and make
-        # a list of delivery uids which do not need to be copied
-        # eventually delete movement which do not exist anylonger
-        existing_uid_list = []
-        existing_uid_list_append = existing_uid_list.append
-        order_movement_type_list = getattr(applied_rule,
-                                           movement_type_method)()
-
-        for movement in applied_rule.objectValues() :
-          delivery_value = movement.getDeliveryValue(
-                                        portal_type=order_movement_type_list)
-
-          if (delivery_value is None) or\
-             (delivery_value.hasCellContent()) or\
-             (len(delivery_value.getDeliveryRelatedValueList()) > 1):
-            # Our delivery_value is already related 
-            # to another simulation movement
-            # Delete ourselve
-            # XXX Make sure this is not deleted if already in delivery
+          movement_delivery = movement.getDeliveryValue()
+          if not self._isTreeDelivered([movement], ignore_first=1) and \
+              movement_delivery not in delivery_movement_list:
             applied_rule._delObject(movement.getId())
           else:
-            existing_uid_list_append(delivery_value.getUid())
+            existing_movement_list.append(movement)
+        else:
+          existing_movement_list.append(movement)
+          immutable_movement_list.append(movement)
 
-        # Copy each movement (line or cell) from the delivery is that
-        for delivery_movement in my_delivery.getMovementList():
-          simulation_movement_to_update_list = delivery_movement.\
-              getOrderRelatedValueList(portal_type = 'Simulation Movement')
-          try:
-            if len(delivery_movement.getDeliveryRelatedValueList()) == 0:
-              # Only create if orphaned movement
-              if delivery_movement.getUid() not in existing_uid_list:
-                # Generate a nicer ID
-                if delivery_movement.getParentUid() ==\
-                                      delivery_movement.getExplanationUid():
-                  # We are on a line
-                  new_id = delivery_movement.getId()
-                else:
-                  # On a cell
-                  new_id = "%s_%s" % (delivery_movement.getParentId(),
-                                      delivery_movement.getId())
-                # Generate the simulation movement
-                new_sim_mvt = applied_rule.newContent(
-                                id          = new_id,
-                                portal_type = delivery_line_type,
-                                order_value = delivery_movement)
-                simulation_movement_to_update_list.append(new_sim_mvt)
-              
-            for simulation_movement in simulation_movement_to_update_list :
-              simulation_movement.edit(
-                      delivery_value=delivery_movement,
-                      # XXX Do we need to copy the quantity
-                      # Why not the resource, the variation,...
-                      # force_update is required in order
-                      # to make sure the quantity is stored
-                      # on the movement
-                      quantity=delivery_movement.getQuantity(),
-                      variation_category_list=\
-                        delivery_movement.getVariationCategoryList(),
-                      delivery_ratio=1,
-                      deliverable=1,
-                      force_update=1)
+      # Create or modify movements
+      for movement in delivery.getMovementList():
+        related_delivery = movement.getDeliveryRelatedValue()
+        if related_delivery is None:
+          # create a new movement
+          if movement.getParentUid() == movement.getExplanationUid():
+            # We are on a line
+            new_id = movement.getId()
+          else:
+            # Weare on a cell
+            new_id = "%s_%s" % (movement.getParentId(), movement.getId())
+          # Generate the simulation movement
+          new_sim_mvt = applied_rule.newContent(
+              portal_type=movement_type,
+              id=new_id,
+              order_value=movement,
+              order_ratio=1,
+              delivery_value=movement,
+              delivery_ratio=1,
+              deliverable=1,
+              source=movement.getSource(),
+              source_section=movement.getSourceSection(),
+              destination=movement.getDestination(),
+              destination_section=movement.getDestinationSection(),
+              quantity=movement.getQuantity(),
+              resource=movement.getResource(),
+              variation_category_list=movement.getVariationCategoryList(),
+              variation_property_dict=movement.getVariationPropertyDict(),
+              start_date=movement.getStartDate(),
+              stop_date=movement.getStopDate())
+        elif related_delivery in existing_movement_list:
+          if related_delivery not in immutable_movement_list:
+            # modification allowed
+            related_delivery.edit(
+                delivery_value=movement,
+                delivery_ratio=1,
+                deliverable=1,
+                source=movement.getSource(),
+                source_section=movement.getSourceSection(),
+                destination=movement.getDestination(),
+                destination_section=movement.getDestinationSection(),
+                quantity=movement.getQuantity(),
+                resource=movement.getResource(),
+                variation_category_list=movement.getVariationCategoryList(),
+                variation_property_dict=movement.getVariationPropertyDict(),
+                start_date=movement.getStartDate(),
+                stop_date=movement.getStopDate(),
+                force_update=1)
+          else:
+            # modification disallowed, must compensate
+            pass
 
-          except AttributeError:
-            LOG('ERP5: WARNING', 0,
-                'AttributeError during expand on delivery line %s'\
-                % delivery_movement.absolute_url())
+      # Now we can set the last expand simulation state to the current state
+      applied_rule.setLastExpandSimulationState(delivery.getSimulationState())
+    # Pass to base class
+    Rule.expand(self, applied_rule, **kw)
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
+  def solve(self, applied_rule, solution_list):
+    """
+      Solve inconsistency according to a certain number of solutions
+      templates. This updates the
 
-      # Pass to base class
-      Rule.expand(self, applied_rule, **kw)
+      -> new status -> solved
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-    def solve(self, applied_rule, solution_list):
-      """
-        Solve inconsistency according to a certain number of solutions
-        templates. This updates the
+      This applies a solution to an applied rule. Once
+      the solution is applied, the parent movement is checked.
+      If it does not diverge, the rule is reexpanded. If not,
+      diverge is called on the parent movement.
+    """
 
-        -> new status -> solved
+  security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
+  def diverge(self, applied_rule):
+    """
+      -> new status -> diverged
 
-        This applies a solution to an applied rule. Once
-        the solution is applied, the parent movement is checked.
-        If it does not diverge, the rule is reexpanded. If not,
-        diverge is called on the parent movement.
-      """
+      This basically sets the rule to "diverged"
+      and blocks expansion process
+    """
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-    def diverge(self, applied_rule):
-      """
-        -> new status -> diverged
+  # Solvers
+  security.declareProtected(Permissions.AccessContentsInformation, 'isStable')
+  def isStable(self, movement):
+    """
+    Checks that the applied_rule is stable
+    """
+    return 0
 
-        This basically sets the rule to "diverged"
-        and blocks expansion process
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  def isDivergent(self, movement):
+    """
+    Checks that the movement is divergent
+    """
+    return Rule.isDivergent(self, movement)
 
-    # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self, applied_rule):
-      """
-        Returns 1 if divergent rule
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
+  def getDivergenceList(self, applied_rule):
+    """
+      Returns a list Divergence descriptors
+    """
 
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self, applied_rule):
-      """
-        Returns a list Divergence descriptors
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSolverList')
+  def getSolverList(self, applied_rule):
+    """
+      Returns a list Divergence solvers
+    """
 
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self, applied_rule):
-      """
-        Returns a list Divergence solvers
-      """
+  # Deliverability / orderability
+  def isOrderable(self, movement):
+    return 1
 
-    # Deliverability / orderability
-    def isOrderable(self, m):
-      return 1
+  def isDeliverable(self, movement):
+    if movement.getSimulationState() in movement.getPortalDraftOrderStateList():
+      return 0
+    return 1
 
-    def isDeliverable(self, m):
-      if m.getSimulationState() in m.getPortalDraftOrderStateList():
-        return 0
-      return 1

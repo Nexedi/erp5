@@ -29,10 +29,8 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5.Document.Movement import Movement
 
@@ -114,11 +112,11 @@ class SimulationMovement(Movement):
                     , PropertySheet.AppliedRule
                     , PropertySheet.ItemAggregation
                     )
-  
+
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """
     return self.objectValues()
-  
+
   # Price should be acquired
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getPrice')
@@ -221,9 +219,9 @@ class SimulationMovement(Movement):
     # reexpanded  each time, because the rule apply only if predicates
     # are true, then this kind of rule must always be tested. Currently,
     # we know that invoicing rule acts like this, and that it comes after
-    # invoice or invoicing_rule, so we if we come from invoince rule or 
+    # invoice or invoicing_rule, so we if we come from invoince rule or
     # invoicing rule, we always expand regardless of the causality state.
-    if ((self.getParentValue().getSpecialiseId() not in 
+    if ((self.getParentValue().getSpecialiseId() not in
          ('default_invoicing_rule', 'default_invoice_rule')
          and self.getCausalityState() == 'expanded' ) or \
          len(self.objectIds()) != 0):
@@ -250,8 +248,6 @@ class SimulationMovement(Movement):
     """
     self.setCausalityState('diverged')
 
-  #diverge = WorkflowMethod(diverge) USELESS NOW
-
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanation')
   def getExplanation(self):
@@ -271,7 +267,7 @@ class SimulationMovement(Movement):
     explanation_value = self.getExplanationValue()
     if explanation_value is not None :
       return explanation_value.getUid()
-    
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationValue')
   def getExplanationValue(self):
@@ -294,15 +290,6 @@ class SimulationMovement(Movement):
             explanation_value = explanation_value.getParentValue()
       if explanation_value != self.getPortalObject():
         return explanation_value
-
-  def isFrozen(self):
-    """
-      A frozen simulation movement can not change its target anylonger
-
-      Also, once a movement is frozen, we do not calculate anylonger
-      its direct consequences. (ex. we do not calculate again a transformation)
-    """
-    return 0
 
   # Deliverability / orderability
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -327,14 +314,14 @@ class SimulationMovement(Movement):
 
   getDeliverable = isDeliverable
 
-  # Simulation Dates - acquire target dates 
+  # Simulation Dates - acquire target dates
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getOrderStartDate')
   def getOrderStartDate(self):
     order_value = self.getOrderValue()
     if order_value is not None:
       return order_value.getStartDate()
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getOrderStopDate')
   def getOrderStopDate(self):
@@ -353,7 +340,7 @@ class SimulationMovement(Movement):
     if delivery_movement is not None:
       start_date_list.append(delivery_movement.getStartDate())
     return start_date_list
-    
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDeliveryStopDateList')
   def getDeliveryStopDateList(self):
@@ -365,7 +352,7 @@ class SimulationMovement(Movement):
     if delivery_movement is not None:
       stop_date_list.append(delivery_movement.getStopDate())
     return stop_date_list
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDeliveryQuantity')
   def getDeliveryQuantity(self):
@@ -377,75 +364,41 @@ class SimulationMovement(Movement):
     if delivery_movement is not None:
       quantity = delivery_movement.getQuantity()
     return quantity
-    
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isConvergent')
   def isConvergent(self):
     """
-      Returns true if the Simulation Movement is convergent comparing to
+      Returns true if the Simulation Movement is convergent with the
       the delivery value
     """
     return not self.isDivergent()
 
   security.declareProtected( Permissions.AccessContentsInformation,
-                            'isDivergent')
+      'isDivergent')
   def isDivergent(self):
     """
-      Returns true if the Simulation Movement is divergent comparing to
+      Returns true if the Simulation Movement is divergent from the
       the delivery value
     """
-    delivery = self.getDeliveryValue()
-    if delivery is None:
-      return 0
-    # XXX Those properties are the same than defined in DeliveryBuilder.
-    # We need to defined it only 1 time.
-    #LOG('SimulationMovement.isDivergent',0,delivery.getPath())
-    #LOG('SimulationMovement.isDivergent self.getStartDate()',0,self.getStartDate())
-    #LOG('SimulationMovement.isDivergent delivery.getStartDate()',0,delivery.getStartDate())
-    if self.getSourceSection()      != delivery.getSourceSection() or \
-       self.getDestinationSection() != delivery.getDestinationSection() or \
-       self.getSource()             != delivery.getSource() or \
-       self.getDestination()        != delivery.getDestination() or \
-       self.getResource()           != delivery.getResource() or \
-       self.getVariationCategoryList() != delivery.getVariationCategoryList()\
-                                                                       or \
-       self.getAggregateList() != delivery.getAggregateList() or \
-       self.getStartDate()          != delivery.getStartDate() or \
-       self.getStopDate()           != delivery.getStopDate():
-#       for method in ["getSourceSection",
-#                      "getDestinationSection",
-#                      "getSource",
-#                      "getDestination",
-#                      "getResource",
-#                      "getVariationCategoryList",
-#                      "getStartDate",
-#                      "getStopDate"]:
-#         LOG("SimulationMovement, isDivergent", 0,
-#             "method: %s, self: %s , delivery: %s" % \
-#             tuple([method]+[str(getattr(x,method)()) for x in (self, delivery)]))
-      return 1
-    d_quantity = delivery.getQuantity()
-    quantity = self.getCorrectedQuantity()
-    d_error = self.getDeliveryError()
-    if quantity is None:
-      if d_quantity is None:
-        return 0
-      return 1
-    if d_quantity is None:
-      d_quantity = 0
-    if d_error is None:
-      d_error = 0
-    delivery_ratio = self.getDeliveryRatio()
-    # if the delivery_ratio is None, make sure that we are
-    # divergent even if the delivery quantity is 0
-    if delivery_ratio is not None:
-      d_quantity *= delivery_ratio
-      if delivery_ratio == 0 and quantity >0:
-        return 1
-    if d_quantity != quantity + d_error:
-      return 1
-    return 0  
- 
+    return self.getParentValue().isDivergent(self)
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+      'getDivergenceList')
+  def getDivergenceList(self):
+    """
+    Returns detailed information about the divergence
+    """
+    return self.getParentValue().getDivergenceList(self)
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+      'getSolverList')
+  def getSolverList(self):
+    """
+    Returns solvers that can fix the current divergence
+    """
+    return self.getParentValue().getSolverList(self)
+
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setDefaultDeliveryProperties')
   def setDefaultDeliveryProperties(self):
@@ -505,10 +458,10 @@ class SimulationMovement(Movement):
     """
     root_rule = self.getRootAppliedRule()
     return root_rule.getCausalityValueList()
-    
+
   # XXX FIXME Use a interaction workflow instead
   # XXX This behavior is now done by simulation_movement_interaction_workflow
-  # The call to activate() must be done after actual call to 
+  # The call to activate() must be done after actual call to
   # setDelivery() on the movement,
   # but activate() must be called on the previous delivery...
   #def _setDelivery(self, value):
@@ -519,10 +472,10 @@ class SimulationMovement(Movement):
   #  if delivery_value is not None:
   #    LOG('delivery_value = ', 0, repr(delivery_value))
   #    activity = delivery_value.activate(
-  #                activity='SQLQueue', 
+  #                activity='SQLQueue',
   #                after_path_and_method_id=(
-  #                                        self.getPath(), 
-  #                                        ['immediateReindexObject', 
+  #                                        self.getPath(),
+  #                                        ['immediateReindexObject',
   #                                         'recursiveImmediateReindexObject']))
   #    activity.edit()
 

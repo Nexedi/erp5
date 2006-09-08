@@ -57,7 +57,6 @@ from Products.CMFCore.utils import getToolByName
 
 class TestOrderMixin:
 
-  run_all_test = 1
   default_quantity = 99
   default_price = 555
   resource_portal_type = 'Apparel Model'
@@ -71,7 +70,7 @@ class TestOrderMixin:
   packing_list_cell_portal_type = 'Sale Packing List Cell'
   delivery_builder_id = 'sale_packing_list_builder'
   order_workflow_id='order_workflow'
-  size_list = ['Baby','Child/32','Child/34','Man','Woman'] 
+  size_list = ['Baby','Child/32','Child/34','Man','Woman']
 
   def getBusinessTemplateList(self):
     """
@@ -93,8 +92,8 @@ class TestOrderMixin:
     self.createCategories()
 
   def createCategories(self):
-    """ 
-      Light install create only base categories, so we create 
+    """
+      Light install create only base categories, so we create
       some categories for testing them
     """
     size_category_list = ['Baby', 'Child', 'Man', 'Woman']
@@ -126,7 +125,7 @@ class TestOrderMixin:
         o = self.category_tool.product_line.newContent(
                                                  portal_type='Category',
                                                  id=category_id)
-  
+
   def stepTic(self,**kw):
     self.tic()
 
@@ -162,7 +161,7 @@ class TestOrderMixin:
       industrial_phase_list=["phase1", "phase2"],
       product_line = 'apparel'
     )
-    resource.setSizeList(self.size_list) 
+    resource.setSizeList(self.size_list)
     # Add colour variation
     colour_variation_count = 3
     for i in range(colour_variation_count):
@@ -185,7 +184,7 @@ class TestOrderMixin:
     resource_list.append(resource)
     sequence.edit( resource_list = resource_list )
 
-  def stepCreateOrganisation(self, sequence=None, sequence_list=None, 
+  def stepCreateOrganisation(self, sequence=None, sequence_list=None,
                              title='organisation', **kw):
     """
       Create a empty organisation
@@ -258,10 +257,10 @@ class TestOrderMixin:
 #     vcl = list(order_line.getVariationCategoryList())
 #     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
-#     self.failIfDifferentSet( vcl , [] ) 
+#     self.failIfDifferentSet( vcl , [] )
 #     self.failIfDifferentSet( cell_key_list , [] )
     self.failIfDifferentSet( cell_list , [] )
-      
+
   def stepSetOrderLineResource(self, sequence=None, sequence_list=None, **kw):
     """
       Set order line resource with the current resource
@@ -443,7 +442,7 @@ class TestOrderMixin:
     order_line = sequence.get('order_line')
     order_line.edit(quantity=self.default_quantity,
                     price=self.default_price)
-      
+
   def stepCheckOrderLineDefaultValues(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
@@ -452,17 +451,17 @@ class TestOrderMixin:
     order_line = sequence.get('order_line')
     self.assertEquals(self.default_quantity, order_line.getQuantity())
     self.assertEquals(self.default_price, order_line.getPrice())
-      
+
   def stepCheckOrderLineTotalQuantity(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
       Check the method getTotalQuantity on a order line.
     """
-    
+
     # FIXME : order_line needs to be indexed for 'fast' calculation to
     # work as expected
     self.stepTic()
-    
+
     order_line = sequence.get('order_line')
     base_id = 'movement'
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
@@ -478,23 +477,23 @@ class TestOrderMixin:
       self.assertEquals(total_quantity, order_line.getTotalQuantity())
     self.assertEquals( order_line.getTotalQuantity(fast = 0),
                        order_line.getTotalQuantity(fast = 1) )
-                       
+
   def stepCheckOrderLineTotalPrice(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
       Check the method getTotalPrice on a order line.
     """
-    
+
     # FIXME : order_line needs to be indexed for 'fast' calculation to
     # work as expected
     self.stepTic()
-    
+
     order_line = sequence.get('order_line')
     base_id = 'movement'
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     if list(cell_key_list) == []:
       self.assertEquals(order_line.getProperty('price') *
-                        order_line.getProperty('quantity'), 
+                        order_line.getProperty('quantity'),
                         order_line.getTotalPrice())
     else:
       total_price = 0
@@ -506,17 +505,17 @@ class TestOrderMixin:
       self.assertEquals(total_price, order_line.getTotalPrice())
     self.assertEquals( order_line.getTotalPrice(fast = 0),
                        order_line.getTotalPrice(fast = 1) )
-      
+
   def stepCheckOrderTotalQuantity(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
       Check the method getTotalQuantity on a order .
     """
-    
+
     # FIXME : order needs to be indexed for 'fast' calculation to
     # work as expected
     self.stepTic()
-    
+
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
@@ -527,17 +526,17 @@ class TestOrderMixin:
     self.assertEquals(total_quantity, order.getTotalQuantity())
     self.assertEquals( order.getTotalQuantity(fast = 0),
                        order.getTotalQuantity(fast = 1) )
-      
+
   def stepCheckOrderTotalPrice(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
       Check the method getTotalPrice on a order .
     """
-    
+
     # FIXME : order needs to be indexed for 'fast' calculation to
     # work as expected
     self.stepTic()
-    
+
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
@@ -548,7 +547,7 @@ class TestOrderMixin:
     self.assertEquals(total_price, order.getTotalPrice())
     self.assertEquals( order.getTotalPrice(fast = 0),
                        order.getTotalPrice(fast = 1) )
-      
+
   def stepCheckOrderInitialState(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
@@ -556,7 +555,7 @@ class TestOrderMixin:
     """
     order = sequence.get('order')
     self.assertEquals('draft', order.getSimulationState())
-      
+
   def stepCheckOrderLineState(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
@@ -565,7 +564,7 @@ class TestOrderMixin:
     order = sequence.get('order')
     order_line = sequence.get('order_line')
     self.assertEquals(order.getSimulationState(), order_line.getSimulationState())
-      
+
   def stepCheckOrderCellState(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
@@ -580,12 +579,13 @@ class TestOrderMixin:
   def stepCheckOrderPlanned(self, sequence=None, sequence_list=None, **kw):
     order = sequence.get('order')
     self.assertEquals('planned', order.getSimulationState())
-      
+
   def checkAcquisition(self, object, acquired_object):
     """
       Check if properties are well acquired
     """
     # packing_list_movement, simulation_movement
+
     self.assertEquals(acquired_object.getStartDate(), object.getStartDate())
     self.assertEquals(acquired_object.getStopDate(), object.getStopDate())
     self.assertEquals(acquired_object.getSourceValue(), \
@@ -649,19 +649,19 @@ class TestOrderMixin:
       self.failUnless(applied_rule is not None)
       self.failUnless(order_state, \
                       applied_rule.getLastExpandSimulationState())
-      
+
       # Test if applied rule has a specialise value with default_order_rule
       portal_rules = getToolByName(order, 'portal_rules')
       self.assertEquals(portal_rules.default_order_rule, \
                         applied_rule.getSpecialiseValue())
-      
+
       simulation_movement_list = applied_rule.objectValues()
       sequence.edit(simulation_movement_list=simulation_movement_list)
 
       # Count the number of movement in order
       order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
-      order_line_list = map(lambda x: x.getObject(), order_line_list)
+      order_line_list = [x.getObject() for x in order_line_list]
       movement_list = []
       for order_line in order_line_list:
         if not order_line.hasCellContent():
@@ -669,12 +669,12 @@ class TestOrderMixin:
         else:
           cell_list = order_line.objectValues( \
                                  portal_type=self.order_cell_portal_type)
-          movement_list.extend(map(lambda x: x.getObject(), cell_list))
+          movement_list.extend([x.getObject() for x in cell_list])
       # Check if number of movement is equal to number of simulation movement
       self.assertEquals(len(movement_list), len(simulation_movement_list))
       # Check if each movement has only one simulation movement related
-      order_movement_list = map(lambda x: x.getOrderValue(), \
-                                simulation_movement_list)
+      order_movement_list = [x.getOrderValue() for x in \
+                             simulation_movement_list]
       self.failIfDifferentSet(movement_list, order_movement_list)
 
       # Check each simulation movement
@@ -699,7 +699,7 @@ class TestOrderMixin:
         # Test other attributes
         self.assertEquals(1, simulation_movement.deliverable)
 
-  def modifyOrderState(self, transition_name, sequence=None, 
+  def modifyOrderState(self, transition_name, sequence=None,
                        sequence_list=None):
     order = sequence.get('order')
     order.portal_workflow.doActionFor(order, transition_name, \
@@ -784,7 +784,7 @@ class TestOrderMixin:
       packing_list = related_packing_list_list[0].getObject()
       self.failUnless(packing_list is not None)
       sequence.edit(packing_list = packing_list)
-      
+
       applied_rule = related_applied_rule_list[0].getObject()
       simulation_movement_list = applied_rule.objectValues()
 
@@ -862,17 +862,17 @@ class TestOrderMixin:
     """
     order = sequence.get('order')
     order.setStartDate(self.datetime + 77)
-      
+
   def stepModifyOrderLineStartDate(self, sequence=None, sequence_list=None, \
                                    **kw):
     """
       Modify order line start date
     """
     order_line = sequence.get('order_line')
-    order_line.setStartDate(self.datetime + 88)
-      
+    order_line.edit(start_date=self.datetime + 88)
+
   def stepModifyOrderCellStartDate(self, sequence=None, sequence_list=None, \
-                                   **kw):
+      **kw):
     """
       Modify order cell start date
     """
@@ -881,22 +881,82 @@ class TestOrderMixin:
     if len(cell_list) > 0:
       order_cell = cell_list[0].getObject()
     order_cell.setStartDate(self.datetime + 99)
-      
 
+  def stepModifyOrderLineQuantity(self, sequence=None, sequence_list=None, \
+      **kw):
+    """
+    Modify order line quantity
+    """
+    order_line = sequence.get('order_line')
+    order_line.setQuantity(order_line.getQuantity() + 111)
+
+  def stepCheckOrderSimulationStable(self, sequence=None, \
+      sequence_list=None, **kw):
+    """
+    Tests that the simulation related to the order is stable and not
+    divergent
+    """
+    order = sequence.get('order')
+    order_movement_list = order.getMovementList()
+    related_simulation_list = []
+    for order_movement in order_movement_list:
+      related_simulation_list.extend(order_movement.getOrderRelatedValueList())
+    related_applied_rule_list = {}
+    for simulation_mvt in related_simulation_list:
+      self.assertFalse(simulation_mvt.isDivergent())
+      related_applied_rule_list[simulation_mvt.getParent()]=1
+    for applied_rule in related_applied_rule_list.keys():
+      self.assertTrue(applied_rule.isStable())
+
+  def stepPackingListAdoptPrevision(self,sequence=None, sequence_list=None, 
+                                    **kw):
+    """
+    Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('packing_list')
+    packing_list.portal_workflow.doActionFor(packing_list,
+                                             'adopt_prevision_action')
+
+  non_variated_order_creation = '\
+      stepCreateOrder \
+      stepCreateNotVariatedResource \
+      stepTic \
+      stepCreateOrderLine \
+      stepCheckOrderLineEmptyMatrix \
+      stepSetOrderLineResource \
+      stepSetOrderLineDefaultValues \
+      stepCheckOrderLineDefaultValues \
+      '
+
+  variated_order_line_creation = '\
+      stepCreateOrder \
+      stepCreateVariatedResource \
+      stepTic \
+      stepCreateOrderLine \
+      '
+  variated_line_completion = '\
+      stepSetOrderLineResource \
+      stepSetOrderLineDefaultValues \
+      stepCheckOrderLineDefaultValues \
+      stepCheckOrderLineTotalQuantity \
+      stepSetOrderLineFullVCL \
+      stepCompleteOrderLineMatrix \
+      '
+  variated_order_creation = variated_order_line_creation + \
+      variated_line_completion
 
 class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   """
-    Test business template erp5_trade 
+    Test business template erp5_trade
   """
   run_all_test = 1
-
 
   def getTitle(self):
     return "Order"
 
   def enableLightInstall(self):
     """
-    You can override this. 
+    You can override this.
     Return if we should do a light install (1) or not (0)
     """
     return 1
@@ -934,10 +994,10 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #         new_price = 0.0
 #       self.assertEquals(new_quantity, cell.getProperty('quantity'))
 #       self.assertEquals(new_price, cell.getProperty('price'))
-# 
+#
 #       # XXX test getTotalPrice on OrderLine
 
-  def test_01_OrderLine_getVariationRangeCategoryList(self, quiet=0, 
+  def test_01_OrderLine_getVariationRangeCategoryList(self, quiet=0,
                                                       run=run_all_test):
     """
       Test order line getVariationRangeCategoryList.
@@ -945,24 +1005,24 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Test when resource has no variation
-    sequence_string = 'CreateOrder \
-                      CreateOrderLine \
-                      CheckOrderLineVRCL \
-                      CreateNotVariatedResource \
-                      Tic \
-                      SetOrderLineResource \
-                      CheckOrderLineVRCL \
-                      '
+    sequence_string = 'stepCreateOrder \
+                       stepCreateOrderLine \
+                       stepCheckOrderLineVRCL \
+                       stepCreateNotVariatedResource \
+                       stepTic \
+                       stepSetOrderLineResource \
+                       stepCheckOrderLineVRCL \
+                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variation
-    sequence_string = 'CreateOrder \
-                      CreateOrderLine \
-                      CheckOrderLineVRCL \
-                      CreateVariatedResource \
-                      Tic \
-                      SetOrderLineResource \
-                      CheckOrderLineVRCL \
-                      '
+    sequence_string = 'stepCreateOrder \
+                       stepCreateOrderLine \
+                       stepCheckOrderLineVRCL \
+                       stepCreateVariatedResource \
+                       stepTic \
+                       stepSetOrderLineResource \
+                       stepCheckOrderLineVRCL \
+                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -974,24 +1034,24 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Test when resource has no variation
-    sequence_string = 'CreateOrder \
-                      CreateOrderLine \
-                      CheckOrderLineVRCIL \
-                      CreateNotVariatedResource \
-                      Tic \
-                      SetOrderLineResource \
-                      CheckOrderLineVRCIL \
-                      '
+    sequence_string = 'stepCreateOrder \
+                       stepCreateOrderLine \
+                       stepCheckOrderLineVRCIL \
+                       stepCreateNotVariatedResource \
+                       stepTic \
+                       stepSetOrderLineResource \
+                       stepCheckOrderLineVRCIL \
+                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variation
-    sequence_string = 'CreateOrder \
-                      CreateOrderLine \
-                      CheckOrderLineVRCIL \
-                      CreateVariatedResource \
-                      Tic \
-                      SetOrderLineResource \
-                      CheckOrderLineVRCIL \
-                      '
+    sequence_string = 'stepCreateOrder \
+                       stepCreateOrderLine \
+                       stepCheckOrderLineVRCIL \
+                       stepCreateVariatedResource \
+                       stepTic \
+                       stepSetOrderLineResource \
+                       stepCheckOrderLineVRCIL \
+                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -1012,16 +1072,16 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Test when resource has variation
-    sequence_string = 'CreateOrder \
-                      CreateOrderLine \
-                      CheckOrderLineVCIL \
-                      CreateVariatedResource \
-                      Tic \
-                      SetOrderLineResource \
-                      SetOrderLineHalfVCL \
-                      Tic \
-                      CheckOrderLineVCIL \
-                      '
+    sequence_string = 'stepCreateOrder \
+                       stepCreateOrderLine \
+                       stepCheckOrderLineVCIL \
+                       stepCreateVariatedResource \
+                       stepTic \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineHalfVCL \
+                       stepTic \
+                       stepCheckOrderLineVCIL \
+                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -1031,51 +1091,36 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when resource has no variation
-    sequence_string = 'CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      CheckOrderLineEmptyMatrix \
-                      SetOrderLineResource \
-                      CheckOrderLineEmptyMatrix \
-                      SetOrderLineFullVCL \
-                      CheckOrderLineRange \
-                      CheckOrderLineEmptyMatrix \
-                      CompleteOrderLineMatrix \
-                      Tic \
-                      CheckOrderLineCompleteMatrix \
-                      SetOrderLineHalfVCL \
-                      Tic \
-                      CheckOrderLineRange \
-                      CheckOrderLineCompleteMatrix \
-                      SetOrderLineEmptyVCL \
-                      Tic \
-                      CheckOrderLineEmptyMatrix \
+    # common part of sequence
+    base_sequence  = 'stepTic \
+                      stepCreateOrderLine \
+                      stepCheckOrderLineEmptyMatrix \
+                      stepSetOrderLineResource \
+                      stepCheckOrderLineEmptyMatrix \
+                      stepSetOrderLineFullVCL \
+                      stepCheckOrderLineRange \
+                      stepCheckOrderLineEmptyMatrix \
+                      stepCompleteOrderLineMatrix \
+                      stepTic \
+                      stepCheckOrderLineCompleteMatrix \
+                      stepSetOrderLineHalfVCL \
+                      stepTic \
+                      stepCheckOrderLineRange \
+                      stepCheckOrderLineCompleteMatrix \
+                      stepSetOrderLineEmptyVCL \
+                      stepTic \
+                      stepCheckOrderLineEmptyMatrix \
                       '
+    # Test when resource has no variation
+    sequence_string = 'stepCreateOrder \
+                       stepCreateNotVariatedResource \
+                      ' + base_sequence
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variations
-    sequence_string = 'CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      CheckOrderLineEmptyMatrix \
-                      SetOrderLineResource \
-                      CheckOrderLineEmptyMatrix \
-                      SetOrderLineFullVCL \
-                      CheckOrderLineRange \
-                      CheckOrderLineEmptyMatrix \
-                      CompleteOrderLineMatrix \
-                      Tic \
-                      CheckOrderLineCompleteMatrix \
-                      SetOrderLineHalfVCL \
-                      Tic \
-                      CheckOrderLineRange \
-                      CheckOrderLineCompleteMatrix \
-                      SetOrderLineEmptyVCL \
-                      Tic \
-                      CheckOrderLineRange \
-                      CheckOrderLineEmptyMatrix \
+    sequence_string = 'stepCreateOrder \
+                       stepCreateVariatedResource \
+                      ' + base_sequence + \
+                      'stepCheckOrderLineRange \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1098,7 +1143,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #       # Then, store new properties
 #       cell.edit(price=price)
 #       self.assertEquals(price, cell.getProperty('price'))
-# 
+#
 # #     for new_quantity, new_price in [(None, 346), (123, None), (None, None), \
 # #                                     (quantity, price)]:
 #   def stepSetCellPriceToNone(self, sequence=None, sequence_list=None, **kw):
@@ -1106,7 +1151,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #       Set the cell price to None
 #     """
 #       self.modifyOrderLineCellPrice(None)
-# 
+#
 #   def stepSetCellQuantityToNone(self, sequence=None, sequence_list=None, **kw):
 #     """
 #       Set the cell price to None
@@ -1121,30 +1166,13 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
 
     # Test when resource has no variation
-    sequence_string = '\
-                      CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CheckOrderLineDefaultValues \
-                      CheckOrderLineTotalQuantity \
+    sequence_string = self.non_variated_order_creation + '\
+                      stepCheckOrderLineTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variations
-    sequence_string = '\
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CheckOrderLineDefaultValues \
-                      CheckOrderLineTotalQuantity \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CheckOrderLineTotalQuantity \
+    sequence_string = self.variated_order_creation + '\
+                      stepCheckOrderLineTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
     # XXX test cell modification
@@ -1159,31 +1187,13 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
 
     # Test when resource has not variation
-    sequence_string = '\
-                      CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      CheckOrderLineEmptyMatrix \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CheckOrderLineDefaultValues \
-                      CheckOrderLineTotalPrice \
+    sequence_string = self.non_variated_order_creation + '\
+                      stepCheckOrderLineTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variations
-    sequence_string = '\
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CheckOrderLineDefaultValues \
-                      CheckOrderLineTotalQuantity \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CheckOrderLineTotalPrice \
+    sequence_string = self.variated_order_creation + '\
+                      stepCheckOrderLineTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
     # XXX test cell modification
@@ -1198,53 +1208,30 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test with no order line
     sequence_string = '\
-                      CreateOrder \
-                      CheckOrderTotalQuantity \
+                      stepCreateOrder \
+                      stepCheckOrderTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has not variation
-    sequence_string = '\
-                      CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      Tic \
-                      CheckOrderTotalQuantity \
+    sequence_string = self.non_variated_order_creation + '\
+                      stepCheckOrderTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variations
-    sequence_string = '\
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CheckOrderTotalQuantity \
+    sequence_string = self.variated_order_creation + '\
+                      stepCheckOrderTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test whith multiples order line
-    sequence_string = '\
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CheckOrderTotalQuantity \
-                      CreateNotVariatedResource \
-                      CreateOrderLine \
-                      Tic \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      Tic \
-                      CheckOrderTotalQuantity \
+    sequence_string = self.variated_order_creation + '\
+                      stepCheckOrderTotalQuantity \
+                      stepCreateNotVariatedResource \
+                      stepCreateOrderLine \
+                      stepTic \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepCheckOrderTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1257,52 +1244,30 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test with no order line
     sequence_string = '\
-                      CreateOrder \
-                      CheckOrderTotalPrice\
+                      stepCreateOrder \
+                      stepCheckOrderTotalPrice\
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has not variation
-    sequence_string = '\
-                      CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      Tic \
-                      CheckOrderTotalPrice \
+    sequence_string = self.non_variated_order_creation + '\
+                      stepCheckOrderTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when resource has variations
-    sequence_string = '\
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CheckOrderTotalPrice \
+    sequence_string = self.variated_order_creation + '\
+                      stepCheckOrderTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test with multiples order line
-    sequence_string = '\
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      Tic \
-                      CheckOrderTotalPrice \
+    sequence_string = self.variated_order_creation + '\
+                      stepCheckOrderTotalQuantity \
+                      stepCreateNotVariatedResource \
+                      stepCreateOrderLine \
+                      stepTic \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepCheckOrderTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1314,50 +1279,40 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CheckOrderInitialState \
-                      CreateOrderLine \
-                      Tic \
-                      CheckOrderLineState \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      Tic \
-                      CheckOrderCellState \
-                      PlanOrder \
-                      Tic \
-                      CheckOrderPlanned \
-                      CheckOrderLineState \
-                      CheckOrderCellState \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_line_creation + '\
+                      stepCheckOrder \
+                      stepCheckOrderInitialState \
+                      stepTic \
+                      stepCheckOrderLineState \
+                      ' + self.variated_line_completion + '\
+                      stepTic \
+                      stepCheckOrderCellState \
+                      stepPlanOrder \
+                      stepTic \
+                      stepCheckOrderPlanned \
+                      stepCheckOrderLineState \
+                      stepCheckOrderCellState \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
   def test_11_testPropertiesAcquisition(self, quiet=0, run=run_all_test):
     """
-      Test if some properties on order line or order 
+      Test if some properties on order line or order
       cell are well acquired.
     """
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CheckOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      CheckOrderLineAcquisition \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CheckOrderCellAcquisition \
-                      Tic \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_line_creation + '\
+                      stepCheckOrder \
+                      stepCheckOrderInitialState \
+                      stepCheckOrderLineAcquisition \
+                      ' + self.variated_line_completion + '\
+                      stepCheckOrderCellAcquisition \
+                      stepTic \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1370,117 +1325,90 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test first some portal method
     sequence_string = '\
-                      CreateOrder \
-                      CheckPortalMethod \
+                      stepCreateOrder \
+                      stepCheckPortalMethod \
                       '
     sequence_list.addSequenceString(sequence_string)
-    
+
     # Test when order is cancelled
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CheckOrderSimulation \
-                      PlanOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      OrderOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      CancelOrder \
-                      Tic \
-                      Tic \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.non_variated_order_creation + '\
+                      stepCheckOrderSimulation \
+                      stepPlanOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCancelOrder \
+                      stepTic \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test with a simply order without cell
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      PlanOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      OrderOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.non_variated_order_creation + '\
+                      stepPlanOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order without planned or ordered it
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_line_creation + '\
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order with variated resource
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_creation + '\
+                      stepTic \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order with multiples lines
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_creation + '\
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -1494,53 +1422,35 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is modified
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      OrderOrder \
-                      Tic \
-                      ModifyOrderStartDate \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_creation + '\
+                      stepOrderOrder \
+                      stepTic \
+                      stepModifyOrderStartDate \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when order line is modified
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      OrderOrder \
-                      Tic \
-                      ModifyOrderLineStartDate \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_creation + '\
+                      stepOrderOrder \
+                      stepTic \
+                      stepModifyOrderLineStartDate \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
     # Test when order cell is modified
     sequence_string = '\
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      OrderOrder \
-                      Tic \
-                      ModifyOrderCellStartDate \
-                      CheckOrderSimulation \
+                      stepCreateOrganisation \
+                      ' + self.variated_order_creation + '\
+                      stepOrderOrder \
+                      stepTic \
+                      stepModifyOrderCellStartDate \
+                      stepTic \
+                      stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -1562,129 +1472,117 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # First, test if delivery buider exists
     sequence_string = '\
-                      CheckDeliveryBuilderPresence \
+                      stepCheckDeliveryBuilderPresence \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test with a simply order without cell
     sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order with variated resource
     sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      ' + self.variated_line_completion + '\
+                      stepTic \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order with multiples lines
     sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      ' + self.variated_line_completion + '\
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test with a order with 2 lines and the same not variated resource
     sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test with a order with 2 lines and the same variated resource
     sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      ' + self.variated_line_completion + '\
+                      stepCreateOrderLine \
+                      ' + self.variated_line_completion + '\
+                      stepTic \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -1701,31 +1599,100 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # XXX Does not work yet
     # Test to confirm order without doing any tic
     # Except after creating organisations
-     
+
     sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      Tic \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateVariatedResource \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      CreateNotVariatedResource \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      Tic \
-                      CheckDeliveryBuilding \
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepTic \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateVariatedResource \
+                      stepCreateOrderLine \
+                      ' + self.variated_line_completion + '\
+                      stepCreateNotVariatedResource \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_17_orderExpand(self, quiet=0, run=run_all_test):
+    """
+    This tests the behaviour of expand.
+    First, without delivery:
+      - create an order, apply a rule
+      - modify the order line, expand the rule
+      - check that the simulation is not Divergent and Stable (simulation must
+        match order value)
+
+    Second, with delivery:
+      - create an order, apply a rule
+      - build a packing list
+      - modify the order line, expand the rule
+      - adopt prevision to fix the delivery
+      - check that the simulation is not Divergent and Stable (simulation must
+        match delivery value)
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = '\
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepModifyOrderLineQuantity \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCheckOrderSimulationStable \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    # XXX XXX FIXME
+    # The idea of this test is to create a PackingList
+    # Before the Order is in state confirmed.
+    # And then, check the behaviour of isDivergent
+    # when the Order is modified
+    sequence_string = '\
+                      stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckDeliveryBuilding \
+                      stepModifyOrderLineQuantity \
+                      stepTic \
+                      stepPackingListAdoptPrevision \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCheckDeliveryBuilding \
+                      stepCheckOrderSimulationStable \
+                      '
+#     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
 

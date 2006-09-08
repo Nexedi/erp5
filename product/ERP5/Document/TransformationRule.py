@@ -62,8 +62,7 @@ class TransformationRule(Rule):
     # Class variable 
     simulation_movement_portal_type = "Simulation Movement"
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'test')
-    def test(self, movement):
+    def _test(self, movement):
       """
         Tests if the rule (still) applies
       """

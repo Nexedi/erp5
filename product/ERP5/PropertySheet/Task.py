@@ -71,3 +71,4 @@ class Task:
             'mode'        : 'w' },
     )
 
+    _categories = ( 'source_project', 'destination_project' )

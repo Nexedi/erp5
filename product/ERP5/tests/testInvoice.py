@@ -31,8 +31,8 @@
 
 TODO:
   * check empty related Delivery Rule
-  * check divergence 
-  
+  * check divergence
+
 """
 
 from random import randint
@@ -65,7 +65,7 @@ class TestInvoice(TestPackingListMixin,
                   TestAccountingRulesMixin,
                   ERP5TypeTestCase):
   """Test invoice are created from orders then packing lists. """
-  
+
   RUN_ALL_TESTS = 1
 
   default_region = "europe/west/france"
@@ -75,16 +75,20 @@ class TestInvoice(TestPackingListMixin,
   customer_gap = 'fr/pcg/4/41/411'
 
   # (account_id, account_gap)
+  #XXX gap for the last 3 should be set to real values
   account_definition_list = (
       ('receivable_vat', vat_gap),
       ('sale', sale_gap),
       ('customer', customer_gap),
+      ('refundable_vat', vat_gap),
+      ('purchase', sale_gap),
+      ('supplier', customer_gap),
       )
-  # (line_id, source_account_id, line_quantity)
+  # (line_id, source_account_id, destination_account_id, line_quantity)
   transaction_line_definition_list = (
-      ('income', 'sale', 1.0),
-      ('receivable', 'customer', -1.0 - vat_rate),
-      ('collected_vat', 'receivable_vat', vat_rate),
+      ('income', 'sale', 'purchase', 1.0),
+      ('receivable', 'customer', 'supplier', -1.0 - vat_rate),
+      ('collected_vat', 'receivable_vat', 'refundable_vat', vat_rate),
       )
 
   invoice_portal_type = 'Sale Invoice Transaction'
@@ -94,14 +98,14 @@ class TestInvoice(TestPackingListMixin,
 
   def getTitle(self):
     return "Invoices"
-  
+
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
     uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
-  
+
   def createCategories(self):
     """Create the categories for our test. """
     TestPackingListMixin.createCategories(self)
@@ -122,7 +126,7 @@ class TestInvoice(TestPackingListMixin,
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
-                
+
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""
     return ('region/%s' % self.default_region,
@@ -130,7 +134,7 @@ class TestInvoice(TestPackingListMixin,
             'gap/%s' % self.sale_gap,
             'gap/%s' % self.customer_gap,
         )
-  
+
   def getBusinessTemplateList(self):
     """ """
     return TestPackingListMixin.getBusinessTemplateList(self) + (
@@ -152,7 +156,7 @@ class TestInvoice(TestPackingListMixin,
     client2 = sequence.get('organisation3')
     self.assertEquals(client2.getRegionValue(), None)
     sequence.edit(client2=client2)
-  
+
   def stepCreateCurrency(self, sequence, **kw) :
     """Create a default currency. """
     currency_module = self.getCurrencyModule()
@@ -162,18 +166,18 @@ class TestInvoice(TestPackingListMixin,
             id = "EUR" )
     currency = currency_module.objectValues(id='EUR')[0]
     sequence.edit(currency = currency)
-  
+
   def stepSetOrderPriceCurrency(self, sequence, **kw) :
-    """Set the price currency of the order. 
-    
-    This step is not necessary. 
+    """Set the price currency of the order.
+
+    This step is not necessary.
     TODO : - include a test without this step.
            - include a test with this step late.
     """
     currency = sequence.get('currency')
     order = sequence.get('order')
     order.setPriceCurrency(currency.getRelativeUrl())
-  
+
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """Create the rule for accounting. """
 
@@ -213,12 +217,13 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(len(cell_list),1)
     cell = cell_list[0]
 
-    for line_id, line_source_id, line_ratio in \
+    for line_id, line_source_id, line_destination_id, line_ratio in \
         self.transaction_line_definition_list:
       line = cell.newContent(id=line_id,
           portal_type=self.sale_invoice_transaction_portal_type)
       line.setQuantity(line_ratio)
       line.setSourceValue(account_module[line_source_id])
+      line.setDestinationValue(account_module[line_destination_id])
 
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
@@ -227,7 +232,7 @@ class TestInvoice(TestPackingListMixin,
       packing_list = sequence.get('packing_list')
     packing_list.portal_workflow.doActionFor(packing_list,
           transition_name, wf_id='packing_list_workflow')
-  
+
   def stepSetReadyPackingList(self, sequence=None, sequence_list=None, **kw):
     """ set the Packing List as Ready. This must build the invoice. """
     self.modifyPackingListState('set_ready_action', sequence=sequence)
@@ -246,30 +251,103 @@ class TestInvoice(TestPackingListMixin,
     self.modifyPackingListState('start_action', sequence=sequence)
     packing_list = sequence.get('packing_list')
     self.assertEquals(packing_list.getSimulationState(), 'started')
-    
+
   def stepStartNewPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('new_packing_list')
     self.modifyPackingListState('start_action', sequence=sequence,
                                 packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'started')
-    
+
   def stepStopPackingList(self, sequence=None, sequence_list=None, **kw):
     self.modifyPackingListState('stop_action', sequence=sequence)
     packing_list = sequence.get('packing_list')
     self.assertEquals(packing_list.getSimulationState(), 'stopped')
-    
+
+  def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('deliver_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+
   def stepCancelPackingList(self, sequence=None, sequence_list=None, **kw):
     self.modifyPackingListState('cancel_action', sequence=sequence)
     packing_list = sequence.get('packing_list')
     self.assertEquals(packing_list.getSimulationState(), 'cancelled')
 
-  def stepPackingListSimulation(self, sequence=None, sequence_list=None, **kw):
+
+  def modifyInvoiceState(self, transition_name,
+                             sequence,invoice=None):
+    """ calls the workflow for the invoice """
+    if invoice is None:
+      invoice = sequence.get('invoice')
+    invoice.portal_workflow.doActionFor(invoice,
+          transition_name, wf_id='accounting_workflow')
+
+  def stepConfirmInvoice(self, sequence=None, sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    self.modifyInvoiceState('confirm_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'confirmed')
+
+  def stepSetReadyInvoice(self, sequence=None, sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    self.modifyInvoiceState('set_ready_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'ready')
+
+  def stepSetReadyNewInvoice(self, sequence=None,
+                                 sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    invoice = sequence.get('new_invoice')
+    self.modifyInvoiceState('set_ready_action', sequence=sequence,
+                                invoice=invoice)
+    self.assertEquals(invoice.getSimulationState(), 'ready')
+
+  def stepStartInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('start_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'started')
+
+  def stepStartNewInvoice(self, sequence=None, sequence_list=None, **kw):
+    invoice = sequence.get('new_invoice')
+    self.modifyInvoiceState('start_action', sequence=sequence,
+                                invoice=invoice)
+    self.assertEquals(invoice.getSimulationState(), 'started')
+
+  def stepStopInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('stop_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'stopped')
+
+  def stepDeliverInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('deliver_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'delivered')
+
+  def stepCancelInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('cancel_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'cancelled')
+
+
+  def stepSwitchPackingLists(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    new_packing_list = sequence.get('new_packing_list')
+    #invoice = new_packing_list.getDefaultCausalityRelatedValue(
+        #portal_type=self.invoice_portal_type)
+    sequence.edit(packing_list=new_packing_list,
+        new_packing_list=packing_list)#, invoice=invoice)
+
+  def stepSwitchInvoices(self, sequence=None, sequence_list=None, **kw):
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    sequence.edit(invoice=new_invoice, new_invoice=invoice)
+
+  def stepCheckPackingListSimulation(self, sequence=None, sequence_list=None, **kw):
     """ checks that simulation movements related to the packing list are OK """
     packing_list = sequence.get('packing_list')
     order = sequence.get('order')
     order_root_applied_rule = order.getCausalityRelatedValueList(
                                   portal_type = 'Applied Rule')[0]
-
     # check simulation movements from this packing list
     for movement in packing_list.getMovementList() :
       simulation_movement_list = movement.getOrderRelatedValueList()
@@ -282,12 +360,12 @@ class TestInvoice(TestPackingListMixin,
         self.assertEquals( simulation_movement.getRootAppliedRule(),
                            order_root_applied_rule)
       self.assertEquals(total_quantity, movement.getQuantity())
-    
+
   def stepCheckInvoiceBuilding(self, sequence=None, sequence_list=None, **kw):
-    """ checks that the invoice is built with the default_invoice_builder """
+    """
+    checks that the invoice is built with the default_invoice_builder
+    """
     packing_list = sequence.get('packing_list')
-    related_applied_rule_list = packing_list.getCausalityRelatedValueList(
-                                   portal_type=self.applied_rule_portal_type)
     related_invoice_list = packing_list.getCausalityRelatedValueList(
                      portal_type=self.sale_invoice_transaction_portal_type)
 
@@ -302,7 +380,7 @@ class TestInvoice(TestPackingListMixin,
       self.failUnless(invoice is not None)
       # Invoices created by Delivery Builder are in planned state
       self.assertEquals(invoice.getSimulationState(), 'planned')
-      
+
       # Get the list of simulation movements of packing list ...
       packing_list_simulation_movement_list = []
       for packing_list_movement in packing_list.getMovementList():
@@ -313,7 +391,7 @@ class TestInvoice(TestPackingListMixin,
       for p_l_simulation_movement in packing_list_simulation_movement_list :
         for applied_rule in p_l_simulation_movement.objectValues() :
           simulation_movement_list.extend(applied_rule.objectValues())
-      
+
       # First, test if each Simulation Movement is related to an
       # Invoice Movement
       invoice_relative_url = invoice.getRelativeUrl()
@@ -360,12 +438,12 @@ class TestInvoice(TestPackingListMixin,
         self.assertEquals(total_price / quantity, invoice_movement.getPrice())
 
       sequence.edit(invoice = invoice)
-      
+
       # Test causality
       self.assertEquals(len(invoice.getCausalityValueList(
                       portal_type = self.packing_list_portal_type)), 1)
       self.assertEquals(invoice.getCausalityValue(), packing_list)
-      
+
       # Finally, test getTotalQuantity and getTotalPrice on Invoice
       self.assertEquals(packing_list.getTotalQuantity(),
                         invoice.getTotalQuantity())
@@ -385,16 +463,16 @@ class TestInvoice(TestPackingListMixin,
     destination_section = sequence.get('destination_section')
     destination = sequence.get('destination')
     product = sequence.get('product')
-    
+
     order_module = self.getSaleOrderModule()
-    order = order_module.newContent(portal_type='Sale Order')
+    order = order_module.newContent(portal_type=self.order_portal_type)
     order.setStartDate(DateTime('2004-11-20'))
     order.setStopDate(DateTime('2004-11-24'))
     order.setDestinationValue(destination)
     order.setDestinationSectionValue(destination_section)
     order.setSourceValue(source)
     order.setSourceSectionValue(source_section)
-    order_line = order.newContent(portal_type = 'Sale Order Line', id = '1')
+    order_line = order.newContent(portal_type=order_line_portal_type, id='1')
     order_line.setResourceValue(product)
     order_line.setQuantity(10)
     order_line.setPrice(100)
@@ -417,10 +495,11 @@ class TestInvoice(TestPackingListMixin,
 
     self.assertEquals(len(order.getMovementList()),
                   sum([len(rule.objectIds()) for rule in rule_list]))
-    
+
   def stepCheckInvoicingRule(self, sequence=None, sequence_list=None, **kw):
-    """ Checks that the invoicing rule is applied and its values are
-        correct. """
+    """
+    Checks that the invoicing rule is applied and its values are correct.
+    """
     order_rule_list = sequence.get('order_rule_list')
     invoicing_rule_list = []
     invoice_transaction_rule_list = []
@@ -449,10 +528,10 @@ class TestInvoice(TestPackingListMixin,
         self.assertTrue(simulation_movement.isConvergent())
         # TODO: What is the invoice dates supposed to be ?
         # is this done through profiles ?
-        self.assertEquals(simulation_movement.getStartDate(),
-                   sequence.get('order').getStartDate())
-        self.assertEquals(simulation_movement.getStopDate(),
-                    sequence.get('order').getStopDate())
+        #self.assertEquals(simulation_movement.getStartDate(),
+        #           sequence.get('order').getStartDate())
+        #self.assertEquals(simulation_movement.getStopDate(),
+        #            sequence.get('order').getStopDate())
     sequence.edit(invoice_transaction_rule_list=invoice_transaction_rule_list)
 
   def stepCheckInvoiceTransactionRule(self, sequence=None, sequence_list=None,
@@ -466,17 +545,50 @@ class TestInvoice(TestPackingListMixin,
     for invoice_transaction_rule in invoice_transaction_rule_list:
       parent_movement = aq_parent(invoice_transaction_rule)
       self.assertEquals(3, len(invoice_transaction_rule.objectValues()))
-      for line_id, line_source_id, line_ratio in \
+      for line_id, line_source_id, line_destination_id, line_ratio in \
           self.transaction_line_definition_list:
         movement = getattr(invoice_transaction_rule, line_id, None)
         self.assertTrue(movement is not None)
-        self.assertEquals(movement.getQuantity(), parent_movement.getPrice() *
-            parent_movement.getQuantity() * line_ratio)
+        self.assertEquals(movement.getCorrectedQuantity(), parent_movement.getPrice() *
+            parent_movement.getCorrectedQuantity() * line_ratio)
         self.assertEquals(movement.getSourceId(), line_source_id)
+        self.assertEquals(movement.getDestinationId(), line_destination_id)
         self.assertEquals(movement.getStartDate(),
             parent_movement.getStartDate())
         self.assertEquals(movement.getStopDate(),
             parent_movement.getStopDate())
+
+  def stepCheckInvoicesConsistency(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Checks that all invoices are consistent:
+    - transaction lines match invoice lines
+    - no movement is divergent
+    """
+    invoice_list = self.getPortal()['accounting_module'].objectValues()
+    for invoice in invoice_list:
+      accounting_state_list = \
+          list(self.getPortal().getPortalCurrentInventoryStateList())
+      accounting_state_list.append('cancelled')
+      if invoice.getSimulationState() in accounting_state_list:
+        invoice_line_list = invoice.contentValues(
+            portal_type=self.invoice_line_portal_type)
+        invoice_transaction_line_list = invoice.contentValues(
+            portal_type=self.invoice_transaction_line_portal_type)
+        self.assertEquals(3, len(invoice_transaction_line_list))
+        expected_price = 0.0
+        for line in invoice_line_list:
+          expected_price += line.getTotalPrice()
+        for line_id, line_source, line_dest, line_ratio in \
+            self.transaction_line_definition_list:
+          for line in invoice.contentValues(
+              portal_type=self.invoice_transaction_line_portal_type):
+            if line.getSource() == 'account_module/%s' % line_source and \
+                line.getDestination() == 'account_module/%s' % line_dest:
+              break
+          else:
+            self.fail('No line found that matches %s' % line_id)
+          self.assertEquals(line.getQuantity(), expected_price * line_ratio)
 
   def stepCheckDeliveryRuleForDeferred(
                       self, sequence=None, sequence_list=None, **kw):
@@ -640,7 +752,7 @@ class TestInvoice(TestPackingListMixin,
     new_list = [x for x in previous_list if x != 'DateMovementGroup']
     new_list.append('ParentExplanationMovementGroup')
     builder.setDeliveryCollectOrderList(new_list)
-    
+
   def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
     """Edit the current invoice, to trigger updateAppliedRule."""
     invoice = sequence.get('invoice')
@@ -668,7 +780,7 @@ class TestInvoice(TestPackingListMixin,
     """Edit the current packing list, to trigger updateAppliedRule."""
     packing_list = sequence.get('packing_list')
     packing_list.edit()
-    
+
     # call updateAppliedRule directly, don't rely on edit interactions
     rule_id = 'default_delivery_rule'
     self.failUnless(rule_id in
@@ -686,7 +798,7 @@ class TestInvoice(TestPackingListMixin,
     for delivery_mvt in packing_list.getMovementList():
       self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
             portal_type=self.simulation_movement_portal_type)), 0)
-    
+
   def stepDecreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
       **kw):
     """
@@ -694,11 +806,40 @@ class TestInvoice(TestPackingListMixin,
     """
     invoice = sequence.get('invoice')
     quantity = sequence.get('line_quantity',default=self.default_quantity)
-    quantity = quantity -1
+    quantity = quantity - 1
     sequence.edit(line_quantity=quantity)
     for invoice_line in invoice.objectValues(
         portal_type=self.invoice_line_portal_type):
       invoice_line.edit(quantity=quantity)
+    sequence.edit(last_delta = sequence.get('last_delta', 0.0) - 1.0)
+
+  def stepIncreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Set a Increased quantity on invoice lines
+    """
+    invoice = sequence.get('invoice')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity + 1
+    sequence.edit(line_quantity=quantity)
+    for invoice_line in invoice.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      invoice_line.edit(quantity=quantity)
+    sequence.edit(last_delta = sequence.get('last_delta', 0.0) + 1.0)
+
+  def stepSetInvoiceLineQuantityToZero(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Set the quantity on invoice lines to zero
+    """
+    invoice = sequence.get('invoice')
+    #default_quantity = sequence.get('line_quantity',default_quantity)
+    quantity = 0.0
+    sequence.edit(line_quantity=quantity)
+    for invoice_line in invoice.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      invoice_line.edit(quantity=quantity)
+    sequence.edit(last_delta = - self.default_quantity)
 
   def stepChangeInvoiceStartDate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -747,10 +888,10 @@ class TestInvoice(TestPackingListMixin,
     invoice = sequence.get('invoice')
     self.assertFalse(invoice.isDivergent())
 
-  def stepSplitAndDifferInvoice(self, sequence=None, sequence_list=None,
+  def stepSplitAndDeferInvoice(self, sequence=None, sequence_list=None,
       **kw):
     """
-    split and differ at the invoice level
+    split and defer at the invoice level
     """
     invoice = sequence.get('invoice')
     invoice.portal_workflow.doActionFor(invoice,'split_prevision_action',
@@ -800,9 +941,11 @@ class TestInvoice(TestPackingListMixin,
     for invoice in invoice_list:
       if invoice.getUid() == sequence.get('invoice').getUid():
         invoice1 = invoice
+    last_delta = sequence.get('last_delta', 0.0)
     for line in invoice1.objectValues(
         portal_type=self.invoice_line_portal_type):
-      self.assertEquals(self.default_quantity, line.getQuantity())
+      self.assertEquals(self.default_quantity + last_delta,
+          line.getQuantity())
 
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
@@ -831,7 +974,7 @@ class TestInvoice(TestPackingListMixin,
       stepTic
       stepCheckPackingListIsPacked
     """
-      
+
   # default sequence for two lines of not varianted resource.
   PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
@@ -865,7 +1008,7 @@ class TestInvoice(TestPackingListMixin,
       stepTic
       stepCheckPackingListIsPacked
     """
-      
+
   # default sequence for one line of not varianted resource.
   TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
@@ -887,11 +1030,11 @@ class TestInvoice(TestPackingListMixin,
       stepCheckOrderRule
       stepCheckOrderSimulation
       stepCheckDeliveryBuilding
-      stepDecreasePackingListLineQuantity 
-      stepCheckPackingListIsCalculating 
-      stepSplitAndDeferPackingList 
-      stepTic 
-      stepCheckPackingListIsSolved 
+      stepDecreasePackingListLineQuantity
+      stepCheckPackingListIsCalculating
+      stepSplitAndDeferPackingList
+      stepTic
+      stepCheckPackingListIsSolved
       stepCheckPackingListSplitted
       stepAddPackingListContainer
       stepAddPackingListContainerLine
@@ -904,10 +1047,14 @@ class TestInvoice(TestPackingListMixin,
     """
 
   def test_01_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
-    """Checks that a Simple Invoice is created from a Packing List"""
+    """
+    Checks that a Simple Invoice is created from a Packing List
+    """
     if not run: return
+    self.logMessage('Simple Invoice')
+    sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
       """
         stepSetReadyPackingList
@@ -917,10 +1064,13 @@ class TestInvoice(TestPackingListMixin,
         stepTic
         stepCheckInvoiceBuilding
         stepRebuildAndCheckNothingIsCreated
+        stepCheckInvoicesConsistency
       """)
+    sequence_list.play(self)
 
   def test_02_TwoInvoicesFromTwoPackingList(self, quiet=0, run=RUN_ALL_TESTS):
-    """ This test was created for the following bug:
+    """
+    This test was created for the following bug:
         - an order is created and confirmed
         - the packing list is split
         - the 2 packing list are delivered (at different date)
@@ -930,8 +1080,10 @@ class TestInvoice(TestPackingListMixin,
           and an invoice with no accounting rules. both invoices are wrong
     """
     if not run: return
+    self.logMessage('Two Invoices from Two Packing List')
+    sequence_list = SequenceList()
     for base_sequence in (self.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
       """
         stepSetReadyPackingList
@@ -945,10 +1097,13 @@ class TestInvoice(TestPackingListMixin,
         stepConfirmTwoInvoices
         stepTic
         stepCheckTwoInvoicesTransactionLines
+        stepCheckInvoicesConsistency
       """)
+    sequence_list.play(self)
 
   def test_03_InvoiceEditAndInvoiceRule(self, quiet=0, run=RUN_ALL_TESTS):
-    """Invoice Rule should not be applied on invoice lines created from\
+    """
+    Invoice Rule should not be applied on invoice lines created from\
     Packing List.
 
     We want to prevent this from happening:
@@ -959,8 +1114,10 @@ class TestInvoice(TestPackingListMixin,
         movements for this invoice are present twice in the simulation.
     """
     if not run: return
+    self.logMessage('Invoice Edit')
+    sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
       """
         stepSetReadyPackingList
@@ -971,27 +1128,38 @@ class TestInvoice(TestPackingListMixin,
         stepCheckInvoiceBuilding
         stepEditInvoice
         stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
+        stepCheckInvoicesConsistency
       """)
-  
+    sequence_list.play(self)
+
   def test_04_PackingListEditAndInvoiceRule(self, quiet=0, run=RUN_ALL_TESTS):
-    """Delivery Rule should not be applied on packing list lines created\
+    """
+    Delivery Rule should not be applied on packing list lines created\
     from Order.
     """
     if not run: return
+    self.logMessage('Packing List Edit')
+    sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
       """
         stepEditPackingList
         stepCheckDeliveryRuleNotAppliedOnPackingListEdit
+        stepCheckInvoicesConsistency
       """)
+    sequence_list.play(self)
 
   def test_05_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
-    """Checks that editing a Packing List Line still creates a correct
-      Invoice"""
+    """
+    Checks that editing a Packing List Line still creates a correct
+    Invoice
+    """
     if not run: return
+    self.logMessage('Packing List Line Edit')
+    sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
     """
       stepEditPackingListLine
@@ -1002,15 +1170,21 @@ class TestInvoice(TestPackingListMixin,
       stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
+      stepCheckInvoicesConsistency
     """)
+    sequence_list.play(self)
 
   def test_06_InvoiceDeletePackingListLine(self, quiet=0,
       run=RUN_ALL_TESTS):
-    """Checks that deleting a Packing List Line still creates a correct
-    Invoice"""
+    """
+    Checks that deleting a Packing List Line still creates a correct
+    Invoice
+    """
     if not run: return
+    self.logMessage('Packing List Line Delete')
+    sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE, ) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
     """
       stepDeletePackingListLine
@@ -1021,15 +1195,21 @@ class TestInvoice(TestPackingListMixin,
       stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
+      stepCheckInvoicesConsistency
     """)
+    sequence_list.play(self)
 
   def test_07_InvoiceAddPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
-    """Checks that adding a Packing List Line still creates a correct
-    Invoice"""
+    """
+    Checks that adding a Packing List Line still creates a correct
+    Invoice
+    """
     if not run: return
+    self.logMessage('Packing List Line Add')
+    sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE,
         self.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE) :
-      self.playSequence(
+      sequence_list.addSequenceString(
         base_sequence +
     """
       stepAddPackingListLine
@@ -1042,13 +1222,18 @@ class TestInvoice(TestPackingListMixin,
       stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
+      stepCheckInvoicesConsistency
     """)
+    sequence_list.play(self)
 
   def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=RUN_ALL_TESTS):
-    """Change the quantity of a Invoice Line,
-    check that the packing list is divergent,
-    then split and differ"""
+    """
+    Change the quantity of a Invoice Line,
+    check that the invoice is divergent,
+    then split and defer, and check everything is solved
+    """
     if not run: return
+    self.logMessage('Invoice Decrease Qantity')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
@@ -1060,24 +1245,32 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceBuilding
 
     stepDecreaseInvoiceLineQuantity
+    stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
-    stepSplitAndDifferInvoice
+    stepSplitAndDeferInvoice
     stepTic
+
+    stepCheckInvoiceIsNotDivergent
     stepCheckInvoiceIsSolved
     stepCheckInvoiceSplitted
-    stepCheckPackingListIsDivergent
-    stepCheckPackingListIsDiverged
+
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
     stepCheckInvoiceTransactionRule
 
     stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
     """
     self.playSequence(sequence)
-    
+
   def test_09_InvoiceChangeStartDate(self, quiet=0, run=RUN_ALL_TESTS):
-    """Change the start_date of a Invoice Line,
-    check that the packing list is divergent,
-    then acceptDecision"""
+    """
+    Change the start_date of a Invoice Line,
+    check that the invoice is divergent,
+    then accept decision, and check everything is solved
+    """
     if not run: return
+    self.logMessage('Invoice Change Sart Date')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
@@ -1089,20 +1282,422 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceBuilding
 
     stepChangeInvoiceStartDate
+    stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
     stepAcceptDecisionInvoice
     stepTic
-    stepCheckInvoiceIsSolved
+
     stepCheckInvoiceNotSplitted
-    stepCheckPackingListIsDivergent
-    stepCheckPackingListIsDiverged
-    stepCheckSimulationStartDateUpdated
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
     stepCheckInvoiceTransactionRule
-    
+
     stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
     """
     self.playSequence(sequence)
-    
+
+  def test_10_AcceptDecisionOnPackingList(self, quiet=0, run=RUN_ALL_TESTS):
+    """
+    - Increase or Decrease the quantity of a Packing List line
+    - Accept Decision on Packing List
+    - Packing List must not be divergent and use new quantity
+    - Invoice must not be divergent and use new quantity
+    """
+    if not run: return
+    self.logMessage('InvoiceAcceptDecisionOnPackingList')
+    end_sequence = \
+    """
+    stepSetContainerFullQuantity
+    stepCheckPackingListIsCalculating
+    stepAcceptDecisionPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+    stepCheckPackingListNotSplitted
+
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+    stepCheckInvoiceNotSplitted
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+
+    mid_sequence_list = ["""
+    stepCheckInvoicingRule
+    stepDecreasePackingListLineQuantity
+    """, """
+    stepCheckInvoicingRule
+    stepIncreasePackingListLineQuantity
+    """]
+
+    sequence_list = SequenceList()
+    for seq in mid_sequence_list:
+      sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+          seq + end_sequence
+      sequence_list.addSequenceString(sequence)
+    sequence_list.play(self)
+
+  def test_11_AcceptDecisionOnPackingListAndInvoice(self, quiet=0,
+      run=RUN_ALL_TESTS):
+    """
+    - Increase or Decrease the quantity of a Packing List line
+    - Accept Decision on Packing List
+    - Packing List must not be divergent and use new quantity
+    - Put old quantity on Invoice
+    - Accept Decision on Invoice
+    - Packing List must not be divergent and use new quantity
+    - Invoice must not be divergent and use old quantity
+    """
+    if not run: return
+    self.logMessage('InvoiceAcceptDecisionOnPackingListAndInvoice')
+    mid_sequence = \
+    """
+    stepSetContainerFullQuantity
+    stepCheckPackingListIsCalculating
+    stepAcceptDecisionPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+    stepCheckPackingListNotSplitted
+
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+    """
+    end_sequence = \
+    """
+    stepCheckInvoiceIsDiverged
+    stepAcceptDecisionInvoice
+    stepTic
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+    stepCheckInvoiceNotSplitted
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+
+    mid_sequence_list = [("""
+    stepCheckInvoicingRule
+    stepDecreasePackingListLineQuantity
+    """, """
+    stepIncreaseInvoiceLineQuantity
+    stepTic
+    """), ("""
+    stepCheckInvoicingRule
+    stepIncreasePackingListLineQuantity
+    """, """
+    stepDecreaseInvoiceLineQuantity
+    stepTic
+    """)]
+
+    sequence_list = SequenceList()
+    for seq1, seq2 in mid_sequence_list:
+      sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+          seq1 + mid_sequence + seq2 + end_sequence
+      sequence_list.addSequenceString(sequence)
+    sequence_list.play(self)
+
+  def test_12_SplitPackingListAndAcceptInvoice(self, quiet=0,
+      run=RUN_ALL_TESTS):
+    """
+    - Decrease the quantity of a Packing List line
+    - Split and Defer on Packing List
+    - Packing List must not be divergent and use new quantity
+    - splitted Packing List must not be divergent and use old - new quantity
+
+    - Put old quantity on Invoice1
+    - Accept Decision on Invoice1
+    - Packing List must not be divergent and use new quantity
+    - splitted Packing List must not be divergent and use old - new quantity
+    - Invoice1 must not be divergent and use old quantity
+
+    - set Invoice2 quantity to 0
+    - Accept Decision on Invoice2
+    - Packing List must not be divergent and use new quantity
+    - splitted Packing List must not be divergent and use old - new quantity
+    - Invoice1 must not be divergent and use old quantity
+    - Invoice2 must not be divergent and use 0 as quantity
+    """
+    if not run: return
+    self.logMessage('InvoiceSplitPackingListAndAcceptInvoice')
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepCheckInvoicingRule
+    stepDecreasePackingListLineQuantity
+    stepSetContainerFullQuantity
+    stepCheckPackingListIsCalculating
+    stepSplitAndDeferPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+    stepCheckPackingListSplitted
+
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+    stepCheckPackingListSplitted
+
+    stepIncreaseInvoiceLineQuantity
+    stepCheckInvoiceIsCalculating
+    stepAcceptDecisionInvoice
+    stepTic
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+    stepCheckInvoiceIsSolved
+    stepCheckInvoiceNotSplitted
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+
+    stepSwitchPackingLists
+
+    stepAddPackingListContainer
+    stepSetContainerFullQuantity
+    stepTic
+    stepCheckPackingListIsSolved
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+
+    stepSetInvoiceLineQuantityToZero
+    stepCheckInvoiceIsCalculating
+    stepAcceptDecisionInvoice
+    stepTic
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+    stepCheckInvoiceIsSolved
+    stepCheckInvoiceNotSplitted
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+    self.playSequence(sequence)
+
+  def test_13_SplitAndDeferInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+    """
+    - Accept Order, Accept Packing List
+    - Decrease quantity on Invoice
+    - Split and defer Invoice
+    - Accept Invoice
+    - Accept splitted Invoice
+    - Packing List must not be divergent and use old quantity
+    - Invoice must not be divergent and use new quantity
+    - splitted Invoice must not be divergent and use old - new quantity
+    """
+    if not run: return
+    self.logMessage('InvoiceSplitAndDeferInvoice')
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+    stepCheckPackingListNotSplitted
+
+    stepDecreaseInvoiceLineQuantity
+    stepCheckInvoiceIsDivergent
+    stepCheckInvoiceIsCalculating
+    stepSplitAndDeferInvoice
+    stepTic
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+    stepCheckInvoiceSplitted
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepSwitchInvoices
+
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+    self.playSequence(sequence)
+
+  def test_14_AcceptDecisionOnInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+    """
+    - Accept Order, Accept Packing List
+    - Increase or Decrease quantity on Invoice
+    - Accept Decision on Invoice
+    - Accept Invoice
+    - Packing List must not be divergent and use old quantity
+    - Invoice must not be divergent and use new quantity
+    """
+    if not run: return
+    self.logMessage('InvoiceAcceptDecisionOnInvoice')
+    mid_sequence = \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
+    stepCheckPackingListIsSolved
+    stepCheckPackingListNotSplitted
+    """
+    end_sequence = \
+    """
+    stepCheckInvoiceIsDivergent
+    stepCheckInvoiceIsCalculating
+    stepAcceptDecisionInvoice
+    stepTic
+    stepConfirmInvoice
+    stepTic
+    stepStopInvoice
+    stepTic
+    stepDeliverInvoice
+    stepTic
+
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepCheckInvoiceNotSplitted
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+
+    mid_sequence_list = ["""
+    stepDecreaseInvoiceLineQuantity
+    """, """
+    stepIncreaseInvoiceLineQuantity
+    """]
+
+    sequence_list = SequenceList()
+    for seq in mid_sequence_list:
+      sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+          mid_sequence + seq + end_sequence
+      sequence_list.addSequenceString(sequence)
+    sequence_list.play(self)
+
+
+#class TestPurchaseInvoice(TestInvoice):
+#  order_portal_type = 'Purchase Order'
+#  order_line_portal_type = 'Purchase Order Line'
+#  order_cell_portal_type = 'Purchase Order Cell'
+#  packing_list_portal_type = 'Purchase Packing List'
+#  packing_list_line_portal_type = 'Purchase Packing List Line'
+#  packing_list_cell_portal_type = 'Purchase Packing List Cell'
+#  delivery_builder_id = 'purchase_packing_list_builder'
+#  invoice_portal_type = 'Purchase Invoice Transaction'
+#  invoice_transaction_line_portal_type = 'Purchase Invoice Transaction Line'
+#
+#  def getTitle(self):
+#    return "Purchase Invoices"
+
 if __name__ == '__main__':
   framework()
 else:

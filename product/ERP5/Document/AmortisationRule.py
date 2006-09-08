@@ -86,7 +86,7 @@ class AmortisationRule(Rule):
                            'correction':         'correction'
                          }
             
-    def test(self, movement):
+    def _test(self, movement):
       """
         Tests if the rule (still) applies
       """

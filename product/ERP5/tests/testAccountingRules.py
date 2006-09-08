@@ -1266,6 +1266,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                             invoice_transaction_line.getSourceCredit())
           self.assertEquals(simulation_movement.getSourceDebit(),
                             invoice_transaction_line.getSourceDebit())
+
           self.assertEquals(simulation_movement.getDelivery(),
                             invoice_transaction_line.getRelativeUrl())
       self.assert_(len(simulation_movement_found.keys()), 3)

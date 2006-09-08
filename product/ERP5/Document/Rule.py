@@ -32,147 +32,356 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
-
+from zLOG import LOG, WARNING
 
 class Rule(XMLObject, Predicate):
-    """
-      Rule objects implement the simulation algorithm
-      (expand, solve)
+  """
+    Rule objects implement the simulation algorithm
+    (expand, solve)
 
-      Example of rules
+    Example of rules
 
-      - Stock rule (checks stocks)
+    - Stock rule (checks stocks)
 
-      - Order rule (copies movements from an order)
+    - Order rule (copies movements from an order)
 
-      - Capacity rule (makes sure stocks / sources are possible)
+    - Capacity rule (makes sure stocks / sources are possible)
 
-      - Transformation rule (expands transformations)
+    - Transformation rule (expands transformations)
 
-      - Template rule (creates submovements with a template system)
-        used in Invoice rule, Paysheet rule, etc.
+    - Template rule (creates submovements with a template system)
+      used in Invoice rule, Paysheet rule, etc.
 
-      Rules are called one by one at the global level (the rules folder)
-      and at the local level (applied rules in the simulation folder)
+    Rules are called one by one at the global level (the rules folder)
+    and at the local level (applied rules in the simulation folder)
 
-      The simulation_tool includes rules which are parametrized by the sysadmin
-      The simulation_tool does the logics of checking, calling, etc.
+    The simulation_tool includes rules which are parametrized by the sysadmin
+    The simulation_tool does the logics of checking, calling, etc.
 
-      simulation_tool is a subclass of Folder & Tool
-    """
+    simulation_tool is a subclass of Folder & Tool
+  """
 
-    # CMF Type Definition
-    meta_type = 'ERP5 Rule'
-    portal_type = 'Rule'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  # CMF Type Definition
+  meta_type = 'ERP5 Rule'
+  portal_type = 'Rule'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  
+  __implements__ = ( Interface.Predicate,
+                     Interface.Rule )
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    )
+  
+  # Portal Type of created children
+  movement_type = 'Simulation Movement'
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self, movement):
+    """Tells wether generated movement needs to be accounted or not.
     
-    __implements__ = ( Interface.Predicate,
-                       Interface.Rule )
+    Only account movements which are not associated to a delivery;
+    Whenever delivery is there, delivery has priority
+    """
+    return movement.getDeliveryValue() is None
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      )
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'constructNewAppliedRule')
+  def constructNewAppliedRule(self, context, id=None, 
+                              activate_kw=None, **kw):
+    """
+      Creates a new applied rule which points to self
+    """
+    # XXX Parameter **kw is useless, so, we should remove it
+    portal_types = getToolByName(self, 'portal_types')
+    if id is None:
+      id = context.generateNewId()
+    if getattr(aq_base(context), id, None) is None:
+      context.newContent(id=id,
+                         portal_type='Applied Rule',
+                         specialise_value=self,
+                         activate_kw=activate_kw)
+    return context.get(id)
+
+  # Simulation workflow
+  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+  def expand(self, applied_rule, **kw):
+    """
+      Expands the current movement downward.
+
+      An applied rule can be expanded only if its parent movement
+      is expanded.
+    """
+    for o in applied_rule.objectValues():
+      o.expand(**kw)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
+  def solve(self, applied_rule, solution_list):
+    """
+      Solve inconsistency according to a certain number of solutions
+      templates. This updates the
+
+      -> new status -> solved
+
+      This applies a solution to an applied rule. Once
+      the solution is applied, the parent movement is checked.
+      If it does not diverge, the rule is reexpanded. If not,
+      diverge is called on the parent movement.
+    """
+
+  def test(self, movement):
+    """
+    Tests if the rule (still) applies
+    First try to call a python script, then call the _test method defined in
+    the class
+
+    This method should not be overriden by Rules.
+    """
+    method = self._getTypeBasedMethod('test')
+    if method is not None:
+      return method(movement)
+    return self._test(movement)
+
+  def _test(self, movement):
+    """
+    Default behaviour of Rule.test, used when no test method for the rule
+    was defined
+
+    This method should be overriden by Rules if another default behaviour is
+    wanted.
+    """
+    return 0
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
+  def diverge(self, applied_rule):
+    """
+      -> new status -> diverged
+
+      This basically sets the rule to "diverged"
+      and blocks expansion process
+    """
+    pass
+
+  # Solvers
+  security.declareProtected( Permissions.AccessContentsInformation,
+                            'isDivergent')
+  def isDivergent(self, movement, ignore_list=[]):
+    """
+    Returns true if the Simulation Movement is divergent comparing to
+    the delivery value
+    """
+    delivery = movement.getDeliveryValue()
+    if delivery is None:
+      return 0
     
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'isAccountable')
-    def isAccountable(self, movement):
-      """Tells wether generated movement needs to be accounted or not.
-      
-      Only account movements which are not associated to a delivery;
-      Whenever delivery is there, delivery has priority
-      """
-      return movement.getDeliveryValue() is None
+    default_match_list = (
+      'source_section', 'destination_section', 'source',
+      'destination', 'resource', 'variation_category_list', 
+      'aggregate_list', 'start_date', 'stop_date')
+    match_list = [x for x in default_match_list if x not in ignore_list]
+    for prop in match_list:
+      if movement.getProperty(prop) != delivery.getProperty(prop):
+        return 1
+    
+    d_quantity = delivery.getQuantity()
+    quantity = movement.getCorrectedQuantity()
+    d_error = movement.getDeliveryError()
+    if quantity is None:
+      if d_quantity is None:
+        return 0
+      return 1
+    if d_quantity is None:
+      d_quantity = 0
+    if d_error is None:
+      d_error = 0
+    delivery_ratio = movement.getDeliveryRatio()
+    # if the delivery_ratio is None, make sure that we are
+    # divergent even if the delivery quantity is 0
+    if delivery_ratio is not None:
+      d_quantity *= delivery_ratio
+      if delivery_ratio == 0 and quantity > 0:
+        return 1
+    if d_quantity != quantity + d_error:
+      return 1
+    return 0
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'constructNewAppliedRule')
-    def constructNewAppliedRule(self, context, id=None,activate_kw=None,**kw):
-      """
-        Creates a new applied rule which points to self
-      """
-      portal_types = getToolByName(self, 'portal_types')
-      if id is None:
-        id = context.generateNewId()
-      if getattr(aq_base(context), id, None) is None:
-        context.newContent(id=id,
-                           portal_type='Applied Rule',
-                           specialise_value=self,
-                           activate_kw=activate_kw,
-                           )
-      return context.get(id)
+#    security.declareProtected(Permissions.View, 'getDivergenceList')
+#    def getDivergenceList(self, applied_rule):
+#      """
+#        Returns a list Divergence descriptors
+#      """
+#
+#    security.declareProtected(Permissions.View, 'getSolverList')
+#    def getSolverList(self, applied_rule):
+#      """
+#        Returns a list Divergence solvers
+#      """
 
-    # Simulation workflow
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, **kw):
-      """
-        Expands the current movement downward.
+  # Deliverability / orderability
+  def isOrderable(self, movement):
+    return 0
 
-        An applied rule can be expanded only if its parent movement
-        is expanded.
-      """
-      for o in applied_rule.objectValues():
-        o.expand(**kw)
+  def isDeliverable(self, movement):
+    return 0
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-    def solve(self, applied_rule, solution_list):
-      """
-        Solve inconsistency according to a certain number of solutions
-        templates. This updates the
+  def isStable(self, applied_rule, **kw):
+    """
+    - generate a list of previsions
+    - compare the prevision with existing children
+    - return 1 if they match, 0 else
+    """
+    list = self._getCompensatedMovementList(applied_rule, **kw)
+    for e in list:
+      if len(e) > 0:
+        return 0
+    return 1
 
-        -> new status -> solved
-
-        This applies a solution to an applied rule. Once
-        the solution is applied, the parent movement is checked.
-        If it does not diverge, the rule is reexpanded. If not,
-        diverge is called on the parent movement.
-      """
-
-    def test(self, movement):
-      """
-        Tests if the rule (still) applies to a movement
-      """
+#### Helpers
+  def _isTreeDelivered(self, movement_list, ignore_first=0):
+    """
+    returns 1 if the movement or any of its child is linked to a delivery
+    """
+    child_movement_list = []
+    for movement in movement_list:
+      if not ignore_first and len(movement.getDeliveryList()) > 0:
+        return 1
+      else:
+        for applied_rule in movement.objectValues():
+          child_movement_list = applied_rule.objectValues()
+    if len(child_movement_list) == 0:
       return 0
+    return self._isTreeDelivered(child_movement_list)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-    def diverge(self, applied_rule):
-      """
-        -> new status -> diverged
+  def _getCurrentMovementList(self, applied_rule, **kw):
+    """
+    Returns the list of current children of the applied rule, sorted in 3
+    groups : immutables/mutables/deletable
 
-        This basically sets the rule to "diverged"
-        and blocks expansion process
-      """
+    If a movement is not frozen, and has no delivered child, it can be
+    deleted.
+    Else, if a movement is not frozen, and has some delivered child, it can
+    be modified.
+    Else, it cannot be modified.
 
-    # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self, applied_rule):
-      """
-        Returns 1 if divergent rule
-      """
+    - is delivered
+    - has delivered childs (including self)
+    - is in reserved or current state
+    - is frozen
 
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self, applied_rule):
-      """
-        Returns a list Divergence descriptors
-      """
+    a movement is deletable if it has no delivered child, is not in current
+    state, and not in delivery movements.
+    a movement 
+    """
+    immutable_movement_list = []
+    mutable_movement_list = []
+    deletable_movement_list = []
+    
+    for movement in applied_rule.contentValues(portal_type=self.movement_type):
+      if movement.isFrozen():
+        immutable_movement_list.append(movement)
+      else:
+        if self._isTreeDelivered([movement]):
+          mutable_movement_list.append(movement)
+        else:
+          deletable_movement_list.append(movement)
 
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self, applied_rule):
-      """
-        Returns a list Divergence solvers
-      """
+    return (immutable_movement_list, mutable_movement_list,
+            deletable_movement_list)
 
-    # Deliverability / orderability
-    def isOrderable(self, m):
-      return 0
+  def _getCompensatedMovementList(self, applied_rule,
+                                  matching_property_list=['resource'], **kw):
+    """
+    Compute the difference between prevision and existing movements
 
-    def isDeliverable(self, m):
-      return 0
+    immutable movements need compensation, mutables needs to be modified
 
+    XXX For now, this implementation is too simple. It could be improved by
+    using MovementGroups
+    """
+    add_list = [] # list of movements to be added
+    modify_dict = {} # dict of movements to be modified
+    delete_list = [] # list of movements to be deleted
+    
+    prevision_list = self._generatePrevisionList(applied_rule, **kw)
+    immutable_movement_list, mutable_movement_list, \
+        deletable_movement_list = self._getCurrentMovementList(applied_rule,
+                                                               **kw)
+    movement_list = immutable_movement_list + mutable_movement_list \
+                    + deletable_movement_list
+    non_matched_list = movement_list[:] # list of remaining movements 
+
+    for prevision in prevision_list:
+      p_matched_list = []
+      for movement in non_matched_list:
+        for prop in matching_property_list:
+          if prevision.get(prop) != movement.getProperty(prop):
+            break
+        else:
+          p_matched_list.append(movement)
+
+      # XXX hardcoded ...
+      LOG("Rule, _getCompensatedMovementList", WARNING, 
+          "Hardcoded properties check")
+      # Movements exist, we'll try to make them match the prevision
+      if p_matched_list != []:
+        # Check the quantity
+        m_quantity = 0.0
+        for movement in p_matched_list:
+          m_quantity += movement.getQuantity()#getCorrectedQuantity()
+        if m_quantity != prevision.get('quantity'):
+          q_diff = prevision.get('quantity') - m_quantity
+          # try to find a movement that can be edited
+          for movement in p_matched_list:
+            if movement in (mutable_movement_list \
+                + deletable_movement_list):
+              # mark as requiring modification
+              prop_dict = modify_dict.setdefault(movement.getId(), {})
+              #prop_dict['quantity'] = movement.getCorrectedQuantity() + \
+              prop_dict['quantity'] = movement.getQuantity() + \
+                  q_diff
+              break
+          # no modifiable movement was found, need to create one
+          else:
+            prevision['quantity'] = q_diff
+            add_list.append(prevision)
+        # Check the date
+        for movement in p_matched_list:
+          if movement in (mutable_movement_list \
+              + deletable_movement_list):
+            for prop in ('start_date', 'stop_date'):
+              #XXX should be >= 15
+              if prevision.get(prop) != movement.getProperty(prop):
+                prop_dict = modify_dict.setdefault(movement.getId(), {})
+                prop_dict[prop] = prevision.get(prop)
+                break
+        # update movement lists
+        for movement in p_matched_list:
+          non_matched_list.remove(movement)
+      # No movement matched, we need to create one
+      else:
+        add_list.append(prevision)
+
+    # delete non matched movements
+    for movement in non_matched_list:
+      if movement in deletable_movement_list:
+        # delete movement
+        delete_list.append(movement.getId())
+      elif movement in mutable_movement_list:
+        # set movement quantity to 0 to make it "void"
+        prop_dict = modify_dict.setdefault(movement.getId(), {})
+        prop_dict['quantity'] = 0.0
+      else:
+        # movement not modifiable, we can decide to create a compensation
+        # with negative quantity
+        raise OperationalError, "Not Implemented"
+    return (add_list, modify_dict, delete_list)

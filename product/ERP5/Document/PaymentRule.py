@@ -64,8 +64,7 @@ class PaymentRule(Rule):
                       , PropertySheet.DublinCore
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'test')
-    def test(self, movement):
+    def _test(self, movement):
       """
         Tests if the rule (still) applies
       """

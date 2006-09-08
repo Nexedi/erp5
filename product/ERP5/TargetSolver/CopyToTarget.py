@@ -31,9 +31,16 @@ from TargetSolver import TargetSolver
 
 class CopyToTarget(TargetSolver):
   """
-    Copy values simulation movement as target. This is
-    only acceptable for root movements. The meaning of
-    this solver of other movements is far from certain.
+    This solver calculates the ratio between the new (delivery) and old
+    (simulation) quantity and applies this ratio to the simulation movement
+    and to its parent, until a stable one is found
+
+    XXX: This solver's name is not good, and it tries too many things.
+    Once the new isDivergent engine is implemented, this solver can be
+    splitted in smaller ones (one for profit and loss, one for backtracking)
+    
+    Backtracking alone is not enough to solve completely, it must be used with
+    another solver (profit and loss, or creating a compensation branch ...)
   """
   def _generateValueDeltaDict(self, simulation_movement):
     """
@@ -94,10 +101,21 @@ class CopyToTarget(TargetSolver):
     """
       Get parent movement, and its value delta dict.
     """
+    #XXX max_allowed_delta is the maximum number of days we want not to
+    # account as a divergence. It should be configurable through a Rule
+    max_allowed_delta = 15
+
     applied_rule = simulation_movement.getParentValue()
     parent_movement = applied_rule.getParentValue()
     if parent_movement.getPortalType() != "Simulation Movement":
       parent_movement = None
+
+    for date_delta in ('start_date_delta', 'stop_date_delta'):
+      if date_delta in value_delta_dict.keys():
+        if abs(value_delta_dict[date_delta]) <= \
+            applied_rule.getProperty('max_allowed_delta', max_allowed_delta):
+          value_delta_dict.pop(date_delta)
+        
     return parent_movement, value_delta_dict
 
   def _recursivelySolve(self, simulation_movement, is_last_movement=1, **value_delta_dict):
@@ -106,12 +124,34 @@ class CopyToTarget(TargetSolver):
       his parent movement.
     """
     value_dict = self._generateValueDict(simulation_movement, **value_delta_dict)
-    simulation_movement.edit(**value_dict)
-    if is_last_movement:
-      delivery_quantity = simulation_movement.getDeliveryValue().getQuantity()
-      simulation_movement.setDeliveryError(delivery_quantity - value_dict['quantity'])
+
     parent_movement, parent_value_delta_dict = \
                 self._getParentParameters(simulation_movement, **value_delta_dict)
-    if parent_movement is not None:
-      # Modify the parent movement
-      self._recursivelySolve(parent_movement, is_last_movement=0, **parent_value_delta_dict)
+
+    if parent_movement is not None and parent_movement.isFrozen():
+      # If backtraxcking is not possible, we have to make sure that the
+      # divergence is solved locally by using profit and loss
+      sm_quantity = simulation_movement.getQuantity()
+      delivery_quantity = \
+          simulation_movement.getDeliveryValue().getQuantity()
+#       simulation_movement.edit(
+#           profit_quantity=sm_quantity - delivery_quantity)
+    else:
+      # fix foating point rounding error
+      if is_last_movement:
+        delivery_quantity = \
+            simulation_movement.getDeliveryValue().getQuantity()
+        simulation_movement.setDeliveryError(delivery_quantity -
+            value_dict['quantity'])
+      delivery = simulation_movement.getDeliveryValue()
+      simulation_movement.setDestination(delivery.getDestination())
+      simulation_movement.setSource(delivery.getSource())
+      simulation_movement.setDestinationSection(delivery.getDestinationSection())
+      simulation_movement.setSourceSection(delivery.getSourceSection())
+		   
+      simulation_movement.edit(**value_dict)
+      if parent_movement is not None:
+        # backtrack to the parent movement only if it is not frozen
+        self._recursivelySolve(parent_movement, is_last_movement=0,
+            **parent_value_delta_dict)
+

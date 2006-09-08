@@ -59,6 +59,7 @@ class TestPackingListMixin(TestOrderMixin):
   """
     Test business template erp5_trade 
   """
+  packable_packing_list_portal_type_list = ['Sale Packing List']
   container_portal_type = 'Container'
   container_line_portal_type = 'Container Line'
   container_cell_portal_type = 'Container Cell'
@@ -81,7 +82,8 @@ class TestPackingListMixin(TestOrderMixin):
                       stepCheckDeliveryBuilding \
                       stepCheckPackingListIsNotDivergent '
 
-  default_sequence_with_two_lines = 'stepCreateOrganisation1 \
+  default_sequence_with_two_lines = '\
+                      stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
                       stepCreateOrganisation3 \
                       stepCreateOrder \
@@ -104,7 +106,8 @@ class TestPackingListMixin(TestOrderMixin):
                       stepCheckDeliveryBuilding \
                       stepCheckPackingListIsNotDivergent '
 
-  variated_default_sequence = 'stepCreateOrganisation1 \
+  variated_default_sequence = '\
+                      stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
                       stepCreateOrganisation3 \
                       stepCreateOrder \
@@ -178,7 +181,7 @@ class TestPackingListMixin(TestOrderMixin):
       Test if packing list is divergent
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals('diverged',packing_list.getCausalityState())
+    self.assertEquals('diverged', packing_list.getCausalityState())
 
   def stepCheckPackingListIsNotDivergent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -205,11 +208,12 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     quantity = sequence.get('line_quantity',default=self.default_quantity)
-    quantity = quantity -1
+    quantity = quantity - 1
     sequence.edit(line_quantity=quantity)
     for packing_list_line in packing_list.objectValues(
         portal_type=self.packing_list_line_portal_type):
       packing_list_line.edit(quantity=quantity)
+    sequence.edit(last_delta = sequence.get('last_delta', 0.0) - 1.0)
 
   def stepIncreasePackingListLineQuantity(self, sequence=None,
       sequence_list=None, **kw):
@@ -217,9 +221,13 @@ class TestPackingListMixin(TestOrderMixin):
     Set a increased quantity on packing list lines
     """
     packing_list = sequence.get('packing_list')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity + 1
+    sequence.edit(line_quantity=quantity)
     for packing_list_line in packing_list.objectValues(
         portal_type=self.packing_list_line_portal_type):
-      packing_list_line.edit(quantity=self.default_quantity+1)
+      packing_list_line.edit(quantity=quantity)
+    sequence.edit(last_delta = sequence.get('last_delta', 0.0) + 1.0)
 
   def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -285,14 +293,41 @@ class TestPackingListMixin(TestOrderMixin):
                                portal_type=self.packing_list_portal_type)
     self.assertEquals(1,len(packing_list_list))
     packing_list1 = sequence.get('packing_list')
+    last_delta = sequence.get('last_delta', 0.0)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity+1,line.getQuantity())
+      self.assertEquals(self.default_quantity + last_delta,
+          line.getQuantity())
       simulation_list = line.getDeliveryRelatedValueList(
                             portal_type='Simulation Movement')
       self.assertEquals(len(simulation_list),1)
       simulation_movement = simulation_list[0]
-      self.assertEquals(simulation_movement.getQuantity(),self.default_quantity+1)
+      self.assertEquals(self.default_quantity + last_delta,
+          simulation_movement.getCorrectedQuantity())
+
+  def stepCheckPackingListNotSolved(self, sequence=None, sequence_list=None, **kw):
+    """
+      This step is specific to test_10 : the incorrectly used solver didn't
+      solve anything.
+    """
+    order = sequence.get('order')
+    packing_list_list = order.getCausalityRelatedValueList(
+                               portal_type=self.packing_list_portal_type)
+    self.assertEquals(1,len(packing_list_list))
+    packing_list1 = sequence.get('packing_list')
+    last_delta = sequence.get('last_delta', 0.0)
+    for line in packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type):
+      self.assertEquals(self.default_quantity + last_delta,
+          line.getQuantity())
+      simulation_list = line.getDeliveryRelatedValueList(
+                            portal_type='Simulation Movement')
+      self.assertEquals(len(simulation_list),1)
+      simulation_movement = simulation_list[0]
+
+      # Here we don't add last_delta, as the solver didn't do its work.
+      self.assertEquals(self.default_quantity,
+          simulation_movement.getCorrectedQuantity())
 
   def stepChangePackingListDestination(self, sequence=None, 
                                        sequence_list=None, **kw):
@@ -429,7 +464,7 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('new_packing_list')
     self.stepAdoptPrevision(sequence=sequence,packing_list=packing_list)
 
-  def stepAcceptDecision(self,sequence=None, sequence_list=None, **kw):
+  def stepAcceptDecisionPackingList(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
     """
@@ -561,6 +596,8 @@ class TestPackingListMixin(TestOrderMixin):
       not equals to the quantity of the packing list
     """
     packing_list = sequence.get('packing_list')
+    if packing_list.getPortalType() not in \
+        self.packable_packing_list_portal_type_list: return
     self.assertEquals(0,packing_list.isPacked())
     self.assertEquals('missing',packing_list.getContainerState())
 
@@ -572,6 +609,8 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
+    if packing_list.getPortalType() not in \
+        self.packable_packing_list_portal_type_list: return
     get_transaction().commit()
     self.assertEquals(1,packing_list.isPacked())
     self.assertEquals('packed',packing_list.getContainerState())
@@ -582,6 +621,8 @@ class TestPackingListMixin(TestOrderMixin):
       equals to the quantity of the packing list
     """
     packing_list = sequence.get('new_packing_list')
+    if packing_list.getPortalType() not in \
+        self.packable_packing_list_portal_type_list: return
     self.stepCheckPackingListIsPacked(sequence=sequence,
                                       packing_list=packing_list)
 
@@ -621,8 +662,11 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
                       stepChangePackingListDestination \
-                      stepCheckPackingListIsDivergent \
+                      stepCheckPackingListIsCalculating \
+                      stepAcceptDecisionPackingList \
                       stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListIsNotDivergent \
                       stepCheckSimulationDestinationUpdated \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -640,7 +684,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_string = self.default_sequence + '\
                       stepChangePackingListStartDate \
                       stepCheckPackingListIsCalculating \
-                      stepAcceptDecision \
+                      stepAcceptDecisionPackingList \
                       stepTic \
                       stepCheckPackingListIsSolved \
                       stepCheckPackingListIsNotDivergent \
@@ -783,9 +827,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
   def test_10_PackingListIncreaseQuantity(self, quiet=0, run=run_all_test):
     """
-      Change the quantity on an delivery line, then
-      see if the packing list is divergent and then
-      split and defer the packing list
+    - Increase the quantity on an delivery line
+    - check if the packing list is divergent
+    - Apply the "split and defer" solver to the packing list
+    - check that nothing was splitted and the packing list is still divergent
+      (reset the delta before, as we don't expect a modification)
+
+    Basically, when we apply "split and defer" to a packing list, we don't
+    want it to modify lines which have been increased.
     """
     if not run: return
     sequence_list = SequenceList()
@@ -796,8 +845,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCheckPackingListIsCalculating \
                       stepSplitAndDeferPackingList \
                       stepTic \
-                      stepCheckPackingListIsSolved \
-                      stepCheckPackingListNotSplitted \
+                      stepCheckPackingListIsDiverged \
+                      stepCheckPackingListIsDivergent \
+                      stepCheckPackingListNotSolved \
                       '
     sequence_list.addSequenceString(sequence_string)
 
