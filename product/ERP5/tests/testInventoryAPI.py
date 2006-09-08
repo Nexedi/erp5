@@ -38,13 +38,10 @@ if __name__ == '__main__':
 
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
+from Testing import ZopeTestCase
 
+from Products.ERP5.Document.OrderRule import OrderRule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Type.Base import initializePortalTypeDynamicProperties, \
-                                   _aq_reset
-from Products.ERP5Type.Utils import DocumentConstructor,\
-                                    setDefaultClassProperties
 
 # Needed in order to have a log file inside the current folder
 os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
@@ -72,10 +69,11 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """set up """
     self.createCategories()
     self.login()
-    if not hasattr(self.getPortal(), 'testing_folder'):
-      self.getPortal().newContent(portal_type='Folder',
+    self.portal = self.getPortal()
+    if not hasattr(self.portal, 'testing_folder'):
+      self.portal.newContent(portal_type='Folder',
                                               id='testing_folder')
-    self.folder = self.getPortal().testing_folder
+    self.folder = self.portal.testing_folder
     
     self.section = self._makeOrganisation(title='Section')
     self.node = self._makeOrganisation(title='Node')
@@ -87,6 +85,11 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.resource = self.getCurrencyModule().newContent(
                                   title='Resource',
                                   portal_type='Currency')
+    # create a dummy Rule, to be able to create simulation movements
+    rule_tool = self.portal.portal_rules
+    if not hasattr(rule_tool, 'default_order_rule'):
+      rule_tool._setObject('default_order_rule',
+                           OrderRule('default_order_rule'))
 
   def _safeTic(self):
     """Like tic, but swallowing errors, usefull for teardown"""
@@ -211,6 +214,23 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.tic()
     return mvt
 
+  def _makeSimulationMovement(self, **kw):
+    """Creates a simulation movement.
+    """
+    ar = self.getSimulationTool().newContent(portal_type='Applied Rule')
+    # we created a default_order_rule in setUp
+    ar.setSpecialise('portal_rules/default_order_rule')
+    mvt = ar.newContent(portal_type='Simulation Movement')
+    kw.setdefault('destination_section_value', self.section)
+    kw.setdefault('source_section_value', self.mirror_section)
+    kw.setdefault('destination_value', self.node)
+    kw.setdefault('source_value', self.mirror_node)
+    kw.setdefault('resource_value', self.resource)
+    mvt.edit(**kw)
+    get_transaction().commit()
+    self.tic()
+    return mvt
+
 # }}}
 
 class TestInventory(InventoryAPITestCase):
@@ -218,13 +238,38 @@ class TestInventory(InventoryAPITestCase):
   """
   RUN_ALL_TESTS = 1
   
-  def testReturnedTypeIsList(self):
+  def testReturnedTypeIsFloat(self):
     """getInventory returns a float"""
     # XXX it may return a Decimal some day
     getInventory = self.getSimulationTool().getInventory
     self.assertEquals(type(getInventory()), type(0.1))
     # default is 0
     self.assertEquals(0, getInventory())
+
+  def test_SimulationMovement(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test Simulation Movements works in this testing environnement.
+    """
+    getInventory = self.getSimulationTool().getInventory
+    self._makeSimulationMovement(quantity=100)
+    self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
+    # mixed with a real movement
+    self._makeMovement(quantity=100)
+    self.assertEquals(200, getInventory(section_uid=self.section.getUid()))
+
+  def test_SimulationMovementisAccountable(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test Simulation Movements are not accountable if related to a delivery.
+    """
+    getInventory = self.getSimulationTool().getInventory
+    sim_mvt = self._makeSimulationMovement(quantity=100)
+    mvt = self._makeMovement(quantity=100)
+    # simulation movement are accountable,
+    self.failUnless(sim_mvt.isAccountable())
+    # unless connected to a delivery movement
+    sim_mvt.setDeliveryValue(mvt)
+    self.failIf(sim_mvt.isAccountable())
+    # not accountable movement are not counted by getInventory
+    get_transaction().commit(); self.tic() # (after reindexing of course)
+    self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
 
   def test_SectionCategory(self, quiet=0, run=RUN_ALL_TESTS):
     """Tests inventory on section category. """
@@ -749,11 +794,15 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                        ('stock.uid', 'ascending'),)) ]
     self.assertEquals(movement_date_list, date_list)
 
+  # FIXME: do we want to include it or no ?
   def test_Limit(self):
-    pass
-    # TODO
-    # test limit argument, as used by listbox
-
+    return "is it part of this API ?" # XXX
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    for q in range(10):
+      self._makeMovement(quantity=1)
+    self.assertEquals(3, len(getMovementHistoryList(list_start=2,
+                                                    list_lines=3)))
+  
   def test_SimulationState(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=2, simulation_state="confirmed")
