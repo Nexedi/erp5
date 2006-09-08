@@ -483,12 +483,22 @@ if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
 default[\'retenue_maladie/salaire_brut\'] = \\\n
 { \'employer_rate\' : None\n
 , \'employee_rate\' : None\n
-, \'base\'          : None\n
+, \'base\'          : gross_salary\n
 }\n
 default[\'primes/salaire_brut\'] = \\\n
 { \'employer_rate\' : None\n
 , \'employee_rate\' : None\n
-, \'base\'          : None\n
+, \'base\'          : gross_salary\n
+}\n
+\n
+# Also add a brand new line for "Reduction Fillon", a negative contribution.\n
+# This tax can be calculated automaticcaly.\n
+# Because of lack of time we just let the accountant do the work.\n
+# See coresponding service description for more details.\n
+default[\'reduction_fillon_forfait/forfait\'] = \\\n
+{ \'employer_rate\' : None\n
+, \'employee_rate\' : None\n
+, \'base\'          : 100.0\n
 }\n
 \n
 return default\n
