@@ -77,6 +77,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>omit_simulation</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>query</string> </key>
                                 <value>
                                   <dictionary/>
@@ -152,21 +158,22 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>query</string>
-                            <string>resource_uid</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>simulation_state</string>
-                            <string>section_category</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>closed_summary</string>
-                            <string>where_expression</string>
-                            <string>from_table_list</string>
-                            <string>selection_uids</string>
+<string>query</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>omit_simulation</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>simulation_state</string>
+<string>section_category</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>closed_summary</string>
+<string>where_expression</string>
+<string>from_table_list</string>
+<string>selection_uids</string>
                           </list>
                         </value>
                     </item>
@@ -194,6 +201,7 @@ resource_uid:list\r\n
 from_date\r\n
 at_date\r\n
 to_date\r\n
+omit_simulation\r\n
 omit_input\r\n
 omit_output\r\n
 simulation_state:list\r\n
@@ -294,6 +302,9 @@ WHERE\n
   </dtml-if>\n
   <dtml-if to_date>\n
     AND stock.date < <dtml-sqlvar to_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if omit_simulation>\n
+    AND catalog.portal_type != \'Simulation Movement\'\n
   </dtml-if>\n
   <dtml-if omit_input>\n
     AND stock.quantity < 0\n
@@ -434,6 +445,9 @@ WHERE\n
   </dtml-if>\n
   <dtml-if to_date>\n
     AND stock.date < <dtml-sqlvar to_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if omit_simulation>\n
+    AND catalog.portal_type != \'Simulation Movement\'\n
   </dtml-if>\n
   <dtml-if omit_input>\n
     AND stock.quantity < 0\n

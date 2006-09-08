@@ -270,6 +270,15 @@ class TestInventory(InventoryAPITestCase):
     # not accountable movement are not counted by getInventory
     get_transaction().commit(); self.tic() # (after reindexing of course)
     self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
+  
+  def test_OmitSimulation(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test omit_simulation argument to getInventory.
+    """
+    getInventory = self.getSimulationTool().getInventory
+    self._makeSimulationMovement(quantity=100)
+    self._makeMovement(quantity=100)
+    self.assertEquals(100, getInventory(section_uid=self.section.getUid(),
+                                        omit_simulation=1))
 
   def test_SectionCategory(self, quiet=0, run=RUN_ALL_TESTS):
     """Tests inventory on section category. """
@@ -819,7 +828,28 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               section_uid=self.section.getUid())
     self.assertEquals(len(movement_history_list), 2)
 
-
+  def test_SimulationMovement(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test simulation movement are listed in getMovementHistoryList
+    """
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeSimulationMovement(quantity=100)
+    self._makeMovement(quantity=100)
+    movement_history_list = getMovementHistoryList(
+                                    section_uid=self.section.getUid())
+    self.assertEquals(2, len(movement_history_list))
+  
+  def test_OmitSimulation(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test omit_simulation argument to getMovementHistoryList.
+    """
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeSimulationMovement(quantity=100)
+    self._makeMovement(quantity=100)
+    movement_history_list = getMovementHistoryList(
+                                    section_uid=self.section.getUid(),
+                                    omit_simulation=1)
+    self.assertEquals(1, len(movement_history_list))
+    self.assertEquals(100, movement_history_list[0].quantity)
+    
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
   """

@@ -79,6 +79,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>omit_simulation</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>order_by_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -126,18 +132,19 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>order_by_expression</string>
-                            <string>group_by_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>ignore_variation</string>
-                            <string>standardize</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>input_simulation_state</string>
-                            <string>output_simulation_state</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+<string>group_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>ignore_variation</string>
+<string>standardize</string>
+<string>omit_simulation</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>input_simulation_state</string>
+<string>output_simulation_state</string>
                           </list>
                         </value>
                     </item>
@@ -577,6 +584,7 @@ selection_domain\r\n
 selection_report\r\n
 ignore_variation\r\n
 standardize\r\n
+omit_simulation\r\n
 omit_input\r\n
 omit_output\r\n
 input_simulation_state:list\r\n
@@ -655,6 +663,10 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
+\n
+<dtml-if omit_simulation>\n
+  AND catalog.portal_type != \'Simulation Movement\'\n
+</dtml-if>\n
 \n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
@@ -785,6 +797,10 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
+\n
+<dtml-if omit_simulation>\n
+  AND catalog.portal_type != \'Simulation Movement\'\n
+</dtml-if>\n
 \n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
