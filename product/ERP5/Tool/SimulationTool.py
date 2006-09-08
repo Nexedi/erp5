@@ -461,79 +461,100 @@ class SimulationTool (BaseTool):
                      omit_simulation=0, omit_input=0, omit_output=0,
                      selection_domain=None, selection_report=None, **kw):
       """
-      Returns an inventory of a single or multiple resources on a single or multiple
-      nodes as a single float value
+      Returns an inventory of a single or multiple resources on a single or
+      multiple nodes as a single float value
 
-      from_date (>=) -
+      from_date (>=) - only take rows which date is >= from_date
 
-      to_date   (<)  -
+      to_date   (<)  - only take rows which date is < to_date
 
       at_date   (<=) - only take rows which date is <= at_date
 
       resource (only in generic API in simulation)
 
-      node        -  only take rows in stock table which node_uid is equivalent to node
+      node           -  only take rows in stock table which node_uid is
+                        equivalent to node
 
-      payment        -  only take rows in stock table which payment_uid is equivalent to payment
+      payment        -  only take rows in stock table which payment_uid is
+                        equivalent to payment
 
-      section        -  only take rows in stock table which section_uid is equivalent to section
+      section        -  only take rows in stock table which section_uid is
+                        equivalent to section
 
-      mirror_section
+      mirror_section 
 
-      resource_category        -  only take rows in stock table which resource_uid is in resource_category
+      resource_category  -  only take rows in stock table which
+                        resource_uid is member of resource_category
 
-      node_category        -  only take rows in stock table which node_uid is in section_category
+      node_category   - only take rows in stock table which node_uid is
+                        member of section_category
 
-      payment_category        -  only take rows in stock table which payment_uid is in section_category
+      payment_category -  only take rows in stock table which payment_uid is
+                        member of section_category
 
-      section_category        -  only take rows in stock table which section_uid is in section_category
+      section_category -  only take rows in stock table which section_uid is
+                        member of section_category
 
       mirror_section_category
 
-      variation_text - only take rows in stock table with specified variation_text
-                       this needs to be extended with some kind of variation_category ?
-                       XXX this way of implementing variation selection is far from perfect
+      variation_text -  only take rows in stock table with specified
+                        variation_text.
+                        This needs to be extended with some kind of
+                        variation_category ?
+                        XXX this way of implementing variation selection is far
+                        from perfect
 
-      sub_variation_text - only take rows in stock table with specified variation_text
+      sub_variation_text - only take rows in stock table with specified
+                        variation_text
 
-      variation_category - variation or list of possible variations (it is not a cross-search ; SQL query uses OR)
+      variation_category - variation or list of possible variations (it is not
+                        a cross-search ; SQL query uses OR)
 
       simulation_state - only take rows with specified simulation_state
 
       transit_simulation_state - specifies which states are transit states
 
-      omit_transit - do not evaluate transit_simulation_state
+      omit_transit   -  do not evaluate transit_simulation_state
 
-      input_simulation_state - only take rows with specified simulation_state and quantity > 0
+      input_simulation_state - only take rows with specified simulation_state
+                        and quantity > 0
 
-      output_simulation_state - only take rows with specified simulation_state and quantity < 0
+      output_simulation_state - only take rows with specified simulation_state
+                        and quantity < 0
 
-      ignore_variation - do not take into account variation in inventory calculation (useless on getInventory,
-                         but useful on getInventoryList)
+      ignore_variation -  do not take into account variation in inventory
+                        calculation (useless on getInventory, but useful on
+                        getInventoryList)
 
-      standardise - provide a standard quantity rather than an SKU (XXX not implemented yet)
+      standardise    -  provide a standard quantity rather than an SKU (XXX
+                        not implemented yet)
 
       omit_simulation - doesn't take into account simulation movements
 
-      omit_input
+      omit_input     -  doesn't take into account movement with quantity < 0
 
-      omit_output
+      omit_output    -  doesn't take into account movement with quantity > 0
 
       selection_domain, selection_report - see ListBox
 
-      group_by_variation (useless on getInventory, but useful on getInventoryList)
+      group_by_variation - (useless on getInventory, but useful on
+                        getInventoryList)
 
-      group_by_node (useless on getInventory, but useful on getInventoryList)
+      group_by_node  -  (useless on getInventory, but useful on
+                        getInventoryList)
 
-      group_by_mirror_node (useless on getInventory, but useful on getInventoryList)
+      group_by_mirror_node - (useless on getInventory, but useful on
+                        getInventoryList)
 
-      group_by_sub_variation (useless on getInventory, but useful on getInventoryList)
+      group_by_sub_variation - (useless on getInventory, but useful on
+                        getInventoryList)
 
-      **kw  - if we want extended selection with more keywords (but bad performance)
-              check what we can do with buildSqlQuery
+      **kw           -  if we want extended selection with more keywords (but
+                        bad performance) check what we can do with
+                        buildSqlQuery
 
-      NOTE: we may want to define a parameter so that we can select the kind of inventory
-      statistics we want to display (ex. sum, average, cost, etc.)
+      NOTE: we may want to define a parameter so that we can select the kind of
+      inventory statistics we want to display (ex. sum, average, cost, etc.)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -543,7 +564,7 @@ class SimulationTool (BaseTool):
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report,
           **sql_kw)
-      if src__ :
+      if src__:
         return result
 
       total_result = 0.0
