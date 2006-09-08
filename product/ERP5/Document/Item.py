@@ -89,7 +89,7 @@ class Item(XMLObject, Amount, ImmobilisableItem):
         """
         return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
 
-    def getPrice(self,**kw):
+    def getPrice(self,context=None,**kw):
       """
         Get the Price in the context.
 
