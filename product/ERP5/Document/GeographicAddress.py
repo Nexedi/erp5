@@ -80,6 +80,9 @@ class GeographicAddress(Coordinate, Base):
           else :
             result = ('%s\n%s %s') % (self.getStreetAddress() or '', 
                           self.getCity() or '', self.getZipCode() or '')
+        # XXX Not very clean
+        if result == "\n ":
+          result = ""
         return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
