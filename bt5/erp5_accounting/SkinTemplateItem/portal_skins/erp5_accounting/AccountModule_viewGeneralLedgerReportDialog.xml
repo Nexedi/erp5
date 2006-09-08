@@ -76,7 +76,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_gap</string>
+                        <string>your_gap</string>
                       </list>
                     </value>
                 </item>
@@ -90,10 +90,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_transaction_section_category</string>
-                        <string>my_from_date</string>
-                        <string>my_at_date</string>
-                        <string>my_portal_skin</string>
+                        <string>your_transaction_section_category</string>
+                        <string>your_from_date</string>
+                        <string>your_at_date</string>
+                        <string>your_portal_skin</string>
                       </list>
                     </value>
                 </item>
@@ -101,7 +101,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_transaction_simulation_state</string>
+                        <string>your_transaction_simulation_state</string>
                       </list>
                     </value>
                 </item>

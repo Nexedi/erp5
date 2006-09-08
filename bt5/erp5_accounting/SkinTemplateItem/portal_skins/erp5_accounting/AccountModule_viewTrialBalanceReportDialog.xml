@@ -81,8 +81,8 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_gap_root</string>
-                        <string>my_gap_list</string>
+                        <string>your_gap_root</string>
+                        <string>your_gap_list</string>
                       </list>
                     </value>
                 </item>
@@ -90,12 +90,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_transaction_section_category</string>
-                        <string>my_from_date</string>
-                        <string>my_at_date</string>
-                        <string>my_expand_accounts</string>
-                        <string>my_show_parent_accounts</string>
-                        <string>my_portal_skin</string>
+                        <string>your_transaction_section_category</string>
+                        <string>your_from_date</string>
+                        <string>your_at_date</string>
+                        <string>your_expand_accounts</string>
+                        <string>your_show_parent_accounts</string>
+                        <string>your_portal_skin</string>
                       </list>
                     </value>
                 </item>
@@ -103,7 +103,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_transaction_simulation_state</string>
+                        <string>your_transaction_simulation_state</string>
                       </list>
                     </value>
                 </item>

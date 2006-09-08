@@ -102,7 +102,6 @@ params = {\n
 \n
 if from_date:\n
   params[\'from_date\'] = from_date\n
-  preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
 else :\n
   params[\'no_from_date\'] = 1\n
 if source_payment :\n
@@ -204,7 +203,6 @@ return [ReportSection(\n
                             <string>True</string>
                             <string>_write_</string>
                             <string>params</string>
-                            <string>preferences</string>
                             <string>result</string>
                             <string>portal</string>
                             <string>account_columns</string>
