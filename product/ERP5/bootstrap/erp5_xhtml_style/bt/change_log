@@ -1,3 +1,6 @@
+2006-09-08 Kevin
+* Don't display action box in default web view and factorize conditions.
+
 2006-09-07 jerome
 * fix <title>s
 
