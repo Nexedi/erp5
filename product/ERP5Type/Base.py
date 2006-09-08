@@ -66,6 +66,7 @@ import sys
 import pickle
 import copy
 import psyco
+import traceback
 
 from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
@@ -2131,9 +2132,21 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     return getattr(self,'title',None)
 
   security.declarePublic('log')
-  def log(self, subsystem, message, level=INFO):
+  def log(self, description, content, level=INFO):
     """Put a log message """
-    LOG(subsystem, level, message)
+    if content=='': # allow for content only while keeping interface
+        description,content=content,description
+    st=traceback.extract_stack()
+    head=[]
+    for frame in st[-2:-6:-1]: # assume no deep nesting in Script (Python)
+        if frame[3] is not None and frame[3].startswith('self.log'): # called from class
+            head.append('%s, %d' % (frame[2],frame[1]))
+            break
+        if frame[0]=='Script (Python)': # does anybody log from ZPT or dtml?
+            head.append('%s, %d' % (frame[2],frame[1]))
+    head=' -> '.join(head)
+    description='%s: %s' % (head,description)
+    LOG(description, level, content)
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility

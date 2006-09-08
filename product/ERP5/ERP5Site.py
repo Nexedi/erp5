@@ -35,7 +35,7 @@ import ERP5Defaults
 
 from zLOG import LOG, INFO
 from string import join
-import os
+import os, traceback
 MARKER = []
 
 
@@ -850,10 +850,19 @@ class ERP5Site(FolderMixIn, CMFSite):
       new_instance.immediateReindexObject()
     return new_instance
 
-  def log(self,description,content):
+  def log(self,description,content=''):
     """
     Put a log message
     """
+    if content=='': # allow for content only while keeping interface
+        description,content=content,description
+    st=traceback.extract_stack()
+    head=[]
+    for frame in st[-2:-6:-1]: # assume no deep nesting in Script (Python)
+        if frame[0]=='Script (Python)': # does anybody log from ZPT or dtml?
+            head.append('%s, %d' % (frame[2],frame[1]))
+    head=' -> '.join(head)
+    description='%s: %s' % (head,description)
     LOG(description, 0, content)
 
 
