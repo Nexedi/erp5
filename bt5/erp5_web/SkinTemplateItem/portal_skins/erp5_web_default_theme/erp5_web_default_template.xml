@@ -61,7 +61,6 @@
 \n
 <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
 \n
-<?xml version="1.0" encoding="UTF-8"?>\n
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
 \n
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n
@@ -90,12 +89,15 @@
 \n
       <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
 \n
-      <div class="main_content">\n
-        <!-- XXX Why no portal message displayed here on save through web interface ??? -->\n
-        <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
+      <div id="main_content" class="column">\n
+        <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
+          <!-- XXX Why no portal message displayed here ?\n
+               Normally a message should be displayed when saving an object through web interface... -->\n
+          <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
+        </tal:block>\n
         <tal:block metal:define-slot="main"/>\n
       </div>\n
-  \n
+\n
       <tal:block tal:condition="python: layout_form is not None"\n
                  tal:define="field_errors python: request.get(\'field_errors\', {});\n
                              dummy        python: request.set(\'editable_mode\', 1);\n
@@ -105,7 +107,13 @@
         </tal:block>\n
         <tal:block>\n
           <tal:block tal:repeat="group groups">\n
-            <div tal:attributes="class group; id group" tal:condition="python: group.find(\'hidden\') < 0">\n
+            <div tal:condition="python: group.find(\'hidden\') < 0"\n
+                 tal:define="group_details     python: here.ERP5XhtmlStyle_getFormGroupTitleAndId(group);\n
+                             group_css_classes python: group_details[0]"\n
+                 tal:attributes="class     python: group_css_classes;\n
+                                 id        python: group_css_classes.replace(\' \', \'_\');\n
+                                 title     python: group_details[1];\n
+              ">\n
               <tal:block tal:repeat="field python: layout_form.get_fields_in_group(group)">\n
                 <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
               </tal:block>\n
