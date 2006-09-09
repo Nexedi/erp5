@@ -17,3 +17,4 @@ Foo | history
 Foo | list
 Foo | metadata
 Foo | view
+Foo | view_relation_field

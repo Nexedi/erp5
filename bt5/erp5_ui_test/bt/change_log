@@ -1,3 +1,7 @@
+2006-09-09 jerome
+* Add a form that shows a multi relation field and a relation field for Foo.
+* A few more tests for relation fields.
+
 2006-09-08 Seb
 * Define a new variable so we can user ${base_url} instead of /erp5/
 
