@@ -78,7 +78,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
   	   , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'  #, 'currency_exchange_patch'
-           , 'erp5_banking_money_deposit' # erp5_banking_money_deposit contains all method for cash sorting
+           , 'erp5_banking_cash' # erp5_banking_money_deposit contains all method for cash sorting
            )
   
   def getMoneyDepositModule(self):
