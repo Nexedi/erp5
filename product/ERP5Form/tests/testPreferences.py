@@ -96,6 +96,11 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(group.getPreferenceState(),   'disabled')
     self.assertEquals(site.getPreferenceState(),    'disabled')
   
+  def test_PreferenceToolTitle(self):
+    """Tests that the title of the preference tool is correct.
+    """
+    self.assertEquals('Preferences', self.getPreferenceTool().Title())
+
   def test_AllowedContentTypes(self, quiet=quiet, run=run_all_tests):
     """Tests Preference can be added in Preference Tool.
     """

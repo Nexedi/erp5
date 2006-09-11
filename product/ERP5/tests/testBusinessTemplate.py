@@ -1834,6 +1834,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(dependency_bt=template)
     
   # tests
+  def test_Title(self):
+    """Tests the Title of the Template Tool."""
+    self.assertEquals('Template Tool', self.getTemplateTool().Title())
+
   def test_01_checkNewSite(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
