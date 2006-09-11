@@ -192,6 +192,10 @@ Monetary Survey | history
 Monetary Survey | metadata
 Monetary Survey | print
 Monetary Survey | view
+Money Deposit Module | list
+Money Deposit Module | list_ui
+Money Deposit Module | sort_on
+Money Deposit Module | view
 Money Deposit Rendering Module | list_ui
 Money Deposit Rendering Module | print_pdf
 Money Deposit Rendering Module | sort_on
@@ -211,6 +215,12 @@ Money Deposit Transfer | history
 Money Deposit Transfer | metadata
 Money Deposit Transfer | print_pdf
 Money Deposit Transfer | view
+Money Deposit | accouting_view
+Money Deposit | fast_input
+Money Deposit | history
+Money Deposit | metadata
+Money Deposit | print_pdf
+Money Deposit | view
 Outgoing Account Incident Line | metadata
 Outgoing Account Incident Line | view
 Outgoing Cash Balance Regulation Line | history

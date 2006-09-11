@@ -13,6 +13,7 @@ monetary_issue_module
 monetary_recall_module
 monetary_reception_module
 monetary_survey_module
+money_deposit_module
 money_deposit_rendering_module
 money_deposit_transfer_module
 usual_cash_incident_module

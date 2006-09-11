@@ -141,6 +141,13 @@
  <portal_type id="Monetary Survey Module">
   <item>Monetary Survey</item>
  </portal_type>
+ <portal_type id="Money Deposit">
+  <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
+ </portal_type>
+ <portal_type id="Money Deposit Module">
+  <item>Money Deposit</item>
+ </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Cash Delivery Line</item>
  </portal_type>

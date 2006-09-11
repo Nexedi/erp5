@@ -29,6 +29,9 @@
  <portal_type id="Monetary Recall Cell">
   <item>variation</item>
  </portal_type>
+ <portal_type id="Money Deposit">
+  <item>external_software</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>
  </portal_type>

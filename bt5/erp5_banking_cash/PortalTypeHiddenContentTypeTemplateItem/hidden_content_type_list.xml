@@ -99,6 +99,10 @@
  <portal_type id="Monetary Survey">
   <item>Cash Delivery Line</item>
  </portal_type>
+ <portal_type id="Money Deposit">
+  <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
+ </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Cash Delivery Line</item>
  </portal_type>

@@ -96,6 +96,12 @@
   <item>Task</item>
   <item>Amount</item>
  </portal_type>
+ <portal_type id="Money Deposit">
+  <item>Arrow</item>
+  <item>Task</item>
+  <item>Price</item>
+  <item>ItemAggregation</item>
+ </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Price</item>
   <item>Amount</item>
@@ -135,8 +141,8 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Usual Cash Incident">
-  <item>Amount</item>
   <item>Price</item>
+  <item>Amount</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Price</item>
@@ -147,7 +153,7 @@
   <item>Amount</item>
  </portal_type>
  <portal_type id="Vault Transfer">
-  <item>Amount</item>
   <item>Price</item>
+  <item>Amount</item>
  </portal_type>
 </property_sheet_list>

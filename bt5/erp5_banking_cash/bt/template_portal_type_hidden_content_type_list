@@ -42,6 +42,8 @@ Monetary Reception | Cash Delivery Line
 Monetary Survey | Cash Delivery Line
 Money Deposit Rendering | Cash Delivery Line
 Money Deposit Transfer | Cash Delivery Line
+Money Deposit | Banking Operation Line
+Money Deposit | Cash Delivery Line
 Outgoing Account Incident Line | Cash Delivery Cell
 Outgoing Cash Balance Regulation Line | Cash Delivery Cell
 Outgoing Cash Exchange Line | Cash Delivery Cell

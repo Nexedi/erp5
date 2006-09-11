@@ -12,6 +12,7 @@ Container Line | emission_letter
 Container Line | variation
 Internal Money Deposit | external_software
 Monetary Recall Cell | variation
+Money Deposit | external_software
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation
 Usual Cash Incident | incident_type

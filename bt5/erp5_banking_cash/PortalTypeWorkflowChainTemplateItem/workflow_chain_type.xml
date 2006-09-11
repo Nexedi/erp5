@@ -68,6 +68,10 @@
   <workflow>monetary_survey_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Money Deposit</type>
+  <workflow>edit_workflow, money_deposit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Money Deposit Rendering</type>
   <workflow>money_deposit_rendering_workflow, edit_workflow</workflow>
  </chain>
@@ -81,7 +85,7 @@
  </chain>
  <chain>
   <type>Usual Cash Rendering</type>
-  <workflow>edit_workflow, usual_cash_rendering_workflow</workflow>
+  <workflow>usual_cash_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Usual Cash Transfer</type>
