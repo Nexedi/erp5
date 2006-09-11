@@ -248,7 +248,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render text input field.
     """
     html_string = ''
-    relation_field_index = REQUEST.get('_v_relation_field_index')
+    relation_field_index = REQUEST.get('_v_relation_field_index', 0)
     render_parameter_list = self._generateRenderValueList(
                                             field, key, value,
                                             REQUEST)

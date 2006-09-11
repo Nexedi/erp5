@@ -372,8 +372,6 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         # We initialize here an index which is used to generate
         # different method ids for every field
         request = extra_context['request']
-        # XXX We must not use a counter, but a ID for each field
-        request.set('_v_relation_field_index', 0)
         return pt.pt_render(extra_context=extra_context)
 
     def _exec(self, bound_names, args, kw):
