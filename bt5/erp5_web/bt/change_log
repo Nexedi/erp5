@@ -1,3 +1,6 @@
+2006-09-11 Kevin
+* Split css in two parts: the generic classes for web forms and the specific classes for the theme.
+
 2006-09-08 Kevin
 * Use group id for the layout.
 * Fix css layout to support ie6.

@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -71,6 +77,8 @@
     * Konqueror 3.4.2\n
     * Opera 9.01\n
     * Internet Explorer 6 (Layout: OK; Style: not OK)\n
+\n
+  TODO: Layout is ok in ie6, now styling should be adapted to support ie6.\n
 ____________________________________*/\n
 \n
 \n
@@ -80,12 +88,6 @@ ____________________________________*/\n
 * {\n
   padding: 0;\n
   margin: 0;\n
-}\n
-\n
-html {\n
-/* XXX  width: 85%;  work with current layout technic but, background should be changed */\n
-  margin-right: auto;\n
-  margin-left: auto;\n
 }\n
 \n
 .clear {\n
@@ -135,75 +137,6 @@ span.cancelled   {color: #ccc}\n
 \n
 \n
 \n
-/* General Layout.\n
-** Layout technic based on http://alistapart.com/articles/holygrail/\n
------------------------------------------------*/\n
-\n
-div.content {\n
-  background: #fff;\n
-  border: .1em solid #ccc;\n
-}\n
-\n
-/* Define some constant to make the css flexible without pain */\n
-<tal:block\n
-  define="unit          python: \'px\';\n
-          LC_fullwidth  python: 200;\n
-          LC_width      python: 180;\n
-          LC_padding    python:  10;\n
-          CC_padding    python:  40;\n
-          RC_fullwidth  python: 150;\n
-          RC_width      python: 130;\n
-          RC_padding    python:  10;\n
-">\n
-form#main_form {\n
-  padding-left: <tal:block  replace="python: (\'%s%s\') % (LC_fullwidth, unit)"/>;\n
-  padding-right: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
-  min-width: <tal:block     replace="python: (\'%s%s\') % (LC_fullwidth + CC_padding, unit)"/>;\n
-}\n
-\n
-form#main_form div#footer,\n
-form#main_form div#header   /* XXX Is header working ?? */\n
-{\n
-  margin-left: <tal:block  replace="python: (\'-%s%s\') % (LC_fullwidth, unit)"/>;\n
-  margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
-}\n
-\n
-form#main_form div.column {\n
-  position: relative;\n
-  float: left;\n
-}\n
-\n
-form#main_form div#main_content {\n
-  padding: 0 20px;\n
-  width: 100%;\n
-}\n
-\n
-form#main_form div#left_column {\n
-  width: <tal:block     replace="python: (\'%s%s\') % (LC_width, unit)"/>;\n
-  padding: 0 <tal:block replace="python: (\'%s%s\') % (LC_padding, unit)"/>;\n
-  right: <tal:block     replace="python: (\'%s%s\') % (LC_fullwidth + CC_padding, unit)"/>;\n
-  margin-left: -100%;\n
-}\n
-\n
-form#main_form div#right_column {\n
-  width: <tal:block     replace="python: (\'%s%s\') % (RC_width, unit)"/>;\n
-  padding: 0 <tal:block replace="python: (\'%s%s\') % (RC_padding, unit)"/>;\n
-  margin-right: -100%;\n
-}\n
-\n
-form#main_form div#footer {\n
-  clear: both;\n
-}\n
-\n
-/*** IE Fix ***/\n
-* html form#main_form div#left_column {\n
-  left: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth, unit)"/>;\n
-}\n
-\n
-</tal:block>\n
-\n
-\n
-\n
 /* Widget default styling\n
 ----------------------------------------------- */\n
 \n
@@ -234,35 +167,6 @@ form#main_form div.field.logo {\n
 div.field.logo label {\n
   display: none;\n
 }\n
-\n
-\n
-\n
-<tal:block replace="nothing">\n
-/* Special layout for search bar group: move it top right */\n
-form#main_form > div.searchBar {\n
-  position: absolute;\n
-  z-index: 200;\n
-  top: .3em;\n
-  right: 1em; /* Same as "body > form#main_form[padding-right]".\n
-                 TODO: use dtml code to make this more flexible.\n
-               */\n
-  width: 28em; /* XXX Must be adapted dynamiccaly to let several web widget be diplayed inline.\n
-                  TODO: find the appropriate CSS trick to do hit without pain.\n
-                */\n
-  border: 0;\n
-}\n
-div.searchBar > div.field {\n
-  float: right;\n
-}\n
-div.searchBar div.field > label {\n
-  display: inherit;\n
-}\n
-div.searchBar > div.field > label,\n
-div.searchBar > div.field > div.input {\n
-  float: left;\n
-  margin: 0 .5em;\n
-}\n
-</tal:block>\n
 \n
 \n
 \n
@@ -685,7 +589,7 @@ div.content fieldset.webcontent.extra label:after {\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_default.css</string> </value>
+            <value> <string>erp5_web_form.css</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

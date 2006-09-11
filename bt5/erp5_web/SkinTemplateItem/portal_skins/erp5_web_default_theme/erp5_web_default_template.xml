@@ -69,7 +69,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n
     <title tal:content="python: \'%s | %s\' % (here.getTitleOrId(), here.getPortalObject().getTitle() or here.getPortalObject().getId())"/>\n
 \n
-    <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_default.css"/>\n
+    <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_form.css"/>\n
+    <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_default_theme.css"/>\n
     <tal:block tal:repeat="css css_list">\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
@@ -105,20 +106,18 @@
         <tal:block tal:define="template python: here.developper_shortcut_render">\n
           <tal:block metal:use-macro="template/macros/form"/>\n
         </tal:block>\n
-        <tal:block>\n
-          <tal:block tal:repeat="group groups">\n
-            <div tal:condition="python: group.find(\'hidden\') < 0"\n
-                 tal:define="group_details     python: here.ERP5XhtmlStyle_getFormGroupTitleAndId(group);\n
-                             group_css_classes python: group_details[0]"\n
-                 tal:attributes="class     python: group_css_classes;\n
-                                 id        python: group_css_classes.replace(\' \', \'_\');\n
-                                 title     python: group_details[1];\n
-              ">\n
-              <tal:block tal:repeat="field python: layout_form.get_fields_in_group(group)">\n
-                <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
-              </tal:block>\n
-            </div>\n
-          </tal:block>\n
+        <tal:block tal:repeat="group groups">\n
+          <div tal:condition="python: group.find(\'hidden\') < 0"\n
+               tal:define="group_details     python: here.ERP5XhtmlStyle_getFormGroupTitleAndId(group);\n
+                           group_css_classes python: group_details[0]"\n
+               tal:attributes="class     python: group_css_classes;\n
+                               id        python: group_css_classes.replace(\' \', \'_\');\n
+                               title     python: group_details[1];\n
+            ">\n
+            <tal:block tal:repeat="field python: layout_form.get_fields_in_group(group)">\n
+              <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+            </tal:block>\n
+          </div>\n
         </tal:block>\n
       </tal:block>\n
 \n
