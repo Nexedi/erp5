@@ -490,8 +490,8 @@ class TemplateTool (BaseTool):
               property_dict['title'] = temp_property_dict.get('title', [''])[0]
               property_dict['version'] = \
                   temp_property_dict.get('version', [''])[0]
-	      property_dict['revision'] = \
-	          temp_property_dict.get('revision', [''])[0]
+              property_dict['revision'] = \
+                  temp_property_dict.get('revision', [''])[0]
               property_dict['description'] = \
                   temp_property_dict.get('description', [''])[0]
               property_dict['license'] = \
@@ -597,11 +597,11 @@ class TemplateTool (BaseTool):
       """
       result = None
       for repository, property_dict_list in self.repository_dict.items():
-	for property_dict in property_dict_list:
+        for property_dict in property_dict_list:
           provision_list = property_dict.get('provision_list', [])
           if title in provision_list:
             raise BusinessTemplateIsMeta, 'Business Template %s is provided by another one'%(title,)
-	  if title == property_dict['title']:
+          if title == property_dict['title']:
             if (version_restriction is None) or (self.compareVersionStrings(property_dict['version'], version_restriction)):
               if (result is None) or (self.compareVersions(property_dict['version'], result[2]) > 0):
                 result = (repository,  property_dict['id'], property_dict['version'])
@@ -751,29 +751,29 @@ class TemplateTool (BaseTool):
               # if this business template is newer.
               previous_repository, previous_property_dict = \
                   template_item_dict[title]
-	      diff_version = self.compareVersions(previous_property_dict['version'],
+              diff_version = self.compareVersions(previous_property_dict['version'],
                                                   property_dict['version'])
               if diff_version < 0:
                 template_item_dict[title] = (repository, property_dict)
               elif diff_version == 0 \
-	           and previous_property_dict['revision'] \
-	           and property_dict['revision'] \
-		   and previous_property_dict['revision'] < property_dict['revision'] :
-		      template_item_dict[title] = (repository, property_dict)
+                   and previous_property_dict['revision'] \
+                   and property_dict['revision'] \
+                   and previous_property_dict['revision'] < property_dict['revision']:
+                      template_item_dict[title] = (repository, property_dict)
         # Next, select only updated business templates.
         for repository, property_dict in template_item_dict.values():
           installed_bt = \
               self.getInstalledBusinessTemplate(property_dict['title'])
           if installed_bt is not None:
-	    diff_version = self.compareVersions(installed_bt.getVersion(),
+            diff_version = self.compareVersions(installed_bt.getVersion(),
                                                 property_dict['version'])
             if diff_version < 0:
               template_item_list.append((repository, property_dict))
-	    elif diff_version == 0 \
-	         and installed_bt.getRevision() \
-	         and property_dict['revision'] \
-		 and installed_bt.getRevision() < property_dict['revision'] :
-		   template_item_list.append((repository, property_dict))
+            elif diff_version == 0 \
+                 and installed_bt.getRevision() \
+                 and property_dict['revision'] \
+                 and installed_bt.getRevision() < property_dict['revision']:
+                   template_item_list.append((repository, property_dict))
       else:
         for repository, property_dict_list in self.repository_dict.items():
           for property_dict in property_dict_list:
