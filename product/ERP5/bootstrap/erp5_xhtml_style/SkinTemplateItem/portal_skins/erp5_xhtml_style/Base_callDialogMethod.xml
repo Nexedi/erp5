@@ -92,16 +92,6 @@ def removeUnpickableObjectsFromDict(request_form):\n
       del cleaned_dict[k]\n
   return cleaned_dict\n
 \n
-# Make this script work alike wether called from another script or by a request\n
-# Reinject parameters in the request\n
-request_form[\'dialog_method\'] = dialog_method\n
-request_form[\'dialog_id\'] = dialog_id\n
-request_form[\'dialog_category\'] = dialog_category\n
-request_form[\'enable_pickle\'] = enable_pickle\n
-# If we get unused parameters, put them in the request\n
-for k, v in kw:\n
-  request_form[k]=v\n
-\n
 # Exceptions for UI\n
 if dialog_method == \'Base_configureUI\':\n
   return context.Base_configureUI(form_id=request_form[\'form_id\'],\n
@@ -337,10 +327,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>request_form</string>
                             <string>error_message</string>
                             <string>removeUnpickableObjectsFromDict</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
-                            <string>v</string>
                             <string>_getitem_</string>
                             <string>value</string>
                             <string>getattr</string>
@@ -354,10 +340,14 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>MARKER</string>
                             <string>listbox_id_list</string>
                             <string>file_id_list</string>
+                            <string>_getiter_</string>
                             <string>field</string>
+                            <string>k</string>
+                            <string>v</string>
                             <string>hasattr</string>
                             <string>splitted</string>
                             <string>len</string>
+                            <string>_write_</string>
                             <string>log</string>
                             <string>listbox_id</string>
                             <string>listbox_line_list</string>
