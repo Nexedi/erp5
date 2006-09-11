@@ -719,7 +719,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
             return wc_path
           else:
             return os.sep.join(wc_path.split(os.sep)[:-1])
-    raise SubversionUnknownBusinessTemplateError,
+    raise SubversionUnknownBusinessTemplateError, \
         "Could not find '%s' at first level of working copies." % (bt_name, )
 
   def _getWorkingPath(self, path):
