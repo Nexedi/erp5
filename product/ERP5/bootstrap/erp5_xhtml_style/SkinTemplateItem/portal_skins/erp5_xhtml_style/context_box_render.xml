@@ -296,7 +296,7 @@ XXX: Folder_filter accesses selection directly\n
     <span class="second">\n
       <a tal:condition="here/portal_preferences/getPreferredHtmlStyleContextualHelp"\n
          class="jump_help" title="Help"\n
-         tal:attributes="href python: here.Base_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))">\n
+         tal:attributes="href python: here.ERP5XhtmlStyle_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Help</span>\n
       </a>\n
