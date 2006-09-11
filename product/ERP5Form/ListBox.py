@@ -2784,6 +2784,8 @@ class ListBoxValidator(Validator.Validator):
                   listbox[uid[4:]][sql] = value
                 except ValidationError, err: # XXXX import missing
                   pass
+                except KeyError:
+                  pass
         # Here we generate again the object_list with listbox the listbox we
         # have just created
         if len(listbox)>0:
