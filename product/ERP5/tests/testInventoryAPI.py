@@ -491,12 +491,13 @@ class TestMovementHistoryList(InventoryAPITestCase):
     """Movement History List returns a sequence object""" 
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList()
-    self.failUnless(str(mvt_history_list.__class__),
+    self.assertEquals(str(mvt_history_list.__class__),
                     'Shared.DC.ZRDB.Results.Results')
     # default is an empty list
     self.assertEquals(0, len(mvt_history_list))
   
   def testMovementBothSides(self):
+    """Movement History List returns movement from both sides""" 
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
     # we don't filter, so we have the same movement from both sides.

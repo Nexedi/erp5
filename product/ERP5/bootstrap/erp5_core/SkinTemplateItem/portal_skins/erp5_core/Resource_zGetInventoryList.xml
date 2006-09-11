@@ -110,6 +110,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>section_filtered</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>selection_domain</string> </key>
                                 <value>
                                   <dictionary/>
@@ -149,6 +155,7 @@
 <string>ignore_variation</string>
 <string>standardize</string>
 <string>omit_simulation</string>
+<string>section_filtered</string>
 <string>omit_input</string>
 <string>omit_output</string>
 <string>input_simulation_state</string>
@@ -184,6 +191,7 @@ selection_report\r\n
 ignore_variation\r\n
 standardize\r\n
 omit_simulation\r\n
+section_filtered\r\n
 omit_input\r\n
 omit_output\r\n
 input_simulation_state:list\r\n
@@ -247,7 +255,8 @@ SELECT\n
 \n
 FROM\n
   stock\n
-  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
+       JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
@@ -384,7 +393,8 @@ SELECT\n
 \n
 FROM\n
   stock\n
-  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
+       JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n

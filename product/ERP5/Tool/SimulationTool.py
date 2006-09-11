@@ -268,6 +268,7 @@ class SimulationTool (BaseTool):
         new_kw[table + '.resource_uid'] = resource_uid
       if section_uid is not None :
         new_kw[table + '.section_uid'] = section_uid
+        sql_kw['section_filtered'] = 1
       if node_uid is not None :
         new_kw[table + '.node_uid'] = node_uid
 
@@ -290,6 +291,7 @@ class SimulationTool (BaseTool):
       section_uid_list = self._generatePropertyUidList(section)
       if section_uid_list:
         new_kw[table + '.section_uid'] = section_uid_list
+        sql_kw['section_filtered'] = 1
 
       mirror_section_uid_list = self._generatePropertyUidList(mirror_section)
       if mirror_section_uid_list:
@@ -322,6 +324,7 @@ class SimulationTool (BaseTool):
       section_category_uid_list = self._generatePropertyUidList(section_category)
       if section_category_uid_list:
         new_kw[table + '_section_category_uid'] = section_category_uid_list
+        sql_kw['section_filtered'] = 1
 
       mirror_section_category_uid_list = self._generatePropertyUidList(
                                               mirror_section_category)
@@ -353,6 +356,7 @@ class SimulationTool (BaseTool):
       if section_category_strict_membership_uid_list:
         new_kw[table + '_section_category_strict_membership_uid'] =\
             section_category_strict_membership_uid_list
+        sql_kw['section_filtered'] = 1
 
       mirror_section_category_strict_membership_uid_list =\
             self._generatePropertyUidList(
