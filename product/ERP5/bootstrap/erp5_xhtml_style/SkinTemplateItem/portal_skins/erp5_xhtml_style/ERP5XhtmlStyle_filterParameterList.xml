@@ -102,7 +102,7 @@ for k in (\'came_from\', \'SearchableText\', \'workflow_action\', \'portal_statu
 \n
 # Listbox special fields.\n
 # XXX: This should not be needed.\n
-for k in (\'list_start\', \'uids\', \'listbox_uid\', \'list_selection_name\', \'md5_object_uid_list\'):\n
+for k in (\'listbox\', \'list_start\', \'uids\', \'listbox_uid\', \'list_selection_name\', \'md5_object_uid_list\'):\n
   if parameter_list.has_key(k):\n
     del parameter_list[k]\n
 \n
