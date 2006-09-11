@@ -13,6 +13,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testCMFActivity >> $DIRECTORY/test_full
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAlarm >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccountingRules >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccounting >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testAccounting_l10n_fr_m9 >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAmount >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInvoice >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInvoiceVAT >> $DIRECTORY/test_full_output 2>&1
