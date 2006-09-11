@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+Short description:\n
+  This script is able to aggregate form groups automaticcaly, according our own\n
+  rules. This is required to do custom xhtml layout for which a flat rendering\n
+  of groups doesn\'t work.\n
+\n
+Detailed description:\n
+  Actually, without this script, fields groups of the ERP5 form used for layout\n
+  are rendered in a flat way like this:\n
+\n
+    <html>\n
+      <body>\n
+\n
+        <div class="group1" id="group1">\n
+          <div class="field" id="field10">(...)</div>\n
+          <div class="field" id="field11">(...)</div>\n
+          <div class="field" id="field12">(...)</div>\n
+          (...)\n
+        </div>\n
+\n
+        <div class="group2" id="group2">\n
+          <div class="field" id="field20">(...)</div>\n
+          <div class="field" id="field21">(...)</div>\n
+          (...)\n
+        </div>\n
+\n
+        <div class="group3" id="group3">\n
+          <div class="field" id="field30">(...)</div>\n
+          (...)\n
+        </div>\n
+\n
+        (...)\n
+\n
+      </body>\n
+    </html>\n
+\n
+  This job is done by the erp5_web_default_template Page Template. The output\n
+  is pure flat xhtml which, thanks to the default css file\n
+  (erp5_web_default.css), is rendered as a "3-column + 1 footer" layout with\n
+  ordered content (= main content is at the top of the page, which is a good SEO\n
+  trick).\n
+\n
+  But sometimes we need to do more complex layouts and those layout cannot be\n
+  built via pure css on top of flat xhtml div like above. Instead, we need <div>\n
+  wrappers with some level depth to control finely the box model of the page.\n
+\n
+  Here is were this script help us solve the problem: it is able to aggregate\n
+  some fields groups according our own rules. Then, the returned aggregation is\n
+  rendered with wrapper to make custom layouts.\n
+\n
+  To avoid performance issues, this script must respect the constraint of 1-pass\n
+  parsing of the group list to generate the group structure.\n
+\n
+\n
+Rules:\n
+  1 - If the group id don\'t match any group_by_criterion string, the group will\n
+      be added in the last aggregate (see \'footer\' group in exemple below).\n
+  2 - A group can\'t be in two differrent aggregate (no duplicate).\n
+  3 - group_by_criterion parameter is ordered and the returned dict respect that\n
+      order.\n
+  4 - If multiples criterion match one group, the first matched criterion will be\n
+      applied (see \'bottom right\' in the exemple below, where it\'s in the \'bottom\'\n
+      aggregate and not in \'right\' one).\n
+  5 - This script is compatible with group titles set in parenthesis (handled by\n
+      ERP5XhtmlStyle_getFormGroupTitleAndId script): the matching process will\n
+      ignore the group title (look at \'(Discount on Right Handed Tools) left\n
+      discount\').\n
+  6 - Matching process between criterion and group id is not case sensitive.\n
+  7 - Group naming should respect naming convention (everything in lower case for\n
+      id and classe, no special char (only ascii and numbers), nything allowed as\n
+      title, is classes separated by spaces).\n
+\n
+  -> TODO: implement naming convention test.\n
+\n
+\n
+Example:\n
+\n
+  Form group list:\n
+    * left column\n
+    * left ad\n
+    * (Discount on Right Handed Tools) left discount\n
+    * metadata right\n
+    * right ad\n
+    * bottom content\n
+    * footer\n
+    * bottom right\n
+\n
+  Script parameter:\n
+    group_by_criterion = [\'left\', \'right\', \'center\', \'bottom\']\n
+\n
+  Returned data:\n
+    [ [\'left\',   [ (\'left column\', \'left column\', \'left column\')\n
+                 , (\'left ad\', \'left ad\', \'left ad\')\n
+                 , (\'left discount\', \'Discount on Right Handed Tools\', \'(Discount on Right Handed Tools) left discount\')\n
+                 ]]\n
+    , [\'right\',  [ (\'metadata right\', \'metadata right\', \'metadata right\')\n
+                 , (\'right ad\', \'right ad\', \'right ad\')\n
+                 ]]\n
+    , [\'center\', [\n
+                 ]]\n
+    , [\'bottom\', [ (\'bottom content\', \'bottom content\', \'bottom content\')\n
+                 , (\'footer\', \'footer\', \'footer\')\n
+                 , (\'bottom right\', \'bottom right\', \'bottom right\')\n
+                 ]]\n
+    ]\n
+\n
+  In fact the aggregate list of groups is a list of tuple, each tuple contain\n
+  informations returned by ERP5XhtmlStyle_getFormGroupTitleAndId().\n
+"""\n
+\n
+aggregate_list = []  # Returned data structure\n
+\n
+if not len(group_by_criterion):\n
+  return aggregate_list\n
+\n
+aggregate_dict = {}  # Temporary data structure for easy grouping\n
+layout_form = context\n
+\n
+# Initialize aggregate dict\n
+for criterion in group_by_criterion:\n
+  aggregate_dict[criterion] = []\n
+\n
+# Put each group in an aggregate\n
+for group_id in layout_form.get_groups(include_empty=0):                      # Rule (2)\n
+\n
+  # TODO: save id title and original id in the returned dict to not recalculate them\n
+  group_details     = context.ERP5XhtmlStyle_getFormGroupTitleAndId(group_id) # Rule (5)\n
+  group_css_classes = group_details[0]\n
+\n
+  # Criterion matching status\n
+  matched = False\n
+\n
+  # Parse the string from left to right\n
+  for group_class in group_css_classes.lower().split(\' \'):                    # Rule (6) & (7)\n
+    # Let criterion match group\n
+    if group_class in group_by_criterion:\n
+      # Put the group in the right aggregate\n
+      aggregate_dict[group_class] = aggregate_dict[group_class] + [group_details]\n
+      matched = True\n
+      break                                                                   # Rule (4)\n
+\n
+  if not matched:                                                             # Rule (1)\n
+    # No \'group by\' criterion found in group id, so put it in the last one\n
+    last_aggregate = group_by_criterion[-1]\n
+    aggregate_dict[last_aggregate] = aggregate_dict[last_aggregate] + [group_details]\n
+\n
+\n
+# Reorder the list                                                            # Rule (3)\n
+aggregate_list = []\n
+for criterion in group_by_criterion:\n
+  aggregate = [ criterion\n
+              , aggregate_dict[criterion]\n
+              ]\n
+  aggregate_list.append(aggregate)\n
+\n
+return aggregate_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>group_by_criterion=[\'left\', \'right\', \'center\', \'bottom\', \'hidden\']</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>group_by_criterion</string>
+                            <string>aggregate_list</string>
+                            <string>len</string>
+                            <string>aggregate_dict</string>
+                            <string>context</string>
+                            <string>layout_form</string>
+                            <string>_getiter_</string>
+                            <string>criterion</string>
+                            <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>group_id</string>
+                            <string>group_details</string>
+                            <string>_getitem_</string>
+                            <string>group_css_classes</string>
+                            <string>False</string>
+                            <string>matched</string>
+                            <string>group_class</string>
+                            <string>True</string>
+                            <string>last_aggregate</string>
+                            <string>aggregate</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>left</string>
+                  <string>right</string>
+                  <string>center</string>
+                  <string>bottom</string>
+                  <string>hidden</string>
+                </list>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_getGroupList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Form Group\'s auto-aggregator</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

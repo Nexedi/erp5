@@ -121,6 +121,45 @@
         </tal:block>\n
       </tal:block>\n
 \n
+\n
+<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX NEXT VERSION ?? XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->\n
+\n
+<!--tal:block tal:condition="python: layout_form is not None"\n
+           tal:define="field_errors   python: request.get(\'field_errors\', {});\n
+                       dummy          python: request.set(\'editable_mode\', 1);\n
+                       aggregate_list python: layout_form.WebSite_getGroupList()">\n
+\n
+  <tal:block tal:define="template python: here.developper_shortcut_render">\n
+    <tal:block metal:use-macro="template/macros/form"/>\n
+  </tal:block-->\n
+\n
+  <!-- Each aggregate of groups is a <div> wrapper -->\n
+  <!--tal:block tal:repeat="aggregate aggregate_list">\n
+    <div tal:define="aggregate_name   python: aggregate[0];\n
+                     aggregate_groups python: aggregate[1];"\n
+         tal:condition="python: len(aggregate_groups)"\n
+         tal:attributes="class python: \'wrapper %s\' % aggregate_name;\n
+                         id    python: \'wrapper_%s\' % aggregate_name;">\n
+\n
+      <tal:block tal:repeat="group_details aggregate_groups">\n
+        <div tal:define="group_css_classes python: group_details[0]"\n
+             tal:attributes="class python: group_css_classes;\n
+                             id    python: group_css_classes.replace(\' \', \'_\');\n
+                             title python: group_details[1];">\n
+\n
+          <tal:block tal:repeat="field python: layout_form.get_fields_in_group(group_details[2])">\n
+            <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+          </tal:block>\n
+\n
+        </div>\n
+      </tal:block>\n
+\n
+    </div>\n
+  </tal:block>\n
+\n
+</tal:block-->\n
+<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->\n
+\n
     </form>\n
   </body>\n
 \n
