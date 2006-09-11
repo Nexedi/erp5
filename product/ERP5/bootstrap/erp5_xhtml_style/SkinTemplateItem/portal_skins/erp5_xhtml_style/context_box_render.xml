@@ -83,7 +83,7 @@ XXX: Folder_filter accesses selection directly\n
 <tal:block metal:define-macro="master">\n
   <span id="jump">\n
     <select name="select_jump"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doJump\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doJump\')">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Jump...</option>\n
       <tal:block tal:repeat="jump actions/object_jump | nothing">\n
@@ -102,7 +102,7 @@ XXX: Folder_filter accesses selection directly\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
-    <button type="submit" name="ERP5XhtmlStyle_doJump:method" title="Jump"\n
+    <button type="submit" name="Base_doJump:method" title="Jump"\n
             i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description"\n
@@ -112,7 +112,7 @@ XXX: Folder_filter accesses selection directly\n
   <span class="separator"></span>\n
   <span id="action">\n
     <select name="select_action"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doAction\')"\n
+            tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"\n
             tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Action...</option>\n
@@ -157,7 +157,7 @@ XXX: Folder_filter accesses selection directly\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
-    <button type="submit" name="ERP5XhtmlStyle_doAction:method" title="Action"\n
+    <button type="submit" name="Base_doAction:method" title="Action"\n
             i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description">Action</span>\n
@@ -296,7 +296,7 @@ XXX: Folder_filter accesses selection directly\n
     <span class="second">\n
       <a tal:condition="here/portal_preferences/getPreferredHtmlStyleContextualHelp"\n
          class="jump_help" title="Help"\n
-         tal:attributes="href python: here.ERP5XhtmlStyle_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))">\n
+         tal:attributes="href python: here.Base_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Help</span>\n
       </a>\n

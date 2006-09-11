@@ -68,57 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
-preserved_parameters={}\n
-request = context.REQUEST\n
+            <value> <string># XXX Localizer-dependent\n
+portal = context.getPortalObject()\n
+portal.Localizer.changeLanguage(select_language)\n
 \n
-Base_doAction = select_action.split()\n
-if len(Base_doAction) == 0:\n
-  return\n
-doAction0 = Base_doAction[0]\n
-\n
-kw.update(request.form)\n
-context.ERP5XhtmlStyle_prepareAction(**kw)\n
-\n
-# If this is an object, a workflow or a folder, then jump to that view\n
-if doAction0 in (\'object\', \'workflow\', \'folder\'):\n
-  redirect_url = \' \'.join(Base_doAction[1:])\n
-  if doAction0 == \'object\':\n
-    kw[\'dialog_category\'] = \'object_action\'\n
-# Otherwise, check if this is an automatic menu (add)\n
-elif doAction0 == \'add\':\n
-  new_id = context.generateNewId()\n
-  type_name = \' \'.join(Base_doAction[1:])\n
-  new_content = context.newContent(portal_type=type_name,\n
-                                   container=context,\n
-                                   id=str(new_id))\n
-  preserved_parameters[\'portal_status_message\'] = N_("Object Created.")\n
-  redirect_url = \'%s/view\' % (new_content.absolute_url(), )\n
-  # The created object is not a part of the selection, so prevent from displaying the selection navigation controls\n
-  kw[\'selection_index\']=None\n
-  kw[\'selection_name\']=None\n
-# Otherwise, check if this is an automatic menu (template)\n
-elif doAction0 == \'template\':\n
-  template_relative_url = \' \'.join(Base_doAction[1:])\n
-  template = context.getPortalObject().restrictedTraverse(template_relative_url)\n
-  if template is not None:\n
-    preference = template.getParentValue()\n
-    preference.manage_copyObjects(ids=[template.getId()], REQUEST=request, RESPONSE=None)\n
-    new_content_list = context.manage_pasteObjects(request[\'__cp\'])\n
-    new_content_id = new_content_list[0][\'new_id\']\n
-    new_content = context[new_content_id]\n
-    new_content.makeTemplateInstance()\n
-    preserved_parameters[\'portal_status_message\'] = N_("Template Created.")\n
-    redirect_url = \'%s/view\' % ( new_content.absolute_url(), )\n
-  else:\n
-    preserved_parameters[\'portal_status_message\'] = N_("Template Does not Exist.")\n
-    redirect_url = \'%s/view\' % (context.absolute_url(), )\n
-else:\n
-  redirect_url = request[\'ACTUAL_URL\']\n
-  preserved_parameters[\'portal_status_message\'] = N_(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
-\n
-return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parameters, **kw)\n
+# XXX should invalidate cached data specific to current user\n
+from Products.ERP5Type.Cache import clearCache\n
+clearCache()\n
 </string> </value>
         </item>
         <item>
@@ -135,7 +91,7 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parame
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_action, **kw</string> </value>
+            <value> <string>select_language</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -161,31 +117,12 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parame
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>select_action</string>
-                            <string>kw</string>
+                            <string>select_language</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
-                            <string>preserved_parameters</string>
-                            <string>request</string>
-                            <string>Base_doAction</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>doAction0</string>
-                            <string>_apply_</string>
-                            <string>redirect_url</string>
-                            <string>_write_</string>
-                            <string>new_id</string>
-                            <string>type_name</string>
-                            <string>str</string>
-                            <string>new_content</string>
-                            <string>None</string>
-                            <string>template_relative_url</string>
-                            <string>template</string>
-                            <string>preference</string>
-                            <string>new_content_list</string>
-                            <string>new_content_id</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>clearCache</string>
                           </tuple>
                         </value>
                     </item>
@@ -202,7 +139,7 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parame
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_doAction</string> </value>
+            <value> <string>Base_doLanguage</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

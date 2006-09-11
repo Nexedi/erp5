@@ -122,7 +122,7 @@ IDEAS:\n
               <select name="select_favorite"\n
                       tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
                                   user_actions actions/user;"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doFavorite\')">\n
+                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doFavorite\')">\n
                 <option selected="selected" value=""\n
                         i18n:translate="" i18n:domain="ui">My favourites</option>\n
                 <tal:block tal:condition="ordered_global_actions">\n
@@ -149,7 +149,7 @@ IDEAS:\n
                           i18n:translate="" i18n:domain="ui"></option>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="ERP5XhtmlStyle_doFavorite:method" title="Select Favorite"\n
+              <button type="submit" name="Base_doFavorite:method" title="Select Favorite"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
@@ -159,8 +159,8 @@ IDEAS:\n
             <span class="separator"></span>\n
             <span id="modules">\n
               <select name="select_module"\n
-                      tal:define="module_list here/ERP5XhtmlStyle_getModuleItemList;"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doModule\')">\n
+                      tal:define="module_list here/Base_getModuleItemList;"\n
+                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doModule\')">\n
                 <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
                 <tal:block tal:repeat="module module_list">\n
                   <option value="something"\n
@@ -168,7 +168,7 @@ IDEAS:\n
                           tal:content="python: module[0]"/>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="ERP5XhtmlStyle_doModule:method" title="Select Module"\n
+              <button type="submit" name="Base_doModule:method" title="Select Module"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n
@@ -179,7 +179,7 @@ IDEAS:\n
           <span class="second">\n
             <span id="language">\n
               <select name="select_language"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'${url}/ERP5XhtmlStyle_doLanguage\')">\n
+                      tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doLanguage\')">\n
                 <option value=""\n
                         i18n:translate="" i18n:domain="ui">My language</option>\n
                 <tal:block tal:repeat="language python: here.Localizer.get_languages_map()">\n
@@ -188,7 +188,7 @@ IDEAS:\n
                           tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])"></option>\n
                 </tal:block>\n
               </select>\n
-              <button type="submit" name="ERP5XhtmlStyle_doLanguage:method" title="Select Language"\n
+              <button type="submit" name="Base_doLanguage:method" title="Select Language"\n
                       i18n:attributes="title" i18n:domain="ui">\n
                 <span class="image"></span>\n
                 <span class="description"\n

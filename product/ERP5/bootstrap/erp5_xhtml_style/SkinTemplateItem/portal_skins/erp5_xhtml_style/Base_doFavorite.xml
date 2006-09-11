@@ -68,13 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX Localizer-dependent\n
-portal = context.getPortalObject()\n
-portal.Localizer.changeLanguage(select_language)\n
-\n
-# XXX should invalidate cached data specific to current user\n
-from Products.ERP5Type.Cache import clearCache\n
-clearCache()\n
+            <value> <string>if select_favorite == \'\':\n
+  return\n
+return context.ERP5XhtmlStyle_redirect(select_favorite, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -91,7 +87,7 @@ clearCache()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_language</string> </value>
+            <value> <string>select_favorite, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,12 +113,11 @@ clearCache()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>select_language</string>
+                            <string>select_favorite</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
                           </tuple>
                         </value>
                     </item>
@@ -139,7 +134,7 @@ clearCache()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_doLanguage</string> </value>
+            <value> <string>Base_doFavorite</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
