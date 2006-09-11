@@ -126,7 +126,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getCSSList</string> </value>
+            <value> <string>ERP5XhtmlStyle_getCSSList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
