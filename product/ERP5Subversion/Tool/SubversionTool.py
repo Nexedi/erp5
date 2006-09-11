@@ -706,10 +706,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     if not wc_list:
       wc_list = self.getPortalObject().portal_preferences.\
       default_site_preference.getPreferredSubversionWorkingCopyList()
-      if not wc_list:
-        raise SubversionPreferencesError, \
-        'Please set at least one Subversion Working Copy in preferences first.'
-    if len(wc_list) == 0 :
+    if not wc_list or len(wc_list) == 0 :
       raise SubversionPreferencesError, \
       'Please set at least one Subversion Working Copy in preferences first.'
     bt_name = business_template.getTitle()
@@ -722,13 +719,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
             return wc_path
           else:
             return os.sep.join(wc_path.split(os.sep)[:-1])
-    if os.path.isdir(os.path.join(working_copy, '.svn')):
-      raise SubversionUnknownBusinessTemplateError, "Could not find '"+\
-      bt_name+"' at first level of working copies."
-    else:
-      raise SubversionNotAWorkingCopyError, \
-      "You must do a clean checkout first. It seems that at least one \
-      of the paths given in preferences is not a SVN working copy"
+    raise SubversionUnknownBusinessTemplateError,
+        "Could not find '%s' at first level of working copies." % (bt_name, )
 
   def _getWorkingPath(self, path):
     """ Check if the given path is reachable (allowed)
