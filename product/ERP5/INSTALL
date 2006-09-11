@@ -20,6 +20,7 @@ Third-party components:
 * BTreeFolder2                http://hathaway.freezope.org/Software/BTreeFolder2
 * CMFhoto
 * CMFReportTool
+* ZMySQLDA
 * PluggableAuthService
 
 Some of those components can be downloaded as RPMs from nexedi repository :
@@ -30,7 +31,6 @@ From ERP5 subversion repository:
 * CMFActivity
 * CMFCategory
 * ERP5
-* ERP5CPS
 * ERP5Catalog
 * ERP5Form
 * ERP5OOo
@@ -38,6 +38,7 @@ From ERP5 subversion repository:
 * ERP5SyncML
 * ERP5Type
 * ZSQLCatalog
+* ZMySQLDDA
 
 Installation
 ============
