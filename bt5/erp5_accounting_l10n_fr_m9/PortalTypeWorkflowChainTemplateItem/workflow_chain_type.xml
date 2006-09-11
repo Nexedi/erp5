@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Purchase Invoice Transmission Sheet</type>
+  <workflow>transmission_sheet_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>
