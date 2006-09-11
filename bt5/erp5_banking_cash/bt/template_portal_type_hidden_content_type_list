@@ -27,6 +27,8 @@ Incoming Cash Sorting Incident Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Incoming Usual Cash Incident Line | Cash Delivery Cell
+Internal Money Deposit | Banking Operation Line
+Internal Money Deposit | Cash Delivery Line
 Monetary Destruction | Cash Delivery Line
 Monetary Issue Container | Container Line
 Monetary Issue | Monetary Issue Container

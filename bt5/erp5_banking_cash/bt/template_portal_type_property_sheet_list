@@ -26,6 +26,9 @@ Incoming Cash Sorting Incident Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
 Incoming Usual Cash Incident Line | CashDeliveryLine
+Internal Money Deposit | Arrow
+Internal Money Deposit | Price
+Internal Money Deposit | Task
 Monetary Destruction | Account
 Monetary Destruction | Amount
 Monetary Destruction | Price

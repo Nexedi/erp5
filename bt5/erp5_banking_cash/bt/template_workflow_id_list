@@ -7,6 +7,7 @@ cash_sorting_workflow
 classification_survey_workflow
 counter_rendering_workflow
 foreign_cash_reception_workflow
+internal_money_deposit_workflow
 monetary_destruction_workflow
 monetary_issue_workflow
 monetary_recall_workflow

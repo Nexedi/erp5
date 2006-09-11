@@ -61,6 +61,11 @@
  <portal_type id="Incoming Usual Cash Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Internal Money Deposit">
+  <item>Arrow</item>
+  <item>Task</item>
+  <item>Price</item>
+ </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Amount</item>
   <item>Account</item>
@@ -134,8 +139,8 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
-  <item>Amount</item>
   <item>Price</item>
+  <item>Amount</item>
  </portal_type>
  <portal_type id="Usual Cash Transfer">
   <item>Price</item>

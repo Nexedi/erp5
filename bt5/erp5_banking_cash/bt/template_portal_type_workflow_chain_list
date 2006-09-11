@@ -21,6 +21,8 @@ Counter Rendering | counter_rendering_workflow
 Counter Rendering | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
+Internal Money Deposit | edit_workflow
+Internal Money Deposit | internal_money_deposit_workflow
 Monetary Destruction | edit_workflow
 Monetary Destruction | monetary_destruction_workflow
 Monetary Issue | edit_workflow

@@ -127,6 +127,15 @@ Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
 Incoming Usual Cash Incident Line | metadata
 Incoming Usual Cash Incident Line | view
+Internal Money Deposit Module | list_ui
+Internal Money Deposit Module | sort_on
+Internal Money Deposit Module | view
+Internal Money Deposit | accouting_view
+Internal Money Deposit | fast_input
+Internal Money Deposit | history
+Internal Money Deposit | metadata
+Internal Money Deposit | print
+Internal Money Deposit | view
 Monetary Destruction Module | list_ui
 Monetary Destruction Module | sort_on
 Monetary Destruction Module | view

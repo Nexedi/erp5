@@ -68,6 +68,10 @@
  <portal_type id="Incoming Usual Cash Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
+ <portal_type id="Internal Money Deposit">
+  <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
+ </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Cash Delivery Line</item>
  </portal_type>

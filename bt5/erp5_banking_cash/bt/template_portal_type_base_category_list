@@ -10,6 +10,7 @@ Container Cell | variation
 Container Line | cash_status
 Container Line | emission_letter
 Container Line | variation
+Internal Money Deposit | external_software
 Monetary Recall Cell | variation
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation
