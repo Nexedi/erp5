@@ -370,7 +370,7 @@
                           <string>End</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state_title</string>
+                          <string>translated_validation_state_title</string>
                           <string>Status</string>
                         </tuple>
                       </list>
@@ -467,6 +467,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
