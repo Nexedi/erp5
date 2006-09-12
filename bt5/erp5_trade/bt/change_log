@@ -1,5 +1,6 @@
 2006-09-12 Romain
 * Fix ReturnedSalePackingListModule_viewReturnedSalePackingListList
+* Fix group's name.
 
 2006-08-02 Romain
 * Added title to some forms.

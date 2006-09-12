@@ -61,7 +61,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
@@ -73,18 +73,6 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>Default</string> </key>
-                    <value>
-                      <list>
-                        <string>my_resource_title</string>
-                        <string>my_priced_quantity</string>
-                        <string>my_quantity_unit</string>
-                        <string>my_price_currency</string>
-                        <string>my_start_date_range_max</string>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
@@ -107,6 +95,18 @@
                         <string>matrixbox_additional_price</string>
                         <string>matrixbox_predicate_category_list</string>
                         <string>matrixbox_variation_category_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_resource_title</string>
+                        <string>my_priced_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_price_currency</string>
+                        <string>my_start_date_range_max</string>
                       </list>
                     </value>
                 </item>
