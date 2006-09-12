@@ -317,7 +317,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getContributorTitleList()+here.getContributorNameList()</string> </value>
+            <value> <string>python: (here.getContributorTitleList() or [])+(here.getContributorNameList() or [])</string> </value>
         </item>
       </dictionary>
     </pickle>
