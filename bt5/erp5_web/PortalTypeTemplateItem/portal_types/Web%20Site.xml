@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Web Site is the root of a tree of Web Sections and Web Containers.</string> </value>
+            <value> <string>A Web Site is the root of a tree of Web Sections and web documents (like web pages or any erp5 object like products, etc.).</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
