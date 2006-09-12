@@ -106,6 +106,11 @@ ul {\n
   list-style-position: inside;\n
 }\n
 \n
+table {\n
+  border-collapse: collapse;\n
+  border-spacing: 0;\n
+}\n
+\n
 .doNotDisplay {\n
   display: none;\n
 }\n
@@ -152,20 +157,6 @@ form#main_form div.wrapper div.field {\n
 \n
 form#main_form div.wrapper div.field label {\n
   font-weight: bold;\n
-}\n
-\n
-\n
-\n
-/* Special layout for logo group */\n
-\n
-form#main_form div.wrapper div.field.logo {\n
-  padding: 2em 0 0;\n
-  border: 0;\n
-  background: transparent;\n
-}\n
-\n
-div.wrapper div.field.logo label {\n
-  display: none;\n
 }\n
 \n
 \n
@@ -261,7 +252,6 @@ button:hover {\n
 \n
 .ListContent table {\n
  margin-bottom: 2em;\n
- border-collapse: collapse;\n
  width: 100%;\n
 }\n
 \n
@@ -419,8 +409,6 @@ table.listbox, table.listbox tr, table.listbox td, table.listbox th {\n
  line-height: 1.5em;\n
  margin: 0;\n
  padding: 0;\n
- border-spacing: 0;\n
- border-collapse: collapse;\n
 }\n
 \n
 table.listbox {\n
@@ -550,6 +538,19 @@ div.content > fieldset.webcontent span.summary {\n
   font-size: 120%;\n
   padding: 0 2em;\n
   font-style: italic;\n
+}\n
+\n
+\n
+\n
+/* Login page style\n
+----------------------------------------------- */\n
+\n
+div.content.login{\n
+  padding: 0 1em;\n
+}\n
+\n
+div.content.login fieldset {\n
+  border: none;\n
 }\n
 \n
 \n
