@@ -1,3 +1,6 @@
+2006-09-12 Kevin
+* Refactor login_form screen to match new xhtml style form structure.
+
 2006-09-08 Kevin
 * Don't display action box in default web view and factorize conditions.
 

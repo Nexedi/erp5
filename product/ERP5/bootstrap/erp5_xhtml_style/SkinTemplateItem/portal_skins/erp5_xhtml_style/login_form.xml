@@ -82,63 +82,60 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                        js_list python: [\'%s/login_form.js\' % (here.portal_url.getPortalPath(), )]">\n
 <tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
-    <div class="login">\n
-      <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
-        <h1 i18n:translate="" i18n:domain="ui">You don\'t have enough permissions to access this page</h1>\n
-        <span i18n:translate="" i18n:domain="ui">You can log in with another user name or\n
-          <a href="javascript:history.back();"\n
-             i18n:translate="" i18n:domain="ui">go back</a>.\n
-        </span>\n
-      </tal:block>\n
+    <div class="content login">\n
+\n
       <tal:block tal:condition="python: request.get(\'came_from\', None) is None">\n
         <h1 i18n:translate="" i18n:domain="ui">Log in</h1>\n
       </tal:block>\n
+\n
+      <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
+        <h1 i18n:translate="" i18n:domain="ui">You don\'t have enough permissions to access this page</h1>\n
+        <p i18n:translate="" i18n:domain="ui">You can log in with another user name or\n
+          <a href="javascript:history.back();"\n
+              i18n:translate="" i18n:domain="ui">go back</a>.\n
+        </p>\n
+      </tal:block>\n
+\n
       <input tal:condition="exists: request/came_from"\n
-             type="hidden" name="came_from"\n
-             tal:attributes="value request/came_from" />\n
-      <div class="content">\n
-        <div class="top_group">\n
-          <div class="left">\n
-            <div class="field">\n
-              <label for="name" class="required"\n
-                     i18n:translate="" i18n:domain="ui">Name</label>\n
-              <div class="input">\n
-                <input type="text" name="__ac_name" id="name"\n
-                       tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
-              </div>\n
-              <p class="clear"></p>\n
-            </div>\n
-            <div class="field">\n
-              <label for="password"\n
-                     i18n:translate="" i18n:domain="ui">Password</label>\n
-              <div class="input">\n
-                <input type="password" name="__ac_password" id="password" />\n
-              </div>\n
-              <p class="clear"></p>\n
-            </div>\n
-            <div class="field">\n
-              <label for="cb_remember"\n
-                     i18n:translate="" i18n:domain="ui">Remember my name.</label>\n
-              <div class="input">\n
-                <input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember" />\n
-              </div>\n
-              <p class="clear"></p>\n
-            </div>\n
+              type="hidden" name="came_from"\n
+              tal:attributes="value request/came_from" />\n
+\n
+      <fieldset id="fieldset_left" class="left">\n
+        <div class="field">\n
+          <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>\n
+          <div class="input"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></div>\n
+        </div>\n
+        <div class="field">\n
+          <label for="password" i18n:translate="" i18n:domain="ui">Password</label>\n
+          <div class="input"><input type="password" name="__ac_password" id="password"/></div>\n
+        </div>\n
+        <div class="field">\n
+          <label for="cb_remember" i18n:translate="" i18n:domain="ui">Remember my name</label>\n
+          <div class="input"><input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember"/></div>\n
+        </div>\n
+        <div class="field">\n
+          <label>&nbsp;</label>\n
+          <div class="input">\n
+            <input type="submit" value="Login" class="submit"\n
+                   tal:attributes="name python: \'%s:method\' % (form_action, )"\n
+                   i18n:attributes="value" i18n:domain="ui"/>\n
           </div>\n
         </div>\n
-      </div>\n
+        <div class="field">\n
+          <label>&nbsp;</label>\n
+          <div class="input">\n
+            <a tal:attributes="href string:${here/portal_url}/mail_password_form"\n
+            i18n:translate="" i18n:domain="ui">I forgot my password!</a>\n
+          </div>\n
+        </div>\n
+      </fieldset>\n
+\n
       <script type="text/javascript">setFocus()</script>\n
-      <p class="clear"></p>\n
-      <input type="submit" value="Login" class="submit"\n
-             tal:attributes="name python: \'%s:method\' % (form_action, )"\n
-             i18n:attributes="value" i18n:domain="ui" />\n
-      <div>\n
-        <a tal:attributes="href string:${here/portal_url}/mail_password_form"\n
-           i18n:translate="" i18n:domain="ui">I forgot my password!</a>\n
-      </div>\n
-      <div i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</div>\n
-      <div i18n:translate="" i18n:domain="ui">Don\'t forget to logout or exit your browser when you\'re done.</div>\n
-      <div i18n:translate="" i18n:domain="ui">Setting the \'Remember my name\' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you.</div>\n
+\n
+      <p i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</p>\n
+      <p i18n:translate="" i18n:domain="ui">Don\'t forget to logout or exit your browser when you\'re done.</p>\n
+      <p i18n:translate="" i18n:domain="ui">Setting the \'Remember my name\' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you.</p>\n
+\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
