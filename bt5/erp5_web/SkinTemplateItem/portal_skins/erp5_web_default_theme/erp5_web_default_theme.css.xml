@@ -71,6 +71,12 @@ div.content {\n
   border: .1em solid #ccc;\n
 }\n
 \n
+div#main_content {\n
+  margin: 4em 0;\n
+}\n
+\n
+\n
+\n
 /* Define some constant to make the css flexible without pain */\n
 <tal:block\n
   define="unit          python: \'px\';\n
@@ -131,8 +137,40 @@ form#main_form div#footer {\n
 \n
 \n
 \n
+/* Widget Layout\n
+-----------------------------------------------*/\n
+\n
+/* Special layout for logo widget */\n
+\n
+form#main_form div.wrapper div.field.logo {\n
+  padding: 2em 0 0;\n
+  border: 0;\n
+  background: transparent;\n
+}\n
+\n
+div.wrapper div.field.logo label {\n
+  display: none;\n
+}\n
+\n
+\n
+/* Special layout for footer group */\n
+\n
+form#main_form div#wrapper_footer div.field {\n
+  margin: 0;\n
+  padding: .7em;\n
+  border: none;\n
+  background: #ccc;\n
+  border-top: 2px solid #999;\n
+}\n
+\n
+div#wrapper_footer div.field label {\n
+  display: none;\n
+}\n
+\n
+\n
 <tal:block replace="nothing">\n
-/* Special layout for search bar group: move it top right */\n
+/* UNUSED YET */\n
+/* Special layout for search bar widget: move it top right */\n
 form#main_form > div.searchBar {\n
   position: absolute;\n
   z-index: 200;\n
