@@ -32,6 +32,7 @@ from RAMQueue import RAMQueue
 from DateTime import DateTime
 from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from ZODB.POSException import ConflictError
 
 try:
   from transaction import get as get_transaction
