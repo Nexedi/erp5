@@ -1,5 +1,7 @@
 2006-09-12 Kevin
 * Rewrite default group generation using macro and WebSite_getGroupList script.
+* Little default theme esthetics enhancements.
+* Add custom view of web site in default theme.
 
 2006-09-11 Kevin
 * Split css in two parts: the generic classes for web forms and the specific classes for the theme.
