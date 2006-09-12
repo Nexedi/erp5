@@ -176,8 +176,9 @@ Example:\n
                  ]]\n
     ]\n
 \n
-  In fact the aggregate list of groups is a list of tuple, each tuple contain\n
-  informations returned by ERP5XhtmlStyle_getFormGroupTitleAndId().\n
+Tips:\n
+  * The returned list structure is design to let you cast them as dict() if you don\'t care about group aggregate ordering. This also help you to get group aggregate more easily\n
+\n
 """\n
 \n
 aggregate_list = []  # Returned data structure\n
