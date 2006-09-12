@@ -41,8 +41,8 @@ mimetypes.init()
 
 
 rs=[]
-rs.append(re.compile('<!.*>'))
 rs.append(re.compile('<HEAD>.*</HEAD>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
+rs.append(re.compile('<!DOCTYPE[^>]*>'))
 rs.append(re.compile('<.?(HTML|BODY)[^>]*>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
 
 def stripHtml(txt):
