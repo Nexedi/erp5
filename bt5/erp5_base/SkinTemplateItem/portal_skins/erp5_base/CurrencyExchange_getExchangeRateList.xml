@@ -70,14 +70,57 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# This script will calculate the exchange value for the current\n
+# context. If to_currency is provided, then instead of using\n
+# the context, it will generate a temp object.\n
+\n
 def sort_by_date(a, b):\n
   if a.getStartDateRangeMin() > b.getStartDateRangeMin() :\n
     return -1\n
   return 1\n
 \n
-mapped_value = context.portal_domains.generateMappedValue(context, has_cell_content=0, sort_method=sort_by_date)\n
+object = context\n
 \n
-return [getattr(mapped_value, \'base_price\', None), getattr(mapped_value, \'discount\', None)]\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+if to_currency is not None:\n
+  # we have parameters, not a context, so we can use cache\n
+  def calculateExchangeFromParameters(from_currency=None,\n
+                                      to_currency=None,\n
+                                      currency_exchange_type=\'sale\',\n
+                                      start_date=None,**kw):\n
+    if start_date is None:\n
+      from DateTime import DateTime\n
+      start_date = DateTime()\n
+    from Products.ERP5Type.Document import newTempBase\n
+    temp_object = newTempBase(context.getPortalObject(),\'temp_object\')\n
+    temp_kw = {\'category_list\':[\'resource/%s\' % to_currency,\n
+                                \'currency_exchange_type/%s\' % currency_exchange_type,\n
+                                \'price_currency/%s\' % from_currency],\n
+               \'start_date\':DateTime()\n
+              }\n
+    context.log(\'Exchange Value temp_kw\',temp_kw)\n
+    temp_object.edit(**temp_kw)\n
+    object = temp_object\n
+    mapped_value = context.portal_domains.generateMappedValue(object, \n
+                                                      has_cell_content=0, \n
+                                                      sort_method=sort_by_date)\n
+    result = [getattr(mapped_value, \'base_price\', None), \n
+              getattr(mapped_value, \'discount\', None)]\n
+    return result\n
+  # The cache duration must not be too long, 300 is the maximum\n
+  calculateExchangeFromParameters = CachingMethod(calculateExchangeFromParameters, \n
+                      id = \'calculateExchangeFromParameters\', cache_duration = 300)\n
+  result = calculateExchangeFromParameters(start_date=start_date,\n
+                       currency_exchange_type=currency_exchange_type,\n
+                       from_currency=from_currency,to_currency=to_currency)\n
+else:\n
+  mapped_value = context.portal_domains.generateMappedValue(object, \n
+                                                   has_cell_content=0, \n
+                                                   sort_method=sort_by_date)\n
+  result = [getattr(mapped_value, \'base_price\', None), \n
+            getattr(mapped_value, \'discount\', None)]\n
+return result\n
 
 
 ]]></string> </value>
@@ -102,7 +145,7 @@ return [getattr(mapped_value, \'base_price\', None), getattr(mapped_value, \'dis
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>from_currency=None,to_currency=None,currency_exchange_type=\'sale\',start_date=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,18 +165,28 @@ return [getattr(mapped_value, \'base_price\', None), getattr(mapped_value, \'dis
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>from_currency</string>
+                            <string>to_currency</string>
+                            <string>currency_exchange_type</string>
+                            <string>start_date</string>
+                            <string>kw</string>
                             <string>sort_by_date</string>
-                            <string>_getattr_</string>
                             <string>context</string>
+                            <string>object</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>None</string>
+                            <string>calculateExchangeFromParameters</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
                             <string>mapped_value</string>
                             <string>getattr</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +198,12 @@ return [getattr(mapped_value, \'base_price\', None), getattr(mapped_value, \'dis
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <string>sale</string>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
