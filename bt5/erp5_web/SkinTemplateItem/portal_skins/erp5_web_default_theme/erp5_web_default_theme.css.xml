@@ -158,9 +158,10 @@ div.wrapper div.field.logo label {\n
 form#main_form div#wrapper_footer div.field {\n
   margin: 0;\n
   padding: .7em;\n
-  border: none;\n
   background: #ccc;\n
-  border-top: 2px solid #999;\n
+  border-color: #999;\n
+  border-width: 2px 0 1px;\n
+  border-style: solid;\n
 }\n
 \n
 div#wrapper_footer div.field label {\n
