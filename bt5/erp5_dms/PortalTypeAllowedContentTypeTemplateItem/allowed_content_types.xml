@@ -9,6 +9,7 @@
   <item>DMS File</item>
   <item>Graphic</item>
   <item>PdfDocument</item>
+  <item>External Document</item>
  </portal_type>
  <portal_type id="File">
   <item>Role Definition</item>

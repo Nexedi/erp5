@@ -9,6 +9,10 @@ Document Module | list_ui
 Document Module | sort_on
 Document Module | view
 Document Module | webdav
+External Document | history
+External Document | metadata
+External Document | spider
+External Document | view
 Graphic | convert
 Graphic | create_snapshot
 Graphic | download

@@ -2,6 +2,9 @@ DMS File | dms_file_interaction_workflow
 DMS File | document_publication_workflow
 DMS File | edit_workflow
 DMS File | local_permission_interaction_workflow
+External Document | edit_workflow
+External Document | external_document_interaction_workflow
+External Document | external_document_publication_workflow
 Graphic | dms_file_interaction_workflow
 Graphic | document_publication_workflow
 Graphic | edit_workflow

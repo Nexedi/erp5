@@ -4,6 +4,10 @@
   <workflow>document_publication_workflow, edit_workflow, local_permission_interaction_workflow, dms_file_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>External Document</type>
+  <workflow>external_document_interaction_workflow, external_document_publication_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Graphic</type>
   <workflow>ooo_interaction_workflow, edit_workflow, local_permission_interaction_workflow, dms_file_interaction_workflow, document_publication_workflow</workflow>
  </chain>
@@ -25,10 +29,10 @@
  </chain>
  <chain>
   <type>Spreadsheet</type>
-  <workflow>dms_file_interaction_workflow, document_publication_workflow, edit_workflow, ooo_interaction_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>dms_file_interaction_workflow, local_permission_interaction_workflow, document_publication_workflow, edit_workflow, ooo_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>local_permission_interaction_workflow, document_publication_workflow, ooo_interaction_workflow, dms_file_interaction_workflow, edit_workflow</workflow>
+  <workflow>document_publication_workflow, ooo_interaction_workflow, dms_file_interaction_workflow, local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
