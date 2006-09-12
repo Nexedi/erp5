@@ -142,15 +142,15 @@ span.cancelled   {color: #ccc}\n
 \n
 /* Default layout for form web widgets */\n
 \n
-form#main_form > div > div.field {\n
+form#main_form div.wrapper div.field {\n
   background: #fff url(erp5-website-field.png) top repeat-x;\n
   border: 1px solid #ccc;\n
   color: #666;\n
-/*  margin: .3em;\n
-  padding: .5em; XXX break new layout technic */\n
+  margin: .3em;\n
+  padding: .5em;\n
 }\n
 \n
-form#main_form > div > div.field label {\n
+form#main_form div.wrapper div.field label {\n
   font-weight: bold;\n
 }\n
 \n
@@ -158,13 +158,13 @@ form#main_form > div > div.field label {\n
 \n
 /* Special layout for logo group */\n
 \n
-form#main_form div.field.logo {\n
+form#main_form div.wrapper div.field.logo {\n
   padding: 2em 0 0;\n
   border: 0;\n
   background: transparent;\n
 }\n
 \n
-div.field.logo label {\n
+div.wrapper div.field.logo label {\n
   display: none;\n
 }\n
 \n
@@ -213,6 +213,10 @@ blockquote {\n
 \n
 \n
 /* General form styling\n
+  Form style based on Aleksandar Vaci\xc4\x87\'s work,\n
+  ditributed under Creative Commons Paternity Licence:\n
+    * http://creativecommons.org/licenses/by/2.0/\n
+    * http://www.aplus.co.yu/css/forms/?css=1\n
 ----------------------------------------------- */\n
 \n
 input, textarea {\n

@@ -64,25 +64,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
 \n
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n
-  <head tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
+  <head tal:define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
     <meta name="generator" content="ERP5"/>\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n
     <title tal:content="python: \'%s | %s\' % (here.getTitleOrId(), here.getPortalObject().getTitle() or here.getPortalObject().getId())"/>\n
 \n
+    <!-- erp5_web_form.css is a constant among erp5 web themes -->\n
     <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_form.css"/>\n
+    <!-- TODO: erp5_web_default_theme.css should be registered via generic mechanism -->\n
     <link rel="stylesheet" type="text/css" media="screen" href="erp5_web_default_theme.css"/>\n
     <tal:block tal:repeat="css css_list">\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
 \n
-    <tal:block metal:use-macro="here/global_definitions/macros/planning_box_definitions"/>\n
-\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
+\n
+    <tal:block metal:use-macro="here/global_definitions/macros/planning_box_definitions"/>\n
   </head>\n
 \n
   <body>\n
+    <!-- Global form is used to save data of other fields when we edit one another (generally make sense in listbox and/or relation string field) -->\n
     <form id="main_form"\n
           tal:attributes="enctype form/enctype | nothing;\n
                           action url;\n
@@ -90,75 +93,31 @@
 \n
       <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
 \n
+      <!-- Main content rendering -->\n
       <div id="main_content" class="column">\n
         <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
-          <!-- XXX Why no portal message displayed here ?\n
+          <!-- XXX Why no portal message displayed there ?\n
                Normally a message should be displayed when saving an object through web interface... -->\n
           <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
         </tal:block>\n
         <tal:block metal:define-slot="main"/>\n
       </div>\n
 \n
+      <!-- Layout form rendering -->\n
       <tal:block tal:condition="python: layout_form is not None"\n
                  tal:define="field_errors python: request.get(\'field_errors\', {});\n
-                             dummy        python: request.set(\'editable_mode\', 1);\n
-                             groups       python: layout_form.get_groups(include_empty=0)">\n
+                             dummy        python: request.set(\'editable_mode\', 1)">\n
+\n
         <tal:block tal:define="template python: here.developper_shortcut_render">\n
           <tal:block metal:use-macro="template/macros/form"/>\n
         </tal:block>\n
-        <tal:block tal:repeat="group groups">\n
-          <div tal:condition="python: group.find(\'hidden\') < 0"\n
-               tal:define="group_details     python: here.ERP5XhtmlStyle_getFormGroupTitleAndId(group);\n
-                           group_css_classes python: group_details[0]"\n
-               tal:attributes="class     python: group_css_classes;\n
-                               id        python: group_css_classes.replace(\' \', \'_\');\n
-                               title     python: group_details[1];\n
-            ">\n
-            <tal:block tal:repeat="field python: layout_form.get_fields_in_group(group)">\n
-              <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
-            </tal:block>\n
-          </div>\n
+\n
+        <tal:block tal:define="agg_list python: layout_form.WebSite_getGroupList([\'header\', \'left\', \'right\', \'footer\'])">\n
+          <tal:block tal:repeat="aggregate agg_list">\n
+            <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
-\n
-\n
-<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX NEXT VERSION ?? XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->\n
-\n
-<!--tal:block tal:condition="python: layout_form is not None"\n
-           tal:define="field_errors   python: request.get(\'field_errors\', {});\n
-                       dummy          python: request.set(\'editable_mode\', 1);\n
-                       aggregate_list python: layout_form.WebSite_getGroupList()">\n
-\n
-  <tal:block tal:define="template python: here.developper_shortcut_render">\n
-    <tal:block metal:use-macro="template/macros/form"/>\n
-  </tal:block-->\n
-\n
-  <!-- Each aggregate of groups is a <div> wrapper -->\n
-  <!--tal:block tal:repeat="aggregate aggregate_list">\n
-    <div tal:define="aggregate_name   python: aggregate[0];\n
-                     aggregate_groups python: aggregate[1];"\n
-         tal:condition="python: len(aggregate_groups)"\n
-         tal:attributes="class python: \'wrapper %s\' % aggregate_name;\n
-                         id    python: \'wrapper_%s\' % aggregate_name;">\n
-\n
-      <tal:block tal:repeat="group_details aggregate_groups">\n
-        <div tal:define="group_css_classes python: group_details[0]"\n
-             tal:attributes="class python: group_css_classes;\n
-                             id    python: group_css_classes.replace(\' \', \'_\');\n
-                             title python: group_details[1];">\n
-\n
-          <tal:block tal:repeat="field python: layout_form.get_fields_in_group(group_details[2])">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
-          </tal:block>\n
-\n
-        </div>\n
-      </tal:block>\n
-\n
-    </div>\n
-  </tal:block>\n
-\n
-</tal:block-->\n
-<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->\n
 \n
     </form>\n
   </body>\n

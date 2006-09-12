@@ -57,7 +57,7 @@
 \n
 \n
 html {\n
-/* XXX  width: 85%;  work with current layout technic but, background should be changed */\n
+ /* XXX width: 85%;  work with current layout technic but, background should be changed */\n
   margin-right: auto;\n
   margin-left: auto;\n
 }\n

@@ -1,3 +1,6 @@
+2006-09-12 Kevin
+* Rewrite default group generation using macro and WebSite_getGroupList script.
+
 2006-09-11 Kevin
 * Split css in two parts: the generic classes for web forms and the specific classes for the theme.
 * Add the alpha code (still not used) that auto-aggregate some form groups in 1-pass for easy custom template creation (see big documentation in the script itself).
