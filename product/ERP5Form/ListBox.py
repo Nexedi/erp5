@@ -2081,7 +2081,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       return aq_base(getattr(self.getContext(), method_id)).__of__(context)
 
     # Otherwise, use the default one.
-    return context.asHTML
+    return context.asHTML.__of__(context)
 
   def render(self, **kw):
     """Render the data in HTML.
