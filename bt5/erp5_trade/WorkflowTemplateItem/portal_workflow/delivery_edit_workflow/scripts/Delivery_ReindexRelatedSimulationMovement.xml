@@ -107,7 +107,9 @@ LOG(\'END\')\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/delivery_edit_workflow/scripts/Delivery_ReindexRelatedSimulationMovement</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -90,7 +90,9 @@ packing_list.edit()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_container_workflow/scripts/PackingList_updateQuantityFromContainerQuantity</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

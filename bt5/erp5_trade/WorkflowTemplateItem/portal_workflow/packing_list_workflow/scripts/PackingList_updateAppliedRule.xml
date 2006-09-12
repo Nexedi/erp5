@@ -103,7 +103,9 @@ packing_list.activate(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_workflow/scripts/PackingList_updateAppliedRule</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

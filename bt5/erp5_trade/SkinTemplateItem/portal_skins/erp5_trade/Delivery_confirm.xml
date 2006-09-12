@@ -89,7 +89,9 @@ packing_list.edit()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/Delivery_confirm</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -126,7 +128,7 @@ packing_list.edit()\n
                         <value>
                           <tuple>
                             <string>kw</string>
-<string>context</string>
+                            <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
                             <string>packing_list_state</string>

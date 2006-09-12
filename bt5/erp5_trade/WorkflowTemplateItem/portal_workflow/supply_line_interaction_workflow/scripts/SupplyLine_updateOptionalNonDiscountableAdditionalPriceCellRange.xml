@@ -83,7 +83,9 @@ supply_line.updateCellRange(base_id=base_id, option_variation=1)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/supply_line_interaction_workflow/scripts/SupplyLine_updateOptionalNonDiscountableAdditionalPriceCellRange</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

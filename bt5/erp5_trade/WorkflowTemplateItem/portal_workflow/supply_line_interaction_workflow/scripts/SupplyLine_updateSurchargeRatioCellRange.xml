@@ -89,7 +89,9 @@ supply_line.updateCellRange(base_id=base_id)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/supply_line_interaction_workflow/scripts/SupplyLine_updateSurchargeRatioCellRange</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

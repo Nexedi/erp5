@@ -70,7 +70,7 @@
             <key> <string>description</string> </key>
             <value> <string>      A DeliveryCell allows to define specific quantities\n
       for each variation of a resource in a delivery line.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

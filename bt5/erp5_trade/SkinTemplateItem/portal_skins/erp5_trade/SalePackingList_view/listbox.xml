@@ -328,11 +328,11 @@
                     <value>
                       <list>
                         <tuple>
-<string>id</string>
+                          <string>id</string>
                           <string>ID</string>
                         </tuple>
                         <tuple>
-<string>title</string>
+                          <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -369,11 +369,11 @@
                     <value>
                       <list>
                         <tuple>
-<string>id</string>
+                          <string>id</string>
                           <string>ID</string>
                         </tuple>
                         <tuple>
-<string>title</string>
+                          <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -519,8 +519,8 @@
                     <value>
                       <list>
                         <tuple>
-<string>id</string>
-<string>id</string>
+                          <string>id</string>
+                          <string>id</string>
                         </tuple>
                       </list>
                     </value>

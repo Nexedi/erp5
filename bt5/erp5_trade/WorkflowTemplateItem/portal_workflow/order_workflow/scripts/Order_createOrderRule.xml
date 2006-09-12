@@ -83,7 +83,9 @@ order.activate(tag=tag).updateAppliedRule(rule_id = \'default_order_rule\',activ
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/order_workflow/scripts/Order_createOrderRule</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

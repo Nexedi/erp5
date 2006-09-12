@@ -89,7 +89,9 @@ packing_list_content.getExplanationValue().activate(after_path=packing_list_cont
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_interaction_workflow/scripts/Container_updatePackingListState</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

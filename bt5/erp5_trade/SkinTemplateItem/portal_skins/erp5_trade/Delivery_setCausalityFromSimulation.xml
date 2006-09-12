@@ -115,7 +115,9 @@ delivery.setCausalityValueList(causality_value_set.keys() + delivery.getCausalit
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_trade/Delivery_setCausalityFromSimulation</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -152,7 +154,7 @@ delivery.setCausalityValueList(causality_value_set.keys() + delivery.getCausalit
                         <value>
                           <tuple>
                             <string>LOG</string>
-<string>context</string>
+                            <string>context</string>
                             <string>delivery</string>
                             <string>simulation_movement_list</string>
                             <string>_getiter_</string>

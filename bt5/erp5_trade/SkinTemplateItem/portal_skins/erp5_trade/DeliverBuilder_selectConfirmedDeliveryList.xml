@@ -82,7 +82,9 @@ return [x.getObject() for x in context.portal_catalog(portal_type=portal_type,si
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/DeliverBuilder_selectConfirmedDeliveryList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

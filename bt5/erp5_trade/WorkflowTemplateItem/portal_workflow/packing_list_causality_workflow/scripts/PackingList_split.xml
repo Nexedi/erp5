@@ -121,7 +121,9 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_causality_workflow/scripts/PackingList_split</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -82,7 +82,9 @@ for simulation_movement in packing_list_content.getDeliveryRelatedValueList():\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/PackingListContent_updateAfterEdit</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -119,7 +121,7 @@ for simulation_movement in packing_list_content.getDeliveryRelatedValueList():\n
                         <value>
                           <tuple>
                             <string>kw</string>
-<string>context</string>
+                            <string>context</string>
                             <string>packing_list_content</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>

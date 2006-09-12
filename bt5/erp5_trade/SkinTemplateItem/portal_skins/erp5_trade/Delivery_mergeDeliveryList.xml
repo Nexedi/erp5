@@ -98,7 +98,9 @@ return REQUEST.RESPONSE.redirect( ret_url + qs )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/Delivery_mergeDeliveryList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -136,7 +138,7 @@ return REQUEST.RESPONSE.redirect( ret_url + qs )\n
                           <tuple>
                             <string>form_id</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>REQUEST</string>
                             <string>_getitem_</string>
                             <string>selection_name</string>

@@ -199,7 +199,9 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/SalePackingList_fastInput</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

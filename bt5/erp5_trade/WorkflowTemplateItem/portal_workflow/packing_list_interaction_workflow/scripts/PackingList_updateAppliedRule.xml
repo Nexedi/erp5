@@ -89,7 +89,9 @@ if packing_list.getSimulationState()!=\'draft\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_interaction_workflow/scripts/PackingList_updateAppliedRule</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
