@@ -85,12 +85,12 @@ def get_value(self, id, **kw):
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
         # Used by ListBox to render different items in a list
-        if kw.has_key('REQUEST') and not kw.get('cell'):
+        if kw.has_key('REQUEST') and kw.get('cell',None) is None:
           if getattr(kw['REQUEST'],'cell',None) is not None:
             kw['cell'] = getattr(kw['REQUEST'],'cell')
           else:
             kw['cell'] = kw['REQUEST']
-        elif not kw.get('cell'):
+        elif kw.get('cell',None) is None:
           if getattr(REQUEST,'cell',None) is not None:
             kw['cell'] = getattr(REQUEST,'cell')
         try:
