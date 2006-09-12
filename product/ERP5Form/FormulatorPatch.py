@@ -614,9 +614,9 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
                                                 css_class,
                                                 extra_item)
       rendered_items.append(rendered_item)
-
-  rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0")) # Added marker field
-
+  
+  # Moved marked field to Render
+  # rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0"))
   return rendered_items
 
 MultiItemsWidget.render_items = MultiItemsWidget_render_items
@@ -625,29 +625,48 @@ from Products.Formulator.Widget import MultiListWidget
 
 def MultiListWidget_render(self, field, key, value, REQUEST):
   rendered_items = self.render_items(field, key, value, REQUEST)
-  return render_element(
-          'select',
-          name=key,
-          multiple=None,
-          css_class=field.get_value('css_class', REQUEST=REQUEST),
-          size=field.get_value('size', REQUEST=REQUEST),
-          contents=string.join(rendered_items, "\n"),
-          extra=field.get_value('extra', REQUEST=REQUEST))
+  input_hidden = render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0")
+  multi_list = render_element(
+                'select',
+                name=key,
+                multiple=None,
+                css_class=field.get_value('css_class', REQUEST=REQUEST),
+                size=field.get_value('size', REQUEST=REQUEST),
+                contents=string.join(rendered_items, "\n"),
+                extra=field.get_value('extra', REQUEST=REQUEST))
+   
+  return "\n".join([multi_list,input_hidden]) 
 
 MultiListWidget.render = MultiListWidget_render
+
+from Products.Formulator.Widget import MultiCheckBoxWidget
+
+def MultiCheckBoxWidget_render(self, field, key, value, REQUEST):
+  rendered_items = self.render_items(field, key, value, REQUEST)
+  rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0"))
+  orientation = field.get_value('orientation')
+  if orientation == 'horizontal':
+    return string.join(rendered_items, "&nbsp;&nbsp;")
+  else:
+    return string.join(rendered_items, "<br />")
+                                                                    
+MultiCheckBoxWidget.render = MultiCheckBoxWidget_render
 
 from Products.Formulator.Widget import ListWidget
 
 def ListWidget_render(self, field, key, value, REQUEST):
   rendered_items = self.render_items(field, key, value, REQUEST)
-  return render_element(
-          'select',
-          name=key,
-          css_class=field.get_value('css_class', REQUEST=REQUEST),
-          size=field.get_value('size', REQUEST=REQUEST),
-          contents=string.join(rendered_items, "\n"),
-          extra=field.get_value('extra', REQUEST=REQUEST))
+  input_hidden = render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0") 
+  list_widget = render_element(
+                'select',
+                name=key,
+                css_class=field.get_value('css_class', REQUEST=REQUEST),
+                size=field.get_value('size', REQUEST=REQUEST),
+                contents=string.join(rendered_items, "\n"),
+                extra=field.get_value('extra', REQUEST=REQUEST))
 
+  return "\n".join([list_widget,input_hidden])
+  
 ListWidget.render = ListWidget_render
 
 # JPS - Subfield handling with listbox requires extension
