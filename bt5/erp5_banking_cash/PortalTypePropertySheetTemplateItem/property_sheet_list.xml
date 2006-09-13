@@ -65,6 +65,7 @@
   <item>Arrow</item>
   <item>Task</item>
   <item>Price</item>
+  <item>InternalMoney</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Amount</item>
