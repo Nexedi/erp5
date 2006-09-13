@@ -89,7 +89,7 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_preferred_accounting_transaction_from_date_day</td>\n
-  <td>11</td>\n
+  <td>12</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -140,13 +140,13 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[preceding-sibling::label[contains(text(),\'From Date\')]]</td>\n
-  <td>2005/01/11</td>\n
+  <td>2005/01/12</td>\n
 </tr>\n
 <!-- The summary line is counted here. -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>47 record(s)</td>\n
+  <td>45 record(s)</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -159,7 +159,7 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
-  <td>2005/01/11</td>\n
+  <td>2005/01/12</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
@@ -192,7 +192,7 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[3]</td>\n
-  <td>2005/01/11</td>\n
+  <td>2005/01/12</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -202,7 +202,7 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[9]</td>\n
-  <td>12100.00</td>\n
+  <td>13200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
@@ -212,12 +212,12 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[12]</td>\n
-  <td>12100.00</td>\n
+  <td>13200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[13]</td>\n
-  <td>83600.00</td>\n
+  <td>84700.00</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -248,27 +248,27 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[1]</td>\n
-  <td>Client 1 Sale Invoice</td>\n
+  <td>Payment from Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
-  <td>2005/01/20</td>\n
+  <td>2005/01/21*</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[9]</td>\n
-  <td>22000</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[10]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[10]</td>\n
+  <td>12100</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[12]</td>\n
-  <td>22000</td>\n
+  <td>-12100</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
