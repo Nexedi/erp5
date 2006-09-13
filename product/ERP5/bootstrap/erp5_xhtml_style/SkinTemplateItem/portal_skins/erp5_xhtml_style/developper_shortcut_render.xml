@@ -90,7 +90,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 \n
 \n
-<tal:block metal:define-macro="form" tal:condition="python: not is_web_mode">\n
+<tal:block metal:define-macro="form" tal:condition="not: is_web_mode | nothing">\n
   <tal:block tal:define="image python: \'editform.png\';\n
                          info python: \'Edit this form\';\n
                          object python: form;\n
@@ -112,7 +112,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 \n
 \n
-<tal:block metal:define-macro="field" tal:condition="python: not is_web_mode">\n
+<tal:block metal:define-macro="field" tal:condition="not: is_web_mode | nothing">\n
   <tal:block tal:define="image python: \'editfield.png\';\n
                          info python: \'Edit this field\';\n
                          object python: field;\n
