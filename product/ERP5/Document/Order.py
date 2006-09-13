@@ -144,3 +144,22 @@ class Order(Delivery):
       """
       Delivery.updateAppliedRule(self, rule_id, force=force,**kw)
 
+    def recursiveReindexObject(self, *k, **kw):
+      """
+      Reindex children and simulation
+      """
+      # Now the applied rule is expanded
+      Delivery.recursiveReindexObject(self, *k, **kw)
+      self.expandAppliedRuleRelatedToOrder(**kw)
+
+    def expandAppliedRuleRelatedToOrder(self, **kw):
+      """
+      Expand the applied rule related 
+      """
+      applied_rule = None
+      order_causality_list = self.getCausalityRelatedValueList()
+      for order_causality in order_causality_list:
+        if order_causality.getPortalType() == 'Applied Rule':
+          applied_rule = order_causality
+      if applied_rule is not None:
+        applied_rule.activate().expand(**kw)

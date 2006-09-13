@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,74 +29,56 @@
 
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Movement import Movement
+from Products.ERP5Type.Base import Base
 
-class OrderLine(DeliveryLine):
+from Products.ERP5.Document.DeliveryCell import DeliveryCell
+
+from zLOG import LOG
+
+class OrderCell(DeliveryCell):
     """
-      A order line defines quantity and price
+      A OrderCell allows to define specific quantities
+      for each variation of a resource in a delivery line.
     """
 
-    meta_type = 'ERP5 Order Line'
-    portal_type = 'Order Line'
+    meta_type = 'ERP5 Order Cell'
+    portal_type = 'Order Cell'
+    isCell = 1
+    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.VariationRange
-                      , PropertySheet.ItemAggregation
-                      )
-
     # Declarative interfaces
     __implements__ = ( Interface.Variated, )
 
-    def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 
-                                        method_id = 'expand'):
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.Arrow
+                      , PropertySheet.Amount
+                      , PropertySheet.Task
+                      , PropertySheet.Movement
+                      , PropertySheet.Price
+                      , PropertySheet.Predicate
+                      , PropertySheet.MappedValue
+                      , PropertySheet.ItemAggregation
+                      )
+
+    def reindexObject(self, *k, **kw):
       """
-        Warning: does not work if it was not catalogued immediately
+      Reindex children and simulation
       """
-      # Find related in simulation
-      for my_simulation_movement in self.getOrderRelatedValueList(
-                                   portal_type = 'Simulation Movement'):
-        # And apply
-        getattr(my_simulation_movement, method_id)()
-      for c in self.contentValues(filter={'portal_type': 'Delivery Cell'}):
-        for my_simulation_movement in c.getOrderRelatedValueList(
-                                   portal_type = 'Simulation Movement'):
-          # And apply
-          getattr(my_simulation_movement, method_id)()
-    
-    security.declarePublic('recursiveReindexObject')    
+      self.recursiveReindexObject(*k,**kw)
+
+    security.declarePublic('recursiveReindexObject')
     def recursiveReindexObject(self, *k, **kw):
       """
-        Reindex children and simulation
+      Reindex children and simulation
       """
       self.getExplanationValue().expandAppliedRuleRelatedToOrder(**kw)
-      DeliveryLine.recursiveReindexObject(self, *k, **kw)
-      #self.activate().applyToOrderLineRelatedMovement(method_id = 'expand')
-      # We do it at Order level through edit
-      # This logic should actually be put in worklow
-
-    # Simulation Consistency Check
-    def getSimulationQuantity(self):
-      """
-          Computes the target quantities in the simulation
-      """
-      result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
-      if len(result) > 0:
-        return result[0].quantity
-      return None
-
+      DeliveryCell.recursiveReindexObject(self, *k, **kw)
