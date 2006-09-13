@@ -185,19 +185,22 @@ class PreferenceTool(BaseTool):
     """ returns all document templates that are in acceptable Preferences 
         based on different criteria such as folder, portal_type, etc.
     """
-    if folder is None :
-      # as the preference tool is also a Folder, this method is called by
-      # page templates to get the list of document templates for self.
-      folder = self
-
-    acceptable_templates = []
-    allowed_content_types = map(lambda pti: pti.id,
-                                folder.allowedContentTypes())
-    for pref in self._getSortedPreferenceList() :
-      for doc in pref.objectValues() :
-        if doc.getPortalType() in allowed_content_types:
-          acceptable_templates.append (doc)
-    return acceptable_templates
+    def _getDocumentTemplateList(folder=None):
+      if folder is None :
+        # as the preference tool is also a Folder, this method is called by
+        # page templates to get the list of document templates for self.
+        folder = self
+  
+      acceptable_templates = []
+      allowed_content_types = map(lambda pti: pti.id,
+                                  folder.allowedContentTypes())
+      for pref in self._getSortedPreferenceList() :
+        for doc in pref.objectValues() :
+          if doc.getPortalType() in allowed_content_types:
+            acceptable_templates.append (doc)
+      return acceptable_templates
+    
+    return CachingMethod(_getDocumentTemplateList, 'portal_preferences.getDocumentTemplateList', cache_duration=3000)(folder)
 
 InitializeClass(PreferenceTool)
 

@@ -739,7 +739,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    def _getColumnIds(self):
+    def _getColumnIds():
       keys = {}
       for table in self.getCatalogSearchTableIds():
         field_list = self._getCatalogSchema(table=table)
@@ -753,14 +753,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       keys = keys.keys()
       keys.sort()
       return keys
-    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_duration=None)(self)
+    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_duration=None)()
 
   def getColumnMap(self):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    def _getColumnMap(self):
+    def _getColumnMap():
       keys = {}
       for table in self.getCatalogSearchTableIds():
         field_list = self._getCatalogSchema(table=table)
@@ -772,7 +772,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           if not keys.has_key(key): keys[key] = []
           keys[key].append(table) # Is this inconsistent ?
       return keys
-    return CachingMethod(_getColumnMap, id='SQLCatalog.getColumnMap', cache_duration=None)(self)
+    return CachingMethod(_getColumnMap, id='SQLCatalog.getColumnMap', cache_duration=None)()
 
   def getResultColumnIds(self):
     """
