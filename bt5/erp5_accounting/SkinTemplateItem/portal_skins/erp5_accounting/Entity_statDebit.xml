@@ -68,44 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw.update(selection.getParams())\n
-kwd = {}\n
-if kw.has_key(\'hide_grouping\'):\n
-  kwd[\'hide_grouping\'] = kw[\'hide_grouping\']\n
-\n
-# read settings from user preference\n
-preference = context.getPortalObject().portal_preferences\n
-if kw.get(\'no_from_date\', 0) :\n
-  from_date = None\n
-else :\n
-  from_date = preference.getPreferredAccountingTransactionFromDate()\n
-if from_date :\n
-  kwd[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
-if at_date :\n
-  kwd[\'at_date\'] = at_date\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
-if simulation_state :\n
-  kwd[\'simulation_state\'] = simulation_state\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
-if section_category :\n
-  kwd[\'section_category\'] = section_category\n
-\n
-# parameters only used in reports\n
-if kw.has_key(\'node_uid\'):\n
-  kwd[\'node_uid\'] = kw[\'node_uid\']\n
-if kw.has_key(\'portal_type\'):\n
-  kwd[\'portal_type\'] = kw[\'portal_type\']\n
-\n
-if kw.get(\'omit_input\') :\n
-  kwd[\'omit_input\'] = 1\n
-if kw.get(\'omit_output\') :\n
-  kwd[\'omit_output\'] = 1\n
-\n
-kwd[\'stat\'] = 1\n
-result = context.Entity_zGetAccountingTransactionList(**kwd)\n
-row = result[0]\n
-return float(\'%.02f\' % row.total_price or 0)\n
+            <value> <string>"""Total debit of all accounting transactions having this\n
+entity as a mirror section\n
+"""\n
+kw[\'mirror_section_uid\'] = context.getUid()\n
+kw[\'omit_output\'] = 1\n
+kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
+                                         \'account_type/liability/payable\']\n
+return context.Node_statAccountingBalance(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -115,20 +85,20 @@ return float(\'%.02f\' % row.total_price or 0)\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -148,29 +118,17 @@ return float(\'%.02f\' % row.total_price or 0)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>kwd</string>
-                            <string>_getitem_</string>
+<string>context</string>
                             <string>_write_</string>
-                            <string>context</string>
-                            <string>preference</string>
-                            <string>None</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>simulation_state</string>
-                            <string>section_category</string>
                             <string>_apply_</string>
-                            <string>result</string>
-                            <string>row</string>
-                            <string>float</string>
                           </tuple>
                         </value>
                     </item>
@@ -187,33 +145,12 @@ return float(\'%.02f\' % row.total_price or 0)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_statSourceBalance</string> </value>
+            <value> <string>Entity_statDebit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

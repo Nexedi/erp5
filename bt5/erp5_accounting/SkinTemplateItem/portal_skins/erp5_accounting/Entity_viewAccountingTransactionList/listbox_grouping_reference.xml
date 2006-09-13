@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not getattr(cell, \'is_previous_balance\', False)</string> </value>
+            <value> <string>request/cell/is_previous_balance | python:1</string> </value>
         </item>
       </dictionary>
     </pickle>

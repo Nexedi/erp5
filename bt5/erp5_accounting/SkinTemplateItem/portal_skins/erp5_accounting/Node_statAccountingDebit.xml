@@ -68,12 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this entity is mirror section.\n
-"""\n
-kw[\'mirror_section_uid\'] = context.getUid()\n
-kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
-                                         \'account_type/liability/payable\']\n
-return context.Node_getAccountingTransactionList(**kw)\n
+            <value> <string>return context.Node_statAccountingBalance(omit_output=1, **kw) or 0.0\n
 </string> </value>
         </item>
         <item>
@@ -97,6 +92,14 @@ return context.Node_getAccountingTransactionList(**kw)\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,10 +126,9 @@ return context.Node_getAccountingTransactionList(**kw)\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +145,7 @@ return context.Node_getAccountingTransactionList(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Node_statAccountingDebit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

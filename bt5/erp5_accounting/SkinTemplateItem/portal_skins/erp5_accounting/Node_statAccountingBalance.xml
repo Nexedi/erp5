@@ -68,12 +68,41 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this entity is mirror section.\n
-"""\n
-kw[\'mirror_section_uid\'] = context.getUid()\n
-kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
-                                         \'account_type/liability/payable\']\n
-return context.Node_getAccountingTransactionList(**kw)\n
+            <value> <string>portal = context.getPortalObject()\n
+params = portal.ERP5Accounting_getParams(selection)\n
+\n
+context.log(\'stat kw %s\'%kw,\'params %s\'%params)\n
+\n
+if kw.get(\'node_uid\'):\n
+  params[\'node_uid\'] = kw[\'node_uid\']\n
+if kw.get(\'mirror_section_uid\'):\n
+  params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
+\n
+# FIXME: bank account uses quantity, not total_price\n
+if kw.get(\'payment_uid\'):\n
+  params[\'payment_uid\'] = kw[\'payment_uid\']\n
+if kw.get(\'node_category_strict_membership\'):\n
+  params[\'node_category_strict_membership\'] = \\\n
+                kw[\'node_category_strict_membership\']\n
+if kw.get(\'node_category\'):\n
+  params[\'node_category\'] = kw[\'node_category\']\n
+\n
+###\n
+# Get the \'where_expression\' parameter\n
+# XXX can be removed ?\n
+if kw.get(\'where_expression\'):\n
+  params[\'where_expression\'] = kw[\'where_expression\']\n
+\n
+# Don\'t use the from_date parameter if from_date_summary is present\n
+# XXX actually I never use from date here -jerome\n
+if kw.get(\'from_date_summary\', 0) and params.has_key(\'from_date\'):\n
+  del params[\'from_date\']\n
+\n
+return portal.portal_simulation.getInventoryAssetPrice(\n
+              omit_input=omit_input,\n
+              omit_output=omit_output,\n
+              selection_domain=selection.getDomain(),\n
+              **params)\n
 </string> </value>
         </item>
         <item>
@@ -96,7 +125,15 @@ return context.Node_getAccountingTransactionList(**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>selection, omit_input=0, omit_output=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,15 +153,21 @@ return context.Node_getAccountingTransactionList(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>selection</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>params</string>
+                            <string>_getitem_</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
@@ -138,12 +181,15 @@ return context.Node_getAccountingTransactionList(**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Node_statAccountingBalance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

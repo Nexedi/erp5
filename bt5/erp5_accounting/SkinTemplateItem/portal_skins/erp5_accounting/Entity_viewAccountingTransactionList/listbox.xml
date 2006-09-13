@@ -257,6 +257,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -344,7 +348,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>parent_title</string>
+                          <string>Movement_getExplanationTitle</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -356,31 +360,31 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Transaction Type</string>
+                          <string>Movement_getExplanationTranslatedPortalType</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>Entity_getAccountingTransactionGapId</string>
-                          <string>GAP</string>
+                          <string>Movement_getNodeGapId</string>
+                          <string>GAP ID</string>
                         </tuple>
                         <tuple>
-                          <string>parent_reference</string>
+                          <string>Movement_getExplanationReference</string>
                           <string>Invoice Number</string>
                         </tuple>
                         <tuple>
-                          <string>parent_specific_reference</string>
+                          <string>Movement_getSpecificReference</string>
                           <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
+                          <string>Movement_getDebitPrice</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>Movement_getCreditPrice</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -388,12 +392,12 @@
                           <string>Grouping</string>
                         </tuple>
                         <tuple>
-                          <string>balance</string>
+                          <string>total_price</string>
                           <string>Balance</string>
                         </tuple>
                         <tuple>
-                          <string>net_balance</string>
-                          <string>Net</string>
+                          <string>running_total_price</string>
+                          <string>Running Balance</string>
                         </tuple>
                       </list>
                     </value>
@@ -423,12 +427,17 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>group</string>
+                          <string>group</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -504,6 +513,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -569,7 +582,16 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>stock.date</string>
+                          <string>ASC</string>
+                        </tuple>
+                        <tuple>
+                          <string>stock.uid</string>
+                          <string>ASC</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -583,16 +605,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
-                          <string>Entity_statSourceDebit</string>
+                          <string>Movement_getDebitPrice</string>
+                          <string>Entity_statDebit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
-                          <string>Entity_statSourceCredit</string>
+                          <string>Movement_getCreditPrice</string>
+                          <string>Entity_statCredit</string>
                         </tuple>
                         <tuple>
-                          <string>balance</string>
-                          <string>Entity_statSourceBalance</string>
+                          <string>total_price</string>
+                          <string>Entity_statBalance</string>
                         </tuple>
                       </list>
                     </value>
@@ -702,7 +724,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'hide_grouping\', 0)]</string> </value>
+            <value> <string>python:[(\'hide_grouping\', 0), ]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -740,7 +762,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(cell, \'is_previous_balance\', False) and [(x[0], None) for x in form.listbox.get_value(\'columns\')]</string> </value>
+            <value> <string>python: getattr(request.cell, \'is_previous_balance\', False) and [(x[0], None) for x in form.listbox.get_value(\'columns\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

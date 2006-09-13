@@ -68,12 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this entity is mirror section.\n
+            <value> <string>"""Total credit of all accounting transactions having this\n
+entity as a mirror section\n
 """\n
 kw[\'mirror_section_uid\'] = context.getUid()\n
+kw[\'omit_input\'] = 1\n
 kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
                                          \'account_type/liability/payable\']\n
-return context.Node_getAccountingTransactionList(**kw)\n
+# here, or 0 is to prevent displaying "- 0"\n
+return - context.Node_statAccountingBalance(**kw) or 0\n
 </string> </value>
         </item>
         <item>
@@ -83,13 +86,13 @@ return context.Node_getAccountingTransactionList(**kw)\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
+            <key> <string>_filepath</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -124,7 +127,7 @@ return context.Node_getAccountingTransactionList(**kw)\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
@@ -143,33 +146,12 @@ return context.Node_getAccountingTransactionList(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Entity_statCredit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

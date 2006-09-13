@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Message import Message\n
+portal = context.getPortalObject()\n
+params = portal.ERP5Accounting_getParams(selection)\n
+N_ = lambda msg: Message(\'erp5_ui\', msg)\n
+\n
+if not from_date:\n
+  from_date = portal.portal_preferences\\\n
+                .getPreferredAccountingTransactionFromDate()\n
+\n
+# XXX needed ?\n
+if kw.get(\'no_from_date\') and from_date:\n
+  from_date = None\n
+\n
+# this script can be used for Node, Section or Payment\n
+if kw.get(\'node_uid\'):\n
+  params[\'node_uid\'] = kw[\'node_uid\']\n
+if kw.get(\'mirror_section_uid\'):\n
+  params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
+if kw.get(\'payment_uid\'):\n
+  params[\'payment_uid\'] = kw[\'payment_uid\']\n
+if node_category_strict_membership:\n
+  params[\'node_category_strict_membership\'] = node_category_strict_membership\n
+if node_category:\n
+  params[\'node_category\'] = node_category\n
+\n
+# Create the related accouting line list\n
+new_result  = []\n
+net_balance = 0.0\n
+\n
+if from_date:\n
+  # Create a new parameter list to get the previous balance\n
+  get_inventory_kw = params.copy()\n
+  get_inventory_kw[\'to_date\'] = from_date\n
+  # TODO: using a list of section_uid \n
+  # \'where_expression\': " section.portal_type = \'Organisation\' " \n
+\n
+  # Get previous debit and credit\n
+  getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
+  # XXX missing Inventory API Feature: this could be retrived in 1 SQL Query\n
+  previous_total_debit  = getInventoryAssetPrice(omit_output=True,\n
+                                                  **get_inventory_kw)\n
+  previous_total_credit = getInventoryAssetPrice(omit_input =True,\n
+                                                  **get_inventory_kw)\n
+  context.log(\'previous credit (%s) %s\' % (get_inventory_kw, previous_total_credit),\n
+          getInventoryAssetPrice(omit_input=True, src__=1, **get_inventory_kw))\n
+  if previous_total_credit != 0:\n
+    previous_total_credit = - previous_total_credit\n
+\n
+  # Show the previous balance if not empty\n
+  if previous_total_credit != 0 or previous_total_debit != 0:\n
+    from Products.ERP5Type.Document import newTempAccountingTransaction\n
+\n
+    net_balance = previous_total_debit - previous_total_credit\n
+    previous_balance = newTempAccountingTransaction(\n
+                            portal, \'_temp_accounting_transaction\')\n
+    previous_balance.edit(\n
+        uid=\'new_000\',\n
+        date=from_date,\n
+        simulation_state_title="",\n
+        Movement_getCreditPrice=previous_total_credit,\n
+        Movement_getDebitPrice=previous_total_debit,\n
+        total_price=net_balance,\n
+        running_total_price=net_balance,\n
+        is_previous_balance=True,\n
+        Movement_getSpecificReference=u\'%s\' % N_(\'Previous Balance\'),\n
+        Movement_getExplanationTitle=u\'%s\' % N_(\'Previous Balance\'),\n
+        Movement_getExplanationTranslatedPortalType=\'\',\n
+        Movement_getExplanationReference=\'\',\n
+        Movement_getMirrorSectionTitle=\'\',\n
+        Movement_getNodeGapId=\'\',\n
+        getTranslatedSimulationStateTitle=\'\',\n
+      )\n
+    new_result = [previous_balance]\n
+    new_result.extend(\n
+      portal.portal_simulation.getMovementHistoryList(\n
+                   from_date=from_date,\n
+                   initial_running_total_price=net_balance,\n
+                   # initial_running_quantity=net_balance, TODO\n
+                   selection_domain=selection.getDomain(),\n
+                   selection_domain_join_column=\'section_uid\',\n
+                   sort_on=sort_on,\n
+                   **params))\n
+    return new_result\n
+\n
+context.log(\'sql\\nparams=%s\\nsort_on=%s\' % (params, sort_on),\n
+              portal.portal_simulation.getMovementHistoryList(\n
+                 from_date=from_date,\n
+                 initial_running_total_price=net_balance,\n
+                 # initial_running_quantity=net_balance, TODO\n
+                 selection_domain=selection.getDomain(),\n
+                 selection_domain_join_column=\'section_uid\',\n
+                 sort_on=sort_on,\n
+                 src__=1,\n
+                 **params))\n
+  \n
+# We try not to convert to a list.\n
+return portal.portal_simulation.getMovementHistoryList(\n
+                 from_date=from_date,\n
+                 initial_running_total_price=net_balance,\n
+                 # initial_running_quantity=net_balance, TODO\n
+                 selection_domain=selection.getDomain(),\n
+                 selection_domain_join_column=\'section_uid\',\n
+                 sort_on=sort_on,\n
+                 **params)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>sort_on</string>
+                            <string>node_category</string>
+                            <string>node_category_strict_membership</string>
+                            <string>from_date</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>params</string>
+                            <string>N_</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>new_result</string>
+                            <string>net_balance</string>
+                            <string>get_inventory_kw</string>
+                            <string>getInventoryAssetPrice</string>
+                            <string>_apply_</string>
+                            <string>True</string>
+                            <string>previous_total_debit</string>
+                            <string>previous_total_credit</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempAccountingTransaction</string>
+                            <string>previous_balance</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <list/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Node_getAccountingTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

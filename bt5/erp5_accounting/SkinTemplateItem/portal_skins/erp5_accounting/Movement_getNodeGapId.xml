@@ -68,12 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this entity is mirror section.\n
-"""\n
-kw[\'mirror_section_uid\'] = context.getUid()\n
-kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
-                                         \'account_type/liability/payable\']\n
-return context.Node_getAccountingTransactionList(**kw)\n
+            <value> <string>gap_id_cache = context.REQUEST.other.get(\'Movement_getNodeGapIdCache\', {})\n
+key = brain.node_relative_url\n
+gap_id = gap_id_cache.get(key)\n
+if gap_id is None:\n
+  gap_id = context.getPortalObject().restrictedTraverse(\n
+                    key).Account_getGapId()\n
+  gap_id_cache[key] = gap_id\n
+  context.REQUEST.other[\'Movement_getNodeGapIdCache\'] = gap_id_cache\n
+return gap_id\n
 </string> </value>
         </item>
         <item>
@@ -95,8 +98,14 @@ return context.Node_getAccountingTransactionList(**kw)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>brain=None, selection=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,17 +125,22 @@ return context.Node_getAccountingTransactionList(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>brain</string>
+                            <string>selection</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>gap_id_cache</string>
+                            <string>key</string>
+                            <string>gap_id</string>
+                            <string>None</string>
                             <string>_write_</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,12 +152,15 @@ return context.Node_getAccountingTransactionList(**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Movement_getNodeGapId</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
