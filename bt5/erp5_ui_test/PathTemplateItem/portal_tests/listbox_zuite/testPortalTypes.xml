@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -62,7 +68,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=ERP5%20Delivery;field_portal_types=</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=;field_portal_types=Foo</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -162,7 +168,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=ERP5%20Toto;field_portal_types=</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=;field_portal_types=Toto</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -172,7 +178,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>${base_url}/foo_module/view?reset:int=1</td>\n
+  <td>${base_url}/foo_module/view?reset:int=1</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -197,11 +203,32 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testMetaTypes</string> </value>
+            <value> <string>testPortalTypes</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
