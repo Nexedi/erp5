@@ -80,25 +80,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 XXX: Folder_filter accesses selection directly\n
 -->\n
 </tal:block>\n
+\n
+\n
 <tal:block metal:define-macro="master">\n
-  <span id="jump">\n
+\n
+  <span id="jump" metal:define-macro="jump">\n
     <select name="select_jump"\n
             tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doJump\')">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Jump...</option>\n
       <tal:block tal:repeat="jump actions/object_jump | nothing">\n
         <option tal:attributes="value jump/url"\n
-                tal:content="jump/name"></option>\n
+                tal:content="jump/name"/>\n
       </tal:block>\n
       <tal:block tal:condition="python: here.getPortalTypeName() in here.portal_types.objectIds() and here.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
         <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types.getTypeInfo(here).absolute_url(),)"\n
                 tal:content="python: \'Edit Portal Type \\\'%s\\\'\' % (here.getPortalTypeName(),)"\n
-                i18n:translate="" i18n:domain="ui"></option>\n
+                i18n:translate="" i18n:domain="ui"/>\n
       </tal:block>\n
       <tal:block tal:condition="here/portal_workflow/Base_getSourceVisibility">\n
         <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
         <tal:block tal:repeat="workflow python: here.portal_workflow.getWorkflowsFor(here)">\n
-          <option tal:attributes="value python: \'%s/manage_properties\' % (workflow.absolute_url(), )" tal:content="workflow/title"></option>\n
+          <option tal:attributes="value python: \'%s/manage_properties\' % (workflow.absolute_url(), )" tal:content="workflow/title"/>\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
@@ -109,8 +112,11 @@ XXX: Folder_filter accesses selection directly\n
             i18n:translate="" i18n:domain="ui">Jump</span>\n
     </button>\n
   </span>\n
+\n
   <span class="separator"></span>\n
-  <span id="action">\n
+\n
+\n
+  <span id="action" metal:define-macro="action">\n
     <select name="select_action"\n
             tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"\n
             tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
@@ -121,7 +127,7 @@ XXX: Folder_filter accesses selection directly\n
           <option tal:attributes="value python: \'add \' + content.getId()"\n
                   i18n:translate="" i18n:domain="ui">\n
             Add <tal:block tal:content="content/Title"\n
-                            i18n:name="portal_type" i18n:translate="" i18n:domain="ui"></tal:block>\n
+                            i18n:name="portal_type" i18n:translate="" i18n:domain="ui"/>\n
           </option>\n
         </tal:block>\n
       </tal:block>\n
@@ -131,7 +137,7 @@ XXX: Folder_filter accesses selection directly\n
           <option tal:attributes="value python:\'template \' + document_template.getRelativeUrl()"\n
                   i18n:translate="" i18n:domain="ui">\n
             Add <tal:block tal:content="document_template/getTitle"\n
-                            i18n:name="document_template"></tal:block>\n
+                            i18n:name="document_template"/>\n
           </option>\n
         </tal:block>\n
       </tal:block>\n
@@ -139,13 +145,13 @@ XXX: Folder_filter accesses selection directly\n
       <tal:block tal:repeat="action actions/workflow">\n
         <option tal:content="action/name"\n
                 tal:attributes="value python: \'workflow \' + action[\'url\']"\n
-                i18n:translate="" i18n:domain="ui"></option>\n
+                i18n:translate="" i18n:domain="ui"/>\n
       </tal:block>\n
       <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --</option>\n
       <tal:block tal:repeat="action actions/object_action | nothing">\n
         <option tal:content="action/name"\n
                 tal:attributes="value python: \'object \' + action[\'url\']"\n
-                i18n:translate="" i18n:domain="ui"></option>\n
+                i18n:translate="" i18n:domain="ui"/>\n
       </tal:block>\n
       <tal:block tal:replace=\'nothing\'>\n
         <!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) -->\n
@@ -153,7 +159,7 @@ XXX: Folder_filter accesses selection directly\n
         <tal:block tal:repeat="action actions/folder">\n
           <option tal:content="action/name"\n
                   tal:attributes="value python: \'folder \' + action[\'url\']"\n
-                  i18n:translate="" i18n:domain="ui"></option>\n
+                  i18n:translate="" i18n:domain="ui"/>\n
         </tal:block>\n
       </tal:block>\n
     </select>\n
@@ -163,7 +169,10 @@ XXX: Folder_filter accesses selection directly\n
       <span class="description">Action</span>\n
     </button>\n
   </span>\n
-  <span class="tool_buttons">\n
+\n
+\n
+  <span class="tool_buttons" metal:define-macro="tool_buttons">\n
+\n
     <!-- XXX: exchange_actions seems to be bad condition -->\n
     <span class="first"\n
           tal:define="search_actions actions/object_search | nothing;\n
@@ -293,6 +302,7 @@ XXX: Folder_filter accesses selection directly\n
         </a>\n
       </tal:block>\n
     </span>\n
+\n
     <span class="second">\n
       <a tal:condition="here/portal_preferences/getPreferredHtmlStyleContextualHelp"\n
          class="jump_help" title="Help"\n
@@ -313,8 +323,11 @@ XXX: Folder_filter accesses selection directly\n
         <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
       </a>\n
     </span>\n
+\n
   </span>\n
+\n
   <p class="clear"></p>\n
+\n
 </tal:block>
 
 ]]></string> </value>
