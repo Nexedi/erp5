@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/payment_mode/getFormItemList</string> </value>
+            <value> <string>here/portal_categories/payment_mode/getCategoryChildTitleItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
