@@ -904,7 +904,7 @@ class TestOrderMixin:
     related_applied_rule_list = {}
     for simulation_mvt in related_simulation_list:
       self.assertFalse(simulation_mvt.isDivergent())
-      related_applied_rule_list[simulation_mvt.getParent()]=1
+      related_applied_rule_list[simulation_mvt.getParentValue()]=1
     for applied_rule in related_applied_rule_list.keys():
       self.assertTrue(applied_rule.isStable())
 
