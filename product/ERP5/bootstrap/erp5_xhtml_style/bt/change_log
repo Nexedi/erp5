@@ -1,5 +1,6 @@
 2006-09-13 Kevin
 * Fix developper mode rendering bug.
+* erp5.js is needed in web mode by admin toolbox which display context_box_render.
 
 2006-09-12 Kevin
 * Refactor login_form screen to match new xhtml style form structure.

@@ -65,7 +65,7 @@
     global css_list  css_list | python: [];\n
            dummy     python: not is_web_mode and css_list.extend([\'%s/%s\' % (here.portal_url.getPortalPath(), x) for x in here.ERP5XhtmlStyle_getCSSList()]);\n
     global js_list   js_list | python: [];\n
-           dummy     python: not is_web_mode and js_list.extend([\'%s/%s\' % (here.portal_url.getPortalPath(), x) for x in here.ERP5XhtmlStyle_getJSList()]);\n
+           dummy     python: js_list.extend([\'%s/%s\' % (here.portal_url.getPortalPath(), x) for x in here.ERP5XhtmlStyle_getJSList()]);\n
 \n
     global http_parameter_list  request/form/copy;\n
            http_parameter_list  python: here.ERP5XhtmlStyle_filterParameterList(http_parameter_list);\n
