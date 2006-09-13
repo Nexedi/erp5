@@ -99,17 +99,17 @@ if wants_from_date:\n
   if from_date :\n
     params[\'from_date\'] = from_date\n
 \n
-at_date = params.get(\'at_date\',\n
+at_date = selection_params.get(\'at_date\',\n
               preference.getPreferredAccountingTransactionAtDate())\n
 if at_date:\n
-  params[\'at_date\'] = at_date\n
+  params[\'at_date\'] = at_date.latestTime()\n
 \n
-section_category = params.get(\'section_category\',\n
+section_category = selection_params.get(\'section_category\',\n
                  preference.getPreferredAccountingTransactionSectionCategory())\n
 if section_category:\n
   params[\'section_category\'] = section_category\n
 \n
-simulation_state = params.get(\'simulation_state\',\n
+simulation_state = selection_params.get(\'simulation_state\',\n
              preference.getPreferredAccountingTransactionSimulationStateList())\n
 if simulation_state:\n
   params[\'simulation_state\'] = simulation_state\n
@@ -163,7 +163,7 @@ return dict(params)\n
                             <string>wants_from_date</string>
                             <string>ignore_cache</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>None</string>
                             <string>params_cache</string>
                             <string>dict</string>
