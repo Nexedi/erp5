@@ -33,7 +33,7 @@ from Products.ERP5.Document.OrderRule import OrderRule
 from Products.ERP5.Document.TransformationSourcingRule import\
                                             TransformationSourcingRuleMixin
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 class ProductionOrderRule(OrderRule):
     """
@@ -60,14 +60,26 @@ class ProductionOrderRule(OrderRule):
                       )
 
     # Simulation workflow
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, force=0, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              '_getExpandablePropertyDict')
+    def _getExpandablePropertyDict(self, applied_rule, movement, 
+                                   default_property_list=None, **kw):
       """
-        Expands the current movement downward.
-        -> new status -> expanded
-        An applied rule can be expanded only if its parent movement
-        is expanded.
+      Return a Dictionary with the Properties used to edit 
+      the simulation movement.
       """
+      property_dict = {}
+
+      if default_property_list is None:
+        LOG("Order Rule , _getExpandablePropertyDict", WARNING,
+            "Hardcoded properties set")
+        default_property_list = (
+          'destination_section',
+          'destination', 'resource', 
+          'variation_category_list',
+          'aggregate_list',
+          'start_date', 'stop_date')
+    
       supply_chain = self.getSupplyChain(applied_rule)
       # We got a supply chain
       # Try to get the last SupplyLink
@@ -76,14 +88,17 @@ class ProductionOrderRule(OrderRule):
       # Now, we have to generate Simulation Movement, in order to
       # create a ProductionPackingList.
       destination_node = last_link.getDestinationValue()
-      source_value = destination_node.getDestinationValue()
-      source_section_value = last_link.getDestinationSectionValue()
+      source_value = destination_node.getDestination()
+      source_section_value = last_link.getDestinationSection()
       if source_value is not None:
-        kw["source_value"] = source_value
+        property_dict["source"] = source_value
       if source_section_value is not None:
-        kw["source_section_value"] = source_section_value
-      # Pass to base class
-      OrderRule.expand(self, applied_rule, force=force, **kw)
+        property_dict["source_section"] = source_section_value
+    
+      for prop in default_property_list:
+        property_dict[prop] = movement.getProperty(prop)
+    
+      return property_dict
 
 from Products.ERP5Type.Utils import monkeyPatch
 monkeyPatch(TransformationSourcingRuleMixin, ProductionOrderRule)

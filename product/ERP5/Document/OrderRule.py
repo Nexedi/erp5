@@ -95,10 +95,11 @@ class OrderRule(DeliveryRule):
         else:
           existing_movement_list.append(movement)
           immutable_movement_list.append(movement)
-      
+       
       # Create or modify movements
       for movement in order_movement_list:
         related_order = movement.getOrderRelatedValue()
+        property_dict = self._getExpandablePropertyDict(applied_rule, movement)      
         if related_order is None:
           if movement.getParentUid() == movement.getExplanationUid():
             # We are on a line
@@ -107,7 +108,6 @@ class OrderRule(DeliveryRule):
             # We are on a cell
             new_id = "%s_%s" % (movement.getParentId(), movement.getId())
           # Generate a simulation movement
-          LOG("OrderRule, expand", WARNING, "Hardcoded state list")
           applied_rule.newContent(
               portal_type=movement_type,
               id=new_id,
@@ -115,34 +115,15 @@ class OrderRule(DeliveryRule):
               order_ratio=1,
               delivery_ratio=1,
               deliverable=1,
-#               source=movement.getSource(),
-#               source_section=movement.getSourceSection(),
-#               destination=movement.getDestination(),
-#               destination_section=movement.getDestinationSection(),
-#               quantity=movement.getQuantity(),
-#               resource=movement.getResource(),
-#               variation_category_list=movement.getVariationCategoryList(),
-#               variation_property_dict=movement.getVariationPropertyDict(),
-#               start_date=movement.getStartDate(),
-#               stop_date=movement.getStopDate(),
-              **kw)
-        
+              **property_dict )
+          
         elif related_order in existing_movement_list:
           if related_order not in immutable_movement_list:
             # modification allowed
             related_order.edit(
               order_value=movement,
-#               source=movement.getSource(),
-#               source_section=movement.getSourceSection(),
-#               destination=movement.getDestination(),
-#               destination_section=movement.getDestinationSection(),
-#               quantity=movement.getQuantity(),
-#               resource=movement.getResource(),
-#               variation_category_list=movement.getVariationCategoryList(),
-#               variation_property_dict=movement.getVariationPropertyDict(),
-#               start_date=movement.getStartDate(),
-#               stop_date=movement.getStopDate(),
-              **kw)
+                **property_dict)
+            
             #related_order.setLastExpandSimulationState(order.getSimulationState())
             
           else:
@@ -169,3 +150,26 @@ class OrderRule(DeliveryRule):
     Checks that the movement is divergent
     """
     return Rule.isDivergent(self, movement)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            '_getExpandablePropertyDict')
+  def _getExpandablePropertyDict(self, applied_rule, movement,
+                                 default_property_list=None, **kw):
+    """
+    Return a Dictionary with the Properties used to edit 
+    the simulation movement
+    """
+    property_dict = {}
+
+    if default_property_list is None:
+      LOG("Order Rule , _getPropertiesTo", WARNING,
+                                "Hardcoded properties set")
+      default_property_list = (
+        'source_section', 'destination_section', 'source',
+        'destination', 'resource', 'variation_category_list',
+        'aggregate_list', 'start_date', 'stop_date')
+  
+      for prop in default_property_list:
+         property_dict[prop] = movement.getProperty(prop)
+       
+    return property_dict
