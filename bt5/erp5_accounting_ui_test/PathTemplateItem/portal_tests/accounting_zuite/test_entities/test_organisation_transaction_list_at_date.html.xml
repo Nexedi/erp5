@@ -89,7 +89,7 @@ Test Transactions related to an Organisation, with stop date\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_preferred_accounting_transaction_at_date_day</td>\n
-  <td>10</td>\n
+  <td>11</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -140,23 +140,30 @@ Test Transactions related to an Organisation, with stop date\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>12 record(s)</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
-  <td>60500.00</td>\n
+  <td>145200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
-  <td>0.00</td>\n
+  <td>2200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_stat_line\']/td[12]</td>\n
-  <td>60500.0</td>\n
+  <td>143000.0</td>\n
+</tr>\n
+<!-- the last line of running total column shows the same value that the total\n
+balance. -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_11\']/td[13]</td>\n
+  <td>143000.0</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
