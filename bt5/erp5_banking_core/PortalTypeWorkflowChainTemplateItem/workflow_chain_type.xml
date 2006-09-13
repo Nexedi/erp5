@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Category</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Check</type>
   <workflow>edit_workflow, check_workflow</workflow>
  </chain>

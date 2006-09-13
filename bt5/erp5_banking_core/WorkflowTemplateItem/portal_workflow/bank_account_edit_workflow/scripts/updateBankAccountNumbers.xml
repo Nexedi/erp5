@@ -90,7 +90,9 @@ bank_account.setBankAccountNumber(bank_account_id)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/bank_account_edit_workflow/scripts/updateBankAccountNumbers</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

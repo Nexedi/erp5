@@ -127,6 +127,8 @@ CREATE TABLE `catalog` (\n
   `has_cell_content` bool,\n
   `creation_date` datetime,\n
   `modification_date` datetime,\n
+  `start_date` datetime,\n
+  `stop_date` datetime,\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
   KEY `Parent` (`parent_uid`),\n
@@ -215,6 +217,8 @@ CREATE TABLE `catalog` (\n
   `has_cell_content` bool,\n
   `creation_date` datetime,\n
   `modification_date` datetime,\n
+  `start_date` datetime,\n
+  `stop_date` datetime,\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
   KEY `Parent` (`parent_uid`),\n

@@ -68,23 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>baobab_id_group = (\'baobab\', \'bankng_operation\')\n
-application_id = \'BA\'\n
-\n
-# first try to get the reference\n
+            <value> <string># first try to get the reference\n
 try:\n
   reference = context.getSourceReference()\n
 except AttributeError:\n
   return \'\'\n
 \n
+application_id = \'BA\'\n
 \n
 # if it\'s not defined, try to generate it\n
 if reference in (None, \'\') or not str(reference).startswith(application_id):\n
+  date = context.getStopDate()\n
+  if date in (None, \'\'):\n
+    return \'No date defined\'\n
+  year = date.strftime(\'%Y\')\n
+\n
   # codification\n
-  source_url = context.getSource()\n
-  # Make sure we do not get the codification of a counter\n
-  if source_url not in (None, \'\'):\n
-    source = context.Baobab_getVaultSite(source_url)\n
+  source = context.getSourceValue()\n
+  if source not in (None, \'\'):\n
     codification = source.getCodification()\n
     if codification in (None, \'\'):\n
       return \'\'\n
@@ -100,15 +101,11 @@ if reference in (None, \'\') or not str(reference).startswith(application_id):\n
       if codification in (None, \'\'):\n
         return \'\'\n
 \n
-  # date\n
-  date = context.getStopDate()\n
-  if date in (None, \'\'):\n
-    return \'No date defined\'\n
-  year = date.strftime(\'%Y\')\n
-\n
   # actual generation\n
   if reference in (None, \'\'):\n
-    reference = context.portal_ids.generateNewId(id_group = baobab_id_group)\n
+    baobab_id_group = (application_id, codification, year)\n
+    reference = context.portal_ids.generateNewLengthId(id_group = baobab_id_group)\n
+\n
   # affectation\n
   reference = "%s-%s-%s-%s" % (application_id, codification, year, reference)\n
   context.setSourceReference(reference)\n
@@ -131,7 +128,9 @@ return reference\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getUniqueReference</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -167,15 +166,15 @@ return reference\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>baobab_id_group</string>
-                            <string>application_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>reference</string>
                             <string>AttributeError</string>
+                            <string>application_id</string>
                             <string>None</string>
                             <string>str</string>
-                            <string>source_url</string>
+                            <string>date</string>
+                            <string>year</string>
                             <string>source</string>
                             <string>codification</string>
                             <string>site_list</string>
@@ -183,8 +182,7 @@ return reference\n
                             <string>_getitem_</string>
                             <string>site</string>
                             <string>site_value</string>
-                            <string>date</string>
-                            <string>year</string>
+                            <string>baobab_id_group</string>
                           </tuple>
                         </value>
                     </item>

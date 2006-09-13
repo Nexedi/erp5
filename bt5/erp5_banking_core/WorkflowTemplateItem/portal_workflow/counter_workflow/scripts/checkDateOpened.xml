@@ -99,7 +99,9 @@ if len(date_list) == 0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/counter_workflow/scripts/checkDateOpened</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

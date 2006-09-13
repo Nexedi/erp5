@@ -147,6 +147,18 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getStartDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getStopDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getStringIndex</string> </key>
                                 <value>
                                   <dictionary/>
@@ -225,37 +237,39 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>security_uid</string>
-                            <string>getPath</string>
-                            <string>getRelativeUrl</string>
-                            <string>getParentUid</string>
-                            <string>id</string>
-                            <string>getDescription</string>
-                            <string>getTitle</string>
-                            <string>meta_type</string>
-                            <string>getPortalType</string>
-                            <string>opportunity_state</string>
-                            <string>getCorporateRegistrationCode</string>
-                            <string>getEan13Code</string>
-                            <string>getSimulationState</string>
-                            <string>getSimulationStateTitle</string>
-                            <string>causality_state</string>
-                            <string>invoice_state</string>
-                            <string>validation_state</string>
-                            <string>validation_state_title</string>
-                            <string>payment_state</string>
-                            <string>event_state</string>
-                            <string>getReference</string>
-                            <string>getGroupingReference</string>
-                            <string>getSourceReference</string>
-                            <string>getDestinationReference</string>
-                            <string>getStringIndex</string>
-                            <string>getIntIndex</string>
-                            <string>getFloatIndex</string>
-                            <string>hasCellContent</string>
-                            <string>getCreationDate</string>
-                            <string>getModificationDate</string>
+<string>uid</string>
+<string>security_uid</string>
+<string>getPath</string>
+<string>getRelativeUrl</string>
+<string>getParentUid</string>
+<string>id</string>
+<string>getDescription</string>
+<string>getTitle</string>
+<string>meta_type</string>
+<string>getPortalType</string>
+<string>opportunity_state</string>
+<string>getCorporateRegistrationCode</string>
+<string>getEan13Code</string>
+<string>getSimulationState</string>
+<string>getSimulationStateTitle</string>
+<string>causality_state</string>
+<string>invoice_state</string>
+<string>validation_state</string>
+<string>validation_state_title</string>
+<string>payment_state</string>
+<string>event_state</string>
+<string>getReference</string>
+<string>getGroupingReference</string>
+<string>getSourceReference</string>
+<string>getDestinationReference</string>
+<string>getStringIndex</string>
+<string>getIntIndex</string>
+<string>getFloatIndex</string>
+<string>hasCellContent</string>
+<string>getCreationDate</string>
+<string>getModificationDate</string>
+<string>getStartDate</string>
+<string>getStopDate</string>
                           </list>
                         </value>
                     </item>
@@ -302,7 +316,9 @@ getIntIndex\r\n
 getFloatIndex\r\n
 hasCellContent\r\n
 getCreationDate\r\n
-getModificationDate</string> </value>
+getModificationDate\r\n
+getStartDate\r\n
+getStopDate</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -377,7 +393,9 @@ VALUES\n
   <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>\n
+  <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>\n
@@ -454,7 +472,9 @@ VALUES\n
   <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>\n
+  <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>\n

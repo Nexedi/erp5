@@ -71,15 +71,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 # check that the amount of `resource` in account `payment` is greater than or equal to `quantity`\n
-\n
 # returns a dictionnary like : {\'error_code\', \'balance\'}\n
 \n
-#workflow_id = \'bank_account_workflow\'\n
 workflow_correct_state_list = (\'valid\', \'being_modified\', \'validating_modification\')\n
 manual_validation_account_category_list = (\'test\',)\n
 \n
 # First check that the payment account is in an acceptable state\n
-#payment_state = context.portal_workflow.getInfoFor(ob=payment, name=\'simulation_state\', wf_id=workflow_id)\n
 payment_value = context.restrictedTraverse(payment)\n
 payment_state = payment_value.getValidationState()\n
 \n
@@ -93,15 +90,10 @@ if resource is None :\n
 \n
 # Next, check the balance of the account\n
 account_balance = resource.getFutureInventory(payment=payment, src__=src__)\n
-context.log("account balance",account_balance)\n
-context.log("resource payement", str((resource,payment)))\n
 if src__ :\n
   return account_balance \n
 \n
 if account_balance - quantity < 0 :\n
-#  if payment.getBankAccountType() in manual_validation_account_category_list :\n
-#    return {\'error_code\':3, \'balance\':account_balance} # manual_validation\n
-\n
   return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
 \n
 return {\'error_code\':0, \'balance\':account_balance} # ok\n
@@ -123,7 +115,9 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/BankAccount_checkBalance</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -180,7 +174,6 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                             <string>None</string>
                             <string>AttributeError</string>
                             <string>account_balance</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

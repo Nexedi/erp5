@@ -112,7 +112,9 @@ for operation in operation_list_object:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/counter_workflow/scripts/cancelRemainingOperation</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

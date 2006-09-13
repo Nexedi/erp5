@@ -112,6 +112,7 @@
                       <list>
                         <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_vault_type</string>
                       </list>
                     </value>
                 </item>

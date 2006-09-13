@@ -109,7 +109,9 @@ for counter in counter_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/counter_date_workflow/scripts/closeAllCounter</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

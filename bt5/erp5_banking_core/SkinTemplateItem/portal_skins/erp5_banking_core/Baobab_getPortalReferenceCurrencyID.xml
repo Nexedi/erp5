@@ -81,7 +81,9 @@ return context.getPortalObject().getProperty(\'reference_currency_id\')\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getPortalReferenceCurrencyID</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

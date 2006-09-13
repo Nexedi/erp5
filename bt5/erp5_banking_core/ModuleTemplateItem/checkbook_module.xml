@@ -292,8 +292,8 @@
    <name>Add Z MySQL Database Connections</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+  <permission type='list'>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
@@ -478,6 +478,9 @@
   <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>
