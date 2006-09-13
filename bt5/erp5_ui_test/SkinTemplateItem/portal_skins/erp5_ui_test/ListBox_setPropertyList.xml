@@ -83,8 +83,8 @@
   field_all_columns = \'\',\n
   field_search_columns = \'\',\n
   field_sort_columns = \'\',\n
-  field_sort = \'id\',\n
-  field_editable_columns = \'\',\n
+  field_sort = \'id\', # Very important, this allow to test tales expression on listbox_XXX fields\n
+  field_editable_columns = \'id\',\n
   field_stat_columns = \'\',\n
   field_url_columns = \'\',\n
   field_list_method = \'searchFolder\',\n
