@@ -79,7 +79,8 @@ class PackingList(Delivery):
                       , PropertySheet.Movement
                       )
 
-    security.declareProtected(Permissions.View, 'isDivergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'isDivergent')
     def isDivergent(self,**kw):
       """
         Returns 1 if not simulated or inconsistent target and values
@@ -91,7 +92,8 @@ class PackingList(Delivery):
 
     #######################################################
     # Container computation
-    security.declareProtected(Permissions.View, 'isPacked')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'isPacked')
     def isPacked(self):
       """
         Returns 0 if all quantity resource on packing list line
