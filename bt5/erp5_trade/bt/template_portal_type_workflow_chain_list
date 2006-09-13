@@ -18,12 +18,10 @@ Inventory Line | trade_matrix_workflow
 Inventory | edit_workflow
 Inventory | inventory_workflow
 Payment Condition | edit_workflow
-Purchase Order Cell | delivery_edit_workflow
-Purchase Order Cell | packing_list_interaction_workflow
+Purchase Order Cell | edit_workflow
 Purchase Order Line | edit_workflow
 Purchase Order Line | trade_matrix_workflow
 Purchase Order | edit_workflow
-Purchase Order | order_interaction_workflow
 Purchase Order | order_workflow
 Purchase Packing List Cell | delivery_edit_workflow
 Purchase Packing List Line | delivery_edit_workflow
@@ -41,12 +39,10 @@ Purchase Supply | edit_workflow
 Purchase Trade Condition | edit_workflow
 Returned Sale Packing List | edit_workflow
 Returned Sale Packing List | packing_list_workflow
-Sale Order Cell | delivery_edit_workflow
-Sale Order Cell | packing_list_interaction_workflow
+Sale Order Cell | edit_workflow
 Sale Order Line | edit_workflow
 Sale Order Line | trade_matrix_workflow
 Sale Order | edit_workflow
-Sale Order | order_interaction_workflow
 Sale Order | order_workflow
 Sale Packing List Cell | delivery_edit_workflow
 Sale Packing List Line | delivery_edit_workflow
