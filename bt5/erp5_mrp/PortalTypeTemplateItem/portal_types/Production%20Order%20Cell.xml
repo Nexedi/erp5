@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Delivery Cell</string> </value>
+            <value> <string>ERP5 Order Cell</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveryCell</string> </value>
+            <value> <string>addOrderCell</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
