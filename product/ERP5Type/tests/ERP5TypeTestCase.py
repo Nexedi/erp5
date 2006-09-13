@@ -142,6 +142,10 @@ from Products.ERP5.ERP5Site import ERP5Site
 
 portal_name = 'erp5_portal'
 
+# we keep a reference to all sites for wich setup failed the first time, to
+# prevent replaying the same failing setup step for each test.
+failed_portal_installation = {}
+
 class ERP5TypeTestCase(PortalTestCase):
 
     def getTitle(self):
@@ -387,6 +391,9 @@ def setupERP5Site( business_template_list=(),
       business_template_list must be specified correctly
       (e.g. '("erp5_common", )').
     '''
+    if portal_name in failed_portal_installation:
+      raise RuntimeError, 'Installation of %s already failed, giving up'\
+                            % portal_name
     try:
       if app is None:
         app = ZopeTestCase.app()
@@ -498,7 +505,10 @@ def setupERP5Site( business_template_list=(),
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
             ZopeTestCase._print('Ran Unit test of %s\n' % title)
-        finally:
+        except:
+          get_transaction().abort()
+          raise
+        else:
           get_transaction().commit()
           ZopeTestCase.close(app)
     except:
@@ -506,6 +516,8 @@ def setupERP5Site( business_template_list=(),
       traceback.print_exc(file=f)
       ZopeTestCase._print(f.getvalue())
       f.close()
+      failed_portal_installation[portal_name] = 1
+      raise
 
 def optimize():
   '''Significantly reduces portal creation time.'''
