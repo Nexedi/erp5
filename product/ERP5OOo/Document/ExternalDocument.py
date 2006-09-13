@@ -34,18 +34,19 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5OOo.Document.DMSFile import DMSFile, stripHtml
 
 import mimetypes, re, urllib
+from htmlentitydefs import name2codepoint
 from DateTime import DateTime
+
+# XXX refactor - html processing functions should go outside
 
 rx=[]
 rx.append(re.compile('<!--.*?-->',re.DOTALL|re.MULTILINE)) # clear comments (sometimes JavaScript code in comments contains > chars)
 rx.append(re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)) # clear tags
-rx.append(re.compile('&#[^;]+;')) # clear most entities (how to safely clear things like &raquo;?)
 rx.append(re.compile('\s+')) # compress multiple spaces
 
 def clearHtml(s):
   for r in rx:
     s=r.sub(" ",s)
-  s=s.replace('&nbsp;'," ")
   return s
 
 class SpiderException(Exception):
@@ -58,6 +59,50 @@ class Opener(urllib.FancyURLopener):
 
   def http_error_default(self, url, fp, code, msg, headers):
     raise SpiderException(code, msg)
+
+tgtencoding='utf-8'
+encodings=['iso-8859-2','iso-8859-15','windows-1250']
+rx_charset=re.compile('<meta.*charset="?([\w\d\-]*)',re.DOTALL|re.MULTILINE|re.IGNORECASE)
+
+def recode(s):
+  """
+  maybe it can be useful system-wide
+  """
+  _encodings=encodings[:] # local copy
+  _encodings.insert(0,tgtencoding) # if not declared or declared wrongly, we try
+  m=rx_charset.search(s)
+  if m and len(m.groups())>0:
+    enc=m.groups()[0].lower()
+    if enc==tgtencoding:
+      return s
+    if enc in _encodings:
+      _encodings.remove(enc)
+    _encodings.insert(0,enc) # we'll start from what we've found
+  for enc in _encodings:
+    try:
+      return s.decode(enc).encode('utf-8')
+    except UnicodeDecodeError, LookupError:
+      pass
+  raise CanNotDecode('sorry')
+
+def _convertEntities(txt,rx,mapper=None):
+    def repl(code):
+        if mapper:
+            code=mapper.get(code)
+        if code is None:
+            return ''
+        return unichr(int(code)).encode(tgtencoding)
+    res=re.split(rx,txt)
+    res[1::2]=map(repl,res[1::2]) # Isn't it beautiful? :)
+    return ''.join(res)
+
+rx_chars=re.compile('&#(\d{3});')
+rx_ents=re.compile('&(\w{1,6});')
+
+def convertEntities(txt):
+    txt=_convertEntities(txt,rx_chars)
+    txt=_convertEntities(txt,rx_ents, name2codepoint)
+    return txt
 
 class ExternalDocument(DMSFile):
   """
@@ -121,10 +166,15 @@ class ExternalDocument(DMSFile):
     if chars==0:
       self.setStatusMessage("Tried on %s: got empty string" % self._time())
       return False
-    # XXX here we will check encoding and convert to UTF8
-    # and decode htmlentities
+    # here we check encoding and convert to UTF8
+    try:
+      s=recode(s)
+    except CanNotDecode:
+      self.setStatusMessage("Spidered on %s, %i chars, but could not decode" % (self._time(), chars))
+      return False
     s=stripHtml(s) # remove headers, doctype and the like
-    s=clearHtml(s) # remove tags and entities
+    s=clearHtml(s) # remove tags
+    s=convertEntities(s) # convert charrefs and named entities
     self.setTextContent(s)
     self.setStatusMessage("Spidered on %s, %i chars" % (self._time(), chars))
     return True
