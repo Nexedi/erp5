@@ -142,7 +142,11 @@ Test Transactions related to an Organisation, with stop date\n
   <td>listbox_record_number</td>\n
   <td>12 record(s)</td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[preceding-sibling::label[contains(text(),\'At Date\')]]</td>\n
+  <td>2005/01/11</td>\n
+</tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
@@ -170,7 +174,7 @@ balance. -->\n
 <!-- {{{ Tear down -->\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/</td>\n
+  <td>${base_url}</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
