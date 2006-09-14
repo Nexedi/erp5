@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Folder_search</string> </value>
+            <value> <string>Base_searchHandler</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -74,8 +74,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_id</string>
+                        <string>your_id</string>
+                        <string>your_title</string>
+                        <string>your_list_form_id</string>
                       </list>
                     </value>
                 </item>
@@ -83,7 +84,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
+                        <string>your_description</string>
                       </list>
                     </value>
                 </item>
@@ -100,11 +101,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewSearchResultList</string> </value>
+            <value> <string>Folder_viewSearchDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
