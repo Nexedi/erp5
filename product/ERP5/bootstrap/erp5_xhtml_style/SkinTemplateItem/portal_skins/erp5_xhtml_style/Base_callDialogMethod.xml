@@ -88,6 +88,11 @@ def removeUnpickableObjectsFromDict(request_form):\n
   """\n
   cleaned_dict = request_form.copy()\n
   for k, v in cleaned_dict.items():\n
+    if k == \'listbox\':\n
+      new_list = []\n
+      for line in v:\n
+        new_list.append(removeUnpickableObjectsFromDict(line))\n
+      cleaned_dict[k] = tuple(new_list)\n
     if v in (None, \'\') or hasattr(v, \'read\'):\n
       del cleaned_dict[k]\n
   return cleaned_dict\n
@@ -205,7 +210,6 @@ if len(listbox_id_list):\n
       listbox_line_list.append(listbox_line)\n
     listbox_line_list = tuple(listbox_line_list)\n
     request_form[listbox_id] = listbox_line_list\n
-\n
 if enable_pickle or (form.update_action != \'\'):\n
   request_form_cleaned = removeUnpickableObjectsFromDict(request_form)\n
   request_form[\'pickle_string\'] = context.portal_selections.getPickle(**request_form_cleaned)\n
@@ -281,6 +285,12 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
