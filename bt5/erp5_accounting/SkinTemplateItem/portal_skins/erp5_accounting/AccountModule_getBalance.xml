@@ -68,39 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>params = selection.getParams()\n
-kwd = {}\n
+            <value> <string>portal = context.getPortalObject()\n
+params = portal.ERP5Accounting_getParams(selection)\n
+params[\'omit_input\'] = omit_input\n
+params[\'omit_output\'] = omit_output\n
 \n
-# read settings from user preference\n
-preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
-if from_date :\n
-  kwd[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
-if at_date :\n
-  kwd[\'at_date\'] = at_date\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
-if simulation_state :\n
-  kwd[\'simulation_state\'] = simulation_state\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
-if section_category :\n
-  kwd[\'section_category\'] = section_category\n
+# XXX this is a hack !\n
+params[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
 \n
-url = params.get(\'accounting_transaction_line_currency\')\n
-if url:\n
-  currency = context.restrictedTraverse(url)\n
-  kwd[\'resource_uid\'] = [currency.getUid()]\n
-if kw.get(\'omit_input\') :\n
-  kwd[\'omit_input\'] = 1\n
-if kw.get(\'omit_output\') :\n
-  kwd[\'omit_output\'] = 1\n
-\n
-kwd[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
-\n
-return context.portal_simulation.getInventoryAssetPrice( node_uid        = context.getUid()\n
-                                                       , omit_simulation = 1\n
-                                                       , **kwd\n
-                                                       )\n
+return portal.portal_simulation.getInventoryAssetPrice(\n
+                                          node_uid=brain.uid,\n
+                                          **params )\n
 </string> </value>
         </item>
         <item>
@@ -123,7 +101,7 @@ return context.portal_simulation.getInventoryAssetPrice( node_uid        = conte
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kw</string> </value>
+            <value> <string>brain=None, selection=None, omit_input=0, omit_output=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -143,7 +121,7 @@ return context.portal_simulation.getInventoryAssetPrice( node_uid        = conte
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -151,19 +129,14 @@ return context.portal_simulation.getInventoryAssetPrice( node_uid        = conte
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>params</string>
-                            <string>kwd</string>
                             <string>context</string>
-                            <string>preference</string>
-                            <string>from_date</string>
+                            <string>portal</string>
+                            <string>params</string>
                             <string>_write_</string>
-                            <string>at_date</string>
-                            <string>simulation_state</string>
-                            <string>section_category</string>
-                            <string>url</string>
-                            <string>currency</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -179,6 +152,8 @@ return context.portal_simulation.getInventoryAssetPrice( node_uid        = conte
               <tuple>
                 <none/>
                 <none/>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>

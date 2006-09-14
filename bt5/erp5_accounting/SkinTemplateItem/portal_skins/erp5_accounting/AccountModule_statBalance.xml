@@ -68,47 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw.update(selection.getParams())\n
-params = {}\n
-LOG=lambda message: context.log("AccountModule_statBalance", message)\n
+            <value> <string>portal = context.getPortalObject()\n
+params = portal.ERP5Accounting_getParams(selection)\n
+selection_params = selection.getParams()\n
 \n
-# read settings from user preference\n
-preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\\\n
-                      or kw.get(\'from_date\', None)\n
-if from_date :\n
-  params[\'from_date\'] = from_date\n
-  \n
-at_date = preference.getPreferredAccountingTransactionAtDate()\\\n
-                      or kw.get(\'at_date\', None)\n
-if at_date :\n
-  params[\'at_date\'] = at_date\n
-\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\\\n
-                      or kw.get(\'simulation_state\', kw.get(\'simulation_state\', None))\n
-if simulation_state :\n
-  params[\'simulation_state\'] = simulation_state\n
-\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\\\n
-                      or kw.get(\'section_category\', kw.get(\'section_category\', None))\n
-if section_category :\n
-  params[\'section_category\'] = section_category\n
-\n
-try:\n
-  url = kw[\'accounting_transaction_line_currency\']\n
-  if url:\n
-    currency = context.restrictedTraverse(url)\n
-    params[\'resource_uid\'] = [currency.getUid()]\n
-except KeyError:\n
-  pass\n
-\n
-# build the query with portal_catalog\n
-query = context.portal_catalog.buildSQLQuery(**kw) #query_table = \'node\', **kw)\n
-\n
-if query.get(\'where_expression\'):\n
-  params[\'where_expression\'] = query[\'where_expression\']\n
-if query.get(\'from_table_list\'):\n
-  params[\'from_table_list\'] = query[\'from_table_list\']\n
+params[\'omit_input\'] = omit_input\n
+params[\'omit_output\'] = omit_output\n
 \n
 if selection.getDomain() :\n
   params[\'selection_domain\'] = selection.getDomain()\n
@@ -118,26 +83,20 @@ if kw.get(\'closed_summary\'):\n
   params[\'closed_summary\'] = kw[\'closed_summary\']\n
 if selection.isInvertMode() :\n
   params[\'node_uid\'] = selection.getInvertModeUidList()\n
-  params[\'selection_uids\'] = selection.getInvertModeUidList()\n
+elif \'title\' in selection_params or \\\n
+   \'preferred_gap_id\' in selection_params or \\\n
+   \'translated_validation_state_title\' in selection_params:\n
+  # if list is filtered, apply the same filter here\n
+  params[\'node_uid\'] = [x.uid for x in\n
+                        portal.portal_catalog(**selection_params)]\n
+else:\n
+  # make sure we only have Accounts as nodes\n
+  params[\'node_category\'] = [\'account_type\',]\n
 \n
-if kw.get(\'omit_input\'):\n
-  params[\'omit_input\'] = 1\n
-if kw.get(\'omit_output\'):\n
-  params[\'omit_output\'] = 1\n
+# XXX this is a hack !\n
+params[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
 \n
-results = context.Resource_zStatInventory(omit_simulation=1, **params)\n
-row = results[0]\n
-total = 0\n
-if row.total_price :\n
-  total = row.total_price or 0.00\n
-return total\n
-\n
-# FIXME:\n
-# here we have to buildSQLQuery on \'node\' catalog table alias and not catalog.\n
-# currently this doesn\'t work.\n
-context.log(\'SQL:\', context.portal_simulation.getInventory( src__=1, omit_simulation=1, **params ))\n
-\n
-return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
+return portal.portal_simulation.getInventoryAssetPrice( **params )\n
 </string> </value>
         </item>
         <item>
@@ -160,7 +119,7 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kw</string> </value>
+            <value> <string>brain=None, selection=None, omit_input=0, omit_output=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -180,7 +139,7 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -188,27 +147,21 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>params</string>
-                            <string>LOG</string>
                             <string>context</string>
-                            <string>preference</string>
-                            <string>None</string>
-                            <string>from_date</string>
+                            <string>portal</string>
+                            <string>params</string>
+                            <string>selection_params</string>
                             <string>_write_</string>
-                            <string>at_date</string>
-                            <string>simulation_state</string>
-                            <string>section_category</string>
                             <string>_getitem_</string>
-                            <string>url</string>
-                            <string>currency</string>
-                            <string>KeyError</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_apply_</string>
-                            <string>query</string>
-                            <string>results</string>
-                            <string>row</string>
-                            <string>total</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -223,6 +176,8 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
               <tuple>
                 <none/>
                 <none/>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
