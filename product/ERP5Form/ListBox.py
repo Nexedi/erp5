@@ -2799,7 +2799,7 @@ class ListBoxValidator(Validator.Validator):
                   value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                   # Here we set the property
                   listbox[uid[4:]][sql] = value
-                except ValidationError, err: # XXXX import missing
+                except ValidationError, err:
                   pass
                 except KeyError:
                   pass
