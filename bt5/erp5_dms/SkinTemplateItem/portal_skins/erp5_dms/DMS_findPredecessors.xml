@@ -72,7 +72,7 @@
 # we can return raw set, the class will get objects and make the records unique\n
 # if you want only the most recent versions, filter the result and apply DMS_findDocument \n
 ss=[]\n
-context.log(script.getId(),\'running\')\n
+if context.getReference() is None: return []\n
 ss.append(context.getReference())\n
 if context.getLanguage() is not None:\n
   ss.append(context.getReference()+\'-\'+context.getLanguage())\n
@@ -129,7 +129,6 @@ return lst\n
                             <string>ss</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>script</string>
                             <string>None</string>
                             <string>lst</string>
                             <string>_getiter_</string>
