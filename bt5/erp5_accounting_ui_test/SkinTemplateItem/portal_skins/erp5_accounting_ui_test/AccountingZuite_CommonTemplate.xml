@@ -56,10 +56,15 @@
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <tal:block metal:define-macro="init">\n
+  <tal:block metal:define-macro="init" tal:define="base_url python: \'/\' + here.getPortalObject().getId()">\n
+    <tr>\n
+      <td>store</td>\n
+      <td tal:content="base_url">erp5</td>\n
+      <td>base_url</td>\n
+    </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td>/erp5/AccountingZuite_reset</td>\n
+      <td>${base_url}/AccountingZuite_reset</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
@@ -69,7 +74,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td tal:content="string:/erp5/accounting_module/$init_method" />\n
+      <td tal:content="string:$base_url/accounting_module/$init_method" />\n
       <td></td>\n
     </tr>\n
     <tr>\n
@@ -80,7 +85,7 @@
 \n
     <tr>\n
       <td>open</td>\n
-      <td>/erp5/Zuite_waitForActivities</td>\n
+      <td>${base_url}/Zuite_waitForActivities</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
@@ -90,7 +95,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td>/erp5/</td>\n
+      <td>${base_url}</td>\n
       <td></td>\n
     </tr>\n
   </tal:block>\n
