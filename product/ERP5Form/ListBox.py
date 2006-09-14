@@ -920,8 +920,17 @@ class ListBoxRenderer:
         elif meta_type_list is not None:
           params.setdefault('meta_type', meta_type_list)
 
-        # Remove useless parameters.
-        for k, v in params.items():
+        # Remove useless parameters as FileUpload
+        for k, v in params.items():          
+          if k == "listbox":
+            # listbox can also contain useless parameters
+            new_list = []
+            for line in v:
+              for k1, v1 in line.items():
+                if v1 in (None, '') or hasattr(v1, 'read'):
+                  del line[k1]
+              new_list.append(line)
+            params[k] = new_list                            
           if v in (None, '') or hasattr(v, 'read'):
             del params[k]
 
@@ -961,7 +970,6 @@ class ListBoxRenderer:
     # objects in the current ListBox configuration.
     if 'select_expression' in params:
       del params['select_expression']
-
     return params
 
   getParamDict = VolatileCachingMethod(getParamDict)
@@ -1844,6 +1852,7 @@ class ListBoxRendererLine:
 
       value_list.append((original_value, processed_value))
 
+    #LOG('ListBox.getValueList', 0, value_list)
     return value_list
 
 class ListBoxHTMLRendererLine(ListBoxRendererLine):
