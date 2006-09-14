@@ -1,5 +1,6 @@
 2006-09-14
 Fixed some bugs and controls, implemented publication workflow side effects, check unique identifier upon submission.
+Added language and version to catalog (compatibility), updated scripts accordingly
 
 2006-09-12
 First implementation of External Document (a web page, spidered and cached)
