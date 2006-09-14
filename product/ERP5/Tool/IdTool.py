@@ -172,12 +172,9 @@ class IdTool(UniqueObject, Folder):
       persistant mapping to be persistent.
       We use MySQL to generate an ID, because it is atomic and we don't want
       to generate any conflict at zope level. The possible downfall is that
-      some IDs might be skipped because of failed transactions (MySQL is not
-      and must not be rolled back).
-      2 ZSQL methods are required for this method to work :
-       - 
-      "Length" because the id is stored in a BTrees.Length. It doesn't have
-      to be a length.
+      some IDs might be skipped because of failed transactions.
+      "Length" is because the id is stored in a python object inspired by
+      BTrees.Length. It doesn't have to be a length.
     """
     if getattr(self, 'dict_length_ids', None) is None:
       self.dict_length_ids = PersistentMapping()
@@ -187,8 +184,9 @@ class IdTool(UniqueObject, Folder):
       if not isinstance(id_group, str):
         id_group = repr(id_group)
       default = isinstance(default, int) and default or 1
-      query = getattr(self, 'Base_zGenerateId')
-      commit = getattr(self, 'Base_zCommit')
+      portal_catalog = self.getPortalObject().portal_catalog['erp5_mysql']
+      query = getattr(portal_catalog, 'z_portal_ids_generate_id')
+      commit = getattr(portal_catalog, 'z_portal_ids_commit')
       if None not in (query, commit):
         result = query(id_group=id_group, default=default)
         commit()
