@@ -216,6 +216,8 @@ class DMSFile(XMLObject,File):
     find references in text_content, return matches
     with this we can then find objects
     '''
+    if self.getTextContent() is None:
+      return []
     rx_search=re.compile(self.portal_preferences.getPreferredDmsReferenceRegexp())
     try:
       res=rx_search.finditer(self.getTextContent())
@@ -258,7 +260,7 @@ class DMSFile(XMLObject,File):
         id='DMSFile_getWikiPredecessorValueList')
     return cached_getWikiPredecessorValueList()
 
-  security.declareProtected(Permissions.View,'getContributors')
+  security.declareProtected(Permissions.View,'getContributorList')
   def getContributorList(self):
     #'''
     #override
