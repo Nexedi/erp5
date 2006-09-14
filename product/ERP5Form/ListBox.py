@@ -442,6 +442,14 @@ class ListBoxRenderer:
       if isinstance(v, VolatileCachingMethod):
         setattr(self, k, InstanceMethod(self, v))
 
+  def getPhysicalPath(self):
+    """
+      Return the path of form we render.
+      This function is required to be able to use ZopeProfiler product with 
+      listbox.
+    """
+    return self.field.getPhysicalPath()
+
   def getLineClass(self):
     """Return a class object for a line. This must be overridden.
     """
@@ -2800,7 +2808,7 @@ class ListBoxValidator(Validator.Validator):
         if len(listbox)>0:
           list_method = field.get_value('list_method')
           list_method = getattr(here, list_method.method_name)
-          REQUEST.set('listbox',listbox)
+          REQUEST.set(field.id, listbox)
           object_list = list_method(REQUEST=REQUEST,**params)
         for uid in listbox_uids:
           if str(uid).find('new') == 0:
