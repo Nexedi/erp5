@@ -230,8 +230,11 @@ for table_name in spreadsheets.keys():\n
           if value not in (\'\', None):\n
             if hasattr(new_category, method_id):\n
               method = getattr(new_category, method_id)\n
-              # Convert the value to something like \'\\xc3\\xa9\' not \'\\xc3\\xa9\'\n
-              method(value.encode(\'UTF-8\'))\n
+              if key != \'int_index\':\n
+                # Convert the value to something like \'\\xc3\\xa9\' not \'\\xc3\\xa9\'\n
+                method(value.encode(\'UTF-8\'))\n
+              else:\n
+                method(int(value))\n
 \n
 \n
 # Import is a success, go back to the portal_categories tool\n
