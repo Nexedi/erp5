@@ -74,8 +74,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_id</string>
-                        <string>your_title</string>
+                        <string>your_search_listbox_id</string>
+                        <string>your_search_listbox_title</string>
                         <string>your_list_form_id</string>
                       </list>
                     </value>
@@ -84,7 +84,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_description</string>
+                        <string>your_search_listbox_description</string>
                       </list>
                     </value>
                 </item>
