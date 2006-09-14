@@ -55,6 +55,9 @@ from zLOG import LOG
 import os
 from Products.ERP5Type import product_path
 
+# XXX set it to an appropriate value
+erp5_port=80
+
 class TestDms(ERP5TypeTestCase):
   """
   """
@@ -119,7 +122,7 @@ class TestDms(ERP5TypeTestCase):
     role._edit(agent='person_module/1',role_name='Assignor')
 
   def printAndCheck(self,doc):
-    self.assert_(u'Auditor' in doc.__ac_local_roles__.get('hq',[]))
+    self.assert_(u'Auditor' in doc.__ac_local_roles__.get('HQ',[]))
 
   def test_02_ObjectCreation(self,quiet=0,run=run_all_test):
     if not quiet:
@@ -153,7 +156,7 @@ class TestDms(ERP5TypeTestCase):
     f.close()
     self.assert_(doctext.isFileUploaded())
     self.assert_(not doctext.hasOOfile())
-    ZopeTestCase._print('\n originalloaded '+str(doctext.getOriginalFilename()))
+    ZopeTestCase._print('\n originalloaded '+str(doctext.getSourceReference()))
     ZopeTestCase._print('\n isFileUploaded '+str(doctext.isFileUploaded()))
     ZopeTestCase._print('\n hasOOfile '+str(doctext.hasOOfile()))
     doctext.convert()
@@ -194,6 +197,21 @@ class TestDms(ERP5TypeTestCase):
     ZopeTestCase._print('\n'+doctext.getCacheInfo())
     mtype=doctext.guessMimeType('file.doc')
     self.assertEquals(mtype,'application/msword')
+
+  def test_06_ExternalDocument(self,quiet=0,run=run_all_test):
+    if not quiet:
+      ZopeTestCase._print('\nTest External Document')
+      LOG('Testing... ',0,'test_06_ExternalDocument')
+    dm=self.getPortal().document_module
+    doctext=dm.newContent(portal_type='External Document',id='ext1')
+    self.assert_('http' in doctext.getProtocolList())
+    doctext.setUrlProtocol('http')
+    doctext.setUrlString('localhost:%i' % erp5_port)
+    doctext.spiderSource()
+    if not quiet:
+      ZopeTestCase._print(doctext.getStatusMessage())
+      LOG('Testing External Document... ',0,doctext.getStatusMessage())
+    self.assert_(doctext.getTextContent().find('My language')>-1)
     
 
 
