@@ -51,6 +51,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -95,95 +101,6 @@ Test Transactions related to an account\n
   <td>2 record(s)</td>\n
 </tr>\n
 \n
-<!-- dumped listbox {{{2 -->\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
-  <td>Client 1 Sale Invoice</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
-  <td>2005/01/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
-  <td>Sale Invoice Transaction</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[6]</td>\n
-  <td>Client 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[7]</td>\n
-  <td>Validated</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]</td>\n
-  <td>2200.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[9]</td>\n
-  <td>0.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[10]</td>\n
-  <td>2200.0</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
-  <td>Client 2 Sale Invoice</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[3]</td>\n
-  <td>2005/01/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]</td>\n
-  <td>Sale Invoice Transaction</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[6]</td>\n
-  <td>Client 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[7]</td>\n
-  <td>Validated</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[8]</td>\n
-  <td>3300.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[9]</td>\n
-  <td>0.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[10]</td>\n
-  <td>3300.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[11]</td>\n
-  <td>5500.0</td>\n
-</tr>\n
-<!-- }}} -->\n
-\n
 <!-- {{{ stat line -->\n
 <tr>\n
   <td>verifyFloat</td>\n
@@ -200,8 +117,51 @@ Test Transactions related to an account\n
   <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
   <td>5500.0</td>\n
 </tr>\n
-<!-- 2}}} -->\n
+<!-- }}} -->\n
 \n
+<!-- Jump to Accounting Module {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Transactions Related To This Account:</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+<!-- check amounts for lines -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[9]</td>\n
+  <td>2200.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[10]</td>\n
+  <td>2200.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[9]</td>\n
+  <td>3300.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[10]</td>\n
+  <td>3300.0</td>\n
+</tr>\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>5500.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
+  <td>5500.00</td>\n
+</tr>\n
 <!-- }}} -->\n
 \n
 </tbody></table>\n
@@ -222,7 +182,7 @@ Test Transactions related to an account\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_account_transaction_list.html</string> </value>
+            <value> <string>test_account_transaction_list_jump_accounting_module.html</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
