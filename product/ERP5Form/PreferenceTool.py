@@ -182,7 +182,7 @@ class PreferenceTool(BaseTool):
 
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
   def getDocumentTemplateList(self, folder=None) :
-    """ returns all document templates that are in acceptable Preferences 
+    """ returns all document templates that are in acceptable Preferences
         based on different criteria such as folder, portal_type, etc.
     """
     def _getDocumentTemplateList(folder=None):
@@ -201,6 +201,27 @@ class PreferenceTool(BaseTool):
       return acceptable_templates
     
     return CachingMethod(_getDocumentTemplateList, 'portal_preferences.getDocumentTemplateList', cache_duration=3000)(folder)
+    # We must set the user_id as a parameter to make sure each
+    # user can get a different user
+    def _getDocumentTemplateList(user_id,portal_type=None):
+      acceptable_templates = []
+      for pref in self._getSortedPreferenceList() :
+        for doc in pref.objectValues() :
+          if doc.getPortalType() == portal_type:
+            acceptable_templates.append(doc.getRelativeUrl())
+      return acceptable_templates
+    _getDocumentTemplateList = CachingMethod(_getDocumentTemplateList,
+                          'portal_preferences.getDocumentTemplateList',
+                          cache_duration=3000)
+
+    allowed_content_types = map(lambda pti: pti.id,
+                                folder.allowedContentTypes())
+    user_id = getToolByName(self, 'portal_membership').getAuthenticatedMember().getId()
+    template_list = []
+    for portal_type in allowed_content_types:
+      for template_url in _getDocumentTemplateList(user_id,portal_type=portal_type):
+        template_list.append(self.restrictedTraverse(template_url))
+    return template_list
 
 InitializeClass(PreferenceTool)
 
