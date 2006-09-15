@@ -30,9 +30,9 @@ from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Metho
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 
-class Setter(Method):
+class SetSetter(Method):
     """
-      Sets a reference
+      Sets a category value through a provided value (List mode)
     """
     _need__name__=1
 
@@ -51,14 +51,31 @@ class Setter(Method):
       instance._setValue(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 keep_default=1)
       if self._reindex: instance.reindexObject()
 
     psyco.bind(__call__)
 
-ListSetter = Setter
-SetSetter = Setter # Error XXX
-DefaultSetter = Setter # Error XXX
+class ListSetter(SetSetter):
+    """
+      Sets a category value through a provided value (Set mode)
+    """
+    _need__name__=1
+
+    def __call__(self, instance, *args, **kw):
+      if self._warning:
+        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      instance._setValue(self._key, args[0],
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()),
+                                                 keep_default=0)
+      if self._reindex: instance.reindexObject()
+
+    psyco.bind(__call__)
+
+DefaultSetter = SetSetter
 
 class DefaultGetter(Method):
     """
@@ -146,10 +163,7 @@ class DefaultTitleGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      o = instance._getDefaultAcquiredValue(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+      o = instance._getDefaultAcquiredValue(self._key, **kw)
       if o is None:
         return None
       return o.getTitle()
@@ -175,11 +189,7 @@ class TitleListGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return [x.getTitle() for x in instance._getAcquiredValueList(self._key,
-                                                    spec=kw.get('spec',()),
-                                                    filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()))
-                                                  ]
+      return [x.getTitle() for x in instance._getAcquiredValueList(self._key, **kw)]
 
     psyco.bind(__call__)
 
