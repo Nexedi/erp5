@@ -79,8 +79,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          html_render  python: field.render_htmlgrid(value, request)">\n
     <div tal:repeat="html_tuple html_render"\n
          tal:attributes="title python: here.Localizer.translate(\'erp5_ui\', here.Base_getFieldDescription(field));\n
-                         class python: \'field \' + ({0: {0: None   , 1: \'required\'},\n
-                                                    1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()] or \'\') + \' \' + (field.get_value(\'css_class\') or \'\')">\n
+                         class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_errors.has_key(field.id) and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])">\n
       <label>\n
         <tal:block tal:content="structure python: html_tuple[0]"\n
                    i18n:translate="" i18n:domain="ui"/>\n

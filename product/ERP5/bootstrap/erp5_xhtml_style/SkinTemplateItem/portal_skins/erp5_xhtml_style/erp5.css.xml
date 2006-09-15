@@ -622,9 +622,7 @@ fieldset.bottom .field label {\n
   vertical-align: middle;\n
 }\n
 \n
-.content .field.reqerror label,\n
-.content .field.required label,\n
-.content .field .error {\n
+.content .required label {\n
   font-weight: bold;\n
 }\n
 \n
@@ -633,7 +631,11 @@ fieldset.bottom .field label {\n
   color: #f00;\n
 }\n
 \n
-.content .field.invisible label {\n
+.content .error .input {\n
+  border: 1px solid #F00;\n
+}\n
+\n
+.content .field .invisible label {\n
   display: None;\n
 }\n
 \n
