@@ -907,12 +907,16 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_14_PackingListHavePriceCurrencyCategory(self, quiet=quiet,
-                                                   run=run_all_test):
+                                                   run=1): #run_all_test):
     """Deliveries must have a price currency category. #252
     """
     if not run:
       return
-  
+    pl = self.getPortal().getDefaultModule(self.packing_list_portal_type
+               ).newContent(portal_type=self.packing_list_portal_type)
+    self.failUnless(hasattr(pl, 'getPriceCurrency'))
+    
+
 if __name__ == '__main__':
     framework()
 else:
