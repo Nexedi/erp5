@@ -76,7 +76,7 @@ for name in (\'foo_module\', \'bar_module\'):\n
   module.manage_delObjects(list(module.objectIds()))\n
   module.setLastId(1)\n
 \n
-# Reset the form.\n
+# Reset the foo module listbox\n
 form = context.FooModule_viewFooList\n
 result = form.listbox.ListBox_setPropertyList()\n
 \n
@@ -85,6 +85,27 @@ result = form.listbox.ListBox_setPropertyList()\n
 #  sort = [], stat_columns = [], url_columns = [],\n
 #  list_method = \'\', count_method = \'\',\n
 #  stat_method = \'\', search = \'\', select = \'\', list_action = \'list\'))\n
+\n
+# Reset the Foo_viewRelationField listbox (modified by listbox_zuite/testRedirect UI test)\n
+form = context.Foo_viewRelationField\n
+default_columns = \'\\n\'.join(( \'id | ID\'\n
+                            , \'title | Title\'\n
+                            , \'quantity | Quantity\'\n
+                            ))\n
+result = form.listbox.ListBox_setPropertyList( \n
+    field_title            = \'Foo Lines\'\n
+  , field_columns          = default_columns\n
+  , field_sort             = \'id\'\n
+  , field_editable_columns = default_columns\n
+  , field_list_method      = \'objectValues\'\n
+  , field_count_method     = \'\'\n
+  , field_selection_name   = \'foo_line_selection\'\n
+  , field_portal_types     = \'\'\n
+  , field_search           = \'\'\n
+  , field_select           = \'\'\n
+  , field_list_action      = \'Folder_viewContentList\'\n
+  , field_editable         = \'checked\'\n
+  )\n
 \n
 # Reset the selection.\n
 def resetSelection(selection_name):\n
@@ -157,6 +178,7 @@ return \'Reset Successfully.\'\n
                             <string>list</string>
                             <string>form</string>
                             <string>result</string>
+                            <string>default_columns</string>
                             <string>resetSelection</string>
                           </tuple>
                         </value>
