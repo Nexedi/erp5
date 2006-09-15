@@ -1908,7 +1908,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        UninstallBusinessTemplate \
@@ -1952,7 +1952,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckSkinFolderExists \
                        UninstallBusinessTemplate \
@@ -1997,7 +1997,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckWorkflowExists \
                        UninstallBusinessTemplate \
@@ -2045,7 +2045,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckModuleExists \
@@ -2095,7 +2095,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckBaseCategoryExists \
                        SaveBaseCategoryUid \
@@ -2154,7 +2154,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckFirstActionExists \
@@ -2202,7 +2202,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
@@ -2249,7 +2249,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckBaseCategoryExists \
                        UninstallBusinessTemplate \
@@ -2294,7 +2294,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckCategoriesExists \
                        UninstallBusinessTemplate \
@@ -2341,7 +2341,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
@@ -2389,7 +2389,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
@@ -2434,7 +2434,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckRoleExists \
                        UninstallBusinessTemplate \
@@ -2479,7 +2479,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckLocalRolesExists \
                        UninstallBusinessTemplate \
@@ -2524,7 +2524,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPropertySheetExists \
                        UninstallBusinessTemplate \
@@ -2568,7 +2568,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPropertySheetExists \
                        RemovePropertySheet \
@@ -2669,7 +2669,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckModuleExists \
@@ -2733,6 +2733,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNotInstalledInstallationState \
                        RemoveModule \
                        RemoveBaseCategory \
+                       RemovePortalType \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        ImportBusinessTemplate \
@@ -2743,7 +2744,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckModuleExists \
@@ -2847,7 +2848,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckModuleExists \
@@ -3246,7 +3247,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckSkinFolderExists \
                        UninstallBusinessTemplate \
