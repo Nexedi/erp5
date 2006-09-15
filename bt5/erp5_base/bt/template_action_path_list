@@ -89,7 +89,6 @@ Person Module | career_print
 Person Module | csv_export
 Person Module | csv_import
 Person Module | email_report
-Person Module | exchange
 Person Module | list_emails
 Person Module | list_ui
 Person Module | ooo_import
