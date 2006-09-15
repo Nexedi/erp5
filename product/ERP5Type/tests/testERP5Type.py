@@ -15,6 +15,8 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG, INFO
 from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.Cache import CachingMethod, clearCache
+from Products.ERP5Type.Base import _aq_reset
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
@@ -244,7 +246,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       clearCache()
       self.assertEquals(cache2(), cached_var2)
 
-    def test_afterCloneScript(self):
+    def test_07_afterCloneScript(self):
       """manage_afterClone can call a type based script."""
       # setup the script for Person portal type
       custom_skin = self.getPortal().portal_skins.custom
@@ -289,7 +291,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       new_orga = folder[new_id]
       self.assertEquals(new_orga.getTitle(), 'something')
       
-    def test_AccessorGeneration(self):
+    def test_09_AccessorGeneration(self):
       """Tests accessor generation doesn't generate error messages.
       """
       from Products.ERP5Type.Base import _aq_reset
@@ -301,7 +303,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       orga.getId()
       self._ignore_log_errors()
     
-    def test_RenameObjects(self):
+    def test_10_RenameObjects(self):
       """Test object renaming.
       As we overloaded some parts of OFS, it's better to test again some basic
       features.
@@ -326,6 +328,52 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
         new_id = '%s_new' % id_
         self.assertEquals(folder._getOb(new_id).getId(), new_id)
       
+    def test_11_ConstraintNotFound(self):
+      """
+      When a Constraint is not found while importing a PropertySheet, AttributeError 
+      was raised, and generated a infinite loop.
+      This is a test to make sure this will not happens any more
+      """
+      # We will first define a new propertysheet
+      class_tool = self.getClassTool()
+
+      class_tool.newPropertySheet('TestPropertySheet')
+      text = """
+class TestPropertySheet:
+    \"\"\"
+        TestPropertySheet for this unit test
+    \"\"\"
+
+    _properties = (
+        {   'id'          : 'strange_property',
+            'description' : 'A local property description',
+            'type'        : 'string',
+            'mode'        : '' },
+      )
+
+    _constraints = (
+        { 'id'            : 'toto',
+          'description'   : 'define a bad constraint',
+          'type'          : 'TestConstraintNotFoundClass',
+        },
+      )
+
+"""
+      class_tool.editPropertySheet('TestPropertySheet',text)
+      class_tool.importPropertySheet('TestPropertySheet')
+      # We set the property sheet on the portal type Organisation
+      type_tool = self.getTypeTool()
+      organisation_portal_type = type_tool['Organisation']
+      organisation_portal_type.setPropertySheetList(['TestPropertySheet'])
+      folder = self.getOrganisationModule()
+      _aq_reset()
+      # We check that we raise exception when we create new object
+      from Products.ERP5Type.Utils import ConstraintNotFound
+      organisation =  self.assertRaises(ConstraintNotFound,folder.newContent,
+                                        portal_type='Organisation')
+      
+
+
 if __name__ == '__main__':
     framework()
 else:

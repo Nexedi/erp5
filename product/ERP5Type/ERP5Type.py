@@ -210,12 +210,21 @@ class ERP5TypeInformation( FactoryTypeInformation,
     def getPropertySheetList( self ):
         """
             Return list of content types.
+            XXX I (seb) think the name is bad
         """
         from Products.ERP5Type import PropertySheet
         result = PropertySheet.__dict__.keys()
         result = filter(lambda k: not k.startswith('__'),  result)
         result.sort()
         return result
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'setPropertySheetList')
+    def setPropertySheetList( self, property_sheet_list):
+        """
+          Set the list of property_sheet for this portal type
+        """
+        self.property_sheet_list = property_sheet_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getHiddenContentTypeList')
