@@ -1,3 +1,6 @@
+2006-09-15 jerome
+* Add an alarm to send a summary of all open bugs.
+
 2006-08-29 jerome
 * Remove related keys, they are automatically generated.
 
