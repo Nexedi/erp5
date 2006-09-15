@@ -630,7 +630,9 @@ class TestPackingListMixin(TestOrderMixin):
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
   run_all_test = 1
-  def test_01_PackingListDecreaseQuantity(self, quiet=0, run=run_all_test):
+  quiet = 0
+
+  def test_01_PackingListDecreaseQuantity(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
       see if the packing list is divergent and then
@@ -650,9 +652,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_02_PackingListChangeDestination(self, quiet=0, run=run_all_test):
+  def test_02_PackingListChangeDestination(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -671,9 +673,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_03_PackingListChangeStartDate(self, quiet=0, run=run_all_test):
+  def test_03_PackingListChangeStartDate(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -692,9 +694,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_04_PackingListDeleteLine(self, quiet=0, run=run_all_test):
+  def test_04_PackingListDeleteLine(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -711,9 +713,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_05_SimulationChangeQuantity(self, quiet=0, run=run_all_test):
+  def test_05_SimulationChangeQuantity(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -733,9 +735,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_06_SimulationChangeStartDate(self, quiet=0, run=run_all_test):
+  def test_06_SimulationChangeStartDate(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -755,9 +757,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_07_SimulationChangeStartDateWithTwoOrderLine(self, quiet=0, run=run_all_test):
+  def test_07_SimulationChangeStartDateWithTwoOrderLine(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -779,9 +781,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_08_AddContainers(self, quiet=0, run=run_all_test):
+  def test_08_AddContainers(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -801,9 +803,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_09_AddContainersWithVariatedResources(self, quiet=0, run=run_all_test):
+  def test_09_AddContainersWithVariatedResources(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -823,9 +825,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
     
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_10_PackingListIncreaseQuantity(self, quiet=0, run=run_all_test):
+  def test_10_PackingListIncreaseQuantity(self, quiet=quiet, run=run_all_test):
     """
     - Increase the quantity on an delivery line
     - check if the packing list is divergent
@@ -851,10 +853,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_11_PackingListDecreaseTwoTimesQuantityAndUpdateDelivery(self, 
-                                               quiet=0, run=run_all_test):
+  def test_11_PackingListDecreaseTwoTimesQuantityAndUpdateDelivery(self,
+                                               quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
       see if the packing list is divergent and then
@@ -883,9 +885,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_12_PackingListLineChangeResource(self, quiet=0, run=run_all_test):
+  def test_12_PackingListLineChangeResource(self, quiet=quiet, run=run_all_test):
     """
     Test if delivery diverged when we change the resource.
     """
@@ -902,9 +904,15 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-
+  def test_14_PackingListHavePriceCurrencyCategory(self, quiet=quiet,
+                                                   run=run_all_test):
+    """Deliveries must have a price currency category. #252
+    """
+    if not run:
+      return
+  
 if __name__ == '__main__':
     framework()
 else:
