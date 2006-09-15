@@ -42,7 +42,7 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
         for action in actions:
             if action.getId() == view or action.getCategory().endswith('_%s' % view):
                 if _verifyActionPermissions(obj, action):
-                  if action.testCondition(context):
+                  if action.testCondition(context) and action.visible:
                     target = action.action(context).strip()
                     if target.startswith('/'):
                         target = target[1:]
