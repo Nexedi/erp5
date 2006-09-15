@@ -82,7 +82,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.login()
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
-    #self._catch_log_errors()
+    self._catch_log_errors()
 
   def beforeTearDown(self):
     """Remove objects created tests."""
