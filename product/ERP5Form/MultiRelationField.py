@@ -48,24 +48,7 @@ SUB_FIELD_ID = 'relation'
 ITEM_ID = 'item'
 NO_VALUE = '??? (No Value)'
 
-def checkSameKeys(a , b):
-  """
-    Checks if the two lists contain
-    the same values
-  """
-  same = 1
-  for ka in a:
-    if (not ka in b) and (ka != ''):
-      same = 0
-      break
-  if same:
-    for kb in b:
-      if (not kb in a) and (kb != ''):
-        same = 0
-        break
-  return same
-
-class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, 
+class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                      Widget.TextWidget, 
                                      Widget.ListWidget):
   """
@@ -457,7 +440,7 @@ class MultiRelationEditor:
           else:
             set_method_name = '_set%sValueList' % \
                          convertToUpperCase(self.base_category)
-            getattr(o, set_method_name)(relation_object_list, 
+            getattr(o, set_method_name)(relation_object_list,
                                         portal_type=self.portal_type_list)
 
 allow_class(MultiRelationEditor)
@@ -502,7 +485,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     if isinstance(current_value_list, StringType):
       current_value_list = [current_value_list]
     # Check value list
-    if not (checkSameKeys(value_list, current_value_list)):
+    if value_list != current_value_list: # Changes in the order or in the number of occurences
+                                         # must be taken into account
       for i in range(len(value_list)):
         value = value_list[i]
         relation_field_id = field.generate_subfield_key("%s_%s" % \
@@ -530,12 +514,14 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     catalog_index = field.get_value('catalog_index')
     portal_type_list = [x[0] for x in field.get_value('portal_type')]
     portal_catalog = getToolByName(field, 'portal_catalog')
+
     ####################################
     # Check list input
     ####################################
     relation_field_id = field.generate_subfield_key("%s" % \
                                                     SUB_FIELD_ID, key=key)
     relation_uid_list = REQUEST.get(relation_field_id, None)
+
     ####################################
     # User clicked on the wheel
     ####################################
@@ -567,6 +553,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
             display_text = message
           else:
             display_text = 'Object has been deleted'
+
         ################################
         # Modify if user modified his value
         ################################
