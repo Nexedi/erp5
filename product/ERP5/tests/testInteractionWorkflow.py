@@ -424,6 +424,42 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertEquals(organisation.getVatCode(),'fooa')
     self.assertEquals(organisation.getDefaultEmailText(),'bar')
 
+  def test_13(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, Check that edit does not detect the '
+          'property modified in interaction script as modified by user')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='setTitle',
+            after_script_name=('afterEdit',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "vat_code = context.getVatCode()\n" +\
+           "if vat_code is None:\n" +\
+           "  vat_code = ''\n" +\
+           "context.setVatCode(vat_code + 'a')"
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setTitle('foo')
+    organisation.setVatCode('bar')
+    self.assertEquals(organisation.getTitle(), 'foo')
+    self.assertEquals(organisation.getVatCode(), 'bar')
+
+    organisation.edit(title='baz', vat_code='bar')
+    self.assertEquals(organisation.getTitle(),'baz')
+    # here, the wrong behaviour was:
+    # - edit:setTitle(baz)
+    # - interaction:setVatCode(bara)
+    # - edit:setVatCode(bar)
+    # whereas, the correct order is:
+    # - edit:setTitle(baz)
+    # - edit:setVatCode(bar)
+    # - interaction:setVatCode(bara)
+    self.assertEquals(organisation.getVatCode(),'bara')
+    
 if __name__ == '__main__':
     framework()
 else:

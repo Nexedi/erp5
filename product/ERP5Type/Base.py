@@ -984,6 +984,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       be updated through this generic edit method
     """
     self._v_modified_property_dict = {}
+    my_modified_property_list = []
     for key in kw.keys():
       if key != 'id':
         # We only change if the value is different
@@ -999,12 +1000,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         if old_value != kw[key] or force_update:
           # We keep in a thread var the previous values
           # this can be useful for interaction workflow to implement lookups
+          # XXX If iteraction workflow script is triggered by edit and calls
+          # edit itself, this is useless as the dict will be overwritten
           self._v_modified_property_dict[key] = old_value
-          self._setProperty(key, kw[key])
+          my_modified_property_list.append(key)
       elif self.id != kw['id']:
         self.setId(kw['id'], reindex=reindex_object)
     # Modification date is supported by edit_workflow in ERP5
     # There is no need to change it here
+    for key in my_modified_property_list:
+      self._setProperty(key, kw[key])
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
       if (self._v_modified_property_dict != {}):
