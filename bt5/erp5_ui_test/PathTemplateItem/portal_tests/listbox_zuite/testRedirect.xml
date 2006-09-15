@@ -132,6 +132,91 @@
 </tr>\n
 \n
 \n
+<!--\n
+  === PART 2 ===\n
+  Test that cover bug #206 (Redirection when changing the listbox display mode are broken in view mode).\n
+    1. Enable multiple display mode on listbox of an alternate view (= not the default view).\n
+    2. Go to the alternative view.\n
+    3. Change listbox display mode.\n
+    4. Test that we are redirected to the right view, not the default.\n
+-->\n
+<!-- START of code strongly inspired (to not said copied) by listbox_zuite/testDomainTree test-->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_category%7CFoo%20Category</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_domain_tree_mode</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>domain_root_url</td>\n
+  <td>Foo Category</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
+  <td>+ a</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
+  <td>+ b</td>\n
+</tr>\n
+<!-- Click on "+ a" link -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=+ a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>domain_root_url</td>\n
+  <td>Foo Category</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
+  <td>- a</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
+  <td>+ a1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[3]//a</td>\n
+  <td>+ a2</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[4]//a</td>\n
+  <td>+ b</td>\n
+</tr>\n
+<!-- END of inspired code -->\n
+<tr>\n
+  <td>verifyLocation</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+</tbody>\n
+</table>\n
 </body>\n
 </html>
 
