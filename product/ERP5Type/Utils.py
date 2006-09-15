@@ -341,7 +341,7 @@ class DocumentConstructor(Method):
         o.uid = folder.portal_catalog.newUid()
       if kw: o.__of__(folder)._edit(force_update=1, **kw)
       if REQUEST is not None:
-          REQUEST['RESPONSE'].redirect( 'manage_main' )
+        REQUEST['RESPONSE'].redirect( 'manage_main' )
 
 class TempDocumentConstructor(DocumentConstructor):
 
@@ -355,6 +355,7 @@ class TempDocumentConstructor(DocumentConstructor):
       if kw:
         o.__of__(folder)._edit(force_update=1, **kw)
       return o
+
 
 python_file_parser = re.compile('^(.*)\.py$')
 
