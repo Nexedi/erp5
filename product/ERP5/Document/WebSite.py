@@ -116,12 +116,36 @@ class WebSite(Domain):
       A Web Site root class. This class is used by ERP5 Commerce
       to define the root of an eCommerce site.
 
+      The main idea of the WebSite class is to provide access to
+      documents by leveraging aq_dynamic with a user definable
+      script: WebSite_getDocumentValue
+
+      This script allows for implementing simple or
+      complex document lookup policies:
+
+      - access to documents by a unique reference (ex. as
+        in a Wiki)
+
+      - access to published documents only (ex.
+        publication_state == 'published')
+
+      - access to most relevant document (ex. latest
+        version, applicable language)
+
+      Changing this script allows for configuring completely
+      the behaviour of a web site and tweaking document
+      lookup policies to fit specific needs.
+
       WARNING:
         - Z Catalog Search permission must be set for Anonymous
+          (XXX is this still true ?)
 
       TODO:
         - accelerate document lookup by caching acceptable keys
+          (XXX is this still true ?)
+
         - fix missing REQUEST information in aq_dynamic documents
+          (XXX is this still true ?)
     """
     # CMF Type Definition
     meta_type       = 'ERP5 Web Site'
@@ -191,6 +215,14 @@ class WebSite(Domain):
         raise
       return document
 
+    # Draft - this is being worked on
+    security.declareProtected(Permissions.AccessContentsInformation, 'getWebSiteValue')
+    def getWebSiteValue(self):
+        """
+          Returns the current web site (ie. self) though containment acquisition
+        """
+        return self
+
     security.declarePrivate( 'manage_beforeDelete' )
     def manage_beforeDelete(self, item, container):
       if item is self:
@@ -204,3 +236,13 @@ class WebSite(Domain):
         handle = self.meta_type + '/' + self.getId()
         BeforeTraverse.registerBeforeTraverse(item, WebSiteTraversalHook(), handle)
       Domain.manage_afterAdd(self, item, container)
+
+    # Experimental methods 
+    def findUrlList(self, document):
+        """
+          Return a list of URLs which exist in the site for
+          a given document
+        """
+        pass
+
+
