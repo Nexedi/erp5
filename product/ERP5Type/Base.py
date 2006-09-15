@@ -1290,7 +1290,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
   # Private accessors for the implementation of relations based on
   # categories
   security.declareProtected( Permissions.ModifyPortalContent, '_setValue' )
-  def _setValue(self, id, target, spec=(), filter=None, portal_type=()):
+  def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1):
     if target is None :
       path = target
     elif isinstance(target, str):
@@ -1310,7 +1310,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
       # We have been provided an object
       # Find the object
       path = target.getRelativeUrl()
-    self._setCategoryMembership(id, path, spec=spec, filter=filter, portal_type=portal_type)
+    self._setCategoryMembership(id, path, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValue' )
   _setDefaultValue = _setValue
@@ -1319,8 +1319,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
   _setValueList = _setValue
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValue' )
-  def setValue(self, id, target, spec=(), filter=None, portal_type=()):
-    self._setValue(id, target, spec=spec, filter=filter, portal_type=portal_type)
+  def setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1):
+    self._setValue(id, target, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultValue' )
@@ -1440,17 +1440,17 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
     return uid_list
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setValueUids' )
-  def _setValueUids(self, id, uids, spec=(), filter=None, portal_type=()):
+  def _setValueUids(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
     references = []
     for uid in uids:
       references.append(self.portal_catalog.getObject(uid))
-    self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type)
+    self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_value)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUids' )
-  def setValueUids(self, id, uids, spec=(), filter=None, portal_type=()):
-    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type)
+  def setValueUids(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1):
+    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, '_addValue' )
@@ -1476,16 +1476,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryMembership' )
   def _setCategoryMembership(self, category, node_list, spec=(),
-                                             filter=None, portal_type=(), base=0):
+                                             filter=None, portal_type=(), base=0, keep_default=1):
     self._getCategoryTool().setCategoryMembership(self, category, node_list,
-                       spec=spec, filter=filter, portal_type=portal_type, base=base)
+                       spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default)
     #self.activate().edit() # Do nothing except call workflow method
     # XXX This is a problem - it is used to circumvent a lack of edit
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
-  def setCategoryMembership(self, category, node_list, spec=(), portal_type=(), base=0):
+  def setCategoryMembership(self, category, node_list, spec=(), portal_type=(), base=0, keep_default=1):
     self._setCategoryMembership(category,
-                      node_list, spec=spec, filter=filter, portal_type=portal_type, base=base)
+                      node_list, spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultCategoryMembership' )
