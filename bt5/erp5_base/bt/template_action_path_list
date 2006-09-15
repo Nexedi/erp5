@@ -88,12 +88,9 @@ Organisation | view
 Person Module | career_print
 Person Module | csv_export
 Person Module | csv_import
-Person Module | email_report
-Person Module | list_emails
 Person Module | list_ui
 Person Module | ooo_import
 Person Module | print
-Person Module | report
 Person Module | search
 Person Module | sort_on
 Person Module | view
