@@ -334,10 +334,6 @@
                           <string>Activity</string>
                         </tuple>
                         <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
                           <string>default_email_text</string>
                           <string>Email</string>
                         </tuple>
@@ -409,10 +405,6 @@
                         <tuple>
                           <string>activity_title</string>
                           <string>Activity</string>
-                        </tuple>
-                        <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -539,6 +531,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
