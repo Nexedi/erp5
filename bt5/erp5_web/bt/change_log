@@ -1,3 +1,9 @@
+2006-09-14 Kevin
+* Reorder actions.
+* Delete deprecated custom first page layout.
+* New version of generic admin tool box (work still in progress).
+* Add admin toolbox in the default layout.
+
 2006-09-12 Kevin
 * Rewrite default group generation using macro and WebSite_getGroupList script.
 * Little default theme esthetics enhancements.
