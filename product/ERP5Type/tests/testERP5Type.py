@@ -291,7 +291,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       new_orga = folder[new_id]
       self.assertEquals(new_orga.getTitle(), 'something')
       
-    def test_09_AccessorGeneration(self):
+    def test_08_AccessorGeneration(self):
       """Tests accessor generation doesn't generate error messages.
       """
       from Products.ERP5Type.Base import _aq_reset
@@ -303,7 +303,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       orga.getId()
       self._ignore_log_errors()
     
-    def test_10_RenameObjects(self):
+    def test_09_RenameObjects(self):
       """Test object renaming.
       As we overloaded some parts of OFS, it's better to test again some basic
       features.
@@ -327,7 +327,24 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       for id_ in id_list:
         new_id = '%s_new' % id_
         self.assertEquals(folder._getOb(new_id).getId(), new_id)
-      
+
+    def test_10_valueAccessor(self):
+      """
+        The purpose of this test is to
+
+        The same test must be done for category accessors
+        for list accessors and for acquired property accessors
+      """
+      # setRegionValueList((a, b, a, b))
+      # setRegionValue((a, b, a, b))
+      # setRegionValueSet((a, b, a, b))
+      # setDefaultRegion(a)
+      # getDefaultRegion
+      # getRegion
+      # getRegionList
+      # getRegionSet
+      pass
+
     def test_11_ConstraintNotFound(self):
       """
       When a Constraint is not found while importing a PropertySheet, AttributeError 
