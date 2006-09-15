@@ -595,6 +595,22 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.tic()
     self.assert_(obj in [x.getObject() for x in test.getCategoryMemberValueList()])
 
+  def test_18_getCategoryList(self, quiet=0, run=run_all_test):
+    """
+    check that getCategoryList called on a category does not append self again
+    and again
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test getCategoryList on Category'
+      ZopeTestCase._print('\n ' + message)
+      LOG('Testing... ', 0, message)
+    portal = self.getPortal()
+    region_value = portal.portal_categories.resolveCategory('region/%s' % self.region1)
+    category_list = region_value.getCategoryList()
+    region_value.setCategoryList(category_list)
+    self.assertEqual(category_list, region_value.getCategoryList())
+
 if __name__ == '__main__':
     framework()
 else:

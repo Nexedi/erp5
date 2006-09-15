@@ -1150,7 +1150,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         result = []
       if getattr(context, 'isCategory', 0):
-        result.append(context.getRelativeUrl()) # Pure category is member of itself
+        category_url = context.getRelativeUrl()
+        if category_url not in result:
+          result.append(context.getRelativeUrl()) # Pure category is member of itself
       return result
 
     security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
