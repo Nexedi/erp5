@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Task</type>
-  <workflow>task_workflow, edit_workflow, order_interaction_workflow</workflow>
+  <workflow>task_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report</type>
