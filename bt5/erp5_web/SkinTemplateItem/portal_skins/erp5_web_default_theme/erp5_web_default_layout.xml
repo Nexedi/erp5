@@ -87,6 +87,7 @@
                         <string>breadcrumb</string>
                         <string>sub_web_object_list</string>
                         <string>sub_document_list</string>
+                        <string>admin_toolbox</string>
                       </list>
                     </value>
                 </item>
