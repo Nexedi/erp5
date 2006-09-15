@@ -453,5 +453,7 @@ class Predicate(Folder):
   def searchPredicate(self, **kw):
     """
       Returns a list of documents matching the predicate
+
+      TO BE IMPLEMENTED using portal_catalog(**kw)
     """
     pass
