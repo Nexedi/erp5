@@ -73,7 +73,10 @@
 if desc in (\'\', None):\n
   id = field.getId().split(\'_\', 1)\n
   if id[0] == \'my\':\n
-    properties = context.propertyMap()\n
+    try:\n
+      properties = context.propertyMap()\n
+    except AttributeError: # If context has no propertyMap, give up\n
+      properties = []\n
     for property in properties:\n
       if id[1] == property[\'id\']:\n
         return property.get(\'description\', \'\')\n
@@ -135,6 +138,7 @@ return desc\n
                             <string>_getitem_</string>
                             <string>context</string>
                             <string>properties</string>
+                            <string>AttributeError</string>
                             <string>_getiter_</string>
                             <string>property</string>
                           </tuple>
