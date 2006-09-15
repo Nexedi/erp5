@@ -1,3 +1,6 @@
+2006-08-29 jerome
+* Remove related keys, they are automatically generated.
+
 2006-07-25 chris
 * Added function to update business template, without reverting the changes
 
