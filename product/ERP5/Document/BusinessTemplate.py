@@ -4047,13 +4047,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
         LOG('Business Template', 0, 'Updating Tools')
         gen.setup(site, 0, update=1)
 
-      # check if we have to updater business template workflow
+      # check if we have to update business template workflow
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateBusinessTemplateWorkflow():
         LOG('Business Template', 0, 'Updating Business Template Workflows')
         gen.setupWorkflow(site)
         # XXX keep TM in case update of workflow doesn't work
         #         self._v_txn = WorkflowUpdateTM()
         #         self._v_txn.register(update=1, gen=gen, site=site)
+
+      # remove trashbin if empty
+      if trashbin is not None:
+        if len(trashbin.objectIds()) == 0:
+          trash_tool.manage_delObjects([trashbin.getId(),])
 
       if update_catalog:
         site.ERP5Site_reindexAll()
