@@ -126,3 +126,11 @@ class Domain(Predicate, MetaNode, MetaResource):
     if parent is None:
       parent = self
     return self.portal_domains.getChildDomainValueList(parent, **kw)
+
+  # Experimental - WebDAV browsing support - ask JPS
+  def experimental_listDAVObjects(self):
+    result = self.objectValues(portal_type = self.getPortalType())
+    result.extend(self.portal_catalog(selection_domain = self))
+    return result
+
+
