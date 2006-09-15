@@ -33,6 +33,8 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
+from OFS.History import Historical
+
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName, _getViewFor
@@ -326,8 +328,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                     method = WorkflowMethod(method, method_id)
                     setattr(prop_holder, method_id, method)
 
-
-class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
+class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
     It defines object attributes which are necessary to implement
@@ -1208,16 +1209,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       objectlist.append(objectlist[-1][element])
     return '/' + join([object.getTitle() for object in objectlist[1:]], '/')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
-  def getPath(self, REQUEST=None):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
+  def getUrl(self, REQUEST=None):
     """
       Returns the absolute path of an object
     """
     return join(self.getPhysicalPath(),'/')
 
-  # This should be the new name
-  security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
-  getUrl = getPath
+  # Old name - for compatibility
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
+  getPath = getUrl
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
   def getRelativeUrl(self):
