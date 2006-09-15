@@ -58,6 +58,7 @@ class WebSection(Domain):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.WebSite
+                      , PropertySheet.SortIndex
                       )
 
     # Draft - this is being worked on
