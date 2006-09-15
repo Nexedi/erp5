@@ -78,12 +78,10 @@ Organisation Module | print
 Organisation Module | search
 Organisation Module | sort_on
 Organisation Module | view
-Organisation | coordinates
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
 Organisation | history
-Organisation | list
 Organisation | metadata
 Organisation | print
 Organisation | view
