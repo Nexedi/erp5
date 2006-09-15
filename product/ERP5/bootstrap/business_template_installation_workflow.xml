@@ -89,10 +89,9 @@
             <value>
               <tuple>
                 <list>
-                  <string>nexedi</string>
                   <string>acl_users</string>
                 </list>
-                <string>ac</string>
+                <string>aurel</string>
               </tuple>
             </value>
         </item>
@@ -610,7 +609,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -671,42 +670,45 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>business_template = state_change.object\n
+            <value> <string encoding="cdata"><![CDATA[
+
+business_template = state_change.object\n
 listbox = state_change.kwargs.get(\'listbox\')\n
 workflow_action = state_change.kwargs.get(\'workflow_action\')\n
 \n
 object_to_update = {}\n
-for item in listbox:\n
-  if item[\'choice\']:\n
-    object_to_update[item[\'listbox_key\']] = item[\'choice\']\n
+if listbox is not None and len(listbox) > 0:\n
+  for item in listbox:\n
+    if item[\'choice\']:\n
+      object_to_update[item[\'listbox_key\']] = item[\'choice\']\n
 \n
 if workflow_action == \'install_action\':\n
   business_template.install(force=0, object_to_update=object_to_update)\n
 elif workflow_action == \'reinstall_action\':\n
   business_template.reinstall(force=0, object_to_update=object_to_update)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAoAAAALAAAAQwAA
-AHP8AAAAdAAAfAAAZAEAgwIAfQIAdAAAdAAAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQMAdAAAdAAA
-fAAAZAIAgwIAZAMAgwIAZAUAgwEAfQQAaAAAfQUAeEoAdAYAfAMAgwEARF08AH0HAHQIAHwHAGQG
-AIMCAG8mAAF0CAB8BwBkBgCDAgB0CQB8BQCDAQB0CAB8BwBkBwCDAgA8cV4AAXFeAFd8BABkCABq
-AgBvIAABdAAAfAIAZAkAgwIAZAoAZAsAZAwAfAUAgwACAW4uAAF8BABkDQBqAgBvIAABdAAAfAIA
-ZA4AgwIAZAoAZAsAZAwAfAUAgwACAW4BAAFkAABTKA8AAABOcwYAAABvYmplY3RzBgAAAGt3YXJn
-c3MDAAAAZ2V0cwcAAABsaXN0Ym94cw8AAAB3b3JrZmxvd19hY3Rpb25zBgAAAGNob2ljZXMLAAAA
-bGlzdGJveF9rZXlzDgAAAGluc3RhbGxfYWN0aW9ucwcAAABpbnN0YWxscwUAAABmb3JjZWkAAAAA
-cxAAAABvYmplY3RfdG9fdXBkYXRlcxAAAAByZWluc3RhbGxfYWN0aW9ucwkAAAByZWluc3RhbGwo
-CgAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzEQAAAGJ1c2luZXNzX3RlbXBsYXRl
-cwcAAABsaXN0Ym94cw8AAAB3b3JrZmxvd19hY3Rpb25zEAAAAG9iamVjdF90b191cGRhdGVzCQAA
-AF9nZXRpdGVyX3MEAAAAaXRlbXMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfKAoAAABzDAAAAHN0
-YXRlX2NoYW5nZXMJAAAAX2dldGF0dHJfcxEAAABidXNpbmVzc190ZW1wbGF0ZXMHAAAAbGlzdGJv
-eHMPAAAAd29ya2Zsb3dfYWN0aW9ucxAAAABvYmplY3RfdG9fdXBkYXRlcwkAAABfZ2V0aXRlcl9z
-BAAAAGl0ZW1zCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlXygAAAAAKAAAAABzDwAAAFNjcmlwdCAo
-UHl0aG9uKXMdAAAAQnVzaW5lc3NUZW1wbGF0ZV9pbnN0YWxsYXRpb24BAAAAcxYAAAAPAR4BHgIG
-AQ0ACQENASoCEAEdARABKAEAAABzHQAAAEJ1c2luZXNzVGVtcGxhdGVfaW5zdGFsbGF0aW9uKAEA
-AABzHQAAAEJ1c2luZXNzVGVtcGxhdGVfaW5zdGFsbGF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAwAAAAMAAAAQwAA
+AHMgAQAAdAAAfAAAZAEAgwIAfQIAdAAAdAAAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQMAdAAAdAAA
+fAAAZAIAgwIAZAMAgwIAZAUAgwEAfQQAaAAAfQUAfAMAdAYAagkAbxAAAXQHAHwDAIMBAGQGAGoE
+AG9RAAF4SgB0CAB8AwCDAQBEXTwAfQkAdAoAfAkAZAcAgwIAbyYAAXQKAHwJAGQHAIMCAHQLAHwF
+AIMBAHQKAHwJAGQIAIMCADxuAQABcX4AV24BAAF8BABkCQBqAgBvIAABdAAAfAIAZAoAgwIAZAsA
+ZAYAZAwAfAUAgwACAW4uAAF8BABkDQBqAgBvIAABdAAAfAIAZA4AgwIAZAsAZAYAZAwAfAUAgwAC
+AW4BAAFkAABTKA8AAABOdAYAAABvYmplY3R0BgAAAGt3YXJnc3QDAAAAZ2V0dAcAAABsaXN0Ym94
+dA8AAAB3b3JrZmxvd19hY3Rpb25pAAAAAHQGAAAAY2hvaWNldAsAAABsaXN0Ym94X2tleXQOAAAA
+aW5zdGFsbF9hY3Rpb250BwAAAGluc3RhbGx0BQAAAGZvcmNldBAAAABvYmplY3RfdG9fdXBkYXRl
+dBAAAAByZWluc3RhbGxfYWN0aW9udAkAAAByZWluc3RhbGwoDAAAAHQJAAAAX2dldGF0dHJfdAwA
+AABzdGF0ZV9jaGFuZ2V0EQAAAGJ1c2luZXNzX3RlbXBsYXRlUgMAAABSBAAAAFIKAAAAdAQAAABO
+b25ldAMAAABsZW50CQAAAF9nZXRpdGVyX3QEAAAAaXRlbXQJAAAAX2dldGl0ZW1fdAcAAABfd3Jp
+dGVfKAwAAABSDgAAAFINAAAAUg8AAABSAwAAAFIEAAAAUgoAAABSEAAAAFIRAAAAUhIAAABSEwAA
+AFIUAAAAUhUAAAAoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbil0GAAAAEJ1c2luZXNzVGVt
+cGxhdGVfaW5zdGFsbAEAAABzGAAAAA8BHgEeAgYBIAENAAkBDQEuAg0BIAENASgBAAAAUhYAAAAo
+AQAAAFIWAAAAKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAAB0
+AAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -746,6 +748,8 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>listbox</string>
                             <string>workflow_action</string>
                             <string>object_to_update</string>
+                            <string>None</string>
+                            <string>len</string>
                             <string>_getiter_</string>
                             <string>item</string>
                             <string>_getitem_</string>
