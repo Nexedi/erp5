@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="master"\n
+           tal:define="layout_form python: context.medicentre_admin_toolbox_layout;\n
+                       widget_list python: context.WebSite_getGroupWidgetList(layout_form, group=\'toolbox\')">\n
+\n
+  <div id="adminToolBox" tal:condition="python: len(widget_list) > 0">\n
+\n
+    <h3 class="warning"><img src="pictures/admin-tool-box.png"/> Admin Tool Box</h3>\n
+\n
+    <script type=\'text/javascript\' src=\'js/nav_bar.js\'></script>\n
+\n
+    <!-- Menu bar -->\n
+    <div class="dynToolbar">\n
+      <tal:block tal:repeat="widget python: widget_list">\n
+        <tal:block\n
+          tal:define="widget_object  python: widget[\'widget\'];\n
+                      order          python: widget[\'order\'];\n
+                      click_attr     python: \'return buttonClick(event, \\\'menu%s\\\');;\' % (order);\n
+                      mouseover_attr python: \'buttonMouseover(event, \\\'menu%s\\\');;\'    % (order);">\n
+          <a class="dynToolbarButton" href="#"\n
+            tal:attributes="onclick     click_attr;\n
+                            onmouseover mouseover_attr"><tal:block metal:use-macro="widget_object/macros/title"/></a>\n
+        </tal:block>\n
+      </tal:block>\n
+\n
+      <!-- Menu items -->\n
+      <tal:block tal:repeat="widget python: widget_list">\n
+        <tal:block tal:define="widget_object python: widget[\'widget\'];\n
+                              menuX         python: \'menu%s\' % (widget[\'order\'])">\n
+          <div tal:attributes="id menuX" class="dynToolbarItem">\n
+            <tal:block metal:use-macro="widget_object/macros/master"/>\n
+          </div>\n
+        </tal:block>\n
+      </tal:block>\n
+\n
+    </div>\n
+  </div>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>medicentre_admin_toolbox_widget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Used ?</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

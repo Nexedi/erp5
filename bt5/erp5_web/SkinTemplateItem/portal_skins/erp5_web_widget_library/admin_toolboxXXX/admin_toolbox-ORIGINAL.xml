@@ -49,30 +49,14 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <!-- Floating Panel -->\n
-\n
-<!-- header_definitions must be re-called and is_web_mode rededined because calling\n
-     the current page template through editor_field in the form layout seems to reset\n
-     the context needed by action drop-down list.\n
-\n
-     TODO: Is this case should be handle by automaticcaly by erp5_xhtml_style ?\n
--->\n
-\n
-\n
-<tal:block\n
-  tal:define="is_web_mode  python: True;\n
-              portal_type  python: here.getPortalType();\n
-">\n
-<!--              widget_list python: [ \'admin_tool_menus\']"\n
-                                           , \'admin_tool_edit\'\n
+<tal:block tal:define="widget_list python: [ \'admin_tool_menus\']">\n
+<!--                                           , \'admin_tool_edit\'\n
                                            , \'admin_tool_duplicate_document\'\n
                                            , \'admin_tool_duplicate_section\'\n
                                            , \'admin_tool_debug\'\n
                                            ]">\n
 -->\n
-\n
-  <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
-\n
-  <div id="adminToolBox">\n
+  <div id="adminToolBox" tal:condition="python: len(widget_list) > 0">\n
 \n
     <script type="text/javascript" language="JavaScript" src="js/cookie_utils.js"></script>\n
     <script type="text/javascript" language="JavaScript">\n
@@ -126,51 +110,16 @@
     -->\n
     </script>\n
 \n
-    <h3 title="Click to Collapse / Expand administrator toolbar." onclick="autoHide()" class="warning"><img src="admin-tool-box.png"/><span name="adminSection"> Admin Tool Box</span></h3>\n
+    <h3 title="Collapse / Expand administrator toolbar." onclick="autoHide()" class="warning"><img src="admin_toolbox/admin-tool-box.png"/><span name="adminSection"> Admin Tool Box</span></h3>\n
 \n
-    <!-- Edit button menu -->\n
-    <div name="adminSection">\n
-      <h3>Edit</h3>\n
-      <ul tal:define="edit_links python: context.AdminToolbox_getEditShortcutList(truc=context)">\n
-        <li tal:repeat="link edit_links">\n
-          <a tal:attributes="href python: link[\'url\']">\n
-            <img tal:attributes="src   python: link[\'icon\'];\n
-                                 title python: link[\'portal_type\'];\n
-                                 alt   python: \'%s Icon\' % link[\'portal_type\'];"/>\n
-            <tal:block tal:replace="python: link[\'label\']"/>\n
-          </a>\n
-        </li>\n
+  <!-- this title mimic the behaviour of menu content depending on context -->\n
+  <h3><tal:block tal:content="here/getPortalType"/> Actions</h3>\n
 \n
-        <!--li tal:condition="python: not is_portal_root">\n
-          <a tal:attributes="href python: \'%s/view?editable_mode=1\' % context.WebSite_getSection();"\n
-          ><img src="pictures/section.png"/> Edit <tal:block tal:content="python: (is_webdoc and \'Parent \') or \'Current \'"/>Section</a>\n
-        </li-->\n
+  <!--tal:block metal:use-macro="here/context_box_render/macros/master"/-->\n
 \n
-        <!--li tal:condition="python: (not is_portal_root) and ((is_section and valid_default_doc and not is_edit_mode) or is_webdoc)">\n
-          <a tal:attributes="href python: \'%s/view?editable_mode=1\' % context.WebSite_getDocumentPhysicalPath();"\n
-          ><img src="pictures/webpage.png"/> Edit <tal:block tal:content="python: (is_section and \'Default \') or \'Current \'"/>Page</a>\n
-        </li-->\n
 \n
-        <!--li tal:define="context_url   python: context.absolute_url();\n
-                        url_list      python: context_url[context_url.find(\'://\')+3:].split(\'/\');\n
-                        is_secure     python: context_url[4].lower() == \'s\';\n
-                        base_url      python: url_list[0];\n
-                        doc_url       python: \'/\'.join(url_list[1:]);\n
-                        webdav_prefix python: \'webdav\' + (is_secure and \'s\' or \'\');\n
-                        WEBDAV_PORT   python: \'443\'">\n
-          <a tal:attributes="href python: \'%s://webdav.%s:%s/%s\' % (webdav_prefix, base_url, WEBDAV_PORT, doc_url)"\n
-          ><img src="pictures/webdav.png" tal:attributes="src string:${portal_url}/pictures/webdav.png"/> Open <tal:block tal:content="python: (is_secure and \'Secured \') or \'Unsecured \'"/>webdav</a>\n
-        </li-->\n
-      </ul>\n
-    </div>\n
 \n
-    <!-- Action drop-down contextual menu -->\n
-    <div name="adminSection">\n
-      <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
-      <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
-    </div>\n
 \n
-    <!-- Generic attempt -->\n
     <!--div name="adminSection" tal:repeat="widget python: widget_list">\n
       <tal:block tal:define="widget_object python: here[widget]">\n
         <tal:block metal:use-macro="widget_object/macros/master"/>\n
@@ -192,7 +141,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>admin_toolbox</string> </value>
+            <value> <string>admin_toolbox-ORIGINAL</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

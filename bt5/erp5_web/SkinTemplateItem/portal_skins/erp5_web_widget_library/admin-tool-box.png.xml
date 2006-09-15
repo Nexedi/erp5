@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>OFS.Image</string>
+          <string>Image</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>admin-tool-box.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAANkE3LLaAgAAAs1JREFU
+eJx9U11Ik2EYPTp1ueXU5dLpMvMnsEjnJq7yB5WyMEgIlTQVRU1YA/MiVpgEilPvugjUK2mKdhFN
+Niy0lQOxtilp7sJkKeq+YWvCN/Sz+bP2dpNh/p3L85xznsMDDwBAIpHkRkdHX8DRCKipqbmv1+vH
+NBrNRwDB/01LSko6JiYmfmVlZV05zN3Z2dlLCCEURf3OzMxU/KX9AZzY1bBbW1t14+PjVgC8vea0
+tLQcmqaJ2+0m1dXV7bt8V1fXy6Kiogd7tb6FhYUvVCrVWwABu2R+fn4lTdPE4XAQk8m0KJVKZUql
+stnj8ZC8vLzaA3UrKip6GhsbNQBYABATEyObn58nNpuNrKysEIqitmmaJmaz2R0SEpLkuz9ArVbX
+0jRN6uvrewAENDQ0yLlcLgDA6/WCzWb72+12tLS0dLtcrhmfw44GwK+urq6/oKAgQya7LGTWXFCp
+2nTLFLUYFhYmNBqNI1arVQ1gy++IAHZKcgo3NjZOSK/+wLuxyYXuvj453G5qv5C1n+DxePzBwUHt
+paSk69ubGzDZdvCZnRoqPHuO/31Mpz02QCDgRKjVAzpxcko6L+gkDIZR+6Nei3PdL5wfJ04Vh0dG
+nl4wDg8d2lkoFEaPDI9MLy0tE6fTSSwWy6ZIFHETQCInt8kmaZ4k5W9+kozapva9PhYAiESieK1W
++z4+ISERIPB6vSgtLX04Ozs3AGB1x/bFvOYbcdsbKOAkXL2WEciGxz7zaQwAWDwej6/RaPT9/a+m
+GGZtXSwWn6mqquoYHR1t+7fGu23bsU9/XWOJChB4in0+PS/XZ8tFO+amTFAoFI83NjaIQqF4ZjAY
+vsnl8teHHRcAECi4w7313C1tNpPyQZok5BbfRVlZ2ROGYQjDMESpVA5h3y8cACeqIrhYTVKfflgP
+jbl4AwCCsrOz5RKJpBIA91jzLkLi77G4UTkA8AemGSncz8QQ2gAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>790</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
