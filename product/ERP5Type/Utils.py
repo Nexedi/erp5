@@ -59,7 +59,7 @@ from zLOG import LOG, BLATHER, PROBLEM
 # Global Switches
 #####################################################
 
-INITIALIZE_PRODUCT_RAD = 1 # If set to 0, product documents are not
+INITIALIZE_PRODUCT_RAD = 0 # If set to 0, product documents are not
                            # initialized this will divide by two memory
                            # usage taken by getters and setters 0 value
                            # is suggested for new ERP5 projetcs
@@ -2537,7 +2537,7 @@ def createValueAccessors(property_holder, id,
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
   setter_name = 'set' + UpperCase(id) + 'Value'
-  setter = Value.Setter(setter_name, id, reindex=1)
+  setter = Value.ListSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
     setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
@@ -2560,7 +2560,7 @@ def createValueAccessors(property_holder, id,
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'Value'
-  setter = Value.Setter(setter_name, id, reindex=0)
+  setter = Value.ListSetter(setter_name, id, reindex=0)
   if not hasattr(property_holder, setter_name):
     setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
