@@ -485,7 +485,8 @@ class SimulationTool (BaseTool):
       section        -  only take rows in stock table which section_uid is
                         equivalent to section
 
-      mirror_section 
+      mirror_section -  only take rows in stock table which mirror_section_uid is
+                        mirror_section
 
       resource_category  -  only take rows in stock table which
                         resource_uid is member of resource_category
@@ -493,13 +494,27 @@ class SimulationTool (BaseTool):
       node_category   - only take rows in stock table which node_uid is
                         member of section_category
 
-      payment_category -  only take rows in stock table which payment_uid is
-                        member of section_category
+      payment_category   -  only take rows in stock table which payment_uid
+                            is in section_category
 
       section_category -  only take rows in stock table which section_uid is
-                        member of section_category
+                          member of section_category
 
-      mirror_section_category
+      mirror_section_category - only take rows in stock table which 
+                                mirror_section_uid is member of
+				mirror_section_category
+
+      node_filter     - only take rows in stock table which node_uid
+                        matches node_filter
+
+      payment_filter  - only take rows in stock table which payment_uid
+                        matches payment_filter
+
+      section_filter  - only take rows in stock table which section_uid
+                        matches section_filter
+
+      mirror_section_filter - only take rows in stock table which mirror_section_uid
+                              matches mirror_section_filter
 
       variation_text -  only take rows in stock table with specified
                         variation_text.
@@ -561,6 +576,15 @@ class SimulationTool (BaseTool):
       inventory statistics we want to display (ex. sum, average, cost, etc.)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
+
+      # JPS: this is a hint for implementation of xxx_filter arguments
+      # node_uid_count = portal_catalog.countResults(**node_filter)
+      # if node_uid_count not too big:
+      #   node_uid_list = cache(portal_catalog(**node_filter))
+      #   pass this list to ZSQL method
+      # else:
+      #   build a table in MySQL
+      #   and join that table with the stock table
 
       result = self.Resource_zGetInventory(
           src__=src__, ignore_variation=ignore_variation,
@@ -769,6 +793,11 @@ class SimulationTool (BaseTool):
       Same thing as getInventory but returns an asset
       price rather than an inventory.
 
+      TODO:
+        - Make sure getInventoryAssetPrice API can 
+	  support precision defition (ie. calculate the 
+	  sum of rounded values)
+
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
       result = self.Resource_zGetInventory(
@@ -831,6 +860,10 @@ class SimulationTool (BaseTool):
       Returns a time based serie of inventory values
       for a single or a group of resource, node, section, etc. This is useful
       to list the evolution with time of inventory values (quantity, asset price).
+
+      TODO:
+        - make sure getInventoryHistoryList can return
+	  cumulative values calculated by SQL (JPS)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_getInventoryHistoryList(
