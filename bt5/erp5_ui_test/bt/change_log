@@ -1,3 +1,6 @@
+2006-09-15 Kevin
+* Add new test to check that redirections triggered by the listbox are ok.
+
 2006-09-09 jerome
 * Add a form that shows a multi relation field and a relation field for Foo.
 * A few more tests for relation fields.
