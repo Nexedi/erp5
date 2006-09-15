@@ -77,53 +77,131 @@ to set categories</td></tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>\n
   <td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Created Successfully.</td>\n
+  <td></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
   <td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Done.</td>\n
+  <td></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/0/Base_viewMetadata</td>\n
   <td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_category_list</td>\n
-  <td>destination/foo_module/0\n
-destination/foo_module/1</td>\n
+  <td>bar_category/foo_module/0\n
+bar_category/foo_module/1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyPortalStatusMessage</td>\n
   <td>Data Updated.</td>\n
   <td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>link=Relation Fields</td>\n
   <td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_destination_title_list</td>\n
+  <td>field_my_bar_category_title_list</td>\n
   <td>Title 0\n
 Title 1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_bar_category_title_list</td>\n
+  <td>Title 0\n
+Title 1\n
+Title 1</td>\n
+  <td>Make sure than we can repeat the second item in a list</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_bar_category_title_list</td>\n
+  <td>Title 0\n
+Title 1\n
+Title 1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_bar_category_title_list</td>\n
+  <td>Title 0\n
+Title 0\n
+Title 1\n
+Title 1</td>\n
+  <td>Make sure that we can repeat the first item (default) in a list</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_bar_category_title_list</td>\n
+  <td>Title 0\n
+Title 0\n
+Title 1\n
+Title 1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_bar_category_title_list</td>\n
+  <td>Title 1\n
+Title 0\n
+Title 1</td>\n
+  <td>Make sure we can reorder items in a list</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_bar_category_title_list</td>\n
+  <td>Title 1\n
+Title 0\n
+Title 1</td>\n
+  <td></td>\n
 </tr>\n
 <!-- XXX don\'t test jump for now, because we don\'t have good locators anyway.\n
 -->\n

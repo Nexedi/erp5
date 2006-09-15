@@ -105,7 +105,7 @@ the same Form</td></tr>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_destination_title_list</td>\n
+  <td>field_my_bar_category_title_list</td>\n
   <td>Title 1</td>\n
 </tr>\n
 <tr>\n
@@ -126,7 +126,7 @@ the same Form</td></tr>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_destination_title_list</td>\n
+  <td>field_my_bar_category_title_list</td>\n
   <td>Title 1</td>\n
 </tr>\n
 </tbody></table>\n
