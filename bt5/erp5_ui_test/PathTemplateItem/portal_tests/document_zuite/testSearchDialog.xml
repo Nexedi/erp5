@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test form_dialog Action List Rendering</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test: Folder_viewSearchDialog</td></tr>\n
+</thead><tbody>\n
+\n
+<!--\n
+  Add Folder_viewSearchDialog on the module.\n
+-->\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=generic_search">Delete Folder_viewSearchDialog action if exists.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_addAction?id=search2&name=generic_search&category=object_search&action=string:%24{object_url}/Folder_viewSearchDialog">Configure Folder_viewSearchDialog.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+\t<td>open</td>\n
+\t<td tal:content="string: ${here/portal_url}/foo_module/view"></td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>link=Foos</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>link=Find</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>select_dialog</td>\n
+\t<td>generic_search</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>field_your_search_listbox_title</td>\n
+\t<td>title_value</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>field_your_search_listbox_id</td>\n
+\t<td>id_value</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+\t<td>id_value</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+\t<td>title_value</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=generic_search">Delete Folder_viewSearchDialog action if exists.</td>\n
+  <td></td>\n
+</tr>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testSearchDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
