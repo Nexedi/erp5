@@ -82,7 +82,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       base categories:
         - region
         - subordination
-      
+
       /organisation
     """
     return ('erp5_base',)
@@ -107,7 +107,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     for message in message_list:
       portal.portal_activities.manageCancel(message.object_path,message.method_id)
-      
+
     # Then add new components
     if not(hasattr(portal,'organisation')):
       portal.portal_types.constructContent(type_name='Organisation Module',
@@ -461,30 +461,30 @@ class TestCMFActivity(ERP5TypeTestCase):
     if not organisation_module.hasContent(self.company_id):
       organisation_module.newContent(id=self.company_id)
     o = portal.organisation._getOb(self.company_id)
-    
+
     o.setTitle('a')
     self.assertEquals(o.getTitle(), 'a')
     get_transaction().commit()
     self.tic()
-    
+
     def toto(self, value):
       self.setTitle(self.getTitle() + value)
     o.__class__.toto = toto
-    
+
     def titi(self, value):
       self.setTitle(self.getTitle() + value)
     o.__class__.titi = titi
-    
+
     o.activate(after_method_id = 'titi', activity = activity).toto('b')
     o.activate(activity = activity).titi('c')
     get_transaction().commit()
     self.tic()
     self.assertEquals(o.getTitle(), 'acb')
-     
+
   def ExpandedMethodWithDeletedSubObject(self, activity):
     """
     Do recursiveReindexObject, then delete a
-    subobject an see if there is only one activity 
+    subobject an see if there is only one activity
     in the queue
     """
     portal = self.getPortal()
@@ -511,7 +511,7 @@ class TestCMFActivity(ERP5TypeTestCase):
   def ExpandedMethodWithDeletedObject(self, activity):
     """
     Do recursiveReindexObject, then delete a
-    subobject an see if there is only one activity 
+    subobject an see if there is only one activity
     in the queue
     """
     portal = self.getPortal()
@@ -544,18 +544,18 @@ class TestCMFActivity(ERP5TypeTestCase):
     if not organisation_module.hasContent(self.company_id):
       organisation_module.newContent(id=self.company_id)
     o = portal.organisation._getOb(self.company_id)
-    
+
     o.setTitle('?')
     self.assertEquals(o.getTitle(), '?')
     get_transaction().commit()
     self.tic()
-    
+
     o.activate(after_tag = 'toto', activity = activity).setTitle('b')
     o.activate(tag = 'toto', activity = activity).setTitle('a')
     get_transaction().commit()
     self.tic()
     self.assertEquals(o.getTitle(), 'b')
-    
+
     o._v_activate_kw = {'tag':'toto'}
     def titi(self):
       self.setCorporateName(self.getTitle() + 'd')
@@ -565,7 +565,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(o.getCorporateName(), 'cd')
-    
+
   def CheckScheduling(self, activity):
     """
       Check if active objects with different after parameters are executed in a correct order
@@ -575,16 +575,16 @@ class TestCMFActivity(ERP5TypeTestCase):
     if not organisation_module.hasContent(self.company_id):
       organisation_module.newContent(id=self.company_id)
     o = portal.organisation._getOb(self.company_id)
-    
+
     o.setTitle('?')
     self.assertEquals(o.getTitle(), '?')
     get_transaction().commit()
     self.tic()
-    
+
     def toto(self, s):
       self.setTitle(self.getTitle() + s)
     o.__class__.toto = toto
-    
+
     o.activate(tag = 'toto', activity = activity).toto('a')
     get_transaction().commit()
     o.activate(after_tag = 'titi', activity = activity).toto('b')
@@ -593,7 +593,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(o.getTitle(), 'cb')
-        
+
   def CheckClearActivities(self, activity):
     """
       Check if active objects are held even after clearing the tables.
@@ -611,16 +611,16 @@ class TestCMFActivity(ERP5TypeTestCase):
       m = message_list[0]
       self.assertEquals(m.object_path, o.getPhysicalPath())
       self.assertEquals(m.method_id, '_setTitle')
-      
+
     o = portal.organisation._getOb(self.company_id)
     o.activate(activity=activity)._setTitle('foo')
     get_transaction().commit()
     check(o)
-    
+
     portal.portal_activities.manageClearActivities()
     get_transaction().commit()
     check(o)
-    
+
     get_transaction().commit()
     self.tic()
 
@@ -1135,7 +1135,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryMethodAfterMethod('SQLDict')
-    
+
   def test_55_TryAfterMethodIdWithSQLQueue(self, quiet=0, run=run_all_test):
     # Test if after_method_id can be used
     if not run: return
@@ -1144,7 +1144,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryMethodAfterMethod('SQLQueue')
-    
+
   def test_56_TryCallActivityWithRightUser(self, quiet=0, run=run_all_test):
     # Test if me execute methods with the right user
     # This should be independant of the activity used
@@ -1181,7 +1181,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.ExpandedMethodWithDeletedSubObject('SQLDict')
-    
+
   def test_58_ExpandedMethodWithDeletedObject(self, quiet=0, run=run_all_test):
     # Test if after_method_id can be used
     if not run: return
@@ -1200,7 +1200,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryAfterTag('SQLDict')
 
-  def test_60_TryAfterTagWithSQLDict(self, quiet=0, run=run_all_test):
+  def test_60_TryAfterTagWithSQLQueue(self, quiet=0, run=run_all_test):
     # Test if after_tag can be used
     if not run: return
     if not quiet:
@@ -1245,7 +1245,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckClearActivities('SQLQueue')
 
-  def flushAllActivities(self):
+  def flushAllActivities(self, silent=0, loop_size=1000):
     """Executes all messages until the queue only contains failed
     messages.
     """
@@ -1254,12 +1254,14 @@ class TestCMFActivity(ERP5TypeTestCase):
     # flush activities
     while 1:
       loop_count += 1
-      if loop_count >= 1000:
+      if loop_count >= loop_size:
+        if silent:
+          return
         self.fail('flushAllActivities maximum loop count reached')
 
       activity_tool.distribute(node_count=1)
       activity_tool.tic(processing_node=1)
-      
+
       finished = 1
       for message in activity_tool.getMessageList():
         if message.processing_node not in (INVOKE_ERROR_STATE,
@@ -1269,7 +1271,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
       get_transaction().commit()
       if finished:
-        return 
+        return
 
   def test_65_TestMessageValidationAndFailedActivities(self,
                                               quiet=0, run=run_all_test):
@@ -1277,16 +1279,23 @@ class TestCMFActivity(ERP5TypeTestCase):
 
     Tests that if we have an active method scheduled by
     after_method_id and a failed activity with this method id, the
-    method is executed."""
+    method is NOT executed.
+
+    Note: earlier version of this test checked exactly the contrary, but it
+    was eventually agreed that this was a bug. If an activity fails, all the
+    activities that depend on it should be block until the first one is
+    resolved."""
     if not run: return
     if not quiet:
       message = '\nafter_method_id and failed activities'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
     activity_tool = self.getPortal().portal_activities
+    original_title = 'something'
     obj = self.getPortal().organisation_module.newContent(
-                    portal_type='Organisation')
-    
+                    portal_type='Organisation',
+                    title=original_title)
+
     # Monkey patch Organisation to add a failing method
     def failingMethod(self):
       raise ValueError, 'This method always fail'
@@ -1302,31 +1311,43 @@ class TestCMFActivity(ERP5TypeTestCase):
     activity_list = ['SQLQueue', 'SQLDict', ]
     for activity in activity_list:
       # reset
-      activity_tool.manageClearActivities()
-      obj.setTitle('something')
+      activity_tool.manageClearActivities(keep=0)
+      obj.setTitle(original_title)
       get_transaction().commit()
 
       # activate failing message and flush
       for fail_activity in activity_list:
         obj.activate(activity = fail_activity).failingMethod()
       get_transaction().commit()
-      self.flushAllActivities()
-      message_count = len(activity_tool.getMessageList())
-      if message_count == 0:
-        self.fail('Activity tool should have remaining messages')
-      
+      self.flushAllActivities(silent=1, loop_size=100)
+      full_message_list = activity_tool.getMessageList()
+      remaining_messages = [a for a in full_message_list if a.method_id !=
+          'failingMethod']
+      if len(full_message_list) != 2:
+        self.fail('failingMethod should not have been flushed')
+      if len(remaining_messages) != 0:
+        self.fail('Activity tool should have no other remaining messages')
+
       # activate our message
       new_title = 'nothing'
       obj.activate(after_method_id = ['failingMethod'],
                    activity = activity ).setTitle(new_title)
       get_transaction().commit()
-      self.flushAllActivities()
-      self.assertEquals(message_count,
-                        len(activity_tool.getMessageList()))
-      self.assertEquals(obj.getTitle(), new_title)
+      self.flushAllActivities(silent=1, loop_size=100)
+      full_message_list = activity_tool.getMessageList()
+      remaining_messages = [a for a in full_message_list if a.method_id !=
+          'failingMethod']
+      if len(full_message_list) != 3:
+        self.fail('failingMethod should not have been flushed')
+      if len(remaining_messages) != 1:
+        self.fail('Activity tool should have one blocked setTitle activity')
+      self.assertEquals(remaining_messages[0].activity_kw['after_method_id'],
+          ['failingMethod'])
+      self.assertEquals(obj.getTitle(), original_title)
 
-    # restore notification
+    # restore notification and flush failed and blocked activities
     Message.notifyUser = originalNotifyUser
+    activity_tool.manageClearActivities(keep=0)
 
   def test_66_TestCountMessageWithTagWithSQLDict(self, quiet=0, run=run_all_test):
     """
