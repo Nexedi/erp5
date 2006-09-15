@@ -758,7 +758,7 @@ GROUP BY\n
   <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
   <dtml-else>\n
-    stock.uid, stock.node_uid, stock.resource_uid\n
+    stock.uid, stock.node_uid, stock.resource_uid, stock.date\n
   </dtml-if>\n
 \n
 <dtml-if order_by_expression>\n
@@ -910,7 +910,7 @@ GROUP BY\n
   <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
   <dtml-else>\n
-    stock.uid, stock.node_uid, stock.resource_uid\n
+    stock.uid, stock.node_uid, stock.resource_uid, stock.date\n
   </dtml-if>\n
 \n
 <dtml-if order_by_expression>\n
