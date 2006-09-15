@@ -8,7 +8,6 @@ rm -f $DIRECTORY/test_full_output
 touch $DIRECTORY/test_full_output
 $DIRECTORY/update_cvs
 # missing : Purchase order
-$DIRECTORY/ERP5Type/tests/runUnitTest.py testCatalog >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testCMFActivity >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAlarm >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccountingRules >> $DIRECTORY/test_full_output 2>&1
