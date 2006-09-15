@@ -863,68 +863,66 @@ class CategoryTemplateItem(ObjectTemplateItem):
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
-  def install(self, context, trashbin, light_install = 0, **kw):
+  def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
-      if light_install == 0:
-        ObjectTemplateItem.install(self, context, trashbin, **kw)
-      else:
-        portal = context.getPortalObject()
-        category_tool = portal.portal_categories
-        tool_id = self.tool_id
-        keys = self._objects.keys()
-        keys.sort()
-        for path in keys:
-          if update_dict.has_key(path) or force:
-            if not force:
-              action = update_dict[path]
-              if action == 'nothing':
+      portal = context.getPortalObject()
+      category_tool = portal.portal_categories
+      tool_id = self.tool_id
+      keys = self._objects.keys()
+      keys.sort()
+      for path in keys:
+        if update_dict.has_key(path) or force:
+          if not force:
+            action = update_dict[path]
+            if action == 'nothing':
+              continue
+          else:
+            action = 'backup'
+          # Wrap the object by an aquisition wrapper for _aq_dynamic.
+          obj = self._objects[path]
+          obj = obj.__of__(category_tool)
+          container_path = path.split('/')[:-1]
+          category_id = path.split('/')[-1]
+          try:
+            container = category_tool.unrestrictedTraverse(container_path)
+          except KeyError:
+            # parent object can be set to nothing, in this case just go on
+            container_url = '/'.join(container_path)
+            if update_dict.has_key(container_url):
+              if update_dict[container_url] == 'nothing':
                 continue
-            else:
-              action = 'backup'
-            # Wrap the object by an aquisition wrapper for _aq_dynamic.
-            obj = self._objects[path]
-            obj = obj.__of__(category_tool)
-            container_path = path.split('/')[:-1]
-            category_id = path.split('/')[-1]
-            try:
-              container = category_tool.unrestrictedTraverse(container_path)
-            except KeyError:
-              # parent object can be set to nothing, in this case just go on
-              container_url = '/'.join(container_path)
-              if update_dict.has_key(container_url):
-                if update_dict[container_url] == 'nothing':
-                  continue
-              raise
-            container_ids = container.objectIds()
-            # Object already exists
-            object_uid = None
-            if category_id in container_ids:
-              object_uid = container[category_id].getUid()
-              subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
-              container.manage_delObjects([category_id])
-            category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
-            if object_uid is not None:
-              category.setUid(object_uid)
-            for property in obj.propertyIds():
-              if property not in ('id', 'uid'):
-                category.setProperty(property, obj.getProperty(property, evaluate=0))
-            # import sub objects if there is
-            if len(subobjects_dict) > 0:
-              # get a jar
-              connection = obj._p_jar
-              o = category
-              while connection is None:
-                o = o.aq_parent
-                connection = o._p_jar
-              # import subobjects
-              for subobject_id in subobjects_dict.keys():
-                subobject_data = subobjects_dict[subobject_id]
-                subobject_data.seek(0)
-                subobject = connection.importFile(subobject_data)
-                if subobject_id not in category.objectIds():
-                  category._setObject(subobject_id, subobject)
+            raise
+          container_ids = container.objectIds()
+          # Object already exists
+          object_uid = None
+          subobjects_dict = {}
+          if category_id in container_ids:
+            object_uid = container[category_id].getUid()
+            subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
+            container.manage_delObjects([category_id])
+          category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
+          if object_uid is not None:
+            category.setUid(object_uid)
+          for property in obj.propertyIds():
+            if property not in ('id', 'uid'):
+              category.setProperty(property, obj.getProperty(property, evaluate=0))
+          # import sub objects if there is
+          if len(subobjects_dict) > 0:
+            # get a jar
+            connection = obj._p_jar
+            o = category
+            while connection is None:
+              o = o.aq_parent
+              connection = o._p_jar
+            # import subobjects
+            for subobject_id in subobjects_dict.keys():
+              subobject_data = subobjects_dict[subobject_id]
+              subobject_data.seek(0)
+              subobject = connection.importFile(subobject_data)
+              if subobject_id not in category.objectIds():
+                category._setObject(subobject_id, subobject)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       portal = context.getPortalObject()
