@@ -82,7 +82,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.login()
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
-    self._catch_log_errors()
+    #self._catch_log_errors()
 
   def beforeTearDown(self):
     """Remove objects created tests."""
@@ -602,7 +602,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pc = self.getCategoryTool()
     base_category = pc.newContent(portal_type = 'Base Category')
     self.failUnless(base_category is not None)
-    sequence.edit(bc_id=base_category.getId())
+    sequence.edit(bc_id=base_category.getId(),)
 
   def stepAddBaseCategoryToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -610,7 +610,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bc_id = sequence.get('bc_id')
     bt = sequence.get('current_bt')
-    bt.edit(template_base_category_list=[bc_id])
+    bt.edit(template_base_category_list=[bc_id,])
 
   def stepAddBaseCategoryAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -648,6 +648,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     base_category = pc._getOb(bc_id, None)
     self.failUnless(base_category is None)
+
+  def stepSaveBaseCategoryUid(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check uid has not changed after an upgrade
+    """
+    bc_id = sequence.get('bc_id')
+    pc = self.getCategoryTool()
+    base_category = pc._getOb(bc_id, None)
+    sequence.edit(bc_uid = base_category.getUid())
+
+  def stepCheckBaseCategoryUid(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check uid has not changed after an upgrade
+    """
+    bc_id = sequence.get('bc_id')
+    bc_uid = sequence.get('bc_uid')
+    pc = self.getCategoryTool()
+    base_category = pc._getOb(bc_id, None)
+    self.assertEqual(bc_uid, base_category.getUid())
 
   # categories
   def stepCreateCategories(self, sequence=None, sequence_list=None, **kw):
@@ -2066,6 +2085,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
+                       Tic \
+                       CheckBaseCategoryRemoved \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -2077,6 +2098,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckTrashBin \
                        CheckSkinsLayers \
                        CheckBaseCategoryExists \
+                       SaveBaseCategoryUid \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTrashBin \
+                       CheckBaseCategoryExists \
+                       CheckBaseCategoryUid \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
