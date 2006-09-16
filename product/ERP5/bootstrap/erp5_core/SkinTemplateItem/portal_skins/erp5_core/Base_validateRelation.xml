@@ -172,7 +172,7 @@ try:\n
     request.set(\'portal_type\', portal_type)\n
     request.set(my_field.get_value(\'catalog_index\'), new_value)\n
     request.set(\'field_id\', my_field.id)\n
-    previous_uids = o.getValueUids(base_category, portal_type=portal_type)\n
+    previous_uids = o.getValueUidList(base_category, portal_type=portal_type)\n
     relation_list = context.portal_catalog(**kw)\n
     relation_uid_list = map(lambda x: x.uid, relation_list)\n
     uids = []\n
@@ -182,7 +182,7 @@ try:\n
     context.portal_selections.setSelectionCheckedUidsFor(\'Base_viewRelatedObjectList\', uids)\n
     if len(new_value) == 0:\n
       # Clear the relation\n
-      o.setValueUids(base_category,  (), portal_type=portal_type)\n
+      o.setValueUidList(base_category,  (), portal_type=portal_type)\n
     elif same_keys:\n
       uids = getOrderedUids(uids, new_value, my_field.get_value(\'catalog_index\'))\n
       return o.Base_editRelation( form_id,\n
