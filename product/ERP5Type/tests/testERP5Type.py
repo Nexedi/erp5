@@ -21,7 +21,7 @@ from Products.ERP5Type.Base import _aq_reset
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
     run_all_test = 1
-    quiet = 0
+    quiet = 1
 
     # Some helper methods
 
