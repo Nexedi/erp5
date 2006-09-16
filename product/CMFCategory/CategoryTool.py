@@ -693,9 +693,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # everything except the first occurence of category
       # this allows to have multiple occurences of the same category
       for category in category_list:
-        if category != default_category or found_one:
-          new_category_list += [category]
+        if category == default_category:
           found_one = 1
+        elif category != default_category or found_one:
+          new_category_list += [category]
       self.setCategoryMembership(context, base_category, new_category_list,
            spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default = 0)
 
