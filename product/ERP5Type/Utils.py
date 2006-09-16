@@ -2182,8 +2182,9 @@ def createCategoryAccessors(property_holder, id,
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'List'
+  setter = Category.ListSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'setDefault' + UpperCase(id)
@@ -2201,8 +2202,9 @@ def createCategoryAccessors(property_holder, id,
     setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
 
   setter_name = '_set' + UpperCase(id) + 'List'
+  setter = Category.ListSetter(setter_name, id, reindex=0)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    setattr(property_holder, setter_name, setter)
   setter_name = '_categorySet' + UpperCase(id) + 'List'
   if not hasattr(property_holder, setter_name):
     setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
@@ -2538,14 +2540,15 @@ def createValueAccessors(property_holder, id,
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
   setter_name = 'set' + UpperCase(id) + 'Value'
-  setter = Value.ListSetter(setter_name, id, reindex=1)
+  setter = Value.Setter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
     setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'ValueList'
+  setter = Value.ListSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'ValueSet'
@@ -2561,7 +2564,7 @@ def createValueAccessors(property_holder, id,
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'Value'
-  setter = Value.ListSetter(setter_name, id, reindex=0)
+  setter = Value.Setter(setter_name, id, reindex=0)
   if not hasattr(property_holder, setter_name):
     setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
@@ -2571,8 +2574,9 @@ def createValueAccessors(property_holder, id,
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'ValueList'
+  setter = Value.ListSetter(setter_name, id, reindex=0)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
   setter_name = '_categorySet' + UpperCase(id) + 'ValueList'
   if not hasattr(property_holder, setter_name):
@@ -2606,9 +2610,16 @@ def createValueAccessors(property_holder, id,
     setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
 
-  setter_name = 'set' + UpperCase(id) + 'UidList'
+  setter_name = 'setDefault' + UpperCase(id) + 'Uid'
+  setter = Value.UidDefaultSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    setattr(property_holder, setter_name, setter)
+    property_holder.security.declareProtected(write_permission, setter_name)
+
+  setter_name = 'set' + UpperCase(id) + 'UidList'
+  setter = Value.UidListSetter(setter_name, id, reindex=1)
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'UidSet'
@@ -2617,7 +2628,45 @@ def createValueAccessors(property_holder, id,
     setattr(property_holder, setter_name, setter)
     property_holder.security.declareProtected(write_permission, setter_name)
 
-  # XXX Missing Uid setters
+  setter_name = '_set' + UpperCase(id) + 'Uid'
+  setter = Value.UidSetter(setter_name, id, reindex=0)
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter)
+    property_holder.security.declareProtected(write_permission, setter_name)
+  setter_name = '_categorySet' + UpperCase(id) + 'Uid'
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    property_holder.security.declareProtected(write_permission, setter_name)
+
+  setter_name = '_setDefault' + UpperCase(id) + 'Uid'
+  setter = Value.UidDefaultSetter(setter_name, id, reindex=0)
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter)
+    property_holder.security.declareProtected(write_permission, setter_name)
+  setter_name = '_categorySetDefault' + UpperCase(id) + 'Uid'
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    property_holder.security.declareProtected(write_permission, setter_name)
+
+  setter_name = '_set' + UpperCase(id) + 'UidList'
+  setter = Value.UidListSetter(setter_name, id, reindex=0)
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter)
+    property_holder.security.declareProtected(write_permission, setter_name)
+  setter_name = '_categorySet' + UpperCase(id) + 'UidList'
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    property_holder.security.declareProtected(write_permission, setter_name)
+
+  setter_name = '_set' + UpperCase(id) + 'UidSet'
+  setter = Value.UidSetSetter(setter_name, id, reindex=0)
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter)
+    property_holder.security.declareProtected(write_permission, setter_name)
+  setter_name = '_categorySet' + UpperCase(id) + 'UidSet'
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    property_holder.security.declareProtected(write_permission, setter_name)
 
 
 def createRelatedValueAccessors(property_holder, id,
