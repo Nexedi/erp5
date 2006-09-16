@@ -75,7 +75,24 @@ class ListSetter(SetSetter):
 
     psyco.bind(__call__)
 
-DefaultSetter = SetSetter
+Setter = ListSetter
+
+class DefaultSetter(SetSetter):
+    """
+      Sets a category value through a provided value (Set mode)
+    """
+    _need__name__=1
+
+    def __call__(self, instance, *args, **kw):
+      if self._warning:
+        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      instance._setDefaultValue(self._key, args[0],
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()))
+      if self._reindex: instance.reindexObject()
+
+    psyco.bind(__call__)
 
 class DefaultGetter(Method):
     """
@@ -407,9 +424,9 @@ class UidSetGetter(UidListGetter):
       return result_set
 
 
-class UidSetter(Method):
+class UidSetSetter(Method):
     """
-      Sets a reference
+      Sets a category from the uid of the object
     """
     _need__name__=1
 
@@ -425,15 +442,45 @@ class UidSetter(Method):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      instance._setValueUids(self._key, args[0],
+      instance._setValueUidList(self._key, args[0],
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()),
+                                                 keep_default=1)
+      if self._reindex: instance.reindexObject()
+
+class UidListSetter(UidSetSetter):
+    """
+      Sets a category from the uid of the object
+    """
+    _need__name__=1
+
+    def __call__(self, instance, *args, **kw):
+      if self._warning:
+        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      instance._setValueUidList(self._key, args[0],
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()),
+                                                 keep_default=0)
+      if self._reindex: instance.reindexObject()
+
+UidSetter = UidListSetter
+
+class UidDefaultSetter(UidSetSetter):
+    """
+      Sets a category from the uid of the object
+    """
+    _need__name__=1
+
+    def __call__(self, instance, *args, **kw):
+      if self._warning:
+        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      instance._setDefaultValueUid(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
       if self._reindex: instance.reindexObject()
-
-UidListSetter = UidSetter
-UidSetSetter = UidSetter # Error XXX
-UidDefaultSetter = UidSetter # Error XXX
 
 class DefaultIdGetter(Method):
     """
