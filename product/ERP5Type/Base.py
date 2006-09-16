@@ -1291,27 +1291,32 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
   # categories
   security.declareProtected( Permissions.ModifyPortalContent, '_setValue' )
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1):
+    start_string = "%s/" % id
+    start_string_len = len(start_string)
     if target is None :
       path = target
     elif isinstance(target, str):
       # We have been provided a string
       path = target
+      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     elif isinstance(target, (tuple, list)):
       # We have been provided a list or tuple
       path_list = []
       for target_item in target:
         if isinstance(target_item, str):
-          path_list += [target_item]
+          path = target_item
         else:
           path = target_item.getRelativeUrl()
-          path_list += [path]
+        if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
+        path_list += [path]
       path = path_list
     else:
       # We have been provided an object
       # Find the object
       path = target.getRelativeUrl()
+      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     self._setCategoryMembership(id, path, spec=spec, filter=filter, portal_type=portal_type,
-                                base=1, keep_default=keep_default)
+                                base=0, keep_default=keep_default)
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setValueList' )
   _setValueList = _setValue
@@ -1331,7 +1336,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
     elif isinstance(target, str):
       # We have been provided a string
       path = target
-    else:
+    else: 
       # We have been provided an object
       # Find the object
       path = target.getRelativeUrl()
