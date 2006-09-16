@@ -417,15 +417,32 @@ class TemplateTool (BaseTool):
       elif (batch_mode == 1):
         return bt
 
-    def runUnitTestList(self, test_list=[], **kwd):
-      """
-        Runs Unit Tests related to this Business Template
+    security.declareProtected(Permissions.ManagePortal, 'runUnitTestList')
+    def runUnitTestList(self, test_list=[],
+                        REQUEST=None, RESPONSE=None, **kwd):
+      """Runs Unit Tests related to this Business Template
       """
       # XXX: should check for file presence before trying to execute.
       # XXX: should check if the unit test file is configured in the BT
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
-      return os.popen('/usr/bin/python %s %s 2>&1'
-                      % (getUnitTestFile(), ' '.join(test_list))).read()
+      if RESPONSE is not None:
+        outfile = RESPONSE
+      elif REQUEST is not None:
+        outfile = RESPONSE = REQUEST.RESPONSE
+      else:
+        outfile =  StringIO()
+      if RESPONSE is not None:
+        RESPONSE.setHeader('Content-type', 'text/plain')
+      process = os.popen('/usr/bin/python %s %s 2>&1'
+                      % (getUnitTestFile(), ' '.join(test_list)))
+      while 1:
+        try:
+          outfile.write(process.next())
+          outfile.flush()
+        except StopIteration:
+          break
+      if hasattr(outfile, 'getvalue'):
+        return outfile.getvalue()
 
     def diffObject(self, REQUEST, **kw):
       """
