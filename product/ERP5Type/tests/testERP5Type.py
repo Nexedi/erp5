@@ -20,6 +20,9 @@ from Products.ERP5Type.Base import _aq_reset
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
+    run_all_test = 1
+    quiet = 0
+
     # Some helper methods
 
     def getTitle(self):
@@ -101,7 +104,8 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       from Products.ERP5Type import Document
       initializeClassDynamicProperties(portal, Base)
       # Base class should now have a state method
-      #self.failUnless(hasattr(Base, 'getFirstName'))
+      # self.failUnless(hasattr(Base, 'getFirstName'))
+      # This test is now useless since methods are portal type based
     
     def test_02_AqDynamic(self):
       portal = self.getPortal()
@@ -117,7 +121,8 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       # Person class should now have method getFirstName
       self.failUnless(hasattr(person, 'getFirstName'))
 
-    def test_03_NewTempObject(self):
+    def test_03_NewTempObject(self, quiet=quiet, run=run_all_test):
+      if not run: return
       portal = self.getPortal()
 
       from Products.ERP5Type.Document import newTempPerson
@@ -142,7 +147,22 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       o.edit(tata=123)
       self.assertEquals(o.getProperty('tata'), 123)
 
-    def test_04_CategoryAccessors(self):
+    def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
+      """
+        This test provides basic testing of category
+        accessors using the region base category.
+
+        setRegion (with base = 0 or base =1)
+        setRegionValue
+        getRegion
+        getRegionId
+        getRegionTitle
+        getRegionRelatedList
+        getRegionRelatedValueList
+        getRegionRelatedIdList
+        getRegionRelatedTitleList
+      """
+      if not run: return
       portal = self.getPortal()
       region_category = self.getPortal().portal_categories.region
       
@@ -167,7 +187,8 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
-        self.assertEquals( person_object.getRegion(), category_relative_url)
+        self.assertEquals( person_object.getRegion(), category_id)
+        self.assertEquals( person_object.getRegion(base=1), category_relative_url)
         self.assertEquals( person_object.getRegionValue(), category_object)
         self.assertEquals( person_object.getRegionId(), category_id)
         self.assertEquals( person_object.getRegionTitle(), category_title)
@@ -196,17 +217,25 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
                             portal_type = "Person"), [] )
         self.assertEquals( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [] )
-      
-      person_object.setRegion(category_relative_url)
+
+      # Test setRegion in default mode (base = 0)
+      person_object.setRegion(category_id)
       checkRelationSet(self)
       person_object.setRegion(None)
       checkRelationUnset(self)
+      # Test setRegion in default mode (base = 1)
+      person_object.setRegion(category_relative_url, base=1)
+      checkRelationSet(self)
+      person_object.setRegion(None)
+      checkRelationUnset(self)
+      # Test setRegion in value mode
       person_object.setRegionValue(category_object)
       checkRelationSet(self)
       person_object.setRegionValue(None)
       checkRelationUnset(self)
       
-    def test_04_setProperty(self):
+    def test_05_setProperty(self, quiet=quiet, run=run_all_test):
+      if not run: return
       portal = self.getPortal()
       module = self.getOrganisationModule()
       organisation = module.newContent(id='1', portal_type='Organisation')
@@ -216,8 +245,9 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(organisation.corporate_name,'Nexedi')
       self.assertEquals(organisation.default_telephone.corporate_name,'Toto')
 
-    def test_06_CachingMethod(self):
+    def test_06_CachingMethod(self, quiet=quiet, run=run_all_test):
       """Tests Caching methods."""
+      if not run: return
       cached_var1 = cached_var1_orig = 'cached_var1'
       cached_var2 = cached_var2_orig = 'cached_var2'
 
@@ -246,8 +276,9 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       clearCache()
       self.assertEquals(cache2(), cached_var2)
 
-    def test_07_afterCloneScript(self):
+    def test_07_afterCloneScript(self, quiet=quiet, run=run_all_test):
       """manage_afterClone can call a type based script."""
+      if not run: return
       # setup the script for Person portal type
       custom_skin = self.getPortal().portal_skins.custom
       method_id = 'Person_afterClone'
@@ -291,9 +322,10 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       new_orga = folder[new_id]
       self.assertEquals(new_orga.getTitle(), 'something')
       
-    def test_08_AccessorGeneration(self):
+    def test_08_AccessorGeneration(self, quiet=quiet, run=run_all_test):
       """Tests accessor generation doesn't generate error messages.
       """
+      if not run: return
       from Products.ERP5Type.Base import _aq_reset
       _aq_reset()
       self._catch_log_errors(ignored_level=INFO)
@@ -303,11 +335,12 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       orga.getId()
       self._ignore_log_errors()
     
-    def test_09_RenameObjects(self):
+    def test_09_RenameObjects(self, quiet=quiet, run=run_all_test):
       """Test object renaming.
       As we overloaded some parts of OFS, it's better to test again some basic
       features.
       """
+      if not run: return
       folder = self.getOrganisationModule()
       id_list = [chr(x) for x in range(ord('a'), ord('z')+1)]
       for id_ in id_list:
@@ -328,29 +361,140 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
         new_id = '%s_new' % id_
         self.assertEquals(folder._getOb(new_id).getId(), new_id)
 
-    def test_10_valueAccessor(self):
+    def test_10_valueAccessor(self, quiet=quiet, run=run_all_test):
       """
-        The purpose of this test is to
+        The purpose of this test is to make sure that category accessors
+        work as expected.
 
+        List accessors support ordering and multiple entries
+        but they are incompatible with default value
+
+        Set accessors preserve the default value but
+        they do not preserver order or multiple entries
+
+        The test is implemented for both Category and Value
+        accessors.
         The same test must be done for category accessors
         for list accessors and for acquired property accessors
       """
-      # setRegionValueList((a, b, a, b))
-      # setRegionValue((a, b, a, b))
-      # setRegionValueSet((a, b, a, b))
-      # setDefaultRegion(a)
-      # getDefaultRegion
-      # getRegion
-      # getRegionList
-      # getRegionSet
-      pass
+      if not run: return
 
-    def test_11_ConstraintNotFound(self):
+      if not quiet:
+        message = 'Test Category setters'
+        ZopeTestCase._print('\n '+message)
+        LOG('Testing... ', 0, message)
+
+      # Create a few categories
+      region_category = self.getPortal().portal_categories.region
+      alpha = region_category.newContent(
+              portal_type = "Category",
+              id =          "alpha",
+              title =       "Alpha System", )
+      beta = region_category.newContent(
+              portal_type = "Category",
+              id =          "beta",
+              title =       "Beta System", )
+      zeta = region_category.newContent(
+              portal_type = "Category",
+              id =          "zeta",
+              title =       "Zeta System", )
+
+      self.assertEquals(alpha.getRelativeUrl(), 'region/alpha')
+
+      alpha.immediateReindexObject()
+      beta.immediateReindexObject()
+      zeta.immediateReindexObject()
+      #self.tic() # Make sure categories are reindexed
+
+      # Create a new person
+      module = self.getPersonModule()
+      person = module.newContent(portal_type='Person')
+
+      # Value setters (list, set, default)
+      person.setRegionValue(alpha)
+      self.assertEquals(person.getRegion(), 'alpha')
+      person.setRegionValueList([alpha, alpha])
+      self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
+      person.setRegionValueSet([alpha, alpha])
+      self.assertEquals(person.getRegionSet(), ['alpha'])
+      person.setRegionValueList([alpha, beta, alpha])
+      self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
+      person.setRegionValueSet([alpha, beta, alpha])
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      person.setDefaultRegionValue(beta)
+      self.assertEquals(person.getDefaultRegion(), 'beta')
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      person.setDefaultRegionValue(alpha)
+      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+
+      # Category setters (list, set, default)
+      person.setRegion('alpha')
+      self.assertEquals(person.getRegion(), 'alpha')
+      person.setRegionList(['alpha', 'alpha'])
+      self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
+      person.setRegionSet(['alpha', 'alpha'])
+      self.assertEquals(person.getRegionSet(), ['alpha'])
+      person.setRegionList(['alpha', 'beta', 'alpha'])
+      self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
+      person.setRegionSet(['alpha', 'beta', 'alpha'])
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      person.setDefaultRegion('beta')
+      self.assertEquals(person.getDefaultRegion(), 'beta')
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      person.setDefaultRegion('alpha')
+      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+
+      # Uid setters (list, set, default)
+      person.setRegionUid(alpha.getUid())
+      self.assertEquals(person.getRegion(), 'alpha')
+      person.setRegionUidList([alpha.getUid(), alpha.getUid()])
+      self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
+      person.setRegionUidSet([alpha.getUid(), alpha.getUid()])
+      self.assertEquals(person.getRegionSet(), ['alpha'])
+      person.setRegionUidList([alpha.getUid(), beta.getUid(), alpha.getUid()])
+      self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
+      person.setRegionUidSet([alpha.getUid(), beta.getUid(), alpha.getUid()])
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      person.setDefaultRegionUid(beta.getUid())
+      self.assertEquals(person.getDefaultRegion(), 'beta')
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      person.setDefaultRegionUid(alpha.getUid())
+      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      result = person.getRegionSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+
+    def test_11_ConstraintNotFound(self, quiet=quiet, run=run_all_test):
       """
       When a Constraint is not found while importing a PropertySheet, AttributeError 
       was raised, and generated a infinite loop.
       This is a test to make sure this will not happens any more
       """
+      if not run: return
       # We will first define a new propertysheet
       class_tool = self.getClassTool()
 
