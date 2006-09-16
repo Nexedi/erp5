@@ -1380,11 +1380,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
         else:
           raise CategoryError('getCategoryMemberValueList must know the base category')
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
-      catalog_search = self.portal_catalog(portal_type = portal_type,
-                      # TODO: make it work in catalog tool
-                      # category_strict_membership = strict_membership,
-                      selection_domain = DomainSelection(domain_dict = {base_category:context}))
 
+      if strict_membership:
+        catalog_search = self.portal_catalog(portal_type = portal_type,
+		           selection_report = DomainSelection(domain_dict = {base_category:context}))
+      else:
+        catalog_search = self.portal_catalog(portal_type = portal_type,
+                           selection_domain = DomainSelection(domain_dict = {base_category:context}))
+      
       return catalog_search
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )

@@ -611,6 +611,49 @@ class TestCMFCategory(ERP5TypeTestCase):
     region_value.setCategoryList(category_list)
     self.assertEqual(category_list, region_value.getCategoryList())
 
+  def test_19_CategoryMemberValueList(self, quiet=0, run=run_all_test):
+    """Test strict_membership parameter to Category Member Value List """
+    if not run : return
+    if not quiet:
+      message = 'Test strict_membership and Category Member Value List'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ',0,message)
+      
+      portal_categories = self.getCategoryTool()
+      organisation = self.getOrganisationModule().newContent(
+                portal_type='Organisation', region='west/france')
+
+      get_transaction().commit()
+      self.tic()
+      
+      self.assertEquals([x.getObject() for x in 
+                          portal_categories.getCategoryMemberValueList(
+                            portal_categories.region.west.france,
+                            base_category='region',
+                            strict_membership=0,
+                            portal_type='Organisation')], [organisation])
+
+      self.assertEquals([x.getObject() for x in 
+                         portal_categories.getCategoryMemberValueList(
+                            portal_categories.region.west.france,
+                            base_category='region',
+                            strict_membership=1,
+                            portal_type='Organisation')], [organisation])
+
+      self.assertEquals([x.getObject() for x in 
+                         portal_categories.getCategoryMemberValueList(
+                            portal_categories.region.west,
+                            base_category='region',
+                            strict_membership=0,
+                            portal_type='Organisation')], [organisation])
+
+      self.assertEquals([x.getObject() for x in 
+                        portal_categories.getCategoryMemberValueList(
+                            portal_categories.region.west,
+                            base_category='region',
+                            strict_membership=1,
+                            portal_type='Organisation')], [])
+
 if __name__ == '__main__':
     framework()
 else:
