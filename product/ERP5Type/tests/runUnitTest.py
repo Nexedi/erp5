@@ -28,6 +28,10 @@ Options:
  
 """
 
+def getUnitTestFile():
+  """returns the absolute path of this script.
+  This is used by template tool to run unit tests."""
+  return os.path.abspath(__file__)
 
 def initializeInstanceHome(tests_framework_home,
                            real_instance_home,
