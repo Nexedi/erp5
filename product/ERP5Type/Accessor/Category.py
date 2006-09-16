@@ -30,7 +30,7 @@ from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Metho
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 
-class Setter(Method):
+class ListSetter(Method):
     """
       Sets a category
     """
@@ -53,8 +53,12 @@ class Setter(Method):
       instance._setCategoryMembership(self._key, args[0],
                                       spec=kw.get('spec',()),
                                       filter=kw.get('filter', None),
-                                      portal_type=kw.get('portal_type',()))
+                                      portal_type=kw.get('portal_type',()),
+                                      base=kw.get('base', 0),
+                                      keep_default=0)
       if self._reindex: instance.reindexObject()
+
+Setter = ListSetter
 
 class DefaultSetter(Method):
     """
@@ -79,7 +83,8 @@ class DefaultSetter(Method):
       instance._setDefaultCategoryMembership(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 base=kw.get('base', 0))
       if self._reindex: instance.reindexObject()
 
 class SetSetter(Method):
@@ -116,7 +121,9 @@ class SetSetter(Method):
       instance._setCategoryMembership(self._key, new_list,
                                       spec=kw.get('spec',()),
                                       filter=kw.get('filter', None),
-                                      portal_type=kw.get('portal_type',()))
+                                      portal_type=kw.get('portal_type',()),
+                                      base=kw.get('base', 0),
+                                      keep_default=1)
       if self._reindex: instance.reindexObject()
 
 
