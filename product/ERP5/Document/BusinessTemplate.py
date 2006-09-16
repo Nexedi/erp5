@@ -905,9 +905,13 @@ class CategoryTemplateItem(ObjectTemplateItem):
           category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
           if object_uid is not None:
             category.setUid(object_uid)
-          for property in obj.propertyIds():
-            if property not in ('id', 'uid'):
-              category.setProperty(property, obj.getProperty(property, evaluate=0))
+          for prop in obj.propertyIds():
+            if prop not in ('id', 'uid'):
+              try:
+                prop_value = obj.getProperty(prop, evaluate=0)
+              except:
+                prop_value = obj.getProperty(prop)
+              category.setProperty(prop, prop_value)
           # import sub objects if there is
           if len(subobjects_dict) > 0:
             # get a jar
@@ -944,9 +948,13 @@ class CategoryTemplateItem(ObjectTemplateItem):
             subobjects_dict = self._backupObject('backup', trashbin, container_path, category_id)
             container.manage_delObjects([category_id])
           category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
-          for property in obj.propertyIds():
-            if property not in ('id', 'uid'):
-              category.setProperty(property, obj.getProperty(property, evaluate=0))
+          for prop in obj.propertyIds():
+            if prop not in ('id', 'uid'):
+              try:
+                prop_value = obj.getProperty(prop, evaluate=0)
+              except:
+                prop_value = obj.getProperty(prop)
+              category.setProperty(prop, prop_value)
           # import sub objects if there is
           if len(subobjects_dict) > 0:
             # get a jar
