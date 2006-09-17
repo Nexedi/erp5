@@ -43,6 +43,7 @@ class ProjectReport(Delivery):
     The amount of time on a particular project relates to a client.
     A expense relates to a project.
 
+    OUTPHASED BY TASK REPORT
     """
 
     meta_type = 'ERP5 Project Report'
@@ -66,49 +67,4 @@ class ProjectReport(Delivery):
 
     # Declarative Interface
     __implements__ = ( )
-
-    # Factory Type Information
-    factory_type_information = \
-        {  'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : 'Use Project Report to track times and expenses in a consulting firm'
-         , 'icon'           : 'document_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addProjectReport'
-         , 'immediate_view' : 'project_report_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Delivery Line',
-                                      )
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'action'        : 'project_report_view'
-          , 'category'      : 'object_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'action'        : 'project_report_print'
-          , 'category'      : 'object_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'action'        : 'metadata_edit'
-          , 'category'      : 'object_view'
-          , 'permissions'   : (
-              Permissions.ModifyPortalContent, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'action'        : 'translation_template'
-          , 'category'      : 'object_action'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        )
-        }
-
 
