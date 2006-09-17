@@ -58,3 +58,13 @@ class BaseCategory(CMFBaseCategory, XMLObject):
                       , PropertySheet.BaseCategory
                       , PropertySheet.Predicate)
 
+    # Experimental - WebDAV browsing support - ask JPS
+    def experimental_listDAVObjects(self):
+      from zLOG import LOG
+      LOG("BaseCategory listDAVObjects" ,0, "listDAVObjects")
+      return []
+      result = self.objectValues(spec=('ERP5 Categorya', 'ERP5 Base Category'))
+      result.append(self.getParentValue())
+      #result.extend(self.portal_catalog())
+      return result
+

@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.MetaResource import MetaResource
 from Products.ERP5Type import Interface, Permissions, PropertySheet
+from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Predicate import Predicate
 
 from zLOG import LOG
@@ -112,3 +113,48 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
                       , PropertySheet.Reference
                       , PropertySheet.SortIndex)
  
+    # Experimental - virtual document access
+    def _experimental_aq_dynamic(self, name):
+      result = Base._aq_dynamic(self, name)
+      if result is not None:
+        return result
+      # Do some optimisation here for names which can not be names of documents
+      if name.startswith('_') or name.startswith('portal_')\
+          or name.startswith('aq_') or name.startswith('selection_') \
+          or name.startswith('sort-') or name == 'getLayout' \
+          or name == 'getListItemUrl' or name.startswith('WebSite_'):
+        return None
+      # Use a non recursion variable
+      cache_key = 'web_site_aq_cache'
+      request = self.REQUEST
+      # Prevent infinite recursion
+      if not request.has_key(cache_key):
+        request[cache_key] = {}
+      elif request[cache_key].has_key(name):
+        return request[cache_key][name]
+      try:
+        result_list = self.portal_catalog(portal_type="Person", id = name)
+        if len(result_list):
+          return result_list[0].getObject()
+      except:
+        # Cleanup non recursion dict in case of exception
+        if request[cache_key].has_key(name):
+          del request[cache_key][name]
+        raise
+      return None
+
+    # Experimental - WebDAV browsing support - ask JPS
+    def experimental_listDAVObjects(self):
+      """
+      """
+      from zLOG import LOG
+      LOG("Category listDAVObjects" ,0, "listDAVObjects")
+      # XXX - We should try to use only Lazy Maps and to set a limit to the
+      # number of objects
+      # First show the subcategories
+      result = list(self.objectValues(spec=('ERP5 Category', 'ERP5 Base Category')))
+      # Then show the related documents
+      result.extend(self.portal_categories.getRelatedValueList(
+                    self, self.getBaseCategory().getId(), portal_type="Person"))
+      return result
+
