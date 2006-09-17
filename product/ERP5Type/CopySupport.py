@@ -188,6 +188,8 @@ class CopyContainer:
     #LOG("After Clone ",0, "id:%s containes:%s" % (str(item.id), str(container.id)))
     # Change uid attribute so that Catalog thinks object was not yet catalogued
     self_base = aq_base(self)
+    #LOG("After Clone ",0, "self:%s item:%s" % (repr(self), repr(item)))
+    #LOG("After Clone ",0, "self:%s item:%s" % (repr(self), repr(self.getPortalObject().objectIds())))
     portal_catalog = getToolByName(self, 'portal_catalog')
     self_base.uid = portal_catalog.newUid()
 
