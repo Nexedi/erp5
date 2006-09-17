@@ -25,7 +25,15 @@ try:
     def AttrDict_has_key(self, name):
         return hasattr(self.ob, name)
 
+    def AttrDict_items(self):
+        return self.ob.__dict__.items()
+
+    def AttrDict_keys(self):
+        return self.ob.__dict__.keys()
+
     AttrDict.__getitem__ = AttrDict_getitem
     AttrDict.has_key = AttrDict_has_key
+    AttrDict.items = AttrDict_items
+    AttrDict.keys = AttrDict_keys
 except ImportError:
     pass
