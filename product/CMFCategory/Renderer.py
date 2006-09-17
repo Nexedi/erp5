@@ -40,7 +40,7 @@ class Renderer(Filter):
 
   def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
-                     display_method = None, sort_method = None,
+                     display_method = None, sort_method = None, filter_method = None,
                      is_right_display = 0, translate_display = 0, 
                      translatation_domain = None, display_base_category = 0,
                      base_category = None, base = 1,
@@ -102,7 +102,8 @@ class Renderer(Filter):
 
     """
     #LOG('Renderer', 0, 'spec = %s, filter = %s, portal_type = %s, display_id = %s, sort_id = %s, display_method = %s, sort_method = %s, is_right_display = %s, translate_display = %s, translatation_domain = %s, base_category = %s, base = %s, display_none_category = %s, current_category = %s' % (repr(spec), repr(filter), repr(portal_type), repr(display_id), repr(sort_id), repr(display_method), repr(sort_method), repr(is_right_display), repr(translate_display), repr(translatation_domain), repr(base_category), repr(base), repr(display_none_category), repr(current_category)))
-    Filter.__init__(self, spec=spec, filter=filter, portal_type=portal_type)
+    Filter.__init__(self, spec=spec, filter=filter,
+                    portal_type=portal_type, filter_method=filter_method)
     self.display_id = display_id
     self.sort_id = sort_id
     self.display_method = display_method
