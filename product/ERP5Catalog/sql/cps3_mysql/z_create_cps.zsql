@@ -22,6 +22,8 @@ CREATE TABLE `cps` (
   `time` datetime default '0000-00-00 00:00:00',
   `relative_path_depth` int(11) default NULL,
   `container_path` varchar(255) default NULL,
+  `PrincipiaSearchSource` text,
+  `SearchableText` text,
   KEY  (`uid`),
   KEY `start` (`start`),
   KEY `leaves` (`leaves`),
@@ -29,5 +31,8 @@ CREATE TABLE `cps` (
   KEY `time` (`time`),
   KEY `searchable` (`searchable`),
   KEY `end` (`end`),
-  KEY `container_path` (`container_path`)
-) TYPE=InnoDB;
+  KEY `container_path` (`container_path`),
+  FULLTEXT KEY `PrincipiaSearchSource` (`PrincipiaSearchSource`),
+  FULLTEXT KEY `SearchableText` (`SearchableText`),
+  FULLTEXT KEY `ZCTitle` (`ZCTitle`)
+) TYPE=MyISAM;

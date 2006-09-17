@@ -8,6 +8,8 @@ class_name:
 class_file:
 </dtml-comment>
 <params>uid
+PrincipiaSearchSource
+SearchableText
 Title
 start
 end
@@ -19,6 +21,8 @@ getPhysicalPath</params>
 UPDATE 
   cps
 SET
+  PrincipiaSearchSource=<dtml-sqlvar PrincipiaSearchSource type="string">,
+  SearchableText=<dtml-sqlvar SearchableText  type="string">,
   ZCTitle = <dtml-sqlvar Title type="string">,
   start = <dtml-sqlvar start type="string">,
   end = <dtml-sqlvar end type="string">,
