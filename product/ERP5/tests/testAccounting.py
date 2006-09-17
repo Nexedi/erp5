@@ -94,6 +94,9 @@ class TestAccounting(ERP5TypeTestCase):
   def afterSetUp(self):
     """Prepare the test."""
     self.createCategories()
+    self.createCurrencies()
+    self.createEntities()
+    self.createAccounts()
     self.login()
 
   def login(self) :
@@ -127,7 +130,7 @@ class TestAccounting(ERP5TypeTestCase):
                 
   def getNeededCategoryList(self):
     """Returns a list of categories that should be created."""
-    return ('group/client', 'group/vendor',
+    return ('group/client', 'group/vendor/sub1', 'group/vendor/sub2',
             'region/%s'%self.default_region, )
   
   def getBusinessTemplateList(self):
@@ -137,25 +140,35 @@ class TestAccounting(ERP5TypeTestCase):
   def stepTic(self, **kw):
     """Flush activity queue. """
     self.tic()
-
-  def stepCreateEntities(self, sequence, **kw) :
-    """Create a vendor and a client. """
-    client = self.getOrganisationModule().newContent(
+  
+  def createEntities(self):
+    """Create entities. """
+    self.client = self.getOrganisationModule().newContent(
         portal_type = self.organisation_portal_type,
         group = "group/client",
         price_currency = "currency_module/USD")
-    vendor = self.getOrganisationModule().newContent(
+    self.vendor = self.getOrganisationModule().newContent(
         portal_type = self.organisation_portal_type,
-        group = "group/vendor",
+        group = "group/vendor/sub1",
+        price_currency = "currency_module/EUR")
+    self.other_vendor = self.getOrganisationModule().newContent(
+        portal_type = self.organisation_portal_type,
+        group = "group/vendor/sub2",
         price_currency = "currency_module/EUR")
     # validate entities
-    for entity in (client, vendor):
+    for entity in (self.client, self.vendor, self.other_vendor):
       entity.setRegion(self.default_region)
       self.getWorkflowTool().doActionFor(entity, 'validate_action')
+    get_transaction().commit()
+    self.tic()
     
-    sequence.edit( client = client,
-                   vendor = vendor,
-                   organisation = vendor )
+  def stepCreateEntities(self, sequence, **kw) :
+    """Create entities. """
+    # TODO: remove this method
+    sequence.edit( client=self.client,
+                   vendor=self.vendor,
+                   other_vendor=self.other_vendor,
+                   organisation=self.vendor )
   
   def stepCreateAccountingPeriod(self, sequence, **kw):
     """Creates an Accounting Period for the Organisation."""
@@ -217,57 +230,64 @@ class TestAccounting(ERP5TypeTestCase):
     self.assertEquals(accounting_period.getSimulationState(),
                       'delivered')
     
-  
+  def createCurrencies(self):
+    """Create some currencies.
+    This script will reuse existing currencies, because we want currency ids to
+    be stable, as we use them as categories.
+    """
+    currency_module = self.getCurrencyModule()
+    if not hasattr(currency_module, 'EUR'):
+      self.EUR = currency_module.newContent(
+          portal_type = self.currency_portal_type,
+          reference = "EUR", id = "EUR" )
+      self.USD = currency_module.newContent(
+          portal_type = self.currency_portal_type,
+          reference = "USD", id = "USD" )
+      self.YEN = currency_module.newContent(
+          portal_type = self.currency_portal_type,
+          reference = "YEN", id = "YEN" )
+      get_transaction().commit()
+      self.tic()
+    else:
+      self.EUR = currency_module.EUR
+      self.USD = currency_module.USD
+      self.YEN = currency_module.YEN
+
   def stepCreateCurrencies(self, sequence, **kw) :
-    """Create a some currencies. """
-    if hasattr(self.getCurrencyModule(), 'EUR'):
-      sequence.edit(
-        EUR = self.getCurrencyModule()['EUR'],
-        USD = self.getCurrencyModule()['USD'],
-        YEN = self.getCurrencyModule()['YEN'],
-      )
-      return
-    EUR = self.getCurrencyModule().newContent(
-          portal_type = self.currency_portal_type,
-          reference = "EUR",
-          id = "EUR" )
-    USD = self.getCurrencyModule().newContent(
-          portal_type = self.currency_portal_type,
-          reference = "USD",
-          id = "USD" )
-    YEN = self.getCurrencyModule().newContent(
-          portal_type = self.currency_portal_type,
-          reference = "YEN",
-          id = "YEN" )
-    sequence.edit( EUR = EUR, USD = USD, YEN = YEN )
+    """Create some currencies. """
+    # TODO: remove
+    sequence.edit(EUR=self.EUR, USD=self.USD, YEN=self.YEN)
   
-  def stepCreateAccounts(self, sequence, **kw) :
-    """Create necessary accounts. """
-    receivable = self.getAccountModule().newContent(
+  def createAccounts(self):
+    """Create some accounts.
+    """
+    receivable = self.receivable_account = self.getAccountModule().newContent(
           title = 'receivable',
           portal_type = self.account_portal_type,
           account_type = 'asset/receivable' )
-    payable = self.getAccountModule().newContent(
+    payable = self.payable_account = self.getAccountModule().newContent(
           title = 'payable',
           portal_type = self.account_portal_type,
           account_type = 'liability/payable' )
-    expense = self.getAccountModule().newContent(
+    expense = self.expense_account = self.getAccountModule().newContent(
           title = 'expense',
           portal_type = self.account_portal_type,
           account_type = 'expense' )
-    income = self.getAccountModule().newContent(
+    income = self.income_account = self.getAccountModule().newContent(
           title = 'income',
           portal_type = self.account_portal_type,
           account_type = 'income' )
-    collected_vat = self.getAccountModule().newContent(
+    collected_vat = self.collected_vat_account = self\
+                                        .getAccountModule().newContent(
           title = 'collected_vat',
           portal_type = self.account_portal_type,
           account_type = 'liability/payable/collected_vat' )
-    refundable_vat = self.getAccountModule().newContent(
+    refundable_vat = self.refundable_vat_account = self\
+                                        .getAccountModule().newContent(
           title = 'refundable_vat',
           portal_type = self.account_portal_type,
           account_type = 'asset/receivable/refundable_vat' )
-    bank = self.getAccountModule().newContent(
+    bank = self.bank_account = self.getAccountModule().newContent(
           title = 'bank',
           portal_type = self.account_portal_type,
           account_type = 'asset/cash/bank')
@@ -281,28 +301,32 @@ class TestAccounting(ERP5TypeTestCase):
     refundable_vat.setDestinationValue(collected_vat)
     bank.setDestinationValue(bank)
     
-    account_list = [ receivable,
-                     payable,
-                     expense,
-                     income,
-                     collected_vat,
-                     refundable_vat,
-                     bank ]
+    self.account_list = [ receivable,
+                          payable,
+                          expense,
+                          income,
+                          collected_vat,
+                          refundable_vat,
+                          bank ]
 
-    for account in account_list :
+    for account in self.account_list :
       account.validate()
       self.failUnless('Site Error' not in account.view())
       self.assertEquals(account.getValidationState(), 'validated')
-      
-    sequence.edit( receivable_account = receivable,
-                   payable_account = payable,
-                   expense_account = expense,
-                   income_account = income,
-                   collected_vat_account = collected_vat,
-                   refundable_vat_account = refundable_vat,
-                   bank_account = bank,
-                   account_list = account_list )
+    get_transaction().commit()
+    self.tic()
 
+  def stepCreateAccounts(self, sequence, **kw) :
+    """Create necessary accounts. """
+    # XXX remove me !  
+    sequence.edit( receivable_account=self.receivable_account,
+                   payable_account=self.payable_account,
+                   expense_account=self.expense_account,
+                   income_account=self.income_account,
+                   collected_vat_account=self.collected_vat_account,
+                   refundable_vat_account=self.refundable_vat_account,
+                   bank_account=self.bank_account,
+                   account_list=self.account_list )
   
   def stepCreateAccountingTransactionAndCheckMirrorAccount(self,
                                           sequence, **kw):
@@ -655,61 +679,95 @@ class TestAccounting(ERP5TypeTestCase):
                             accounting_transaction.getPortalType(),
                             allowed_content_types ))
   
-  def stepCreateValidAccountingTransaction(self, sequence,
-                                          sequence_list=None, **kw) :
-    """Creates a valide accounting transaction and put it in
-    the sequence as `transaction` key. """
-    resource_value = sequence.get('EUR')
-    source_section_value = sequence.get('vendor')
-    destination_section_value = sequence.get('client')
-    start_date = DateTime(2000,01,01)
-    stop_date = DateTime(2000,02,02)
-    # get a date inside openned period, if any
-    for openned_source_section_period in\
-      source_section_value.searchFolder(
-            portal_type =  self.accounting_period_portal_type,
-            simulation_state = 'planned' ):
-      start_date = openned_source_section_period.getStartDate() + 1
-    for openned_destination_section_period in\
-      destination_section_value.searchFolder(
-            portal_type =  self.accounting_period_portal_type,
-            simulation_state = 'planned' ):
-      stop_date = openned_destination_section_period.getStartDate() + 1
+  def createAccountingTransaction(self,
+                        portal_type=accounting_transaction_portal_type,
+                        line_portal_type=accounting_transaction_line_portal_type,
+                        quantity=100, reindex=1, check_consistency=1, **kw):
+    """Creates an accounting transaction.
+    By default, this transaction contains 2 lines, income and receivable.
+      quantity          - The quantity property on created lines.
+      reindex           - The transaction will be reindexed.
+      check_consistency - a consistency check will be performed on the
+                          transaction.
+    """
+    kw.setdefault('resource_value', self.EUR)
+    kw.setdefault('source_section_value', self.vendor)
+    kw.setdefault('destination_section_value', self.client)
+    if 'start_date' not in kw:
+      start_date = DateTime(2000, 01, 01)
+      # get a valid date for source section
+      for openned_source_section_period in\
+        kw['source_section_value'].searchFolder(
+              portal_type=self.accounting_period_portal_type,
+              simulation_state='planned' ):
+        start_date = openned_source_section_period.getStartDate() + 1
+      kw['start_date'] = start_date
 
+    if 'stop_date' not in kw:
+      # get a valid date for destination section
+      stop_date = DateTime(2000, 02, 02)
+      for openned_destination_section_period in\
+        kw['destination_section_value'].searchFolder(
+              portal_type=self.accounting_period_portal_type,
+              simulation_state='planned' ):
+        stop_date = openned_destination_section_period.getStartDate() + 1
+      kw['stop_date'] = stop_date
+
+    # create the transaction.
     transaction = self.getAccountingModule().newContent(
-      portal_type = self.accounting_transaction_portal_type,
-      start_date = start_date,
-      stop_date = stop_date,
-      resource_value = resource_value,
-      source_section_value = source_section_value,
-      destination_section_value = destination_section_value,
-      created_by_builder = 1 # XXX prevent the init script from
+      portal_type=portal_type,
+      start_date=kw['start_date'],
+      stop_date=kw['stop_date'],
+      resource_value=kw['resource_value'],
+      source_section_value=kw['source_section_value'],
+      destination_section_value=kw['destination_section_value'],
+      created_by_builder = 1 # prevent the init script from
                              # creating lines.
     )
     income = transaction.newContent(
-      portal_type = self.accounting_transaction_line_portal_type,
-      quantity = 100,
-      source_value = sequence.get('income_account'),
-      destination_value = sequence.get('expense_account'),
-    )
+                  id='income',
+                  portal_type=line_portal_type,
+                  quantity=quantity,
+                  source_value=kw.get('income_account', self.income_account),
+                  destination_value=kw.get('expense_account',
+                                              self.expense_account), )
     self.failUnless(income.getSource() != None)
     self.failUnless(income.getDestination() != None)
     
     receivable = transaction.newContent(
-      portal_type = self.accounting_transaction_line_portal_type,
-      quantity = -100,
-      source_value = sequence.get('receivable_account'),
-      destination_value = sequence.get('payable_account'),
-    )
+                  id='receivable',
+                  portal_type=line_portal_type,
+                  quantity=-quantity,
+                  source_value=kw.get('receivable_account',
+                                          self.receivable_account),
+                  destination_value=kw.get('payable_account',
+                                            self.payable_account), )
     self.failUnless(receivable.getSource() != None)
     self.failUnless(receivable.getDestination() != None)
-    
-    self.failUnless(len(transaction.checkConsistency()) == 0,
-      "Check consistency failed : %s" % transaction.checkConsistency())
+    if reindex:
+      get_transaction().commit()
+      self.tic()
+    if check_consistency:
+      self.failUnless(len(transaction.checkConsistency()) == 0,
+         "Check consistency failed : %s" % transaction.checkConsistency())
+    return transaction
+
+  def stepCreateValidAccountingTransaction(self, sequence,
+                                          sequence_list=None, **kw) :
+    """Creates a valid accounting transaction and put it in
+    the sequence as `transaction` key. """
+    transaction = self.createAccountingTransaction(
+                            resource_value=sequence.get('EUR'),
+                            source_section_value=sequence.get('vendor'),
+                            destination_section_value=sequence.get('client'),
+                            income_account=sequence.get('income_account'),
+                            expense_account=sequence.get('expense_account'),
+                            receivable_account=sequence.get('receivable_account'),
+                            payable_account=sequence.get('payable_account'), )
     sequence.edit(
       transaction = transaction,
-      income = income,
-      receivable = receivable
+      income = transaction.income,
+      receivable = transaction.receivable
     )
     
   def stepValidateNoDate(self, sequence, sequence_list=None, **kw) :
@@ -960,7 +1018,7 @@ class TestAccounting(ERP5TypeTestCase):
           line.edit( source_value = sequence.get('bank_account'),
                      destination_value = sequence.get('bank_account') )
       self.failUnless(income_account_found)
-    
+    # XXX
     transaction = sequence.get('transaction')
     useBankAccount(transaction)
     self.assertRaises(ValidationFailed,
@@ -975,11 +1033,12 @@ class TestAccounting(ERP5TypeTestCase):
                                   portal_type = ptype, )
       destination_payment_value = destination_section_value.newContent(
                                   portal_type = ptype, )
-      self.stepCreateValidAccountingTransaction(sequence)
-      transaction = sequence.get('transaction')
+      transaction = self.createAccountingTransaction(
+                      destination_section_value=self.other_vendor)
       useBankAccount(transaction)
 
-      # payment node have to be set on both sides
+      # payment node have to be set on both sides if both sides are member of
+      # the same group.
       transaction.setSourcePaymentValue(source_payment_value)
       transaction.setDestinationPaymentValue(None)
       self.assertRaises(ValidationFailed,
@@ -998,8 +1057,22 @@ class TestAccounting(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor(transaction, 'stop_action')
         self.assertEquals(transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err :
-        self.assert_(0, "Validation failed : %s" % err.msg)
-      
+        self.fail("Validation failed : %s" % err.msg)
+
+      # if we are not interested in the accounting for the third party, no need
+      # to have a destination_payment
+      transaction = self.createAccountingTransaction()
+      useBankAccount(transaction)
+      # only set payment for source
+      transaction.setSourcePaymentValue(source_payment_value)
+      transaction.setDestinationPaymentValue(None)
+      # then we should be able to validate.
+      try:
+        self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+        self.assertEquals(transaction.getSimulationState(), 'stopped')
+      except ValidationFailed, err:
+        self.fail("Validation failed : %s" % err.msg)
+    
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
     """Check validating a transaction remove empty lines. """
     transaction = sequence.get('transaction')
