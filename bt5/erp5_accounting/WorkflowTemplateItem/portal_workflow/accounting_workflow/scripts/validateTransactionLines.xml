@@ -92,9 +92,9 @@ destination_section = transaction.getDestinationSectionValue(\n
 # do we want to check validity for destination as well?\n
 check_for_destination = 0\n
 if source_section is not None and destination_section is not None:\n
-  source_section_group = source_section.getGroup().lstrip(\'group/\').split(\'/\')\n
+  source_section_group = source_section.getGroup(\'\').lstrip(\'group/\').split(\'/\')\n
   destination_section_group = destination_section\\\n
-                                  .getGroup().lstrip(\'group/\').split(\'/\')\n
+                                  .getGroup(\'\').lstrip(\'group/\').split(\'/\')\n
   if destination_section_group and source_section_group and \\\n
       destination_section_group[0] == source_section_group[0]:\n
     check_for_destination = 1\n
