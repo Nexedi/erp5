@@ -428,14 +428,15 @@ class MultiRelationEditor:
         if self.relation_setter_id:
           relation_setter = getattr(o, self.relation_setter_id)
           relation_setter((), portal_type=self.portal_type_list)
-          relation_setter(relation_uid_list,
-                          portal_type=self.portal_type_list)
+          relation_setter(relation_uid_list,                  # relation setter is uid based
+                          portal_type=self.portal_type_list)  # maybe not the best solution
+                                                              # and inconsistent with bellow
         else:
           # we could call a generic method which create the setter method name
           if len(relation_object_list) == 1:
             set_method_name = '_set%sValue' % \
                          convertToUpperCase(self.base_category)
-            getattr(o, set_method_name)(relation_object_list[0], 
+            getattr(o, set_method_name)(relation_object_list[0],
                                         portal_type=self.portal_type_list)
           else:
             set_method_name = '_set%sValueList' % \

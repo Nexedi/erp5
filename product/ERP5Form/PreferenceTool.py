@@ -115,7 +115,12 @@ class PreferenceMethod(Method) :
     return _getPreference(user_name=user_name)
     
 class PreferenceTool(BaseTool):
-  """ PreferenceTool manages User Preferences / User profiles. """
+  """
+    PreferenceTool manages User Preferences / User profiles.
+
+    TODO:
+      - make the preference tool an action provider (templates)
+  """
   id            = 'portal_preferences'
   meta_type     = 'ERP5 Preference Tool'
   portal_type   = 'Preference Tool'
