@@ -30,22 +30,22 @@ from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import Base
 
 from Products.CMFDefault.File import File as CMFFile
 
 from zLOG import LOG
 
-class File(Base, CMFFile):
+class File(XMLObject, CMFFile):
     """
         A File can contain text that can be formatted using
         *Structured Text* or *HTML*. Text can be automatically translated
         through the use of 'message catalogs'.
 
-        A Document is a terminating leaf
-        in the OFS. It can not contain anything.
+        File can only contain role information.
 
-        Document inherits from XMLObject and can
+        File inherits from XMLObject and can
         be synchronized accross multiple sites.
     """
 
