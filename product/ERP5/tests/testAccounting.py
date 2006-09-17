@@ -1303,6 +1303,20 @@ class TestAccounting(ERP5TypeTestCase):
       stepValidateRemoveEmptyLines
     """, quiet=quiet)
 
+  def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self,
+                                        quiet=QUIET, run=RUN_ALL_TESTS):
+    """Validating a transaction with categories as sections is refused.
+    See http://wiki.erp5.org/Discussion/AccountingProblems """
+    category = self.vendor.getGroupValue()
+    self.assertNotEquals(category, None)
+    transaction = self.createAccountingTransaction(
+                                    source_section_value=category)
+    self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
+                      transaction, 'stop_action')
+    transaction = self.createAccountingTransaction(
+                                    destination_section_value=category)
+    self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
+                      transaction, 'stop_action')
 
 if __name__ == '__main__':
   framework()

@@ -87,24 +87,17 @@ if transition.id in (\'plan_action\', \'confirm_action\') :\n
   skip_period_validation = 1\n
 \n
 # do we have to care about destination section ?\n
-check_destination = (transaction.getPortalType() in transaction.getPortalInvoiceTypeList())\n
+check_destination = (transaction.getPortalType() in\n
+                     transaction.getPortalInvoiceTypeList())\n
 \n
 # Get sections and a currency.\n
 source_section = transaction.getSourceSectionValue(\n
-            portal_type = [\'Organisation\', \'Person\', \'Category\'])\n
-if source_section is not None and \\\n
-            source_section.getPortalType() == \'Category\' :\n
-  source_section = source_section.getMappingRelatedValue(\n
-            portal_type = \'Organisation\')\n
+                       portal_type=[\'Organisation\', \'Person\'])\n
 if source_section is None:\n
   raise ValidationFailed(\'Source Section is not Defined.\')\n
 \n
 destination_section = transaction.getDestinationSectionValue(\n
-       portal_type = [\'Organisation\', \'Person\', \'Category\'])\n
-if destination_section is not None and \\\n
-       destination_section.getPortalType() == \'Category\' :\n
-  destination_section = destination_section.getMappingRelatedValue(\n
-            portal_type = \'Organisation\')\n
+                portal_type=[\'Organisation\', \'Person\'])\n
 # if it\'s not an invoice, then we can validate without destination\n
 if destination_section is None and check_destination :\n
   raise ValidationFailed(\'Destination Section is not Defined.\')\n

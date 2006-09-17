@@ -76,6 +76,8 @@ from Products.ERP5Type.Message import Message\n
 \n
 SOURCE, DESTINATION = (\'source\', \'destination\')\n
 transaction = state_change[\'object\']\n
+portal = transaction.getPortalObject()\n
+valid_section_portal_type_list = [\'Person\', \'Organisation\']\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 # first of all, validate the transaction itself\n
@@ -83,9 +85,9 @@ container.validateTransaction(state_change)\n
 \n
 # Get sections.\n
 source_section = transaction.getSourceSectionValue(\n
-                        portal_type=[\'Person\', \'Organisation\'])\n
+                           portal_type=valid_section_portal_type_list)\n
 destination_section = transaction.getDestinationSectionValue(\n
-                        portal_type=[\'Person\', \'Organisation\'])\n
+                           portal_type=valid_section_portal_type_list)\n
 \n
 # do we want to check validity for destination as well?\n
 check_for_destination = 0\n
@@ -131,12 +133,16 @@ if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
     for side in (SOURCE, DESTINATION) :\n
       if side == SOURCE:\n
         account = transaction_line.getSourceValue(portal_type=\'Account\')\n
-        payment          = transaction_line.getSourcePaymentValue()\n
-        third_party      = transaction_line.getDestinationSectionValue()\n
+        payment = transaction_line.getSourcePaymentValue(\n
+                           portal_type=portal.getPortalPaymentNodeTypeList())\n
+        third_party = transaction_line.getDestinationSectionValue(\n
+                           portal_type=valid_section_portal_type_list)\n
       else:\n
         account = transaction_line.getDestinationValue(portal_type=\'Account\')\n
-        payment          = transaction_line.getDestinationPaymentValue()\n
-        third_party      = transaction_line.getSourceSectionValue()\n
+        payment = transaction_line.getDestinationPaymentValue(\n
+                           portal_type=portal.getPortalPaymentNodeTypeList())\n
+        third_party = transaction_line.getSourceSectionValue(\n
+                           portal_type=valid_section_portal_type_list)\n
 \n
       if account is None:\n
         continue\n
@@ -304,8 +310,10 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>DESTINATION</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
-                            <string>N_</string>
                             <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>valid_section_portal_type_list</string>
+                            <string>N_</string>
                             <string>container</string>
                             <string>source_section</string>
                             <string>destination_section</string>
