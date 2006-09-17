@@ -72,38 +72,28 @@ class DefaultSetter(Method):
       if not self._reindex:
         # Modify the property
         if self._is_tales_type:
-          if value in self._null:
-            value = None
-          setattr(instance, self._storage_id, value)
+          setattr(instance, self._storage_id, str(value))
         elif value in self._null:
           # The value has no default property -> it is empty
           setattr(instance, self._storage_id, ())
         else:
-          value = self._cast(args[0])
           if self._item_cast is not identity:
-            value = map(self._item_cast, value)
-          if len(value) > 0:
-            default_value = value[0]
-            list_value = getattr(instance, self._storage_id, None)
-            if list_value is None: list_value = []
-            new_list_value = [default_value]
-            keep_value = 0
-            for k in list_value:
-              # Only delete the first occurence if exists
-              if keep_value or k is not default_value:
-                new_list_value += [k]
-                keep_value = 1
-          else:
-            # The list has no default property -> it is empty
-            new_list_value = []
-          setattr(instance, self._storage_id, tuple(new_list_value))
+            value = self._item_cast(value)
+          default_value = value
+          list_value = getattr(instance, self._storage_id, None)
+          if list_value is None: list_value = []
+          my_dict = dict([(x, 0) for x in list_value if x != default_value])
+          new_list_value = my_dict.keys()
+          new_list_value.insert(0, default_value)
+          value = new_list_value
+          setattr(instance, self._storage_id, tuple(value))
       else:
         # Call the private setter
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
 
-class Setter(DefaultSetter):
+class ListSetter(DefaultSetter):
 
     def __call__(self, instance, *args, **kw):
       value = args[0]
@@ -125,8 +115,7 @@ class Setter(DefaultSetter):
 
       if self._reindex: instance.reindexObject()
 
-ListSetter = Setter
-
+Setter = ListSetter
 
 class SetSetter(Method):
     """
@@ -166,11 +155,8 @@ class SetSetter(Method):
       if not self._reindex:
         # Modify the property
         if self._is_tales_type:
-          if value in self._null:
-            value = None
-          setattr(instance, self._storage_id, value)
+          setattr(instance, self._storage_id, str(value))
         elif value in self._null:
-          # The value has no default property -> it is empty
           setattr(instance, self._storage_id, ())
         else:
           value = self._cast(args[0])
@@ -179,27 +165,9 @@ class SetSetter(Method):
           if len(value) > 0:
             list_value = getattr(instance, self._storage_id, None)
             if list_value is None: list_value = []
-
-            
-
-#             if len(list_value) > 0:
-#               my_dict = {}
-#               default_value = list_value[0]
-#               for v in value:
-#                 my_dict[v] = 0
-#               if my_dict.has_key(default_value):
-#                 del my_dict[default_value]
-#               # If we change the set, the default value must be in the new set
-#               if default_value in value:
-#                 new_list_value = [default_value] + my_dict.keys()
-#               else:
-#                 new_list_value = my_dict.keys()
-#             else:
-#               new_list_value = value
-
             if len(list_value) > 0:
               default_value = list_value[0]
-              my_dict = dict([(x, 0) for x in value if x!=default_value])
+              my_dict = dict([(x, 0) for x in value if x != default_value])
               new_list_value = my_dict.keys()
               # If we change the set, 
               # the default value must be in the new set
@@ -207,7 +175,6 @@ class SetSetter(Method):
                 new_list_value.insert(0, default_value)
             else:
               new_list_value = value
-
           else:
             # The list has no default property -> it is empty
             new_list_value = []
@@ -300,7 +267,7 @@ class ListGetter(Method):
         if self._is_tales_type:
           if kw.get('evaluate', 1):
             if type(list_value) != type(''):
-              LOG('ListGetter', 0, 'instance = %r, self._storage_id = %r, list_value = %r' % (instance, self._storage_id, list_value,))
+              LOG('ListGetter', 0, 'instance = %r, self._storage_id = %r, list_value = %r' % (instance, self._storage_id, list_value,)) # If we reach this point, something strange is going on
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value

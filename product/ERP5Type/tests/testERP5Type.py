@@ -161,6 +161,12 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
         getRegionRelatedValueList
         getRegionRelatedIdList
         getRegionRelatedTitleList
+
+        This tests also makes sure that the related accessors are
+        compatible with acquisition of category. Although region
+        is not defined on a Person, Person documents are member
+        of a region and should thus be accessible from the region
+        category through getRegionRelated accessors
       """
       if not run: return
       portal = self.getPortal()
@@ -235,15 +241,36 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       checkRelationUnset(self)
       
     def test_05_setProperty(self, quiet=quiet, run=run_all_test):
+      """
+        In this test we create a subobject (ie. a phone number)
+        and show the difference between calling getProperty and
+        an accessor.
+
+        Accessors can be acquired thus returning a property value
+        defined on a parent object whereas getProperty / setProperty
+        always act at the level of the object itself.
+
+        We also do some basic tests on the telephone number parser
+
+        XXX I think this is inconsistent because it prevents from
+        using getProperty / setProperty as a generic way to use
+        accessors from subobjects.
+      """
       if not run: return
       portal = self.getPortal()
       module = self.getOrganisationModule()
       organisation = module.newContent(id='1', portal_type='Organisation')
-      organisation.setDefaultTelephoneText('55 55 5555')
+      organisation.setDefaultTelephoneText('+55(0)66-5555')
+      self.assertEquals(organisation.default_telephone.getTelephoneCountry(),'55')
+      self.assertEquals(organisation.default_telephone.getTelephoneArea(),'66')
+      self.assertEquals(organisation.default_telephone.getTelephoneNumber(),'5555')
       organisation.setCorporateName('Nexedi')
+      #self.assertEquals(organisation.default_telephone.getProperty('corporate_name'),'Nexedi') # Who is right ? XXX
       organisation.default_telephone.setProperty('corporate_name','Toto')
       self.assertEquals(organisation.corporate_name,'Nexedi')
+      self.assertEquals(organisation.default_telephone.getCorporateName(),'Nexedi')
       self.assertEquals(organisation.default_telephone.corporate_name,'Toto')
+      self.assertEquals(organisation.default_telephone.getProperty('corporate_name'),'Toto')
 
     def test_06_CachingMethod(self, quiet=quiet, run=run_all_test):
       """Tests Caching methods."""
@@ -337,8 +364,9 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     
     def test_09_RenameObjects(self, quiet=quiet, run=run_all_test):
       """Test object renaming.
-      As we overloaded some parts of OFS, it's better to test again some basic
-      features.
+
+         As we overloaded some parts of OFS, it's better to test again some basic
+         features.
       """
       if not run: return
       folder = self.getOrganisationModule()
@@ -361,7 +389,52 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
         new_id = '%s_new' % id_
         self.assertEquals(folder._getOb(new_id).getId(), new_id)
 
-    def test_10_valueAccessor(self, quiet=quiet, run=run_all_test):
+    def test_10_ConstraintNotFound(self, quiet=quiet, run=run_all_test):
+      """
+      When a Constraint is not found while importing a PropertySheet, AttributeError 
+      was raised, and generated a infinite loop.
+      This is a test to make sure this will not happens any more
+      """
+      if not run: return
+      # We will first define a new propertysheet
+      class_tool = self.getClassTool()
+
+      class_tool.newPropertySheet('TestPropertySheet')
+      text = """
+class TestPropertySheet:
+    \"\"\"
+        TestPropertySheet for this unit test
+    \"\"\"
+
+    _properties = (
+        {   'id'          : 'strange_property',
+            'description' : 'A local property description',
+            'type'        : 'string',
+            'mode'        : '' },
+      )
+
+    _constraints = (
+        { 'id'            : 'toto',
+          'description'   : 'define a bad constraint',
+          'type'          : 'TestConstraintNotFoundClass',
+        },
+      )
+
+"""
+      class_tool.editPropertySheet('TestPropertySheet',text)
+      class_tool.importPropertySheet('TestPropertySheet')
+      # We set the property sheet on the portal type Organisation
+      type_tool = self.getTypeTool()
+      organisation_portal_type = type_tool['Organisation']
+      organisation_portal_type.setPropertySheetList(['TestPropertySheet'])
+      folder = self.getOrganisationModule()
+      _aq_reset()
+      # We check that we raise exception when we create new object
+      from Products.ERP5Type.Utils import ConstraintNotFound
+      organisation =  self.assertRaises(ConstraintNotFound,folder.newContent,
+                                        portal_type='Organisation')
+
+    def test_11_valueAccessor(self, quiet=quiet, run=run_all_test):
       """
         The purpose of this test is to make sure that category accessors
         work as expected.
@@ -374,8 +447,6 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
         The test is implemented for both Category and Value
         accessors.
-        The same test must be done for category accessors
-        for list accessors and for acquired property accessors
       """
       if not run: return
 
@@ -401,6 +472,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       self.assertEquals(alpha.getRelativeUrl(), 'region/alpha')
 
+      #get_transaction().commit()
       alpha.immediateReindexObject()
       beta.immediateReindexObject()
       zeta.immediateReindexObject()
@@ -488,51 +560,74 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
 
-    def test_11_ConstraintNotFound(self, quiet=quiet, run=run_all_test):
+    def test_12_listAccessor(self, quiet=quiet, run=run_all_test):
       """
-      When a Constraint is not found while importing a PropertySheet, AttributeError 
-      was raised, and generated a infinite loop.
-      This is a test to make sure this will not happens any more
+      The purpose of this test is to make sure that accessor for
+      sequence types support the same kind of semantics as the
+      one on categories. We use 'subject' of the DublinCore propertysheet
+      on organisation documents for this test.
       """
       if not run: return
-      # We will first define a new propertysheet
-      class_tool = self.getClassTool()
 
-      class_tool.newPropertySheet('TestPropertySheet')
-      text = """
-class TestPropertySheet:
-    \"\"\"
-        TestPropertySheet for this unit test
-    \"\"\"
+      if not quiet:
+        message = 'Test Category setters'
+        ZopeTestCase._print('\n '+message)
+        LOG('Testing... ', 0, message)
 
-    _properties = (
-        {   'id'          : 'strange_property',
-            'description' : 'A local property description',
-            'type'        : 'string',
-            'mode'        : '' },
-      )
+      # Create a new person
+      module = self.getPersonModule()
+      person = module.newContent(portal_type='Person')
 
-    _constraints = (
-        { 'id'            : 'toto',
-          'description'   : 'define a bad constraint',
-          'type'          : 'TestConstraintNotFoundClass',
-        },
-      )
+      # Do the same tests as in test_11_valueAccessor 
+      person.setSubject('alpha')
+      self.assertEquals(person.getSubject(), 'alpha')
+      person.setSubjectList(['alpha', 'alpha'])
+      self.assertEquals(person.getSubjectList(), ['alpha', 'alpha'])
+      person.setSubjectSet(['alpha', 'alpha'])
+      self.assertEquals(person.getSubjectSet(), ['alpha'])
+      person.setSubjectList(['alpha', 'beta', 'alpha'])
+      self.assertEquals(person.getSubjectList(), ['alpha', 'beta', 'alpha'])
+      person.setSubjectSet(['alpha', 'beta', 'alpha'])
+      result = person.getSubjectSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      person.setDefaultSubject('beta')
+      self.assertEquals(person.getDefaultSubject(), 'beta')
+      result = person.getSubjectSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getSubjectList(), ['beta', 'alpha'])
+      person.setDefaultSubject('alpha')
+      self.assertEquals(person.getDefaultSubject(), 'alpha')
+      result = person.getSubjectSet()
+      result.sort()
+      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEquals(person.getSubjectList(), ['alpha', 'beta'])
 
-"""
-      class_tool.editPropertySheet('TestPropertySheet',text)
-      class_tool.importPropertySheet('TestPropertySheet')
-      # We set the property sheet on the portal type Organisation
-      type_tool = self.getTypeTool()
-      organisation_portal_type = type_tool['Organisation']
-      organisation_portal_type.setPropertySheetList(['TestPropertySheet'])
-      folder = self.getOrganisationModule()
-      _aq_reset()
-      # We check that we raise exception when we create new object
-      from Products.ERP5Type.Utils import ConstraintNotFound
-      organisation =  self.assertRaises(ConstraintNotFound,folder.newContent,
-                                        portal_type='Organisation')
-      
+    def test_13_acquiredAccessor(self, quiet=quiet, run=run_all_test):
+      """
+      The purpose of this test is to make sure that accessor for
+      sequence types support the same kind of semantics as the
+      one on categories. We use 'subject' of the DublinCore propertysheet
+      on organisation documents for this test.
+      """
+
+      # If address is updated on subordination, then
+      # address is updated on person
+
+      # If address is changed on person, it rem
+
+      # If address not available on one organisation
+      # it is found on the mapping related organisation
+      # which is one step higher in the site 
+      pass
+
+    def test_14_bangAccessor(self, quiet=quiet, run=run_all_test):
+      """
+      Bang accesors must be triggered each time another accessor is called
+      They are useful for centralising events ?
+      """
+      pass
 
 
 if __name__ == '__main__':
