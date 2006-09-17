@@ -74,11 +74,10 @@
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
-N_ = transaction.Base_translateString\n
-def raiseError(msg) :\n
-  raise ValidationFailed(N_(msg))\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 # do we have to check transaction is in openned periods ?\n
 skip_period_validation = state_change[\'kwargs\'].get(\n
@@ -98,7 +97,7 @@ if source_section is not None and \\\n
   source_section = source_section.getMappingRelatedValue(\n
             portal_type = \'Organisation\')\n
 if source_section is None:\n
-  raiseError(\'Source Section is not Defined.\')\n
+  raise ValidationFailed(\'Source Section is not Defined.\')\n
 \n
 destination_section = transaction.getDestinationSectionValue(\n
        portal_type = [\'Organisation\', \'Person\', \'Category\'])\n
@@ -108,18 +107,18 @@ if destination_section is not None and \\\n
             portal_type = \'Organisation\')\n
 # if it\'s not an invoice, then we can validate without destination\n
 if destination_section is None and check_destination :\n
-  raiseError(\'Destination Section is not Defined.\')\n
+  raise ValidationFailed(\'Destination Section is not Defined.\')\n
 \n
 currency = transaction.getResource(portal_type = \'Currency\')\n
 if not currency :\n
-  raiseError(\'Currency is not Defined.\')\n
+  raise ValidationFailed(\'Currency is not Defined.\')\n
 \n
 # XXX manually default start date to stop date\n
 if not transaction.getStartDate() and transaction.getStopDate():\n
   transaction.setStartDate(transaction.getStopDate())\n
 \n
 if not transaction.getStartDate() :\n
-  raiseError(\'Date is not Defined\')\n
+  raise ValidationFailed(\'Date is not Defined\')\n
 else:\n
   if not skip_period_validation :\n
     valid_date = False\n
@@ -142,8 +141,8 @@ else:\n
       if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date :\n
-      raiseError("Date is not in an openned Accounting Period "\n
-                 "for source section")\n
+      raise ValidationFailed("Date is not in an openned Accounting Period "\n
+                             "for source section")\n
     # do the same for destination section \n
     if check_destination :\n
       valid_date = False\n
@@ -162,8 +161,8 @@ else:\n
         if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
           valid_date = True\n
       if not valid_date :\n
-        raiseError("Date is not in an openned Accounting Period "+\n
-                   "for destination section")\n
+        raise ValidationFailed("Date is not in an openned Accounting Period "\n
+                               "for destination section")\n
 
 
 ]]></string> </value>
@@ -235,11 +234,12 @@ else:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
-                            <string>_getattr_</string>
                             <string>N_</string>
-                            <string>raiseError</string>
+                            <string>_getattr_</string>
                             <string>skip_period_validation</string>
                             <string>transition</string>
                             <string>check_destination</string>
