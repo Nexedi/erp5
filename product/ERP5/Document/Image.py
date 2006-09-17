@@ -39,10 +39,9 @@ class Image (Base, Photo):
     *Structured Text* or *HTML*. Text can be automatically translated
     through the use of 'message catalogs'.
 
-    A Document is a terminating leaf
-    in the OFS. It can not contain anything.
+    Image can only contain role information.
 
-    Document inherits from XMLObject and can
+    Image inherits from XMLObject and can
     be synchronized accross multiple sites.
   """
 
