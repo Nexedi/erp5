@@ -38,9 +38,6 @@ class Document(XMLObject, TextContent):
         *Structured Text* or *HTML*. Text can be automatically translated
         through the use of 'message catalogs'.
 
-        A Document is a terminating leaf
-        in the OFS. It can not contain anything.
-
         Document inherits from XMLObject and can
         be synchronized accross multiple sites.
 
@@ -52,6 +49,9 @@ class Document(XMLObject, TextContent):
         in place and is not needed for archive. In the case (3) of
         a web page, the new version replaces the previous one,
         the previous one being kept in place for archive.
+
+        Subcontent: documents may include subcontent (files, images, etc.)
+        so that publication of rich content can be path independent
     """
 
     meta_type = 'ERP5 Document'
