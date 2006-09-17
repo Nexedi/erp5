@@ -116,7 +116,7 @@ class ZPyChartWidget(Widget.Widget):
         selection.edit(method_id = data_method) # XXX This is probably wrong
 
     # Return an image field
-    return """<img src="%s/download?selection_name=%s&chart_title=%s&data_method=%s&x_title=%s&y_title=%s"/>""" % (self.absolute_url(), selection_name, chart_title, data_method, x_title, y_title)
+    return """<img src="%s/download?selection_name=%s&chart_title=%s&data_method=%s&x_title=%s&y_title=%s"/>""" % (field.absolute_url(), selection_name, chart_title, data_method, x_title, y_title)
 
 ZPyChartWidgetInstance = ZPyChartWidget()
 
