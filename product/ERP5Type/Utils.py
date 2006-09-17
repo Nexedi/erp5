@@ -1644,7 +1644,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
       property_holder.security.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id) + 'Set'
     if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
+      setattr(property_holder, accessor_name, set_accessor.dummy_copy(accessor_name))
   elif prop['type'] == 'content':
     # Create url getters for an object property
     accessor_name = 'get' + UpperCase(id)
@@ -1892,7 +1892,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
                                                  storage_id = prop.get('storage_id'))
     # The list setter sets the whole list
     setter_name = '_set' + UpperCase(id) + 'Set'
-    list_setter = List.SetSetter(setter_name, id, prop['type'], reindex=0,
+    set_setter = List.SetSetter(setter_name, id, prop['type'], reindex=0,
                                                  storage_id = prop.get('storage_id'))
     # Create setters for a list property
     setter_name = '_set' + UpperCase(id)
