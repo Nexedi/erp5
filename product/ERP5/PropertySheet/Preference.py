@@ -29,6 +29,8 @@
 class Preference:
   """
     User Preference PropertySheet
+
+    XXX: why is this here and not in ERP5Form ?
   """
   
   _properties = (
