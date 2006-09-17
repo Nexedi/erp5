@@ -57,6 +57,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1
+  quiet = 1
   id1 = '1'
   id2 = '2'
   region1 = 'europe/west/france'
@@ -88,7 +89,7 @@ class TestCMFCategory(ERP5TypeTestCase):
   def getPortalId(self):
     return self.getPortal().getId()
 
-  def test_00_HasEverything(self, quiet=0, run=run_all_test):
+  def test_00_HasEverything(self, quiet=quiet, run=run_all_test):
     # Test if portal_synchronizations was created
     if not run: return
     if not quiet:
@@ -163,13 +164,13 @@ class TestCMFCategory(ERP5TypeTestCase):
       bc_obj = self.getPortal().portal_categories[bc]
       bc_obj.manage_delObjects()
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self, quiet=quiet, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_SingleCategory(self, quiet=0, run=run_all_test):
+  def test_01_SingleCategory(self, quiet=quiet, run=run_all_test):
     # Test if a single category is working
     if not run: return
     if not quiet:
@@ -184,7 +185,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),[self.region1])
 
-  def test_02_MultipleCategory(self, quiet=0, run=run_all_test):
+  def test_02_MultipleCategory(self, quiet=quiet, run=run_all_test):
     # Test if multiple categories are working
     if not run: return
     if not quiet:
@@ -201,7 +202,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
 
-  def test_03_CategoryValue(self, quiet=0, run=run_all_test):
+  def test_03_CategoryValue(self, quiet=quiet, run=run_all_test):
     # Test if we can get categories values
     if not run: return
     if not quiet:
@@ -214,7 +215,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion(self.region_list)
     self.assertEqual(p1.getRegionValue(),region_value)
 
-  def test_04_ReturnNone(self, quiet=0, run=run_all_test):
+  def test_04_ReturnNone(self, quiet=quiet, run=run_all_test):
     # Test if we getCategory return None if the cat is '' or None
     if not run: return
     if not quiet:
@@ -227,7 +228,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion('')
     self.assertEqual(p1.getRegion(),None)
 
-  def test_05_SingleAcquisition(self, quiet=0, run=run_all_test):
+  def test_05_SingleAcquisition(self, quiet=quiet, run=run_all_test):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -242,7 +243,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),[self.region1])
 
-  def test_06_ListAcquisition(self, quiet=0, run=run_all_test):
+  def test_06_ListAcquisition(self, quiet=quiet, run=run_all_test):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -261,7 +262,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
 
-  def test_07_SubordinationValue(self, quiet=0, run=run_all_test):
+  def test_07_SubordinationValue(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -276,7 +277,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultSubordinationValue(),o1)
     self.assertEqual(p1.getSubordinationValueList(),[o1])
 
-  def test_08_SubordinationMultipleValue(self, quiet=0, run=run_all_test):
+  def test_08_SubordinationMultipleValue(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -293,7 +294,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultSubordinationValue(),o1)
     self.assertEqual(p1.getSubordinationValueList(),subordination_value_list)
 
-  def test_09_GetCategoryParentUidList(self, quiet=0, run=run_all_test):
+  def test_09_GetCategoryParentUidList(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     # WARNING: getCategoryParentUidList does not provide a sorted result
     if not run: return
@@ -322,7 +323,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     parent_uid_list2.sort()
     self.assertEqual(parent_uid_list2, parent_uid_list)
     
-  def test_10_FallBackBaseCategory(self, quiet=0, run=run_all_test):
+  def test_10_FallBackBaseCategory(self, quiet=quiet, run=run_all_test):
     # Test if we can use an alternative base category
     if not run: return
     if not quiet:
@@ -336,7 +337,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setSubordinationValue(o1)
     self.assertEqual(p1.getGenderValue(),o1)
 
-  def test_11_ParentAcquisition(self, quiet=0, run=run_all_test):
+  def test_11_ParentAcquisition(self, quiet=quiet, run=run_all_test):
     # Test if we can use an alternative base category
     if not run: return
     if not quiet:
@@ -351,7 +352,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(sub_person.getRegion(),self.region1)
 
-  def test_12_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
+  def test_12_GetRelatedValueAndValueList(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
     if not run: return
@@ -374,7 +375,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(len(o1.getGenderRelatedValueList()),2)
 
-  def test_13_RenameCategory(self, quiet=0, run=run_all_test) :
+  def test_13_RenameCategory(self, quiet=quiet, run=run_all_test) :
     if not run: return
     if not quiet:
       ZopeTestCase._print('\n Test Category Renaming')
@@ -400,7 +401,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
     self.failUnless(p1 in west.getRegionRelatedValueList())
 
-  def test_13b_RenameCategoryUsingCutAndPaste(self, quiet=0, run=run_all_test) :
+  def test_13b_RenameCategoryUsingCutAndPaste(self, quiet=quiet, run=run_all_test) :
     if not run: return
     if not quiet:
       ZopeTestCase._print('\n Test Category Renaming with cut n paste')
@@ -429,7 +430,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.failUnless(p1 in west.getRegionRelatedValueList())
     
   def test_13c_RenameCategoryUsingCutAndPasteButNotCopy(
-                                        self, quiet=0, run=run_all_test) :
+                                        self, quiet=quiet, run=run_all_test) :
     if not run: return
     if not quiet:
       ZopeTestCase._print('\n Test Category Renaming with cut n paste, '
@@ -461,7 +462,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.failUnless(p1 in west.getRegionRelatedValueList())
     
 
-  def test_14_MultiplePortalTypes(self, quiet=0, run=run_all_test) :
+  def test_14_MultiplePortalTypes(self, quiet=quiet, run=run_all_test) :
     """ Checks that categories support different value per portal_type,
         like a colored graph on portal_type"""
     if not run: return
@@ -496,7 +497,7 @@ class TestCMFCategory(ERP5TypeTestCase):
           org_a.getDestinationValue(portal_type='Organisation'), org_b)
       self.assertEquals(len(org_a.getDestinationValueList()), 2)
 
-  def test_15_SortChildValues(self, quiet=0, run=run_all_test) :
+  def test_15_SortChildValues(self, quiet=quiet, run=run_all_test) :
     """ Checks on sorting child categories"""
     if not run: return
     if not quiet:
@@ -546,7 +547,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals(category_list[1].getId(), '2')
     self.assertEquals(category_list[2].getId(), '3')
     
-  def test_16_GetRelatedValues(self, quiet=0, run=run_all_test) :
+  def test_16_GetRelatedValues(self, quiet=quiet, run=run_all_test) :
     """ Checks on getting related values"""
     if not run: return
     if not quiet:
@@ -574,7 +575,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     value_list = pc.getRelatedValueList(c)
     self.assertEquals(len(value_list), 1)
 
-  def test_17_CategoriesAndDomainSelection(self, quiet=0,
+  def test_17_CategoriesAndDomainSelection(self, quiet=quiet,
       run=run_all_test):
     """ Tests Categories and Domain Selection """
     if not run: return
@@ -595,7 +596,27 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.tic()
     self.assert_(obj in [x.getObject() for x in test.getCategoryMemberValueList()])
 
-  def test_18_getCategoryList(self, quiet=0, run=run_all_test):
+  def test_18_CategoryIsMemberOfSelf(self, quiet=quiet, run=run_all_test):
+    """
+      A Category must be member of self. Otherwise, if for example
+      a document has destination category C and we look for all documents
+      which destination is part of C category, we will not find it.
+
+      For example, the following commit was a mistake:
+    http://svn.erp5.org/erp5/trunk/products/CMFCategory/CategoryTool.py?r1=8850&r2=9997
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test if Category is Member of Self'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    europe = portal.portal_categories.resolveCategory('region/europe')
+    self.failUnless('region/europe' in europe.getCategoryList())
+    self.failUnless(europe.isMemberOf('region/europe'))
+
+  def test_19_getCategoryList(self, quiet=quiet, run=run_all_test):
     """
     check that getCategoryList called on a category does not append self again
     and again
@@ -611,7 +632,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     region_value.setCategoryList(category_list)
     self.assertEqual(category_list, region_value.getCategoryList())
 
-  def test_19_CategoryMemberValueList(self, quiet=0, run=run_all_test):
+  def test_19_CategoryMemberValueList(self, quiet=quiet, run=run_all_test):
     """Test strict_membership parameter to Category Member Value List """
     if not run : return
     if not quiet:
