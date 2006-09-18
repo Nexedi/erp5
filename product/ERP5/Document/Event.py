@@ -29,10 +29,11 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
 from Products.CMFCore.utils import getToolByName
 
-class Event(Movement):
+class Event(XMLObject, Movement):
     """
       Event is the base class for all events in ERP5.
 
@@ -42,6 +43,8 @@ class Event(Movement):
       of the interface between the ERP and third parties.
 
       Events have a start and stop date.
+
+      Events may contain files and local role definitions.
     """
 
     meta_type = 'ERP5 Event'
