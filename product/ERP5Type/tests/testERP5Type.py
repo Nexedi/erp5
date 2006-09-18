@@ -1,10 +1,13 @@
-#
-# Skeleton ZopeTestCase
-#
+
+# we need a class tool for this test.
+def allowClassTool():
+  return 1
+import Products.ERP5Type
+Products.ERP5Type.allowClassTool = allowClassTool
 
 import os, sys
 if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
+  execfile(os.path.join(sys.path[0], 'framework.py'))
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
