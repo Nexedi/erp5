@@ -460,8 +460,10 @@ class ListBoxRenderer:
   def getContext(self):
     """Return the context of rendering this ListBox.
     """
-    here = self.request.get('here')
-    return here is not None and here or self.getForm().aq_parent
+    value = self.request.get('here')
+    if value is None:
+      value = self.getForm().aq_parent
+    return value
 
   getContext = VolatileCachingMethod(getContext)
 
