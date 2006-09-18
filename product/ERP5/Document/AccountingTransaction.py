@@ -68,7 +68,7 @@ class AccountingTransaction(Delivery):
     def manage_beforeDelete(self, item, container):
       """
           Accounting transactions can only be deleted 
-      in draft or cancelled state
+          in draft or cancelled state
       """
       if self.getSimulationState() not in ("draft", "cancelled") :
         from OFS.ObjectManager import BeforeDeleteException
@@ -79,6 +79,7 @@ class AccountingTransaction(Delivery):
     def manage_afterClone(self, item):
       # Reset reference on paste
       # XXX This implementation is quite bad because it is not generic
+      # it is related to the general problem of "what should I reset after paste"
       if self.getReference != None:
         self.setReference(None)
       AccountingTransaction.manage_afterClone(self, item)
