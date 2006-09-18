@@ -1683,6 +1683,27 @@ class TestInvoice(TestPackingListMixin,
       sequence_list.addSequenceString(sequence)
     sequence_list.play(self)
 
+  def testCopyAndPaste(self, run=RUN_ALL_TESTS):
+    """Test copy on paste on Invoice.
+    When an invoice is copy/pasted, references should be resetted.
+    """
+    if not run:
+      return
+    accounting_module = self.getAccountingModule()
+    invoice = accounting_module.newContent(
+                    portal_type=self.invoice_portal_type)
+    invoice.edit(reference='reference',
+                 source_reference='source_reference',
+                 destination_reference='destination_reference',)
+    cb_data = accounting_module.manage_copyObjects([invoice.getId()])
+    copied, = accounting_module.manage_pasteObjects(cb_data)
+    new_invoice = accounting_module[copied['new_id']]
+    self.assertNotEquals(invoice.getReference(),
+                         new_invoice.getReference())
+    self.assertNotEquals(invoice.getSourceReference(),
+                         new_invoice.getSourceReference())
+    self.assertNotEquals(invoice.getDestinationReference(),
+                         new_invoice.getDestinationReference())
 
 #class TestPurchaseInvoice(TestInvoice):
 #  order_portal_type = 'Purchase Order'
