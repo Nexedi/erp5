@@ -86,18 +86,22 @@ def addLink(doc, portal_type, level):\n
              }\n
   edit_links.append(new_link)\n
 \n
-# Display current doc\n
+# Add "edit current object" action\n
 current_doc = context\n
 current_pt  = current_doc.getPortalType()\n
-addLink(current_doc, current_pt, \'Displayed\')\n
+addLink(current_doc, current_pt, \'Current\')\n
 \n
-# Display current doc\n
+# Add "edit parent section" action when WebPage is displayed\n
 if current_pt == \'Web Page\':\n
   parent_doc = current_doc.aq_parent\n
-  addLink(parent_doc, parent_doc.getPortalType(), \'Parent\')\n
+  parent_pt = parent_doc.getPortalType()\n
+  if parent_pt in (\'Web Section\', \'Web Site\'):\n
+    addLink(parent_doc, parent_pt, \'Parent\')\n
 \n
-\n
-\n
+# Add "edit default page" action\n
+default_page_doc = current_doc.WebSite_getDefaultWebPageValue()\n
+if current_pt in (\'Web Section\', \'Web Site\') and default_page_doc:\n
+  addLink(default_page_doc, default_page_doc.getPortalType(), \'Default\')\n
 \n
 \n
 return edit_links\n
@@ -151,6 +155,8 @@ return edit_links\n
                             <string>_getattr_</string>
                             <string>current_pt</string>
                             <string>parent_doc</string>
+                            <string>parent_pt</string>
+                            <string>default_page_doc</string>
                           </tuple>
                         </value>
                     </item>
