@@ -213,6 +213,11 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                                                                         source_total_asset_price=20000.0)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.money_deposit)
+    # check source reference
+    self.assertNotEqual(self.money_deposit.getSourceReference(), '')
+    self.assertNotEqual(self.money_deposit.getSourceReference(), None)
     
     self.money_deposit._setDestination(self.bi_counter.getRelativeUrl())
     self.assertNotEqual(self.money_deposit, None)

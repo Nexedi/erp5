@@ -267,6 +267,11 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                                                                             source_total_asset_price=110000.0, source_section_value=self.paris)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.monetary_destruction)
+    # check source reference
+    self.assertNotEqual(self.monetary_destruction.getSourceReference(), '')
+    self.assertNotEqual(self.monetary_destruction.getSourceReference(), None)
     # check we have only one monetary destruction
     self.assertEqual(len(self.monetary_destruction_module.objectValues()), 1)
     # get the monetary destruction document

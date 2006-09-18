@@ -253,6 +253,11 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
             self.quantity_10000)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.cash_exchange)
+    # check source reference
+    self.assertNotEqual(self.cash_exchange.getSourceReference(), '')
+    self.assertNotEqual(self.cash_exchange.getSourceReference(), None)
     # check there is only one line created
     self.assertEqual(len(self.cash_exchange.objectValues()), 1)
     # get the cash exchange line

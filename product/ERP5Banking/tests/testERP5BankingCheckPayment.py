@@ -220,7 +220,11 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.check_payment.getAggregateFreeText(), self.check_1.getReference())
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(), 20000.0)
     self.assertEqual(self.check_payment.getSource(), self.bi_counter.getRelativeUrl())
-
+    # set source reference
+    self.setDocumentSourceReference(self.check_payment)
+    # check source reference
+    self.assertNotEqual(self.check_payment.getSourceReference(), '')
+    self.assertNotEqual(self.check_payment.getSourceReference(), None)
     # the initial state must be draft
     self.assertEqual(self.check_payment.getSimulationState(), 'draft')
 

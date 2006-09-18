@@ -223,6 +223,11 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     self.cash_sorting = self.cash_sorting_module.newContent(id='cash_sorting_1', portal_type='Cash Sorting', source_value=self.encaisse_tri, destination_value=None, source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.cash_sorting)
+    # check source reference
+    self.assertNotEqual(self.cash_sorting.getSourceReference(), '')
+    self.assertNotEqual(self.cash_sorting.getSourceReference(), None)
     # check we have only one cash sorting
     self.assertEqual(len(self.cash_sorting_module.objectValues()), 1)
     # get the cash sorting document

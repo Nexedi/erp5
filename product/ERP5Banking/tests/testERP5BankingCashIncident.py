@@ -181,6 +181,11 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.cash_incident = self.cash_incident_module.newContent(id='cash_incident_1', portal_type='Cash Incident', source_total_asset_price=52400.0,)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.account_incident)
+    # check source reference
+    self.assertNotEqual(self.cash_incident.getSourceReference(), '')
+    self.assertNotEqual(self.cash_incident.getSourceReference(), None)
     # set source here
     self.cash_incident._setSource(self.counter.getRelativeUrl())
     # check we have only one cash transfer

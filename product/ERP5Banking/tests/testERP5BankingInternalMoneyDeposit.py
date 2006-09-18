@@ -200,6 +200,11 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
                                                                         source_total_asset_price=20000.0)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.internal_money_deposit)
+    # check source reference
+    self.assertNotEqual(self.internal_money_deposit.getSourceReference(), '')
+    self.assertNotEqual(self.internal_money_deposit.getSourceReference(), None)
     # check we have only one cash sorting
     self.assertEqual(len(self.internal_money_deposit_module.objectValues()), 1)
     # get the cash sorting document

@@ -200,6 +200,11 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     self.classification_survey = self.classification_survey_module.newContent(id='classification_survey_1', portal_type='Classification Survey', source_value=self.encaisse_a_detruire, destination_value=None, source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.classification_survey)
+    # check source reference
+    self.assertNotEqual(self.classification_survey.getSourceReference(), '')
+    self.assertNotEqual(self.classification_survey.getSourceReference(), None)
     # check we have only one classification surveyg
     self.assertEqual(len(self.classification_survey_module.objectValues()), 1)
     # get the classification surveyg document

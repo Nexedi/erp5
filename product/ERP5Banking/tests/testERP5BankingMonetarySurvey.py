@@ -196,6 +196,11 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     self.monetary_survey = self.monetary_survey_module.newContent(id='monetary_survey_1', portal_type='Monetary Survey', source_value=self.source, destination_value=self.destination, source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.monetary_survey)
+    # check source reference
+    self.assertNotEqual(self.monetary_survey.getSourceReference(), '')
+    self.assertNotEqual(self.monetary_survey.getSourceReference(), None)
     # check we have only one cash transfer
     self.assertEqual(len(self.monetary_survey_module.objectValues()), 1)
     # get the cash transfer document

@@ -225,6 +225,11 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.monetary_recall.getPortalType(), 'Monetary Recall')
     # check that its source is cash
     self.assertEqual(self.monetary_recall.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
+    # set source reference
+    self.setDocumentSourceReference(self.monetary_recall)
+    # check source reference
+    self.assertNotEqual(self.monetary_recallaccount_incident.getSourceReference(), '')
+    self.assertNotEqual(self.monetary_recall.getSourceReference(), None)
     # check that its destination is counter
     ##self.assertEqual(self.monetary_recall.getDestination(),
     ##'site/testsite/paris/caveau/serre/encaisse_des_billets_retires_de_la_circulation')

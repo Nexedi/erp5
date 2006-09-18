@@ -191,11 +191,11 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.check_deposit.getSourceTotalAssetPrice(), 500.0)
     # the initial state must be draft
     self.assertEqual(self.check_deposit.getSimulationState(), 'draft')
-
-    # source reference must be automatically generated
-    #     self.check_deposit.setSourceReference(self.check_deposit.Baobab_getUniqueReference())
-    #     self.assertNotEqual(self.check_deposit.getSourceReference(), None)
-    #     self.assertNotEqual(self.check_deposit.getSourceReference(), '')
+    # set source reference
+    self.setDocumentSourceReference(self.check_deposit)
+    # check source reference
+    self.assertNotEqual(self.check_deposit.getSourceReference(), '')
+    self.assertNotEqual(self.check_deposit.getSourceReference(), None)
 
   def stepAddCheckOperationLine(self, sequence=None, sequence_list=None, **kwd):
     """

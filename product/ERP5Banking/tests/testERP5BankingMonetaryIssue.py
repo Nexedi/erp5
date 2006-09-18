@@ -209,6 +209,11 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     self.monetary_issue = self.monetary_issue_module.newContent(id='monetary_issue', portal_type='Monetary Issue', start_date=self.current_date)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.monetary_issue)
+    # check source reference
+    self.assertNotEqual(self.monetary_issue.getSourceReference(), '')
+    self.assertNotEqual(self.monetary_issue.getSourceReference(), None)
     # get the cash inventory document
     self.monetary_issue = getattr(self.monetary_issue_module, 'monetary_issue')
     # check its portal type
