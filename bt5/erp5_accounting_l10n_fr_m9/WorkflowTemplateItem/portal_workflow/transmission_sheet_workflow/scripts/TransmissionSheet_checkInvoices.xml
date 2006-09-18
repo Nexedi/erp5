@@ -74,7 +74,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 transmission_sheet = sci[\'object\']\n
 portal = transmission_sheet.getPortalObject()\n
 \n
-if not transmission_sheet.getRelatedAggregateList(\n
+if not transmission_sheet.getAggregateRelatedList(\n
                 portal_type=portal.getPortalInvoiceTypeList()):\n
   raise ValidationFailed(\'No Invoices selected.\')\n
 </string> </value>
