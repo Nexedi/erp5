@@ -1848,6 +1848,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
 
+  security.declarePublic('isTempObject')
+  def isTempObject(self):
+    """
+      Tells if an object is temporary or not
+    """
+    return self.reindexObject is self._temp_reindexObject
+
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
   def getWorkflowStateItemList(self):

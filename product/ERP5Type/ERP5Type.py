@@ -21,6 +21,7 @@
 ##############################################################################
 
 from Globals import InitializeClass, DTMLFile
+from exceptions import AccessControl_Unauthorized
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 
@@ -176,6 +177,26 @@ class ERP5TypeInformation( FactoryTypeInformation,
     #
     #   Agent methods
     #
+    def _getFactoryMethod(self, container, check_security=1):
+        if not self.product or not self.factory:
+            raise ValueError, ('Product factory for %s was undefined' %
+                               self.getId())
+        p = container.manage_addProduct[self.product]
+        if hasattr(container, 'isTempObject') and container.isTempObject():
+          factory_name = self.factory
+          factory_name.replace('add', 'newTemp')
+          m = getattr(p, factory_name, None)g
+        else:
+          m = getattr(p, self.factory, None)
+        if m is None:
+            raise ValueError, ('Product factory for %s was invalid' %
+                               self.getId())
+        if not check_security:
+            return m
+        if getSecurityManager().validate(p, p, self.factory, m):
+            return m
+        raise AccessControl_Unauthorized( 'Cannot create %s' % self.getId() )
+    
     security.declarePublic('constructInstance')
     def constructInstance( self, container, id,
                            created_by_builder=0, *args, **kw ):
@@ -189,7 +210,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
         ob = FactoryTypeInformation.constructInstance(
                                              self, container, id, *args, **kw)
 
-        # Only try to assign roles to secutiry groups if some roles are defined
+        # Only try to assign roles to security groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
         # which acquire their security definition from their parent
         # The downside of this optimisation is that it is not possible to
