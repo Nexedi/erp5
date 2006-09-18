@@ -93,14 +93,14 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
                                        is_indexable=is_indexable
                                        ) # **kw) removed due to CMF bug
     # TODO :the **kw makes it impossible to create content not based on
-    # ERP5TypeInformation, because factory method often to not support 
+    # ERP5TypeInformation, because factory method often do not support
     # keywords arguments.
     
     new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
-
+  
   security.declareProtected(
             Permissions.DeletePortalContent, 'deleteContent')
   def deleteContent(self, id):
