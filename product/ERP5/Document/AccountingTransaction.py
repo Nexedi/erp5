@@ -74,15 +74,7 @@ class AccountingTransaction(Delivery):
         from OFS.ObjectManager import BeforeDeleteException
         raise BeforeDeleteException, \
               "%s can only be deleted in draft or cancelled states." % self.getPortalType()
-      Delivery.manage_beforeDelete(self, item, container) 
-
-    def manage_afterClone(self, item):
-      # Reset reference on paste
-      # XXX This implementation is quite bad because it is not generic
-      # it is related to the general problem of "what should I reset after paste"
-      if self.getReference != None:
-        self.setReference(None)
-      AccountingTransaction.manage_afterClone(self, item)
+      Delivery.manage_beforeDelete(self, item, container)
 
 # Compatibility
 # It may be necessary to create an alias after removing the Transaction class
