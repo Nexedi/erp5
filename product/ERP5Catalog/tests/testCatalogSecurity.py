@@ -61,7 +61,7 @@ class Test(ERP5TypeTestCase):
   """
 
   def getTitle(self):
-    return "ERP5Catalog"
+    return "CatalogSecurity"
 
   def getBusinessTemplateList(self):
     return ('erp5_base',)
