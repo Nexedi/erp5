@@ -231,7 +231,7 @@ class Movement(XMLObject, Amount):
       Get the Total Price in the context.
     """
     return self._getTotalPrice(self.asContext(context=context,
-                                REQUEST=REQUEST, **kw))
+                                REQUEST=REQUEST, **kw),**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalQuantity')
