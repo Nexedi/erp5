@@ -435,14 +435,15 @@ class ERP5TypeTestCase(PortalTestCase):
             from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
             portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
 
-
     def failIfDifferentSet(self, a, b, msg=""):
-      LOG('failIfDifferentSet',0,'a:%s b:%s' % (repr(a),repr(b)))
+      if not msg:
+        msg='%r != %r' % (a, b)
       for i in a:
         self.failUnless(i in b, msg)
       for i in b:
         self.failUnless(i in a, msg)
       self.assertEquals(len(a), len(b), msg)
+    assertSameSet = failIfDifferentSet
 
 def setupERP5Site( business_template_list=(),
                    app=None,
