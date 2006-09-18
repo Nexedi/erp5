@@ -342,6 +342,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>source_section_title</string>
                           <string>Section Title</string>
                         </tuple>

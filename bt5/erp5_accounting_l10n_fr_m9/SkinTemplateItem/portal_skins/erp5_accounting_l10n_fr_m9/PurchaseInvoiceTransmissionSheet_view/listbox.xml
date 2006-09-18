@@ -338,7 +338,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getDestinationSectionTitle</string>
+                          <string>getSourceSectionTitle</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -530,7 +530,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getAggregateValueList</string> </value>
+            <value> <string>getAggregateRelatedValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

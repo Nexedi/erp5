@@ -69,13 +69,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>selection = context.portal_selections.getSelectionFor(\n
-                \'purchase_invoice_transmission_sheet_selection\')\n
+                \'purchase_invoice_transmission_sheet_list_selection\')\n
 \n
-context.log(\'selection_uid\', selection.getCheckedUids())\n
-removed_uid_list = (selection.getCheckedUids() or uids)\n
-if not removed_uid_list:\n
-  return context.REQUEST.RESPONSE.redirect(\n
-    "%s/view?portal_status_message=Select+Invoices+to+Remove" % context.absolute_url())\n
+for uid in selection.getCheckedUids():\n
+  invoice = context.portal_catalog.getObject(uid)\n
+  aggregate_list = invoice.getAggregateValueList()\n
+  if context in aggregate_list :\n
+    aggregate_list.remove(context) \n
+  invoice.setAggregateValueList(aggregate_list)\n
 \n
 old_uid_list = context.getAggregateUidList()\n
 context.setAggregateUidList([uid for uid in old_uid_list if uid not in removed_uid_list])\n
@@ -141,12 +142,14 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>selection</string>
-                            <string>removed_uid_list</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>invoice</string>
+                            <string>aggregate_list</string>
                             <string>old_uid_list</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>uid</string>
+                            <string>removed_uid_list</string>
                           </tuple>
                         </value>
                     </item>

@@ -71,11 +71,13 @@
             <value> <string>selection = context.portal_selections.getSelectionFor(\n
                             "transmission_sheet_add_invoice_selection")\n
 \n
-context.setAggregateUidList(context.getAggregateUidList() \\\n
-              + (selection.getCheckedUids() or uids))\n
+for uid in uids:\n
+  invoice = context.portal_catalog.getObject(uid)\n
+  aggregate_list = invoice.getAggregateValueList()\n
+  invoice.setAggregateValueList(aggregate_list + [context])\n
 \n
 return context.REQUEST.RESPONSE.redirect(\n
-        "%s/view?portal_status_message=Invoice+Added" % context.absolute_url())\n
+        "%s/view?portal_status_message=Invoice+Added." % context.absolute_url())\n
 </string> </value>
         </item>
         <item>
@@ -135,6 +137,10 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>selection</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>invoice</string>
+                            <string>aggregate_list</string>
                           </tuple>
                         </value>
                     </item>
