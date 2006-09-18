@@ -185,7 +185,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
         if hasattr(container, 'isTempObject') and container.isTempObject():
           factory_name = self.factory
           factory_name.replace('add', 'newTemp')
-          m = getattr(p, factory_name, None)g
+          m = getattr(p, factory_name, None)
         else:
           m = getattr(p, self.factory, None)
         if m is None:
