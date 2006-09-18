@@ -353,8 +353,8 @@ class TempDocumentConstructor(DocumentConstructor):
         setattr(o, k, getattr(o,"_temp_%s" % k))
       if kw:
         o.__of__(folder)._edit(force_update=1, **kw)
-      if folder.isTempObject(): # Temp Object in Temp Object should use containment
-        folder._setObject(id, o)
+      if hasattr(folder, 'isTempObject') and folder.isTempObject(): 
+        folder._setObject(id, o)# Temp Object in Temp Object should use containment
         return id               # return id to be compatible with CMF constructInstance
       else:                     # Temp Object in Persistent Object should use acquisition
         o = o.__of__(folder)
