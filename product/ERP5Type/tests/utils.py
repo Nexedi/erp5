@@ -33,7 +33,7 @@ from Products.MailHost.MailHost import MailHost
 
 class DummyMailHost(MailHost):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
-  _last_message attrbute.
+  _last_message attribute.
   To use it, you have to replace existing mailhost in afterSetUp:
     
     if 'MailHost' in portal.objectIds():
