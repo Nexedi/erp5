@@ -146,6 +146,29 @@ portal_name = 'erp5_portal'
 # prevent replaying the same failing setup step for each test.
 failed_portal_installation = {}
 
+def _getConnectionStringDict():
+  """Returns the connection strings used for this test.
+  """
+  connection_string_dict = {}
+  erp5_sql_connection_string = os.environ.get(
+                                    'erp5_sql_connection_string')
+  if erp5_sql_connection_string:
+    connection_string_dict['erp5_sql_connection_string'] = \
+                                erp5_sql_connection_string
+  cmf_activity_sql_connection_string = os.environ.get(
+                            'cmf_activity_sql_connection_string',
+                            os.environ.get('erp5_sql_connection_string'))
+  if cmf_activity_sql_connection_string:
+    connection_string_dict['cmf_activity_sql_connection_string'] = \
+                                cmf_activity_sql_connection_string
+  erp5_sql_deferred_connection_string = os.environ.get(
+                            'erp5_sql_deferred_connection_string',
+                            os.environ.get('erp5_sql_connection_string'))
+  if erp5_sql_deferred_connection_string:
+    connection_string_dict['erp5_sql_deferred_connection_string'] = \
+                                erp5_sql_deferred_connection_string
+  return connection_string_dict
+
 class ERP5TypeTestCase(PortalTestCase):
 
     def getTitle(self):
@@ -158,7 +181,12 @@ class ERP5TypeTestCase(PortalTestCase):
         Return the name of a portal for this test case.
         This is necessary for each test case to use a different portal built by
         different business templates.
+        The test runner can set `erp5_tests_portal_id` environnement variable
+        to force a portal id.
       """
+      forced_portal_id = os.environ.get('erp5_tests_portal_id')
+      if forced_portal_id:
+        return str(forced_portal_id)
       m = md5.new()
       m.update(repr(self.getBusinessTemplateList())+ self.getTitle())
       uid = m.hexdigest()
@@ -271,6 +299,8 @@ class ERP5TypeTestCase(PortalTestCase):
                     create_activities=create_activities,
                     hot_reindexing=hot_reindexing)
       PortalTestCase.setUp(self)
+      self._updateConnectionStrings()
+      self._recreateCatalog()
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -291,6 +321,39 @@ class ERP5TypeTestCase(PortalTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing ... ', DEBUG, message)
     
+    def _updateConnectionStrings(self):
+      """Update connection strings with values passed by the testRunner
+      """
+      portal = self.getPortal()
+      # update connection strings
+      for connection_string_name, connection_string in\
+                                    _getConnectionStringDict().items():
+        connection_name = connection_string_name.replace('_string', '')
+        getattr(portal, connection_name).edit('', connection_string)
+
+    def _recreateCatalog(self, quiet=0):
+      """Clear activities and catalog and recatalog everything.
+      Test runner can set `erp5_tests_recreate_catalog` environnement variable,
+      in that case we have to clear catalog. """
+      portal = self.getPortal()
+      if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
+        try:
+          self.login()
+          _start = time.time()
+          if not quiet:
+            ZopeTestCase._print('\nRecreating catalog ... ')
+          portal.portal_activities.manageClearActivities()
+          portal.portal_catalog.manage_catalogClear()
+          get_transaction().commit()
+          portal.ERP5Site_reindexAll()
+          get_transaction().commit()
+          self.tic()
+          if not quiet:
+            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
+        finally:
+          os.environ['erp5_tests_recreate_catalog'] = '0'
+          noSecurityManager()
+
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
       return getToolByName(self.getPortal(), 'portal_templates', None)
@@ -389,7 +452,7 @@ def setupERP5Site( business_template_list=(),
     '''
       Creates an ERP5 site.
       business_template_list must be specified correctly
-      (e.g. '("erp5_common", )').
+      (e.g. '("erp5_base", )').
     '''
     if portal_name in failed_portal_installation:
       raise RuntimeError, 'Installation of %s already failed, giving up'\
@@ -417,24 +480,7 @@ def setupERP5Site( business_template_list=(),
           if not quiet:
             ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
           
-          extra_constructor_kw = {}
-          erp5_sql_connection_string = os.environ.get(
-                                        'erp5_sql_connection_string')
-          if erp5_sql_connection_string:
-            extra_constructor_kw['erp5_sql_connection_string'] = \
-                                        erp5_sql_connection_string
-          cmf_activity_sql_connection_string = os.environ.get(
-                                    'cmf_activity_sql_connection_string',
-                                    os.environ.get('erp5_sql_connection_string'))
-          if cmf_activity_sql_connection_string:
-            extra_constructor_kw['cmf_activity_sql_connection_string'] = \
-                                        cmf_activity_sql_connection_string
-          erp5_sql_deferred_connection_string = os.environ.get(
-                                    'erp5_sql_deferred_connection_string',
-                                    os.environ.get('erp5_sql_connection_string'))
-          if erp5_sql_deferred_connection_string:
-            extra_constructor_kw['erp5_sql_deferred_connection_string'] = \
-                                        erp5_sql_deferred_connection_string
+          extra_constructor_kw = _getConnectionStringDict()
           email_from_address = os.environ.get('email_from_address')
           if email_from_address is not None:
             extra_constructor_kw['email_from_address'] = email_from_address
@@ -517,6 +563,8 @@ def setupERP5Site( business_template_list=(),
       ZopeTestCase._print(f.getvalue())
       f.close()
       failed_portal_installation[portal_name] = 1
+      ZopeTestCase._print('Ran Unit test of %s (installation failed)\n'
+                          % title) # run_unit_test depends on this string.
       raise
 
 def optimize():

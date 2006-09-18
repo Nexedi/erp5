@@ -10,6 +10,15 @@ usage: %(program)s [options] [UnitTest1[:TestClass1[:TestClass2]] [UnitTest2]]
 Options:
   -v, --verbose              produce verbose output
   -h, --help                 this help screen
+  --portal_id=STRING         force id of the portal. Usefull when using
+                             --data_fs_path to run tests on an existing
+                             Data.fs
+  --data_fs_path=STRING      Path to the orginal Data.fs to run tests on an
+                             existing environment. The Data.fs is openned read
+                             only
+  --recreate_catalog=0 or 1  recreate the content of the sql catalog. Defaults
+                             is to recreate, when using an existing Data.fs
+  
   --erp5_sql_connection_string=STRING
                              ZSQL Connection string for erp5_sql_connection, by
                              default, it will use "test test"                            
@@ -177,7 +186,8 @@ def usage(stream, msg=None):
 def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
-        "hv", ["help", "verbose", "erp5_sql_connection_string=",
+        "hv", ["help", "verbose", "portal_id=", "data_fs_path=",
+        "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "erp5_deferred_sql_connection_string=",
         "email_from_address="] )
@@ -185,12 +195,21 @@ def main():
     usage(sys.stderr, msg)
     sys.exit(2)
   
+  os.environ["erp5_tests_recreate_catalog"] = "0"
+
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
       os.environ['VERBOSE'] = "1"
     elif opt in ("-h", "--help"):
       usage(sys.stdout)
       sys.exit()
+    elif opt == '--portal_id':
+      os.environ["erp5_tests_portal_id"] = arg
+    elif opt == '--data_fs_path':
+      os.environ["erp5_tests_data_fs_path"] = arg
+      os.environ["erp5_tests_recreate_catalog"] = "1"
+    elif opt == '--recreate_catalog':
+      os.environ["erp5_tests_recreate_catalog"] = arg
     elif opt == "--erp5_sql_connection_string":
       os.environ["erp5_sql_connection_string"] = arg
     elif opt == "--cmf_activity_sql_connection_string":
