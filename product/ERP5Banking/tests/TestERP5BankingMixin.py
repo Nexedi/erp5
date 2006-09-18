@@ -590,6 +590,14 @@ class TestERP5BankingMixin:
     # a default date
     self.date = DateTime()
 
+  def setDocumentSourceReference(self, doc):
+    """
+    Compute and set the source reference for a document
+    """
+    # document must have a date defined
+    doc.edit(start_date=DateTime())
+    # call script to set source reference
+    doc.Baobab_getUniqueReference()
 
 
   def createPerson(self, id, first_name, last_name):
@@ -667,6 +675,7 @@ class TestERP5BankingMixin:
                      quantity=25,title='100')
     return model
 
+
   def createCheckModel(self, id):
     """
     Create a checkbook for the given bank account
@@ -688,7 +697,6 @@ class TestERP5BankingMixin:
     # mark the check as issued
     check.confirm()
     return check
-
 
   def createCashContainer(self, document, container_portal_type, global_dict, line_list, delivery_line_type='Cash Delivery Line'):
     """
