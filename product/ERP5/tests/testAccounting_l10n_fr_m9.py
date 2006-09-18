@@ -155,7 +155,8 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
             portal_type=self.purchase_invoice_transmission_sheet_portal_type)
     self.assertEquals(transmission_sheet.getValidationState(), 'draft')
     # add an invoice to the transamission sheet
-    transmission_sheet.setAggregateValue(invoice)
+    invoice.setAggregateValue(transmission_sheet)
+    invoice.recursiveImmediateReindexObject()
     self.getWorkflowTool().doActionFor(
                             transmission_sheet,
                             'emit_action')
