@@ -50,9 +50,6 @@ class TestPreferences(ERP5TypeTestCase):
   def getTitle(self):
     return "Portal Preference"
 
-  def getPreferenceTool(self) :
-    return self.getPortal().portal_preferences
-    
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager', 'Assignor'], [])

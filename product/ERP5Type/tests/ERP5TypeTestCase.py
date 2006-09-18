@@ -357,6 +357,9 @@ class ERP5TypeTestCase(PortalTestCase):
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
       return getToolByName(self.getPortal(), 'portal_templates', None)
+    
+    def getPreferenceTool(self) :
+      return getToolByName(self.getPortal(), 'portal_preferences', None)
       
     def getTrashTool(self):
       return getToolByName(self.getPortal(), 'portal_trash', None)
