@@ -263,7 +263,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Clone or Create new content</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

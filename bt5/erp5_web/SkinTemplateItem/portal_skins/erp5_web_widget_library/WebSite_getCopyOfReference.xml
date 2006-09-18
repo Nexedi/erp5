@@ -187,7 +187,7 @@ return new_ref\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Used ?</string> </value>
+            <value> <string>Not used yet, but helpful</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
