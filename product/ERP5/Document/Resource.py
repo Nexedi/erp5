@@ -27,8 +27,9 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
+from math import log
 
+from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -708,8 +709,11 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def getQuantityPrecision(self):
       """Return the floating point precision of a quantity.
       """
-      quantity = str(self.getBaseUnitQuantity())
-      i = quantity.find('.')
-      if i < 0:
+      try:
+        return int(round(- log(self.getBaseUnitQuantity(), 10),0))
+      except TypeError:
         return 0
-      return len(quantity[i+1:].rstrip('0'))
+      return 0
+
+
+        
