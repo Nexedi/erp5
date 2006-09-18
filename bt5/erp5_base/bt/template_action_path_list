@@ -83,6 +83,7 @@ Organisation | document_view
 Organisation | financial_view
 Organisation | history
 Organisation | metadata
+Organisation | person_list
 Organisation | print
 Organisation | view
 Person Module | career_print
