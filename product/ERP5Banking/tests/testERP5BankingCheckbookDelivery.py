@@ -149,6 +149,8 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookUsualCashTransfer
     self.createCheckbookReception()
     self.checkItemsCreated()
     self.createCheckbookVaultTransfer()
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
