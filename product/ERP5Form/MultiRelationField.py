@@ -337,12 +337,12 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
        (field.get_value('allow_jump') == 1):
       # Keep the selection name in the URL
       if REQUEST.get('selection_name') is not None:
-        selection_name_html = '&selection_name=%s&selection_index=%s' % \
+        selection_name_html = '&amp;selection_name=%s&amp;selection_index=%s' % \
               (REQUEST.get('selection_name'), REQUEST.get('selection_index'))
       else:
         selection_name_html = ''
       # Generate plan link
-      html_string += '<a href="%s/%s?field_id=%s&form_id=%s%s">' \
+      html_string += '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
                        '<img src="%s/images/jump.png" />' \
                      '</a>' % \
                 (here.absolute_url(), 
