@@ -801,7 +801,7 @@ class PreferenceTemplateItem(PathTemplateItem):
     if relative_url_list != []:
       LOG("PreferenceTemplateItem, _resolvePath", WARNING,
           "Should be empty")
-    if len(id_list) is not None:
+    if len(id_list) != 1:
       LOG("PreferenceTemplateItem, _resolvePath", WARNING,
           "Should contain only one element")
     # XXX hardcoded
@@ -814,11 +814,11 @@ class PreferenceTemplateItem(PathTemplateItem):
     PathTemplateItem.install(self, context, trashbin, **kw)
     portal = context.getPortalObject()
     for object_path in self._objects.keys():
-      object = portal.unrestrictedTraverse(object_path)
+      pref = portal.unrestrictedTraverse(object_path)
       # XXX getPreferenceState is a bad name
-      if object.getPreferenceState() == 'disabled':
-        object.portal_workflow.doActionFor(
-                      object,
+      if pref.getPreferenceState() == 'disabled':
+        portal.portal_workflow.doActionFor(
+                      pref,
                       'enable_action',
                       wf_id='preference_workflow',
                       comment="Initialized during Business Template " \
