@@ -358,7 +358,8 @@ class TempDocumentConstructor(DocumentConstructor):
         return id               # return id to be compatible with CMF constructInstance
       else:                     # Temp Object in Persistent Object should use acquisition
         o = o.__of__(folder)
-      return o
+      return o                  # We should return id if called on a Factory Dispatcher
+                                # and return o if called on a container
 
 
 python_file_parser = re.compile('^(.*)\.py$')
