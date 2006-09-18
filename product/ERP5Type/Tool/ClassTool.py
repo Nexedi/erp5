@@ -645,13 +645,14 @@ class ConstraintTemplate(Constraint):
             f = open(init, 'w')
             f.close()
           # For convenience, make .cvsignore.
-          cvsignore = os.path.join(path, '.cvsignore')
-          if not os.path.exists(cvsignore):
-            f = open(cvsignore, 'w')
-            try:
-              f.write('*.pyc' + os.linesep)
-            finally:
-              f.close()
+          if generate_cvsignore:
+            cvsignore = os.path.join(path, '.cvsignore')
+            if not os.path.exists(cvsignore):
+              f = open(cvsignore, 'w')
+              try:
+                f.write('*.pyc' + os.linesep)
+              finally:
+                f.close()
 
         # Create a Permissions module for this Product.
         permissions = os.path.join(base_path, 'Permissions.py')
