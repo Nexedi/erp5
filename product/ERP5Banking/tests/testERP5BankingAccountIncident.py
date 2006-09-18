@@ -213,6 +213,8 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                                                                     destination_payment_value=self.bank_account_1)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.account_incident)
     # check we have only one cash transfer
     self.assertEqual(len(self.account_incident_module.objectValues()), 1)
     # get the cash transfer document
@@ -223,7 +225,10 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # check that its destination is counter
     self.assertEqual(self.account_incident.getSource(), 'site/testsite/paris')
     self.assertEqual(self.account_incident.getDestination(), None)
-
+    # check source reference
+    self.assertNotEqual(self.account_incident.getSourceReference(), '')
+    self.assertNotEqual(self.account_incident.getSourceReference(), None)
+    
 
   def stepCreateIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
