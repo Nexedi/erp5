@@ -9,7 +9,7 @@ touch $DIRECTORY/test_full_output
 $DIRECTORY/update_cvs
 
 # Excluded tests must be separated by whitespaces
-excluded_test_list="testPurchaseOrder"
+excluded_test_list="testPurchaseOrder testCatalogSecurity"
 
 test_list=`/bin/ls -1 $DIRECTORY/*/tests/test*.py`
 
