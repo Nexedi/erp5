@@ -65,20 +65,17 @@ class TestBudget(ERP5TypeTestCase):
   RUN_ALL_TEST = 1
   QUIET = 0
 
-
   def getTitle(self):
     """
       Return the title of the current test set.
     """
     return "ERP5 Budget"
 
-
   def getBusinessTemplateList(self):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting', 'erp5_budget')
-
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', 'erp5_budget')
 
   def login(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -148,12 +145,10 @@ class TestBudget(ERP5TypeTestCase):
     self.organisation_module = self.getOrganisationModule()
     budget_module = self.getBudgetModule()
     budget_transaction_module  = self.getBudgetTransactionModule()
-    self.portal = self.getPortal()
     self.getAccountingModule().manage_addLocalRoles('maurice', ('Assignor','Assignee','Manager','Owner',))
     # flush activities
     get_transaction().commit()
     self.tic()
-
     # When using light install, only base categories are created
     if len(self.portal_categories.region.contentValues()) == 0 :
       o = self.portal_categories.region.newContent(portal_type='Category', id='europe')
@@ -231,7 +226,11 @@ class TestBudget(ERP5TypeTestCase):
                     )
     budget_cell2.setQuantity(1000.0)
 
-    budget_transfert1 = budget1.newContent(portal_type='Budget Transfert Line',source=budget_cell1.getRelativeUrl(), resource='currency/EUR',destination =budget_cell2.getRelativeUrl(),quantity=500.0)
+    budget_transfert1 = budget1.newContent(portal_type='Budget Transfer Line',
+                                           source=budget_cell1.getRelativeUrl(),
+                                           resource='currency/EUR',
+                                           destination=budget_cell2.getRelativeUrl(),
+                                           quantity=500.0)
 
     self.budget_transaction1 = budget_transaction_module.newContent(portal_type='Budget Transaction',source =budget_cell1.getRelativeUrl(), destination=budget_cell2.getRelativeUrl(), quantity=25.0,group='world_company', stop_date='2005/05/01 18:06:26.388 GMT-4')
 
@@ -241,27 +240,17 @@ class TestBudget(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-
-
-
-
   def getAccountModule(self):
     return getattr(self.getPortal(), 'account_module', None)
 
   def getAccountingModule(self):
     return getattr(self.getPortal(), 'accounting_module', None)
 
-  def getOrganisationModule(self):
-    return getattr(self.getPortal(), 'organisation', None)
-
   def getBudgetModule(self):
     return getattr(self.getPortal(), 'budget_module', None)
 
   def getBudgetTransactionModule(self):
     return getattr(self.getPortal(), 'budget_transaction_module', None)
-
-  def getCurrencyModule(self) :
-    return getattr(self.getPortal(), 'currency', None)
 
   def createCategories(self):
     """
@@ -379,7 +368,6 @@ class TestBudget(ERP5TypeTestCase):
       LOG('Testing... ',0,'testHasBudgetCells')
     message = ""
     len_cells = 0
-    self.afterSetUp()
     for objects in self.getBudgetModule().budget_module.objectValues():
       if objects.getPortalType() == 'Budget':
         for obj_line in objects.objectValues():
@@ -407,7 +395,6 @@ class TestBudget(ERP5TypeTestCase):
       message = 'Test if there is enough budget before validating an accounting transaction'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    self.afterSetUp()
     self.stepConfirmAccountingTransaction(self.accounting_transaction1)
     message = str(self.accounting_transaction1.getSimulationState())
     ZopeTestCase._print('\n%s ' % message)
@@ -445,7 +432,6 @@ class TestBudget(ERP5TypeTestCase):
       message = 'Test if the transaction of budget is authorized'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    self.afterSetUp()
     self.stepDeliverBudgetTransaction(self.budget_transaction1)
     message = str(self.budget_transaction1.getSimulationState())
     ZopeTestCase._print('\n%s ' % message)
