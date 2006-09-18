@@ -226,7 +226,7 @@ return []
         """return [context.asContext(alternate_title = u'\xe9lisa')]""")
  
     # set the listbox to use this as list method
-    listbox = portal.foo_module.FooModule_viewFooList.listbox
+    listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
       field_columns = ['alternate_title | Alternate Title',],)
