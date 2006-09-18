@@ -182,7 +182,7 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # execute tic
     self.stepTic()
     # set source reference
-    self.setDocumentSourceReference(self.account_incident)
+    self.setDocumentSourceReference(self.cash_incident)
     # check source reference
     self.assertNotEqual(self.cash_incident.getSourceReference(), '')
     self.assertNotEqual(self.cash_incident.getSourceReference(), None)
