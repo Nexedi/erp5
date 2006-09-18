@@ -458,8 +458,7 @@ class TestOrderMixin:
       Check the method getTotalQuantity on a order line.
     """
 
-    # FIXME : order_line needs to be indexed for 'fast' calculation to
-    # work as expected
+    # order_line needs to be indexed for 'fast' calculation to work as expected
     self.stepTic()
 
     order_line = sequence.get('order_line')
@@ -477,6 +476,7 @@ class TestOrderMixin:
       self.assertEquals(total_quantity, order_line.getTotalQuantity())
     self.assertEquals( order_line.getTotalQuantity(fast = 0),
                        order_line.getTotalQuantity(fast = 1) )
+    self.assertNotEquals(order_line.getTotalQuantity(fast = 1),0)
 
   def stepCheckOrderLineTotalPrice(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -484,8 +484,7 @@ class TestOrderMixin:
       Check the method getTotalPrice on a order line.
     """
 
-    # FIXME : order_line needs to be indexed for 'fast' calculation to
-    # work as expected
+    # order_line needs to be indexed for 'fast' calculation to work as expected
     self.stepTic()
 
     order_line = sequence.get('order_line')
@@ -505,6 +504,41 @@ class TestOrderMixin:
       self.assertEquals(total_price, order_line.getTotalPrice())
     self.assertEquals( order_line.getTotalPrice(fast = 0),
                        order_line.getTotalPrice(fast = 1) )
+    self.assertNotEquals(order_line.getTotalPrice(fast = 1),0)
+
+  def stepCheckOrderLineTotalPriceAndQuantityFastParameter(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Check the method getTotalPrice on a order line.
+
+      Here we will check that very carefully ther parameter fast
+    """
+    portal_catalog = self.getCatalogTool()
+    total_price = 0
+    total_quantity = 0
+    order_line = sequence.get('order_line')
+    base_id = 'movement'
+    cell_key_list = order_line.getCellKeyList(base_id=base_id)
+    for cell_key in cell_key_list:
+      if order_line.hasCell(base_id = base_id, *cell_key):
+        cell = order_line.getCell(base_id = base_id, *cell_key)
+        total_price +=  ( cell.getProperty('quantity') *
+                          cell.getProperty('price'))
+        total_quantity += (cell.getProperty('quantity'))
+    self.assertEquals(len(portal_catalog(
+                          relative_url=order_line.getRelativeUrl())),0)
+    self.assertEquals(total_price, order_line.getTotalPrice(fast=0))
+    self.assertEquals(total_quantity, order_line.getTotalQuantity(fast=0))
+    self.assertEquals(0, order_line.getTotalPrice(fast=1))
+    self.assertEquals(0, order_line.getTotalQuantity(fast=1))
+    self.assertNotEquals(total_price, 0)
+    self.stepTic()
+    self.assertEquals(len(portal_catalog(relative_url=
+                                         order_line.getRelativeUrl())),1)
+    self.assertEquals(total_price, order_line.getTotalPrice(fast=1))
+    self.assertEquals(total_price, order_line.getTotalPrice(fast=0))
+    self.assertEquals(total_quantity, order_line.getTotalQuantity(fast=1))
+    self.assertEquals(total_quantity, order_line.getTotalQuantity(fast=0))
 
   def stepCheckOrderTotalQuantity(self, sequence=None, sequence_list=None, \
                                   **kw):
@@ -512,8 +546,7 @@ class TestOrderMixin:
       Check the method getTotalQuantity on a order .
     """
 
-    # FIXME : order needs to be indexed for 'fast' calculation to
-    # work as expected
+    # order needs to be indexed for 'fast' calculation to work as expected
     self.stepTic()
 
     order = sequence.get('order')
@@ -533,8 +566,7 @@ class TestOrderMixin:
       Check the method getTotalPrice on a order .
     """
 
-    # FIXME : order needs to be indexed for 'fast' calculation to
-    # work as expected
+    # order needs to be indexed for 'fast' calculation to work as expected
     self.stepTic()
 
     order = sequence.get('order')
@@ -547,6 +579,31 @@ class TestOrderMixin:
     self.assertEquals(total_price, order.getTotalPrice())
     self.assertEquals( order.getTotalPrice(fast = 0),
                        order.getTotalPrice(fast = 1) )
+
+  def stepCheckOrderTotalPriceAndQuantityFastParameter(self, 
+                                  sequence=None, sequence_list=None, **kw):
+    """
+      Check the method getTotalPrice on a order .
+
+      Here we will look carefully at the parameter fast
+    """
+    portal_catalog = self.getCatalogTool()
+
+    order = sequence.get('order')
+    order_line_list = order.objectValues( \
+                                 portal_type=self.order_line_portal_type)
+    order_line_list = map(lambda x: x.getObject(), order_line_list)
+    total_price = 0
+    for order_line in order_line_list:
+      total_price += order_line.getTotalPrice(fast=0)
+    self.assertEquals(0, len(portal_catalog(relative_url=order.getRelativeUrl())))
+    self.assertEquals(total_price, order.getTotalPrice(fast=0))
+    self.assertNotEquals(total_price, 0)
+    self.assertEquals(0, order.getTotalPrice(fast=1))
+    self.stepTic()
+    self.assertEquals(1, len(portal_catalog(relative_url=order.getRelativeUrl())))
+    self.assertEquals(total_price, order.getTotalPrice(fast=1))
+    self.assertEquals(total_price, order.getTotalPrice(fast=0))
 
   def stepCheckOrderInitialState(self, sequence=None, sequence_list=None, \
                                   **kw):
@@ -920,7 +977,6 @@ class TestOrderMixin:
   non_variated_order_creation = '\
       stepCreateOrder \
       stepCreateNotVariatedResource \
-      stepTic \
       stepCreateOrderLine \
       stepCheckOrderLineEmptyMatrix \
       stepSetOrderLineResource \
@@ -931,7 +987,6 @@ class TestOrderMixin:
   variated_order_line_creation = '\
       stepCreateOrder \
       stepCreateVariatedResource \
-      stepTic \
       stepCreateOrderLine \
       '
   variated_line_completion = '\
@@ -944,6 +999,16 @@ class TestOrderMixin:
       '
   variated_order_creation = variated_order_line_creation + \
       variated_line_completion
+
+  variated_line_completion_without_tic = '\
+    stepSetOrderLineResource \
+    stepSetOrderLineDefaultValues \
+    stepCheckOrderLineDefaultValues \
+    stepSetOrderLineFullVCL \
+    stepCompleteOrderLineMatrix \
+    '
+  variated_order_creation_without_tic = variated_order_line_creation + \
+    variated_line_completion_without_tic
 
 class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   """
@@ -1200,6 +1265,21 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  def test_07b_OrderLine_getTotalPriceAndQuantityFastParameter(self, quiet=0, run=run_all_test):
+    """
+      Test method getTotalPrice on order line.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test when resource has variations
+    sequence_string = self.variated_order_creation_without_tic + '\
+                      stepCheckOrderLineTotalPriceAndQuantityFastParameter \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
   def test_08_Order_testTotalQuantity(self, quiet=0, run=run_all_test):
     """
       Test method getTotalQuantity on a order
@@ -1232,6 +1312,23 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepSetOrderLineDefaultValues \
                       stepTic \
                       stepCheckOrderTotalQuantity \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_08b_Order_testTotalPriceAndQuantityFastParameter(self, quiet=0, run=run_all_test):
+    """
+      Test method getTotalQuantity on a order
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test whith multiples order line
+    sequence_string = self.variated_order_creation_without_tic + '\
+                      stepCreateNotVariatedResource \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepCheckOrderTotalPriceAndQuantityFastParameter \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
