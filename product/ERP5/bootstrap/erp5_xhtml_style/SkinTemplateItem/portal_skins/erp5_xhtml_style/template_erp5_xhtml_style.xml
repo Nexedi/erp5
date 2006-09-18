@@ -103,7 +103,7 @@ IDEAS:\n
   <body onload="fixLeftRightHeight()">\n
 <!--     <tal:block tal:replace="structure request"/> -->\n
     <form id="main_form"\n
-          tal:attributes="enctype form/enctype | nothing;\n
+          tal:attributes="enctype python: here.ERP5XhtmlStyle_getFormEnctype(form);\n
                           action url;\n
                           method form/method | string:post">\n
       <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n

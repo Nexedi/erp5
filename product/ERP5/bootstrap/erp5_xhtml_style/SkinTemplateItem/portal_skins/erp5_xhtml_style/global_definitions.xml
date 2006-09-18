@@ -71,6 +71,7 @@
            http_parameter_list  python: here.ERP5XhtmlStyle_filterParameterList(http_parameter_list);\n
            dummy                python: http_parameter_list.update(local_parameter_list);\n
     global http_parameters      python: here.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list);\n
+    global form                 nocall:form | nothing;\n
   "/>\n
 </tal:block>\n
 \n
