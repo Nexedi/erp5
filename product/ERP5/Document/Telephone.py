@@ -98,19 +98,25 @@ class Telephone(Coordinate, Base):
         script = self._getTypeBasedMethod('asText')
         if script is not None:
           return script()
+
         text = '+'
-        if self.telephone_country != None:
-                text += self.telephone_country
+        telephone_country = self.getTelephoneCountry()
+        if telephone_country is not None:
+          text += telephone_country
+
         text += '(0)'
-        if self.telephone_area != None:
-          text += self.telephone_area
+        telephone_area = self.getTelephoneArea()
+        if telephone_area is not None:
+          text += telephone_area
+
         text += '-'
-        if self.telephone_number != None:
-          text += self.telephone_number
-        if text == '+(0)-' :
-          return ''
-        else:
-          return text
+        telephone_number = self.getTelephoneNumber()
+        if self.telephone_number is not None:
+          text += telephone_number
+
+        if text == '+(0)-':
+          text = ''
+        return text
 
     security.declareProtected(Permissions.View, 'getText')
     getText = asText
