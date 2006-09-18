@@ -76,5 +76,12 @@ class DublinCore:
             'description' : '',
             'type'        : 'string',
             'mode'        : 'w' },
+        # Extended properties specific to ERP5 - not part of DublinCore
+        {   'id'          : 'short_title',
+            'description' : '',
+            'type'        : 'string',
+            'translatable'  : 1,
+            'translation_domain' : 'erp5_content',
+            'mode'        : 'w' },
     )
 
