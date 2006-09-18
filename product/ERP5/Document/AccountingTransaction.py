@@ -75,4 +75,14 @@ class AccountingTransaction(Delivery):
         raise BeforeDeleteException, \
               "%s can only be deleted in draft or cancelled states." % self.getPortalType()
       Delivery.manage_beforeDelete(self, item, container) 
-    
+
+    def manage_afterClone(self, item):
+      # Reset reference on paste
+      # XXX This implementation is quite bad because it is not generic
+      if self.getReference != None:
+        self.setReference(None)
+      AccountingTransaction.manage_afterClone(self, item)
+
+# Compatibility
+# It may be necessary to create an alias after removing the Transaction class
+# Products.ERP5Type.Document.Transaction = AccountingTransaction

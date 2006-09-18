@@ -86,9 +86,3 @@ class Invoice(AccountingTransaction):
       """ Returns the total net price for this invoice """
       raise NotImplemented
       return self.Invoice_zGetTotalNetPrice()
-
-    def manage_afterClone(self, item):
-      # Reset reference on paste
-      if self.getReference != None:
-        self.setReference(None)
-      AccountingTransaction.manage_afterClone(self, item)
