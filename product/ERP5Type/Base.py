@@ -2335,12 +2335,33 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
     # Add to catalog
     self.reindexObject()
 
+  # ZODB Transaction Management
   security.declarePublic('serialize')
   def serialize(self):
     """Make the transaction accessing to this object atomic
     """
     self.id = self.id
 
+  # Helpers
+  def getQuantityPrecisionFromResource(self, resource):
+    """
+      Provides a quick access to precision without accessing the resource
+      value in ZODB
+    """
+    def cashed_getQuantityPrecisionFromResource(resource):
+      resource_value = self.portal_categories.resolveCategory(resource)
+      if resource_value is not None:
+        return resource_value.getQuantityPrecision()
+      else:
+        return 0
+
+    cashed_getQuantityPrecisionFromResource = CachingMethod(cashed_getQuantityPrecisionFromResource,
+                                                        id='Base_getQuantityPrecisionFromResource')
+
+    return cashed_getResourceQuantityPrecision(resource)
+
+
+  # Documentation Helpers
   security.declareProtected( Permissions.ManagePortal, 'asDocumentationHelper' )
   def asDocumentationHelper(self, item_id=None):
     """

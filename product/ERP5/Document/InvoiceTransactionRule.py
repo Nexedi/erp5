@@ -263,6 +263,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
               # XXX this happen in many order, so this log is probably useless
               LOG("InvoiceTransactionRule", PROBLEM,
                   "expanding %s: without resource" % applied_rule.getPath())
+          quantity_precision = self.getQuantityPrecisionFromResource(resource)
           my_simulation_movement._edit(
                 source = transaction_line.getSource()
               , destination = transaction_line.getDestination()
@@ -271,9 +272,9 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
                                         .getDestinationSection()
               , resource = resource
                 # calculate (quantity * price) * cell_quantity
-              , quantity = (my_invoice_line_simulation.getQuantity()
+              , quantity = round((my_invoice_line_simulation.getQuantity()
                             * my_invoice_line_simulation.getPrice())
-                            * transaction_line.getQuantity()
+                            * transaction_line.getQuantity(), quantity_precision)
               , start_date = my_invoice_line_simulation.getStartDate()
               , stop_date  = my_invoice_line_simulation.getStopDate()
               , force_update = 1
