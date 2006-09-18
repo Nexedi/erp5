@@ -28,6 +28,7 @@
 
 from Products.CMFCore.utils import UniqueObject
 
+from zExceptions import BadRequest
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
@@ -610,9 +611,18 @@ class ConstraintTemplate(Constraint):
       security.declareProtected( Permissions.ManageExtensions, 'generateProduct' )
       def generateProduct(self, product_id,
                           document_id_list=(), property_sheet_id_list=(), constraint_id_list=(),
-                          extension_id_list=(), test_id_list=(), REQUEST=None):
+                          extension_id_list=(), test_id_list=(),
+                          generate_cvsignore=0, REQUEST=None):
         """Generate a Product
         """
+        if not product_id:
+          message = 'Product Name must be specified'
+          if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(
+                    '%s/manage_viewProductGeneration?manage_tabs_message=%s' %
+                    (self.absolute_url(), message.replace(' ', '+')))
+          raise BadRequest(message)
+        
         # Ensure that Products exists.
         product_path = os.path.join(getConfiguration().instancehome, 'Products')
         if not os.path.exists(product_path):
@@ -650,13 +660,14 @@ class ConstraintTemplate(Constraint):
           f.close()
 
         # Make .cvsignore for convenience.
-        cvsignore = os.path.join(base_path, '.cvsignore')
-        if not os.path.exists(cvsignore):
-          f = open(cvsignore, 'w')
-          try:
-            f.write('*.pyc' + os.linesep)
-          finally:
-            f.close()
+        if generate_cvsignore:
+          cvsignore = os.path.join(base_path, '.cvsignore')
+          if not os.path.exists(cvsignore):
+            f = open(cvsignore, 'w')
+            try:
+              f.write('*.pyc' + os.linesep)
+            finally:
+              f.close()
 
         # Create an init file for this Product.
         init = os.path.join(base_path, '__init__.py')
@@ -746,7 +757,7 @@ def initialize( context ):
               f.close()
 
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_viewProductGeneration?message=New+Product+Saved+In+%s' % (self.absolute_url(), base_path))
+          REQUEST.RESPONSE.redirect('%s/manage_viewProductGeneration?manage_tabs_message=New+Product+Saved+In+%s' % (self.absolute_url(), base_path))
 
       security.declareProtected( Permissions.ManagePortal,
                                  'asDocumentationHelper')

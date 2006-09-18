@@ -25,7 +25,18 @@
     <input type="text" name="product_id" size="40" value="" />
     </td>
   </tr>
-
+  
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Generate .cvsignore files ?
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="checkbox" name="generate_cvsignore" />
+    </td>
+  </tr>
+  
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
