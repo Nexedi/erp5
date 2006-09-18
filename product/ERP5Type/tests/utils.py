@@ -26,8 +26,24 @@
 #
 ##############################################################################
 
-"""Utility functions for unit testing
+"""Utility functions and classes for unit testing
 """
+
+from Products.MailHost.MailHost import MailHost
+
+class DummyMailHost(MailHost):
+  """Dummy Mail Host that doesn't really send messages and keep a copy in
+  _last_message attrbute.
+  To use it, you have to replace existing mailhost in afterSetUp:
+    
+    if 'MailHost' in portal.objectIds():
+      portal.manage_delObjects(['MailHost'])
+    portal._setObject('MailHost', DummyMailHost('MailHost'))
+  """
+  _last_message = ()
+  def _send( self, mfrom, mto, messageText ):
+    """Record message in _last_message."""
+    self._last_message = (mfrom, mto, messageText)
 
 def createZODBPythonScript(container, script_id, script_params,
                            script_content):
