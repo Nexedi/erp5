@@ -150,6 +150,13 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       o.edit(tata=123)
       self.assertEquals(o.getProperty('tata'), 123)
 
+      # Make sure this is a Temp Object
+      self.assertEquals(o.isTempObject(), 1)
+
+      # Create a subobject and make sure it is a Temp Object
+      a = o.newContent(portal_type = 'Telephone')
+      self.assertEquals(a.isTempObject(), 1)
+
     def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
       """
         This test provides basic testing of category

@@ -351,9 +351,13 @@ class TempDocumentConstructor(DocumentConstructor):
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
                 'activate', 'setUid', 'setTitle', 'getTitle'):
         setattr(o, k, getattr(o,"_temp_%s" % k))
-      o = o.__of__(folder)
       if kw:
         o.__of__(folder)._edit(force_update=1, **kw)
+      if folder.isTempObject(): # Temp Object in Temp Object should use containment
+        folder._setObject(id, o)
+        return id               # return id to be compatible with CMF constructInstance
+      else:                     # Temp Object in Persistent Object should use acquisition
+        o = o.__of__(folder)
       return o
 
 
@@ -685,7 +689,7 @@ def importLocalDocument(class_id, document_path = None):
           temp_document_constructor_name,
           temp_document_constructor)
   ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(
-                      temp_document_constructor_name,)
+                      temp_document_constructor_name,) # XXX Probably bad security
 
   # Update Meta Types
   new_meta_types = []
@@ -713,12 +717,14 @@ def importLocalDocument(class_id, document_path = None):
     constructors = ( manage_addContentForm
                    , manage_addContent
                    , document_constructor
+                   , temp_document_constructor
                    , ('factory_type_information',
                         document_class.factory_type_information) )
   else:
     constructors = ( manage_addContentForm
                    , manage_addContent
-                   , document_constructor )
+                   , document_constructor
+                   , temp_document_constructor )
   initial = constructors[0]
   m[initial.__name__]=manage_addContentForm
   default_permission = ('Manager',)

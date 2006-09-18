@@ -21,10 +21,10 @@
 ##############################################################################
 
 from Globals import InitializeClass, DTMLFile
-from exceptions import AccessControl_Unauthorized
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 
+import Products
 import Products.CMFCore.TypesTool
 from Products.CMFCore.TypesTool import TypeInformation
 from Products.CMFCore.TypesTool import FactoryTypeInformation
@@ -34,6 +34,7 @@ from Products.CMFCore.interfaces.portal_types import ContentTypeInformation\
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.utils import SimpleItemWithProperties
 from Products.CMFCore.Expression import createExprContext
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions
@@ -183,8 +184,9 @@ class ERP5TypeInformation( FactoryTypeInformation,
                                self.getId())
         p = container.manage_addProduct[self.product]
         if hasattr(container, 'isTempObject') and container.isTempObject():
-          factory_name = self.factory
-          factory_name.replace('add', 'newTemp')
+          factory_name = self.factory.replace('add', 'newTemp') # We suppose here
+                         # that methods are names addClass or newTempClass
+                         # Prefix should be moved to a central place.
           m = getattr(p, factory_name, None)
         else:
           m = getattr(p, self.factory, None)
@@ -233,8 +235,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
             Return list of content types.
             XXX I (seb) think the name is bad
         """
-        from Products.ERP5Type import PropertySheet
-        result = PropertySheet.__dict__.keys()
+        result = Products.ERP5Type.PropertySheet.__dict__.keys()
         result = filter(lambda k: not k.startswith('__'),  result)
         result.sort()
         return result
@@ -265,8 +266,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getConstraintList')
     def getConstraintList( self ):
-        from Products.ERP5Type import Constraint
-        result = Constraint.__dict__.keys()
+        result = Products.ERP5Type.Constraint.__dict__.keys()
         result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
                         result)
         result.sort()
@@ -368,13 +368,12 @@ class ERP5TypeInformation( FactoryTypeInformation,
       We do this by creating a temp object at the root of the portal
       and invoking propertyMap
       """
-      from Products.ERP5Type import Document
       # Access the factory method for temp object by guessing it
       # according to ERP5 naming conventions (not very nice)
       factory_method_id = self.factory.replace('add', 'newTemp', 1)
       if not factory_method_id.startswith('newTemp'):
         raise
-      factory_method = getattr(Document, factory_method_id)
+      factory_method = getattr(Products.ERP5Type.Document, factory_method_id)
       id = "some_very_unlikely_temp_object_id_which_should_not_exist"
       portal = self.portal_url.getPortalObject()
       portal_ids = portal.objectIds()

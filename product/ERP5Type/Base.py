@@ -1852,8 +1852,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
   def isTempObject(self):
     """
       Tells if an object is temporary or not
+
+      Implementation is based on the fact that reindexObject method is overloaded
+      for all TempObjects with the same dummy method
     """
-    return self.reindexObject is self._temp_reindexObject
+    return self.reindexObject.im_func is self._temp_reindexObject.im_func
 
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
