@@ -100,9 +100,11 @@ class Domain(Predicate, MetaNode, MetaResource):
   # How to define a generated subdomain
   security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
   def getDomainGeneratorList(self, depth=0):
-    # We call a script which builds for us a list DomainGenerator instances
-    # We need a way to know how deep we are in the domain generation
-    # to prevent infinite recursion XXX not implemented
+    """
+    We call a script which builds for us a list DomainGenerator instances
+    We need a way to know how deep we are in the domain generation
+    to prevent infinite recursion XXX not implemented
+    """
     from Products.ERP5Type.Document import newTempDomainGenerator
     klass = tmp_domain_generator = newTempDomainGenerator(self, 'new_generator')
     script = self.getDomainGeneratorMethodId('')
