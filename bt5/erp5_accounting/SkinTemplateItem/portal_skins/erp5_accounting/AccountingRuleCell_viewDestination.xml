@@ -123,7 +123,6 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_description</string>
-                        <string>simulation_state</string>
                       </list>
                     </value>
                 </item>
