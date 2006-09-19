@@ -581,7 +581,7 @@ class ConstraintTemplate(Constraint):
       Explain here what this constraint checker does
     \"\"\"
 
-    def checkConsistency(self, object, fixit = 0):
+    def checkConsistency(self, obj, fixit = 0):
       \"\"\"
         Implement here the consistency checker
         whenever fixit is not 0, object data should be updated to 

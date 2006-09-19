@@ -45,7 +45,7 @@ class CategoryAcquiredMembershipArity(Constraint):
     },
   """
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
@@ -60,7 +60,7 @@ class CategoryAcquiredMembershipArity(Constraint):
     max_arity = int(self.constraint_definition['max_arity'])
     portal_type = self.constraint_definition['portal_type']
     # Check arity and compare it with the min and max
-    arity = len(object.getAcquiredCategoryMembershipList(base_category, 
+    arity = len(obj.getAcquiredCategoryMembershipList(base_category,
                                                  portal_type=portal_type))
     if (arity < min_arity) or (arity > max_arity):
       # Generate error message
@@ -72,5 +72,5 @@ class CategoryAcquiredMembershipArity(Constraint):
           ", arity is equal to %i but should be between %i and %i" % \
           (arity, min_arity, max_arity)
       # Add error
-      errors.append(self._generateError(object, error_message))
+      errors.append(self._generateError(obj, error_message))
     return errors

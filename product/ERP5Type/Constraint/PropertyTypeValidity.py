@@ -54,21 +54,21 @@ class PropertyTypeValidity(Constraint):
     'date':               (type(DateTime()), ),
   }
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
     errors = []
     # For each attribute name, we check type
-    for property in object.propertyMap():
-      property_id = property['id']
-      if property.get('multivalued', 0):
+    for prop in obj.propertyMap():
+      property_id = prop['id']
+      if prop.get('multivalued', 0):
         property_type = 'lines'
       else:
-        property_type = property['type']
+        property_type = prop['type']
       wrong_type = 0
-      value = object.getProperty(property_id)
+      value = obj.getProperty(property_id)
       if value is not None:
         # Check known type
         try:
@@ -77,7 +77,7 @@ class PropertyTypeValidity(Constraint):
           wrong_type = 0
           error_message = "Attribute %s is defined with unknown type %s" % \
                           (property_id, property_type)
-          errors.append(self._generateError(object, error_message))
+          errors.append(self._generateError(obj, error_message))
       if wrong_type:
         # Type is wrong, so, raise constraint error
         error_message = \
@@ -91,7 +91,7 @@ class PropertyTypeValidity(Constraint):
             except (KeyError, ValueError), error:
               error_message += " (Type cast failed : %s)" % error
             else:
-              object.setProperty(property_id, value)
+              obj.setProperty(property_id, value)
               error_message += " (Fixed)"
-        errors.append(self._generateError(object, error_message))
+        errors.append(self._generateError(obj, error_message))
     return errors

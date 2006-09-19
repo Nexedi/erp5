@@ -43,7 +43,7 @@ class PropertyExistence(Constraint):
     },
   """
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
@@ -54,16 +54,16 @@ class PropertyExistence(Constraint):
       # Check existence of property
       error_message = \
           "Property existence error for property '%s': " % property_id
-      if not object.hasProperty(property_id):
+      if not obj.hasProperty(property_id):
         error_message += " this document has no such property"
-      elif object.getProperty(property_id) is None:
+      elif obj.getProperty(property_id) is None:
         # If value is '', attribute is considered a defined
         # XXX is this the default API ?
         error_message += " this property was not defined"
       else:
         error_message = None
       # Return error
-      error = self._generateError(object, error_message)
+      error = self._generateError(obj, error_message)
       if error is not None:
         errors.append(error)
     return errors

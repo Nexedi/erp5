@@ -33,7 +33,7 @@ class Constraint:
       Default Constraint implementation
     """
 
-    def __init__(self, id=None, description=None, type=None, 
+    def __init__(self, id=None, description=None, type=None,
                  **constraint_definition):
       """
         Remove unwanted attributes from constraint definition and keep
@@ -44,7 +44,7 @@ class Constraint:
       self.type = type
       self.constraint_definition = constraint_definition
 
-    def edit(self, id=None, description=None, type=None, 
+    def edit(self, id=None, description=None, type=None,
              **constraint_definition):
       """
         Remove unwanted attributes from constraint definition and keep
@@ -55,27 +55,28 @@ class Constraint:
       if type is not None: self.type = type
       self.constraint_definition.update(constraint_definition)
 
-    def _generateError(self, object, error_message):
+    def _generateError(self, obj, error_message):
       """
         Generic method used to generate error in checkConsistency.
       """
       error = None
       if error_message:
-        error = (object.getRelativeUrl(), 
-                 '%s inconsistency' % self.__class__.__name__, 
+        error = (obj.getRelativeUrl(),
+                 '%s inconsistency' % self.__class__.__name__,
                  104, error_message, self.description)
       return error
 
-    def checkConsistency(self, object, fixit=0):
+    def checkConsistency(self, obj, fixit=0):
       """
         Default method is to return no error.
       """
       errors = []
       return errors
 
-    def fixConsistency(self, object):
+    def fixConsistency(self, obj):
       """
         Default method is to call checkConsistency with
         fixit set to 1
       """
-      return self.checkConsistency(object, fixit=1)
+      return self.checkConsistency(obj, fixit=1)
+

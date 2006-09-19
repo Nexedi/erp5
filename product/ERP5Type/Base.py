@@ -1811,9 +1811,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
 
     for constraint_instance in self.constraints:
       if fixit:
-        error_list += constraint_instance.fixConsistency(object=self)
+        error_list += constraint_instance.fixConsistency(self)
       else:
-        error_list += constraint_instance.checkConsistency(object=self)
+        error_list += constraint_instance.checkConsistency(self)
 
     if len(error_list) > 0 and fixit:
       self.reindexObject()

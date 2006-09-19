@@ -42,7 +42,7 @@ class CategoryExistence(Constraint):
     },
   """
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
@@ -56,9 +56,9 @@ class CategoryExistence(Constraint):
       # Check existence of base category
       error_message = "Category existence error for base category '%s': " % \
                       base_category
-      if base_category not in object.getBaseCategoryList():
+      if base_category not in obj.getBaseCategoryList():
         error_message += " this document has no such category"
-      elif len(object.getCategoryMembershipList(base_category,
+      elif len(obj.getCategoryMembershipList(base_category,
                 portal_type = self.constraint_definition\
                                   .get('portal_type', ()))) == 0:
         error_message += " this category was not defined"
@@ -67,6 +67,6 @@ class CategoryExistence(Constraint):
       
       # Raise error
       if error_message:
-        errors.append(self._generateError(object, error_message))
+        errors.append(self._generateError(obj, error_message))
     return errors
 

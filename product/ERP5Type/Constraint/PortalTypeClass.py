@@ -46,13 +46,11 @@ class PortalTypeClass(Constraint):
     },
   """
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
-    obj = object # FIXME: default argument should not use `object`
-                 # from python builtins
     errors = []
     types_tool = getToolByName(obj, 'portal_types')
     type_info = types_tool._getOb(obj.getPortalType(), None)
