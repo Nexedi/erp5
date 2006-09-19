@@ -215,7 +215,7 @@ try:
       self.client.callback_ssl_client_cert_prompt = SSLClientCertPromptCallback(obj)
       self.client.callback_ssl_client_cert_password_prompt = SSLClientCertPasswordPromptCallback(obj)
       self.creation_time = time.time()
-      self.__dict__.update(**kw)
+      self.__dict__.update(kw)
       self.exception = None
 
     def getLogMessage(self):
