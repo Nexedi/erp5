@@ -281,7 +281,7 @@ class Signature(Folder,SyncCode):
       # XXX This may be a problem, if the document is changed
       # during a synchronization
       self.setLastSynchronizationDate(DateTime())
-      self.getParent().removeRemainingObjectPath(self.getPath())
+      self.getParentValue().removeRemainingObjectPath(self.getPath())
     if status == self.NOT_SYNCHRONIZED:
       self.setTempXML(None)
       self.setPartialXML(None)
@@ -536,7 +536,7 @@ class Signature(Folder,SyncCode):
     """
     Returns the object corresponding to this signature
     """
-    return self.getParent().getObjectFromGid(self.getGid())
+    return self.getParentValue().getObjectFromGid(self.getGid())
 
   def checkSynchronizationNeeded(self, object):
     """
