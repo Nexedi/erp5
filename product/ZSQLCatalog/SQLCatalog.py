@@ -1052,7 +1052,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
         if index:
           if uid != index:
-            LOG('SQLCatalog', WARNING, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
+            LOG('SQLCatalog', WARNING, 'uid of %r changed from %r (property) to %r (catalog, by path) !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
             uid = index
             object.uid = uid
         else:
@@ -1089,7 +1089,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
             object.uid = self.newUid()
             LOG('SQLCatalog', WARNING,
-                'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid))
+                'uid of %r changed from %r to %r as old one is assigned to %s in catalog !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid, catalog_path))
 
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
@@ -1258,7 +1258,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       search_result = method(path = path, uid_only=1)
       # If not empty, return first record
       if len(search_result) > 0:
-        return search_result[0].uid
+        return long(search_result[0].uid)
       else:
         return None
     except ConflictError:
