@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl.Permission import Permission
@@ -139,6 +140,21 @@ def getChainByType(context):
     new_dict['chain_%s' % item['id']] = item['chain']
   default_chain=', '.join(pw._default_chain)
   return (default_chain, new_dict)
+
+def fixZSQLMethod(portal, method):
+  """Make sure the ZSQLMethod uses a valid connection.
+  """
+  if not isinstance(getattr(portal, method.connection_id, None),
+                      RDBConnection):
+    # if not valid, we assign to the first valid connection found
+    sql_connection_list = portal.objectIds(
+                          spec=('Z MySQL Database Connection',))
+    if (method.connection_id not in sql_connection_list) and \
+       (len(sql_connection_list) != 0):
+      LOG('BusinessTemplate', WARNING,
+          'connection_id for Z SQL Method %s is invalid, using %s' % (
+                    method.getId(), sql_connection_list[0]))
+      method.connection_id = sql_connection_list[0]
 
 class BusinessTemplateArchive:
   """
@@ -632,12 +648,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               if subobject_id not in obj.objectIds():
                 obj._setObject(subobject_id, subobject)
           if obj.meta_type in ('Z SQL Method',):
-            # It is necessary to make sure that the sql connection
-            # in this method is valid.
-            sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
-            if (obj.connection_id not in sql_connection_list) and \
-               (len(sql_connection_list) != 0):
-              obj.connection_id = sql_connection_list[0]
+            fixZSQLMethod(portal, obj)
       # now put original order group
       for path in groups.keys():
         obj = portal.unrestrictedTraverse(path)
@@ -662,12 +673,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.manage_afterClone(obj)
         obj.wl_clearLocks()
         if obj.meta_type in ('Z SQL Method',):
-          # It is necessary to make sure that the sql connection
-          # in this method is valid.
-          sql_connection_list = portal.objectIds(
-                                   spec=('Z MySQL Database Connection',))
-          if obj.connection_id not in sql_connection_list:
-            obj.connection_id = sql_connection_list[0]
+          fixZSQLMethod(portal, obj)
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
@@ -997,14 +1003,11 @@ class SkinTemplateItem(ObjectTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     p = context.getPortalObject()
-    # It is necessary to make sure that the sql connections in Z SQL Methods are valid.
-    sql_connection_list = p.objectIds(spec=('Z MySQL Database Connection',))
     for relative_url in self._archive.keys():
       folder = p.unrestrictedTraverse(relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method',)):
-        if (obj.connection_id not in sql_connection_list) and \
-           (len(sql_connection_list) != 0):
-          obj.connection_id = sql_connection_list[0]
+        fixZSQLMethod(p, obj)
+
     # Add new folders into skin paths.
     ps = p.portal_skins
     for skin_name, selection in ps.getSkinPaths():
@@ -3681,6 +3684,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     # This is a global variable
     # Order is important for installation
+    # We want to have:
+    #  * path after module, because path can be module content
+    #  * path after categories, because path can be categories content
+    #  * skin after paths, because we can install a custom connection string as
+    #       path and use it with SQLMethods in a skin.
+    #    ( and more )
     _item_name_list = [
       '_product_item',
       '_property_sheet_item',
@@ -3700,8 +3709,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_portal_type_base_category_item',
       '_category_item',
       '_module_item',
-      '_skin_item',
       '_path_item',
+      '_skin_item',
       '_preference_item',
       '_action_item',
       '_portal_type_roles_item',
