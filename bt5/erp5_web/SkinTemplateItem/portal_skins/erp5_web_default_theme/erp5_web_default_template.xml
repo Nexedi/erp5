@@ -112,10 +112,8 @@
           <tal:block metal:use-macro="template/macros/form"/>\n
         </tal:block>\n
 \n
-        <tal:block tal:define="agg_list python: layout_form.WebSite_getGroupList([\'header\', \'left\', \'right\', \'footer\'])">\n
-          <tal:block tal:repeat="aggregate agg_list">\n
-            <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>\n
-          </tal:block>\n
+        <tal:block tal:repeat="aggregate python: layout_form.WebSite_getGroupList([\'header\', \'left\', \'right\', \'footer\'])">\n
+          <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>\n
         </tal:block>\n
 \n
       </tal:block>\n

@@ -61,187 +61,145 @@
 <tal:block\n
   tal:define="is_web_mode  python: True;\n
               portal_type  python: here.getPortalType();">\n
-<!--              widget_list python: [ \'admin_tool_menus\']"\n
-                                           , \'admin_tool_edit\'\n
-                                           , \'admin_tool_duplicate_document\'\n
-                                           , \'admin_tool_duplicate_section\'\n
-                                           , \'admin_tool_debug\'\n
-]">\n
--->\n
+\n
   <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
 \n
+  <script type="text/javascript" language="JavaScript" src="admin_toolbox_cookie_utils.js"></script>\n
+  <script type="text/javascript" language="JavaScript">\n
+  <!--\n
+    // global variables\n
+    var cookie_name           = "erp5_admin_toolbox_hidden_state"\n
+    var hidden_class          = "doNotDisplay";\n
+    var displayed_class       = "adminSection";\n
+    var elements_to_hide_name = "adminSection";\n
 \n
-  <div id="adminToolbox">\n
-\n
-    <script type="text/javascript" language="JavaScript" src="admin_toolbox_cookie_utils.js"></script>\n
-    <script type="text/javascript" language="JavaScript">\n
-    <!--\n
-      // global variables\n
-      var cookie_name           = "erp5_admin_toolbox_hidden_state"\n
-      var hidden_class          = "doNotDisplay";\n
-      var elements_to_hide_name = "adminSection";\n
-\n
-      function hideElements (hide) {\n
-        if (hide == true) {\n
-          new_hidden_class = hidden_class;\n
-        } else if (hide == false) {\n
-          new_hidden_class = "";\n
-        } else {\n
-          return;\n
-        }\n
-        // set the visibility of each element\n
-        element_list  = document.getElementsByName(elements_to_hide_name);\n
-        for (var i = 0; i < element_list.length; i++) {\n
-          element_list[i].className = new_hidden_class;\n
-        }\n
-        // update cookie to remember the visibility status\n
-        days = 1; // cookie lifetime\n
-        stop_date = new Date();\n
-        stop_date.setTime(stop_date.getTime() + (days*24*60*60*1000));\n
-        SetCookie(cookie_name, hidden_status, stop_date);\n
+    function hideElements (hide) {\n
+      if (hide == true) {\n
+        new_hidden_class = hidden_class;\n
+      } else if (hide == false) {\n
+        new_hidden_class = displayed_class;\n
+      } else {\n
+        return;\n
       }\n
+      // set the visibility of each element\n
+      element_list  = document.getElementsByName(elements_to_hide_name);\n
+      for (var i = 0; i < element_list.length; i++) {\n
+        element_list[i].className = new_hidden_class;\n
+      }\n
+      // update cookie to remember the visibility status\n
+      days = 1; // cookie lifetime\n
+      stop_date = new Date();\n
+      stop_date.setTime(stop_date.getTime() + (days*24*60*60*1000));\n
+      SetCookie(cookie_name, hidden_status, stop_date);\n
+    }\n
 \n
-      function autoHide () {\n
-        element_list  = document.getElementsByName(elements_to_hide_name);\n
+    function autoHide () {\n
+      element_list  = document.getElementsByName(elements_to_hide_name);\n
+      hidden_status = false;\n
+      // compute the global visibility only once to avoid inconsistencies\n
+      if (element_list[0].className != hidden_class) {\n
+        hidden_status = true;\n
+      }\n
+      hideElements(hidden_status);\n
+    }\n
+\n
+    function initHiddenState () {\n
+      hidden_status = GetCookie(cookie_name);\n
+      // be carefull: cookies contain string values\n
+      if (hidden_status == "false") {\n
         hidden_status = false;\n
-        // compute the global visibility only once to avoid inconsistencies\n
-        if (element_list[0].className != hidden_class) {\n
-          hidden_status = true;\n
-        }\n
-        hideElements(hidden_status);\n
+      } else if (hidden_status == "true") {\n
+        hidden_status = true;\n
       }\n
-\n
-      function initHiddenState () {\n
-        hidden_status = GetCookie(cookie_name);\n
-        // be carefull: cookies contain string values\n
-        if (hidden_status == "false") {\n
-          hidden_status = false;\n
-        } else if (hidden_status == "true") {\n
-          hidden_status = true;\n
-        }\n
-        // restore the previous state\n
-        hideElements(hidden_status);\n
-      }\n
-    -->\n
-    </script>\n
-\n
-    <h3 title="Click to Collapse / Expand administrator toolbar." onclick="autoHide()" class="important"><img src="admin_toolbox.png"/><span name="adminSection"> Admin Tool Box</span></h3>\n
-\n
-    <!-- Edit button menu -->\n
-    <div name="adminSection">\n
-      <h3>Edit</h3>\n
-      <ul tal:define="edit_links python: context.admin_toolbox_getEditShortcutList(truc=context)">\n
-        <li tal:repeat="link edit_links">\n
-          <a tal:attributes="href python: link[\'url\']">\n
-            <img tal:attributes="src   python: link[\'icon\'];\n
-                                 title python: link[\'portal_type\'];\n
-                                 alt   python: \'%s Icon\' % link[\'portal_type\'];"/>\n
-            <tal:block tal:replace="python: link[\'label\']"/>\n
-          </a>\n
-        </li>\n
-      </ul>\n
-    </div>\n
+      // restore the previous state\n
+      hideElements(hidden_status);\n
+    }\n
+  -->\n
+  </script>\n
 \n
 \n
-    <!-- Action drop-down contextual menu -->\n
-    <div name="adminSection">\n
-      <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
-      <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
-    </div>\n
+  <h3 title="Click to Collapse / Expand administrator toolbar." onclick="autoHide()" class="important"><img src="admin_toolbox.png"/><span name="adminSection"> Admin Tool Box</span></h3>\n
 \n
 \n
-    <!-- Document creation panel -->\n
-    <div name="adminSection">\n
-      <form name="tool_create" method="post" action="WebSite_newContent">\n
-        <input id="document_action_mode" name="document_action_mode" value="clone" type="hidden"/>\n
+  <!-- Edit button menu -->\n
+  <div name="adminSection" class="adminSection">\n
+    <h3>Edit</h3>\n
+    <ul tal:define="edit_links python: context.admin_toolbox_getEditShortcutList(truc=context)">\n
+      <li tal:repeat="link edit_links">\n
+        <a tal:attributes="href python: link[\'url\']">\n
+          <img tal:attributes="src   python: link[\'icon\'];\n
+                                title python: link[\'portal_type\'];\n
+                                alt   python: \'%s Icon\' % link[\'portal_type\'];"/>\n
+          <tal:block tal:replace="python: link[\'label\']"/>\n
+        </a>\n
+      </li>\n
+    </ul>\n
+  </div>\n
 \n
-        <h3>\n
-          <span id="create_new_document_title"></span>\n
-          <span id="clone_document_title">Clone <tal:block tal:content="python: (portal_type and \'Default \') or \'Current \'"/>Page</span>\n
-        </h3>\n
 \n
-        <!-- TODO: bad use of table ! Generic css class for forms should be used there -->\n
-        <table cellspacing="1" cellpadding="0" border="0">\n
-          <tr>\n
-            <td>Title</td>\n
-            <td><input class="input" size="15" type="text" name="title"     tal:attributes="value document/getTitle | nothing"/></td>\n
-          </tr>\n
-          <tr>\n
-            <td>Page URI</td>\n
-            <td><input class="input" size="15" type="text" name="reference" tal:attributes="value document/getReference | nothing"/></td>\n
-          </tr>\n
-          <tr>\n
-            <td>Version</td>\n
-            <td><input class="input" size="5"  type="text" name="version"   tal:attributes="value document/getVersion | nothing"/></td>\n
-          </tr>\n
-          <tr>\n
-            <td>Language</td>\n
-            <td><input class="input" size="5"  type="text" name="language"  tal:attributes="value document/getLanguage | nothing"/></td>\n
-              <!-- No required widget (make the form more complex) -->\n
-              <!--select name="language" size="1"\n
-                      tal:define="language_map python: here.Localizer.get_languages_map()">\n
-                <tal:block tal:repeat="language language_map">\n
-                  <tal:block tal:condition="python: document.getLanguage() == language[\'id\'] or language[\'selected\']">\n
-                    <option tal:attributes="value language/id"\n
-                            tal:content="language/id"\n
-                            selected/>\n
-                  </tal:block>\n
-                  <tal:block tal:condition="python: not(document.getLanguage() == language[\'id\'] or language[\'selected\'])">\n
-                    <option tal:attributes="value language/id"\n
-                            tal:content="language/id"/>\n
-                  </tal:block>\n
+  <!-- Action drop-down contextual menu -->\n
+  <div name="adminSection" class="adminSection">\n
+    <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
+    <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
+  </div>\n
+\n
+\n
+  <!-- Document creation panel.\n
+       This part is displayed any document apart Web Site and Web Section.\n
+       But if Web Site and Web Section have default page, then it will be displayed anyway.\n
+  -->\n
+  <div name="adminSection" class="adminSection"\n
+       tal:condition="python: (portal_type in [\'Web Site\', \'Web Section\'] and here.WebSite_getDefaultWebPageValue()) or not portal_type in [\'Web Site\', \'Web Section\']">\n
+\n
+    <form name="tool_create" method="post" action="WebSite_newContent">\n
+      <input id="document_action_mode" name="document_action_mode" value="clone" type="hidden"/>\n
+\n
+      <h3>\n
+        <span id="create_new_document_title"></span>\n
+        <span id="clone_document_title"><tal:block tal:replace="python: \'Clone %s %s\' % ((portal_type in [\'Web Site\', \'Web Section\'] and \'Default\') or \'Current\', portal_type)"/></span>\n
+      </h3>\n
+\n
+      <fieldset>\n
+        <!--legend class="group_title">left</legend-->\n
+\n
+          <div class="field">\n
+            <label>Title</label>\n
+            <div class="input"><input class="input" size="15" type="text" name="title"     tal:attributes="value here/getTitle | nothing"/></div>\n
+          </div>\n
+\n
+          <div class="field">\n
+            <label>Page URI</label>\n
+            <div class="input"><input class="input" size="15" type="text" name="reference" tal:attributes="value here/getReference | nothing"/></div>\n
+          </div>\n
+\n
+          <div class="field">\n
+            <label>Version</label>\n
+            <div class="input"><input class="input" size="5"  type="text" name="version"   tal:attributes="value here/getVersion | nothing"/></div>\n
+          </div>\n
+\n
+          <div class="field">\n
+            <label>Language</label>\n
+            <div class="input"><input class="input" size="5"  type="text" name="language"  tal:attributes="value here/getLanguage | nothing"/></div>\n
+            <!-- Not a required widget (make the form more complex) -->\n
+            <!--select name="language" size="1"\n
+                    tal:define="language_map python: here.Localizer.get_languages_map()">\n
+              <tal:block tal:repeat="language language_map">\n
+                <tal:block tal:condition="python: document.getLanguage() == language[\'id\'] or language[\'selected\']">\n
+                  <option tal:attributes="value language/id"\n
+                          tal:content="language/id"\n
+                          selected/>\n
                 </tal:block>\n
-              </select-->\n
-          </tr>\n
+                <tal:block tal:condition="python: not(document.getLanguage() == language[\'id\'] or language[\'selected\'])">\n
+                  <option tal:attributes="value language/id"\n
+                          tal:content="language/id"/>\n
+                </tal:block>\n
+              </tal:block>\n
+            </select-->\n
+          </div>\n
 \n
-          <script type="text/javascript" language="JavaScript">\n
-          <!--\n
-            // preload action icons\n
-            if (document.images) {\n
-              clone_icon = new Image();\n
-              new_icon   = new Image();\n
-              clone_icon.src = "clone-document.png";\n
-              new_icon.src   = "new-document.png";\n
-            }\n
-\n
-            function setCreationMode (sel) {\n
-              // default is cloning\n
-              var action      = \'clone\';\n
-              var action_name = \'Clone &amp; Edit\';\n
-              var icon        = \'clone-document.png\';\n
-              var clone_class = \'\';\n
-              var new_title   = \'\';\n
-\n
-              // a portal type is given, so create a new document\n
-              var portal_type = sel.options[sel.selectedIndex].value;\n
-              if (portal_type != \'None\') {\n
-                action      = \'new\'\n
-                action_name = \'Create New &amp; Edit\';\n
-                icon        = \'new-document.png\';\n
-                clone_class = \'doNotDisplay\';\n
-                new_title   = \'Create New Document\';\n
-              }\n
-\n
-              // update action dependent values\n
-              document.getElementById(\'document_action_mode\'     ).value     = action;\n
-              document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
-              document.getElementById(\'clone_document_title\'     ).className = clone_class;\n
-              document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
-\n
-              // replace the action icon\n
-              document.getElementById(\'clone_action_icon\').src = eval(action + "_icon.src");\n
-\n
-              // update action button alt & title\n
-              var button   = document.getElementById(\'clone_action_button\');\n
-              button.alt   = action_name;\n
-              button.title = action_name;\n
-            }\n
-          -->\n
-          </script>\n
-\n
-          <tr>\n
-            <td>Type</td>\n
-            <td>\n
+          <div class="field">\n
+            <label>Type</label>\n
+            <div class="input">\n
               <select class="input" name="new_portal_type" size="1" onchange="setCreationMode(this)">\n
                 <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
                 <tal:block tal:repeat="portal_type python: here.portal_types.objectValues()">\n
@@ -250,34 +208,63 @@
                           tal:attributes="value portal_type/id"/>\n
                 </tal:block>\n
               </select>\n
-            </td>\n
-          </tr>\n
-          <tr>\n
-            <td colspan="2" class="centeredInner">\n
-              <button alt=\'Clone &amp; Edit\' id="clone_action_button" title=\'Clone &amp; Edit\'><img src="pictures/clone-document.png" id="clone_action_icon"/> <span id="duplicate_document_action">Clone &amp; Edit</span></button>\n
-              <!--input type="image" alt="Clone &amp; Edit" title="Clone &amp; Edit" src="pictures/clone-document.png" id="clone_action_icon"/> <span id="duplicate_document_action">Clone &amp; Edit</span-->\n
-            </td>\n
-          </tr>\n
-        </table>\n
+            </div>\n
+          </div>\n
 \n
-      </form>\n
-    </div>\n
+          <div class="field">\n
+            <label> </label>\n
+            <div class="input"><button alt=\'Clone &amp; Edit\' id="clone_action_button" title=\'Clone &amp; Edit\'><img src="admin_toolbox_clone_document.png" id="clone_action_icon"/> <span id="duplicate_document_action">Clone &amp; Edit</span></button></div>\n
+          </div>\n
 \n
+      </fieldset>\n
 \n
-    <!-- Debug panel -->\n
-    <!-- TODO: only display this part for manager -->\n
-    <div name="adminSection">\n
-      <h3>Debug Menu</h3>\n
-      <ul>\n
-        <li class="code">\n
-          <!-- Display erp5 web globals -->\n
-          <b>Globals:</b>\n
-          <tal:block tal:content="python: \'is_web_mode    = \' + repr(is_web_mode)"   />\n
-        </li>\n
-      </ul>\n
-    </div>\n
+      <script type="text/javascript" language="JavaScript">\n
+      <!--\n
+        // preload action icons\n
+        if (document.images) {\n
+          clone_icon = new Image();\n
+          new_icon   = new Image();\n
+          clone_icon.src = "admin_toolbox_clone_document.png";\n
+          new_icon.src   = "admin_toolbox_new_document.png";\n
+        }\n
 \n
+        function setCreationMode (sel) {\n
+          // default is cloning\n
+          var action      = \'clone\';\n
+          var action_name = \'Clone &amp; Edit\';\n
+          var icon        = \'admin_toolbox_clone_document.png\';\n
+          var clone_class = \'\';\n
+          var new_title   = \'\';\n
+\n
+          // a portal type is given, so create a new document\n
+          var portal_type = sel.options[sel.selectedIndex].value;\n
+          if (portal_type != \'None\') {\n
+            action      = \'new\'\n
+            action_name = \'Create New &amp; Edit\';\n
+            icon        = \'admin_toolbox_new_document.png\';\n
+            clone_class = \'doNotDisplay\';\n
+            new_title   = \'Create New Document\';\n
+          }\n
+\n
+          // update action dependent values\n
+          document.getElementById(\'document_action_mode\'     ).value     = action;\n
+          document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
+          document.getElementById(\'clone_document_title\'     ).className = clone_class;\n
+          document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
+\n
+          // replace the action icon\n
+          document.getElementById(\'clone_action_icon\').src = eval(action + "_icon.src");\n
+\n
+          // update action button alt & title\n
+          var button   = document.getElementById(\'clone_action_button\');\n
+          button.alt   = action_name;\n
+          button.title = action_name;\n
+        }\n
+      -->\n
+      </script>\n
+    </form>\n
   </div>\n
+\n
 </tal:block>
 
 ]]></string> </value>

@@ -1,6 +1,7 @@
 2006-09-19 Kevin
 * Much more sementical breadcrumb with hierarchical lists.
 * Admin Toolbar: add webdav and direct ERP5 access link.
+* Admin toolbar is now floating in the default style.
 
 2006-09-18 Kevin
 * Merge all admin toolbar code in one single page template.

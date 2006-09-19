@@ -168,18 +168,67 @@ form#main_form div.wrapper div.field label {\n
 /* Admin toolbox widget style\n
 ----------------------------------------------- */\n
 \n
-#adminToolbox ul {\n
+form#main_form div.wrapper div.adminToolbox {\n
+  position: fixed;\n
+  z-index: 200;\n
+  top: .2em;\n
+  right: .2em;\n
+  margin: 0;\n
+  padding: 0;\n
+  background-color: #fff7cd;\n
+  border: 1px solid #f77;\n
+}\n
+\n
+div.adminToolbox label {\n
+  display: none;\n
+}\n
+\n
+/* admin toolbox sub section title */\n
+div.adminToolbox h3 {\n
+  padding: .5em 0;\n
+  margin-left: -1em;\n
+  font-size: inherit;\n
+}\n
+\n
+/* admin toolbox title */\n
+div.adminToolbox > div > h3 {\n
+ background: #f77;\n
+ padding: .5em;\n
+ margin: 0;\n
+ color: #fff;\n
+ cursor: pointer;\n
+}\n
+\n
+div.adminToolbox > div > h3:hover {\n
+ background: #f00;\n
+}\n
+\n
+div.adminToolbox > div.input > div.adminSection {\n
+ border-bottom: 1px dotted #f77;\n
+ padding: .5em .5em 1em 1.5em;\n
+}\n
+\n
+div.adminToolbox ul {\n
   list-style: none;\n
 }\n
 \n
-#adminToolbox li {\n
+div.adminToolbox li {\n
   margin: 0;\n
 }\n
 \n
-#adminToolbox li > a {\n
+div.adminToolbox li > a {\n
   text-decoration: none;\n
 }\n
 \n
+div.adminToolbox button,\n
+div.adminToolbox li > a {\n
+  margin: .1em 0;\n
+  padding: .2em;\n
+}\n
+\n
+div.adminToolbox button[type="submit"] {\n
+  display: none;\n
+}\n
 \n
 \n
 \n
@@ -248,19 +297,22 @@ input[type="image"] {\n
   background-color: transparent;\n
 }\n
 \n
-/* Admin toolbox edit buttons have the same style as actions buttons */\n
-#adminToolbox li > a,\n
 button {\n
   margin: .8em .5em;\n
-  border: 1px #ddd solid;\n
   padding: .3em;\n
+}\n
+\n
+/* Admin toolbox edit buttons have the same style as actions buttons */\n
+div.adminToolbox li > a,\n
+button {\n
+  border: 1px #ddd solid;\n
   color: #999;\n
   background: #eee;\n
   cursor: pointer;\n
   display: block;\n
 }\n
 \n
-#adminToolbox li > a:hover,\n
+div.adminToolbox li > a:hover,\n
 button:hover {\n
   color: #333;\n
   background: #b0cfcb;\n
