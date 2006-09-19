@@ -70,6 +70,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
 cell_range = []\n
 add_predicate = 1\n
 \n
@@ -139,7 +142,28 @@ if add_predicate == 1:\n
       price_parameter = price_parameter[len(option_base_id_begin_with):]\n
   predicate_list = context.getQuantityPredicateValueList(price_parameter)\n
   if matrixbox == 1:\n
-    pred_ids = [(x.getRelativeUrl(), x.getTitle()) for x in predicate_list]\n
+#     pred_ids = [(x.getRelativeUrl(), x.getTitle()) for x in predicate_list]\n
+    # Translate the matrixbox ranges\n
+    pred_ids = []\n
+    for predicate in predicate_list:\n
+      predicate_criterion_list = predicate.getCriterionList()\n
+      predicate_title = \'\'\n
+      for criterion in predicate_criterion_list:\n
+        if criterion.property == \'quantity\':\n
+          min_qty = criterion.min\n
+          max_qty = criterion.max\n
+          if min_qty is None:\n
+            predicate_title = N_("Quantity < ${max_quantity}",\n
+                                 mapping={\'max_quantity\': max_qty})\n
+          elif max_qty is None:\n
+            predicate_title = N_("${min_quantity} <= Quantity",\n
+                                 mapping={\'min_quantity\': min_qty})\n
+          else:\n
+            predicate_title = N_("${min_quantity} <= Quantity < ${max_quantity}",\n
+                                 mapping={\'min_quantity\': min_qty,\n
+                                          \'max_quantity\': max_qty})\n
+          break\n
+      pred_ids.append((predicate.getRelativeUrl(), predicate_title))\n
   else:\n
     pred_ids = [x.getRelativeUrl() for x in predicate_list]\n
   # Insert predicat list for display in columns\n
@@ -165,6 +189,12 @@ return cell_range\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -202,10 +232,12 @@ return cell_range\n
                             <string>display_base_category</string>
                             <string>option_variation</string>
                             <string>kw</string>
-                            <string>cell_range</string>
-                            <string>add_predicate</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>cell_range</string>
+                            <string>add_predicate</string>
                             <string>no_option_base_category_list</string>
                             <string>base_category_list</string>
                             <string>append</string>
@@ -223,6 +255,13 @@ return cell_range\n
                             <string>option_base_id_begin_with</string>
                             <string>predicate_list</string>
                             <string>pred_ids</string>
+                            <string>predicate</string>
+                            <string>predicate_criterion_list</string>
+                            <string>predicate_title</string>
+                            <string>criterion</string>
+                            <string>min_qty</string>
+                            <string>max_qty</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
