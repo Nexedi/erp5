@@ -106,6 +106,10 @@ ul {\n
   list-style-position: inside;\n
 }\n
 \n
+li {\n
+  margin-left: 1em;\n
+}\n
+\n
 table {\n
   border-collapse: collapse;\n
   border-spacing: 0;\n
@@ -161,6 +165,24 @@ form#main_form div.wrapper div.field label {\n
 \n
 \n
 \n
+/* Admin toolbox widget style\n
+----------------------------------------------- */\n
+\n
+#adminToolbox ul {\n
+  list-style: none;\n
+}\n
+\n
+#adminToolbox li {\n
+  margin: 0;\n
+}\n
+\n
+#adminToolbox li > a {\n
+  text-decoration: none;\n
+}\n
+\n
+\n
+\n
+\n
 /* Default content styling (apply to everything, site wide);\n
    Typography & colors (fonts, color, background).\n
 ----------------------------------------------- */\n
@@ -185,7 +207,7 @@ body, input, textarea, select, table {\n
   font-family: "Courier New", Courier, monospace;\n
 }\n
 \n
-#transition_message, .warning, .error {\n
+#transition_message, .warning, .error, .important {\n
   color: #f00;\n
   font-weight: bold;\n
 }\n
@@ -226,6 +248,8 @@ input[type="image"] {\n
   background-color: transparent;\n
 }\n
 \n
+/* Admin toolbox edit buttons have the same style as actions buttons */\n
+#adminToolbox li > a,\n
 button {\n
   margin: .8em .5em;\n
   border: 1px #ddd solid;\n
@@ -233,8 +257,10 @@ button {\n
   color: #999;\n
   background: #eee;\n
   cursor: pointer;\n
+  display: block;\n
 }\n
 \n
+#adminToolbox li > a:hover,\n
 button:hover {\n
   color: #333;\n
   background: #b0cfcb;\n
