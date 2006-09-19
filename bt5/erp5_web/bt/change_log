@@ -1,3 +1,6 @@
+2006-09-19 Kevin
+* Much more sementical breadcrumb with hierarchical lists.
+
 2006-09-18 Kevin
 * Merge all admin toolbar code in one single page template.
 * No need of special form for web site first page: the default document to display is known through aggregate category.
