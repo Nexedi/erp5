@@ -206,12 +206,7 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>column</string>
-                          <string>column</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -238,14 +233,6 @@
                           <string>title</string>
                           <string>title</string>
                         </tuple>
-                        <tuple>
-                          <string>predicate_category_list</string>
-                          <string>predicate_category_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_category_list</string>
-                          <string>variation_category_list</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -264,20 +251,7 @@
                 <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>domain_base_category_list</string>
-                          <string>domain_base_category_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>mapped_value_property_list</string>
-                          <string>mapped_value_property_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>predicate_operator</string>
-                          <string>predicate_operator</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -287,12 +261,7 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>line</string>
-                          <string>line</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
