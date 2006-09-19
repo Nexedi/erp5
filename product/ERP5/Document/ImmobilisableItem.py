@@ -80,7 +80,6 @@ class ImmobilisableItem(XMLObject, Amount):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Price
-                      , PropertySheet.Resource
                       , PropertySheet.Item
                       , PropertySheet.Amount
                       , PropertySheet.Reference

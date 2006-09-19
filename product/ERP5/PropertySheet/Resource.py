@@ -152,11 +152,6 @@ class Resource:
             'default'     : [],
             'mode'        : 'w' },
         # Sourcing / planning properties
-        {   'id'          : 'source_reference',
-            'storage_id'  : 'default_source_reference', # Compatibility
-            'description' : 'The references of the resource for default sources',
-            'type'        : 'string',
-            'mode'        : 'w' },
         {   'id'          : 'source_title',
             'storage_id'  : 'default_source_title', # Compatibility
             'description' : 'The titles of the sources of this resource',
@@ -166,11 +161,6 @@ class Resource:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getTitle',
             'acquisition_depends'           : None,
-            'mode'        : 'w' },
-        {   'id'          : 'destination_reference',
-            'storage_id'  : 'default_destination_reference', # Compatibility
-            'description' : 'The references of the resource for default destinations',
-            'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'destination_title',
             'storage_id'  : 'default_destination_title', # Compatibility

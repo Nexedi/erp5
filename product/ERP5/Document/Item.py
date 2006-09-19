@@ -71,7 +71,6 @@ class Item(XMLObject, Amount, ImmobilisableItem):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Price
-                      , PropertySheet.Resource
                       , PropertySheet.Item
                       , PropertySheet.Amount
                       , PropertySheet.Reference
