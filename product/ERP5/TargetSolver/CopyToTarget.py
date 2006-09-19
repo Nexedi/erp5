@@ -127,31 +127,33 @@ class CopyToTarget(TargetSolver):
 
     parent_movement, parent_value_delta_dict = \
                 self._getParentParameters(simulation_movement, **value_delta_dict)
-
-    if parent_movement is not None and parent_movement.isFrozen():
+    
+    #if parent is not None and parent_movement.isFrozen():
       # If backtraxcking is not possible, we have to make sure that the
       # divergence is solved locally by using profit and loss
-      sm_quantity = simulation_movement.getQuantity()
-      delivery_quantity = \
-          simulation_movement.getDeliveryValue().getQuantity()
-#       simulation_movement.edit(
-#           profit_quantity=sm_quantity - delivery_quantity)
-    else:
-      # fix foating point rounding error
-      if is_last_movement:
+      # sm_quantity = simulation_movement.getQuantity()
+      # delivery_quantity = \
+      #      simulation_movement.getDeliveryValue().getQuantity()
+      #  simulation_movement.edit(
+      #    profit_quantity=sm_quantity - delivery_quantity)
+    #else:
+    if is_last_movement:
         delivery_quantity = \
             simulation_movement.getDeliveryValue().getQuantity()
         simulation_movement.setDeliveryError(delivery_quantity -
             value_dict['quantity'])
-      delivery = simulation_movement.getDeliveryValue()
-      simulation_movement.setDestination(delivery.getDestination())
-      simulation_movement.setSource(delivery.getSource())
-      simulation_movement.setDestinationSection(delivery.getDestinationSection())
-      simulation_movement.setSourceSection(delivery.getSourceSection())
-		   
-      simulation_movement.edit(**value_dict)
-      if parent_movement is not None:
+    
+    delivery = simulation_movement.getDeliveryValue()
+    
+    # XXX Hardcoded Set 
+    simulation_movement.setDestination(delivery.getDestination())
+    simulation_movement.setSource(delivery.getSource())
+    simulation_movement.setDestinationSection(delivery.getDestinationSection())
+    simulation_movement.setSourceSection(delivery.getSourceSection())
+		
+    simulation_movement.edit(**value_dict)
+      
+    if parent_movement is not None and not parent_movement.isFrozen():
         # backtrack to the parent movement only if it is not frozen
         self._recursivelySolve(parent_movement, is_last_movement=0,
             **parent_value_delta_dict)
-
