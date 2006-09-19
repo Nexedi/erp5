@@ -1034,7 +1034,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return object
 
     # Related document searching
-    def viewSearchRelatedDocumentDialog(self, index, form_id, object_path,
+    def viewSearchRelatedDocumentDialog(self, index, form_id,
                                         REQUEST=None, sub_index=None, **kw):
       """
       Returns a search related document dialog
@@ -1042,6 +1042,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if sub_index != None:
         REQUEST.form['sub_index'] = sub_index
+      object_path = REQUEST.form['object_path']
       # Find the object which needs to be updated
       o = self.restrictedTraverse(object_path)
       # Find the field which was clicked on
