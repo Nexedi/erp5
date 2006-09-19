@@ -71,7 +71,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>dynamic_subcontent_listbox</string>

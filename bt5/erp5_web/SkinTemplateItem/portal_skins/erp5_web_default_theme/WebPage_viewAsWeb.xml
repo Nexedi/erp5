@@ -73,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>webcontent bottom</string> </key>
+                    <key> <string>webcontent bottom</string> </key>
                     <value>
                       <list>
                         <string>my_text_content</string>
@@ -81,7 +81,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>webcontent extra (Document Metadata)</string> </key>
+                    <key> <string>webcontent extra (Document Metadata)</string> </key>
                     <value>
                       <list>
                         <string>my_language</string>
@@ -91,7 +91,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>webcontent extra related (Related Documents)</string> </key>
+                    <key> <string>webcontent extra related (Related Documents)</string> </key>
                     <value>
                       <list>
                         <string>my_destination_title_list</string>
@@ -99,7 +99,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>webcontent header bottom</string> </key>
+                    <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
                         <string>page_title</string>

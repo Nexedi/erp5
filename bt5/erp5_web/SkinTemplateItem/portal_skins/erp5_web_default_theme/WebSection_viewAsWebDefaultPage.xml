@@ -77,13 +77,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>section_bottom</string> </key>
+                    <key> <string>section_bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>section_top</string> </key>
+                    <key> <string>section_top</string> </key>
                     <value>
                       <list>
                         <string>default_content</string>

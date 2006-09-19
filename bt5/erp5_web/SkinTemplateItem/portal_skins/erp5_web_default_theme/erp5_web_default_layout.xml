@@ -72,7 +72,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>footer</string> </key>
+                    <key> <string>footer</string> </key>
                     <value>
                       <list>
                         <string>login_box</string>
@@ -80,7 +80,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column</string> </key>
+                    <key> <string>left column</string> </key>
                     <value>
                       <list>
                         <string>website_logo</string>
@@ -92,7 +92,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right column</string> </key>
+                    <key> <string>right column</string> </key>
                     <value>
                       <list>
                         <string>your_searchable_text</string>

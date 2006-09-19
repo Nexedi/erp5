@@ -164,17 +164,17 @@ Example:\n
     [ [\'left\',   [ (\'left column\', \'left column\', \'left column\')\n
                  , (\'left ad\', \'left ad\', \'left ad\')\n
                  , (\'left discount\', \'Discount on Right Handed Tools\', \'(Discount on Right Handed Tools) left discount\')\n
-                 ]]\n
+]]\n
     , [\'right\',  [ (\'metadata right\', \'metadata right\', \'metadata right\')\n
                  , (\'right ad\', \'right ad\', \'right ad\')\n
-                 ]]\n
+]]\n
     , [\'center\', [\n
-                 ]]\n
+]]\n
     , [\'bottom\', [ (\'bottom content\', \'bottom content\', \'bottom content\')\n
                  , (\'footer\', \'footer\', \'footer\')\n
                  , (\'bottom right\', \'bottom right\', \'bottom right\')\n
-                 ]]\n
-    ]\n
+]]\n
+]\n
 \n
 Tips:\n
   * The returned list structure is design to let you cast them as dict() if you don\'t care about group aggregate ordering. This also help you to get group aggregate more easily\n
@@ -223,7 +223,7 @@ aggregate_list = []\n
 for criterion in group_by_criterion:\n
   aggregate = [ criterion\n
               , aggregate_dict[criterion]\n
-              ]\n
+]\n
   aggregate_list.append(aggregate)\n
 \n
 return aggregate_list\n
