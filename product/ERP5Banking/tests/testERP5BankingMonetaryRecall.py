@@ -228,12 +228,11 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # set source reference
     self.setDocumentSourceReference(self.monetary_recall)
     # check source reference
-    self.assertNotEqual(self.monetary_recallaccount_incident.getSourceReference(), '')
+    self.assertNotEqual(self.monetary_recall.getSourceReference(), '')
     self.assertNotEqual(self.monetary_recall.getSourceReference(), None)
     # check that its destination is counter
-    ##self.assertEqual(self.monetary_recall.getDestination(),
-    ##'site/testsite/paris/caveau/serre/encaisse_des_billets_retires_de_la_circulation')
-    #'site/testsite/paris/surface/banque_interne/guichet_1')
+    self.assertEqual(self.monetary_recall.getBaobabDestination(),
+      'site/testsite/paris/caveau/serre/encaisse_des_billets_retires_de_la_circulation')
 
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
