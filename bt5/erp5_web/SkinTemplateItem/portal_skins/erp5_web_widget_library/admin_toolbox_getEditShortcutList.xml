@@ -71,6 +71,12 @@
             <value> <string>global edit_links\n
 edit_links = []\n
 \n
+# Generic function to get a consistent icon name\n
+def getIconName(portal_type, suffix=\'\'):\n
+  return \'admin_toolbox_%s%s.png\' % ( portal_type.lower().replace(\' \', \'_\')\n
+                                    , suffix and (\'_%s\' % suffix) or \'\'\n
+                                    )\n
+\n
 # Generic function to make edit links consistent\n
 def addLink(doc, portal_type, level):\n
   global edit_links\n
@@ -78,30 +84,70 @@ def addLink(doc, portal_type, level):\n
   doc_url = doc.WebSite_getDocumentUrl()\n
   while doc_url.endswith(\'/\'):\n
     doc_url = doc_url[:-1]\n
-  new_link = { \'doc\'        : doc\n
-             , \'portal_type\': portal_type\n
-             , \'url\'        : \'%s/view?editable_mode=1\' % doc_url\n
-             , \'label\'      : \'Edit %s %s\' % (level, portal_type)\n
-             , \'icon\'       : \'admin-toolbox-%s.png\' % portal_type.lower().replace(\' \', \'-\')\n
-             }\n
-  edit_links.append(new_link)\n
+  for mode in [\'editable_mode\', \'ignore_layout\']:\n
+    new_link = {\n
+        \'doc\'        : doc\n
+      , \'portal_type\': portal_type\n
+      , \'url\'        : \'%s/view?%s=1\' % (doc_url, mode)\n
+      , \'label\'      : \'Edit %s %s%s\' % ( level\n
+                                        , portal_type\n
+                                        , mode is \'ignore_layout\' and \' in ERP5\' or \'\'\n
+                                        )\n
+      , \'icon\'       : getIconName( portal_type\n
+                                  , suffix = mode is \'ignore_layout\' and \'erp5_edit\' or \'\'\n
+                                  )\n
+      }\n
+    edit_links.append(new_link)\n
 \n
-# Add "edit current object" action\n
+\n
+\n
+# Add "edit current object" link\n
 current_doc = context\n
 current_pt  = current_doc.getPortalType()\n
 addLink(current_doc, current_pt, \'Current\')\n
 \n
-# Add "edit parent section" action when WebPage is displayed\n
+\n
+\n
+# Add "edit parent section" link when a Web Page is displayed\n
 if current_pt == \'Web Page\':\n
   parent_doc = current_doc.aq_parent\n
   parent_pt = parent_doc.getPortalType()\n
   if parent_pt in (\'Web Section\', \'Web Site\'):\n
     addLink(parent_doc, parent_pt, \'Parent\')\n
 \n
+\n
+\n
 # Add "edit default page" action\n
 default_page_doc = current_doc.WebSite_getDefaultWebPageValue()\n
 if current_pt in (\'Web Section\', \'Web Site\') and default_page_doc:\n
   addLink(default_page_doc, default_page_doc.getPortalType(), \'Default\')\n
+\n
+\n
+\n
+# Add contextual webdav access link.\n
+# The \'webdav://\' protocol is currently known to be supported by Konqueror only.\n
+context_url   = current_doc.absolute_url()\n
+url_sep_index = context_url.find(\'://\')\n
+protocol      = context_url[:url_sep_index]\n
+url_list      = context_url[url_sep_index+3:].split(\'/\')\n
+is_secure     = protocol is \'https\'                   # TODO: don\'t guess; use preferences instead\n
+base_host     = url_list[0].split(\':\')[0]\n
+# base_port     = url_list[0].split(\':\')[-1]          # Unneeded parameter\n
+doc_url       = \'/\'.join(url_list[1:])\n
+webdav_prefix = \'webdav\' + (is_secure and \'s\' or \'\')\n
+WEBDAV_PORT   = \'1980\'                                # TODO: put this constant in preferences\n
+webdav_host   = \'webdav.%s\' % base_host               # Medicentre case\n
+webdav_host   = base_host                             # Generic case\n
+\n
+# Add to dict\n
+portal_type = \'WebDAV\'\n
+new_link = { \'doc\'        : current_doc\n
+           , \'portal_type\': portal_type\n
+           , \'url\'        : \'%s://%s:%s/%s\' % (webdav_prefix, webdav_host, WEBDAV_PORT, doc_url)\n
+           , \'label\'      : \'Open %s %s\' % ((is_secure and \'Secured\') or \'Unsecured\', portal_type)\n
+           , \'icon\'       : getIconName(portal_type)\n
+           }\n
+edit_links.append(new_link)\n
 \n
 \n
 return edit_links\n
@@ -149,6 +195,7 @@ return edit_links\n
                           <tuple>
                             <string>truc</string>
                             <string>edit_links</string>
+                            <string>getIconName</string>
                             <string>addLink</string>
                             <string>context</string>
                             <string>current_doc</string>
@@ -157,6 +204,19 @@ return edit_links\n
                             <string>parent_doc</string>
                             <string>parent_pt</string>
                             <string>default_page_doc</string>
+                            <string>context_url</string>
+                            <string>url_sep_index</string>
+                            <string>_getitem_</string>
+                            <string>protocol</string>
+                            <string>url_list</string>
+                            <string>is_secure</string>
+                            <string>base_host</string>
+                            <string>doc_url</string>
+                            <string>webdav_prefix</string>
+                            <string>WEBDAV_PORT</string>
+                            <string>webdav_host</string>
+                            <string>portal_type</string>
+                            <string>new_link</string>
                           </tuple>
                         </value>
                     </item>
@@ -173,7 +233,7 @@ return edit_links\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AdminToolbox_getEditShortcutList</string> </value>
+            <value> <string>admin_toolbox_getEditShortcutList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
