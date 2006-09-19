@@ -136,7 +136,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -217,7 +219,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<img src="erp5-website-logo.png"/>
+<a href="http://erp5.org"><img src="erp5-website-logo.png"/></a>
 
 ]]></string> </value>
                 </item>
@@ -283,6 +285,29 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: """<a href="%s" title="%s"><img src="erp5-website-logo.png" alt="Web Site Logo"/></a>""" % (here.getWebSiteValue().absolute_url(), here.getWebSiteValue().getTitleOrId())
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
