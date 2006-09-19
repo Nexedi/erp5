@@ -1034,8 +1034,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return object
 
     # Related document searching
-    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None,
-                                        sub_index=None, object_path, **kw):
+    def viewSearchRelatedDocumentDialog(self, index, form_id, object_path,
+                                        REQUEST=None, sub_index=None, **kw):
       """
       Returns a search related document dialog
       A set of forwarders us defined to circumvent limitations of HTML
