@@ -34,7 +34,7 @@ from zLOG import LOG
 
 # XXX need to expire old objects in a way.
 cache_check_time = time()
-CACHE_CHECK_TIMEOUT = 60
+CACHE_CHECK_TIMEOUT = 3600
 
 # Special Exception for this code.
 class CachedMethodError(Exception): pass
