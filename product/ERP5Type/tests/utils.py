@@ -29,6 +29,7 @@
 """Utility functions and classes for unit testing
 """
 
+import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 
 class DummyMailHost(MailHost):
@@ -68,3 +69,24 @@ def removeZODBPythonScript(container, script_id):
   Removes a Python script `script_id` in the given `container`.
   """
   container.manage_delObjects([script_id])
+
+def installRealClassTool(portal):
+  """Replaces portal_classes by a real class tool object.
+  """
+  Products.ERP5Type.allowClassTool = lambda: 1
+  _recreateClassTool(portal)
+
+def installDummyClassTool(portal):
+  """Replaces portal_classes by a dummy class tool object.
+  """
+  Products.ERP5Type.allowClassTool = lambda: 0
+  _recreateClassTool(portal)
+
+def _recreateClassTool(portal):
+  """Recreate the class tool for this portal.
+  """
+  from Products.ERP5Type.Tool import ClassTool
+  reload(ClassTool)
+  portal.manage_delObjects(['portal_classes'])
+  portal._setObject('portal_classes', ClassTool.ClassTool())
+  

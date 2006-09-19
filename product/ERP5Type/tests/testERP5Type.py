@@ -1,10 +1,4 @@
 
-# we need a class tool for this test.
-def allowClassTool():
-  return 1
-import Products.ERP5Type
-Products.ERP5Type.allowClassTool = allowClassTool
-
 import os, sys
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -20,6 +14,7 @@ from zLOG import LOG, INFO
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.Cache import CachingMethod, clearCache
 from Products.ERP5Type.Base import _aq_reset
+from Products.ERP5Type.tests.utils import installRealClassTool
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
@@ -406,6 +401,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       This is a test to make sure this will not happens any more
       """
       if not run: return
+      installRealClassTool(self.getPortal())
       # We will first define a new propertysheet
       class_tool = self.getClassTool()
 
