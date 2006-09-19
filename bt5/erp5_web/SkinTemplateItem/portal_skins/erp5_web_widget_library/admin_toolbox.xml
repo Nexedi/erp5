@@ -71,13 +71,13 @@
   <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
 \n
 \n
-  <div id="adminToolBox">\n
+  <div id="adminToolbox">\n
 \n
-    <script type="text/javascript" language="JavaScript" src="js/cookie_utils.js"></script>\n
+    <script type="text/javascript" language="JavaScript" src="admin_toolbox_cookie_utils.js"></script>\n
     <script type="text/javascript" language="JavaScript">\n
     <!--\n
       // global variables\n
-      var cookie_name           = "erp5_admin_tool_box_hidden_state"\n
+      var cookie_name           = "erp5_admin_toolbox_hidden_state"\n
       var hidden_class          = "doNotDisplay";\n
       var elements_to_hide_name = "adminSection";\n
 \n
@@ -125,12 +125,12 @@
     -->\n
     </script>\n
 \n
-    <h3 title="Click to Collapse / Expand administrator toolbar." onclick="autoHide()" class="warning"><img src="admin-tool-box.png"/><span name="adminSection"> Admin Tool Box</span></h3>\n
+    <h3 title="Click to Collapse / Expand administrator toolbar." onclick="autoHide()" class="important"><img src="admin_toolbox.png"/><span name="adminSection"> Admin Tool Box</span></h3>\n
 \n
     <!-- Edit button menu -->\n
     <div name="adminSection">\n
       <h3>Edit</h3>\n
-      <ul tal:define="edit_links python: context.AdminToolbox_getEditShortcutList(truc=context)">\n
+      <ul tal:define="edit_links python: context.admin_toolbox_getEditShortcutList(truc=context)">\n
         <li tal:repeat="link edit_links">\n
           <a tal:attributes="href python: link[\'url\']">\n
             <img tal:attributes="src   python: link[\'icon\'];\n
@@ -139,17 +139,6 @@
             <tal:block tal:replace="python: link[\'label\']"/>\n
           </a>\n
         </li>\n
-\n
-        <!--li tal:define="context_url   python: context.absolute_url();\n
-                        url_list      python: context_url[context_url.find(\'://\')+3:].split(\'/\');\n
-                        is_secure     python: context_url[4].lower() == \'s\';\n
-                        base_url      python: url_list[0];\n
-                        doc_url       python: \'/\'.join(url_list[1:]);\n
-                        webdav_prefix python: \'webdav\' + (is_secure and \'s\' or \'\');\n
-                        WEBDAV_PORT   python: \'443\'">\n
-          <a tal:attributes="href python: \'%s://webdav.%s:%s/%s\' % (webdav_prefix, base_url, WEBDAV_PORT, doc_url)"\n
-          ><img src="pictures/webdav.png" tal:attributes="src string:${portal_url}/pictures/webdav.png"/> Open <tal:block tal:content="python: (is_secure and \'Secured \') or \'Unsecured \'"/>webdav</a>\n
-        </li-->\n
       </ul>\n
     </div>\n
 \n
@@ -280,32 +269,13 @@
     <div name="adminSection">\n
       <h3>Debug Menu</h3>\n
       <ul>\n
-        <li>\n
-          <pre>\n
-            <!-- Display erp5 web globals -->\n
-            <b>Globals:</b>\n
-            <tal:block tal:content="python: \'is_web_mode    = \' + repr(is_web_mode)"   />\n
-          </pre>\n
+        <li class="code">\n
+          <!-- Display erp5 web globals -->\n
+          <b>Globals:</b>\n
+          <tal:block tal:content="python: \'is_web_mode    = \' + repr(is_web_mode)"   />\n
         </li>\n
-        <!-- XXX should we display this part everytime ? -->\n
-        <!--li>\n
-          <a tal:attributes="href python: \'%s/view?ignore_layout=1\' % context.WebSite_getSection();"\n
-          ><img src="pictures/section.png"/> Edit <tal:block tal:content="python: (is_webdoc and \'Parent \') or \'Current \'"/>Section in ERP5</a>\n
-        </li>\n
-        <li tal:condition="python: (is_section and valid_default_doc and not is_edit_mode) or is_webdoc">\n
-          <a tal:attributes="href python: \'%s/view?ignore_layout=1\' % context.WebSite_getDocumentPhysicalPath();"\n
-          ><img src="pictures/webpage.png" tal:attributes="src string:${portal_url}/pictures/webpage.png"/> Edit <tal:block tal:content="python: (is_section and \'Default \') or \'Current \'"/>Page in ERP5</a>\n
-        </li-->\n
       </ul>\n
     </div>\n
-\n
-\n
-    <!-- Generic attempt -->\n
-    <!--div name="adminSection" tal:repeat="widget python: widget_list">\n
-      <tal:block tal:define="widget_object python: here[widget]">\n
-        <tal:block metal:use-macro="widget_object/macros/master"/>\n
-      </tal:block>\n
-    </div-->\n
 \n
   </div>\n
 </tal:block>
