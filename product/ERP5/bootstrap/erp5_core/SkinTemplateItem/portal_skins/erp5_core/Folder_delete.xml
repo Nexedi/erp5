@@ -125,30 +125,14 @@ elif uids is not None:\n
 \n
     for object in object_list:\n
 \n
-      workflow_id_list = [x.id for x in object.portal_workflow.getWorkflowsFor(object)]\n
-      # XXX Remove edit_workflow, which should no prevent deletion\n
-      try:\n
-        workflow_id_list.remove("edit_workflow")\n
-      except ValueError:\n
-        pass\n
-\n
-      # If a workflow manage a history, \n
-      # object should not be removed, but only put in state deleted\n
-      for wf_id in workflow_id_list:\n
-        # It is important to use the history variable\n
-        try:\n
-          list_history_item = context.portal_workflow.getInfoFor(\n
-                        ob=object, name="history", wf_id=wf_id)\n
-        # XXX Can not use WorkflowException\n
-        except ConflictError:\n
-          raise\n
-        except:\n
-          pass\n
-        else:\n
-          object_to_delete_list.append(object)\n
-          break\n
-      else:\n
+      history_dict = object.Base_getWorkflowHistory()\n
+      history_dict.pop(\'edit_workflow\', None)\n
+      if history_dict == {}:\n
         object_to_remove_list.append(object)\n
+      else:\n
+        # If a workflow manage a history, \n
+        # object should not be removed, but only put in state deleted\n
+        object_to_delete_list.append(object)\n
 \n
     # Remove some objects\n
     try: \n
@@ -177,6 +161,8 @@ elif uids is not None:\n
       # Change workflow state of others objects\n
       not_deleted_count = 0\n
       for object in object_to_delete_list:\n
+        # Hidden transition (without a message displayed) \n
+        # are not returned by getActionsFor\n
         try:\n
           context.getPortalObject().portal_workflow.doActionFor(\n
                       object,\n
@@ -297,10 +283,7 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
                             <string>object_to_remove_list</string>
                             <string>object_to_delete_list</string>
                             <string>object</string>
-                            <string>workflow_id_list</string>
-                            <string>ValueError</string>
-                            <string>wf_id</string>
-                            <string>list_history_item</string>
+                            <string>history_dict</string>
                             <string>Exception</string>
                             <string>object_ids</string>
                             <string>comment</string>
