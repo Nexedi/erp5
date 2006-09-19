@@ -405,29 +405,32 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 #        import pdb; pdb.set_trace()
         result = {}
         errors = []
-        for field in self.get_fields():
-            # skip any field we don't need to validate
-            if not field.need_validate(REQUEST):
+        for group in self.get_groups():
+            if group.lower() == 'hidden':
                 continue
-            if not (field.get_value('editable',REQUEST=REQUEST)):
-                continue
-            try:
-                value = field.validate(REQUEST)
-                # store under id
-                result[field.id] = value
-                # store as alternate name as well if necessary
-                alternate_name = field.get_value('alternate_name')
-                if alternate_name:
-                    result[alternate_name] = value
-            except FormValidationError, e: # XXX JPS Patch for listbox
-                #LOG('validate_all', 0, 'FormValidationError: field = %s, errors=%s' % (repr(field), repr(errors)))
-                errors.extend(e.errors)
-                result.update(e.result)
-            except ValidationError, err:
-                #LOG('validate_all', 0, 'ValidationError: field.id = %s, err=%s' % (repr(field.id), repr(err)))
-                errors.append(err)
-            except KeyError, err:
-                LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
+            for field in self.get_fields_in_group(group):
+                # skip any field we don't need to validate
+                if not field.need_validate(REQUEST):
+                    continue
+                if not (field.get_value('editable',REQUEST=REQUEST)):
+                    continue
+                try:
+                    value = field.validate(REQUEST)
+                    # store under id
+                    result[field.id] = value
+                    # store as alternate name as well if necessary
+                    alternate_name = field.get_value('alternate_name')
+                    if alternate_name:
+                        result[alternate_name] = value
+                except FormValidationError, e: # XXX JPS Patch for listbox
+                    #LOG('validate_all', 0, 'FormValidationError: field = %s, errors=%s' % (repr(field), repr(errors)))
+                    errors.extend(e.errors)
+                    result.update(e.result)
+                except ValidationError, err:
+                    #LOG('validate_all', 0, 'ValidationError: field.id = %s, err=%s' % (repr(field.id), repr(err)))
+                    errors.append(err)
+                except KeyError, err:
+                    LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
         if len(errors) > 0:
             raise FormValidationError(errors, result)
         return result
