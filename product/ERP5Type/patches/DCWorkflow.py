@@ -361,7 +361,8 @@ def setupERP5Workflow(wf):
   for perm in (Permissions.AccessContentsInformation,
                Permissions.View,
                Permissions.AddPortalContent,
-               Permissions.ModifyPortalContent ):
+               Permissions.ModifyPortalContent,
+               Permissions.DeleteObjects):
     wf.addManagedPermission(perm)
 
   wf.states.setInitialState('draft')

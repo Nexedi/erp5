@@ -64,6 +64,7 @@ ModifyCookieCrumblers = permissions.ModifyCookieCrumblers
 ReplyToItem = permissions.ReplyToItem
 ManagePortal = permissions.ManagePortal
 ModifyPortalContent = permissions.ModifyPortalContent
+DeleteObjects = permissions.DeleteObjects
 ChangeLocalRoles = permissions.ChangeLocalRoles
 ListPortalMembers = permissions.ListPortalMembers
 AddPortalFolders = permissions.AddPortalFolders
