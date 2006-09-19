@@ -60,26 +60,10 @@ class TestConstraint(ERP5TypeTestCase):
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
-    portal = self.getPortal()
+    self.portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
-    portal_catalog = self.getCatalogTool()
-    #portal_catalog.manage_catalogClear()
     self.createCategories()
 
   def stepTic(self,**kw):
@@ -104,6 +88,15 @@ class TestConstraint(ERP5TypeTestCase):
     portal = self.getPortal()
     module = portal.getDefaultModule(self.object_portal_type)
     module.manage_delObjects(module.contentIds())
+
+  def _makeOne(self):
+    """Creates an object and reindex it
+    """
+    module = self.portal.getDefaultModule(self.object_portal_type)
+    obj = module.newContent(portal_type=self.object_portal_type)
+    get_transaction().commit()
+    self.tic()
+    return obj
 
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1018,6 +1011,25 @@ class TestConstraint(ERP5TypeTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_BooleanPropertiesPropertyTypeValidity(self):
+    """Tests PropertyTypeValidity can handle boolean values.
+    """
+    obj = self._makeOne()
+    obj.manage_addProperty('dummy_boolean_property', True, type='boolean')
+    self.assertEquals([], obj.checkConsistency())
+  
+  def test_BooleanPropertiesPropertyTypeValidityFix(self):
+    """Tests PropertyTypeValidity can fix boolean values.
+    """
+    obj = self._makeOne()
+    prop_name = 'dummy_boolean_property'
+    obj.manage_addProperty(prop_name, True, type='boolean')
+    obj.setProperty(prop_name, 2)
+    obj.fixConsistency()
+    # should be fixed now
+    self.assertEquals([], obj.checkConsistency())
+    self.failUnless(obj.getPropertyType(prop_name))
 
 if __name__ == '__main__':
     framework()
