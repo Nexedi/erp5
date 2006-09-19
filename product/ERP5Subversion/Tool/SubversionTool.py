@@ -737,13 +737,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """
     path = self._getWorkingPath(self.getSubversionPath(business_template))
     # First remove unversioned in working copy that could conflict
-    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
+    self.removeAllInList([x['uid'] for x in self.unversionedFiles(path)])
     client = self._getClient()
     # Revert local changes in working copy first
     # to import a "pure" BT after update
     self.revert(path=path, recurse=True)
     # removed unversioned files due to former added files that were reverted
-    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
+    self.removeAllInList([x['uid'] for x in self.unversionedFiles(path)])
     # Update from SVN
     client.update(path)
     # Import in zodb
@@ -762,7 +762,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     if os.path.exists(revision_path):
       self.revert(path=revision_path, recurse=False)
     # remove unversioned files in working copy that could be annoying
-    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
+    self.removeAllInList([x['uid'] for x in self.unversionedFiles(path)])
     # Update from SVN
     client.update(path)
     # Check if some files are conflicted to raise an exception
