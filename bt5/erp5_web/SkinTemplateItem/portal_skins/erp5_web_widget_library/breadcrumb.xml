@@ -57,7 +57,8 @@
       tal:condition="remaining_items">\n
     <li tal:define="current_item    python: remaining_items[0];\n
                     remaining_items python: remaining_items[1:]">\n
-      <a tal:attributes="href python: current_item[1].WebSite_getDocumentUrl()"\n
+      <a tal:attributes="href  python: current_item[1].WebSite_getDocumentUrl();\n
+                         class python: len(remaining_items) == 0 and \'selected\' or \'\'"\n
           tal:content="python: current_item[0]"/>\n
       <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
     </li>\n
@@ -65,9 +66,9 @@
 </tal:block>\n
 \n
 <!-- Initialize the recursive loop -->\n
-<tal:block tal:define="remaining_items python: context.WebSite_getBreadcrumbItemList()">\n
+<div class="breadcrumb" tal:define="remaining_items python: context.WebSite_getBreadcrumbItemList()">\n
   <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
-</tal:block>
+</div>
 
 ]]></string> </value>
         </item>
