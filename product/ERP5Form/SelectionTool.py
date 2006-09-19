@@ -1035,7 +1035,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     # Related document searching
     def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None,
-                                        sub_index=None, **kw):
+                                        sub_index=None, object_path, **kw):
       """
       Returns a search related document dialog
       A set of forwarders us defined to circumvent limitations of HTML
@@ -1043,25 +1043,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if sub_index != None:
         REQUEST.form['sub_index'] = sub_index
       # Find the object which needs to be updated
-      object_uid = REQUEST.get('object_uid', None)
-      object_path = REQUEST.get('object_path', None)
-      if object_uid is not None:
-        try :
-          o = self.portal_catalog.getObject(object_uid)
-        except (NotFound, KeyError), err :
-          o = None
-      if o is None:
-        # we first try to reindex the object, thanks to the object_path
-        if object_path is not None:
-          o = self.getPortalObject().restrictedTraverse(object_path)
-        if o is not None:
-          # XXX
-          o.immediateReindexObject()
-          object_uid = o.getUid()
-        else:
-          raise SelectionError, \
-                "Sorrry, Error, the calling object was not catalogued. " \
-                "Do not know how to do ?"
+      o = self.restrictedTraverse(object_path)
       # Find the field which was clicked on
       # Important to get from the object instead of self
       form = getattr(o, form_id)
@@ -1141,7 +1123,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
         base_category = None
         kw = {}
-        kw['object_uid'] = object_uid
         kw['dialog_id'] = dialog_id
         kw['selection_name'] = selection_name
         kw['selection_index'] = 0 # We start on the first page
