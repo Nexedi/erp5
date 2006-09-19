@@ -68,7 +68,10 @@ class PropertyTypeValidity(Constraint):
       else:
         property_type = prop['type']
       wrong_type = 0
-      value = obj.getProperty(property_id)
+      if property_type == 'tales':
+        value = obj.getProperty(property_id, evaluate=0)
+      else:
+        value = obj.getProperty(property_id)
       if value is not None:
         # Check known type
         try:
