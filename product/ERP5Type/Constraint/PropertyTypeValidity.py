@@ -31,6 +31,11 @@
 from Constraint import Constraint
 from DateTime import DateTime
 
+try:
+  boolean_types = (type(1), type(True))
+except NameError:
+  boolean_types = (type(1), )
+
 class PropertyTypeValidity(Constraint):
   """
     This constraint class allows to check / fix type of each
@@ -43,7 +48,7 @@ class PropertyTypeValidity(Constraint):
     'string':             (type('a'), ),
     'text':               (type('a'), ),
     'int':                (type(1), ),
-    'boolean':            (type(1), ),
+    'boolean':            boolean_types,
     'float':              (type(1.0), ),
     'long':               (type(1L), ),
     'tales':              (type('string:3'), ),
