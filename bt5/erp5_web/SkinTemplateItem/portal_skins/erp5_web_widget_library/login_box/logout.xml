@@ -121,7 +121,7 @@ return REQUEST.RESPONSE.redirect(website_url)\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>REQUEST</string>
                             <string>_getitem_</string>
                             <string>website</string>

@@ -66,7 +66,7 @@
                                            , \'admin_tool_duplicate_document\'\n
                                            , \'admin_tool_duplicate_section\'\n
                                            , \'admin_tool_debug\'\n
-                                           ]">\n
+]">\n
 -->\n
   <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
 \n
