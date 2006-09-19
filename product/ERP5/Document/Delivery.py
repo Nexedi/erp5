@@ -120,6 +120,9 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         if the `fast` argument is set to a true value, then it use
         SQLCatalog to compute the price, otherwise it sums the total
         price of objects one by one.
+
+        So if the order is not in the catalog, getTotalPrice(fast=1)
+        will return 0, this is not a bug.
       """
       if not fast :
         kw.setdefault( 'portal_type',
@@ -140,6 +143,9 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         if the `fast` argument is set to a true value, then it use
         SQLCatalog to compute the quantity, otherwise it sums the total
         quantity of objects one by one.
+
+        So if the order is not in the catalog, getTotalQuantity(fast=1)
+        will return 0, this is not a bug.
       """
       if not fast :
         kw.setdefault('portal_type',
