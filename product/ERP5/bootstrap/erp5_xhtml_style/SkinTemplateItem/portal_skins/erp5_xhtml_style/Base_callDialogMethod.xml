@@ -128,7 +128,6 @@ if dialog_method == \'Base_editRelation\':\n
                                    field_id=request_form[\'field_id\'],\n
                                    selection_name=request_form[\'selection_name\'],\n
                                    selection_index=request_form[\'selection_index\'],\n
-                                   object_uid=request_form[\'object_uid\'],\n
                                    uids=request_form[\'uids\'],\n
                                    listbox_uid=request_form[\'listbox_uid\'],\n
                                    form_pickle=request_form[\'form_pickle\'],\n
