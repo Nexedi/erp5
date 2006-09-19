@@ -1245,7 +1245,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           workflow_name = workflow[1:]
         else:
           workflow_name = workflow
-        if workflow[0]!= '-' and \
+        if workflow[0] != '-' and \
             workflow_name not in chain_dict['chain_%s' % portal_type]:
           raise NotFound, 'workflow %s not found in chain for portal_type %s'\
                 % (workflow, portal_type)
@@ -1815,7 +1815,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         key = method.getAttribute('key')
         key_type = str(method.getAttribute('type'))
         if key_type == "str":
-          value = str(method.getElementsByTagName('value')[0].childNodes[0].data)
+          if len(method.getElementsByTagName('value')[0].childNodes):
+            value = str(method.getElementsByTagName('value')[0].childNodes[0].data)
+          else:
+            value = ''
           key = str(key)
         elif key_type == "int":
           value = int(method.getElementsByTagName('value')[0].childNodes[0].data)
