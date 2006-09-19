@@ -76,13 +76,18 @@ parent = context.aq_parent\n
 \n
 # XXX May be this need to be changed in order to get something else than\n
 # the permission "Add portal content"\n
-new_id = parent.generateNewId()\n
-context.portal_types.constructContent(type_name=context.portal_type,\n
+if not parent.allowedContentTypes():\n
+  return context.ERP5XhtmlStyle_redirect(\'%s/%s/view\' % (parent.getUrl(), context.getId()), \n
+                                         keep_items={\'portal_status_message\': N_("You are not allowed to add new content in this context.")})\n
+  \n
+else:\n
+  new_id = parent.generateNewId()\n
+  context.portal_types.constructContent(type_name=context.portal_type,\n
                         container=parent,\n
                         id=str(new_id),\n
                         RESPONSE=REQUEST.RESPONSE)\n
-\n
-return context.ERP5XhtmlStyle_redirect(\'%s/%s/view\' % (parent.getUrl(), new_id), keep_items={\'portal_status_message\': N_("Object Created.")})\n
+  return context.ERP5XhtmlStyle_redirect(\'%s/%s/view\' % (parent.getUrl(), new_id), \n
+                                         keep_items={\'portal_status_message\': N_("Object Created.")})\n
 </string> </value>
         </item>
         <item>
