@@ -98,6 +98,12 @@ img {\n
   border: 0;\n
 }\n
 \n
+a:link, a:visited {text-decoration: none}\n
+a:active, a:hover {text-decoration: underline}\n
+a:link {color: #00248f}\n
+a:visited {color: #909}\n
+a:hover {color: #39f}\n
+\n
 a img, h3 img, button img, li img {\n
   vertical-align: middle;\n
 }\n
@@ -228,6 +234,15 @@ div.adminToolbox li > a {\n
 \n
 div.adminToolbox button[type="submit"] {\n
   display: none;\n
+}\n
+\n
+\n
+\n
+/* Breadcrumb default style\n
+----------------------------------------------- */\n
+\n
+div.breadcrumb li a.selected {\n
+  border-bottom: 1px dashed #999;\n
 }\n
 \n
 \n
