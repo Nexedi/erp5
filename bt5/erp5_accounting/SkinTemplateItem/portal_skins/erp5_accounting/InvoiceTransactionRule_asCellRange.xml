@@ -75,30 +75,29 @@ dimension_list.extend([ pred.getStringIndex()\n
             for pred in context.objectValues(portal_type=\'Predicate\')\n
             if pred.getStringIndex() not in dimension_list ])\n
 \n
-if list_dimensions == 1 :\n
+if list_dimensions:\n
   return dimension_list\n
 \n
 dimension_result_list = []\n
 \n
-for dimension in dimension_list :\n
-  if dimension is not None :\n
+for dimension in dimension_list:\n
+  if dimension is not None:\n
     predicate_list = context.searchFolder(string_index=dimension,\n
                                           sort_on=\'int_index\')\n
     if len(predicate_list):\n
       dimension_result_list.append(predicate_list)\n
 \n
-\n
 dimension_ids_list = []\n
 \n
-if matrixbox == 1 :\n
+if matrixbox:\n
   for dimension_result in dimension_result_list :\n
     dimension_ids_list.append(\n
-              map(lambda x: (x.getObject().getRelativeUrl(),\n
-                             x.getObject().getTitle()), dimension_result))\n
+              [(x.getObject().getRelativeUrl(),\n
+                x.getObject().getTitle()) for x in dimension_result])\n
 else :\n
   for dimension_result in dimension_result_list :\n
     dimension_ids_list.append(\n
-          map(lambda x: x.getObject().getRelativeUrl(), dimension_result))\n
+          [x.getObject().getRelativeUrl() for x in dimension_result])\n
 \n
 return dimension_ids_list\n
 # vim: syntax=python\n
@@ -167,7 +166,7 @@ return dimension_ids_list\n
                             <string>len</string>
                             <string>dimension_ids_list</string>
                             <string>dimension_result</string>
-                            <string>map</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
