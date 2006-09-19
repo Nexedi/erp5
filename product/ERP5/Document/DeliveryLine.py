@@ -144,6 +144,10 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
     def getTotalQuantity(self, fast=1):
       """
         Returns the quantity if no cell or the total quantity if cells
+
+        If fast is equal to 0, we returns the right quantity even
+        if there is nothing into the catalog or the catalog is not
+        up to date
       """
       base_id = 'movement'
       if not self.hasCellContent(base_id=base_id):
