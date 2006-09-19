@@ -138,28 +138,31 @@ class InvoicingRule(Rule):
         modify, remove)
     - add/modify/remove child movements to match prevision
     """
-    add_list, modify_dict, \
-        delete_list = self._getCompensatedMovementList(applied_rule, **kw)
+    parent_movement = applied_rule.getParentValue()
+    if parent_movement is not None: 
+      if not parent_movement.isFrozen():
+        add_list, modify_dict, \
+          delete_list = self._getCompensatedMovementList(applied_rule, **kw)
 
-    for movement_id in delete_list:
-      applied_rule._delObject(movement_id)
+        for movement_id in delete_list:
+          applied_rule._delObject(movement_id)
       
-    for movement, prop_dict in modify_dict.items():
-      #XXX ignore start_date and stop_date if the difference is smaller than a
-      # rule defined value
-      for prop in ('start_date', 'stop_date'):
-        if prop in prop_dict.keys():
-          prop_dict.pop(prop)
-      applied_rule[movement].edit(**prop_dict)
+        for movement, prop_dict in modify_dict.items():
+          #XXX ignore start_date and stop_date if the difference is smaller than a
+          # rule defined value
+          for prop in ('start_date', 'stop_date'):
+           if prop in prop_dict.keys():
+              prop_dict.pop(prop)
+          applied_rule[movement].edit(**prop_dict)
 
-    for movement_dict in add_list:
-      if 'id' in movement_dict.keys():
-        mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
-        new_mvmt = applied_rule.newContent(id=mvmt_id,
-            portal_type=self.movement_type)
-      else:
-        new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
-      new_mvmt.edit(**movement_dict)
+        for movement_dict in add_list:
+          if 'id' in movement_dict.keys():
+            mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
+            new_mvmt = applied_rule.newContent(id=mvmt_id,
+                portal_type=self.movement_type)
+          else:
+            new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
+          new_mvmt.edit(**movement_dict)
 
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
