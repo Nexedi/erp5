@@ -234,6 +234,14 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
             <value> <string>form_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,uids=None,cancel_url=\'\',listbox_uid=[],md5_object_uid_list=\'\'</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
