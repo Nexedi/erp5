@@ -1,4 +1,7 @@
 2006-09-15 Aurel
+* remove immediateReindex and pass parameter explicitely in Base_validateRelation
+
+2006-09-15 Aurel
 * set flag to update bt workflow
 
 2006-08-25 Stefan

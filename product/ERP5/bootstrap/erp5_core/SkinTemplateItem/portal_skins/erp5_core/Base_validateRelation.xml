@@ -81,17 +81,7 @@ request=context.REQUEST\n
 #base_category = context.getBaseCategoryId()\n
 base_category = None\n
 \n
-o = context.portal_catalog.getObject(object_uid)\n
-redirect_url = None\n
-\n
-if o is None:\n
-  # we first try to reindex the object, thanks to the object_path\n
-  o = context.restrictedTraverse(object_path)\n
-  if o is not None:\n
-    o.immediateReindexObject()\n
-  else:\n
-    message = N_("Sorrry, Error, the calling object was not catalogued. Do not know how to do ?")\n
-    return ValueError, message\n
+o = context.restrictedTraverse(object_path)\n
 \n
 def checkSameKeys(a , b):\n
   """\n
@@ -185,13 +175,13 @@ try:\n
       o.setValueUidList(base_category,  (), portal_type=portal_type)\n
     elif same_keys:\n
       uids = getOrderedUids(uids, new_value, my_field.get_value(\'catalog_index\'))\n
-      return o.Base_editRelation( form_id,\n
-                                my_field.id,\n
-                                selection_index,\n
-                                selection_name,\n
-                                uids,\n
-                                object_uid,\n
-                                listbox_uid=None)\n
+      return o.Base_editRelation( form_id = form_id,\n
+                                  field_id = my_field.id,\n
+                                  selection_index = selection_index,\n
+                                  selection_name = selection_name,\n
+                                  uids = uids,\n
+                                  object_uid = object_uid,\n
+                                  listbox_uid=None)\n
     elif len(relation_list) > 0:\n
       # If we have only one in the list, we don\'t want to lose our time by\n
       # selecting it. So we directly do the update\n
@@ -284,6 +274,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
@@ -335,9 +331,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>None</string>
                             <string>base_category</string>
                             <string>o</string>
-                            <string>redirect_url</string>
-                            <string>message</string>
-                            <string>ValueError</string>
                             <string>checkSameKeys</string>
                             <string>getOrderedUids</string>
                             <string>getattr</string>
@@ -370,8 +363,10 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>value</string>
                             <string>catalog_index</string>
                             <string>complete_value</string>
+                            <string>redirect_url</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -394,6 +389,27 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
