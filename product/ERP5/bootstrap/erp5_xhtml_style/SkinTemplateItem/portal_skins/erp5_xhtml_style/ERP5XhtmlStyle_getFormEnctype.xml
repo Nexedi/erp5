@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>if form is None:\n
   return None\n
-enctype = form.get(\'enctype\')\n
+enctype = form[\'enctype\']\n
 if enctype in (\'\', None):\n
   return None\n
 return enctype\n
@@ -124,7 +124,7 @@ return enctype\n
                           <tuple>
                             <string>form</string>
                             <string>None</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>enctype</string>
                           </tuple>
                         </value>
