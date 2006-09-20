@@ -158,9 +158,9 @@ div.wrapper div.field.logo label {\n
 form#main_form div#wrapper_footer div.field {\n
   margin: 0;\n
   padding: .7em;\n
-  background: #ccc;\n
+  background: #ccc url(erp5-website-micro-gray-shadow.png) top repeat-x;\n
   border-color: #999;\n
-  border-width: 2px 0 1px;\n
+  border-width: 0 0 1px;\n
   border-style: solid;\n
 }\n
 \n

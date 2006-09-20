@@ -148,7 +148,7 @@
        This part is displayed any document apart Web Site and Web Section.\n
        But if Web Site and Web Section have default page, then it will be displayed anyway.\n
   -->\n
-  <div name="adminSection" class="adminSection"\n
+  <div name="adminSection" class="adminSection content"\n
        tal:condition="python: (portal_type in [\'Web Site\', \'Web Section\'] and here.WebSite_getDefaultWebPageValue()) or not portal_type in [\'Web Site\', \'Web Section\']">\n
 \n
     <form name="tool_create" method="post" action="WebSite_newContent">\n

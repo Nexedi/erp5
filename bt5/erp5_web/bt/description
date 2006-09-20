@@ -1,3 +1,13 @@
 Simple yet powerful publication system over the web. Can serve any ERP5 object whithin a custom web design / layout.
 
-NB: The actual web widget library contain some outdated code that need to be adapted to the new API.
+Features:
+ * Friendly URLs.
+ * Default 3 column layout with ordered content (IE6 should be able to display it).
+ * Content edition through custom layout.
+ * Custom view based on generic ERP5 forms.
+ * Work out of the box.
+ * Multi-publication: 1 document can be published in several sections.
+ * Collection of generic web widgets (breadcrumb, listbox, admin toolbar, ...).
+ * Support FCKeditor for content edition.
+
+NB: The actual web widget collection contain some outdated code that need to be adapted to the new API.
