@@ -685,7 +685,7 @@ be a problem)."""
     
     _allowedContentTypes = CachingMethod( _allowedContentTypes,
                                           id = 'allowedContentTypes',
-                                          cache_duration = 300)
+                                          cache_duration = None)
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
     portal = self.getPortalObject()
