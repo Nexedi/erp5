@@ -444,15 +444,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         delivery_line_list.append(packing_list_line)
         resource_value = resource_list[line['resource']]
         resource_value.setVariationBaseCategoryList(base_category_list)
-        category_list = packing_list_line.getCategoryList()
         variation_category_list = resource_value.getVariationRangeCategoryList(base_category_list=['size']) + \
             ['colour/' + x.getRelativeUrl() for x in resource_value.objectValues(portal_type='Apparel Model Colour Variation')] + \
             ['morphology/' + x.getRelativeUrl() for x in resource_value.objectValues(portal_type='Apparel Model Morphology Variation')]
 
         packing_list_line.edit(
             resource_value = resource_value,
-            default_resource_value = resource_value,
-            categories = category_list,
             variation_category_list=variation_category_list
         )
         
@@ -470,6 +467,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
             if len(c.split('/')) == 1:
               variation[i] = '%s/%s' % (base_category_list[i], resource_value[c].getRelativeUrl())
           new_variation = []
+          self.failUnless(len(packing_list_line.getVariationBaseCategoryList())>0)
           for bc in packing_list_line.getVariationBaseCategoryList():
             new_variation.append(variation[base_category_dict[bc]])
           variation = new_variation
