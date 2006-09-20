@@ -1331,17 +1331,21 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValue' )
   def _setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):
+    start_string = "%s/" % id
+    start_string_len = len(start_string)
     if target is None :
       path = target
     elif isinstance(target, str):
       # We have been provided a string
       path = target
+      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     else: 
       # We have been provided an object
       # Find the object
       path = target.getRelativeUrl()
+      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     self._setDefaultCategoryMembership(id, path, spec=spec, filter=filter,
-                                       portal_type=portal_type, base=1)
+                                       portal_type=portal_type, base=0)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultValue' )
   def setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):

@@ -439,6 +439,9 @@ class TestPropertySheet:
       from Products.ERP5Type.Utils import ConstraintNotFound
       organisation =  self.assertRaises(ConstraintNotFound,folder.newContent,
                                         portal_type='Organisation')
+      # Cleanup for next test
+      organisation_portal_type.setPropertySheetList([])
+      _aq_reset()
 
     def test_11_valueAccessor(self, quiet=quiet, run=run_all_test):
       """
@@ -475,20 +478,30 @@ class TestPropertySheet:
               portal_type = "Category",
               id =          "zeta",
               title =       "Zeta System", )
+      function_category = self.getPortal().portal_categories.function
+      nofunction = function_category.newContent(
+              portal_type = "Category",
+              id =          "nofunction",
+              title =       "No Function", )
 
       self.assertEquals(alpha.getRelativeUrl(), 'region/alpha')
 
-      #get_transaction().commit()
-      alpha.immediateReindexObject()
-      beta.immediateReindexObject()
-      zeta.immediateReindexObject()
-      #self.tic() # Make sure categories are reindexed
+      alpha.reindexObject()
+      beta.reindexObject()
+      zeta.reindexObject()
+      nofunction.reindexObject()
+      get_transaction().commit()
+      self.tic() # Make sure categories are reindexed
 
       # Create a new person
       module = self.getPersonModule()
       person = module.newContent(portal_type='Person')
 
       # Value setters (list, set, default)
+      person.setFunction('nofunction')  # Fill at least one other category
+      person.setDefaultRegionValue(alpha)
+      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      self.assertEquals(person.getRegion(), 'alpha')
       person.setRegionValue(alpha)
       self.assertEquals(person.getRegion(), 'alpha')
       person.setRegionValueList([alpha, alpha])
@@ -513,8 +526,19 @@ class TestPropertySheet:
       result.sort()
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      # Test accessor on documents rather than on categories
+      person.setDefaultRegionValue(person)
+      self.assertEquals(person.getDefaultRegion(), person.getRelativeUrl())
+      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      person.setRegionValue([person, alpha, beta])
+      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
       # Category setters (list, set, default)
+      person = module.newContent(portal_type='Person')
+      person.setFunction('nofunction')  # Fill at least one other category
+      person.setDefaultRegion('alpha')
+      self.assertEquals(person.getRegion(), 'alpha')
+      self.assertEquals(person.getDefaultRegion(), 'alpha')
       person.setRegion('alpha')
       self.assertEquals(person.getRegion(), 'alpha')
       person.setRegionList(['alpha', 'alpha'])
@@ -539,8 +563,22 @@ class TestPropertySheet:
       result.sort()
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      # Test accessor on documents rather than on categories
+      person.setDefaultRegion(person.getRelativeUrl())
+      self.assertEquals(person.getDefaultRegion(), person.getRelativeUrl())
+      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      person.setRegion([person.getRelativeUrl(), 'alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
       # Uid setters (list, set, default)
+      person = module.newContent(portal_type='Person')
+      person.reindexObject()
+      get_transaction().commit()
+      self.tic() # Make sure person is reindexed
+      person.setFunction('nofunction')  # Fill at least one other category
+      person.setDefaultRegionUid(alpha.getUid())
+      self.assertEquals(person.getRegion(), 'alpha')
+      self.assertEquals(person.getDefaultRegion(), 'alpha')
       person.setRegionUid(alpha.getUid())
       self.assertEquals(person.getRegion(), 'alpha')
       person.setRegionUidList([alpha.getUid(), alpha.getUid()])
@@ -565,6 +603,12 @@ class TestPropertySheet:
       result.sort()
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      # Test accessor on documents rather than on categories
+      person.setDefaultRegionUid(person.getUid())
+      self.assertEquals(person.getDefaultRegion(), person.getRelativeUrl())
+      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      person.setRegionUid([person.getUid(), alpha.getUid(), beta.getUid()])
+      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
     def test_12_listAccessor(self, quiet=quiet, run=run_all_test):
       """
