@@ -229,6 +229,10 @@ class TestBudget(ERP5TypeTestCase):
           portal_type='Account',
           financial_section='actif/actif_immobilise/immobilisations_financieres')
 
+    # Open accounts
+    for account in account_module.objectValues(portal_type='Account'):
+      account.validate()
+
     # Create some accounting transactions
     self.accounting_transaction1 = accounting_module.newContent(
         portal_type='Accounting Transaction',title='Accounting 1',
@@ -240,12 +244,12 @@ class TestBudget(ERP5TypeTestCase):
         portal_type='Accounting Transaction Line',
         source_section='organisation_module/world_company',
         resource='currency_module/EUR', source_debit='2000.0',
-        source_credit='0.0', source='account_module/account1')
+        source='account_module/account1')
     self.accounting_transaction1.newContent(
         portal_type='Accounting Transaction Line',
         source_section='organisation_module/world_company',
-        resource='currency_module/EUR', source_debit='0.0',
-        source_credit='2000.0', source='account_module/account2')
+        resource='currency_module/EUR', source_credit='2000.0',
+        source='account_module/account2')
 
     self.accounting_transaction2 = accounting_module.newContent(
         portal_type='Accounting Transaction',title='Accounting 2',
@@ -257,12 +261,12 @@ class TestBudget(ERP5TypeTestCase):
         portal_type='Accounting Transaction Line',
         source_section='organisation_module/world_company',
         resource='currency_module/EUR', source_debit='100000.0',
-        source_credit='0.0', source='account_module/account1')
+        source='account_module/account1')
     self.accounting_transaction2.newContent(
         portal_type='Accounting Transaction Line',
         source_section='organisation_module/world_company',
-        resource='currency_module/EUR', source_debit='0.0',
-        source_credit='100000.0', source='account_module/account4')
+        resource='currency_module/EUR', source_credit='100000.0',
+        source='account_module/account4')
 
     id_list = []
     for objects in self.accounting_transaction1.getPortalObject().\
