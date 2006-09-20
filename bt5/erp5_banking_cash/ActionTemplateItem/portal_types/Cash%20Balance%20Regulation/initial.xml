@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cash detail to regularize</string> </value>
+            <value> <string>Initial Cash Detail</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

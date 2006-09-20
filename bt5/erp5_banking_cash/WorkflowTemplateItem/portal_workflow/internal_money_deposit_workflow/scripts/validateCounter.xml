@@ -79,7 +79,7 @@ transaction = state_change[\'object\']\n
 date = transaction.getStartDate()\n
 destination= transaction.getDestination(None)\n
 \n
-lettering =transaction.getLettering()\n
+lettering = transaction.getGroupingReference()\n
 \n
 if lettering is None:\n
   msg = Message(domain=\'ui\', message=\'No lettering defined.\')\n
@@ -146,7 +146,9 @@ elif price != cash_detail:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/internal_money_payment_workflow/scripts/validateCounter</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

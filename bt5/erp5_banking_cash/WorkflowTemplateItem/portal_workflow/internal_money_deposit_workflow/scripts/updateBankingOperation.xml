@@ -95,7 +95,9 @@ if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/internal_money_payment_workflow/scripts/updateBankingOperation</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
