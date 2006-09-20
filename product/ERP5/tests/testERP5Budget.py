@@ -56,9 +56,10 @@ from Products.ERP5.Document.Organisation import Organisation
 
 class TestBudget(ERP5TypeTestCase):
   """
-    ERP5 Budget related tests. For the moment every assignment of budget related features are
-    in Budget module, as well as the predicates to test the accounting operations. These are
-    packaged in the erp5_budget business template.
+    ERP5 Budget related tests. For the moment every assignment of budget
+    related features are in Budget module, as well as the predicates to test
+    the accounting operations. These are packaged in the erp5_budget business
+    template.
   """
 
   # pseudo constants
@@ -75,7 +76,8 @@ class TestBudget(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', 'erp5_budget')
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+        'erp5_budget')
 
   def login(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -83,49 +85,63 @@ class TestBudget(ERP5TypeTestCase):
     """
     user_name = 'maurice'
     user_folder = self.getPortal().acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor', 'Assignee', 'Author'], [])
+    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor',
+      'Assignee', 'Author'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
-  def stepCheckBudgetTransactionDrafted(self,budget_transaction, sequence=None, sequence_list=None, **kw):
+  def stepCheckBudgetTransactionDrafted(self,budget_transaction,
+      sequence=None, sequence_list=None, **kw):
     self.assertEquals('draft', budget_transaction.getSimulationState())
 
 
-  def stepCheckBudgetTransactionDelivered(self,budget_transaction, sequence=None, sequence_list=None, **kw):
+  def stepCheckBudgetTransactionDelivered(self,budget_transaction,
+      sequence=None, sequence_list=None, **kw):
     self.assertEquals('delivered', budget_transaction.getSimulationState())
 
-  def stepDeliverBudgetTransaction(self,budget_transaction, sequence=None, sequence_list=None, **kw):
-    self.portal_workflow.doActionFor(budget_transaction,'deliver_action', \
-                                      wf_id='budget_transaction_workflow')
+  def stepDeliverBudgetTransaction(self,budget_transaction, sequence=None,
+      sequence_list=None, **kw):
+    self.portal_workflow.doActionFor(budget_transaction,'deliver_action',
+        wf_id='budget_transaction_workflow')
 
 
-  def stepDeliverAccountingTransaction(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
-    self.portal_workflow.doActionFor(accounting_transaction,'deliver_action', \
-                                      wf_id='accounting_workflow')
+  def stepDeliverAccountingTransaction(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
+    self.portal_workflow.doActionFor(accounting_transaction,'deliver_action',
+        wf_id='accounting_workflow')
 
-  def stepCheckAccountingTransactionDelivered(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
-    self.assertEquals('delivered', accounting_transaction.getSimulationState())
+  def stepCheckAccountingTransactionDelivered(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
+    self.assertEquals('delivered',
+        accounting_transaction.getSimulationState())
 
-  def stepPlanAccountingTransaction(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
-    self.portal_workflow.doActionFor(accounting_transaction,'plan_action', \
-                                      wf_id='accounting_workflow')
+  def stepPlanAccountingTransaction(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
+    self.portal_workflow.doActionFor(accounting_transaction,'plan_action',
+        wf_id='accounting_workflow')
 
-  def stepCheckAccountingTransactionPlanned(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
+  def stepCheckAccountingTransactionPlanned(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
     self.assertEquals('planned', accounting_transaction.getSimulationState())
 
-  def stepStopAccountingTransaction(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
-    self.portal_workflow.doActionFor(accounting_transaction,'stop_action', \
-                                      wf_id='accounting_workflow')
+  def stepStopAccountingTransaction(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
+    self.portal_workflow.doActionFor(accounting_transaction,'stop_action',
+        wf_id='accounting_workflow')
 
-  def stepCheckAccountingTransactionStopped(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
+  def stepCheckAccountingTransactionStopped(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
     self.assertEquals('stopped', accounting_transaction.getSimulationState())
 
-  def stepConfirmAccountingTransaction(self, accounting_transaction, sequence=None, sequence_list=None, **kw):
-    self.portal_workflow.doActionFor(accounting_transaction,'confirm_action', \
-                                      wf_id='accounting_workflow')
+  def stepConfirmAccountingTransaction(self, accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
+    self.portal_workflow.doActionFor(accounting_transaction,'confirm_action',
+        wf_id='accounting_workflow')
 
-  def stepCheckAccountingTransactionConfirmed(self,accounting_transaction, sequence=None, sequence_list=None, **kw):
-    self.assertEquals('confirmed', accounting_transaction.getSimulationState())
+  def stepCheckAccountingTransactionConfirmed(self,accounting_transaction,
+      sequence=None, sequence_list=None, **kw):
+    self.assertEquals('confirmed',
+        accounting_transaction.getSimulationState())
 
 
   def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -138,103 +154,175 @@ class TestBudget(ERP5TypeTestCase):
     self.portal_categories = self.getCategoryTool()
     self.portal_workflow = self.getWorkflowTool()
     self.createCategories()
-    # Must add some accounts, accounting transactions, budget and budget transaction, etc.
+    # Must add some accounts, accounting transactions, budget and budget
+    # transaction, etc.
     account_module = self.getAccountModule()
     accounting_module = self.getAccountingModule()
     self.currency_module = self.getCurrencyModule()
     self.organisation_module = self.getOrganisationModule()
     budget_module = self.getBudgetModule()
     budget_transaction_module  = self.getBudgetTransactionModule()
-    self.getAccountingModule().manage_addLocalRoles('maurice', ('Assignor','Assignee','Manager','Owner',))
+    self.getAccountingModule().manage_addLocalRoles('maurice',
+        ('Assignor','Assignee','Manager','Owner',))
     # flush activities
     get_transaction().commit()
     self.tic()
     # When using light install, only base categories are created
     if len(self.portal_categories.region.contentValues()) == 0 :
-      o = self.portal_categories.region.newContent(portal_type='Category', id='europe')
+      o = self.portal_categories.region.newContent(portal_type='Category',
+          id='europe')
       o = o.newContent(portal_type='Category', id='west')
       o.newContent(portal_type='Category', id='france')
 
-    # If currency/XOF already exists, it means that the afterSetUp actions were already commited. Then, we just need to link to them.
+    # If currency_module/XOF already exists, it means that the afterSetUp
+    # actions were already commited. Then, we just need to link to them.
     old_eur = getattr( self.getCurrencyModule(), 'EUR', None)
     # Create some currencies
     if old_eur is None :
-      eur = self.getCurrencyModule().newContent(id='EUR', title='Euros', portal_type='Currency')
+      eur = self.getCurrencyModule().newContent(id='EUR', title='Euros',
+          portal_type='Currency')
 
     # Create some organisations
-    old_organisation = getattr( self.organisation_module, 'world_company', None)
+    old_organisation = getattr( self.organisation_module, 'world_company',
+        None)
     if old_organisation is None:
-      self.organisation0 = self.organisation_module.newContent(id='world_company', title='World Company Inc.', portal_type='Organisation')
-      self.organisation0.newContent(id='default_address', portal_type='Address', region='europe/west/france')
+      self.organisation0 = self.organisation_module.newContent(
+          id='world_company', title='World Company Inc.',
+          portal_type='Organisation')
+      self.organisation0.newContent(id='default_address',
+          portal_type='Address', region='europe/west/france')
     old_nexedi = getattr( self.organisation_module, 'nexedi', None)
     if old_nexedi is None:
-      self.organisation1 = self.organisation_module.newContent(id='nexedi', title='Nexedi', portal_type='Organisation')
-      self.organisation1.newContent(id='default_address', portal_type='Address', region='europe/west/france')
+      self.organisation1 = self.organisation_module.newContent(id='nexedi',
+          title='Nexedi', portal_type='Organisation')
+      self.organisation1.newContent(id='default_address',
+          portal_type='Address', region='europe/west/france')
     old_client1 = getattr( self.organisation_module, 'client1', None)
     if old_client1 is None:
-      self.organisation2 = self.organisation_module.newContent(id='client1', title='Client1', portal_type='Organisation')
-      self.organisation2.newContent(id='default_address', portal_type='Address', region='europe/west/france')
+      self.organisation2 = self.organisation_module.newContent(id='client1',
+          title='Client1', portal_type='Organisation')
+      self.organisation2.newContent(id='default_address',
+          portal_type='Address', region='europe/west/france')
 
     # Create some accounts
     old_accounts = getattr( account_module, 'prestation_service', None)
     if old_accounts is None:
-      account_module.newContent(id='prestation_service', title='prestation_service', portal_type='Account', financial_section='actif/actif_circulant')
-      account_module.newContent(id='creance_client', title='creance_client', portal_type='Account', financial_section='actif/actif_circulant/caisse')
-      account_module.newContent(id='tva_collectee_196', title='tva_collectee_196', portal_type='Account', financial_section='actif/actif_circulant/caisse')
-      account_module.newContent(id='account1', title='Account1', portal_type='Account', financial_section='actif/actif_circulant/caisse')
-      account_module.newContent(id='account2', title='Account2', portal_type='Account', financial_section='actif/actif_immobilise/immobilisations_financieres')
-      account_module.newContent(id='account3', title='Account3', portal_type='Account', financial_section='actif/actif_immobilise/immobilisations_financieres')
-      account_module.newContent(id='account4', title='Account4', portal_type='Account', financial_section='actif/actif_immobilise/immobilisations_financieres')
+      account_module.newContent(id='prestation_service',
+          title='prestation_service', portal_type='Account',
+          financial_section='actif/actif_circulant')
+      account_module.newContent(id='creance_client', title='creance_client',
+          portal_type='Account',
+          financial_section='actif/actif_circulant/caisse')
+      account_module.newContent(id='tva_collectee_196',
+          title='tva_collectee_196', portal_type='Account',
+          financial_section='actif/actif_circulant/caisse')
+      account_module.newContent(id='account1', title='Account1',
+          portal_type='Account',
+          financial_section='actif/actif_circulant/caisse')
+      account_module.newContent(id='account2', title='Account2',
+          portal_type='Account',
+          financial_section='actif/actif_immobilise/immobilisations_financieres')
+      account_module.newContent(id='account3', title='Account3',
+          portal_type='Account',
+          financial_section='actif/actif_immobilise/immobilisations_financieres')
+      account_module.newContent(id='account4', title='Account4',
+          portal_type='Account',
+          financial_section='actif/actif_immobilise/immobilisations_financieres')
 
     # Create some accounting transactions
-    self.accounting_transaction1 = accounting_module.newContent(portal_type='Accounting Transaction',title='Accounting 1 ', source_section='organisation/world_company', destination_section='organisation/client1', start_date='2005/08/22 18:06:26.388 GMT-4', resource='currency/EUR', source_function='function/hq')
-    self.accounting_transaction1.newContent(portal_type='Accounting Transaction Line', source_section='organisation/world_company', resource='currency/EUR', source_debit='2000.0', source_credit='0.0', source='account_module/account1')
-    self.accounting_transaction1.newContent(portal_type='Accounting Transaction Line', source_section='organisation/world_company', resource='currency/EUR', source_debit='0.0', source_credit='2000.0', source='account_module/account2')
+    self.accounting_transaction1 = accounting_module.newContent(
+        portal_type='Accounting Transaction',title='Accounting 1',
+        source_section='organisation_module/world_company',
+        destination_section='organisation_module/client1',
+        start_date='2005/08/22 18:06:26.388 GMT-4',
+        resource='currency_module/EUR', source_function='function/hq')
+    self.accounting_transaction1.newContent(
+        portal_type='Accounting Transaction Line',
+        source_section='organisation_module/world_company',
+        resource='currency_module/EUR', source_debit='2000.0',
+        source_credit='0.0', source='account_module/account1')
+    self.accounting_transaction1.newContent(
+        portal_type='Accounting Transaction Line',
+        source_section='organisation_module/world_company',
+        resource='currency_module/EUR', source_debit='0.0',
+        source_credit='2000.0', source='account_module/account2')
 
-    self.accounting_transaction2 = accounting_module.newContent(portal_type='Accounting Transaction',title='Accounting 2 ', source_section='organisation/world_company', destination_section='organisation/client1', start_date='2005/08/22 18:06:26.388 GMT-4', resource='currency/EUR', source_function='function/hq')
-    self.accounting_transaction2.newContent(portal_type='Accounting Transaction Line', source_section='organisation/world_company', resource='currency/EUR', source_debit='100000.0', source_credit='0.0', source='account_module/account1')
-    self.accounting_transaction2.newContent(portal_type='Accounting Transaction Line', source_section='organisation/world_company', resource='currency/EUR', source_debit='0.0', source_credit='100000.0', source='account_module/account4')
+    self.accounting_transaction2 = accounting_module.newContent(
+        portal_type='Accounting Transaction',title='Accounting 2',
+        source_section='organisation_module/world_company',
+        destination_section='organisation_module/client1',
+        start_date='2005/08/22 18:06:26.388 GMT-4',
+        resource='currency_module/EUR', source_function='function/hq')
+    self.accounting_transaction2.newContent(
+        portal_type='Accounting Transaction Line',
+        source_section='organisation_module/world_company',
+        resource='currency_module/EUR', source_debit='100000.0',
+        source_credit='0.0', source='account_module/account1')
+    self.accounting_transaction2.newContent(
+        portal_type='Accounting Transaction Line',
+        source_section='organisation_module/world_company',
+        resource='currency_module/EUR', source_debit='0.0',
+        source_credit='100000.0', source='account_module/account4')
 
     id_list = []
-    for objects in self.accounting_transaction1.getPortalObject().budget_module.objectValues():
-        id_list.append(objects.getId())
+    for objects in self.accounting_transaction1.getPortalObject().\
+        budget_module.objectValues():
+      id_list.append(objects.getId())
     self.accounting_transaction1.budget_module.manage_delObjects(id_list)
 
     id_list = []
-    for objects in self.accounting_transaction1.getPortalObject().budget_transaction_module.objectValues():
-        id_list.append(objects.getId())
-    self.accounting_transaction1.budget_transaction_module.manage_delObjects(id_list)
+    for objects in self.accounting_transaction1.getPortalObject().\
+        budget_transaction_module.objectValues():
+      id_list.append(objects.getId())
+    self.accounting_transaction1.budget_transaction_module.\
+        manage_delObjects(id_list)
 
 
-    budget1 = budget_module.newContent(portal_type='Budget',title='Budget initial ', group='world_company', start_date='2005/01/01 18:06:26.388 GMT-4', stop_date='2005/12/31 18:06:26.388 GMT-4')
-    budget_line1 = budget1.newContent(portal_type='Budget Line', group='world_company', resource='currency/EUR',title = 'Line 1 of budget')
+    budget1 = budget_module.newContent(
+        portal_type='Budget', title='Budget initial ', group='world_company',
+        start_date='2005/01/01 18:06:26.388 GMT-4',
+        stop_date='2005/12/31 18:06:26.388 GMT-4')
+    budget_line1 = budget1.newContent(
+        portal_type='Budget Line', group='world_company',
+        resource='currency_module/EUR', title='Line 1 of budget')
     budget_cell1 = budget_line1.newContent(
-                      id = 'cell_0_0_1',
-                      portal_type = 'Budget Cell',
-                      mapped_value_property_list = ('max_quantity'),
-                      membership_criterion_category_list = ['financial_section/actif/actif_circulant/caisse', 'function/hq', 'group/world_company'],
-                      membership_criterion_base_category_list = ['financial_section','function','group']
-                    )
+        id='cell_0_0_1', portal_type='Budget Cell',
+        mapped_value_property_list=('max_quantity'),
+        membership_criterion_category_list=[
+          'financial_section/actif/actif_circulant/caisse', 'function/hq',
+          'group/world_company'],
+        membership_criterion_base_category_list=[ 'financial_section',
+          'function', 'group'])
     budget_cell1.setQuantity(3000.0)
 
     budget_cell2 = budget_line1.newContent(
-                      id = 'cell_0_1_0',
-                      portal_type = 'Budget Cell',
-                      mapped_value_property_list = ('max_quantity'),
-                      membership_criterion_category_list = [ 'financial_section/actif/actif_immobilise/immobilisations_financieres', 'function/hq', 'group/world_company'],
-                      membership_criterion_base_category_list = ['financial_section','function','group']
-                    )
+        id='cell_0_1_0', portal_type='Budget Cell',
+        mapped_value_property_list=('max_quantity'),
+        membership_criterion_category_list=[
+          'financial_section/actif/actif_immobilise/immobilisations_financieres',
+          'function/hq', 'group/world_company'],
+        membership_criterion_base_category_list=[ 'financial_section',
+          'function', 'group'])
     budget_cell2.setQuantity(1000.0)
 
-    budget_transfert1 = budget1.newContent(portal_type='Budget Transfer Line',
-                                           source=budget_cell1.getRelativeUrl(),
-                                           resource='currency/EUR',
-                                           destination=budget_cell2.getRelativeUrl(),
-                                           quantity=500.0)
+    budget_transfert1 = budget1.newContent(
+        portal_type='Budget Transfer Line',
+        source=budget_cell1.getRelativeUrl(), resource='currency_module/EUR',
+        destination=budget_cell2.getRelativeUrl(), quantity=500.0)
 
-    self.budget_transaction1 = budget_transaction_module.newContent(portal_type='Budget Transaction',source =budget_cell1.getRelativeUrl(), destination=budget_cell2.getRelativeUrl(), quantity=25.0,group='world_company', stop_date='2005/05/01 18:06:26.388 GMT-4')
+    self.budget_transaction1 = budget_transaction_module.newContent(
+        portal_type='Budget Transaction',
+        source=budget_cell1.getRelativeUrl(),
+        destination=budget_cell2.getRelativeUrl(),
+        quantity=25.0,group='world_company', stop_date='2005/05/01
+        18:06:26.388 GMT-4')
 
-    self.budget_transaction2 = budget_transaction_module.newContent(portal_type='Budget Transaction',source =budget_cell2.getRelativeUrl(), destination=budget_cell1.getRelativeUrl(), quantity=25.0,group='world_company', stop_date='2005/05/01 18:06:26.388 GMT-4')
+    self.budget_transaction2 = budget_transaction_module.newContent(
+        portal_type='Budget Transaction',
+        source=budget_cell2.getRelativeUrl(),
+        destination=budget_cell1.getRelativeUrl(),
+        quantity=25.0,group='world_company', stop_date='2005/05/01
+        18:06:26.388 GMT-4')
 
     # flush activities
     get_transaction().commit()
@@ -258,40 +346,40 @@ class TestBudget(ERP5TypeTestCase):
     """
     self.category_list = [
 
-                          # Function categories
-                           {'path' : 'function/hq'
-                            ,'title': 'HQ'
-                            }
-                          , {'path' : 'function/warehouse'
-                            ,'title': 'Warehouse'
-                            }
-                          , {'path' : 'function/research_center'
-                            ,'title': 'Research Center'
-                            }
+        # Function categories
+         {'path' : 'function/hq'
+          ,'title': 'HQ'
+          }
+        , {'path' : 'function/warehouse'
+          ,'title': 'Warehouse'
+          }
+        , {'path' : 'function/research_center'
+          ,'title': 'Research Center'
+          }
 
-                          # Group categories
-                          , {'path' : 'group/nexedi'
-                            ,'title': 'Nexedi'
-                            }
-                          , {'path' : 'group/world_company'
-                            ,'title': 'World Company Inc.'
-                            }
-                          # some financial sections
-                          , {'path' : 'financial_section/actif/actif_circulant'
-                            ,'title': 'Actif Circulant'
-                            }
-                          , {'path' : 'financial_section/actif/actif_circulant/caisse'
-                            ,'title': 'Caisse'
-                            }
-                          , {'path' : 'financial_section/actif/actif_immobilise/immobilisations_financieres'
-                            ,'title': 'Immobilisations Financieres'
-                            }
+        # Group categories
+        , {'path' : 'group/nexedi'
+          ,'title': 'Nexedi'
+          }
+        , {'path' : 'group/world_company'
+          ,'title': 'World Company Inc.'
+          }
+        # some financial sections
+        , {'path' : 'financial_section/actif/actif_circulant'
+          ,'title': 'Actif Circulant'
+          }
+        , {'path' : 'financial_section/actif/actif_circulant/caisse'
+          ,'title': 'Caisse'
+          }
+        , {'path' : 'financial_section/actif/actif_immobilise/immobilisations_financieres'
+          ,'title': 'Immobilisations Financieres'
+          }
 
-                          ]
+        ]
 
     # Create categories
-    # Note : this code was taken from the CategoryTool_importCategoryFile python
-    #        script (packaged in erp5_core).
+    # Note : this code was taken from the CategoryTool_importCategoryFile
+    # python script (packaged in erp5_core).
     for category in self.category_list:
       keys = category.keys()
       if 'path' in keys:
@@ -336,10 +424,9 @@ class TestBudget(ERP5TypeTestCase):
 #    """
 #    portal_type = 'Organisation'
 #    organisation_module = self.portal.getDefaultModule(portal_type)
-#    self.organisation = organisation_module.newContent( portal_type       = portal_type
-#                                                      , group             = 'group/world_company'
-#                                                      , immediate_reindex = 1
-#                                                      )
+#    self.organisation = organisation_module.newContent(
+#    portal_type=portal_type, group='group/world_company',
+#    immediate_reindex=1)
 
   ### TODO: write here basic steps
 
@@ -378,7 +465,8 @@ class TestBudget(ERP5TypeTestCase):
               function = obj.getMembershipCriterionCategoryList()[1]
               group = obj.getMembershipCriterionCategoryList()[2]
               quantity = obj.getQuantity()
-              message += str(obj.getId())+': '+str(financial_section)+', '+str(function)+', '+str(group)+', '+str(quantity)+'\n'
+              message += str(obj.getId())+': '+str(financial_section)+', ' \
+                  +str(function)+', '+str(group)+', '+str(quantity)+'\n'
     if len_cells == 0:
        message = "could not create budget cells"
     ZopeTestCase._print('\n%s ' % message)
@@ -392,7 +480,8 @@ class TestBudget(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet:
-      message = 'Test if there is enough budget before validating an accounting transaction'
+      message = 'Test if there is enough budget before validating an '\
+          + 'accounting transaction'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
     self.stepConfirmAccountingTransaction(self.accounting_transaction1)
@@ -404,7 +493,8 @@ class TestBudget(ERP5TypeTestCase):
 #       ZopeTestCase._print('\n%s ' % message)
 #       LOG('Testing accounting transaction 1... ',0,message)
 #     else:
-#       message = 'There is not enough budget, so this transaction will not be validated'
+#       message = 'There is not enough budget, so this transaction will not be
+#       validated'
 #       ZopeTestCase._print('\n%s ' % message)
 #       LOG('Testing accounting transaction 1... ',0,message)
 
@@ -417,7 +507,8 @@ class TestBudget(ERP5TypeTestCase):
 #       ZopeTestCase._print('\n%s ' % message)
 #       LOG('Testing accounting transaction 2... ',0,message)
 #     else:
-#       message = 'There is not enough budget, so this transaction will not be validated'
+#       message = 'There is not enough budget, so this transaction will not be
+#       validated'
 #       ZopeTestCase._print('\n%s ' % message)
 #       LOG('Testing accounting transaction 2... ',0,message)
 
