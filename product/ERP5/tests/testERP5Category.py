@@ -228,9 +228,9 @@ class TestERP5Category(ERP5TypeTestCase):
       self.logMessage('Rename a Base Category with a Person Related to a Sub-Sub-Sub-Category')
     o = self.organisation
     o.setEfgValueList([self.efg_l4])
-    self.failIfDifferentSet(o.getEfgList(),[self.base_cat2+'/1/11/111/1111'])
+    self.failIfDifferentSet(o.getEfgList(base=1),[self.base_cat2+'/1/11/111/1111'])
     self.efg_l1.edit(id='new_id')
-    self.failIfDifferentSet(o.getEfgList(),[self.base_cat2+'/new_id/11/111/1111'])
+    self.failIfDifferentSet(o.getEfgList(base=1),[self.base_cat2+'/new_id/11/111/1111'])
 
   def test_08(self, quiet=0, run=run_all_test):
     if not run: return
