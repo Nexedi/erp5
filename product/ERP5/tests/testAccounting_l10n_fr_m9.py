@@ -173,6 +173,51 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transmission_sheet, 'emit_action')
 
+  def test_AccountTypeConstaintForExpense(self):
+    account = self._getAccount('account',
+                               gap='fr/m9/6/60/602/6022/60225',
+                               account_type='expense')
+    self.assertEquals([], account.checkConsistency())
+  
+  def test_AccountTypeConstaintFixForExpense(self):
+    account = self._getAccount('account',
+                               gap='fr/m9/6/60/602/6022/60225',
+                               account_type='equity')
+    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.assertEquals('expense', account.getAccountType())
+
+  def test_AccountTypeConstaintForPayable(self):
+    account = self._getAccount('payable_account',
+                               gap='fr/m9/4/40',
+                               account_type='liability/payable')
+    self.assertEquals([], account.checkConsistency())
+  
+  def test_AccountTypeConstaintFixForPayable(self):
+    account = self._getAccount('payable_account',
+                               gap='fr/m9/4/40',
+                               account_type='equity')
+    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.assertEquals('liability/payable', account.getAccountType())
+
+  def test_AccountTypeConstaintForClass4(self):
+    # members of class 4 can be payable or receivable
+    account = self._getAccount('class4_account',
+                               gap='fr/m9/4/44',
+                               account_type='liability/payable')
+    self.assertEquals([], account.checkConsistency())
+    
+    account.edit(account_type='asset/receivable')
+    self.assertEquals([], account.checkConsistency())
+    
+  def test_AccountTypeConstaintFixForClass4(self):
+    # members of class 4 can be payable or receivable
+    account = self._getAccount('class4_account',
+                               gap='fr/m9/4/44',
+                               account_type='equity')
+    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.failUnless(account.getAccountType() in ('liability/payable',
+                                                 'asset/receivable'))
+
 if __name__ == '__main__':
   framework()
 else:
