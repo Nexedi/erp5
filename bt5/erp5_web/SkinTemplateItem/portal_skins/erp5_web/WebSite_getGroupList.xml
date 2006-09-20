@@ -72,11 +72,14 @@
 
 """\n
 Short description:\n
+\n
   This script is able to aggregate form groups automaticcaly, according our own\n
   rules. This is required to do custom xhtml layout for which a flat rendering\n
   of groups doesn\'t work.\n
 \n
+\n
 Detailed description:\n
+\n
   Actually, without this script, fields groups of the ERP5 form used for layout\n
   are rendered in a flat way like this:\n
 \n
@@ -125,6 +128,7 @@ Detailed description:\n
 \n
 \n
 Rules:\n
+\n
   1 - If the group id don\'t match any group_by_criterion string, the group will\n
       be added in the last aggregate (see \'footer\' group in exemple below).\n
   2 - A group can\'t be in two differrent aggregate (no duplicate).\n
@@ -164,22 +168,27 @@ Example:\n
     [ [\'left\',   [ (\'left column\', \'left column\', \'left column\')\n
                  , (\'left ad\', \'left ad\', \'left ad\')\n
                  , (\'left discount\', \'Discount on Right Handed Tools\', \'(Discount on Right Handed Tools) left discount\')\n
-]]\n
+                 ]]\n
     , [\'right\',  [ (\'metadata right\', \'metadata right\', \'metadata right\')\n
                  , (\'right ad\', \'right ad\', \'right ad\')\n
-]]\n
+                 ]]\n
     , [\'center\', [\n
-]]\n
+                 ]]\n
     , [\'bottom\', [ (\'bottom content\', \'bottom content\', \'bottom content\')\n
                  , (\'footer\', \'footer\', \'footer\')\n
                  , (\'bottom right\', \'bottom right\', \'bottom right\')\n
-]]\n
-]\n
+                 ]]\n
+    ]\n
+\n
 \n
 Tips:\n
-  * The returned list structure is design to let you cast them as dict() if you don\'t care about group aggregate ordering. This also help you to get group aggregate more easily\n
+\n
+  * The returned list structure is design to let you cast it as dict() if you don\'t\n
+    care about group aggregate ordering. This also help you to get group aggregate\n
+    more easily.\n
 \n
 """\n
+\n
 \n
 aggregate_list = []  # Returned data structure\n
 \n
@@ -219,12 +228,12 @@ for group_id in layout_form.get_groups(include_empty=0):                      # 
 \n
 \n
 # Reorder the list                                                            # Rule (3)\n
-aggregate_list = []\n
 for criterion in group_by_criterion:\n
   aggregate = [ criterion\n
               , aggregate_dict[criterion]\n
-]\n
+              ]\n
   aggregate_list.append(aggregate)\n
+\n
 \n
 return aggregate_list\n
 
