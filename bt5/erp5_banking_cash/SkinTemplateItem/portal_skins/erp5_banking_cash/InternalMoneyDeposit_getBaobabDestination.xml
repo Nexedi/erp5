@@ -88,7 +88,7 @@ if user_id is not None:\n
   for site in site_list:\n
     context.log(\'site\',site)\n
     site_value = context.portal_categories.getCategoryValue(site)\n
-    if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
+    if site_value.getVaultType().endswith(\'guichet\') and (destination in site or site in destination):\n
       baobab_destination = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
       found = 1\n
       context.log(\'baobab_destination\',baobab_destination)\n
@@ -115,7 +115,9 @@ return baobab_destination\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/InternalMoneyDeposit_getBaobabDestination</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
