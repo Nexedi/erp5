@@ -8,6 +8,12 @@ rm -f $DIRECTORY/test_full_output
 touch $DIRECTORY/test_full_output
 $DIRECTORY/update_cvs
 
+if [ -d ${DIRECTORY}/ERP5/.svn ]
+then
+  svn info ${DIRECTORY}/ERP5 | grep -e '^R.vision[ \t]:' \
+      >> ${DIRECTORY}/test_output
+fi
+
 # Excluded tests must be separated by whitespaces
 excluded_test_list="testPurchaseOrder testCatalogSecurity"
 
