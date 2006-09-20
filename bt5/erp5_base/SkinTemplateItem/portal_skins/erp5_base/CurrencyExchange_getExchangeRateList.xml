@@ -94,23 +94,33 @@ if to_currency is not None:\n
       start_date = DateTime()\n
     from Products.ERP5Type.Document import newTempBase\n
     temp_object = newTempBase(context.getPortalObject(),\'temp_object\')\n
-    temp_kw = {\'category_list\':[\'resource/%s\' % to_currency,\n
+    temp_kw = {\'category_list\':[\'resource/%s\' % from_currency,\n
                                 \'currency_exchange_type/%s\' % currency_exchange_type,\n
-                                \'price_currency/%s\' % from_currency],\n
+                                \'price_currency/%s\' % to_currency],\n
                \'start_date\':DateTime()\n
               }\n
-    context.log(\'Exchange Value temp_kw\',temp_kw)\n
     temp_object.edit(**temp_kw)\n
     object = temp_object\n
     mapped_value = context.portal_domains.generateMappedValue(object, \n
                                                       has_cell_content=0, \n
                                                       sort_method=sort_by_date)\n
+    predicate_list = context.portal_domains.searchPredicateList(object,\n
+        has_cell_content=0,\n
+        sort_method=sort_by_date)\n
+    context.log(\'predicate_list with test\',predicate_list)\n
+    context.log(\'temp_object.showDict\',temp_object.showDict())\n
+    predicate_list = context.portal_domains.searchPredicateList(object,\n
+        has_cell_content=0,\n
+        sort_method=sort_by_date,\n
+        test=0)\n
+    context.log(\'predicate_list without test\',predicate_list)\n
+    context.log\n
     result = [getattr(mapped_value, \'base_price\', None), \n
               getattr(mapped_value, \'discount\', None)]\n
     return result\n
   # The cache duration must not be too long, 300 is the maximum\n
   calculateExchangeFromParameters = CachingMethod(calculateExchangeFromParameters, \n
-                      id = \'calculateExchangeFromParameters\', cache_duration = 300)\n
+                      id = \'calculateExchangeFromParameterss\', cache_duration = 0)\n
   result = calculateExchangeFromParameters(start_date=start_date,\n
                        currency_exchange_type=currency_exchange_type,\n
                        from_currency=from_currency,to_currency=to_currency)\n
@@ -120,6 +130,7 @@ else:\n
                                                    sort_method=sort_by_date)\n
   result = [getattr(mapped_value, \'base_price\', None), \n
             getattr(mapped_value, \'discount\', None)]\n
+context.log(\'CurrencyExchange_getExchangeRateList,result:\',result)\n
 return result\n
 
 
