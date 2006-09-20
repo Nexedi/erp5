@@ -263,8 +263,12 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     #print self.portal.portal_categories.objectIds()
     # Monetary Destruction has source(serre) for source, destinat (serre) for destination, and a price coresponding to the sum of banknote of 10000 and of 5000 ( (2*3) * 10000 + (5*7) * 5000 )
-    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1', portal_type='Monetary Destruction', source_value=self.source, destination_value=None,
-                                                                            source_total_asset_price=110000.0, source_section_value=self.paris)
+    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1',
+                                                                            portal_type='Monetary Destruction',
+                                                                            source_value=self.source,
+                                                                            destination_value=None,
+                                                                            source_total_asset_price=110000.0,
+                                                                            source_section_value=self.paris)
     # execute tic
     self.stepTic()
     # set source reference
@@ -289,10 +293,19 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Create a monetary destruction document and check it
     """
     # Monetary Destruction has source(serre) for source, destinat (serre) for destination, and a price coresponding to the sum of banknote of 10000 and of 5000 ( (2*3) * 10000 + (5*7) * 5000 )
-    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1', portal_type='Monetary Destruction', source_value=self.source_for_externe, destination_value=None,
-                                                                            source_total_asset_price=110000.0, source_section_value=self.madrid)
+    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1',
+                                                                            portal_type='Monetary Destruction',
+                                                                            source_value=self.source_for_externe,
+                                                                            destination_value=None,
+                                                                            source_total_asset_price=110000.0,
+                                                                            source_section_value=self.madrid)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.monetary_destruction)
+    # check source reference
+    self.assertNotEqual(self.monetary_destruction.getSourceReference(), '')
+    self.assertNotEqual(self.monetary_destruction.getSourceReference(), None)
     # check we have only one monetary destruction
     self.assertEqual(len(self.monetary_destruction_module.objectValues()), 1)
     # get the monetary destruction document
