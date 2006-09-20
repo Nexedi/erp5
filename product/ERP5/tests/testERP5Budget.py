@@ -314,15 +314,15 @@ class TestBudget(ERP5TypeTestCase):
         portal_type='Budget Transaction',
         source=budget_cell1.getRelativeUrl(),
         destination=budget_cell2.getRelativeUrl(),
-        quantity=25.0,group='world_company', stop_date='2005/05/01
-        18:06:26.388 GMT-4')
+        quantity=25.0,group='world_company',
+        stop_date='2005/05/01 18:06:26.388 GMT-4')
 
     self.budget_transaction2 = budget_transaction_module.newContent(
         portal_type='Budget Transaction',
         source=budget_cell2.getRelativeUrl(),
         destination=budget_cell1.getRelativeUrl(),
-        quantity=25.0,group='world_company', stop_date='2005/05/01
-        18:06:26.388 GMT-4')
+        quantity=25.0,group='world_company',
+        stop_date='2005/05/01 18:06:26.388 GMT-4')
 
     # flush activities
     get_transaction().commit()
