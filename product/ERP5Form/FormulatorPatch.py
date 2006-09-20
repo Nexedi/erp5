@@ -686,11 +686,37 @@ def DateTimeField_get_default(self, key, value, REQUEST):
 DateTimeField._get_default = DateTimeField_get_default
 
 from Products.Formulator.Widget import DateTimeWidget
+old_date_time_widget_property_names = DateTimeWidget.property_names
 
 class PatchedDateTimeWidget(DateTimeWidget):
     """
       Added support for key in every call to render_sub_field
     """
+    hide_day = fields.CheckBoxField('hide_day',
+                                  title="Hide Day",
+                                  description=(
+        "The day will be hidden on the output. Instead the default"
+        "Day will be taken"),
+                                  default=0)
+
+    hidden_day_is_last_day = fields.CheckBoxField('hidden_day_is_last_day',
+                                  title="Hidden Day is last day of the Month",
+                                  description=(
+        "Defines wether hidden day means, you want the last day of the month"
+        "Else it will be the first day"),
+                                  default=0)
+
+    property_names = old_date_time_widget_property_names \
+        + ['hide_day', 'hidden_day_is_last_day']
+
+    def getInputOrder(self, field):
+      input_order = field.get_value('input_order')
+      if field.get_value('hide_day'):
+        if input_order == 'ymd':
+          input_order = 'ym'
+        elif input_order in ('dmy', 'mdy'):
+          input_order = 'my'
+      return input_order
 
     def render(self, field, key, value, REQUEST):
         use_ampm = field.get_value('ampm_time_style')
@@ -717,7 +743,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
                 hour = "%02d" % value.hour()
             minute = "%02d" % value.minute()
             ampm = value.ampm()
-        input_order = field.get_value('input_order')
+        input_order = self.getInputOrder(field)
         if input_order == 'ymd':
             order = [('year', year),
                      ('month', month),
@@ -730,6 +756,12 @@ class PatchedDateTimeWidget(DateTimeWidget):
             order = [('month', month),
                      ('day', day),
                      ('year', year)]
+        elif input_order == 'my':
+            order = [('month', month),
+                     ('year', year)]
+        elif input_order == 'ym':
+            order = [('year', year),
+                     ('month', month)]
         else:
             order = [('year', year),
                      ('month', month),
@@ -768,13 +800,17 @@ class PatchedDateTimeWidget(DateTimeWidget):
         minute = "%02d" % value.minute()
         ampm = value.ampm()
 
-        order = field.get_value('input_order')
+        order = self.getInputOrder(field)
         if order == 'ymd':
             output = [year, month, day]
         elif order == 'dmy':
             output = [day, month, year]
         elif order == 'mdy':
             output = [month, day, year]
+        elif order == 'my':
+            output = [month, year]
+        elif order == 'ym':
+            output = [year, month]
         else:
             output = [year, month, day]
         date_result = string.join(output, field.get_value('date_separator'))
@@ -801,7 +837,10 @@ class PatchedDateTimeValidator(DateTimeValidator):
         try:
             year = field.validate_sub_field('year', REQUEST, key=key)
             month = field.validate_sub_field('month', REQUEST, key=key)
-            day = field.validate_sub_field('day', REQUEST, key=key)
+            if field.get_value('hide_day'):
+              day = 1
+            else:
+              day = field.validate_sub_field('day', REQUEST, key=key)
 
             if field.get_value('date_only'):
                 hour = 0
@@ -821,7 +860,8 @@ class PatchedDateTimeValidator(DateTimeValidator):
             self.raise_error('not_datetime', field)
 
         # handling of completely empty sub fields
-        if ((year == '' and month == '' and day == '') and
+        if ((year == '' and month == '') and
+            (field.get_value('hide_day') or day == '') and
             (field.get_value('date_only') or (hour == '' and minute == '')
             or (hour == 0 and minute == 0))):
             if field.get_value('required'):
@@ -830,7 +870,8 @@ class PatchedDateTimeValidator(DateTimeValidator):
                 # field is not required, return None for no entry
                 return None
         # handling of partially empty sub fields; invalid datetime
-        if ((year == '' or month == '' or day == '') or
+        if ((year == '' or month == '') or
+            (not field.get_value('hide_day') and day == '') or
             (not field.get_value('date_only') and
              (hour == '' or minute == ''))):
             self.raise_error('not_datetime', field)
@@ -852,7 +893,18 @@ class PatchedDateTimeValidator(DateTimeValidator):
                 hour += 12
 
         try:
-            result = DateTime(int(year), int(month), int(day), hour, minute)
+            # handling of hidden day, which can be first or last day of the month:
+            if field.get_value('hidden_day_is_last_day'):
+              if int(month) == 12:
+                tmp_year = int(year) + 1
+                tmp_month = 1
+              else:
+                tmp_year = int(year)
+                tmp_month = int(month) + 1
+              tmp_day = DateTime(tmp_year, tmp_month, 1, hour, minute)
+              result = tmp_day - 1
+            else:
+              result = DateTime(int(year), int(month), int(day), hour, minute)
         # ugh, a host of string based exceptions (not since Zope 2.7)
         except ('DateTimeError', 'Invalid Date Components', 'TimeError',
                 DateError, TimeError) :
