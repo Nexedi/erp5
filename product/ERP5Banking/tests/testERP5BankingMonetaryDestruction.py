@@ -595,9 +595,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     Check that compution of inventory at vault source is right after confirm and before deliver 
     """
-    print self.monetary_destruction.getBaobabDestination()
-    print self.monetary_destruction.getBaobabDestinationUid()
-    
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we will have 0 banknote of 10000 after deliver
