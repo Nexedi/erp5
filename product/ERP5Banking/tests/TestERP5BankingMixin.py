@@ -426,7 +426,7 @@ class TestERP5BankingMixin:
          price_currency_value=self.currency_2, variation_list=('not_defined',),
          quantity_unit_value=self.unit)
 
-  def createFunctionGroupSiteCategory(self):
+  def createFunctionGroupSiteCategory(self, no_site=0):
     """
     Create site group function category that can be used for security
     """
@@ -469,64 +469,65 @@ class TestERP5BankingMixin:
     self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P1',  vault_type='site')
     self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S1',  vault_type='site')
 
-    for c in self.testsite.getCategoryChildValueList():
-      # create bank structure for each agency
-      site = c.getId()
-      # surface
-      surface = c.newContent(id='surface', portal_type='Category', codification='',  vault_type='site/surface')
-      caisse_courante = surface.newContent(id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
-      caisse_courante.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
-      # create counter for surface
-      for s in ['banque_interne', 'gros_versement', 'gros_payement']:
-        s = surface.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
-        for ss in ['guichet_1', 'guichet_2', 'guichet_3']:
-          ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
-          for sss in ['encaisse_des_billets_et_monnaies',]:
-            sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
-            for ssss in ['entrante', 'sortante']:
-              sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
-          for sss in ['encaisse_des_devises',]:
-            sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
-            for currency in ['usd']:
-              sss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(ss.getId(),))
+    if not no_site:
+      for c in self.testsite.getCategoryChildValueList():
+        # create bank structure for each agency
+        site = c.getId()
+        # surface
+        surface = c.newContent(id='surface', portal_type='Category', codification='',  vault_type='site/surface')
+        caisse_courante = surface.newContent(id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        caisse_courante.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        # create counter for surface
+        for s in ['banque_interne', 'gros_versement', 'gros_payement']:
+          s = surface.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
+          for ss in ['guichet_1', 'guichet_2', 'guichet_3']:
+            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+            for sss in ['encaisse_des_billets_et_monnaies',]:
+              sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
               for ssss in ['entrante', 'sortante']:
                 sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
-      # create sort room
-      salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
-      for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences']:
-        ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
-        if 'ventilation' in ss.getId():
-          for country in ['France', 'Spain']:
-            if country[0] != c.getCodification()[0]:
-              ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-      # caveau
-      caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
-      for s in ['auxiliaire', 'reserve', 'externes', 'serre','devises']:
-        s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
-        if s.getId() == 'serre':
-          for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
-            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-            if 'transit' in ss.getId():
-              for country in ['France', 'Spain']:
-                if country[0] != c.getCodification()[0]:
-                  ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+            for sss in ['encaisse_des_devises',]:
+              sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+              for currency in ['usd']:
+                sss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(ss.getId(),))
+                for ssss in ['entrante', 'sortante']:
+                  sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+        # create sort room
+        salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
+        for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences']:
+          ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
+          if 'ventilation' in ss.getId():
+            for country in ['France', 'Spain']:
+              if country[0] != c.getCodification()[0]:
+                ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+        # caveau
+        caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
+        for s in ['auxiliaire', 'reserve', 'externes', 'serre','devises']:
+          s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+          if s.getId() == 'serre':
+            for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
+              ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+              if 'transit' in ss.getId():
+                for country in ['France', 'Spain']:
+                  if country[0] != c.getCodification()[0]:
+                    ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
-        else:
-          for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
-                     'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
-            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-            if 'ventilation' in ss.getId():
-              for country in ['France', 'Spain']:
-                if country[0] != c.getCodification()[0]:
-                  ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-            if 'devises' in ss.getId():
-              for currency in ['eur','usd']:
-                  ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
-            #if ss.getId()=='encaisse_des_devises':
-            #  for
-          if s.getId() == 'auxiliaire':
-            for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
-              s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+          else:
+            for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
+                       'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
+              ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+              if 'ventilation' in ss.getId():
+                for country in ['France', 'Spain']:
+                  if country[0] != c.getCodification()[0]:
+                    ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+              if 'devises' in ss.getId():
+                for currency in ['eur','usd']:
+                    ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
+              #if ss.getId()=='encaisse_des_devises':
+              #  for
+            if s.getId() == 'auxiliaire':
+              for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
+                s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
 
   def openCounterDate(self, date=None, site=None):
