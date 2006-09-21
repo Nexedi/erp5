@@ -19,24 +19,30 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Draft of Purchase Invoice Transmission Sheet (%(count)s)</string> </value>
+            <value> <string>Transmission Sheets to affect (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_invoice_transmission_sheet_module/view?reset:int=1&validation_state=draft
+purchase_invoice_transmission_sheet_module/view?reset:int=1&validation_state=new
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>New Transmissions Sheets that needs to be affected</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +52,7 @@ purchase_invoice_transmission_sheet_module/view?reset:int=1&validation_state=dra
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transmission_draft</string> </value>
+            <value> <string>transmission_new</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -85,7 +91,7 @@ purchase_invoice_transmission_sheet_module/view?reset:int=1&validation_state=dra
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>new</string>
                       </tuple>
                     </value>
                 </item>
