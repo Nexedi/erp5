@@ -147,7 +147,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
                              'quantity': self.quantity_200}
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
-    self.gros_versement = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
+    self.gros_versement = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.openCounterDate(site=self.paris)
     self.openCounter(self.gros_versement)
@@ -211,13 +211,17 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     """
     self.assertEqual(self.money_deposit_rendering.getBaobabDestination(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
 
+
   def stepCreateMoneyDepositRendering(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a money deposit rendering document and check it
     """
     # Money deposit rendering has auxiliaire for source, gros_versement for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
 
-    self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(id='money_deposit_rendering_1', portal_type='Money Deposit Rendering', source_value=self.gros_versement, source_total_asset_price=52400.0)
+    self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(id='money_deposit_rendering_1',
+                                                                                  portal_type='Money Deposit Rendering',
+                                                                                  source_value=self.gros_versement,
+                                                                                  source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one money deposit rendering
@@ -227,10 +231,9 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # check its portal type
     self.assertEqual(self.money_deposit_rendering.getPortalType(), 'Money Deposit Rendering')
     # check that its source is auxiliaire
-    self.assertEqual(self.money_deposit_rendering.getSource(), 'site/testsite/paris/surface/gros_versement/guichet_1/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.money_deposit_rendering.getSource(), 'site/testsite/paris/surface/gros_versement/guichet_1/encaisse_des_billets_et_monnaies/entrante')
     # check that its destination is gros_versement
     #self.assertEqual(self.money_deposit_rendering.getDestination(), 'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
-
 
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
