@@ -354,6 +354,10 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
+                          <string>total_price</string>
+                          <string>Total Amount</string>
+                        </tuple>
+                        <tuple>
                           <string>Invoice_getPayableRemainingQuantity</string>
                           <string>Invoice Total Net Quantity</string>
                         </tuple>

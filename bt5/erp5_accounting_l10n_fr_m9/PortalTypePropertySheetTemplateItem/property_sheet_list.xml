@@ -3,7 +3,9 @@
   <item>M9Account</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transmission Sheet">
+  <item>PurchaseInvoiceTransmissionSheet</item>
   <item>SortIndex</item>
   <item>Task</item>
+  <item>DefaultRoleDefinition</item>
  </portal_type>
 </property_sheet_list>
