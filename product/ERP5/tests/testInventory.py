@@ -1549,8 +1549,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
         packing_list_line.edit(
             resource_value=resource_value,
-            default_resource_value=resource_value,
-            categories=category_list,
             variation_category_list=variation_category_list,
         )
         
