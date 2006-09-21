@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2006-03-04 05:03+EST\n"
+"PO-Revision-Date: 2006-03-04 05:03+EST\n"
+"Last-Translator:  <>\n"
+"Language-Team: fr <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Asset"
+msgstr "Actif"
+
+msgid "Income"
+msgstr "Produits"
+
+msgid "Expense"
+msgstr "Charges"
+
+msgid "Liability"
+msgstr "Passif"
+
+msgid "Receivable"
+msgstr "Créances"
+
+msgid "Equity"
+msgstr "Capital"
+
+msgid "Refundable VAT"
+msgstr "TVA déductible"
+
+msgid "Collected VAT"
+msgstr "TVA collectée"
+
+msgid "Bank"
+msgstr "Trésorerie"
+
+msgid "Payable"
+msgstr "Dettes"
+
+msgid "Cash"
+msgstr "Caisse"
