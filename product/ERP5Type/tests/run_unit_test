@@ -10,7 +10,7 @@ $DIRECTORY/update_cvs
 
 if [ -d ${DIRECTORY}/ERP5/.svn ]
 then
-  svn info ${DIRECTORY}/ERP5 | grep -e '^R.vision[ \t]:' \
+  svn info ${DIRECTORY}/ERP5 | grep -e '^R.vision[ \t]*:' \
       >> ${DIRECTORY}/test_output
 fi
 
