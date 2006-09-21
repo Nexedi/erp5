@@ -1,3 +1,8 @@
+2006-09-21 Kevin
+* Modify CSS selectors to apply the right style to forms and input by default.
+* erp5_web depends on erp5_xhtml_style.
+* Clean up default css.
+
 2006-09-20 Kevin
 * Admin toolbox style clean-up.
 

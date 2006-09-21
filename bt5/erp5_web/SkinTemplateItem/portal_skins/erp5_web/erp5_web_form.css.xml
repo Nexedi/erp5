@@ -61,8 +61,7 @@
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
-/*____________________________________\n
-\n
+/*========================================================================================\n
   Default ERP5 Web CSS.\n
 \n
   Guidelines (how-to create a good css):\n
@@ -79,10 +78,16 @@
     * Internet Explorer 6 (Layout: OK; Style: not OK)\n
 \n
   TODO: Layout is ok in ie6, now styling should be adapted to support ie6.\n
-____________________________________*/\n
+========================================================================================*/\n
 \n
 \n
-/* General stuff that are good to include in every website.\n
+\n
+/*========================================================================================\n
+**  GENERAL STUFF\n
+**========================================================================================*/\n
+\n
+\n
+/* Good CSS directive to include in every website to reset all browser default style.\n
 ----------------------------------------------- */\n
 \n
 * {\n
@@ -90,13 +95,9 @@ ____________________________________*/\n
   margin: 0;\n
 }\n
 \n
-.clear {\n
-  clear: both;\n
-}\n
+.clear {clear: both}\n
 \n
-img {\n
-  border: 0;\n
-}\n
+img {border: 0}\n
 \n
 a:link, a:visited {text-decoration: none}\n
 a:active, a:hover {text-decoration: underline}\n
@@ -108,27 +109,25 @@ a img, h3 img, button img, li img {\n
   vertical-align: middle;\n
 }\n
 \n
-ul {\n
-  list-style-position: inside;\n
-}\n
+ul {list-style-position: inside}\n
+li {margin-left: 1em}\n
 \n
-li {\n
-  margin-left: 1em;\n
-}\n
+.doNotDisplay {display: none}\n
 \n
 table {\n
   border-collapse: collapse;\n
   border-spacing: 0;\n
 }\n
 \n
-.doNotDisplay {\n
-  display: none;\n
-}\n
-\n
 p {\n
-  margin: 1em 0;\n
+  margin: .6em 0;\n
   text-align: justify;\n
 }\n
+\n
+\n
+\n
+/* Workflow states\n
+----------------------------------------------- */\n
 \n
 span.draft       {color: #be854d}\n
 span.published,\n
@@ -136,10 +135,12 @@ span.validated   {color: #078307}\n
 span.invalidated {color: #ab0303}\n
 span.cancelled   {color: #ccc}\n
 \n
+\n
+\n
 /* Emulate <center> html tag.\n
-** This class is called \'centered\' to not interfer with the \'center\' group\n
-** used in erp5_xhtml_style positionning.\n
-*/\n
+   This class is called \'centered\' to not interfer with the \'center\' group\n
+   used in erp5_xhtml_style rigid positionning mechanism.\n
+----------------------------------------------- */\n
 .centered {\n
   width: 100%;\n
   text-align: center;\n
@@ -148,105 +149,6 @@ span.cancelled   {color: #ccc}\n
 *.centered * {\n
   margin-left: auto;\n
   margin-right: auto;\n
-}\n
-\n
-\n
-\n
-/* Widget default styling\n
------------------------------------------------ */\n
-\n
-/* Default layout for form web widgets */\n
-\n
-form#main_form div.wrapper div.field {\n
-  background: #fff url(erp5-website-field.png) top repeat-x;\n
-  border: 1px solid #ccc;\n
-  color: #666;\n
-  margin: .3em;\n
-  padding: .5em;\n
-}\n
-\n
-form#main_form div.wrapper div.field label {\n
-  font-weight: bold;\n
-}\n
-\n
-\n
-\n
-/* Admin toolbox widget style\n
------------------------------------------------ */\n
-\n
-form#main_form div.wrapper div.adminToolbox {\n
-  position: fixed;\n
-  z-index: 200;\n
-  top: .2em;\n
-  right: .2em;\n
-  margin: 0;\n
-  padding: 0;\n
-  background-color: #fff7cd;\n
-  border: 1px solid #f77;\n
-}\n
-\n
-div.adminToolbox label {\n
-  display: none;\n
-}\n
-\n
-/* admin toolbox sub section title */\n
-div.adminToolbox h3 {\n
-  padding: .5em 0;\n
-  margin-left: -1em;\n
-  font-size: inherit;\n
-}\n
-\n
-/* admin toolbox title */\n
-div.adminToolbox > div > h3 {\n
-  background: #f77;\n
-  padding: .5em;\n
-  margin: 0;\n
-  color: #fff;\n
-  cursor: pointer;\n
-}\n
-\n
-div.adminToolbox > div > h3:hover {\n
-  background: #f00;\n
-}\n
-\n
-div.adminToolbox > div.input > div.adminSection {\n
-  border-bottom: 1px dotted #f77;\n
-  padding: .5em .5em 1em 1.5em;\n
-}\n
-\n
-div.adminToolbox > div.input > div.adminSection:last-child {\n
-  border-bottom: none;\n
-}\n
-\n
-div.adminToolbox ul {\n
-  list-style: none;\n
-}\n
-\n
-div.adminToolbox li {\n
-  margin: 0;\n
-}\n
-\n
-div.adminToolbox li > a {\n
-  text-decoration: none;\n
-}\n
-\n
-div.adminToolbox button,\n
-div.adminToolbox li > a {\n
-  margin: .1em 0;\n
-  padding: .2em;\n
-}\n
-\n
-div.adminToolbox button[type="submit"] {\n
-  display: none;\n
-}\n
-\n
-\n
-\n
-/* Breadcrumb default style\n
------------------------------------------------ */\n
-\n
-div.breadcrumb li a.selected {\n
-  border-bottom: 1px dashed #999;\n
 }\n
 \n
 \n
@@ -273,6 +175,7 @@ body, input, textarea, select, table {\n
 \n
 .code, code {\n
   font-family: "Courier New", Courier, monospace;\n
+  font-size: 120%; /* monospaced font are usually shorter than normal one */\n
 }\n
 \n
 #transition_message, .warning, .error, .important {\n
@@ -293,11 +196,16 @@ blockquote {\n
 \n
 \n
 \n
-/* General form styling\n
-  Form style based on Aleksandar Vaci\xc4\x87\'s work,\n
-  ditributed under Creative Commons Paternity Licence:\n
-    * http://creativecommons.org/licenses/by/2.0/\n
+\n
+/*========================================================================================\n
+**  FORMs & INPUTs\n
+**========================================================================================*/\n
+\n
+/*\n
+  Inspired by Aleksandar Vaci\xc4\x87\'s work,\n
+  distributed under Creative Commons Paternity Licence:\n
     * http://www.aplus.co.yu/css/forms/?css=1\n
+    * http://creativecommons.org/licenses/by/2.0/\n
 ----------------------------------------------- */\n
 \n
 input, textarea {\n
@@ -364,143 +272,14 @@ button:hover {\n
 \n
 \n
 \n
-/* Content zone form styling (apply for editable mode and read\n
-** only mode within the content zone).\n
-** TODO: Change form rendering to let the field go below the label\n
-**       if there is not enought width to display them inline.\n
-** TODO: Use dtml variables to define dynamiccaly label width.\n
------------------------------------------------ */\n
-\n
-div.content div.input {\n
-  margin-left: 11.5em;   /* = div.content label width + 0.5 of margin */\n
-}\n
-\n
-div.content fieldset {\n
-  margin: 1em 0;\n
-  padding: .5em;\n
-  border-color: #ccc;\n
-  border-width: 1px 0 0;\n
-  border-style: dotted none none;\n
-}\n
-\n
-div.content fieldset > div {\n
-  clear: both;\n
-  margin: .1em 0;\n
-  position: relative;\n
-}\n
-\n
-div.content legend {\n
-  padding: .2em .5em;\n
-  font-weight: bold;\n
-  color: #666;\n
-  text-transform: capitalize;\n
-}\n
-\n
-div.content label {\n
-  margin: 0;\n
-  display: block;\n
-  width: 11em;\n
-  text-align: right;\n
-  float: left;\n
-  text-transform: capitalize;\n
-}\n
-\n
-\n
-/* Reset common fieldset styling:\n
-     - no need to let some free space in the left side\n
-     - no need to display label\n
-     - no need to display fieldset legend\n
-   TODO: Because thoses properties are used for generic ".bottom" fieldset\n
-         and webcontent custom forms, we can add a new CSS class with a better\n
-         name to enhance semantics.\n
-*/\n
-div.content fieldset.bottom legend,\n
-div.content fieldset.bottom label {\n
-  display: none;\n
-}\n
-div.content fieldset.bottom div.input {\n
-  margin-left: inherit;\n
-}\n
-\n
-\n
-\n
-/* Edit tabs styling.\n
-** Edit tabs are another part of admin stuffs and\n
-** should respect other admin design convention\n
-** (colors, etc...) to keep the UI consistent.\n
------------------------------------------------ */\n
-\n
-div.actions {\n
-  position: relative;\n
-  width: 100%;\n
-  height: 3em;\n
-}\n
-\n
-div.actions ul {\n
-  position: absolute;\n
-  bottom: -1px;\n
-  list-style: none;\n
-  margin: 0;\n
-}\n
-\n
-div.actions ul li  {\n
-  display: inline;\n
-  margin: 0;\n
-  padding: 0;\n
-}\n
-\n
-div.actions ul a, div.actions ul li.selected a {\n
-  display: block;\n
-  float: left;\n
-  padding: 4px 1em;\n
-  margin: 1px 2px 0 0;\n
-  text-align: center;\n
-  text-decoration: none;\n
-}\n
-\n
-div.actions ul a {\n
-  background: #fffae1;\n
-  border: 1px solid #999;\n
-}\n
-\n
-div.actions ul li.selected a, div.actions ul li.selected a:hover {\n
-  border-bottom: none;\n
-  padding-bottom: 6px;\n
-  margin-top: 0;\n
-  background: #fff;\n
-}\n
-\n
-div.actions ul a:hover {\n
-  margin-top: 0;\n
-  border-color: #000;\n
-  border-bottom: none;\n
-  padding-bottom: 5px;\n
-}\n
-\n
-\n
-\n
-/* Editable mode forms styling\n
------------------------------------------------ */\n
-\n
-div.document > div.editable {\n
-  border: 1px solid #999;\n
-}\n
-\n
-/* Save button styling */\n
-div.actions button {\n
-  position: absolute; /* XXX bad location: should be at the bottom of the form */\n
-  z-index: 300;\n
-  top: -.5em;\n
-  right: 0;\n
-}\n
-\n
-\n
-\n
 /* Custom web Listbox styling.\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
 -----------------------------------------------*/\n
 \n
-table.listbox, table.listbox tr, table.listbox td, table.listbox th {\n
+table.listbox,\n
+table.listbox tr,\n
+table.listbox td,\n
+table.listbox th {\n
   border: 0;\n
   color: #000;\n
   line-height: 1.5em;\n
@@ -516,14 +295,16 @@ table.listbox {\n
 table.listbox .right {float: right}\n
 table.listbox .left  {float: left}\n
 \n
-table.listbox caption, div.searchResultHeader {\n
+table.listbox caption,\n
+div.searchResultHeader {\n
   border-top: 1px #3366CC solid;\n
   background-color: #c3e3df;\n
   padding: .2em;\n
   color: #000;\n
 }\n
 \n
-table.listbox caption em, div.searchResultHeader em {\n
+table.listbox caption em,\n
+div.searchResultHeader em {\n
   font-weight: bold;\n
   font-style: normal;\n
 }\n
@@ -546,7 +327,8 @@ table.listbox thead th {\n
   font-variant: small-caps;\n
 }\n
 \n
-table.listbox tbody td.externalLink a, table.listbox tbody th.externalLink a {\n
+table.listbox tbody td.externalLink a,\n
+table.listbox tbody th.externalLink a {\n
   text-decoration: none;\n
   background: transparent url(erp5-website-external-link.png) center right no-repeat;\n
   padding-right: 15px;\n
@@ -604,6 +386,258 @@ table.listbox tfoot .pageNavigation button:hover {\n
 \n
 \n
 \n
+\n
+/*========================================================================================\n
+**  WEB WIDGET\n
+**========================================================================================*/\n
+\n
+/* Default layout and style of form web widgets.\n
+   All widgets (extracted from layout form) are always inside a wrapper.\n
+----------------------------------------------- */\n
+\n
+div.wrapper div.field {\n
+  background: #fff url(erp5-website-field.png) top repeat-x;\n
+  border: 1px solid #ccc;\n
+  color: #666;\n
+  margin: .3em;\n
+  padding: .5em;\n
+}\n
+\n
+div.wrapper div.field label {\n
+  font-weight: bold;\n
+}\n
+\n
+\n
+\n
+/* Admin toolbox widget style.\n
+   Some properties override default web widget style,\n
+     that\'s why there is "div.wrapper" in some CSS selectors.\n
+----------------------------------------------- */\n
+\n
+div.wrapper div.adminToolbox {\n
+  position: fixed;\n
+  z-index: 200;\n
+  top: 2px;\n
+  right: 2px;\n
+  margin: 0;\n
+  padding: 0;\n
+  background-color: #fff7cd;\n
+  border: 1px solid #f77;\n
+}\n
+\n
+div.adminToolbox label {\n
+  display: none;\n
+}\n
+\n
+/* Sub section title */\n
+div.adminToolbox h3 {\n
+  padding: .5em 0;\n
+  margin-left: -1em;\n
+  font-size: inherit;\n
+}\n
+\n
+/* Title */\n
+div.adminToolbox > div > h3 {\n
+  background: #f77;\n
+  padding: .5em;\n
+  margin: 0;\n
+  color: #fff;\n
+  cursor: pointer;\n
+}\n
+\n
+div.adminToolbox > div > h3:hover {\n
+  background: #f00;\n
+}\n
+\n
+div.adminToolbox > div.input > div.adminSection {\n
+  border-bottom: 1px dotted #f77;\n
+  padding: .5em .5em 1em 1.5em;\n
+}\n
+\n
+div.adminToolbox > div.input > div.adminSection:last-child {\n
+  border-bottom: none;\n
+}\n
+\n
+div.adminToolbox ul {\n
+  list-style: none;\n
+}\n
+\n
+div.adminToolbox li {\n
+  margin: 0;\n
+}\n
+\n
+div.adminToolbox li > a {\n
+  text-decoration: none;\n
+}\n
+\n
+div.adminToolbox button,\n
+div.adminToolbox li > a {\n
+  margin: .1em 0;\n
+  padding: .2em;\n
+}\n
+\n
+div.adminToolbox button[type="submit"] {\n
+  display: none;\n
+}\n
+\n
+/*div.adminToolbox fieldset {\n
+  background: #ff0;\n
+  border-top: none;\n
+}\n
+\n
+div.adminToolbox legend {\n
+  border: none;\n
+}*/\n
+\n
+\n
+\n
+/* Breadcrumb default style\n
+----------------------------------------------- */\n
+\n
+div.breadcrumb li a.selected {\n
+  border-bottom: 1px dashed #999;\n
+}\n
+\n
+\n
+\n
+\n
+/*========================================================================================\n
+**  PAGE LAYOUT\n
+**========================================================================================*/\n
+\n
+/* Content zone form styling (apply for editable mode and read\n
+   only mode within the content zone).\n
+   TODO: Change form rendering to let the field go below the label\n
+         if there is not enought width to display them inline.\n
+   TODO: Use dtml variables to define dynamiccaly label width.\n
+----------------------------------------------- */\n
+\n
+fieldset div.input {\n
+  margin-left: 11.5em;   /* = div.content label width + 0.5 of margin */\n
+}\n
+\n
+fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+fieldset legend {\n
+  padding: .2em .5em;\n
+  font-weight: bold;\n
+  color: #666;\n
+  text-transform: capitalize;\n
+}\n
+\n
+fieldset label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 11em;\n
+  text-align: right;\n
+  float: left;\n
+  text-transform: capitalize;\n
+}\n
+\n
+\n
+\n
+/* Edit tabs styling.\n
+** Edit tabs are another part of admin stuffs and\n
+** should respect other admin design convention\n
+** (colors, etc...) to keep the UI consistent.\n
+----------------------------------------------- */\n
+\n
+div.actions {\n
+  position: relative;\n
+  width: 100%;\n
+  height: 3em;\n
+}\n
+\n
+div.actions ul {\n
+  position: absolute;\n
+  bottom: -1px;\n
+  list-style: none;\n
+  margin: 0;\n
+}\n
+\n
+div.actions ul li  {\n
+  display: inline;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div.actions ul a,\n
+div.actions ul li.selected a {\n
+  display: block;\n
+  float: left;\n
+  padding: 4px 1em;\n
+  margin: 1px 2px 0 0;\n
+  text-align: center;\n
+  text-decoration: none;\n
+}\n
+\n
+div.actions ul a {\n
+  background: #fffae1;\n
+  border: 1px solid #999;\n
+}\n
+\n
+div.actions ul li.selected a,\n
+div.actions ul li.selected a:hover {\n
+  border-bottom: none;\n
+  padding-bottom: 6px;\n
+  margin-top: 0;\n
+  background: #fff;\n
+}\n
+\n
+div.actions ul a:hover {\n
+  margin-top: 0;\n
+  border-color: #000;\n
+  border-bottom: none;\n
+  padding-bottom: 5px;\n
+}\n
+\n
+\n
+\n
+/* Editable mode forms styling\n
+----------------------------------------------- */\n
+\n
+div.document > div.editable {\n
+  border: 1px solid #999;\n
+}\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+  position: absolute; /* XXX bad location: should be at the bottom of the form */\n
+  z-index: 300;\n
+  top: -.5em;\n
+  right: 0;\n
+}\n
+\n
+/* Reset common fieldset styling for bottom group in editable mode:\n
+     - no need to let some free space in the left side\n
+     - no need to display label\n
+     - no need to display fieldset legend\n
+   TODO: Because thoses properties are used for generic ".bottom" fieldset\n
+         and webcontent custom forms, we can add a new CSS class with a better\n
+         name to enhance semantics.\n
+*/\n
+div.content fieldset.bottom legend,\n
+div.content fieldset.bottom label {\n
+  display: none;\n
+}\n
+div.content fieldset.bottom div.input {\n
+  margin-left: inherit;\n
+}\n
+\n
+\n
+\n
 /* Special rendering for read-only webcontent\n
      (used in WebPage_viewAsWeb and so on).\n
 ----------------------------------------------- */\n
@@ -647,13 +681,8 @@ div.content > fieldset.webcontent span.summary {\n
 /* Login page style\n
 ----------------------------------------------- */\n
 \n
-div.content.login{\n
-  padding: 0 1em;\n
-}\n
-\n
-div.content.login fieldset {\n
-  border: none;\n
-}\n
+div.content.login {padding: 0 1em}\n
+div.content.login fieldset {border: none}\n
 \n
 \n
 \n

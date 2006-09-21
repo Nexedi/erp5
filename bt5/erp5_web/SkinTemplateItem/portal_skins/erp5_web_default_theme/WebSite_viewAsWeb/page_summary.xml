@@ -201,7 +201,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Current site description.</string> </value>
+                    <value> <string>Current web site description.</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

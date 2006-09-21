@@ -5,7 +5,6 @@ Features:
  * Default 3 column layout with ordered content (IE6 should be able to display it).
  * Content edition through custom layout.
  * Custom view based on generic ERP5 forms.
- * Work out of the box.
  * Multi-publication: 1 document can be published in several sections.
  * Collection of generic web widgets (breadcrumb, listbox, admin toolbar, ...).
  * Support FCKeditor for content edition.
