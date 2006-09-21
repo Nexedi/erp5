@@ -9,6 +9,12 @@ msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 
+msgid "Balance Side Required"
+msgstr "Solde du compte nécessairement créditeur ou débiteur"
+
+msgid "Counterpart Account"
+msgstr "Compte de contrepartie"
+
 msgid "${number} item(s) selected"
 msgstr "${number} élément(s) sélectionné(s)"
 
@@ -17,9 +23,6 @@ msgstr "${number} enregistrements "
 
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
-
-msgid "&nbsp;"
-msgstr ""
 
 msgid "-- Object --"
 msgstr "-- Action sur l'Objet --"

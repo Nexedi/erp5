@@ -1,6 +1,5 @@
 msgid ""
-msgstr ""
-"Project-Id-Version: \n"
+msgstr "Project-Id-Version: \n"
 "POT-Creation-Date: 2006-03-04 05:03+EST\n"
 "PO-Revision-Date: 2006-03-04 05:03+EST\n"
 "Last-Translator:  <>\n"
