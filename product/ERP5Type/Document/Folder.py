@@ -769,6 +769,10 @@ be a problem)."""
     """
     if meta_type is not None:
       spec = meta_type
+    # when an object inherits from Folder after it was instanciated, it lacks
+    # its BTreeFolder properties.
+    if getattr(self, '_tree', None) is None:
+      self._initBTrees()
     object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
       if type(portal_type) == type(''):
