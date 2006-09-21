@@ -55,7 +55,6 @@ class AccountTypeConstraint(Constraint):
     """Implement here the consistency checker
     """
     errors = []
-    import pdb; pdb.set_trace()
     if getattr(obj, 'getAccountType', _MARKER) is _MARKER:
       errors.append(self._generateError(obj,
                 N_("Object doesn't have account_type category")))
