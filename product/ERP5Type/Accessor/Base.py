@@ -119,6 +119,7 @@ class Getter(Method):
     func_code.co_varnames = ('self',)
     func_code.co_argcount = 1
     func_defaults = ()
+    _default=None
 
     def __init__(self, id, key, property_type, default=None, storage_id=None):
       self._id = id
@@ -132,11 +133,7 @@ class Getter(Method):
       self._storage_id = storage_id
       self._is_tales_type = (property_type == 'tales')
 
-    def __call__(self, instance, object=None, *args, **kw):
-      if len(args) > 0:
-        default = args[0]
-      else:
-        default = self._default
+    def __call__(self, instance, default=_default, object=None, *args, **kw):
       # No acquisition on properties
       value = getattr(aq_base(instance), self._storage_id, None) 
       if value is not None:

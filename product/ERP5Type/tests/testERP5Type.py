@@ -679,6 +679,44 @@ class TestPropertySheet:
       """
       pass
 
+    def test_15_DefaultValue(self):
+      """
+      Tests that the default value is returned correctly
+      """
+      portal = self.getPortal()
+      module = self.getPersonModule()
+      person = module.newContent(id='1', portal_type='Person')
+
+      def getFirstName(object, default=None):
+        "dummy method to check default is passed correctly"
+        print (object, default)
+        return default
+
+      from Products.ERP5.Document.Person import Person
+      Person.getFirstName = getFirstName
+
+      # test static method
+      self.assertEquals(person.getFirstName(), None)
+      self.assertEquals(person.getFirstName('foo'), 'foo')
+      self.assertEquals(person.getFirstName(default='foo'), 'foo')
+      # test dynamic method
+      self.assertEquals(person.getLastName(), None)
+      self.assertEquals(person.getLastName('foo'), 'foo')
+      self.assertEquals(person.getLastName(default='foo'), 'foo')
+      # test static method through getProperty
+      #self.assertEquals(person.getProperty('first_name'), None)
+      #self.assertEquals(person.getProperty('first_name', 'foo'), 'foo')
+      #self.assertEquals(person.getProperty('first_name', d='foo'), 'foo')
+      # test dynamic method through getProperty
+      #self.assertEquals(person.getProperty('last_name'), None)
+      #self.assertEquals(person.getProperty('last_name', 'foo'), 'foo')
+      #self.assertEquals(person.getProperty('last_name', d='foo'), 'foo')
+      # test simple property through getProperty
+      property_name = 'XXXthis_property_does_not_exist123123'
+      self.assertEquals(person.getProperty(property_name), None)
+      self.assertEquals(person.getProperty(property_name, 'foo'), 'foo')
+      self.assertEquals(person.getProperty(property_name, d='foo'), 'foo')
+
 
 if __name__ == '__main__':
     framework()
