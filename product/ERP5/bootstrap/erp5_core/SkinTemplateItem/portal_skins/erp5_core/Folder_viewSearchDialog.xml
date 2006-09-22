@@ -74,18 +74,17 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_search_listbox_id</string>
-                        <string>your_search_listbox_title</string>
                         <string>your_list_form_id</string>
+                        <string>your_description</string>
+                        <string>your_id</string>
+                        <string>your_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_search_listbox_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
