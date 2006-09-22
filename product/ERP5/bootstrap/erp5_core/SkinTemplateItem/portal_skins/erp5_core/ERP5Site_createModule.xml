@@ -248,7 +248,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, module_portal_type, portal_skins_folder, object_portal_type, object_title, module_id, module_title, selection_index=0, selection_name=\'\'</string> </value>
+            <value> <string>module_portal_type, portal_skins_folder, object_portal_type, object_title, module_id, module_title, selection_index=0, selection_name=\'\', form_id=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -274,7 +274,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
                             <string>module_portal_type</string>
                             <string>portal_skins_folder</string>
                             <string>object_portal_type</string>
@@ -283,6 +282,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>module_title</string>
                             <string>selection_index</string>
                             <string>selection_name</string>
+                            <string>form_id</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
@@ -326,6 +326,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <value>
               <tuple>
                 <int>0</int>
+                <string></string>
                 <string></string>
               </tuple>
             </value>
