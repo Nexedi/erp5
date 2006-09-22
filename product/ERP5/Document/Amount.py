@@ -37,7 +37,7 @@ from Products.ERP5Type.Base import TempBase
 from Products.CMFCategory.Renderer import Renderer
 
 
-from zLOG import LOG
+from zLOG import LOG, ERROR
 
 
 
@@ -309,7 +309,7 @@ class Amount(Base, Variated):
         try:
           self.setProperty(property_id, property_value)
         except KeyError:
-          LOG("Amount", 200, "Can not set %s with value %s on %s" % \
+          LOG("Amount", ERROR, "Can not set %s with value %s on %s" % \
                     (property_id, property_value, self.getRelativeUrl()))
           raise
 
