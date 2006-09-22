@@ -88,7 +88,7 @@
 \n
 \n
 /* Good CSS directive to include in every website to reset all browser default style.\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 * {\n
   padding: 0;\n
@@ -105,9 +105,7 @@ a:link {color: #00248f}\n
 a:visited {color: #909}\n
 a:hover {color: #39f}\n
 \n
-a img, h3 img, button img, li img {\n
-  vertical-align: middle;\n
-}\n
+a img, h3 img, button img, li img {vertical-align: middle}\n
 \n
 ul {list-style-position: inside}\n
 li {margin-left: 1em}\n
@@ -127,7 +125,7 @@ p {\n
 \n
 \n
 /* Workflow states\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 span.draft       {color: #be854d}\n
 span.published,\n
@@ -140,7 +138,8 @@ span.cancelled   {color: #ccc}\n
 /* Emulate <center> html tag.\n
    This class is called \'centered\' to not interfer with the \'center\' group\n
    used in erp5_xhtml_style rigid positionning mechanism.\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
+\n
 .centered {\n
   width: 100%;\n
   text-align: center;\n
@@ -155,11 +154,9 @@ span.cancelled   {color: #ccc}\n
 \n
 /* Default content styling (apply to everything, site wide);\n
    Typography & colors (fonts, color, background).\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
-body {\n
-  background: #e6e6e6 url(erp5-website-background.png) top left no-repeat;\n
-}\n
+body {background: #e6e6e6 url(erp5-website-background.png) top left no-repeat}\n
 \n
 body, input, textarea, select, table {\n
   color: #333;\n
@@ -173,19 +170,14 @@ body, input, textarea, select, table {\n
                       */\n
 }\n
 \n
-.code, code {\n
-  font-family: "Courier New", Courier, monospace;\n
-  font-size: 120%; /* monospaced font are usually shorter than normal one */\n
-}\n
+.code, code {font-family: monospace}\n
 \n
 #transition_message, .warning, .error, .important {\n
   color: #f00;\n
   font-weight: bold;\n
 }\n
 \n
-h1 {\n
-  margin: 1.3em 0;\n
-}\n
+h1 {margin: 1.3em 0}\n
 \n
 blockquote {\n
   margin: .5em;\n
@@ -206,7 +198,7 @@ blockquote {\n
   distributed under Creative Commons Paternity Licence:\n
     * http://www.aplus.co.yu/css/forms/?css=1\n
     * http://creativecommons.org/licenses/by/2.0/\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 input, textarea {\n
   border: 1px solid #999;\n
@@ -250,10 +242,9 @@ button:hover {\n
 \n
 /* Default Listbox styling\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
------------------------------------------------ */\n
-.ListSummary table {\n
-  display: none;\n
-}\n
+------------------------------------------------------------------ */\n
+\n
+.ListSummary table {display: none}\n
 \n
 .ListContent table {\n
   margin-bottom: 2em;\n
@@ -274,7 +265,7 @@ button:hover {\n
 \n
 /* Custom web Listbox styling.\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
------------------------------------------------*/\n
+------------------------------------------------------------------ */\n
 \n
 table.listbox,\n
 table.listbox tr,\n
@@ -341,9 +332,7 @@ table.listbox tbody th.externalLink a:hover {\n
   color: #637dc1;\n
 }\n
 \n
-table.listbox tbody td, table.listbox tbody th {\n
-  border-top: 1px solid #ddd;\n
-}\n
+table.listbox tbody td, table.listbox tbody th {border-top: 1px solid #ddd}\n
 \n
 table.listbox td, table.listbox th {\n
   text-align: left;\n
@@ -363,13 +352,9 @@ table.listbox tbody .mainLink {\n
   display: block;\n
 }\n
 \n
-table.listbox tfoot th, table.listbox tfoot td {\n
-  border-top: 1px solid #999;\n
-}\n
+table.listbox tfoot th, table.listbox tfoot td {border-top: 1px solid #999}\n
 \n
-table.listbox tfoot td {\n
-  text-align: right;\n
-}\n
+table.listbox tfoot td {text-align: right}\n
 \n
 table.listbox tfoot .pageNavigation button {\n
   border: 1px #eee solid;\n
@@ -393,7 +378,7 @@ table.listbox tfoot .pageNavigation button:hover {\n
 \n
 /* Default layout and style of form web widgets.\n
    All widgets (extracted from layout form) are always inside a wrapper.\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 div.wrapper div.field {\n
   background: #fff url(erp5-website-field.png) top repeat-x;\n
@@ -403,16 +388,14 @@ div.wrapper div.field {\n
   padding: .5em;\n
 }\n
 \n
-div.wrapper div.field label {\n
-  font-weight: bold;\n
-}\n
+div.wrapper div.field label {font-weight: bold}\n
 \n
 \n
 \n
 /* Admin toolbox widget style.\n
    Some properties override default web widget style,\n
      that\'s why there is "div.wrapper" in some CSS selectors.\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 div.wrapper div.adminToolbox {\n
   position: fixed;\n
@@ -425,9 +408,7 @@ div.wrapper div.adminToolbox {\n
   border: 1px solid #f77;\n
 }\n
 \n
-div.adminToolbox label {\n
-  display: none;\n
-}\n
+div.adminToolbox label {display: none}\n
 \n
 /* Sub section title */\n
 div.adminToolbox h3 {\n
@@ -445,30 +426,20 @@ div.adminToolbox > div > h3 {\n
   cursor: pointer;\n
 }\n
 \n
-div.adminToolbox > div > h3:hover {\n
-  background: #f00;\n
-}\n
+div.adminToolbox > div > h3:hover {background: #f00}\n
 \n
 div.adminToolbox > div.input > div.adminSection {\n
   border-bottom: 1px dotted #f77;\n
   padding: .5em .5em 1em 1.5em;\n
 }\n
 \n
-div.adminToolbox > div.input > div.adminSection:last-child {\n
-  border-bottom: none;\n
-}\n
+div.adminToolbox > div.input > div.adminSection:last-child {border-bottom: none}\n
 \n
-div.adminToolbox ul {\n
-  list-style: none;\n
-}\n
+div.adminToolbox ul {list-style: none}\n
 \n
-div.adminToolbox li {\n
-  margin: 0;\n
-}\n
+div.adminToolbox li {margin: 0}\n
 \n
-div.adminToolbox li > a {\n
-  text-decoration: none;\n
-}\n
+div.adminToolbox li > a {text-decoration: none}\n
 \n
 div.adminToolbox button,\n
 div.adminToolbox li > a {\n
@@ -476,27 +447,41 @@ div.adminToolbox li > a {\n
   padding: .2em;\n
 }\n
 \n
-div.adminToolbox button[type="submit"] {\n
-  display: none;\n
-}\n
+div.adminToolbox button[type="submit"] {display: none}\n
 \n
-/*div.adminToolbox fieldset {\n
-  background: #ff0;\n
-  border-top: none;\n
-}\n
 \n
-div.adminToolbox legend {\n
+\n
+/* Reset default styling of fields in admin tool box\n
+** TODO: find a CSS trick to let forms and fieldset embedded in\n
+**       ".adminToolbox" behave like default one instead of using\n
+**       the one defined by default "div.wrapper div.field" rules.\n
+*/\n
+div.adminToolbox fieldset {               /* Should be the same as "fieldset" rule */\n
+  border: inherit;\n
+  margin: 0;\n
+}\n
+div.adminToolbox fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
+  padding: 0;\n
+  margin: .1em 0;\n
+  background: none;\n
   border: none;\n
-}*/\n
+}\n
+div.adminToolbox div.field label {        /* Should be the same as "fieldset label" rule */\n
+  display: inherit;\n
+  font-weight: inherit;\n
+  margin: .1em 0;\n
+}\n
+\n
+/* Those values differ from default "fieldset label" rule to reduce admin toolbox minimum width */\n
+div.adminToolbox div.field label     {width: 5em}\n
+div.adminToolbox div.field div.input {margin-left: 5.5em}\n
 \n
 \n
 \n
 /* Breadcrumb default style\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
-div.breadcrumb li a.selected {\n
-  border-bottom: 1px dashed #999;\n
-}\n
+div.breadcrumb li a.selected {border-bottom: 1px dashed #999}\n
 \n
 \n
 \n
@@ -510,11 +495,7 @@ div.breadcrumb li a.selected {\n
    TODO: Change form rendering to let the field go below the label\n
          if there is not enought width to display them inline.\n
    TODO: Use dtml variables to define dynamiccaly label width.\n
------------------------------------------------ */\n
-\n
-fieldset div.input {\n
-  margin-left: 11.5em;   /* = div.content label width + 0.5 of margin */\n
-}\n
+------------------------------------------------------------------ */\n
 \n
 fieldset {\n
   margin: 1em 0;\n
@@ -528,6 +509,10 @@ fieldset > div {\n
   clear: both;\n
   margin: .1em 0;\n
   position: relative;\n
+}\n
+\n
+fieldset div.input {\n
+  margin-left: 11.5em;   /* = div.content label width + 0.5 of margin */\n
 }\n
 \n
 fieldset legend {\n
@@ -552,7 +537,7 @@ fieldset label {\n
 ** Edit tabs are another part of admin stuffs and\n
 ** should respect other admin design convention\n
 ** (colors, etc...) to keep the UI consistent.\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 div.actions {\n
   position: relative;\n
@@ -606,11 +591,9 @@ div.actions ul a:hover {\n
 \n
 \n
 /* Editable mode forms styling\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
-div.document > div.editable {\n
-  border: 1px solid #999;\n
-}\n
+div.document > div.editable {border: 1px solid #999}\n
 \n
 /* Save button styling */\n
 div.actions button {\n
@@ -632,15 +615,14 @@ div.content fieldset.bottom legend,\n
 div.content fieldset.bottom label {\n
   display: none;\n
 }\n
-div.content fieldset.bottom div.input {\n
-  margin-left: inherit;\n
-}\n
+\n
+div.content fieldset.bottom div.input {margin-left: inherit}\n
 \n
 \n
 \n
 /* Special rendering for read-only webcontent\n
      (used in WebPage_viewAsWeb and so on).\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 div.content > fieldset.webcontent {\n
   margin: 0;\n
@@ -650,9 +632,7 @@ div.content > fieldset.webcontent {\n
 /* TODO: redo webcontent header spacing policy because lack of consistency\n
          (not tested with huge titles) */\n
 \n
-div.content > fieldset#fieldset_webcontent {\n
-  padding: 2em;\n
-}\n
+div.content > fieldset#fieldset_webcontent {padding: 2em}\n
 \n
 div.content > fieldset.header {\n
   padding-bottom: 1em;\n
@@ -679,7 +659,7 @@ div.content > fieldset.webcontent span.summary {\n
 \n
 \n
 /* Login page style\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
 div.content.login {padding: 0 1em}\n
 div.content.login fieldset {border: none}\n
@@ -687,11 +667,9 @@ div.content.login fieldset {border: none}\n
 \n
 \n
 /* Extra content (metadata, related document box, etc...) styling.\n
------------------------------------------------ */\n
+------------------------------------------------------------------ */\n
 \n
-div.content fieldset.webcontent.bottom div {\n
-  display: inline;\n
-}\n
+div.content fieldset.webcontent.bottom div {display: inline}\n
 \n
 div.content fieldset.webcontent.extra {\n
   color: #999;\n
@@ -705,13 +683,8 @@ div.content fieldset.webcontent.extra {\n
   display: inline;\n
 }\n
 \n
-div.content fieldset.webcontent.extra legend {\n
-  color: #999;\n
-}\n
-\n
-div.content fieldset.webcontent.extra label:after {\n
-  content: ":";\n
-}
+div.content fieldset.webcontent.extra legend {color: #999}\n
+div.content fieldset.webcontent.extra label:after {content: ":"}
 
 ]]></string> </value>
         </item>
