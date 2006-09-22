@@ -80,12 +80,12 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_your_search_listbox_id</td>\n
+  <td>field_your_id</td>\n
   <td tal:content="value_a"></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_your_search_listbox_title</td>\n
+  <td>field_your_title</td>\n
   <td tal:content="value_b"></td>\n
 </tr>\n
 <tr>\n
@@ -110,12 +110,12 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_your_search_listbox_id</td>\n
+  <td>field_your_id</td>\n
   <td tal:content="other_value_a"></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_your_search_listbox_title</td>\n
+  <td>field_your_title</td>\n
   <td tal:content="other_value_b"></td>\n
 </tr>\n
 <tr>\n

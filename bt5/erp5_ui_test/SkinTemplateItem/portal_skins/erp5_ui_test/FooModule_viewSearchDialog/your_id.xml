@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_search_listbox_title</string> </value>
+            <value> <string>your_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>ID</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
