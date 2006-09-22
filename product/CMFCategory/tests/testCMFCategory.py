@@ -675,6 +675,15 @@ class TestCMFCategory(ERP5TypeTestCase):
                             strict_membership=1,
                             portal_type='Organisation')], [])
 
+  def test_20_CategoryChildTitleAndIdItemList(self, quiet=quiet,
+                                              run=run_all_test):
+    """Tests getCategoryChildTitleAndIdItemList."""
+    base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
+    cat = base_cat.newContent(portal_type='Category',
+                              id='the_id', title='The Title')
+    self.assertEquals([['', ''], ['The Title (the_id)', 'the_id']],
+                       base_cat.getCategoryChildTitleAndIdItemList())
+    
 if __name__ == '__main__':
     framework()
 else:

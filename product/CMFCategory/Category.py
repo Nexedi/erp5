@@ -288,9 +288,19 @@ class Category(Folder):
     def getCategoryChildTitleOrIdItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
-      given list of base categories. Uses getTitle as default method
+      given list of base categories. Uses getTitleOrId as default method
       """
       return self.getCategoryChildItemList(recursive = recursive, display_id='title_or_id', base=base, **kw)
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                       'getCategoryChildTitleAndIdItemList')
+    def getCategoryChildTitleAndIdItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses title_and_id as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+                                          display_id='title_and_id', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildLogicalPathItemList')

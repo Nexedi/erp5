@@ -1690,6 +1690,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
 
   security.declareProtected( Permissions.View, 'Title' )
   Title = getTitleOrId
+  
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTitleAndId')
+  def getTitleAndId(self):
+    """Returns the title and the id in parenthesis
+    """
+    return self.title_and_id()
 
   # This method allows to sort objects in list is a more reasonable way
   security.declareProtected(Permissions.View, 'getIntId')
