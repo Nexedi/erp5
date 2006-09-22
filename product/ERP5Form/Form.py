@@ -352,6 +352,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         self.id = id
         self.title = title
         self.row_length = 4
+        self.group_list = ["left", "right", "center", "bottom", "hidden"]
+        self.groups = dict.fromkeys(self.group_list, [])
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
@@ -402,7 +404,6 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         if they occur and raise a FormValidationError in the end if any
         Validation Errors occured.
         """
-#        import pdb; pdb.set_trace()
         result = {}
         errors = []
         for group in self.get_groups():
@@ -431,6 +432,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                     errors.append(err)
                 except KeyError, err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
+                
         if len(errors) > 0:
             raise FormValidationError(errors, result)
         return result
