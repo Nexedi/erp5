@@ -1297,7 +1297,7 @@ class ListBoxRenderer:
     search_column_id_set = self.getSearchColumnIdSet()
     param_dict = self.getParamDict()
     value_list = []
-    for (sql, title), alias in zip(self.getSelectedColumnList(), ['search_%s_%s' % (self.getId(), alias) for alias in self.getColumnAliasList()]):
+    for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
       if sql in search_column_id_set:
         # Get the current value and encode it in unicode.
         param = param_dict.get(alias, u'')
