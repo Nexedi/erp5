@@ -1256,7 +1256,7 @@ class ERP5Generator(PortalGenerator):
       'FTP access'                   : ('Manager', 'Owner'),
       'List folder contents'         : ('Manager', 'Member'),
       'List portal members'          : ('Manager', 'Member'),
-      'List undoable changes'        : ('Manager', 'Member'),
+      'List undoable changes'        : ('Manager', ),
       'Manage properties'            : ('Manager', 'Owner'),
       'Modify portal content'        : ('Manager', 'Owner'),
       'Reply to item'                : ('Manager', 'Member'),
