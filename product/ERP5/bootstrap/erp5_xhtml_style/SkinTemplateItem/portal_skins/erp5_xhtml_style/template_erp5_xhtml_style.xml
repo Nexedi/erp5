@@ -156,7 +156,7 @@ IDEAS:\n
             <span class="separator"></span>\n
             <span id="modules">\n
               <select name="select_module"\n
-                      tal:define="module_list here/ERP5XhtmlStyle_getModuleItemList;"\n
+                      tal:define="module_list here/ERP5Site_getModuleItemList;"\n
                       tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doModule\')">\n
                 <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
                 <tal:block tal:repeat="module module_list">\n
