@@ -452,10 +452,11 @@ class TestERP5BankingMixin:
     self.controleur_caisse_courante = self.banking.newContent(id='controleur_caisse_courante', portal_type='Category', codification='CCC')
     self.controleur_caveau = self.banking.newContent(id='controleur_caveau', portal_type='Category', codification='CCA')
     self.comptable = self.banking.newContent(id='comptable', portal_type='Category', codification='FXF')
-    self.chef_section = self.banking.newContent(id='chef_section_comptable', portal_type='Category', codification='FXS')
+    self.chef_section_comptable = self.banking.newContent(id='chef_section_comptable', portal_type='Category', codification='CSB')
     self.chef_comptable = self.banking.newContent(id='chef_comptable', portal_type='Category', codification='CCB')
     self.chef_de_tri = self.banking.newContent(id='chef_de_tri', portal_type='Category', codification='CTR')
     self.chef_caisse = self.banking.newContent(id='chef_caisse', portal_type='Category', codification='CCP')
+    self.chef_section = self.banking.newContent(id='chef_section', portal_type='Category', codification='FXS')
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
