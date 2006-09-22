@@ -72,8 +72,9 @@
 #       to use checkbook_module.\n
 \n
 transaction = state_change[\'object\']\n
-check = transaction.getAggregateValue()\n
-check.deliver()\n
+if transaction.getExternalSoftwareTitle() == \'SICA\' and transaction.getSicaOperationType() == "sica_operation_type/030":\n
+  check = transaction.getAggregateValue()\n
+  check.deliver()\n
 </string> </value>
         </item>
         <item>
@@ -84,7 +85,9 @@ check.deliver()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/check_payment_workflow/scripts/updateCheck</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

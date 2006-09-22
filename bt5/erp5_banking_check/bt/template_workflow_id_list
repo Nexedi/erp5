@@ -4,3 +4,5 @@ checkbook_movement_workflow
 checkbook_reception_workflow
 checkbook_usual_cash_transfer_workflow
 checkbook_vault_transfer_workflow
+traveler_check_purchase_workflow
+traveler_check_sale_workflow

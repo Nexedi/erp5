@@ -57,3 +57,23 @@ Checkbook Vault Transfer | history
 Checkbook Vault Transfer | metadata
 Checkbook Vault Transfer | print_pdf
 Checkbook Vault Transfer | view
+Traveler Check Purchase Module | list_ui
+Traveler Check Purchase Module | print
+Traveler Check Purchase Module | sort_on
+Traveler Check Purchase Module | view
+Traveler Check Purchase | accounting_view
+Traveler Check Purchase | fastinput
+Traveler Check Purchase | history
+Traveler Check Purchase | metadata
+Traveler Check Purchase | print_pdf
+Traveler Check Purchase | view
+Traveler Check Sale Module | list_ui
+Traveler Check Sale Module | print
+Traveler Check Sale Module | sort_on
+Traveler Check Sale Module | view
+Traveler Check Sale | accounting_view
+Traveler Check Sale | fastinput
+Traveler Check Sale | history
+Traveler Check Sale | metadata
+Traveler Check Sale | print_pdf
+Traveler Check Sale | view

@@ -2,3 +2,5 @@ Checkbook Delivery Line | check_amount
 Checkbook Delivery Line | currency_exchange_type
 Checkbook Delivery | currency_exchange_type
 Checkbook Reception Line | check_amount
+Traveler Check Purchase | currency_exchange_type
+Traveler Check Sale | currency_exchange_type

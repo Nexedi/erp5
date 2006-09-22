@@ -86,7 +86,9 @@ return context.Delivery_viewCheckbookInputDialog(destination_payment=account,**k
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/CheckbookDelivery_viewCheckbookInputDialog</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

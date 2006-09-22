@@ -147,7 +147,9 @@ for line in line_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/checkbook_reception_workflow/scripts/CheckbookReception_generateItemList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

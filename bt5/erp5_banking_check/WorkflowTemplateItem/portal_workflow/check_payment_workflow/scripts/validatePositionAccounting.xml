@@ -113,7 +113,7 @@ if - price != (line.getPrice() * line.getQuantity()):\n
   raise ValidationFailed, (msg,)\n
 \n
 # Test if the account balance is sufficient.\n
-error = transaction.BankAccount_checkBalance(bank_account.getRelativeUrl(), price)\n
+error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), price)\n
 if error[\'error_code\'] == 1:\n
   msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
   raise ValidationFailed, (msg,)\n
@@ -139,7 +139,9 @@ elif error[\'error_code\'] != 0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/check_payment_workflow/scripts/validatePositionAccounting</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

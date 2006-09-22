@@ -167,7 +167,9 @@ if \'guichet\' in site.getVaultType():\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/checkbook_delivery_workflow/scripts/validatePositionAccounting</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

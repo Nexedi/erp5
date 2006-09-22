@@ -11,3 +11,7 @@ Checkbook Usual Cash Transfer Module | Checkbook Usual Cash Transfer
 Checkbook Usual Cash Transfer | Checkbook Delivery Line
 Checkbook Vault Transfer Module | Checkbook Vault Transfer
 Checkbook Vault Transfer | Checkbook Delivery Line
+Traveler Check Purchase Module | Traveler Check Purchase
+Traveler Check Purchase | Checkbook Delivery Line
+Traveler Check Sale Module | Traveler Check Sale
+Traveler Check Sale | Checkbook Delivery Line

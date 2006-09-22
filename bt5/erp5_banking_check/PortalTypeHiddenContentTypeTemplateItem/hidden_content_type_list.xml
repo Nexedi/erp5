@@ -18,4 +18,10 @@
  <portal_type id="Checkbook Vault Transfer">
   <item>Checkbook Delivery Line</item>
  </portal_type>
+ <portal_type id="Traveler Check Purchase">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Traveler Check Sale">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
 </hidden_content_type_list>

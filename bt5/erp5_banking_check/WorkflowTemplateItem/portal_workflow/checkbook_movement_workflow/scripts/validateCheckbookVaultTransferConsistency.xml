@@ -101,7 +101,9 @@ if msg is not None:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/checkbook_movement_workflow/scripts/validateCheckbookVaultTransferConsistency</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -98,7 +98,7 @@ resource = transaction.CashDelivery_checkCounterInventory(source = source, porta
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
-cash_detail = transaction.getTotalPrice(portal_type = \'Cash Delivery Cell\')\n
+cash_detail = transaction.getTotalPrice(portal_type = \'Cash Delivery Cell\', fast=0)\n
 #transaction.log("price vs cash detail", str((price, cash_detail)))\n
 if resource == 3:\n
   msg = Message(domain="ui", message="No banknote or coin defined.")\n
@@ -128,7 +128,9 @@ elif resource == 1:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/check_payment_workflow/scripts/validateVaultBalance</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

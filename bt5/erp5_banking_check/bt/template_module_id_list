@@ -4,3 +4,5 @@ checkbook_movement_module
 checkbook_reception_module
 checkbook_usual_cash_transfer_module
 checkbook_vault_transfer_module
+traveler_check_purchase_module
+traveler_check_sale_module

@@ -104,7 +104,9 @@ for line in line_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/checkbook_delivery_workflow/scripts/updateCheckAndCheckbook</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

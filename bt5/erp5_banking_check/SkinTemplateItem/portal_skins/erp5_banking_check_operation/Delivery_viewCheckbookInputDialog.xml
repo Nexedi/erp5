@@ -84,7 +84,7 @@ if listbox is None:\n
   item_list = []\n
   listbox = []\n
   getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-  context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node))\n
+  context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1))\n
   current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
                                                 at_date=reference_date, node=node)]\n
   for item in current_tracking_list:\n
@@ -95,12 +95,13 @@ if listbox is None:\n
         if resource.getProperty(property)!=value:\n
           exclude=1\n
     if destination_payment is not None:\n
-      if item.getDestinationPayment() is not None:\n
-        if destination_payment!=item.getDestinationPayment():\n
-          exclude=1\n
+      if destination_payment!=item.getDestinationPayment():\n
+        exclude=1\n
     if not exclude:\n
       item_portal_type = item.getPortalType()\n
       if item_portal_type  in item_portal_type_list:\n
+        if item_portal_type==\'Check\' and item.getSimulationState() not in (\'draft\',\'confirmed\'):\n
+          continue\n
         item_dict = {}\n
         if item_portal_type==\'Check\':\n
           item_dict[\'reference_range_max\'] = item.getReference()\n
@@ -139,7 +140,9 @@ return context.asContext(context=None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/Delivery_viewCheckbookInputDialog</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

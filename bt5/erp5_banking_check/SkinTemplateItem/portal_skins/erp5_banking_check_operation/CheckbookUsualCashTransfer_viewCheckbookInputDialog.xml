@@ -88,7 +88,9 @@ return context.Delivery_viewCheckbookInputDialog(item_portal_type_list=(\'Check\
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_check_operation/CheckbookUsualCashTransfer_viewCheckbookInputDialog</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

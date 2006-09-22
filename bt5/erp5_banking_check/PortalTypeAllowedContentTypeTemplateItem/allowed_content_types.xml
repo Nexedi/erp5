@@ -36,4 +36,16 @@
  <portal_type id="Checkbook Vault Transfer Module">
   <item>Checkbook Vault Transfer</item>
  </portal_type>
+ <portal_type id="Traveler Check Purchase">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Traveler Check Purchase Module">
+  <item>Traveler Check Purchase</item>
+ </portal_type>
+ <portal_type id="Traveler Check Sale">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Traveler Check Sale Module">
+  <item>Traveler Check Sale</item>
+ </portal_type>
 </allowed_content_type_list>

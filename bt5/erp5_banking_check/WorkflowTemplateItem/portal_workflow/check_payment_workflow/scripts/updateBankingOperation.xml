@@ -70,6 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string># Note: this script is executed with the proxy role Manager, because this script needs\n
 #       to use checkbook_module.\n
+from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 bank_account = transaction.getDestinationPaymentValue()\n
@@ -133,7 +134,9 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/check_payment_workflow/scripts/updateBankingOperation</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -178,6 +181,8 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
@@ -185,7 +190,6 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                             <string>check_number</string>
                             <string>message_tag</string>
                             <string>context</string>
-                            <string>Message</string>
                             <string>msg</string>
                             <string>ValidationFailed</string>
                             <string>result</string>
