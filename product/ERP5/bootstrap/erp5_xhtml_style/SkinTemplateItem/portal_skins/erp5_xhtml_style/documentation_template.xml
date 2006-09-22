@@ -262,7 +262,7 @@ div.listbox_dataline div.description,\n
 div.listbox_dataline div.source_path,\n
 div.listbox_dataline div.source_code,\n
 div.listbox_dataline div.content {\n
-  font-family: fixed, "Courier New", Courier, monospace;\n
+  font-family: monospace;\n
   white-space: pre;\n
   overflow: auto;\n
 }\n
