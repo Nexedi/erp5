@@ -915,7 +915,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
             if prop not in ('id', 'uid'):
               try:
                 prop_value = obj.getProperty(prop, evaluate=0)
-              except:
+              except TypeError: # the getter doesn't support evaluate=
                 prop_value = obj.getProperty(prop)
               category.setProperty(prop, prop_value)
           # import sub objects if there is
@@ -958,7 +958,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
             if prop not in ('id', 'uid'):
               try:
                 prop_value = obj.getProperty(prop, evaluate=0)
-              except:
+              except TypeError: # the getter doesn't support evaluate=
                 prop_value = obj.getProperty(prop)
               category.setProperty(prop, prop_value)
           # import sub objects if there is
