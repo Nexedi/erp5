@@ -142,17 +142,18 @@ class Order(Delivery):
         XXX FIXME: Kept for compatibility
         updateAppliedRule must be call with the rule_id in workflow script
       """
+      LOG('Order.updateAppliedRule ',0,'This method this method should not be used anymore.')
       Delivery.updateAppliedRule(self, rule_id, force=force,**kw)
 
-    def recursiveReindexObject(self, *k, **kw):
+    def recursiveReindexObject(self, activate_kw=None, *k, **kw):
       """
       Reindex children and simulation
       """
       # Now the applied rule is expanded
       Delivery.recursiveReindexObject(self, *k, **kw)
-      self.expandAppliedRuleRelatedToOrder(**kw)
+      self.expandAppliedRuleRelatedToOrder(activate_kw=activate_kw, **kw)
 
-    def expandAppliedRuleRelatedToOrder(self, **kw):
+    def expandAppliedRuleRelatedToOrder(self, activate_kw=None,**kw):
       """
       Expand the applied rule related 
       """
@@ -162,4 +163,5 @@ class Order(Delivery):
         if order_causality.getPortalType() == 'Applied Rule':
           applied_rule = order_causality
       if applied_rule is not None:
-        applied_rule.activate().expand(**kw)
+        # XXX Missing activate keys
+        applied_rule.activate(activate_kw=activate_kw).expand(**kw)
