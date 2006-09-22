@@ -159,9 +159,9 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     invoice.recursiveImmediateReindexObject()
     self.getWorkflowTool().doActionFor(
                             transmission_sheet,
-                            'emit_action')
+                            'emit_action') # XXX is this transition name good?
     self.assertEquals(transmission_sheet.getValidationState(),
-                            'emitted')
+                            'new')
 
   def test_TransmissionSheetEmitRefusedIfNoInvoice(self):
     """Transmission sheet cannot be emitted if it doesn't contain any invoice.
@@ -217,6 +217,13 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.assertEquals(1, len(account.checkConsistency(fixit=1)))
     self.failUnless(account.getAccountType() in ('liability/payable',
                                                  'asset/receivable'))
+
+  def test_AccountTypeConstaintFixForPayable(self):
+    account = self._getAccount('payable_account',
+                               gap='fr/m9/4/40',
+                               account_type='equity')
+    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.assertEquals('liability/payable', account.getAccountType())
 
 if __name__ == '__main__':
   framework()
