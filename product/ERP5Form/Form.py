@@ -353,7 +353,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         self.title = title
         self.row_length = 4
         self.group_list = ["left", "right", "center", "bottom", "hidden"]
-        self.groups = dict.fromkeys(self.group_list, [])
+        groups = {}
+        for group in self.group_list:
+          groups[group] = []
+        self.groups = groups
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
