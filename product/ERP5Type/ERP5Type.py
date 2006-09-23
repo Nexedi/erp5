@@ -231,7 +231,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
         result.sort()
         return result
 
-    security.declareProtected(Permissions.ModifyPortalContent,
+    security.declareProtected(Permissions.ManagePortal,
                               'setPropertySheetList')
     def setPropertySheetList( self, property_sheet_list):
         """
