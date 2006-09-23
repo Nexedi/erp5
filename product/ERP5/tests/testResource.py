@@ -745,12 +745,24 @@ class TestResource(ERP5TypeTestCase):
                         tab=1)
         self.assertEquals(base_price, 
                           product.getPrice())
+  
+  def testQuantityPrecision(self):
+    """test how to define quantity precision on resources.
+    """
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    # default is 1
+    self.assertEquals(1, resource.getBaseUnitQuantity())
+    self.assertEquals(0, resource.getQuantityPrecision())
+    # quantity precision is calculated using base quantity unit
+    resource.setBaseUnitQuantity(0.001)
+    self.assertEquals(3, resource.getQuantityPrecision())
 
 if __name__ == '__main__':
-    framework()
+  framework()
 else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestResource))
-        return suite
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestResource))
+    return suite
