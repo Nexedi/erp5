@@ -144,9 +144,9 @@ class ERP5TypeInformation( FactoryTypeInformation,
 
     # Groups are used to classify portal types (e.g. resource).
     defined_group_list = (
-      'accounting_transaction', 'accounting_movement', 'alarm', 'balance_transaction_line',
-      'container', 'container_line', 'delivery', 'delivery_movement',
-      'discount', 'invoice', 'invoice_movement', 'item',
+      'accounting_transaction', 'accounting_movement', 'alarm',
+      'balance_transaction_line', 'container', 'container_line', 'delivery',
+      'delivery_movement', 'discount', 'invoice', 'invoice_movement', 'item',
       'order', 'order_movement', 'node', 'payment_node', 'payment_condition',
       'resource', 'supply', 'supply_path', 'transformation', 'variation',
       'sub_variation', 'web_document', 'event', 'ticket', 'dms_document'
@@ -165,15 +165,6 @@ class ERP5TypeInformation( FactoryTypeInformation,
         """
         self.setMethodAliases({})
         return 1
-
-    security.declarePublic('hideFromAddMenu')
-    def hidenFromAddMenu(self):
-      """
-      Return only true or false if we should
-      hide from add menu
-      """
-      return self.hiden_from_add_menu
-
 
     #
     #   Agent methods
@@ -627,7 +618,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
         _aq_reset() # XXX We should also call it whenever we change workflow defition
       return result
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_editLocalRolesForm' )
+    security.declareProtected( Permissions.ManagePortal,
+                              'manage_editLocalRolesForm' )
     def manage_editLocalRolesForm( self, REQUEST, manage_tabs_message=None ):
 
         """ Show the 'Local Roles' management tab.
