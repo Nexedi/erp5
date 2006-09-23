@@ -201,15 +201,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-This field is limited to 6 characters because of float precision:\n
->>> 0.0001\n
-0.0001\n
->>> 0.00001\n
-1.0000000000000001e-05
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
