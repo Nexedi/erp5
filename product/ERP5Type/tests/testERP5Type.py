@@ -1,5 +1,7 @@
 
-import os, sys
+import os
+import sys
+import md5
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -15,8 +17,80 @@ from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.Cache import CachingMethod, clearCache
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
+from Products.ERP5Type.Utils import removeLocalPropertySheet
 
-class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
+class PropertySheetTestCase(ERP5TypeTestCase):
+  """Base test case class for property sheets tests.
+  Inherits from this class to get methods to easily add new property sheets,
+  constraints and documents in tests.
+
+  TODO : only property sheets are supported at this time.
+  """
+  def setUp(self):
+    """Set up the fixture. """
+    ERP5TypeTestCase.setUp(self)
+    installRealClassTool(self.getPortal())
+    # keep a mapping type info name -> property sheet list, to remove them in
+    # tear down.
+    self._added_property_sheets = {}
+
+  def tearDown(self):
+    """Clean up """
+    ttool = self.getTypesTool()
+    class_tool = self.getClassTool()
+    # remove all property sheet we added to type informations
+    for ti_name, psheet_list in self._added_property_sheets.items():
+      ti = ttool.getTypeInfo(ti_name)
+      ps_list = ti.property_sheet_list
+      for psheet in psheet_list:
+        if psheet in ps_list:
+          ps_list.remove(psheet)
+          # physically remove property sheet, otherwise invalid property sheet
+          # could break next tests.
+          removeLocalPropertySheet(psheet)
+      ti.property_sheet_list = ps_list
+    _aq_reset()
+    ERP5TypeTestCase.tearDown(self)
+    
+  def _addProperty(self, portal_type_name, property_definition_code):
+    """quickly add a property to a type information."""
+    m = md5.new()
+    m.update(portal_type_name + property_definition_code)
+    property_sheet_name = 'TestPS%s' % m.hexdigest()
+    property_sheet_code = """
+from Products.CMFCore.Expression import Expression
+class %(property_sheet_name)s:
+  _properties = ( %(property_definition_code)s, )
+""" % locals()
+    self._addPropertySheet(portal_type_name,
+                           property_sheet_code,
+                           property_sheet_name)
+
+  def _addPropertySheet(self, portal_type_name, property_sheet_code,
+                       property_sheet_name='TestPropertySheet'):
+    """Utility method to add a property sheet to a type information.
+    You might be interested in the higer level method _addProperty
+    This method registers all added property sheets, to be able to remove
+    them in tearDown.
+    """
+    # install the 'real' class tool
+    class_tool = self.getClassTool()
+
+    class_tool.newPropertySheet(property_sheet_name)
+    class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
+    class_tool.importPropertySheet(property_sheet_name)
+    
+    # We set the property sheet on the portal type
+    ti = self.getTypesTool().getTypeInfo(portal_type_name)
+    ti.property_sheet_list = list(ti.property_sheet_list) +\
+                                [property_sheet_name]
+    # remember that we added a property sheet for tear down
+    self._added_property_sheets.setdefault(
+                portal_type_name, []).append(property_sheet_name)
+    # reset aq_dynamic cache
+    _aq_reset()
+
+class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     run_all_test = 1
     quiet = 1
@@ -85,7 +159,8 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       # Create a business template and test if portal_type matches
       # Make a extension tests on basic accessors
       portal_templates = self.getTemplateTool()
-      business_template = self.getTemplateTool().newContent(portal_type="Business Template")
+      business_template = self.getTemplateTool().newContent(
+                            portal_type="Business Template")
       self.failUnless(business_template.getPortalType() == 'Business Template')
       # Test simple string accessor
       test_string = self.getRandomString()
@@ -112,7 +187,8 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       from Products.ERP5Type import Document
       # Person class should have no method getFirstName
       self.failUnless(not hasattr(Document.Person, 'getFirstName'))
-      # Calling getFirstName should produce dynamic methods related to the portal_type
+      # Calling getFirstName should produce dynamic methods related to the
+      # portal_type
       name = person.getFirstName()
       # Person class should have no method getFirstName
       self.failUnless(not hasattr(Document.Person, 'getFirstName'))
@@ -396,16 +472,11 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
     def test_10_ConstraintNotFound(self, quiet=quiet, run=run_all_test):
       """
-      When a Constraint is not found while importing a PropertySheet, AttributeError 
-      was raised, and generated a infinite loop.
+      When a Constraint is not found while importing a PropertySheet,
+      AttributeError was raised, and generated a infinite loop.
       This is a test to make sure this will not happens any more
       """
       if not run: return
-      installRealClassTool(self.getPortal())
-      # We will first define a new propertysheet
-      class_tool = self.getClassTool()
-
-      class_tool.newPropertySheet('TestPropertySheet')
       text = """
 class TestPropertySheet:
     \"\"\"
@@ -427,21 +498,12 @@ class TestPropertySheet:
       )
 
 """
-      class_tool.editPropertySheet('TestPropertySheet',text)
-      class_tool.importPropertySheet('TestPropertySheet')
-      # We set the property sheet on the portal type Organisation
-      type_tool = self.getTypeTool()
-      organisation_portal_type = type_tool['Organisation']
-      organisation_portal_type.setPropertySheetList(['TestPropertySheet'])
+      self._addPropertySheet('Organisation', text)
       folder = self.getOrganisationModule()
-      _aq_reset()
       # We check that we raise exception when we create new object
       from Products.ERP5Type.Utils import ConstraintNotFound
-      organisation =  self.assertRaises(ConstraintNotFound,folder.newContent,
+      organisation =  self.assertRaises(ConstraintNotFound, folder.newContent,
                                         portal_type='Organisation')
-      # Cleanup for next test
-      organisation_portal_type.setPropertySheetList([])
-      _aq_reset()
 
     def test_11_valueAccessor(self, quiet=quiet, run=run_all_test):
       """
@@ -686,7 +748,7 @@ class TestPropertySheet:
       portal = self.getPortal()
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
-
+      
       def getFirstName(object, default=None):
         "dummy method to check default is passed correctly"
         print (object, default)
@@ -703,6 +765,7 @@ class TestPropertySheet:
       self.assertEquals(person.getLastName(), None)
       self.assertEquals(person.getLastName('foo'), 'foo')
       self.assertEquals(person.getLastName(default='foo'), 'foo')
+      # FIXME: default not supported with getProperty and Getter methods
       # test static method through getProperty
       #self.assertEquals(person.getProperty('first_name'), None)
       #self.assertEquals(person.getProperty('first_name', 'foo'), 'foo')
@@ -717,6 +780,51 @@ class TestPropertySheet:
       self.assertEquals(person.getProperty(property_name, 'foo'), 'foo')
       self.assertEquals(person.getProperty(property_name, d='foo'), 'foo')
 
+    def test_15b_DefaultValueDefinedOnPropertySheet(self):
+      """Tests that the default value is returned correctly when a default
+      value is defined using the property sheet.
+      """
+      self._addProperty('Person', '''{'id': 'dummy_ps_prop',
+                                      'type': 'string',
+                                      'mode': 'w',
+                                      'default': 'ps_default',}''')
+      module = self.getPersonModule()
+      person = module.newContent(id='1', portal_type='Person')
+      # The default ps value will be returned, when using generated accessor
+      self.assertEquals('ps_default', person.getDummyPsProp())
+      # (unless you explicitly pass a default value.
+      self.assertEquals('default', person.getDummyPsProp('default'))
+      # using getProperty
+      self.assertEquals('ps_default', person.getProperty('dummy_ps_prop'))
+      # FIXME: default not supported with getProperty and Getter methods
+      # XXX self.assertEquals('default', person.getProperty('dummy_ps_prop', 'default'))
+
+      # None can be a default value too
+      # FIXME: default not supported with getProperty and Getter methods
+      # XXX self.assertEquals(None, person.getProperty('dummy_ps_prop', None))
+      self.assertEquals(None, person.getDummyPsProp(None))
+      
+      # once the value has been set, there's no default
+      value = 'a value'
+      person.setDummyPsProp(value)
+      self.assertEquals(value, person.getDummyPsProp())
+      self.assertEquals(value, person.getDummyPsProp('default'))
+      self.assertEquals(value, person.getProperty('dummy_ps_prop'))
+      self.assertEquals(value, person.getProperty('dummy_ps_prop', d='default'))
+
+    def test_16_SimpleStringAccessor(self):
+      """Tests a simple string accessor.
+      This is also a way to test _addProperty method """
+      self._addProperty('Person', '''{'id': 'dummy_ps_prop',
+                                      'type': 'string',
+                                      'mode': 'w',}''')
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      self.assertEquals('string', person.getPropertyType('dummy_ps_prop'))
+      self.failUnless(hasattr(person, 'getDummyPsProp'))
+      self.failUnless(hasattr(person, 'setDummyPsProp'))
+      person.setDummyPsProp('a value')
+      self.failUnless(person.hasProperty('dummy_ps_prop'))
+      self.assertEquals('a value', person.getDummyPsProp())
 
 if __name__ == '__main__':
     framework()
