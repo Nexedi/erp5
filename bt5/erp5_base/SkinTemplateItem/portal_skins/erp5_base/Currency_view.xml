@@ -108,7 +108,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_symbol</string>
+                        <string>my_short_title</string>
                         <string>my_reference</string>
                         <string>my_base_unit_quantity</string>
                       </list>

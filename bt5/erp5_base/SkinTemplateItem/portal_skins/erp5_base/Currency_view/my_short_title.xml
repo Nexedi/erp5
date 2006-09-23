@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_symbol</string> </value>
+            <value> <string>my_short_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
