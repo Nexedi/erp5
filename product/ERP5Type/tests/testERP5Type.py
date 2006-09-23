@@ -765,15 +765,14 @@ class TestPropertySheet:
       self.assertEquals(person.getLastName(), None)
       self.assertEquals(person.getLastName('foo'), 'foo')
       self.assertEquals(person.getLastName(default='foo'), 'foo')
-      # FIXME: default not supported with getProperty and Getter methods
       # test static method through getProperty
-      #self.assertEquals(person.getProperty('first_name'), None)
-      #self.assertEquals(person.getProperty('first_name', 'foo'), 'foo')
-      #self.assertEquals(person.getProperty('first_name', d='foo'), 'foo')
+      self.assertEquals(person.getProperty('first_name'), None)
+      self.assertEquals(person.getProperty('first_name', 'foo'), 'foo')
+      self.assertEquals(person.getProperty('first_name', d='foo'), 'foo')
       # test dynamic method through getProperty
-      #self.assertEquals(person.getProperty('last_name'), None)
-      #self.assertEquals(person.getProperty('last_name', 'foo'), 'foo')
-      #self.assertEquals(person.getProperty('last_name', d='foo'), 'foo')
+      self.assertEquals(person.getProperty('last_name'), None)
+      self.assertEquals(person.getProperty('last_name', 'foo'), 'foo')
+      self.assertEquals(person.getProperty('last_name', d='foo'), 'foo')
       # test simple property through getProperty
       property_name = 'XXXthis_property_does_not_exist123123'
       self.assertEquals(person.getProperty(property_name), None)
@@ -796,12 +795,10 @@ class TestPropertySheet:
       self.assertEquals('default', person.getDummyPsProp('default'))
       # using getProperty
       self.assertEquals('ps_default', person.getProperty('dummy_ps_prop'))
-      # FIXME: default not supported with getProperty and Getter methods
-      # XXX self.assertEquals('default', person.getProperty('dummy_ps_prop', 'default'))
+      self.assertEquals('default', person.getProperty('dummy_ps_prop', 'default'))
 
       # None can be a default value too
-      # FIXME: default not supported with getProperty and Getter methods
-      # XXX self.assertEquals(None, person.getProperty('dummy_ps_prop', None))
+      self.assertEquals(None, person.getProperty('dummy_ps_prop', None))
       self.assertEquals(None, person.getDummyPsProp(None))
       
       # once the value has been set, there's no default

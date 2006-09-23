@@ -89,6 +89,8 @@ except ImportError:
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
+_MARKER=[]
+
 class WorkflowMethod(Method):
 
   def __init__(self, method, id=None, reindex=1):
@@ -789,16 +791,24 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
         return default_value
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  def getProperty(self, key, d=None, **kw):
-    """
-      Previous Name: getValue
-
-      Generic accessor. Calls the real accessor
+  def getProperty(self, key, d=_MARKER, **kw):
+    """getProperty is the generic accessor to all properties and categories
+    defined on this object.
+    If an accessor exists for this property, the accessor will be called,
+    default value will be passed to the accessor as first positional argument.
     """
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
     if hasattr(aq_self, accessor_name):
       method = getattr(self, accessor_name)
+      if d is not _MARKER:
+        try:
+          # here method is a method defined on the class, we don't know if the
+          # method supports default argument or not, so we'll try and if the
+          # method doesn't accepts it, we ignore default argument.
+          return method(d, **kw)
+        except TypeError:
+          pass
       return method(**kw)
     # Try to get a portal_type property (Implementation Dependent)
     if not Base.aq_portal_type.has_key(self.portal_type):
@@ -808,16 +818,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
         pass
     if hasattr(Base.aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
+      if d is not _MARKER:
+        try:
+          return method(d, **kw)
+        except TypeError:
+          pass
       return method(**kw)
     else:
-      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
+      if d is not _MARKER:
+        return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
+      return ERP5PropertyManager.getProperty(self, key, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
-    """
-      Previous Name: getValue
-
-      Generic accessor. Calls the real accessor
+    """Same as getProperty, but for list properties.
     """
     return self.getProperty('%s_list' % key)
 
