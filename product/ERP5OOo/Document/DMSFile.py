@@ -234,7 +234,8 @@ class DMSFile(XMLObject,File):
     '''
     lst=[]
     for ref in self.getWikiSuccessorReferenceList():
-      res=self.DMS_findDocument(ref)
+      r=ref[1]
+      res=self.DMS_findDocument(**r)
       if len(res)>0:
         lst.append(res[0].getObject())
     return lst
