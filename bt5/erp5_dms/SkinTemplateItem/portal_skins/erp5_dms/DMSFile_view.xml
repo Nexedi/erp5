@@ -120,6 +120,7 @@
                     <value>
                       <list>
                         <string>my_source_project_title</string>
+                        <string>my_classification</string>
                         <string>my_dms_category_list</string>
                         <string>image_view</string>
                       </list>
