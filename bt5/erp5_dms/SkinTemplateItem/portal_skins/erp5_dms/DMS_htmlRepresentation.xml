@@ -61,7 +61,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>a</string>
+                <string>left</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -70,10 +72,25 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key>                 <string>a</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>html_representation</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
