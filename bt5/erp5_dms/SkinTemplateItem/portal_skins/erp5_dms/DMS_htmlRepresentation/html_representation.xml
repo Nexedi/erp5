@@ -299,11 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'<div style="background-color:white;color:black;">%s</div>\' % here.getHtmlRepresentation()
-
-]]></string> </value>
+            <value> <string>here/DMS_decorateHtmlRepresentation</string> </value>
         </item>
       </dictionary>
     </pickle>
