@@ -35,8 +35,6 @@ from zLOG import LOG
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.PsycoWrapper import psyco
 
-_MARKER=[]
-
 # Creation of default constructor
 class func_code: pass
 
@@ -134,24 +132,19 @@ class Getter(Method):
       self._storage_id = storage_id
       self._is_tales_type = (property_type == 'tales')
 
-    def __call__(self, instance, default=_MARKER, object=None, *args, **kw):
-      if default is _MARKER:
+    def __call__(self, instance, *args, **kw):
+      if len(args) > 0:
+        default = args[0]
+      else:
         default = self._default
-      # No acquisition on properties
-      value = getattr(aq_base(instance), self._storage_id, None)
+      value = getattr(aq_base(instance), self._storage_id, None) # No acquisition on properties
       if value is not None:
         if self._is_tales_type and kw.get('evaluate', 1):
-          if object is not None:
-            return evaluateTales(object, value)
-          else:
-            return evaluateTales(instance, value)
+          return evaluateTales(instance, value)
         else:
           return value
       if default is not None and self._is_tales_type and kw.get('evaluate', 1):
-        if object is not None:
-          return evaluateTales(object, default)
-        else:
-          return evaluateTales(instance, default)
+        return evaluateTales(instance, default)
       return default
 
     psyco.bind(__call__)
