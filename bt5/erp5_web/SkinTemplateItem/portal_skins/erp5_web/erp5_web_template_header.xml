@@ -105,7 +105,12 @@
     <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
 \n
     <!-- Main content rendering -->\n
-    <tal:block metal:define-slot="erp5_web_template_main_content"/>\n
+    <!-- Here we force the editable_mode variable to True to let the layout and widgets based on forms be rendered as editable or non-editable according the "editable" property on fields.\n
+         XXX However this hasa bad side effect: the editable_mode variable in request is force to True and is no longer representative of the web site mode.\n
+     -->\n
+    <tal:block tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
+      <tal:block metal:define-slot="erp5_web_template_main_content"/>\n
+    </tal:block>\n
 \n
   </form>\n
 </body>\n
