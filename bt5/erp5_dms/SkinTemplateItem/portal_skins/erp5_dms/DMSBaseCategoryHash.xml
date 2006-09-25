@@ -76,11 +76,11 @@ default_sub_field_property_dict[\'size\']=1\n
 \n
 for base_category in item_list:\n
   if not sub_field_dict.has_key(base_category):\n
+    basecatobject=context.portal_categories.resolveCategory(base_category)\n
     sub_field_property_dict=default_sub_field_property_dict.copy()\n
     sub_field_property_dict[\'key\']=base_category\n
-    sub_field_property_dict[\'title\']=base_category\n
-    context.log(base_category)\n
-    sub_field_property_dict[\'item_list\']=context.portal_categories.resolveCategory(base_category).getCategoryChildLogicalPathItemList()\n
+    sub_field_property_dict[\'title\']=basecatobject.getTitleOrId()\n
+    sub_field_property_dict[\'item_list\']=basecatobject.getCategoryChildLogicalPathItemList()\n
     sub_field_property_dict[\'value\']=context.aq_parent.aq_parent.getProperty(base_category)\n
     \n
     sub_field_dict[base_category]=sub_field_property_dict\n
@@ -138,8 +138,9 @@ return sub_field_dict.values()\n
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>_getattr_</string>
-                            <string>sub_field_property_dict</string>
                             <string>context</string>
+                            <string>basecatobject</string>
+                            <string>sub_field_property_dict</string>
                           </tuple>
                         </value>
                     </item>
