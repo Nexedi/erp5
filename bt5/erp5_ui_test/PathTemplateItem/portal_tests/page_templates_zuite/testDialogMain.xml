@@ -68,7 +68,12 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action&name=Dummy Exchange&category=object_exchange&action=string:%24{portal_url}/view">Create a dummy action</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action&name=Dummy Exchange&category=object_exchange&action=string:%24{object_url}/Foo_viewDummyDialog">Create a dummy action</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action_2&name=Another Dummy Exchange&category=object_exchange&action=string:%24{object_url}/Foo_viewDummyDialog">Create another dummy action</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -88,13 +93,38 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>assertTextPresent</td>\n
-  <td>Welcome to ERP5</td>\n
+  <td>"Nothing" action is done.</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
   <td>//input[@name=\'dialog_id\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name=\'dialog_category\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name=\'update_method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name=\'dialog_method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name=\'select_dialog\']</td>\n
   <td></td>\n
 </tr>\n
 </body>\n

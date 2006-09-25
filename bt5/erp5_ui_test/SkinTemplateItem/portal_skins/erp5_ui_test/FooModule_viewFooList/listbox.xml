@@ -393,7 +393,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
