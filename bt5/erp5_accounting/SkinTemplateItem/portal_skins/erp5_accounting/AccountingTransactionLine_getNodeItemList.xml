@@ -74,6 +74,7 @@ The id of the line is used to filter the list. If `mirror` is set to a true\n
 value, the list will be filtered for the mirror node.\n
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
+portal = context.getPortalObject()\n
 \n
 if not mirror:\n
   category_dict = {\n
@@ -96,7 +97,7 @@ else:\n
     \'bank\': \'account_type/asset/cash\',\n
     \'cash\': \'account_type/asset/cash\', }\n
 \n
-category = category_dict.get(context.getId(), \'account_type\')\n
+category = category_dict.get(context.getId())\n
 \n
 display_cache = {}\n
 display_funct = context.Account_getFormattedTitle\n
@@ -112,7 +113,10 @@ def sort(x,y):\n
 def getItemList(category=None, portal_path=None, mirror=0,\n
                 user_name=None, simulation_state=None):\n
   """Returns a list of Account path items. """\n
-  cat = context.portal_categories.resolveCategory(category)\n
+  if category is not None:\n
+    cat = portal.portal_categories.resolveCategory(category)\n
+  else:\n
+    cat = portal.portal_categories.account_type\n
   filter_dict = {}\n
 \n
   # we don\'t filter in existing transactions or report / search dialogs\n
@@ -124,7 +128,9 @@ def getItemList(category=None, portal_path=None, mirror=0,\n
                               base=0,\n
                               display_method=display,\n
                               sort_method=sort,\n
-                              strict_membership=1,\n
+                              # we don\'t want strict membership if now category\n
+                              # has been found.\n
+                              strict_membership=(category is not None),\n
                               filter=filter_dict)\n
   return item_list\n
 \n
@@ -197,9 +203,10 @@ return getItemList( category=category,\n
                             <string>mirror</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>category_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>category_dict</string>
                             <string>category</string>
                             <string>display_cache</string>
                             <string>display_funct</string>
