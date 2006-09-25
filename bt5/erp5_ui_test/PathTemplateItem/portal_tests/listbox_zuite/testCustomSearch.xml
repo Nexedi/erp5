@@ -148,12 +148,12 @@
 </tr>\n
 <tr>\n
 \t<td>type</td>\n
-\t<td>field_your_search_listbox_id</td>\n
+\t<td>field_your_id</td>\n
 \t<td>0</td>\n
 </tr>\n
 <tr>\n
 \t<td>type</td>\n
-\t<td>field_your_search_listbox_title</td>\n
+\t<td>field_your_title</td>\n
 \t<td>%l%</td>\n
 </tr>\n
 <tr>\n
