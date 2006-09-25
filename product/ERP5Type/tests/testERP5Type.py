@@ -821,6 +821,53 @@ class TestPropertySheet:
       self.failUnless(person.hasProperty('dummy_ps_prop'))
       self.assertEquals('a value', person.getDummyPsProp())
 
+    def test_17_WorkflowStateAccessor(self):
+      """Tests for workflow state. assumes that validation state is chained to
+      the Person portal type and that this workflow has 'validation_state' as
+      state_variable.
+      """
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      wf = self.getWorkflowTool().validation_workflow
+      # those are assumptions for this test.
+      self.failUnless(wf.getId() in
+                        self.getWorkflowTool().getChainFor('Person'))
+      self.assertEquals('validation_state', wf.variables.getStateVar())
+      initial_state = wf.states[wf.initial_state]
+      other_state = wf.states['validated']
+
+      self.failUnless(hasattr(person, 'getValidationState'))
+      self.failUnless(hasattr(person, 'getValidationStateTitle'))
+      self.failUnless(hasattr(person, 'getTranslatedValidationStateTitle'))
+
+      self.assertEquals(initial_state.getId(), person.getValidationState())
+      self.assertEquals(initial_state.title,
+                        person.getValidationStateTitle())
+      # XXX we do not have translation system set up at that point
+      self.assertEquals(initial_state.title,
+                        person.getTranslatedValidationStateTitle())
+      
+      self.assertEquals(initial_state.getId(),
+                        person.getProperty('validation_state'))
+      self.assertEquals(initial_state.title,
+                        person.getProperty('validation_state_title'))
+      # XXX we do not have translation system set up at that point
+      self.assertEquals(initial_state.title,
+                        person.getProperty('translated_validation_state_title'))
+      
+      # pass a transition and check accessors again.
+      person.validate()
+      self.assertEquals(other_state.getId(), person.getValidationState())
+      self.assertEquals(other_state.title,
+                        person.getValidationStateTitle())
+      self.assertEquals(other_state.title,
+                        person.getTranslatedValidationStateTitle())
+      self.assertEquals(other_state.getId(),
+                        person.getProperty('validation_state'))
+      self.assertEquals(other_state.title,
+                        person.getProperty('validation_state_title'))
+      self.assertEquals(other_state.title,
+                        person.getProperty('translated_validation_state_title'))
+
 if __name__ == '__main__':
     framework()
 else:
