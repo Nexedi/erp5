@@ -69,9 +69,7 @@
   </div>\n
 \n
   <!-- Layout form rendering -->\n
-  <tal:block tal:condition="python: layout_form is not None"\n
-              tal:define="field_errors python: request.get(\'field_errors\', {});\n
-                          dummy        python: request.set(\'editable_mode\', 1)">\n
+  <tal:block tal:condition="python: layout_form is not None">\n
 \n
     <tal:block tal:define="template python: here.developper_shortcut_render">\n
       <tal:block metal:use-macro="template/macros/form"/>\n
