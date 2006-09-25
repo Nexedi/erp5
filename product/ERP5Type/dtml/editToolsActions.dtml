@@ -181,6 +181,7 @@
 <td><input type="submit" name="deleteActions:method" value="Delete" /></td>
 <td><input type="submit" name="moveUpActions:method" value="Move up" /></td>
 <td><input type="submit" name="moveDownActions:method" value="Move down" /></td>
+<td><input type="submit" name="reorderActions:method" value="Reorder actions by priority" /></td>
 </tr>
 </table>
 </div>

@@ -634,6 +634,15 @@ class ERP5TypeInformation( FactoryTypeInformation,
                                  , manage_tabs_message=manage_tabs_message
                                  )
 
+    def reorderActions(self, REQUEST=None):
+      """Reorder actions according to their priorities."""
+      new_actions = self._cloneActions()
+      new_actions.sort(lambda x,y: cmp(x.getPriority(), y.getPriority()))
+      self._actions = tuple( new_actions )
+
+      if REQUEST is not None:
+        return self.manage_editActionsForm(REQUEST,
+            manage_tabs_message='Actions reordered.')
 
 InitializeClass( ERP5TypeInformation )
 
