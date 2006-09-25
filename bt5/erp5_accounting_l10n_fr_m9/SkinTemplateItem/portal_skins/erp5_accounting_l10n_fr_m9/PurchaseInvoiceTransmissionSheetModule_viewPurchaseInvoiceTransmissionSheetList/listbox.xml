@@ -335,7 +335,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>Transmission Sheet Number</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -445,6 +445,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
