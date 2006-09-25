@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>subjecttpl=\'ingested %(name)s\'\n
+            <value> <string>pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
+if pref==\'never\':return\n
+\n
+subjecttpl=\'ingested %(name)s\'\n
 msgtpl="""Your document "%(name)s" was successfully ingested.\n
 \n
 click here: %(url)s/view to proceed with your work.\n
@@ -123,16 +126,17 @@ context.MailHost.send(msg,mto,mfro,subject)\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>pref</string>
                             <string>subjecttpl</string>
                             <string>msgtpl</string>
                             <string>_getitem_</string>
                             <string>ob</string>
-                            <string>_getattr_</string>
                             <string>subject</string>
                             <string>msg</string>
                             <string>mto</string>
                             <string>mfro</string>
-<string>context</string>
                           </tuple>
                         </value>
                     </item>

@@ -79,6 +79,7 @@
                         <string>my_preferred_dms_reference_regexp</string>
                         <string>my_preferred_dms_filename_regexp</string>
                         <string>my_preferred_dms_reference_function</string>
+                        <string>my_preferred_dms_ingest_email_notification</string>
                       </list>
                     </value>
                 </item>

@@ -61,6 +61,11 @@ class DMSPreference:
     'type'    : 'string',
     'preference':1,
     'mode'    : '' },
+    { 'id'    : 'preferred_dms_ingest_email_notification',
+    'description' : 'None - always, "always", "problem (only if problem), "never"',
+    'type'    : 'string', # is it possible to use int in radio?
+    'preference':1,
+    'mode'    : '' },
     )
 
  
