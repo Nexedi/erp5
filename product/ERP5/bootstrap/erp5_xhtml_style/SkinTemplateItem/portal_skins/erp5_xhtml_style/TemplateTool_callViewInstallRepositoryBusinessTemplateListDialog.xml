@@ -68,10 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Clear selection\n
+            <value> <string>kw.update(context.REQUEST.form)\n
+# Clear selection\n
 context.portal_selections.setSelectionCheckedUidsFor(\'template_tool_install_selection\', [])\n
 # Then call the listbox\n
-return context.ERP5XhtmlStyle_redirect("%s/%s" % (context.absolute_url(), \'TemplateTool_viewInstallRepositoryBusinessTemplateListDialog\'))\n
+return context.ERP5XhtmlStyle_redirect("%s/%s" % (context.absolute_url(), \'TemplateTool_viewInstallRepositoryBusinessTemplateListDialog\'), keep_items={\'dialog_category\': dialog_category}, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +95,7 @@ return context.ERP5XhtmlStyle_redirect("%s/%s" % (context.absolute_url(), \'Temp
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>dialog_category=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,15 +115,17 @@ return context.ERP5XhtmlStyle_redirect("%s/%s" % (context.absolute_url(), \'Temp
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>dialog_category</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -134,7 +137,9 @@ return context.ERP5XhtmlStyle_redirect("%s/%s" % (context.absolute_url(), \'Temp
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

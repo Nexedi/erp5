@@ -68,49 +68,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX: This file contains many duplicated loops when filtering, this is done on purpose :\n
-# Each loop contains variable names which concern a certain hidden field generator (listbox, xhtml style,...).\n
-# Above each loop is said wether it is normal or shoul dbe fixed.\n
+            <value> <string>kept_names = (\'editable_mode\', \'ignore_layout\',            # erp5_web\n
+              \'selection_name\', \'selection_index\',         # list mode\n
+              \'form_id\',                                   # list mode and view mode\n
+              \'object_uid\', \'object_path\',                 # view mode\n
+              \'field_id\', \'form_pickle\', \'form_signature\', # related string field\n
+              \'bt_list\',                                   # business template installation system\n
+              \'cancel_url\',\n
+             )\n
+# Dialog mode is absent from the kept_name list on purpose :\n
+# none of its variable should ever get transmited because\n
+# it\'s the deepest level of navigation.\n
+# Cancel url is always overwritten, except when rendering\n
+# a dialog. So this is safe to propagate it.\n
+\n
+kept_names = dict([(key, None) for key in kept_names])\n
 \n
 def isValid(value_name):\n
   """\n
     Return true when the given field name can be propagated, false otherwise.\n
-\n
-    FIXME: _select should be a prefix, not a sufix, to avoid potential collisions with property names.\n
   """\n
-  prefix = value_name.split(\'_\')[0]\n
-  if value_name == \'field_id\' \\\n
-     or prefix not in (\'field\', \'subfield\', \'default\', \'select\', \'search\'):\n
+  if kept_names.has_key(value_name):\n
     return True\n
   return False\n
-\n
-# Remove a strange value. No idea on its meaning nor what it does here.\n
-if parameter_list.has_key(\'-C\'):\n
-  del parameter_list[\'-C\']\n
-\n
-# erp5_xhtml_style special fields.\n
-# This is normal.\n
-for k in (\'came_from\', \'SearchableText\', \'workflow_action\', \'portal_status_message\', \'reset\', \'dialog_id\', \'update_method\', \'dialog_method\', \'cancel_method\'):\n
-  if parameter_list.has_key(k):\n
-    del parameter_list[k]\n
-\n
-# Listbox search fields special values\n
-# XXX: This should not be needed.\n
-# for k in (\'id\', \'title\', \'description\', \'reporter\'):\n
-#   if parameter_list.has_key(k):\n
-#     del parameter_list[k]\n
-\n
-# Listbox special fields.\n
-# XXX: This should not be needed.\n
-for k in (\'listbox\', \'list_start\', \'uids\', \'listbox_uid\', \'list_selection_name\', \'md5_object_uid_list\'):\n
-  if parameter_list.has_key(k):\n
-    del parameter_list[k]\n
-\n
-# Subversion special fields\n
-# XXX: This should not be needed.\n
-for k in (\'changelog\', \'added\', \'removed\', \'modified\'):\n
-  if parameter_list.has_key(k):\n
-    del parameter_list[k]\n
 \n
 for k in parameter_list.keys():\n
   if not isValid(k):\n
@@ -160,11 +140,17 @@ return parameter_list\n
                         <value>
                           <tuple>
                             <string>parameter_list</string>
+                            <string>kept_names</string>
+                            <string>dict</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>None</string>
                             <string>isValid</string>
                             <string>_getattr_</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
                             <string>k</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
