@@ -1,3 +1,7 @@
+2006-09-25 jerome
+* Add tests for bank accounts
+* Add tests for accounting transaction inputing
+
 2006-09-13 jerome
 * Fix tests for organisations.
 
