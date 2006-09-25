@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_preferences.getPreferredDmsBaseCategoryListList() or []</string> </value>
+            <value> <string>python:here.portal_preferences.getPreferredDmsBaseCategoryList() or []</string> </value>
         </item>
       </dictionary>
     </pickle>
