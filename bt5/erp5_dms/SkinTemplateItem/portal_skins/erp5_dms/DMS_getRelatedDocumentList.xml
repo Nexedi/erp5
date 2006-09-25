@@ -68,22 +68,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># dummy simple implementation - if no version, then return the newest in the chosen language\n
-# or in any language if not specified\n
-reference=kw.get(\'reference\')\n
-if reference is None:\n
-  return []\n
+            <value> <string>def findRecentVersion(doc):\n
+  res=context.DMS_findDocument(reference=doc.getReference(),language=doc.getLanguage())\n
+  return res[0].getObject()\n
 \n
-searchargs=dict(reference=reference,portal_type=context.getPortalDocumentTypeList(),sort_on=\'version\')\n
-language=kw.get(\'language\')\n
-if language is not None:\n
-  searchargs[\'language\']=language\n
-version=kw.get(\'version\')\n
-if version is not None:\n
-  searchargs[\'version\']=version\n
-res=list(context.portal_catalog(**searchargs))\n
-res.reverse() # can catalog do reverse sorting?\n
-return res\n
+def getRelatedLatest(category):\n
+  funcname=\'get%sValueList\' % category.title()\n
+  func=getattr(context,funcname)\n
+  return map(findRecentVersion, func())\n
+\n
+what=kw.get(\'what\')\n
+if what==\'wiki_predecessors\':\n
+  return context.getWikiPredecessorValueList()\n
+if what==\'wiki_successors\':\n
+  return context.getWikiSuccessorValueList()\n
+if what.startswith(\'related\'):\n
+  return getRelatedLatest(what[8:])\n
+if what==\'all\':\n
+  dic={}\n
+  for ob in context.getWikiPredecessorValueList()+context.getWikiSuccessorValueList()+\\\n
+    getRelatedLatest(\'predecessor\')+getRelatedLatest(\'successor\')+getRelatedLatest(\'similar\'):\n
+    dic[ob]=True\n
+  return dic.keys()\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -100,7 +107,7 @@ return res\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>*a,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,19 +133,19 @@ return res\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>a</string>
                             <string>kw</string>
+                            <string>findRecentVersion</string>
+                            <string>getRelatedLatest</string>
                             <string>_getattr_</string>
-                            <string>reference</string>
-                            <string>None</string>
-                            <string>dict</string>
+                            <string>what</string>
                             <string>context</string>
-                            <string>searchargs</string>
-                            <string>language</string>
+                            <string>_getitem_</string>
+                            <string>dic</string>
+                            <string>_getiter_</string>
+                            <string>ob</string>
+                            <string>True</string>
                             <string>_write_</string>
-                            <string>version</string>
-                            <string>list</string>
-                            <string>_apply_</string>
-                            <string>res</string>
                           </tuple>
                         </value>
                     </item>
@@ -155,7 +162,7 @@ return res\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_findDocument</string> </value>
+            <value> <string>DMS_getRelatedDocumentList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

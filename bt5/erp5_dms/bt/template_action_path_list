@@ -81,6 +81,12 @@ Text | download_snapshot
 Text | export
 Text | history
 Text | html_view
+Text | jump_to_all_related
+Text | jump_to_predecessor
+Text | jump_to_similar
+Text | jump_to_successor
+Text | jump_to_wiki_predecessor
+Text | jump_to_wiki_successor
 Text | local_permission
 Text | metadata
 Text | print
