@@ -95,6 +95,16 @@
   <td>//input[@name=\'dialog_category\' and @value=\'object_exchange\']</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action_2"></td>\n
+  <td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>\n

@@ -86,6 +86,11 @@
   <td>Welcome to ERP5</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action"></td>\n
+  <td></td>\n
+</tr>\n
 </body>\n
 </html>\n
 
