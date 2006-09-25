@@ -80,9 +80,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_title_list</string>
+                        <string>my_successor_title_list</string>
                         <string>my_similar_title_list</string>
-                        <string>my_source_title_list</string>
+                        <string>my_predecessor_title_list</string>
                       </list>
                     </value>
                 </item>

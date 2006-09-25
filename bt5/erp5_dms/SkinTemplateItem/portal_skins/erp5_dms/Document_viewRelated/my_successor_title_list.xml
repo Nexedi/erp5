@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_title_list</string> </value>
+            <value> <string>my_successor_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,6 +243,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -328,7 +332,9 @@
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
@@ -391,7 +397,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
+                    <value> <string>destination</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -423,7 +429,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Documents which serve as reference to the current document.</string> </value>
+                    <value> <string>Documents which can be a follow-up to the current document.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -540,7 +546,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reference Documents</string> </value>
+                    <value> <string>Related Documents</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -568,6 +574,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x,x) for x in here.getPortalDocumentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
