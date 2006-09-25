@@ -77,7 +77,9 @@
     * Opera 9.01\n
     * Internet Explorer 6 (Layout: OK; Style: not OK)\n
 \n
-  TODO: Layout is ok in ie6, now styling should be adapted to support ie6.\n
+  TODO: * Layout is ok in ie6, now styling should be adapted to support ie6.\n
+        * The "WebWidget" class should be used somewhere to identify such objects easily\n
+          and enhance semantics.\n
 ========================================================================================*/\n
 \n
 \n
@@ -200,8 +202,11 @@ blockquote {\n
     * http://creativecommons.org/licenses/by/2.0/\n
 ------------------------------------------------------------------ */\n
 \n
-input, textarea {\n
+input, textarea, select {\n
   border: 1px solid #999;\n
+}\n
+\n
+input, textarea {\n
   padding: 1px;\n
 }\n
 \n
