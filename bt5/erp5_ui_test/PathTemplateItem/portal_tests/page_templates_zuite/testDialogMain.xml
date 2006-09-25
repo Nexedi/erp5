@@ -93,6 +93,36 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//input[@name=\'dialog_id\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//input[@name=\'dialog_category\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//input[@name=\'update_method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//input[@name=\'dialog_method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//select[@name=\'select_dialog\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td tal:content="here/Foo_viewDummyDialog/title"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>clickAndWait</td>\n
   <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
@@ -125,6 +155,16 @@
 <tr>\n
   <td>assertElementNotPresent</td>\n
   <td>//input[@name=\'select_dialog\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action_2"></td>\n
   <td></td>\n
 </tr>\n
 </body>\n
