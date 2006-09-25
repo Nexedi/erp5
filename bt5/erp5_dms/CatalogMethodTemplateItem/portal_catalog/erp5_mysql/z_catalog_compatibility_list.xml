@@ -141,6 +141,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>short_title</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>summary</string> </key>
                                 <value>
                                   <dictionary/>
@@ -186,6 +192,7 @@
 <string>summary</string>
 <string>language</string>
 <string>version</string>
+<string>short_title</string>
                           </list>
                         </value>
                     </item>
@@ -222,7 +229,8 @@ modified\r\n
 review_state\r\n
 summary\r\n
 language\r\n
-version</string> </value>
+version\r\n
+short_title</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -287,7 +295,8 @@ VALUES\n
   <dtml-sqlvar expr="review_state[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="summary[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="language[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="version[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="version[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="short_title[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n
@@ -357,7 +366,8 @@ VALUES\n
   <dtml-sqlvar expr="review_state[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="summary[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="language[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="version[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="version[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="short_title[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n
