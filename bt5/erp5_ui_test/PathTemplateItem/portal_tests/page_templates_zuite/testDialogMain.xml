@@ -58,12 +58,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Exchange Actions</title>\n
+<title>Test Dialog Main</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test dialog_main</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test that dialog main doesn\'t fail when some varables are absent from request</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -92,6 +92,11 @@
   <td>Welcome to ERP5</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name=\'dialog_id\']</td>\n
+  <td></td>\n
+</tr>\n
 </body>\n
 </html>\n
 
@@ -112,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Test that dialog main doesn\'t fail when some varables are absent from request</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
