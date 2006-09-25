@@ -260,8 +260,7 @@ class OOoDocument(DMSFile, CachingMixin):
       meta[k]=v.encode('utf-8')
     #self.log('meta',meta)
     self.setTitle(meta.get('title',''))
-    self.setSubject([meta.get('subject',''),])
-    self.setKeywords(meta.get('keywords',''))
+    self.setSubject(meta.get('keywords','').split())
     self.setDescription(meta.get('description',''))
     self.setLanguage(meta.get('language',''))
     if meta.get('MIMEType',False):
