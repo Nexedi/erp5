@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DMS_jumpToRelatedDocuments?what=wiki_predecessors</string> </value>
+            <value> <string>string:${object_url}/DMS_jumpToRelatedDocuments?what=wiki_predecessor</string> </value>
         </item>
       </dictionary>
     </pickle>

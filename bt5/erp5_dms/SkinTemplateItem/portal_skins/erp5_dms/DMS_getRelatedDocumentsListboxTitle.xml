@@ -68,29 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def findRecentVersion(doc):\n
-  res=context.DMS_findDocument(reference=doc.getReference(),language=doc.getLanguage())\n
-  return res[0].getObject()\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
 \n
-def getRelatedLatest(category):\n
-  funcname=\'get%sValueList\' % category.title()\n
-  func=getattr(context,funcname)\n
-  return map(findRecentVersion, func())\n
+what=context.REQUEST.get(\'what\')\n
 \n
-what=kw.get(\'what\')\n
-if what==\'wiki_predecessor\':\n
-  return context.getWikiPredecessorValueList()\n
-if what==\'wiki_successor\':\n
-  return context.getWikiSuccessorValueList()\n
-if what.startswith(\'related\'):\n
-  return getRelatedLatest(what[8:])\n
-if what==\'all\':\n
-  dic={}\n
-  for ob in context.getWikiPredecessorValueList()+context.getWikiSuccessorValueList()+\\\n
-    getRelatedLatest(\'predecessor\')+getRelatedLatest(\'successor\')+getRelatedLatest(\'similar\'):\n
-    dic[ob]=True\n
-  return dic.keys()\n
-return []\n
+mapka={\'wiki_predecessor\':\'Wiki Predecessors\',\n
+\'wiki_successor\':\'Wiki Successors\',\n
+\'related_similar\':\'Similar documents\',\n
+\'related_successor\':\'Related documents\',\n
+\'related_predecessor\':\'Reference documents\',\n
+\'all\':\'All related documents\'}\n
+\n
+s=mapka.get(what)\n
+if s is None:return \'\'\n
+return str(Message(domain=\'ui\',message=s))\n
 </string> </value>
         </item>
         <item>
@@ -135,17 +126,15 @@ return []\n
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
-                            <string>findRecentVersion</string>
-                            <string>getRelatedLatest</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getattr_</string>
-                            <string>what</string>
                             <string>context</string>
-                            <string>_getitem_</string>
-                            <string>dic</string>
-                            <string>_getiter_</string>
-                            <string>ob</string>
-                            <string>True</string>
-                            <string>_write_</string>
+                            <string>what</string>
+                            <string>mapka</string>
+                            <string>s</string>
+                            <string>None</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -162,7 +151,7 @@ return []\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_getRelatedDocumentList</string> </value>
+            <value> <string>DMS_getRelatedDocumentsListboxTitle</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
