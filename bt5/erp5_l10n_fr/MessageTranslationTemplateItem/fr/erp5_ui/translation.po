@@ -243,9 +243,6 @@ msgstr "Action impossible : le tiers n'est pas spécifié"
 msgid "Action impossible : source_section is not defined"
 msgstr "Action impossible : La source n'est pas spécifiée"
 
-msgid "Action impossible : the quantity of the transaction is greater than the transferable maximum quantity (TMQ): TMQ = 50000.00"
-msgstr "hkhkjhkjh"
-
 msgid "Action..."
 msgstr "Action ..."
 
@@ -1833,16 +1830,7 @@ msgstr "Aller au payement"
 msgid "Jump..."
 msgstr "Aller à ..."
 
-msgid "KAOLACK"
-msgstr ""
-
-msgid "KOLDA"
-msgstr ""
-
 msgid "Keyword Keys"
-msgstr ""
-
-msgid "LOUGA"
 msgstr ""
 
 msgid "Language"
@@ -2194,7 +2182,7 @@ msgid "Organisations"
 msgstr "Organisations"
 
 msgid "Origin"
-msgstr "Niveau de modification"
+msgstr "Origine"
 
 msgid "Origin Reference"
 msgstr "Ref. Commande client"
@@ -2323,9 +2311,6 @@ msgid "Person Career View"
 msgstr "Carrière"
 
 msgid "Person Module"
-msgstr ""
-
-msgid "Person Module old"
 msgstr ""
 
 msgid "Person Report"
@@ -2679,9 +2664,6 @@ msgstr ""
 msgid "Run Unit Tests"
 msgstr ""
 
-msgid "SAINT-LOUIS"
-msgstr ""
-
 msgid "Salary Coefficient"
 msgstr "Coefficient"
 
@@ -2727,9 +2709,6 @@ msgstr "Ordres non confirmés"
 msgid "Sale trade condition"
 msgstr "Conditions de vente"
 
-msgid "Sans emploi"
-msgstr ""
-
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -2746,7 +2725,7 @@ msgid "Search Select:"
 msgstr "Recherche:"
 
 msgid "Search Type:"
-msgstr "Sélectionner une Action :"
+msgstr "Sélectionner une Action:"
 
 msgid "Section Account"
 msgstr "Compte de Section"
@@ -2860,28 +2839,7 @@ msgid "Social form"
 msgstr "Forme de la Sté"
 
 msgid "Sorry your selection has changed"
-msgstr "Désolé ! Essayez encore après avoir cliqué devant le nombre d'éléments de la liste."
-
-msgid "Sorry, 1 Item Is In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
-
-msgid "Sorry, 2 Items Are In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
-
-msgid "Sorry, 3 Items Are In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
-
-msgid "Sorry, 4 Items Are In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
-
-msgid "Sorry, 5 Items Are In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
-
-msgid "Sorry, 6 Items Are In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
-
-msgid "Sorry, 8 Items Are In Use."
-msgstr "Suppression impossible. D'autres objets dépendent de celui-ci."
+msgstr "Désolé, votre séléction a changé"
 
 msgid "Sort"
 msgstr "Trier"
@@ -2946,14 +2904,8 @@ msgstr ""
 msgid "Spreadsheet Name"
 msgstr ""
 
-msgid "Standard Price"
-msgstr "Prix Laize 150cm"
-
 msgid "Start Date"
 msgstr "Date de début"
-
-msgid "Start date"
-msgstr "Ne Pas livrer Avant le"
 
 msgid "State"
 msgstr "État"
@@ -2969,9 +2921,6 @@ msgstr ""
 
 msgid "Stop Date"
 msgstr "Date de fin"
-
-msgid "Stop date"
-msgstr "Ne Pas livrer Après le"
 
 msgid "Stopped"
 msgstr "Brouillard"
@@ -3017,12 +2966,6 @@ msgstr "Ref Fournisseur"
 
 msgid "Surname"
 msgstr "Prénom"
-
-msgid "TAMBACOUNDA"
-msgstr ""
-
-msgid "THIES"
-msgstr ""
 
 msgid "Tariff nomenclature"
 msgstr "Code nomenclature douanière"
@@ -3279,9 +3222,6 @@ msgstr "Utilisateur"
 msgid "User Name"
 msgstr ""
 
-msgid "User name"
-msgstr ""
-
 msgid "Usual Name"
 msgstr "Nom courant"
 
@@ -3400,7 +3340,7 @@ msgid "You are not currently logged in. Your username and or password may be inc
 msgstr "Vous n'êtes pas connecté. Votre Nom ou votre Mot de passe sont peut-être incorrects. En cas de besoin, contactez  ${admin_email}."
 
 msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
-msgstr ""
+msgstr "Vous pouvez vous connecter sous un autre profil ou <a href=\"javascript:history.back();\">retourner à la page précédante</a>."
 
 msgid "You did not enter a floating point number."
 msgstr "Vous devez entrer un numérique."
@@ -3412,16 +3352,13 @@ msgid "You did not enter an integer."
 msgstr "Vous devez saisir un nombre entier."
 
 msgid "You don't have enough permissions to access this page"
-msgstr ""
+msgstr "Vous n'avez pas la permission d'acceder à cette page"
 
 msgid "You don't have the permissions to edit the object."
 msgstr "Vous n'avez pas la permission d'éditer l'objet"
 
 msgid "You selected an item that was not in the list."
 msgstr "Cet élément n'est pas dans la liste"
-
-msgid "ZIGUINCHOR"
-msgstr ""
 
 msgid "Zip Code"
 msgstr "Code Postal"
