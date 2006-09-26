@@ -61,9 +61,7 @@
         <tal:repeat repeat="html_tuple html_render">\n
           <tr tal:attributes="title python: context.Localizer.translate(\'erp5_ui\', context.Base_getFieldDescription(field))">\n
             <td tal:content="structure python: html_tuple[0]"\n
-                tal:attributes="class python: \n
-                             {0: {0: None, 1: \'required\'},\n
-                              1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()]"\n
+                tal:attributes="class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_errors.has_key(field.id) and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
                 i18n:translate="" i18n:domain="ui" />\n
             <td>\n
               <tal:block metal:use-macro="context/form_developper_buttons/macros/field"/>\n

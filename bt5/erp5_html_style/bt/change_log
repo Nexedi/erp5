@@ -1,3 +1,6 @@
+2006-09-26 Alex
+* applied erp5_xhtml_style's patch for application of the css class attribute to the field title
+
 2006-07-19 Kevin
 * Add support of HTML Report in list_mode (similar to history tab, but in list_mode).
 
