@@ -69,6 +69,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
+if len(pref)==0:return\n
+pref=pref[0]\n
 if pref==\'never\':return\n
 \n
 subjecttpl=\'ingested %(name)s\'\n
@@ -129,9 +131,10 @@ context.MailHost.send(msg,mto,mfro,subject)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>pref</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>subjecttpl</string>
                             <string>msgtpl</string>
-                            <string>_getitem_</string>
                             <string>ob</string>
                             <string>subject</string>
                             <string>msg</string>
