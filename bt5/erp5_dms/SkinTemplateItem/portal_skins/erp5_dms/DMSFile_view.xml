@@ -98,16 +98,16 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_portal_type</string>
+                        <string>my_translated_portal_type</string>
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_language</string>
                         <string>my_short_title</string>
                         <string>my_int_index</string>
-                        <string>my_validation_state</string>
                         <string>my_file</string>
                         <string>my_source_reference</string>
+                        <string>my_translated_simulation_state_title</string>
                         <string>my_contributor_title_list</string>
                       </list>
                     </value>

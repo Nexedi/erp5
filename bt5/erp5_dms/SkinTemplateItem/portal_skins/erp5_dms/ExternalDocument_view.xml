@@ -100,7 +100,7 @@
                         <string>my_url_string</string>
                         <string>my_url_protocol</string>
                         <string>my_status_message</string>
-                        <string>my_simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
