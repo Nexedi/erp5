@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_contributor_related_title_list</string> </value>
+            <value> <string>my_contributor_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -391,7 +391,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>contributor_related</string> </value>
+                    <value> <string>contributor</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>

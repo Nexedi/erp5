@@ -79,9 +79,6 @@
                       <list>
                         <string>my_description</string>
                         <string>my_subject_list</string>
-                        <string>my_contributor_list</string>
-                        <string>my_contributor_name_list</string>
-                        <string>my_contributor_related_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -111,6 +108,7 @@
                         <string>my_validation_state</string>
                         <string>my_file</string>
                         <string>my_source_reference</string>
+                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>

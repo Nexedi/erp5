@@ -272,24 +272,6 @@ class DMSFile(XMLObject,File):
         #id='DMSFile_getWikiPredecessorValueList')
     #return cached_getWikiPredecessorValueList()
 
-  security.declareProtected(Permissions.View,'getContributorList')
-  def getContributorList(self):
-    '''
-    override
-    '''
-    return (self.getContributorRelatedTitleList() or [])+(self.getContributorNameList() or [])
-  
-  getContributorsList=getContributorList
-  getContributorTitleList=getContributorList
-
-  security.declarePrivate('setContributorList')
-  def setContributorList(self,*args,**kwargs):
-    '''
-    just in case
-    '''
-    pass
-  setContributorsList=setContributorList
-
   # BG copied from File in case
   index_html = CMFFile.index_html
   PUT = CMFFile.PUT
