@@ -68,21 +68,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
+            <value> <string># returns all documents related by similarity (either way), recursively\n
+# so all documents related indirectly are also returned\n
+# recursion depth can be limited, to avoid returning all documents\n
+# if there is many similarities\n
+# every doc is returned in its latest version available\n
 \n
-what=context.REQUEST.get(\'what\')\n
+lista={}\n
+depth=int(depth)\n
 \n
-mapka={\'wiki_predecessor\':\'Wiki Predecessors\',\n
-\'wiki_successor\':\'Wiki Successors\',\n
-\'related_similar\':\'Similar documents\',\n
-\'related_successor\':\'Related documents\',\n
-\'related_predecessor\':\'Reference documents\',\n
-\'cloud\':\'Similarity cloud\',\n
-\'all\':\'All related documents\'}\n
+def getSimilarities(self,level=0):\n
+  level+=1\n
+  context.log(self.getRelativeUrl())\n
+  context.log(level)\n
+  res=self.getSimilarValueList()+self.getSimilarRelatedValueList()\n
+  for r in res:\n
+    if lista.get(r) is None:\n
+      lista[r]=True\n
+      if level!=depth:\n
+        getSimilarities(r,level)\n
 \n
-s=mapka.get(what)\n
-if s is None:return \'\'\n
-return str(Message(domain=\'ui\',message=s))\n
+getSimilarities(context)\n
+if lista.has_key(context):lista.pop(context)\n
+return [o.DMSDocument_getLastVersion() for o in lista.keys()]\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +107,7 @@ return str(Message(domain=\'ui\',message=s))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a,**kw</string> </value>
+            <value> <string>depth=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,23 +127,22 @@ return str(Message(domain=\'ui\',message=s))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>depth</string>
+                            <string>lista</string>
+                            <string>int</string>
+                            <string>getSimilarities</string>
                             <string>context</string>
-                            <string>what</string>
-                            <string>mapka</string>
-                            <string>s</string>
-                            <string>None</string>
-                            <string>str</string>
+                            <string>_getattr_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
                           </tuple>
                         </value>
                     </item>
@@ -147,12 +154,14 @@ return str(Message(domain=\'ui\',message=s))\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_getRelatedDocumentsListboxTitle</string> </value>
+            <value> <string>DMS_getSimilarityCloud</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

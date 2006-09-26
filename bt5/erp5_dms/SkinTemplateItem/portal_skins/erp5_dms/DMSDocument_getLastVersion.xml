@@ -68,21 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-\n
-what=context.REQUEST.get(\'what\')\n
-\n
-mapka={\'wiki_predecessor\':\'Wiki Predecessors\',\n
-\'wiki_successor\':\'Wiki Successors\',\n
-\'related_similar\':\'Similar documents\',\n
-\'related_successor\':\'Related documents\',\n
-\'related_predecessor\':\'Reference documents\',\n
-\'cloud\':\'Similarity cloud\',\n
-\'all\':\'All related documents\'}\n
-\n
-s=mapka.get(what)\n
-if s is None:return \'\'\n
-return str(Message(domain=\'ui\',message=s))\n
+            <value> <string>if context.getReference() is None:\n
+  return context\n
+res=context.DMS_findDocument(reference=context.getReference(),language=context.getLanguage())\n
+return res[0].getObject()\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +88,7 @@ return str(Message(domain=\'ui\',message=s))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a,**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,17 +114,11 @@ return str(Message(domain=\'ui\',message=s))\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>what</string>
-                            <string>mapka</string>
-                            <string>s</string>
                             <string>None</string>
-                            <string>str</string>
+                            <string>res</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,7 +135,7 @@ return str(Message(domain=\'ui\',message=s))\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_getRelatedDocumentsListboxTitle</string> </value>
+            <value> <string>DMSDocument_getLastVersion</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

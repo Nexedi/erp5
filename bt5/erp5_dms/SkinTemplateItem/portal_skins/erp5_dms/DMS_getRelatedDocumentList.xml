@@ -68,14 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def findRecentVersion(doc):\n
-  res=context.DMS_findDocument(reference=doc.getReference(),language=doc.getLanguage())\n
-  return res[0].getObject()\n
-\n
-def getRelatedLatest(category):\n
+            <value> <string>def getRelatedLatest(category):\n
   funcname=\'get%sValueList\' % category.title()\n
   func=getattr(context,funcname)\n
-  return map(findRecentVersion, func())\n
+  return [o.DMS_getLatestVersion() for o in func()]\n
 \n
 what=kw.get(\'what\')\n
 if what==\'wiki_predecessor\':\n
@@ -84,6 +80,8 @@ if what==\'wiki_successor\':\n
   return context.getWikiSuccessorValueList()\n
 if what.startswith(\'related\'):\n
   return getRelatedLatest(what[8:])\n
+if what==\'cloud\':\n
+  return context.DMS_getSimilarityCloud()\n
 if what==\'all\':\n
   dic={}\n
   for ob in context.getWikiPredecessorValueList()+context.getWikiSuccessorValueList()+\\\n
@@ -135,7 +133,6 @@ return []\n
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
-                            <string>findRecentVersion</string>
                             <string>getRelatedLatest</string>
                             <string>_getattr_</string>
                             <string>what</string>
