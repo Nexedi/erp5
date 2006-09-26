@@ -76,7 +76,7 @@ ob.log(script.getId(),ob.getRelativeUrl())\n
 if f is not None and f:\n
   # if file uploaded, then:\n
   fname=f.filename\n
-  ob.setPropertiesFromFilename(fname)\n
+  ob.setPropertyListFromFilename(fname)\n
   ob.setSourceReference(fname)\n
   if not ob.getTitle():\n
     ob.setTitle(fname)\n

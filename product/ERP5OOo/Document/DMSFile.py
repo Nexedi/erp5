@@ -197,8 +197,8 @@ class DMSFile(XMLObject,File):
         self.content_type=content_type
     return content_type
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setPropertiesFromFilename')
-  def setPropertiesFromFilename(self,fname):
+  security.declareProtected(Permissions.ModifyPortalContent, 'setPropertyListFromFilename')
+  def setPropertyListFromFilename(self,fname):
     rx_parse=re.compile(self.portal_preferences.getPreferredDmsFilenameRegexp())
     if rx_parse is None:
       self.setReference(fname)

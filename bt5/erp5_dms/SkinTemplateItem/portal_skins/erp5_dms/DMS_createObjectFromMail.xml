@@ -79,7 +79,7 @@ if ctype is None:\n
 # create content\n
 ob=context.document_module.newContent(portal_type=ctype,file=data)\n
 ob.setSourceReference(fname)\n
-ob.setPropertiesFromFilename(fname)\n
+ob.setPropertyListFromFilename(fname)\n
 ob.guessMimeType(fname)\n
 code,msg=ob.convert()\n
 if code>0:\n
