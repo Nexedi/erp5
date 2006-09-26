@@ -204,10 +204,12 @@ class SupplyLine(DeliveryLine, Path):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantityStepList')
-    def getQuantityStepList(self, price_parameter="base_price"):
+    def getQuantityStepList(self, *args, **kw):
       """
         Return predicate step related to a price_parameter
       """
+      # We need to keep compatibility with generated accessor
+      price_parameter = kw.get('price_parameter', "base_price")
       if price_parameter == "base_price":
         method_name = "_baseGetQuantityStepList"
       else:
