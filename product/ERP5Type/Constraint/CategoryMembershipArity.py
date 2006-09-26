@@ -42,6 +42,7 @@ class CategoryMembershipArity(Constraint):
       'max_arity'     : '1',
       'portal_type'   : ('Organisation', ),
       'base_category' : ('source',)
+      'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
 
@@ -53,6 +54,8 @@ class CategoryMembershipArity(Constraint):
       are defined the minimum and the maximum arity, and the
       list of objects we wants to check the arity.
     """
+    if not self._checkConstraintCondition(obj):
+      return []
     errors = []
     # Retrieve values inside de PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']

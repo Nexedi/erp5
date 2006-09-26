@@ -324,6 +324,32 @@ class TestConstraint(ERP5TypeTestCase):
                                   description='propertyExistence test',
                                   not_defined_property=None)
 
+  def stepCreatePropertyExistence1TrueCondition(self, sequence=None, 
+                                   sequence_list=None, **kw):
+    """
+      Create a PropertyExistence Constraint with a true condition
+    """
+    self._createGenericConstraint(sequence, 
+                                  klass_name='PropertyExistence',
+                                  id='property_existence',
+                                  description='propertyExistence test',
+                                  not_defined_property=None,
+                                  condition='python: object.getPortalType()' \
+                                      + ' == "%s"' % self.object_portal_type)
+
+  def stepCreatePropertyExistence1FalseCondition(self, sequence=None, 
+                                   sequence_list=None, **kw):
+    """
+      Create a PropertyExistence Constraint with a false condition
+    """
+    self._createGenericConstraint(sequence, 
+                                  klass_name='PropertyExistence',
+                                  id='property_existence',
+                                  description='propertyExistence test',
+                                  not_defined_property=None,
+                                  condition='python: object.getPortalType()' \
+                                      + ' == "False_PortalTypeXXX123"')
+
   def stepCreatePropertyExistence2(self, sequence=None, 
                                    sequence_list=None, **kw):
     """
@@ -355,6 +381,24 @@ class TestConstraint(ERP5TypeTestCase):
               CreatePropertyExistence1 \
               CallCheckConsistency \
               CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with property not defined in PropertySheet and true
+    # condition
+    sequence_string = '\
+              CreateObject \
+              CreatePropertyExistence1TrueCondition \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with property not defined in PropertySheet and false
+    # condition
+    sequence_string = '\
+              CreateObject \
+              CreatePropertyExistence1FalseCondition \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object

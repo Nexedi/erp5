@@ -43,6 +43,7 @@ class PortalTypeClass(Constraint):
       'description'   : 'The __class__ must be the same as the portal'\
                         ' type definition',
       'type'          : 'PortalTypeClass',
+      'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
 
@@ -51,6 +52,8 @@ class PortalTypeClass(Constraint):
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
+    if not self._checkConstraintCondition(obj):
+      return []
     errors = []
     types_tool = getToolByName(obj, 'portal_types')
     type_info = types_tool._getOb(obj.getPortalType(), None)

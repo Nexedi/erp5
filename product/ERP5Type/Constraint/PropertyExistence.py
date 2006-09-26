@@ -40,6 +40,7 @@ class PropertyExistence(Constraint):
       'description'   : 'Property price must be defined',
       'type'          : 'PropertyExistence',
       'price'         : None,
+      'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
 
@@ -48,6 +49,8 @@ class PropertyExistence(Constraint):
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
+    if not self._checkConstraintCondition(obj):
+      return []
     errors = []
     # For each attribute name, we check if defined
     for property_id in self.constraint_definition.keys():

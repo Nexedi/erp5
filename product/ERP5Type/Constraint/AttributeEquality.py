@@ -39,6 +39,7 @@ class AttributeEquality(PropertyExistence):
       'description'   : 'Title must be "ObjectTitle"',
       'type'          : 'AttributeEquality',
       'title'         : 'ObjectTitle',
+      'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
 
@@ -49,6 +50,8 @@ class AttributeEquality(PropertyExistence):
       We will make sure that each non None constraint_definition is 
       satisfied (equality)
     """
+    if not self._checkConstraintCondition(obj):
+      return []
     errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
     for attribute_name, attribute_value in self.constraint_definition.items():
       error_message = None

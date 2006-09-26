@@ -39,6 +39,7 @@ class CategoryExistence(Constraint):
       'type'          : 'CategoryExistence',
       'portal_type'   : ('Person', 'Organisation')
       'causality'     : None,
+      'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
 
@@ -47,6 +48,8 @@ class CategoryExistence(Constraint):
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
+    if not self._checkConstraintCondition(obj):
+      return []
     errors = []
     # For each attribute name, we check if defined
     for base_category in self.constraint_definition.keys():

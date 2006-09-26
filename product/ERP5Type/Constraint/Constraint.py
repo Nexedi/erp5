@@ -28,13 +28,15 @@
 #
 ##############################################################################
 
+from Products.CMFCore.Expression import Expression
+
 class Constraint:
     """
       Default Constraint implementation
     """
 
     def __init__(self, id=None, description=None, type=None,
-                 **constraint_definition):
+                 condition=None, **constraint_definition):
       """
         Remove unwanted attributes from constraint definition and keep
         them as instance attributes
@@ -42,6 +44,7 @@ class Constraint:
       self.id = id
       self.description = description
       self.type = type
+      self.condition = condition
       self.constraint_definition = constraint_definition
 
     def edit(self, id=None, description=None, type=None,
@@ -65,6 +68,21 @@ class Constraint:
                  '%s inconsistency' % self.__class__.__name__,
                  104, error_message, self.description)
       return error
+
+    def _checkConstraintCondition(self, obj):
+      """
+        method that will check if the TALES condition is true.
+        It should be called by checkConsistency, which should ignore
+        constraints if TALES is False
+      """
+      from Products.ERP5Type.Utils import createExpressionContext
+      condition = getattr(self, 'condition', None)
+      if condition not in (None, ''):
+        expression = Expression(condition)
+        econtext = createExpressionContext(obj)
+        if not expression(econtext):
+          return 0 # a condition was defined and is False
+      return 1 # no condition or a True condition was defined
 
     def checkConsistency(self, obj, fixit=0):
       """
