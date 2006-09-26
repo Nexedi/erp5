@@ -498,7 +498,7 @@ class TestERP5BankingMixin:
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences']:
           ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
           if 'ventilation' in ss.getId():
-            for country in ['France', 'Spain']:
+            for country in ['madrid', 'paris']:
               if country[0] != c.getCodification()[0]:
                 ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         # caveau
@@ -509,7 +509,7 @@ class TestERP5BankingMixin:
             for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
               ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'transit' in ss.getId():
-                for country in ['France', 'Spain']:
+                for country in ['madrid', 'paris']:
                   if country[0] != c.getCodification()[0]:
                     ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
@@ -518,7 +518,7 @@ class TestERP5BankingMixin:
                        'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
               ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'ventilation' in ss.getId():
-                for country in ['France', 'Spain']:
+                for country in ['madrid', 'paris']:
                   if country[0] != c.getCodification()[0]:
                     ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'devises' in ss.getId():
