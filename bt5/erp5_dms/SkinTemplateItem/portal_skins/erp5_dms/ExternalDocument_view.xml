@@ -100,7 +100,6 @@
                         <string>my_url_string</string>
                         <string>my_url_protocol</string>
                         <string>my_status_message</string>
-                        <string>my_source_project_title</string>
                         <string>my_simulation_state</string>
                       </list>
                     </value>
@@ -110,6 +109,9 @@
                     <value>
                       <list>
                         <string>link</string>
+                        <string>my_source_project_title</string>
+                        <string>my_classification</string>
+                        <string>my_dms_category_list</string>
                       </list>
                     </value>
                 </item>
