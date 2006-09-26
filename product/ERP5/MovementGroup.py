@@ -1063,3 +1063,8 @@ class DestinationMovementGroup(PropertyMovementGroup):
   _property = 'destination'
 allow_class(DestinationMovementGroup)
 
+class SourceProjectMovementGroup(PropertyMovementGroup):
+  """ Group movements that have the same source project ."""
+  _property = 'source_project'
+allow_class(SourceProjectMovementGroup)
+
