@@ -854,6 +854,16 @@ class TestPropertySheet:
       self.assertEquals(initial_state.title,
                         person.getProperty('translated_validation_state_title'))
       
+      # default parameter is accepted by getProperty for compatibility
+      self.assertEquals(initial_state.getId(),
+                        person.getProperty('validation_state', 'default'))
+      self.assertEquals(initial_state.title,
+                        person.getProperty('validation_state_title', 'default'))
+      # XXX we do not have translation system set up at that point
+      self.assertEquals(initial_state.title,
+                        person.getProperty('translated_validation_state_title',
+                        'default'))
+
       # pass a transition and check accessors again.
       person.validate()
       self.assertEquals(other_state.getId(), person.getValidationState())
