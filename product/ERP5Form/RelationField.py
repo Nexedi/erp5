@@ -55,6 +55,7 @@ class RelationStringFieldWidget(
        MultiRelationField.MultiRelationStringFieldWidget.local_property_names
 
   default_widget_rendering_instance = Widget.TextWidgetInstance
+  default = Widget.TextWidget.default
 
   def _generateRenderValueList(self, field, key, value, REQUEST):
 #     value = value or NO_VALUE
