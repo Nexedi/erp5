@@ -74,17 +74,11 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 err=\'\'\n
 o=state_change.object\n
-for req in (\'reference\', \'language\', \'version\'):\n
-  if o.getProperty(req) is None or o.getProperty(req)==\'\':\n
-    err+=\'E: %s is None  \' % req\n
-if err:\n
-  raise ValidationFailed(err)\n
-res=context.portal_catalog(reference=o.getReference(),language=o.getLanguage(),version=o.getVersion(),portal_type=context.getPortalDocumentTypeList())\n
-res=list(res)\n
-if len(res)==2: # this and the other one\n
-  raise ValidationFailed(\'E: another object %s - %s - %s exists\' % (o.getReference(),o.getLanguage(),o.getVersion()))\n
-if len(res)>2:\n
-  raise Exception(\'Fatal error: multiple objects %s - %s - %s exist\' % (o.getReference(),o.getLanguage(),o.getVersion()))\n
+res=o.checkConsistency()\n
+res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
+if len(res)>0:\n
+  msg=\'<br/>\'.join(str(c[3]) for c in res)\n
+  raise ValidationFailed(msg)\n
 
 
 ]]></string> </value>
@@ -135,14 +129,14 @@ if len(res)>2:\n
                             <string>err</string>
                             <string>_getattr_</string>
                             <string>o</string>
-                            <string>_getiter_</string>
-                            <string>req</string>
-                            <string>None</string>
-                            <string>context</string>
                             <string>res</string>
-                            <string>list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>c</string>
+                            <string>_getitem_</string>
                             <string>len</string>
-                            <string>Exception</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
