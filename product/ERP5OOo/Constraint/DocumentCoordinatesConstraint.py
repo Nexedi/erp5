@@ -39,7 +39,7 @@ class DocumentCoordinatesConstraint(Constraint):
   we do not fix (although we could, e.g. change version number)
   """
 
-  def checkConsistency(self, o, fixit=0):
+  def checkConsistency(self, o, fixit=0, throw=False):
     """Implement here the consistency checker
     """
     errors = []
@@ -49,6 +49,8 @@ class DocumentCoordinatesConstraint(Constraint):
         s='%s is None  ' % req
         errors.append(self._generateError(o, N_(s)))
     if errors:
+      if throw:
+        raise Exception(str(errors))
       return errors
     res=o.portal_catalog(reference=o.getReference(),language=o.getLanguage(),version=o.getVersion(),portal_type=o.getPortalDocumentTypeList())
     res=list(res)
@@ -57,7 +59,9 @@ class DocumentCoordinatesConstraint(Constraint):
       errors.append(self._generateError(o, N_(s)))
     if len(res)>2: # this is very serious
       raise Exception('Fatal error: multiple objects %s - %s - %s exist' % (o.getReference(),o.getLanguage(),o.getVersion()))
-      errors.append(self._generateError(o, N_(s)))
+      #errors.append(self._generateError(o, N_(s)))
+    if errors and throw:
+      raise Exception(str(errors))
     return errors
 
 
