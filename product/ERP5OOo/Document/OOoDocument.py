@@ -182,6 +182,13 @@ class OOoDocument(DMSFile, CachingMixin):
     return map(lambda x: x[0], self.getTargetFormatItemList())
 
 
+  security.declareProtected(Permissions.ModifyPortalContent,'reset')
+  def reset(self):
+    self.clearCache()
+    self.oo_data=None
+    m=self.returnMessage('new')
+    self.setStatusMessage(str(m[1]))
+
   security.declareProtected(Permissions.ModifyPortalContent,'isAllowed')
   def isAllowed(self, format):
     """
@@ -262,7 +269,7 @@ class OOoDocument(DMSFile, CachingMixin):
     self.setTitle(meta.get('title',''))
     self.setSubject(meta.get('keywords','').split())
     self.setDescription(meta.get('description',''))
-    self.setLanguage(meta.get('language',''))
+    #self.setLanguage(meta.get('language',''))
     if meta.get('MIMEType',False):
       self.setMimeType(meta['MIMEType'])
     #self.setReference(meta.get('reference',''))

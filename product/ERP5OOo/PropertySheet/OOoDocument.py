@@ -35,6 +35,10 @@ class OOoDocument:
     'description' : 'mime type of OOo version',
     'type'    : 'string',
     'mode'    : ''},
+    {   'id'          : 'status_message',
+        'description' : 'message about status',
+        'type'        : 'string',
+        'mode'        : 'w' },
   )
 
 
