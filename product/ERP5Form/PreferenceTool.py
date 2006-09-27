@@ -190,28 +190,12 @@ class PreferenceTool(BaseTool):
     """ returns all document templates that are in acceptable Preferences
         based on different criteria such as folder, portal_type, etc.
     """
-    def _getDocumentTemplateList(folder=None):
-      if folder is None :
-        # as the preference tool is also a Folder, this method is called by
-        # page templates to get the list of document templates for self.
-        folder = self
-  
-      acceptable_templates = []
-      allowed_content_types = map(lambda pti: pti.id,
-                                  folder.allowedContentTypes())
-      for pref in self._getSortedPreferenceList() :
-        for doc in pref.objectValues() :
-          if doc.getPortalType() in allowed_content_types:
-            acceptable_templates.append (doc)
-      return acceptable_templates
-    
-    return CachingMethod(_getDocumentTemplateList, 'portal_preferences.getDocumentTemplateList', cache_duration=3000)(folder)
     # We must set the user_id as a parameter to make sure each
-    # user can get a different user
+    # user can get a different cache
     def _getDocumentTemplateList(user_id,portal_type=None):
       acceptable_templates = []
       for pref in self._getSortedPreferenceList() :
-        for doc in pref.objectValues() :
+        for doc in pref.contentValues() :
           if doc.getPortalType() == portal_type:
             acceptable_templates.append(doc.getRelativeUrl())
       return acceptable_templates
@@ -224,7 +208,7 @@ class PreferenceTool(BaseTool):
     user_id = getToolByName(self, 'portal_membership').getAuthenticatedMember().getId()
     template_list = []
     for portal_type in allowed_content_types:
-      for template_url in _getDocumentTemplateList(user_id,portal_type=portal_type):
+      for template_url in _getDocumentTemplateList(user_id, portal_type=portal_type):
         template_list.append(self.restrictedTraverse(template_url))
     return template_list
 
