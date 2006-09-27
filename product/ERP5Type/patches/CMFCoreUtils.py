@@ -14,6 +14,7 @@
 
 from Products.CMFCore.utils import *
 from Products.CMFCore.utils import _verifyActionPermissions
+from Products.CMFCore.Expression import getExprContext
 from Products.CMFCore import PortalContent
 
 from zLOG import LOG
@@ -27,7 +28,6 @@ from zLOG import LOG
   This method was patched to let CMF choose between several default actions according conditions.
 """
 
-security.declarePrivate('_getViewFor')
 def CMFCoreUtils_getViewFor(obj, view='view'):
     warn('__call__() and view() methods using _getViewFor() as well as '
          '_getViewFor() itself are deprecated and will be removed in CMF 1.6. '
@@ -37,12 +37,15 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
     ti = obj.getTypeInfo()
 
     if ti is not None:
+
         context = getActionContext( obj )
+        test_context = getExprContext(obj, obj) # Patch 1: mimic _listActionInfos in ActionsTool
         actions = ti.listActions()
         for action in actions:
             if action.getId() == view or action.getCategory().endswith('_%s' % view):
+                                                          # Patch 2: consider anything ending by _view
                 if _verifyActionPermissions(obj, action):
-                  if action.testCondition(context) and action.visible:
+                  if action.visible and action.testCondition(test_context): # Patch 3: test actions
                     target = action.action(context).strip()
                     if target.startswith('/'):
                         target = target[1:]
@@ -53,7 +56,7 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
         # Find something that's allowed.
         for action in actions:
             if _verifyActionPermissions(obj, action):
-              if action.testCondition(context):
+              if action.visible and action.testCondition(test_context): # Patch 3: test actions
                 target = action.action(context).strip()
                 if target.startswith('/'):
                     target = target[1:]
@@ -65,6 +68,5 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
     else:
         raise NotFound('Cannot find default view for "%s"' %
                             '/'.join(obj.getPhysicalPath()))
-
 
 PortalContent._getViewFor = CMFCoreUtils_getViewFor
