@@ -135,7 +135,16 @@
 \t<td>id=listbox_data_line_3</td>\n
 \t<td></td>\n
 </tr>\n
-\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/0/getSimulationState</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>deleted</td>\n
+\t<td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>\n
