@@ -130,7 +130,7 @@ def getItemList(category=None, portal_path=None, mirror=0,\n
                               sort_method=sort,\n
                               # we don\'t want strict membership if now category\n
                               # has been found.\n
-                              strict_membership=(category is not None),\n
+                              strict_membership=0,\n
                               filter=filter_dict)\n
   return item_list\n
 \n
