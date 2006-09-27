@@ -61,86 +61,57 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-      tal:define="value_a string: DumbValueA;\n
-                  value_b string: DumbValueB;\n
-                  other_value_a string: OtherValueA;\n
-                  other_value_b string: OtherValueB;">\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test form_dialog called on a site object and Base_callDialogMethod executed from this dialog</title>\n
+<title>Test Simple Relation Field, using metadata tab to set categories</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test form_dialog called on a site object and Base_callDialogMethod executed from this dialog</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Simple Relation Field, using metadata tab\n
+to set categories</td></tr>\n
 </thead><tbody>\n
-<!--\n
-  This test checks that a dialog can be displayed and used on the site object.\n
-  This is used, for example, to create a module.\n
--->\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/FooModule_viewSearchDialog"></td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>field_your_id</td>\n
-  <td tal:content="value_a"></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_your_title</td>\n
-  <td tal:content="value_b"></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//input[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
   <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>id</td>\n
-  <td tal:content="value_a"></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>title</td>\n
-  <td tal:content="value_b"></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/FooModule_viewSearchDialog"></td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>field_your_id</td>\n
-  <td tal:content="other_value_a"></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>field_your_title</td>\n
-  <td tal:content="other_value_b"></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td>link=Title 0</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id</td>\n
-  <td tal:content="other_value_a"></td>\n
+  <td>field_my_fake_category_title</td>\n
+  <td></td>\n
 </tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>title</td>\n
-  <td tal:content="other_value_b"></td>\n
-</tr>\n
+</tbody></table>\n
 </body>\n
-</html>
+</html>\n
+
 
 ]]></string> </value>
         </item>
@@ -154,7 +125,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFormDialogOnSiteObject</string> </value>
+            <value> <string>testSimpleRelationFieldDefaultValue</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

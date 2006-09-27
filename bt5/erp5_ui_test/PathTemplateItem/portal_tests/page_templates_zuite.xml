@@ -25,6 +25,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>filename_glob</string> </key>
             <value> <string></string> </value>
         </item>

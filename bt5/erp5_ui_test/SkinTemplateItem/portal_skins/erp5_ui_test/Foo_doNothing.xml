@@ -85,6 +85,12 @@ return context.ERP5XhtmlStyle_redirect(context.absolute_url(), keep_items={\'por
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

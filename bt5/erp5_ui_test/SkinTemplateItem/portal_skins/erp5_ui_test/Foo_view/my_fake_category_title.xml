@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_foo_category_title</string> </value>
+            <value> <string>my_fake_category_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -363,7 +363,7 @@
               <dictionary>
                 <item>
                     <key> <string>allow_creation</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>allow_jump</string> </key>
@@ -375,7 +375,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>foo_category</string> </value>
+                    <value> <string>fake_category</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -502,7 +502,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Foo Category</string> </value>
+                    <value> <string>Fake Category</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
