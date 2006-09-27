@@ -190,19 +190,6 @@ class DeliveryRule(Rule):
     """
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
-  def isDivergent(self, movement):
-    """
-    Checks that the movement is divergent
-    """
-    return Rule.isDivergent(self, movement)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
-  def getDivergenceList(self, applied_rule):
-    """
-      Returns a list Divergence descriptors
-    """
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getSolverList')
   def getSolverList(self, applied_rule):
     """
