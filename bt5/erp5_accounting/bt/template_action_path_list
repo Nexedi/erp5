@@ -140,6 +140,7 @@ Purchase Invoice Transaction | print
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | view
 Purchase Invoice Transaction | view_invoice
+Purchase Invoice Transaction | view_source
 Sale Invoice Transaction Line | history
 Sale Invoice Transaction Line | metadata
 Sale Invoice Transaction Line | print
