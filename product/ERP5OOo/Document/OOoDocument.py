@@ -144,13 +144,13 @@ class OOoDocument(DMSFile, CachingMixin):
     communicates with the conversion server
     and gets converted file as well as metadata
     """
-    if force==0 and not self.isFileUploaded():
+    if force==0 and self.hasOOfile():
       return self.returnMessage('OOo file is up do date',1)
     try:
       self._convert()
     except xmlrpclib.Fault,e:
       return self.returnMessage('Problem: %s' % str(e),2)
-    self.setLastConvertTime(DateTime())
+    #self.setLastConvertTime(DateTime())
     return self.returnMessage('converted')
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
@@ -279,16 +279,6 @@ class OOoDocument(DMSFile, CachingMixin):
     data=self.oo_data
     return data
 
-  security.declareProtected(Permissions.View,'hasFile')
-  def hasFile(self):
-    """
-    Checks whether we have an initial file
-    """
-    _marker=[]
-    if getattr(self,'data',_marker) is not _marker: # XXX - use propertysheet accessors
-      return getattr(self,'data') is not None
-    return False
-
   security.declareProtected(Permissions.View,'hasOOfile')
   def hasOOfile(self):
     """
@@ -331,8 +321,7 @@ class OOoDocument(DMSFile, CachingMixin):
       return self.returnMessage('no pdf format found')
     fmt=tgts[0]
     self.makeFile(fmt)
-    #self.snapshot=Pdata(self._unpackData(self.cached_data[fmt]))
-    self.snapshot=Pdata(self._unpackData(self.cacheGet(format)[1]))
+    self.snapshot=Pdata(self._unpackData(self.cacheGet(fmt)[1]))
     return self.returnMessage('snapshot created')
 
   security.declareProtected(Permissions.View,'getSnapshot')
@@ -391,23 +380,13 @@ class OOoDocument(DMSFile, CachingMixin):
     except ConvertionError,e:
       return self.returnMessage(str(e))
 
-  security.declareProtected(Permissions.View,'isFileUploaded')
-  def isFileUploaded(self):
-    """
-    Checks whether the file was uploaded after the last conversion into OOo
-    """
-    if not self.hasOOfile():return True
-    return self.getLastUploadTime() > self.getLastConvertTime()
-
   security.declareProtected(Permissions.View,'isFileChanged')
   def isFileChanged(self,format):
     """
     Checks whether the file was converted (or uploaded) after last generation of
     the target format
     """
-    if self.isFileUploaded(): return True
-    if not self.hasFileCache(format):return True
-    return self.getLastConvertTime()>self.getCacheTime(format)
+    return not self.hasFileCache(format)
 
   security.declareProtected(Permissions.ModifyPortalContent,'makeFile')
   def makeFile(self,format,REQUEST=None):
@@ -426,7 +405,7 @@ class OOoDocument(DMSFile, CachingMixin):
       if REQUEST is not None:
         return self.returnMessage(errstr)
       raise ConvertionError(errstr)
-    if self.isFileUploaded():
+    if not self.hasOOfile():
       if REQUEST is not None:
         return self.returnMessage('needs conversion')
       raise ConvertionError('needs conversion')

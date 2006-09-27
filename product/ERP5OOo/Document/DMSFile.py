@@ -171,6 +171,16 @@ class DMSFile(XMLObject,File):
     searchable_text = ' '.join(map(lambda x: self.getProperty(x) or ' ',self.searchable_attrs))
     return searchable_text
 
+  security.declareProtected(Permissions.View,'hasFile')
+  def hasFile(self):
+    """
+    Checks whether we have an initial file
+    """
+    _marker=[]
+    if getattr(self,'data',_marker) is not _marker: # XXX - use propertysheet accessors
+      return getattr(self,'data') is not None
+    return False
+
   security.declarePrivate('_unpackData')
   def _unpackData(self,data):
     """
