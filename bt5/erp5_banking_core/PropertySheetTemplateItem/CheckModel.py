@@ -35,7 +35,7 @@ class CheckModel:
             'description' : 'If we have to specify the account number',
             'type'        : 'boolean',
             'mode'        : 'w' },
-        {   'id'          : 'price_required',
+        {   'id'          : 'fixed_price',
             'description' : 'If we have to specify the price',
             'type'        : 'boolean',
             'mode'        : 'w' },
