@@ -190,6 +190,11 @@ class PreferenceTool(BaseTool):
     """ returns all document templates that are in acceptable Preferences
         based on different criteria such as folder, portal_type, etc.
     """
+    if folder is None:
+      # as the preference tool is also a Folder, this method is called by
+      # page templates to get the list of document templates for self.   
+      folder = self
+
     # We must set the user_id as a parameter to make sure each
     # user can get a different cache
     def _getDocumentTemplateList(user_id,portal_type=None):
