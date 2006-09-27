@@ -157,12 +157,14 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     global_dict['resource'] = self.billet_10000
     line_list = []
     line_1 = {}
+    line_1['id'] = '1'
     line_1['reference'] = 'unit_test_1'
     line_1['range_start'] = 0
     line_1['range_stop'] = 100
     line_1['quantity'] = 100
     line_list.append(line_1)
     line_2 = {}
+    line_2['id'] = '2'
     line_2['reference'] = 'unit_test_2'
     line_2['range_start'] = 100
     line_2['range_stop'] = 200
@@ -231,6 +233,9 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the cash container item from the monetary reception
     cash_container_item_list = [x.getObject() for x in self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())]
     self.assertEqual(len(cash_container_item_list), 2)
+    def reference_sort(a,b):                                                                                   return cmp(a.getReference(),b.getReference())
+    cash_container_item_list.sort(reference_sort)
+
     # contruct list of dict to create cash container
     new_cash_container_list = []
     i = 1
@@ -238,6 +243,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
       # register cash container on self to check aggregate value later
       setattr(self, 'cash_container_item_%s' %(str(i),), cash_container)
       container_dict = {}
+      container_dict['id'] = str(i)
       container_dict['reference'] = cash_container.getReference()
       container_dict['range_start'] = cash_container.getCashNumberRangeStart()
       container_dict['range_stop'] = cash_container.getCashNumberRangeStop()
@@ -246,6 +252,10 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
       container_dict['aggregate'] = cash_container
       new_cash_container_list.append(container_dict)
       i+=1
+    def reference_sort(a,b):
+      return cmp(a['reference'],b['reference'])
+    new_cash_container_list.sort(reference_sort)
+
 
     global_dict = {}
     global_dict['emission_letter'] = 'p'
