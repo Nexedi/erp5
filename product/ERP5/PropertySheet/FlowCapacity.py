@@ -33,18 +33,20 @@ class FlowCapacity:
 
   _properties = (
     # Accounting
+    # XXX efficiency is already defined on Amount
+    # Need to be removed
     { 'id'          : 'efficiency',
       'description' : """The efficiency.""",
       'type'        : 'float',
       'default'     : 1.0,
       'mode'        : 'w' },
     { 'id'          : 'min_flow',
-      'description' : """The quantity of resource.""",
+      'description' : """Minimal quantity to use on a movement.""",
       'type'        : 'float',
       'default'     : 0.0,
       'mode'        : 'w' },
     { 'id'          : 'max_flow',
-      'description' : """The quantity of resource.""",
+      'description' : """Maximal quantity to use on a movement.""",
       'type'        : 'float',
       'default'     : 0.0,
       'mode'        : 'w' },
