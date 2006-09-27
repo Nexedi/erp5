@@ -154,19 +154,19 @@ class AppliedRule(XMLObject):
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'isDivergent')
-    def isDivergent(self, movement):
+    def isDivergent(self, sim_mvt):
       """
-      Tells whether generated movement is divergent or not.
+      Tells whether generated sim_mvt is divergent or not.
       """
-      return self.getSpecialiseValue().isDivergent(movement)
+      return self.getSpecialiseValue().isDivergent(sim_mvt)
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getDivergenceList')
-    def getDivergenceList(self, movement):
+    def getDivergenceList(self, sim_mvt):
       """
       Returns a list Divergence descriptors
       """
-      return self.getSpecialiseValue().getDivergenceList(movement)
+      return self.getSpecialiseValue().getDivergenceList(sim_mvt)
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getSolverList')
