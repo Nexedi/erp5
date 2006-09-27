@@ -74,9 +74,7 @@ class ObjectMessage:
      if request is not None:
        for item in request:
          if item.meta_type ==  'ERP5 Site':
-           portal = item 
-           portal_categories = getToolByName(portal, 'portal_categories')
-           return portal_categories.resolveCategory(self.object_relative_url)
+           return item.restrictedTraverse(self.object_relative_url)
 
      return None
 
