@@ -635,10 +635,20 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getPrice')
-    def getPrice(self, context=None, REQUEST=None, **kw):
+    def getPrice(self, default=None, context=None, REQUEST=None, **kw):
       """
       Return the unit price of a resource in a specific context.
       """
+      # see Movement.getPrice
+      if isinstance(default, Base) and context is None:
+        msg = 'getPrice first argument is supposed to be the default value'\
+              ' accessor, the context should be passed as with the context='\
+              ' keyword argument'
+        warn(msg, DeprecationWarning)
+        LOG('ERP5', WARNING, msg)
+        context = default
+        default = None
+      
       price_parameter_dict = self._getPriceParameterDict(
                                      context=context, REQUEST=REQUEST, **kw)
       # Calculate the unit price

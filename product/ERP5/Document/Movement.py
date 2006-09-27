@@ -26,9 +26,12 @@
 #
 ##############################################################################
 
+from warnings import warn
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Base import Base
+
 from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
@@ -199,38 +202,64 @@ class Movement(XMLObject, Amount):
     # Call a script on the context
     return context.Movement_lookupPrice()
 
-  def _getTotalPrice(self, context):
+  def _getTotalPrice(self, default=None, context=None):
     price = self.getPrice(context=context)
     quantity = self.getQuantity()
     if type(price) in (type(1.0), type(1)) and \
         type(quantity) in (type(1.0), type(1)):
       return quantity * price
     else:
-      return None
+      return default
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-  def getPrice(self, context=None, REQUEST=None, **kw):
+  def getPrice(self, default=None, context=None, REQUEST=None, **kw):
     """
       Get the Price in the context.
 
       If price is not stored locally, lookup a price and store it.
     """
+    # XXX As all accessors can recieve the default value as first positional
+    # argument, so we changed the first positional argument from context to
+    # default. Here we try to provide backward compatibility for scripts
+    # passing the context as first positional argument, and advice them to use:
+    #   context.getPrice(context=context)
+    # instead of:
+    #   context.getPrice(context)
+    if isinstance(default, Base) and context is None:
+      msg = 'getPrice first argument is supposed to be the default value'\
+            ' accessor, the context should be passed as with the context='\
+            ' keyword argument'
+      warn(msg, DeprecationWarning)
+      LOG('ERP5', WARNING, msg)
+      context = default
+      default = None
+
     local_price = self._baseGetPrice()
     if local_price is None:
       # We must find a price for this movement
-      local_price = self._getPrice(self.asContext(
+      local_price = self._getPrice(context=self.asContext(
                             context=context, REQUEST=REQUEST, **kw))
       # And store it localy
-      if local_price is not None: self.setPrice(local_price)
+      if local_price is not None:
+        self.setPrice(local_price)
     return local_price
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalPrice')
-  def getTotalPrice(self, context=None, REQUEST=None, **kw):
+  def getTotalPrice(self, default=None, context=None, REQUEST=None, **kw):
     """
       Get the Total Price in the context.
     """
-    return self._getTotalPrice(self.asContext(context=context,
+    # see getPrice
+    if isinstance(default, Base) and context is None:
+      msg = 'getTotalPrice first argument is supposed to be the default value'\
+            ' accessor, the context should be passed as with the context='\
+            ' keyword argument'
+      warn(msg, DeprecationWarning)
+      LOG('ERP5', WARNING, msg)
+      context = default
+      default = None
+    return self._getTotalPrice(default=default, context=self.asContext(context=context,
                                 REQUEST=REQUEST, **kw),**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
