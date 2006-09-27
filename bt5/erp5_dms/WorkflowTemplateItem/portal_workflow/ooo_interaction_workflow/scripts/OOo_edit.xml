@@ -70,39 +70,32 @@
             <key> <string>_body</string> </key>
             <value> <string>ob=state_change.object\n
 kw=ob.REQUEST\n
-#ob.log(\'interaction\',\'edit\')\n
 metafields=(\'title\',\'subject\',\'keywords\',\'description\',\'reference\',\'version\',\'language\')\n
 f=kw.get(\'my_file\',None)\n
-#ob.log(\'f\',f)\n
 \n
 # edit metadata (only if we have OOo file)\n
 if ob.hasOOfile():\n
   newmeta={}\n
-#  ob.log(\'metafields\',metafields)\n
   for mf in metafields:\n
     keymf=\'my_\'+mf\n
-#    ob.log(\'keymf\',keymf)\n
     if kw.has_key(keymf):\n
-#      ob.log(\'newmeta[mf]\',kw[keymf])\n
       newmeta[mf]=kw[keymf]\n
   if newmeta:\n
     # edit metadata via server\n
     ob.editMetadata(newmeta)\n
-#    ob.log(\'newmeta\',newmeta)\n
 if f is not None and f:\n
   # if file uploaded, then:\n
-#  ob.log(\'file\',f)\n
   fname=f.filename\n
   # we check for appropriate file type (by extension, using content_type_registry)\n
   ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-#  context.log(context.getPortalType(),ctype)\n
   if ctype is None:\n
     raise Exception(\'File type of \'+fname+\' is not registered\')\n
   if ctype!=ob.getPortalType():\n
     raise Exception(\'This file should be created as \'+ctype)\n
   ob.setSourceReference(fname)\n
   ob.setTitle(fname)\n
-  ob.setLastUploadTime(DateTime())\n
+  ob.oo_data=None # we clear it\n
+  #ob.setLastUploadTime(DateTime())\n
 </string> </value>
         </item>
         <item>
@@ -162,7 +155,7 @@ if f is not None and f:\n
                             <string>context</string>
                             <string>ctype</string>
                             <string>Exception</string>
-                            <string>DateTime</string>
+                            <string>oo_data</string>
                           </tuple>
                         </value>
                     </item>
