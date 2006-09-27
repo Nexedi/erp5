@@ -801,6 +801,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('event')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDivergenceTesterTypeList')
+  def getPortalDivergenceTesterTypeList(self):
+    """
+    Return divergence tester types.
+    """
+    return self._getPortalGroupedTypeList('divergence_tester')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """
