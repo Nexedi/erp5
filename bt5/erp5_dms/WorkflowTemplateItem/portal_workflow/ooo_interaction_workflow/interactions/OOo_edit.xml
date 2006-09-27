@@ -33,7 +33,9 @@
         <item>
             <key> <string>activate_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Convert_after</string>
+              </list>
             </value>
         </item>
         <item>

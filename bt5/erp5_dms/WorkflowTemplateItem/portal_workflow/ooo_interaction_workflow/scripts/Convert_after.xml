@@ -69,31 +69,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>ob=state_change.object\n
-kw=ob.REQUEST\n
-metafields=(\'title\',\'subject\',\'keywords\',\'description\',\'reference\',\'version\',\'language\')\n
-f=kw.get(\'my_file\',None)\n
-\n
-# edit metadata (only if we have OOo file)\n
-if ob.hasOOfile():\n
-  newmeta={}\n
-  for mf in metafields:\n
-    keymf=\'my_\'+mf\n
-    if kw.has_key(keymf):\n
-      newmeta[mf]=kw[keymf]\n
-  if newmeta:\n
-    # edit metadata via server\n
-    ob.editMetadata(newmeta)\n
-if f is not None and f:\n
-  # if file uploaded, then:\n
-  context.log(f)\n
-  fname=f.filename\n
-  # we check for appropriate file type (by extension, using content_type_registry)\n
-  ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-  if ctype is None:\n
-    raise Exception(\'File type of \'+fname+\' is not registered\')\n
-  if ctype!=ob.getPortalType():\n
-    raise Exception(\'This file should be created as \'+ctype)\n
-  ob.reset()\n
+ob.log(ob.getRelativeUrl())\n
+ob.log(ob.hasFile())\n
+ob.log(ob.hasOOfile())\n
+if ob.hasFile() and not ob.hasOOfile():\n
+  res=ob.convert()\n
+  ob.log(res)\n
+  ob.setStatusMessage(str(res[1]))\n
 </string> </value>
         </item>
         <item>
@@ -139,20 +121,9 @@ if f is not None and f:\n
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>ob</string>
-                            <string>kw</string>
-                            <string>metafields</string>
-                            <string>None</string>
-                            <string>f</string>
-                            <string>newmeta</string>
-                            <string>_getiter_</string>
-                            <string>mf</string>
-                            <string>keymf</string>
+                            <string>res</string>
+                            <string>str</string>
                             <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>context</string>
-                            <string>fname</string>
-                            <string>ctype</string>
-                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
@@ -169,7 +140,7 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOo_edit</string> </value>
+            <value> <string>Convert_after</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
