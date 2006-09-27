@@ -30,6 +30,7 @@ Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
 Business Template | view_portal_types
+Category Divergence Tester | view
 Category Tool | fast_input
 Category Tool | list
 Category Tool | localroles
@@ -98,6 +99,8 @@ Preference | html_style_preferences
 Preference | metadata
 Preference | print
 Preference | view
+Property Divergence Tester | view
+Quantity Divergence Tester | view
 Route Tool | list
 Route Tool | localroles
 Route Tool | metadata

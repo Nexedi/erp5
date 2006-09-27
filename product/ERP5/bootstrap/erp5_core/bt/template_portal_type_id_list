@@ -4,6 +4,7 @@ Applied Rule
 Base Category
 Base Domain
 Category
+Category Divergence Tester
 Category Tool
 Delivery Builder
 Delivery Tool
@@ -19,6 +20,8 @@ Order Tool
 Predicate
 Preference
 Preference Tool
+Property Divergence Tester
+Quantity Divergence Tester
 Route Tool
 Rule Tool
 Simulation Movement
