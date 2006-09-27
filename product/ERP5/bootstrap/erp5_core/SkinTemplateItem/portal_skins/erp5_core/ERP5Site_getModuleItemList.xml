@@ -71,7 +71,7 @@
             <value> <string>from Products.ERP5Type.Cache import CachingMethod, clearCache\n
 from ZODB.POSException import ConflictError\n
 \n
-user = context.portal_membership.getAuthenticatedMember().getUserName()\n
+user = context.portal_membership.getAuthenticatedMember()\n
 \n
 portal = context.getPortalObject()\n
 \n
@@ -82,10 +82,11 @@ def getModuleItemList(user=None, portal_path=None):\n
     for module_id in portal.objectIds(\'ERP5 Folder\'):\n
       try:\n
         module = portal[module_id]\n
-        url = module.getPath()\n
-        label = module.getTitleOrId()\n
-        label = gettext(label)\n
-        item_list.append((label, url))\n
+        if user.has_permission(\'View\', module):\n
+          url = module.getPath()\n
+          label = module.getTitleOrId()\n
+          label = gettext(label)\n
+          item_list.append((label, url))\n
       except ConflictError : raise\n
       except: pass\n
   except ConflictError : raise\n
