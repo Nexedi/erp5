@@ -6,6 +6,6 @@ class ExternalDocument:
         {   'id'          : 'status_message',
             'description' : 'message about status',
             'type'        : 'string',
-            'mode'        : 'r' },
+            'mode'        : 'w' },
         )
 
