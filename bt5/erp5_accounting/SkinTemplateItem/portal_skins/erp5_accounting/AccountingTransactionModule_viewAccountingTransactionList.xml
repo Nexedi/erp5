@@ -62,6 +62,7 @@
             <value>
               <list>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -74,7 +75,16 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_credit</string>
+                        <string>listbox_debit</string>
+                        <string>listbox_delivery_start_date</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

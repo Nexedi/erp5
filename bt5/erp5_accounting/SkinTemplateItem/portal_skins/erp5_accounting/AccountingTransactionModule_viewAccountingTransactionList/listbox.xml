@@ -366,12 +366,12 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceCredit</string>
-                          <string>Credit</string>
+                          <string>debit</string>
+                          <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceDebit</string>
-                          <string>Debit</string>
+                          <string>credit</string>
+                          <string>Credit</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -379,7 +379,7 @@
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Creation Date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -427,11 +427,11 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceDebit</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceCredit</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                       </list>
@@ -478,7 +478,20 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>delivery_start_date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -661,11 +674,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceDebit</string>
+                          <string>debit</string>
                           <string>AccountingTransactionModule_statSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceCredit</string>
+                          <string>credit</string>
                           <string>AccountingTransactionModule_statSourceCredit</string>
                         </tuple>
                       </list>

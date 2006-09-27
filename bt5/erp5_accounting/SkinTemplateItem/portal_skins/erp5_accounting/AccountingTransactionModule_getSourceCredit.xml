@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if selection is not None:\n
+            <value> <string>if selection is None:\n
+  selection = context.getPortalObject()\\\n
+              .portal_selections.getSelectionFor(\'accounting_selection\')\n
+if selection is not None:\n
   params.update(selection.getParams())\n
 kw = {}\n
 kw[\'section_category\'] = params.get(\'section_category\')\n
@@ -81,8 +84,8 @@ result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
 \n
 if result:\n
   row = result[0]\n
-  # FIXME: No rounding should be done here\n
-  return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
+  # we do not want -0 to be displayed\n
+  return (row.total_price and -row.total_price or 0)\n
 return 0.\n
 </string> </value>
         </item>
@@ -137,14 +140,13 @@ return 0.\n
                             <string>params</string>
                             <string>None</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>kw</string>
                             <string>_write_</string>
-                            <string>context</string>
                             <string>_apply_</string>
                             <string>result</string>
                             <string>_getitem_</string>
                             <string>row</string>
-                            <string>float</string>
                           </tuple>
                         </value>
                     </item>
