@@ -927,8 +927,8 @@ msgstr ""
 msgid "Clean Up SVN Locks"
 msgstr ""
 
-msgid "Close Transaction"
-msgstr "Cloturer la transaction"
+msgid "Validate Accounting Transaction"
+msgstr "Valider le brouillard"
 
 msgid "Closed"
 msgstr ""
