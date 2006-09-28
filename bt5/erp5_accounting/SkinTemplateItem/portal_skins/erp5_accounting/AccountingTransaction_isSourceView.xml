@@ -69,8 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source = context.getSourceSectionValue()\n
-if source is not None:\n
-  if source.isMemberOf(context.getPortalDefaultSectionCategory()):\n
+section_category = context.portal_preferences.getPreferredSectionCategory()\n
+if source is not None and section_category:\n
+  if source.isMemberOf(section_cat):\n
     return 1\n
 \n
 return 0\n
@@ -123,8 +124,9 @@ return 0\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>source</string>
+                            <string>section_cat</string>
                             <string>None</string>
                           </tuple>
                         </value>
