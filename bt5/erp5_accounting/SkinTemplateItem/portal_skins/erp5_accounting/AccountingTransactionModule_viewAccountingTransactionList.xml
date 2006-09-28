@@ -75,16 +75,17 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_credit</string>
-                        <string>listbox_debit</string>
-                        <string>listbox_delivery_start_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_credit</string>
+                        <string>listbox_debit</string>
+                        <string>listbox_delivery_start_date</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
