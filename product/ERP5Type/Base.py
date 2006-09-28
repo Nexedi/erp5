@@ -2196,7 +2196,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
     return getattr(self,'title',None)
 
   security.declarePublic('log')
-  def log(self, description, content, level=INFO):
+  def log(self, description, content='', level=INFO):
     """Put a log message """
     if content=='': # allow for content only while keeping interface
         description,content=content,description
