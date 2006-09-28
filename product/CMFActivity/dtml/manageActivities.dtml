@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top"></th>
     <th align="left" valign="top">Object</th>
     <th align="left" valign="top">Method Id</th>
+    <th align="left" valign="top">Activity Kw</th>
     <th align="left" valign="top">Arguments</th>
     <th align="left" valign="top">Named Parameters</th>
     <th align="left" valign="top">Processing Node</th>
@@ -46,8 +47,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="top"><a href="manageCancel?object_path=<dtml-var "'/'.join(object_path)">&method_id=<dtml-var method_id>">Cancel</a> <a href="manageInvoke?object_path=<dtml-var "'/'.join(object_path)">&method_id=<dtml-var method_id>">Invoke</a></td>
         <td align="left" valign="top"><a href="<dtml-var "'/'.join(object_path)">"><dtml-var "'/'.join(object_path)"></a></td>
         <td align="left" valign="top"><dtml-var method_id></td>
+        <td align="left" valign="top"><dtml-var "_.str(activity_kw)[1:-1]"></td>
         <dtml-try>
-          <td align="left" valign="top"><dtml-var "','.join(args)"></td>
+          <td align="left" valign="top"><dtml-var "', '.join(args)"></td>
         <dtml-except>
           <th align="left" valign="top">Not printable</th>
         </dtml-try>
