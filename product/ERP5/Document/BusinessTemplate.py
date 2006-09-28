@@ -4170,7 +4170,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getBuildingState')
-    def getBuildingState(self, id_only=1):
+    def getBuildingState(self, default=None, id_only=1):
       """
         Returns the current state in building
       """
@@ -4181,7 +4181,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstallationState')
-    def getInstallationState(self, id_only=1):
+    def getInstallationState(self, default=None, id_only=1):
       """
         Returns the current state in installation
       """
