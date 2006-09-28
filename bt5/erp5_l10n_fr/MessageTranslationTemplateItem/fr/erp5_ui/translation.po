@@ -1405,7 +1405,7 @@ msgid "Download Business Templates From Repositories"
 msgstr ""
 
 msgid "Draft"
-msgstr ""
+msgstr "Brouillon"
 
 msgid "Drafts to Validate"
 msgstr "Brouillons à valider"
@@ -1430,36 +1430,6 @@ msgstr ""
 
 msgid "ERP5 Modules"
 msgstr "Modules ERP5"
-
-msgid "Edit Portal Type 'Base Category'"
-msgstr ""
-
-msgid "Edit Portal Type 'Business Template'"
-msgstr ""
-
-msgid "Edit Portal Type 'Category Tool'"
-msgstr ""
-
-msgid "Edit Portal Type 'Category'"
-msgstr ""
-
-msgid "Edit Portal Type 'Member Module'"
-msgstr ""
-
-msgid "Edit Portal Type 'Person Module'"
-msgstr ""
-
-msgid "Edit Portal Type 'Person'"
-msgstr ""
-
-msgid "Edit Portal Type 'Preference Tool'"
-msgstr ""
-
-msgid "Edit Portal Type 'Preference'"
-msgstr ""
-
-msgid "Edit Portal Type 'Template Tool'"
-msgstr ""
 
 msgid "Effective date"
 msgstr "Valable du"
@@ -1765,10 +1735,10 @@ msgid "Internal Money Deposit Module"
 msgstr "Dépôt sur compte d'ordre"
 
 msgid "Invalidate"
-msgstr "Annuler"
+msgstr "Invalider"
 
 msgid "Invalidated"
-msgstr ""
+msgstr "Invalidé"
 
 msgid "Inventory"
 msgstr "Inventaire"
@@ -1844,9 +1814,6 @@ msgstr "Nom"
 
 msgid "Last Report"
 msgstr "Dernier Rapport"
-
-msgid "Last name."
-msgstr ""
 
 msgid "Length (cm)"
 msgstr "Longueur (cm)"
@@ -1959,12 +1926,6 @@ msgstr ""
 msgid "Manage members"
 msgstr ""
 
-msgid "Mapped Value"
-msgstr ""
-
-msgid "Marabout"
-msgstr ""
-
 msgid "Marital Status"
 msgstr "Situation Familliale"
 
@@ -2074,7 +2035,7 @@ msgid "Next"
 msgstr "Suivant"
 
 msgid "Next Page"
-msgstr ""
+msgstr "Page suivante"
 
 msgid "No Trade Condition."
 msgstr "Conditions de vente non définies."
@@ -2374,7 +2335,7 @@ msgid "Previous"
 msgstr "Précédent"
 
 msgid "Previous Page"
-msgstr ""
+msgstr "Page précédante"
 
 msgid "Price"
 msgstr "Prix"
@@ -2492,12 +2453,6 @@ msgstr "Tranches"
 
 msgid "Quantity unit"
 msgstr "Unité"
-
-msgid "RUFISQUE"
-msgstr ""
-
-msgid "Rapports"
-msgstr ""
 
 msgid "Ratio"
 msgstr "Taux (%)"
@@ -2911,13 +2866,10 @@ msgid "State"
 msgstr "État"
 
 msgid "Status"
-msgstr ""
+msgstr "État"
 
 msgid "Status changed."
 msgstr "Etat modifié."
-
-msgid "Status+changed."
-msgstr ""
 
 msgid "Stop Date"
 msgstr "Date de fin"
@@ -3247,7 +3199,7 @@ msgid "Validate Workflow Action"
 msgstr "Valider le Changement d'État"
 
 msgid "Validated"
-msgstr ""
+msgstr "Validé"
 
 msgid "Validating Closing"
 msgstr ""
@@ -3402,17 +3354,8 @@ msgstr ""
 msgid "being_modified"
 msgstr ""
 
-msgid "built"
-msgstr ""
-
-msgid "cancelled"
-msgstr "Annulé"
-
 msgid "cash_status"
 msgstr "Etat de valeur"
-
-msgid "closed"
-msgstr ""
 
 msgid "collection"
 msgstr "Collection"
@@ -3422,21 +3365,6 @@ msgstr "Commentaire"
 
 msgid "confirmed"
 msgstr "Confirmé"
-
-msgid "count"
-msgstr ""
-
-msgid "current"
-msgstr ""
-
-msgid "delivered"
-msgstr "Cloturé"
-
-msgid "disabled"
-msgstr ""
-
-msgid "draft"
-msgstr "Brouillon"
 
 msgid "edit_workflow"
 msgstr "Workflow d'édition"
