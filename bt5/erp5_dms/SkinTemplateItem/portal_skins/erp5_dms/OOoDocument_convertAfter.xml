@@ -68,11 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=state_change.object\n
-ob.log(ob.getRelativeUrl())\n
-ob.log(ob.hasFile())\n
-ob.log(ob.hasOOfile())\n
-if ob.hasFile() and not ob.hasOOfile():\n
+            <value> <string>ob=context\n
+if ob.hasFile() and not ob.hasOOfile(): #doublecheck\n
   try:\n
     res=ob.convert()\n
     ob.log(res)\n
@@ -96,8 +93,14 @@ if ob.hasFile() and not ob.hasOOfile():\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>*a,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,15 +120,17 @@ if ob.hasFile() and not ob.hasOOfile():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>a</string>
+                            <string>kw</string>
+                            <string>context</string>
                             <string>ob</string>
+                            <string>_getattr_</string>
                             <string>res</string>
                             <string>str</string>
                             <string>_getitem_</string>
@@ -147,7 +152,7 @@ if ob.hasFile() and not ob.hasOOfile():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Convert_after</string> </value>
+            <value> <string>OOoDocument_convertAfter</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

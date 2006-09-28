@@ -81,6 +81,11 @@ if fname is not None:\n
   context.guessMimeType(fname)\n
   if not context.getTitle():\n
     context.setTitle(fname)\n
+  # use duck typing to check if it is OOo\n
+  if hasattr(context,\'convert\') and hasattr(context,\'hasFile\') and hasattr(context,\'hasOOfile\'):\n
+    context.reset()\n
+    if context.hasFile() and not context.hasOOfile():\n
+      context.activate( activity  = \'SQLQueue\').OOoDocument_convertAfter()\n
 </string> </value>
         </item>
         <item>
@@ -128,6 +133,7 @@ if fname is not None:\n
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
