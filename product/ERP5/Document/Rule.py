@@ -383,5 +383,5 @@ class Rule(XMLObject, Predicate):
       else:
         # movement not modifiable, we can decide to create a compensation
         # with negative quantity
-        raise OperationalError, "Not Implemented"
+        raise NotImplementedError("Not Implemented")
     return (add_list, modify_dict, delete_list)
