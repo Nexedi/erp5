@@ -435,7 +435,7 @@ class Movement(XMLObject, Amount):
     # XXX Hardcoded
     # Maybe, we should use getPortalCurrentInventoryStateList
     # and another portal method for cancelled (and deleted)
-    LOG("Movement, isFrozen", WARNING, "Hardcoded state list")
+    #LOG("Movement, isFrozen", WARNING, "Hardcoded state list")
     if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
       return 1
     if self._baseIsFrozen() == 0:
