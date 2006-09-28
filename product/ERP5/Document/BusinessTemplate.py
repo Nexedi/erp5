@@ -527,7 +527,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
-  def _backupObject(self, action, trashbin, container_path, object_id):
+  def _backupObject(self, action, trashbin, container_path, object_id, **kw):
     """
       Backup the object in portal trash if necessery and return its subobjects
     """
@@ -543,9 +543,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       return subobjects_dict
     # XXX btsave is for backward compatibility
     if action == 'backup' or action == 'btsave':
-      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1)
+      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, **kw)
     elif action == 'install':
-      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0)
+      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0, **kw)
     return subobjects_dict
 
   def install(self, context, trashbin, **kw):
@@ -1124,7 +1124,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             raise
           container_ids = container.objectIds()
           if object_id in container_ids:    # Object already exists
-            self._backupObject(action, trashbin, container_path, object_id)
+            self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
             container.manage_delObjects([object_id])
           obj = self._objects[path]
           if getattr(obj, 'meta_type', None) == 'Script (Python)':
@@ -1266,9 +1266,6 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       workflow_list = self._objects[key]
       # XXX Not always a list
       if isinstance(workflow_list, str):
-        LOG("BusinessTemplate, generateXml.", ERROR,
-            "A list was expected instead of %s for key %s." % \
-                (workflow_list, key))
         workflow_list = [workflow_list]
       xml_data += os.linesep+' <chain>'
       xml_data += os.linesep+'  <type>%s</type>' %(key,)
