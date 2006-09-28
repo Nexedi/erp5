@@ -406,6 +406,6 @@ class TestDomainTool(ERP5TypeTestCase):
     mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
     self.assertEquals(mapped_value.getProperty('base_price'),26)
     # Now check the price
-    self.assertEquals(self.resource.getPrice( self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()]),sort_method=sort_method),45)
+    self.assertEquals(self.resource.getPrice(context=self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()]),sort_method=sort_method),45)
 
 
