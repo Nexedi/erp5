@@ -68,24 +68,50 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
 if pref is not None and len(pref)==0:\n
   pref=pref[0]\n
   if pref==\'never\':return\n
 \n
-subjecttpl=\'ingested %(name)s\'\n
-msgtpl="""Your document "%(name)s" was successfully ingested.\n
-\n
-click here: %(url)s/view to proceed with your work.\n
-"""\n
 ob=kw[\'object\']\n
+res=ob.checkConsistency()\n
+res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
+\n
+# shall we send?\n
+send=(pref==\'always\' or len(res)>0)\n
+if not send:return\n
+\n
+if len(res)>0:\n
+  errmsg=\'<br/>\'.join(str(c[3]) for c in res)\n
+  subjecttpl=\'ingested %(name)s - there was a problem\'\n
+  msgtpl="""Your document "%(name)s" was ingested.\n
+  \n
+  The following problems were detected:\n
+\n
+  %(errmsg)s\n
+  \n
+  click here: %(url)s/view to proceed and fix the problems.\n
+  """\n
+else:\n
+  errmsg=\'\'\n
+  subjecttpl=\'ingested %(name)s\'\n
+  msgtpl="""Your document "%(name)s" was successfully ingested.\n
+\n
+  click here: %(url)s/view to proceed with your work.\n
+  """\n
+\n
 subject=subjecttpl % {\'name\':ob.getSourceReference()}\n
-msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getSourceReference()}\n
+\n
+msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getSourceReference(), \'errmsg\':errmsg}\n
 mto=kw[\'address\']\n
-mfro=\'dms@dms.nexedi.com\'\n
+mfro=\'dms@dms.nexedi.com\' # this should be in preferences\n
 \n
 context.MailHost.send(msg,mto,mfro,subject)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -134,9 +160,16 @@ context.MailHost.send(msg,mto,mfro,subject)\n
                             <string>None</string>
                             <string>len</string>
                             <string>_getitem_</string>
+                            <string>ob</string>
+                            <string>res</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>c</string>
+                            <string>send</string>
+                            <string>errmsg</string>
                             <string>subjecttpl</string>
                             <string>msgtpl</string>
-                            <string>ob</string>
                             <string>subject</string>
                             <string>msg</string>
                             <string>mto</string>
