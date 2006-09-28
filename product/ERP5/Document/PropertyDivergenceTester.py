@@ -76,7 +76,7 @@ class PropertyDivergenceTester(XMLObject):
     divergence_message_list = []
     tested_property = self.getTestedPropertyList()     
     for tested_property_id, tested_property_title in \
-                       self._splitStringList(property=tested_property):
+                       self._splitStringList(tested_property):
       
       delivery_mvt = simulation_movement.getDeliveryValue()
       delivery_mvt_property = delivery_mvt.getProperty(tested_property_id)

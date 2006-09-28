@@ -101,7 +101,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
             simulation_category_title_list.append(category_value.getTitle())
 
         delivery_mvt_property = ' , '.join(delivery_mvt_category_title_list)
-        simulation_mvt_property = ' , '.join(movement_category_title_list)
+        simulation_mvt_property = ' , '.join(simulation_category_title_list)
         
         solver_script_list = self.getSolverScriptList()
         if solver_script_list is None:
@@ -113,7 +113,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
                      prevision_value = simulation_mvt_property,
                      tested_property=tested_property_id, 
                      message=tested_property_title,
-                     solver_script_list=self._splitStringList(property = solver_script_list)
+                     solver_script_list=self._splitStringList(solver_script_list)
                      )
         
         divergence_message_list.append(message)  
