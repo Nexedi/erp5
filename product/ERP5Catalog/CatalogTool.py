@@ -87,8 +87,8 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
     def allowedRolesAndUsers(self):
         """
-        Return a list of roles and users with Access contents
-        information permission.
+        Return a list of roles and users with
+        View permission.
         Used by PortalCatalog to filter out items you're not allowed to see.
         """
         ob = self.__ob
