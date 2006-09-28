@@ -71,7 +71,7 @@
             <value> <string>def getRelatedLatest(category):\n
   funcname=\'get%sValueList\' % category.title()\n
   func=getattr(context,funcname)\n
-  return [o.DMS_getLatestVersion() for o in func()]\n
+  return [o.DMSDocument_getLatestVersion() for o in func()]\n
 \n
 what=kw.get(\'what\')\n
 if what==\'wiki_predecessor\':\n

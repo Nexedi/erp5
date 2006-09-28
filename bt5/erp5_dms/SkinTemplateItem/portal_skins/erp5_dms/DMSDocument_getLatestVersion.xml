@@ -135,7 +135,7 @@ return res[0].getObject()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMSDocument_getLastVersion</string> </value>
+            <value> <string>DMSDocument_getLatestVersion</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
