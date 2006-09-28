@@ -339,7 +339,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_1.objectValues()), 2)
     # now check for each variation (years 1992 and 2003)
@@ -385,7 +385,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_1.objectValues()), 2)
     # now check for each variation (years 1992 and 2003)
@@ -444,7 +444,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check the value of banknote
     self.assertEqual(self.valid_line_2.getPrice(), 5000.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_2.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_2.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:
@@ -483,7 +483,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check the value of banknote
     self.assertEqual(self.valid_line_2.getPrice(), 5000.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_2.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_2.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:

@@ -215,7 +215,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have one delivery cells
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
     # now check for variation 2003

@@ -189,7 +189,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 50.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
     # now check for each variation (years 1992 and 2003)
@@ -233,7 +233,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 20.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
     # now check for each variation (years 1992 and 2003)
@@ -269,7 +269,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 50.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have one delivery cells
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
     # now check for variation 
@@ -299,7 +299,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 20.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have one delivery cells
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
     # now check for variation 

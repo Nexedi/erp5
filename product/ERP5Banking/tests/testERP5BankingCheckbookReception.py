@@ -101,6 +101,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
     self.checkbook_model_1 = self.createCheckbookModel('checkbook_model_1')
+    self.traveler_check_model = self.createTravelerCheckModel('traveler_check_model')
     self.check_model_1 = self.createCheckModel('check_model_1')
     self.reception = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.destination_site = self.paris

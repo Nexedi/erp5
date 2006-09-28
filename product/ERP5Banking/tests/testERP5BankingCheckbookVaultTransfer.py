@@ -54,7 +54,6 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     self.checkbook_reception = self.checkbook_reception_module.newContent(
                      id='checkbook_reception', portal_type='Checkbook Reception',
                      source_value=None, destination_value=self.reception_destination_site,
-                     resource_value=self.currency_1,
                      start_date=(self.date-4))
     # get the checkbook reception document
     self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
@@ -78,12 +77,44 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
                                    wf_id='checkbook_reception_workflow')
 
-  def checkItemsCreated(self, sequence=None, sequence_list=None, **kwd):
+  def createCheckbookReceptionWithTravelerCheck(self, sequence=None, 
+                                  sequence_list=None, **kwd):
+    """
+    Create a checkbook Reception
+    We do not need to check it because it is already done in another unit test.
+    """
+    self.checkbook_reception = self.checkbook_reception_module.newContent(
+                     id='checkbook_reception', portal_type='Checkbook Reception',
+                     source_value=None, destination_value=self.reception_destination_site,
+                     start_date=(self.date-4))
+    # get the checkbook reception document
+    self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
+    # Add a line for check and checkbook
+    self.line_2 = self.checkbook_reception.newContent(quantity=1,
+                             resource_value=self.traveler_check_model,
+                             check_amount_value=self.traveler_check_model.variant_1,
+                             reference_range_min=52,
+                             reference_range_max=52,
+                             )
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
+                                   wf_id='checkbook_reception_workflow')
+
+  def checkItemsCreatedWithTravelerCheck(self, sequence=None, 
+                                         sequence_list=None, **kwd):
+    self.checkItemsCreated(sequence=sequence,
+                           sequence_list=sequence_list,
+                           traveler_check=1,**kwd)
+
+  def checkItemsCreated(self, sequence=None, sequence_list=None, 
+                        traveler_check=0,**kwd):
     """
     Create the checkbook
     """
     self.checkbook_1 = None
     self.check_1 = None
+    self.traveler_check = None
 
     for line in self.checkbook_reception.objectValues():
       aggregate_value_list = line.getAggregateValueList()
@@ -92,9 +123,15 @@ class TestERP5BankingCheckbookVaultTransferMixin:
       if aggregate_value.getPortalType()=='Checkbook':
         self.checkbook_1 = aggregate_value
       elif aggregate_value.getPortalType()=='Check':
-        self.check_1 = aggregate_value
-    self.assertNotEquals(None,self.checkbook_1)
-    self.assertNotEquals(None,self.check_1)
+        if aggregate_value.getResourceValue().isFixedPrice():
+          self.traveler_check = aggregate_value
+        else:
+          self.check_1 = aggregate_value
+    if not traveler_check:
+      self.assertNotEquals(None,self.checkbook_1)
+      self.assertNotEquals(None,self.check_1)
+    else:
+      self.assertNotEquals(traveler_check,None)
 
 class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransferMixin,
                                               TestERP5BankingMixin, ERP5TypeTestCase):

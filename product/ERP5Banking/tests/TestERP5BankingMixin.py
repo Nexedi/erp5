@@ -292,10 +292,11 @@ class TestERP5BankingMixin:
           start_date='01/01/1900',stop_date='01/01/2900',
           price_currency='currency_module/EUR',
           currency_exchange_type_list=['currency_exchange_type/sale',
-                                       'currency_exchange_type/purchase'],
+                                       'currency_exchange_type/purchase',
+                                       'currency_exchange_type/transfer'],
           base_price=2)
       cell_list = exchange_line.objectValues()
-      self.assertEquals(len(cell_list),2)
+      self.assertEquals(len(cell_list),3)
       for cell in cell_list:
         cell.setBasePrice(650.0)
         cell.setDiscount(650.0)
@@ -438,6 +439,7 @@ class TestERP5BankingMixin:
     self.currency_exchange_type = getattr(self.category_tool,'currency_exchange_type')
     self.currency_exchange_type.newContent(id='sale')
     self.currency_exchange_type.newContent(id='purchase')
+    self.currency_exchange_type.newContent(id='transfer')
 
     # get the base category function
     self.function_base_category = getattr(self.category_tool, 'function')
@@ -684,6 +686,7 @@ class TestERP5BankingMixin:
     """
     return self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Check Model',
+                                            title = 'Check',
                                             )
 
   def createCheck(self, id, reference, checkbook,bank_account=None):
@@ -699,6 +702,21 @@ class TestERP5BankingMixin:
     # mark the check as issued
     check.confirm()
     return check
+
+  def createTravelerCheckModel(self, id):
+    """
+    Create a checkbook for the given bank account
+    """
+    model = self.checkbook_model_module.newContent(id = id,
+                                            title = 'USD Traveler Check',
+                                            portal_type = 'Check Model',
+                                            fixed_price = 1
+                                            )
+    variation = model.newContent(id='variant_1',
+                                 portal_type='Check Model Type Variation',
+                                 price=50)
+    model.setPriceCurrency(self.currency_2)
+    return model
 
   def createCashContainer(self, document, container_portal_type, global_dict, line_list, delivery_line_type='Cash Delivery Line'):
     """

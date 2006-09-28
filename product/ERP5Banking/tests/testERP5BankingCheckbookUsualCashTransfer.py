@@ -60,10 +60,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                      id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
                      source_value=self.vault_transfer_source_site, 
                      destination_value=self.vault_transfer_destination_site,
-                     resource_value=self.currency_1,
                      start_date=(self.date-3))
-    # get the checkbook vault transfer document
-    self.checkbook_vault_transfer = getattr(self.getCheckbookVaultTransferModule(), 'checkbook_vault_transfer')
     # Add a line for check and checkbook
     self.line_1 = self.checkbook_vault_transfer.newContent(quantity=1,
                                  resource_value=self.checkbook_model_1,
@@ -86,6 +83,31 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
+  def createCheckbookVaultTransferWithTravelerCheck(self, sequence=None, 
+                                 sequence_list=None, **kwd):
+    """
+    Create a checkbook Reception
+    We do not need to check it because it is already done in another unit test.
+    """
+    self.checkbook_vault_transfer = self.getCheckbookVaultTransferModule().newContent(
+                     id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
+                     source_value=self.vault_transfer_source_site, 
+                     destination_value=self.vault_transfer_destination_site,
+                     start_date=(self.date-3))
+    # Add a line for traveler check
+    self.line_2 = self.checkbook_vault_transfer.newContent(quantity=1,
+                             resource_value=self.traveler_check_model,
+                             check_amount_value=self.traveler_check_model.variant_1,
+                             aggregate_value=self.traveler_check,
+                             )
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'plan_action', 
+                                   wf_id='checkbook_vault_transfer_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
+                                   wf_id='checkbook_vault_transfer_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
+                                   wf_id='checkbook_vault_transfer_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action', 
+                                   wf_id='checkbook_vault_transfer_workflow')
 
 
 class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin,
