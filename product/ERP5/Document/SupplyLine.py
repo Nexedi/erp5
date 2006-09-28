@@ -223,7 +223,7 @@ class SupplyLine(DeliveryLine, Path):
       """
         Update the quantity predicate for this price parameter
       """
-      quantity_step_list = self.getQuantityStepList(price_parameter)
+      quantity_step_list = self.getQuantityStepList(price_parameter=price_parameter)
       quantity_step_list.sort()
       
       # remove old predicates
