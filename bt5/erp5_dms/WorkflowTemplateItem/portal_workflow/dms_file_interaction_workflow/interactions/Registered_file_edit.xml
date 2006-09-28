@@ -39,9 +39,7 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>OOo_edit</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -56,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOo_edit</string> </value>
+            <value> <string>Registered_file_edit</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
@@ -71,6 +69,8 @@
             <value>
               <list>
                 <string>Graphic</string>
+                <string>ImageDocument</string>
+                <string>PdfDocument</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>
                 <string>Text</string>
@@ -80,7 +80,9 @@
         <item>
             <key> <string>script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>CheckKnownType</string>
+              </list>
             </value>
         </item>
         <item>

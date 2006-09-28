@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>ob=state_change.object\n
 kw=ob.REQUEST\n
-metafields=(\'title\',\'subject\',\'keywords\',\'description\',\'reference\',\'version\',\'language\')\n
+metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'language\')\n
 f=kw.get(\'my_file\',None)\n
 \n
 # edit metadata (only if we have OOo file)\n
@@ -83,17 +83,6 @@ if ob.hasOOfile():\n
   if newmeta:\n
     # edit metadata via server\n
     ob.editMetadata(newmeta)\n
-if f is not None and f:\n
-  # if file uploaded, then:\n
-  context.log(f)\n
-  fname=f.filename\n
-  # we check for appropriate file type (by extension, using content_type_registry)\n
-  ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-  if ctype is None:\n
-    raise Exception(\'File type of \'+fname+\' is not registered\')\n
-  if ctype!=ob.getPortalType():\n
-    raise Exception(\'This file should be created as \'+ctype)\n
-  ob.reset()\n
 </string> </value>
         </item>
         <item>
@@ -149,10 +138,6 @@ if f is not None and f:\n
                             <string>keymf</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
-                            <string>context</string>
-                            <string>fname</string>
-                            <string>ctype</string>
-                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>

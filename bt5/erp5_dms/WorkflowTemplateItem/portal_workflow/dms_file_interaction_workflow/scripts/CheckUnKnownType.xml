@@ -70,14 +70,16 @@
             <key> <string>_body</string> </key>
             <value> <string>ob=state_change.object\n
 kw=ob.REQUEST\n
-ob.log(\'interaction\',\'edit\')\n
 f=kw.get(\'my_file\',None)\n
-ob.log(\'f\',f)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  if hasattr(ob,\'clearCache\'): # e.g. DMS File doesnt have it\n
-    ob.clearCache()\n
+  fname=f.filename\n
+  # we check for appropriate file type (by extension, using content_type_registry)\n
+  # we allow only not known types\n
+  ctype=context.content_type_registry.findTypeName(fname,None,None)\n
+  if ctype is not None:\n
+    raise Exception(\'This file should be created as \'+ctype)\n
 </string> </value>
         </item>
         <item>
@@ -126,7 +128,10 @@ if f is not None and f:\n
                             <string>kw</string>
                             <string>None</string>
                             <string>f</string>
-                            <string>hasattr</string>
+                            <string>fname</string>
+                            <string>context</string>
+                            <string>ctype</string>
+                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +148,7 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ClearCacheUponUpload</string> </value>
+            <value> <string>CheckUnKnownType</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
