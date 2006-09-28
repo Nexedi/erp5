@@ -108,8 +108,14 @@ evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_durati
 
 class Getter(Method):
     """
-      Gets an attribute value. A default value can be
-      provided if needed
+      Gets an attribute value. A default value can be provided if needed.
+
+    Note that 'default' argument is the first positional argument, this is
+    important if you want to override a Getter in a class,  overloaded
+    accessors have to respect this::
+
+      getSomething(self, [default], [name=value, [name=value], ])
+
     """
     _need__name__=1
 
