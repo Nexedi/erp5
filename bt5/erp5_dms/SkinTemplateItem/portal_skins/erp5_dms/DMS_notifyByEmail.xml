@@ -69,9 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
-if len(pref)==0:return\n
-pref=pref[0]\n
-if pref==\'never\':return\n
+if pref is not None and len(pref)==0:\n
+  pref=pref[0]\n
+  if pref==\'never\':return\n
 \n
 subjecttpl=\'ingested %(name)s\'\n
 msgtpl="""Your document "%(name)s" was successfully ingested.\n
@@ -79,8 +79,8 @@ msgtpl="""Your document "%(name)s" was successfully ingested.\n
 click here: %(url)s/view to proceed with your work.\n
 """\n
 ob=kw[\'object\']\n
-subject=subjecttpl % {\'name\':ob.getOriginalFilename()}\n
-msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getOriginalFilename()}\n
+subject=subjecttpl % {\'name\':ob.getSourceReference()}\n
+msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getSourceReference()}\n
 mto=kw[\'address\']\n
 mfro=\'dms@dms.nexedi.com\'\n
 \n
@@ -131,6 +131,7 @@ context.MailHost.send(msg,mto,mfro,subject)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>pref</string>
+                            <string>None</string>
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>subjecttpl</string>

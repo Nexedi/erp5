@@ -76,7 +76,7 @@ if ctype is None:\n
 \n
 # create content\n
 ob=context.document_module.newContent(portal_type=ctype)\n
-ob.Base_edit(file=data) # XXX to nie jest dobrze\n
+ob.manage_upload(data)\n
 ob.DMS_ingestFile(fname,data)\n
 return ob\n
 </string> </value>
