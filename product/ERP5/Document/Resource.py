@@ -34,6 +34,7 @@ from DateTime import DateTime
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource

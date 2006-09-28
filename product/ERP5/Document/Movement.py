@@ -259,7 +259,7 @@ class Movement(XMLObject, Amount):
       LOG('ERP5', WARNING, msg)
       context = default
       default = None
-    return self._getTotalPrice(default=default, context=self.asContext(context=context,
+    return self._getTotalPrice(context=self.asContext(context=context,
                                 REQUEST=REQUEST, **kw),**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
