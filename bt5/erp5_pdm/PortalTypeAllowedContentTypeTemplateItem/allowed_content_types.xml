@@ -1,5 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Component">
+  <item>Purchase Supply Line</item>
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Component Module">
@@ -16,8 +17,8 @@
  </portal_type>
  <portal_type id="Transformation">
   <item>Transformation Operation</item>
-  <item>Transformation Optional Resource</item>
   <item>Transformation Transformed Resource</item>
+  <item>Transformation Optional Resource</item>
  </portal_type>
  <portal_type id="Transformation Module">
   <item>Transformation</item>
