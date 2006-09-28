@@ -28,6 +28,7 @@
 ##############################################################################
 
 from math import log
+from warnings import warn
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
@@ -42,7 +43,7 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCore.utils import getToolByName
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 class Resource(XMLMatrix, CoreResource, Variated):
     """
