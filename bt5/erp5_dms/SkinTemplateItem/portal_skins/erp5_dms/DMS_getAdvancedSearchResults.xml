@@ -79,8 +79,13 @@ for k,v in args.items():\n
     cats.append(\'/\'.join((k,v)))\n
 if cats!=[]:\n
   args[\'category\']=cats\n
-context.log(\'args\',args)\n
 kw.update(args)\n
+\n
+# a hack because SQLCatalog wants table.key now \n
+# dunno if it is a bug or a feature\n
+if kw.has_key(\'SearchableText\'):\n
+  kw[\'full_text.SearchableText\']=kw[\'SearchableText\']\n
+  kw.pop(\'SearchableText\')\n
 \n
 cf=kw.get(\'creation_from\')\n
 ct=kw.get(\'creation_to\')\n
@@ -98,8 +103,18 @@ if mt:\n
   wheres.append(\'modification_date<"\'+str(mt)+\'"\')\n
 if wheres!=[]:\n
   kw[\'where_expression\']=\' AND \'.join(wheres)\n
-context.log(\'wheres\',kw.get(\'where_expression\',\'x\'))\n
-return context.portal_catalog(**kw)\n
+\n
+res=context.portal_catalog(**kw)\n
+\n
+if kw.get(\'mine\')==1: # user wants only his documents\n
+  from AccessControl import getSecurityManager\n
+  sm=getSecurityManager()\n
+  u=sm.getUser()\n
+  # now we need to filter by owner\n
+  # some day we will do it in catalog\n
+  res=[r for r in res if u.allowed(r,(\'Owner\',))]\n
+\n
+return res\n
 
 
 ]]></string> </value>
@@ -154,6 +169,7 @@ return context.portal_catalog(**kw)\n
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
+                            <string>_getitem_</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>
@@ -161,6 +177,14 @@ return context.portal_catalog(**kw)\n
                             <string>wheres</string>
                             <string>str</string>
                             <string>_apply_</string>
+                            <string>res</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>sm</string>
+                            <string>u</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>r</string>
                           </tuple>
                         </value>
                     </item>

@@ -76,6 +76,7 @@
                       <list>
                         <string>SearchableText</string>
                         <string>search_mode</string>
+                        <string>mine</string>
                       </list>
                     </value>
                 </item>
