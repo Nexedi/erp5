@@ -143,6 +143,7 @@ class ERP5Site(FolderMixIn, CMFSite):
   uid = 0
   last_id = 0
   icon = 'portal.gif'
+  isIndexable = 1 # Default value, prevents error during upgrade
 
   _properties = (
       { 'id':'title',
