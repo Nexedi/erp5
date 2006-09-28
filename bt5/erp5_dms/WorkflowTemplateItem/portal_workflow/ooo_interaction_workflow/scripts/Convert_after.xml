@@ -73,9 +73,14 @@ ob.log(ob.getRelativeUrl())\n
 ob.log(ob.hasFile())\n
 ob.log(ob.hasOOfile())\n
 if ob.hasFile() and not ob.hasOOfile():\n
-  res=ob.convert()\n
-  ob.log(res)\n
-  ob.setStatusMessage(str(res[1]))\n
+  try:\n
+    res=ob.convert()\n
+    ob.log(res)\n
+    ob.setStatusMessage(str(res[1]))\n
+  except Exception,e:\n
+    ob.log(e)\n
+    ob.setStatusMessage(str(e))\n
+    #raise Exception(str(e)) # do we want the activity to keep trying?\n
 </string> </value>
         </item>
         <item>
@@ -124,6 +129,8 @@ if ob.hasFile() and not ob.hasOOfile():\n
                             <string>res</string>
                             <string>str</string>
                             <string>_getitem_</string>
+                            <string>Exception</string>
+                            <string>e</string>
                           </tuple>
                         </value>
                     </item>
