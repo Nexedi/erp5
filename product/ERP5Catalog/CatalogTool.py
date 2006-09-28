@@ -95,7 +95,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         withnuxgroups = getSecurityProduct(ob.acl_users)\
                               == SECURITY_USING_NUX_USER_GROUPS
         allowed = {}
-        for r in rolesForPermissionOn('Access contents information', ob):
+        for r in rolesForPermissionOn('View', ob):
           allowed[r] = 1
         if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
