@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Close Transaction</string> </value>
+            <value> <string>Validate Accounting Transaction</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
