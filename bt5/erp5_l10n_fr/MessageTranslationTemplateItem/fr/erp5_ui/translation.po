@@ -928,7 +928,7 @@ msgid "Clean Up SVN Locks"
 msgstr ""
 
 msgid "Close Transaction"
-msgstr "Cloturer la Transaction"
+msgstr "Cloturer la transaction"
 
 msgid "Closed"
 msgstr ""
@@ -1036,7 +1036,7 @@ msgid "Confirm"
 msgstr "Envoyer en validation"
 
 msgid "Confirm Transaction"
-msgstr "Confirmer la Transaction"
+msgstr "Confirmer la transaction"
 
 msgid "Constraints"
 msgstr ""
@@ -2329,7 +2329,7 @@ msgid "Plan"
 msgstr "Planifier"
 
 msgid "Plan Transaction"
-msgstr "Planifier la Trasaction "
+msgstr "Planifier la transaction"
 
 msgid "Planned"
 msgstr "Plannifié"
