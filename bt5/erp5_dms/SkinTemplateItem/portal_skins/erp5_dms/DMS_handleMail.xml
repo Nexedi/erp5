@@ -98,7 +98,7 @@ context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUr
 # create objects from attachments\n
 try:\n
   for fname,data in theMail[\'attachments\'].items():\n
-    obj=context.DMS_createObjectFromMail(fname,data)\n
+    obj=context.DMS_createObjectFromFile(fname,data)\n
     obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
     context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
 except Exception,e:\n
