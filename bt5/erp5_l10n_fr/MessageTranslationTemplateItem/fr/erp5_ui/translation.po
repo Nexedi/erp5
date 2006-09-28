@@ -2278,7 +2278,7 @@ msgid "Person Report"
 msgstr ""
 
 msgid "Personal Name"
-msgstr "Nom"
+msgstr "Prénom"
 
 msgid "Persons"
 msgstr "Personnes"
