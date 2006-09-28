@@ -46,8 +46,69 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 
+class TestERP5BankingMonetaryReceptionMixin:
 
-class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
+  def stepCreateMonetaryReception(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a monetary reception to have some cash container to use in the issue test
+    """
+    self.monetary_reception = self.monetary_reception_module.newContent(id='monetary_reception', portal_type='Monetary Reception',
+                                                                        source_value=None, destination_value=self.reception_site,
+                                                                        resource_value=self.currency_1, start_date=self.current_date)
+    self.stepTic()
+    # now create container
+    global_dict = {}
+    global_dict['emission_letter'] = 'p'
+    global_dict['variation'] = '2003'
+    global_dict['cash_status'] = 'new_not_emitted'
+    global_dict['resource'] = self.billet_10000
+    line_list = []
+    line_1 = {}
+    line_1['id'] = '1'
+    line_1['reference'] = 'unit_test_1'
+    line_1['range_start'] = 0
+    line_1['range_stop'] = 100
+    line_1['quantity'] = 100
+    line_list.append(line_1)
+    line_2 = {}
+    line_2['id'] = '2'
+    line_2['reference'] = 'unit_test_2'
+    line_2['range_start'] = 100
+    line_2['range_stop'] = 200
+    line_2['quantity'] = 100
+    line_list.append(line_2)
+    self.createCashContainer(self.monetary_reception, 'Cash Container Item', global_dict, line_list)
+    self.stepTic()
+    self.workflow_tool.doActionFor(self.monetary_reception, 'confirm_action', wf_id='monetary_reception_workflow')
+    self.stepTic()
+    self.workflow_tool.doActionFor(self.monetary_reception, 'deliver_action', wf_id='monetary_reception_workflow')
+    self.stepTic()
+    # check that state is delivered, all other check are done in a separate unit test
+    self.assertEqual(self.monetary_reception.getSimulationState(), 'delivered')
+
+
+  def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check source
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception_site.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception_site.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
+    # check destination
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.destination_site.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.destination_site.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+
+
+  def stepCheckInitialContainerInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check initial cash container on source
+    """
+    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
+    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
+
+
+class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin, TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Monetary Issue
 
@@ -115,6 +176,8 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createBanknotesAndCoins()
     self.issue = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.reception = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis
+    self.reception_site = self.reception
+    self.destination_site = self.issue
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                                                             function='banking', group='baobab',  site='testsite/paris')
@@ -126,6 +189,8 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    # this is required in order to have some items
+    # in the source
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
@@ -141,64 +206,8 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.monetary_issue_module.objectValues()), 0)
 
 
-  def stepCreateMonetaryReception(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create a monetary reception to have some cash container to use in the issue test
-    """
-    self.monetary_reception = self.monetary_reception_module.newContent(id='monetary_reception', portal_type='Monetary Reception',
-                                                                        source_value=None, destination_value=self.reception,
-                                                                        resource_value=self.currency_1, start_date=self.current_date)
-    self.stepTic()
-    # now create container
-    global_dict = {}
-    global_dict['emission_letter'] = 'p'
-    global_dict['variation'] = '2003'
-    global_dict['cash_status'] = 'new_not_emitted'
-    global_dict['resource'] = self.billet_10000
-    line_list = []
-    line_1 = {}
-    line_1['id'] = '1'
-    line_1['reference'] = 'unit_test_1'
-    line_1['range_start'] = 0
-    line_1['range_stop'] = 100
-    line_1['quantity'] = 100
-    line_list.append(line_1)
-    line_2 = {}
-    line_2['id'] = '2'
-    line_2['reference'] = 'unit_test_2'
-    line_2['range_start'] = 100
-    line_2['range_stop'] = 200
-    line_2['quantity'] = 100
-    line_list.append(line_2)
-    self.createCashContainer(self.monetary_reception, 'Cash Container Item', global_dict, line_list)
-    self.stepTic()
-    self.workflow_tool.doActionFor(self.monetary_reception, 'confirm_action', wf_id='monetary_reception_workflow')
-    self.stepTic()
-    self.workflow_tool.doActionFor(self.monetary_reception, 'deliver_action', wf_id='monetary_reception_workflow')
-    self.stepTic()
-    # check that state is delivered, all other check are done in a separate unit test
-    self.assertEqual(self.monetary_reception.getSimulationState(), 'delivered')
 
 
-  def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check the initial inventory before any operations
-    """
-    self.simulation_tool = self.getSimulationTool()
-    # check source
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
-    # check destination
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.issue.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.issue.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-
-
-  def stepCheckInitialContainerInventory(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check initial cash container on source
-    """
-    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
-    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
 
 
   def stepCreateMonetaryIssue(self, sequence=None, sequence_list=None, **kwd):
@@ -283,7 +292,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check the destination variation text is redefine on destination
     self.assertEqual(self.valid_line_1.getBaobabDestinationVariationText(), 'cash_status/new_emitted\nemission_letter/p\nvariation/2003')
     # check we have one delivery cells
@@ -463,8 +472,9 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # define the sequence
-    sequence_string = 'Tic CheckObjects CreateMonetaryReception Tic ' \
-                      + 'CheckInitialInventory CheckInitialContainerInventory ' \
+    sequence_string = 'Tic CheckObjects  CreateMonetaryReception Tic ' \
+                      + 'CheckInitialInventory ' \
+                      + 'CheckInitialContainerInventory ' \
                       + 'CreateMonetaryIssue Tic ' \
                       + 'CreateCashContainer Tic CheckCashDeliveryLine ' \
                       + 'CheckCashContainer1 CheckCashContainer2 ' \
