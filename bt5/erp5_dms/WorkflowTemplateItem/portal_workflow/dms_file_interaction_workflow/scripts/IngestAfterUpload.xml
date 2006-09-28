@@ -74,7 +74,7 @@ f=kw.get(\'my_file\',None)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  ob.DMS_ingestFile()\n
+  ob.DMS_ingestFile(f.filename) # we don\'t analyze contents (yet)\n
 </string> </value>
         </item>
         <item>
