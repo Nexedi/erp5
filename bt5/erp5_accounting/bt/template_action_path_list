@@ -135,6 +135,7 @@ Purchase Invoice Transaction | create_reversal
 Purchase Invoice Transaction | destination_asset
 Purchase Invoice Transaction | detail
 Purchase Invoice Transaction | history
+Purchase Invoice Transaction | jump_related_payment
 Purchase Invoice Transaction | metadata
 Purchase Invoice Transaction | print
 Purchase Invoice Transaction | source_asset
