@@ -321,7 +321,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.AccountingTransaction_getSourceSectionItemList()</string> </value>
+            <value> <string>here/Base_getPreferredSectionItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
