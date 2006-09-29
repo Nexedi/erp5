@@ -584,7 +584,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           subobjects_dict = {}
           # Object already exists
           if object_id in container_ids:
-            old_obj = container[object_id]
+            old_obj = container._getOb(object_id)
             if hasattr(aq_base(old_obj), 'groups'):
               # we must keep original order groups
               # from old form in case we keep some
