@@ -68,20 +68,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>desc = field.get_value(\'description\')\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
-if desc in (\'\', None):\n
-  id = field.getId().split(\'_\', 1)\n
-  if id[0] == \'my\':\n
-    try:\n
-      properties = context.propertyMap()\n
-    except AttributeError: # If context has no propertyMap, give up\n
-      properties = []\n
-    for property in properties:\n
-      if id[1] == property[\'id\']:\n
-        return property.get(\'description\', \'\')\n
+def getFieldDescription():\n
+  desc = field.get_value(\'description\')\n
+  if desc in (\'\', None):\n
+    id = field.getId().split(\'_\', 1)\n
+    if id[0] == \'my\':\n
+      try:\n
+        properties = context.propertyMap()\n
+      except AttributeError: # If context has no propertyMap, give up\n
+        properties = []\n
+      for property in properties:\n
+        if id[1] == property[\'id\']:\n
+          return property.get(\'description\', \'\')\n
+  return desc\n
 \n
-return desc\n
+getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', field.aq_parent.getId(), field.getId(), context.Localizer.get_selected_language()), cache_duration=None)\n
+\n
+return getFieldDescription()\n
 </string> </value>
         </item>
         <item>
@@ -131,16 +136,12 @@ return desc\n
                         <value>
                           <tuple>
                             <string>field</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>getFieldDescription</string>
                             <string>_getattr_</string>
-                            <string>desc</string>
-                            <string>None</string>
-                            <string>id</string>
-                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>properties</string>
-                            <string>AttributeError</string>
-                            <string>_getiter_</string>
-                            <string>property</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
