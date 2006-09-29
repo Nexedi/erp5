@@ -660,7 +660,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       # now put original order group
       # we remove object not added in forms
       # we put old objects we have kept
-      LOG('update_dict', 0, update_dict)
       for path in groups.keys():
         new_groups_dict = groups[path]        
         if not old_groups.has_key(path):
