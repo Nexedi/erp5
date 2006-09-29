@@ -553,6 +553,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
       groups = {}
+      old_groups = {}
       portal = context.getPortalObject()
       # sort to add objects before their subobjects
       keys = self._objects.keys()
@@ -583,6 +584,13 @@ class ObjectTemplateItem(BaseTemplateItem):
           subobjects_dict = {}
           # Object already exists
           if object_id in container_ids:
+            old_obj = container[object_id]
+            if hasattr(aq_base(old_obj), 'groups'):
+              # we must keep original order groups
+              # from old form in case we keep some
+              # old widget, thus we can readd them in
+              # the right order group
+              old_groups[path] = deepcopy(old_obj.groups)
             subobjects_dict = self._backupObject(action, trashbin,
                                                  container_path, object_id)
             container.manage_delObjects([object_id])
@@ -650,9 +658,58 @@ class ObjectTemplateItem(BaseTemplateItem):
           if obj.meta_type in ('Z SQL Method',):
             fixZSQLMethod(portal, obj)
       # now put original order group
+      # we remove object not added in forms
+      # we put old objects we have kept
+      LOG('update_dict', 0, update_dict)
       for path in groups.keys():
-        obj = portal.unrestrictedTraverse(path)
-        obj.groups = groups[path]
+        new_groups_dict = groups[path]        
+        if not old_groups.has_key(path):
+          # installation of a new form
+          obj = portal.unrestrictedTraverse(path)
+          obj.groups = new_groups_dict
+        else:
+          # upgrade of a form
+          old_groups_dict = old_groups[path]
+          obj = portal.unrestrictedTraverse(path)
+          # first check that all widgets are in new order
+          # excetp the one that had to be removed          
+          widget_id_list = obj.objectIds()
+          for widget_id in widget_id_list:
+            widget_path = path+'/'+widget_id
+            if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
+              continue              
+            widget_in_form = 0            
+            for group_id in new_groups_dict.keys():
+              group_values = new_groups_dict[group_id]
+              if widget_id in group_values:
+                widget_in_form = 1
+                break
+            # if not, add it in the same groups
+            # defined on the former form
+            previous_group_id = None
+            if not widget_in_form:
+              for old_group_id in old_groups_dict.keys():
+                old_group_values = old_groups_dict[old_group_id]
+                if widget_id in old_group_values:
+                  previous_group_id = old_group_id
+              # if we find same group in new one, add widget to it
+              if previous_group_id is not None and new_groups_dict.has_key(previous_group_id):
+                new_groups_dict[previous_group_id].append(widget_id)
+              # otherwise use a specific group
+              else:
+                if new_groups_dict.has_key('not_assigned'):
+                  new_groups_dict['not_assigned'].append(widget_id)
+                else:
+                  new_groups_dict['not_assigned'] = [widget_id,]
+          # second check all widget_id in order are in form
+          for group_id in new_groups_dict.keys():
+            for widget_id in new_groups_dict[group_id]:
+              if widget_id not in widget_id_list:
+                # if we don't find the widget id in the form
+                # remove it fro the group
+                new_groups_dict[group_id].remove(widget_id)
+          # now set new group object
+          obj.groups = new_groups_dict            
     else:
       # for old business template format
       BaseTemplateItem.install(self, context, trashbin, **kw)
@@ -4482,6 +4539,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for dependency_couple in dependency_list:
           dependency_couple_list = dependency_couple.split(' ')
           dependency = dependency_couple_list[0]
+          if dependency in (None, ''):
+            continue
           version_restriction = None
           if len(dependency_couple_list) > 1:
             version_restriction = dependency_couple_list[1][1:-1]
