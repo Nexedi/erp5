@@ -98,7 +98,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_total_price</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -107,6 +109,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
+                        <string>my_default_role_definition_agent_title</string>
                         <string>total_amount</string>
                       </list>
                     </value>
@@ -119,7 +122,6 @@
                         <string>my_visa_date</string>
                         <string>my_payment_date</string>
                         <string>my_translated_validation_state_title</string>
-                        <string>my_default_role_definition_agent_title</string>
                       </list>
                     </value>
                 </item>

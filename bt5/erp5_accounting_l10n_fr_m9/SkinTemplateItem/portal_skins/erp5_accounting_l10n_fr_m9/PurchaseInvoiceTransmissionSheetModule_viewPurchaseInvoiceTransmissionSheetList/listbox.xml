@@ -316,7 +316,28 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Transmission Sheet Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Emission Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -334,12 +355,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Transmission Sheet Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -485,6 +506,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Transmission Sheet Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>

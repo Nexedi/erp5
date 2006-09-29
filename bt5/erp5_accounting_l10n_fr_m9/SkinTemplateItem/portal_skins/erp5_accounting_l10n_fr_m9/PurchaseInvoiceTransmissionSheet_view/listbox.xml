@@ -346,8 +346,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>getOriginTitle</string>
+                          <string>Origin</string>
+                        </tuple>
+                        <tuple>
                           <string>int_index</string>
-                          <string>Invoice Reference</string>
+                          <string>Invoice Transmission Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -356,10 +360,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Amount</string>
-                        </tuple>
-                        <tuple>
-                          <string>Invoice_getPayableRemainingQuantity</string>
-                          <string>Invoice Total Net Quantity</string>
                         </tuple>
                       </list>
                     </value>
@@ -403,7 +403,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Amount</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -506,7 +511,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Purchase Invoices</string> </value>
+                    <value> <string>Transmitted Invoices</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
