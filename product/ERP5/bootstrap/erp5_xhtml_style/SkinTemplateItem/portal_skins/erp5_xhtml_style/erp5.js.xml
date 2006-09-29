@@ -65,20 +65,20 @@ function fixLeftRightHeight(){\n
   var lfieldset;\n
   var rh = 0;\n
   var rfieldset;\n
-  var liste=document.getElementsByTagName(\'fieldset\');\n
-  for(i=0; i<liste.length; i=i+1){\n
-    list_parts = liste[i].id.split(\'_\');\n
+  var list=document.getElementsByTagName(\'fieldset\');\n
+  for(i=0; i<list.length; i=i+1){\n
+    list_parts = list[i].id.split(\'_\');\n
     for(j=1; j<list_parts.length; j=j+1){\n
       if(list_parts[j] == "left"){\n
-        lfieldset = liste[i];\n
-      \tlh = lfieldset.offsetHeight;\n
+        lfieldset = list[i];\n
+        lh = lfieldset.offsetHeight;\n
         break;\n
       }else{\n
-      \tif(list_parts[j] == "right"){\n
-\t  rfieldset = liste[i];\n
-\t  rh = rfieldset.offsetHeight;\n
+        if(list_parts[j] == "right"){\n
+          rfieldset = list[i];\n
+          rh = rfieldset.offsetHeight;\n
           break;\n
-\t}\n
+        }\n
       }\n
     }\n
     if(lh && rh){\n
@@ -86,14 +86,10 @@ function fixLeftRightHeight(){\n
     }\n
   }\n
   if(lh && rh){\n
-    lfieldset.style.height=(lh>rh)? lh+"px" : rh+"px";\n
-    rfieldset.style.height=(lh>rh)? lh+"px" : rh+"px";\n
-    lfieldset.style.borderTop = \'1px solid #3D7474\';\n
-    lfieldset.style.borderLeft = \'1px solid #3D7474\';\n
-    lfieldset.style.borderBottom = \'1px solid #3D7474\';\n
-    rfieldset.style.borderTop = \'1px solid #3D7474\';\n
-    rfieldset.style.borderRight = \'1px solid #3D7474\';\n
-    rfieldset.style.borderBottom = \'1px solid #3D7474\';\n
+    lfieldset.style.height = (lh>rh)? lh+"px" : rh+"px";\n
+    rfieldset.style.height = (lh>rh)? lh+"px" : rh+"px";\n
+    lfieldset.style.borderRightWidth = 0;\n
+    rfieldset.style.borderLeftWidth = 0;\n
   }\n
 }\n
 

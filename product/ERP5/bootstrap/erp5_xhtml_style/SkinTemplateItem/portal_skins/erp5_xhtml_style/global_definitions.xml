@@ -72,6 +72,8 @@
            dummy                python: http_parameter_list.update(local_parameter_list);\n
     global http_parameters      python: here.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list);\n
     global form                 nocall:form | nothing;\n
+    global preferred_html_style_developper_mode   here/portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
+    global preferred_html_style_translator_mode   here/portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
   "/>\n
 </tal:block>\n
 \n

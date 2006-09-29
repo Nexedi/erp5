@@ -75,18 +75,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 \n
 <tal:block metal:define-macro="edit_link">\n
-  <a tal:condition="python: hasattr(object, \'meta_type\') and context.Base_getSourceVisibility(object)"\n
+  <a tal:condition="python: preferred_html_style_developper_mode and hasattr(object, \'meta_type\')"\n
      tal:attributes="href python: \'%s/%s\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):]), manage) # XXX: quick hack to get path;\n
                      title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
                                                        alt info;"/></a>\n
 </tal:block>\n
 \n
 \n
-<tal:block metal:define-macro="translate_link" tal:define="image image | python: \'translate.png\'">\n
-  <a tal:condition="python: here.Base_getTranslationVisibility()"\n
-     tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, here.Localizer.get_selected_language());\n
-                     title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
-                                                       alt info;"/></a>\n
+<tal:block metal:define-macro="translate_link">\n
+  <tal:block tal:condition="preferred_html_style_translator_mode">\n
+    <a tal:define="image image | python: \'translate.png\'"\n
+       tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, here.Localizer.get_selected_language());\n
+                       title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
+                                                         alt info;"/></a>\n
+  </tal:block>\n
 </tal:block>\n
 \n
 \n
@@ -95,12 +97,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          info python: \'Edit this form\';\n
                          object python: form;\n
                          manage python: \'manage\'">\n
-    <tal:block metal:use-macro="template/macros/edit_link"/>\n
-  </tal:block>\n
-  <tal:block tal:define="image  python: \'editformrenderer.png\';\n
-                         info   python: \'Edit this form\\\'s renderer\';\n
-                         object python: getattr(here, form.pt, None);\n
-                         manage python: \'manage_main\'">\n
     <tal:block metal:use-macro="template/macros/edit_link"/>\n
   </tal:block>\n
   <tal:block tal:define="image python: \'editformaction.png\';\n
@@ -124,14 +120,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          image python: \'translate.png\'">\n
     <tal:block metal:use-macro="template/macros/translate_link"/>\n
   </tal:block>\n
-  <tal:block tal:define="desc python: here.Base_getFieldDescription(field)">\n
-    <tal:block tal:condition="python: desc not in (None, \'\')">\n
-      <tal:block tal:define="info python: \'Translate this field description\';\n
-                             message desc;\n
-                             image python: \'translate_tooltip.png\'">\n
-        <tal:block metal:use-macro="template/macros/translate_link"/>\n
-      </tal:block>\n
-    </tal:block>\n
+  <tal:block tal:define="message python: here.Base_getFieldDescription(field);\n
+                         info python: \'Translate this field description\';\n
+                         image python: \'translate_tooltip.png\'"\n
+             tal:condition="python: message not in (None, \'\')">\n
+    <tal:block metal:use-macro="template/macros/translate_link"/>\n
   </tal:block>\n
 </tal:block>
 
