@@ -119,10 +119,10 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
 
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
-    self.encaisse_tri = self.paris.surface.salle_tri.encaisse_des_billets_recus_pour_ventilation.Spain
+    self.encaisse_tri = self.paris.surface.salle_tri.encaisse_des_billets_recus_pour_ventilation.madrid
     self.encaisse_reserve = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.encaisse_externe = self.paris.caveau.externes.encaisse_des_externes
-    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.Spain
+    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
 
     self.createCashInventory(source=None, destination=self.encaisse_tri, currency=self.currency_1,
                              line_list=line_list)
@@ -235,7 +235,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     # check its portal type
     self.assertEqual(self.cash_sorting.getPortalType(), 'Cash Sorting')
     # check that its source is encaisse_paris
-    self.assertEqual(self.cash_sorting.getSource(), 'site/testsite/paris/surface/salle_tri/encaisse_des_billets_recus_pour_ventilation/Spain')
+    self.assertEqual(self.cash_sorting.getSource(), 'site/testsite/paris/surface/salle_tri/encaisse_des_billets_recus_pour_ventilation/madrid')
     # check that its destination is encaisse_externe
     self.assertEqual(self.cash_sorting.getDestination(), None)
 
