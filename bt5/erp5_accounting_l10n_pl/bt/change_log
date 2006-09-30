@@ -1,0 +1,18 @@
+2006-09-30
+Added Polish GAP to this template
+
+2006-06-16
+Fixed some things suggested by JP
+Spun payroll of as separate template
+2006-05-05
+Poprawka w getInventory coby prawidlowo sumowalo waluty
+2006-05-02
+Paysheet dziala
+Raport VAT-7 plus konieczne przeróbki
+2006-05-01
+Przystosowane do nowej wersji wszystkiego
+PL i BS przerobione na OO
+Trochę poprawek
+(!!! nie działa paysheet bo erp5_payroll jest zwalona)
+2006-02-18
+Pierwszy eksport - wstępnie sprawdzone rachunek wyników i bilans, działająca podstawowa wesja listy płac.

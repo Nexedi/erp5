@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+debug=True\n
+request=context.REQUEST\n
+from Products.ERP5Type.Message import Message\n
+\n
+# empty class for report data\n
+class Dane:pass\n
+\n
+# only one report implemented at this time - monthly VAT\n
+mess=Message(domain=\'ui\',message=\'VAT-7 is a monthly report\')\n
+\n
+#check dates - VAT report is always monthly\n
+if request.from_date.month()!=request.at_date.month() or request.from_date.year()!=request.at_date.year():\n
+  return request.RESPONSE.redirect(context.absolute_url()+\'/AccountingTransactionModule_viewFiscalReportDialog?portal_status_message=\'+str(mess))\n
+\n
+dane=Dane()\n
+for f in range(20,60):\n
+  setattr(dane,\'p\'+str(f),0)\n
+\n
+dane.p08_1=\'x\' # XXX: should we allow for accounting business of a person?\n
+\n
+# data calculation\n
+dane.p20=-context.getCredit((\'7015\',\'7025\',\'7075\',\'7315\',\'7325\'))\n
+dane.p22=-context.getCredit((\'7014\',\'7024\',\'7074\',\'7314\',\'7324\'))\n
+dane.p24=-context.getCredit((\'7013\',\'7023\',\'7073\',\'7313\',\'7323\'))\n
+dane.p26=-context.getCredit((\'7012\',\'7022\',\'7072\',\'7312\',\'7322\'))\n
+dane.p28=-context.getCredit((\'7011\',\'7021\',\'7071\',\'7311\',\'7321\'))\n
+dane.p25=-context.getCredit((\'2223\',))\n
+dane.p27=-context.getCredit((\'2222\',))\n
+dane.p29=-context.getCredit((\'2221\',))\n
+\n
+dane.p40=dane.p20+dane.p21+dane.p22+dane.p24+dane.p26+dane.p28+dane.p30+dane.p31+dane.p32+dane.p34+dane.p36\n
+dane.p41=dane.p25+dane.p27+dane.p29+dane.p33+dane.p35+dane.p37+dane.p38-dane.p39\n
+\n
+try:dane.p42=float(request.get(\'carryforward\',0))\n
+except ValueError:pass\n
+\n
+dane.p44=context.getDebit((\'304\',))\n
+dane.p45=context.getDebit((\'2232\',))\n
+dane.p46=context.getDebit((\'30\',))-dane.p44\n
+dane.p47=context.getDebit((\'2231\',))\n
+\n
+dane.p50=dane.p42+dane.p43+dane.p45+dane.p47+dane.p48+dane.p49\n
+if dane.p41>dane.p50:dane.p53=dane.p41-dane.p50-dane.p51-dane.p52\n
+else:dane.p55=dane.p50-dane.p41+dane.p54\n
+dane.p56=max(dane.p55-dane.p53,0)\n
+dane.p59=dane.p55-dane.p56\n
+\n
+if debug:\n
+  for f in range(20,60):\n
+    n=\'p\'+str(f)\n
+    print n,getattr(dane,n)\n
+  return printed\n
+\n
+return container[report].index_html(REQUEST=context.REQUEST, RESPONSE=context.REQUEST.RESPONSE,dane=dane)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>report</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>report</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>True</string>
+                            <string>debug</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>Dane</string>
+                            <string>mess</string>
+                            <string>str</string>
+                            <string>dane</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>f</string>
+                            <string>setattr</string>
+                            <string>_write_</string>
+                            <string>p08_1</string>
+                            <string>p20</string>
+                            <string>p22</string>
+                            <string>p24</string>
+                            <string>p26</string>
+                            <string>p28</string>
+                            <string>p25</string>
+                            <string>p27</string>
+                            <string>p29</string>
+                            <string>p40</string>
+                            <string>p41</string>
+                            <string>float</string>
+                            <string>p42</string>
+                            <string>ValueError</string>
+                            <string>p44</string>
+                            <string>p45</string>
+                            <string>p46</string>
+                            <string>p47</string>
+                            <string>p50</string>
+                            <string>p53</string>
+                            <string>p55</string>
+                            <string>max</string>
+                            <string>p56</string>
+                            <string>p59</string>
+                            <string>n</string>
+                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>container</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>FiscalReport_doReport</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

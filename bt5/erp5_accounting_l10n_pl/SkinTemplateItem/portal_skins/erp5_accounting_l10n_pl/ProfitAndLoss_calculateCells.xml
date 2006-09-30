@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>getInventory=context.FiscalReportCell_doGetInventory\n
+\n
+# pobiera stan kont po stronie credit\n
+getCredit=context.getCredit\n
+\n
+# pobiera stan kont po stronie debit\n
+getDebit=context.getDebit\n
+\n
+# pobiera r\xc3\xb3\xc5\xbcnic\xc4\x99 dla kont po obu stronach \n
+getBalance=context.getBalance\n
+\n
+class PL:pass\n
+pl=PL()\n
+\n
+pl.AI=-getBalance((\'70\',))\n
+pl.AII=getBalance((\'490\',))\n
+pl.AIII=getBalance((\'790\',))\n
+pl.AIV=-getBalance((\'731\',\'732\',\'733\',\'740\'))\n
+pl.A=pl.AI+pl.AII+pl.AIII+pl.AIV\n
+\n
+pl.BI=getBalance((\'408\',))\n
+pl.BII=getBalance((\'401\',))\n
+pl.BIII=getBalance((\'402\',))\n
+pl.BIV=getBalance((\'403\',))\n
+pl.BV=getBalance((\'404\',))\n
+pl.BVI=getBalance((\'405\',))\n
+pl.BVII=getBalance((\'409\',))\n
+pl.BVIII=getBalance((\'736\',\'737\',\'738\',\'741\'))\n
+pl.B=pl.BI+pl.BII+pl.BIII+pl.BIV+pl.BV+pl.BVI+pl.BVII+pl.BVIII\n
+\n
+pl.C=pl.A-pl.B\n
+\n
+pl.DI=max(getBalance((\'761\',))-getBalance((\'766\',)),0)\n
+pl.DII=-getBalance((\'762\',))\n
+pl.DIII=-getBalance((\'763\',\'764\'))\n
+pl.D=pl.DI+pl.DII+pl.DIII\n
+\n
+pl.EI=max(getBalance((\'766\',))-getBalance((\'761\',)),0)\n
+pl.EII=getBalance((\'767\',))\n
+pl.EIII=getBalance((\'768\',\'769\'))\n
+pl.E=pl.EI+pl.EII+pl.EIII\n
+\n
+pl.F=pl.C+pl.D-pl.E\n
+\n
+pl.GI=-getBalance((\'750\',))\n
+pl.GII=-getBalance((\'751\',))\n
+pl.GIII=max(getBalance((\'752\',)) -getBalance((\'761\',)),0)\n
+pl.GIV=-getBalance((\'753\',))\n
+pl.GV=-getBalance((\'754\',))\n
+\n
+pl.G=pl.GI+pl.GII+pl.GIII+pl.GIV+pl.GV\n
+\n
+pl.HI=getBalance((\'757\',))\n
+pl.HII=max(getBalance((\'756\',)) -getBalance((\'752\',)),0)\n
+pl.HIII=getBalance((\'758\',))\n
+pl.HIV=getBalance((\'759\',))\n
+pl.H=pl.HI+pl.HII+pl.HIII+pl.HIV\n
+\n
+pl.I=pl.F+pl.G-pl.H\n
+\n
+pl.JI=getBalance((\'770\',))\n
+pl.JII=getBalance((\'771\',))\n
+pl.J=pl.JI-pl.JII\n
+\n
+pl.K=pl.I+pl.J\n
+\n
+pl.L=getBalance((\'871\',))\n
+\n
+pl.M=getBalance((\'872\',))\n
+\n
+pl.N=pl.K-pl.L-pl.M\n
+\n
+return pl\n
+\n
+# vim:syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>getInventory</string>
+                            <string>getCredit</string>
+                            <string>getDebit</string>
+                            <string>getBalance</string>
+                            <string>PL</string>
+                            <string>pl</string>
+                            <string>_write_</string>
+                            <string>AI</string>
+                            <string>AII</string>
+                            <string>AIII</string>
+                            <string>AIV</string>
+                            <string>A</string>
+                            <string>BI</string>
+                            <string>BII</string>
+                            <string>BIII</string>
+                            <string>BIV</string>
+                            <string>BV</string>
+                            <string>BVI</string>
+                            <string>BVII</string>
+                            <string>BVIII</string>
+                            <string>B</string>
+                            <string>C</string>
+                            <string>max</string>
+                            <string>DI</string>
+                            <string>DII</string>
+                            <string>DIII</string>
+                            <string>D</string>
+                            <string>EI</string>
+                            <string>EII</string>
+                            <string>EIII</string>
+                            <string>E</string>
+                            <string>F</string>
+                            <string>GI</string>
+                            <string>GII</string>
+                            <string>GIII</string>
+                            <string>GIV</string>
+                            <string>GV</string>
+                            <string>G</string>
+                            <string>HI</string>
+                            <string>HII</string>
+                            <string>HIII</string>
+                            <string>HIV</string>
+                            <string>H</string>
+                            <string>I</string>
+                            <string>JI</string>
+                            <string>JII</string>
+                            <string>J</string>
+                            <string>K</string>
+                            <string>L</string>
+                            <string>M</string>
+                            <string>N</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ProfitAndLoss_calculateCells</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
