@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_self
+from OFS.History import Historical
 import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
@@ -293,6 +294,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
   
   manage_options = ( CMFBTreeFolder.manage_options +
+                     Historical.manage_options +
                      CMFCatalogAware.manage_options
                    )
   # Declarative properties

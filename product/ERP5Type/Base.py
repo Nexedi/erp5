@@ -26,14 +26,15 @@
 #
 ##############################################################################
 
+from struct import unpack
 import warnings
 import ExtensionClass
+
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
-
-from OFS.History import Historical
+import OFS.History
 
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
@@ -330,7 +331,11 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                     method = WorkflowMethod(method, method_id)
                     setattr(prop_holder, method_id, method)
 
-class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5PropertyManager ):
+class Base( CopyContainer,
+            PortalContent,
+            ActiveObject,
+            OFS.History.Historical,
+            ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
     It defines object attributes which are necessary to implement
@@ -415,6 +420,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
       return getattr(Base.aq_portal_type[ptype], id, None).__of__(self)
 
     return None
+  
+  def manage_historyCompare(self, rev1, rev2, REQUEST,
+                            historyComparisonResults=''):
+    return Base.inheritedAttribute('manage_historyCompare')(
+          self, rev1, rev2, REQUEST,
+          historyComparisonResults=OFS.History.html_diff(
+              pformat(rev1.showDict()),
+              pformat(rev2.showDict())))
 
   def _aq_dynamic(self, id):
     ptype = self.portal_type
@@ -539,6 +552,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, Historical, ERP5Property
     """
     from ZODB.utils import oid_repr
     return oid_repr(self._p_oid)
+  
+  def getSerial(self):
+    """Return ODB Serial."""
+    return self._p_serial
+  
+  def getHistorySerial(self):
+    """Return ODB Serial, in the same format used for history keys"""
+    return '.'.join([str(x) for x in unpack('>HHHH', self._p_serial)])
 
   # Utils
   def _getCategoryTool(self):
