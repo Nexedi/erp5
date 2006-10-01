@@ -29,25 +29,12 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Cache import CachingMethod
-#from Products.ERP5.Document.Url import Url
-from Products.ERP5OOo.Document.DMSFile import DMSFile, stripHtml
+from Products.ERP5OOo.Document.DMSFile import DMSFile
 
 import mimetypes, re, urllib
 from htmlentitydefs import name2codepoint
 from DateTime import DateTime
 
-# XXX refactor - html processing functions should go outside
-
-rx=[]
-rx.append(re.compile('<!--.*?-->',re.DOTALL|re.MULTILINE)) # clear comments (sometimes JavaScript code in comments contains > chars)
-rx.append(re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)) # clear tags
-rx.append(re.compile('\s+')) # compress multiple spaces
-
-def clearHtml(s):
-  for r in rx:
-    s=r.sub(" ",s)
-  return s
 
 class SpiderException(Exception):
 
@@ -60,53 +47,13 @@ class Opener(urllib.FancyURLopener):
   def http_error_default(self, url, fp, code, msg, headers):
     raise SpiderException(code, msg)
 
-tgtencoding='utf-8'
-encodings=['iso-8859-2','iso-8859-15','windows-1250']
-rx_charset=re.compile('<meta.*charset="?([\w\d\-]*)',re.DOTALL|re.MULTILINE|re.IGNORECASE)
-
-def recode(s):
-  """
-  maybe it can be useful system-wide
-  """
-  _encodings=encodings[:] # local copy
-  _encodings.insert(0,tgtencoding) # if not declared or declared wrongly, we try
-  m=rx_charset.search(s)
-  if m and len(m.groups())>0:
-    enc=m.groups()[0].lower()
-    if enc==tgtencoding:
-      return s
-    if enc in _encodings:
-      _encodings.remove(enc)
-    _encodings.insert(0,enc) # we'll start from what we've found
-  for enc in _encodings:
-    try:
-      return s.decode(enc).encode('utf-8')
-    except UnicodeDecodeError, LookupError:
-      pass
-  raise CanNotDecode('sorry')
-
-def _convertEntities(txt,rx,mapper=None):
-    def repl(code):
-        if mapper:
-            code=mapper.get(code)
-        if code is None:
-            return ''
-        return unichr(int(code)).encode(tgtencoding)
-    res=re.split(rx,txt)
-    res[1::2]=map(repl,res[1::2]) # Isn't it beautiful? :)
-    return ''.join(res)
-
-rx_chars=re.compile('&#(\d{3});')
-rx_ents=re.compile('&(\w{1,6});')
-
-def convertEntities(txt):
-    txt=_convertEntities(txt,rx_chars)
-    txt=_convertEntities(txt,rx_ents, name2codepoint)
-    return txt
-
 class ExternalDocument(DMSFile):
   """
   caching sources from outside
+  This is basically an abstract class
+  classes deriving from it should overwrite method _processData (this
+  is the one that does something with character data obtained from source)
+  Spidering method supports http, ftp and file protocols, and possibly many others
   """
   # CMF Type Definition
   meta_type = 'ERP5 External Document'
@@ -130,7 +77,7 @@ class ExternalDocument(DMSFile):
                     , PropertySheet.ExternalDocument
                     )
 
-  protocols=(('Web page','http'),)
+  protocols=(('Web page','http'),('FTP site','ftp'),('Local file','file'),)
 
   searchable_attrs=DMSFile.searchable_attrs+('text_content',)
 
@@ -146,37 +93,54 @@ class ExternalDocument(DMSFile):
     """
     return self.protocols
 
+  security.declarePrivate(Permissions.View, '_spiderSource')
+  def _spiderSource(self):
+    """
+    FancyURLopener can open various protocols
+    """
+    op=Opener()
+    f=op.open(self.getQualifiedUrl())
+    s=f.read()
+    return s
+
+  security.declarePrivate('_processData')
+  def _processData(self,s):
+    raise Exception('this should be implemented in subclass')
+
+  security.declareProtected(Permissions.ModifyPortalContent,'resetTopObject')
+  def resetTopObject(self):
+    '''
+    abstract function for maintaining interface
+    call before beginning recursive spidering
+    used mostly in web pages
+    '''
+    pass
+
   security.declareProtected(Permissions.View, 'getProtocolItemList')
   def spiderSource(self):
     """
-    Spidering policy questions:
-    - refreshing: how often
-    - what to do if site not accessible - erate text_content or keep it?
-    Shall we delegate these questions to preferences?
-    Or use portal_alarms?
+    spiders external datasource
+    sets status message
+    returned value tells us if it succeeded or failed
     """
-    op=Opener()
     try:
-      f=op.open(self.getQualifiedUrl())
-    except (IOError, SpiderException),e:
+      s=self._spiderSource()
+    except Exception,e:
+      self.log(e,level=1)
       self.setStatusMessage("Tried on %s: %s" % (self._time(),str(e)))
       return False
-    s=f.read()
     chars=len(s)
     if chars==0:
       self.setStatusMessage("Tried on %s: got empty string" % self._time())
       return False
-    # here we check encoding and convert to UTF8
     try:
-      s=recode(s)
-    except CanNotDecode:
-      self.setStatusMessage("Spidered on %s, %i chars, but could not decode" % (self._time(), chars))
+      s=self._processData(s)
+    except Exception,e:
+      self.log(e,level=1)
+      self.setStatusMessage("Spidered on %s, %i chars, but could not process; reason: %s" % (self._time(), chars, str(e)))
       return False
-    s=stripHtml(s) # remove headers, doctype and the like
-    s=clearHtml(s) # remove tags
-    s=convertEntities(s) # convert charrefs and named entities
     self.setTextContent(s)
-    self.setStatusMessage("Spidered on %s, %i chars" % (self._time(), chars))
+    self.setStatusMessage("Spidered on %s, %i chars, recorded %i chars" % (self._time(), chars, len(s)))
     return True
 
   security.declareProtected(Permissions.View, 'getProtocolItemList')
