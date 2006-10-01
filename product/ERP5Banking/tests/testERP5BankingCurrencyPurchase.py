@@ -276,7 +276,6 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
     self.simulation_tool = self.getSimulationTool()
     # check we have 0 banknotes of 10000 in encaisse_paris
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 0.0)
-    import pdb;pdb.set_trace()
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 0.0)
      # check the final inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
