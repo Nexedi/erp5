@@ -210,7 +210,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
         # The downside of this optimisation is that it is not possible to
         # set a local role definition if the local role list is empty
         if len(self._roles):
-            self.assignRoleToSecurityGroup(ob)
+            self.updateLocalRolesOnSecurityGroups(ob)
 
         if self.init_script :
             # Acquire the init script in the context of this object
