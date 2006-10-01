@@ -91,12 +91,11 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
       need to be installed to run the test on.
     """
     return ( 'erp5_base'
-           #, 'erp5_trade'
-           #, 'erp5_accounting'
-           , 'baobab_unit_test'
+           , 'erp5_trade'
+           , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-           , 'erp5_banking_cash_to_currency_sale-0.1.bt5' # erp5_banking_cash_to_currency_sale contains all method for cash sorting
+           , 'erp5_banking_cash' # erp5_banking_cash contains all method for cash sorting
            )
 
   def getCashToCurrencySaleModule(self):
@@ -240,31 +239,22 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.valid_incoming_line = getattr(self.cash_to_currency_sale, 'valid_incoming_line_1')
     # check its portal type
     self.assertEqual(self.valid_incoming_line.getPortalType(), 'Incoming Cash To Currency Sale Line')
-    # check the resource is banknotes of 10000
     self.assertEqual(self.valid_incoming_line.getResourceValue(), self.billet_5000)
-    # chek the value of the banknote
     self.assertEqual(self.valid_incoming_line.getPrice(), 5000.0)
-    # check the unit of banknote
-    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'quantity_unit/unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
+    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'unit')
     self.assertEqual(len(self.valid_incoming_line.objectValues()), 2)
-    # now check for each variation (years 1992 and 2003)
     for variation in self.variation_list:
       # get the delivery cell
       cell = self.valid_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/valid')
       # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_5000)
-      # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is guichet_1
       self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/entrante')
       if cell.getId() == 'movement_0_0_0':
-        # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 4.0)
       elif cell.getId() == 'movement_0_1_0':
-        # check the quantity of banknote for year 2003 is 3
         self.assertEqual(cell.getQuantity(), 6.0)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
@@ -280,31 +270,24 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.valid_incoming_line = getattr(self.cash_to_currency_sale, 'valid_incoming_line_2')
     # check its portal type
     self.assertEqual(self.valid_incoming_line.getPortalType(), 'Incoming Cash To Currency Sale Line')
-    # check the resource is banknotes of 10000
     self.assertEqual(self.valid_incoming_line.getResourceValue(), self.piece_100)
     # chek the value of the banknote
     self.assertEqual(self.valid_incoming_line.getPrice(), 100.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'quantity_unit/unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
+    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'unit')
     self.assertEqual(len(self.valid_incoming_line.objectValues()), 2)
-    # now check for each variation (years 1992 and 2003)
     for variation in self.variation_list:
       # get the delivery cell
       cell = self.valid_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/valid')
       # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.piece_100)
-      # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is guichet_1
       self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/entrante')
       if cell.getId() == 'movement_0_0_0':
-        # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 200.0)
       elif cell.getId() == 'movement_0_1_0':
-        # check the quantity of banknote for year 2003 is 3
         self.assertEqual(cell.getQuantity(), 0.0)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
@@ -317,7 +300,6 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # Check number of lines
     self.assertEqual(len(self.cash_to_currency_sale.objectValues()), 2)
-    # Check quantity of banknotes (2 for 1992 and 3 for 2003)
     self.assertEqual(self.cash_to_currency_sale.getTotalQuantity(deliveryLineType="Incoming Cash To Currency Sale Line"), 210)
     # Check the total price
     self.assertEqual(self.cash_to_currency_sale.getTotalPrice(deliveryLineType="Incoming Cash To Currency Sale Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 200.0)
@@ -348,31 +330,19 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.valid_outgoing_line.getResourceValue(), self.usd_billet_20)
     # chek the value of the banknote
     self.assertEqual(self.valid_outgoing_line.getPrice(), 20.0)
-    # check the unit of banknote
-    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'quantity_unit/unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
+    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'unit')
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 1)
-    # now check for each variation (years 1992 and 2003)
     for variation in self.usd_variation_list:
-      # get the delivery cell
       cell = self.valid_outgoing_line.getCell('emission_letter/not_defined', variation, 'cash_status/not_defined')
-      # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.usd_billet_20)
-      # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_devises/usd/sortante')
-      # check the destination vault is guichet_1
       self.assertEqual(cell.getBaobabDestination(), None)
       if cell.getId() == 'movement_0_0_0':
-        # check the quantity of banknote 20
         self.assertEqual(cell.getQuantity(), 5.0)
 
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
-
-
-
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -384,9 +354,6 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_to_currency_sale.getTotalQuantity(deliveryLineType="Outgoing Cash To Currency Sale Line"), 5.0)
     # check the total price
     self.assertEqual(self.cash_to_currency_sale.getTotalPrice(deliveryLineType="Outgoing Cash To Currency Sale Line"), 20 * 5.0)
-
-
-
 
   def stepDeliverCashToCurrencySale(self, sequence=None, sequence_list=None, **kwd):
     """

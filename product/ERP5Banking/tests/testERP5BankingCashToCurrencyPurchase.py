@@ -95,7 +95,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
            , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-           , 'erp5_banking_cash_to_currency_purchase-0.1.bt5' # erp5_banking_cash_to_currency_purchase contains all method for cash sorting
+           , 'erp5_banking_cash' 
            )
 
   def getCashToCurrencyPurchaseModule(self):
@@ -260,7 +260,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     # chek the value of the banknote
     self.assertEqual(self.valid_incoming_line.getPrice(), 20.0)
     # check the unit of banknote
-    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_incoming_line.objectValues()), 1)
     # now check for each variation (years 1992 and 2003)
@@ -319,7 +319,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     # check the value of coin
     self.assertEqual(self.valid_outgoing_line.getPrice(), 5000.0)
     # check the unit of coin
-    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
@@ -357,7 +357,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     # check the value of coin
     self.assertEqual(self.valid_outgoing_line.getPrice(), 100.0)
     # check the unit of coin
-    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'quantity_unit/unit')
+    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
