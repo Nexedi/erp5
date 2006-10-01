@@ -58,3 +58,10 @@ class Bug( Folder ):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
+    
+    def SearchableText(self):
+      """ Used by the catalog for basic full text indexing """
+      return """ %s %s %s """ % ( self.getTitle(),
+                                  self.getDescription(),
+                                  self.Bug_getFollowUpListAsText() )
+
