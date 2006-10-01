@@ -84,5 +84,5 @@ class Invoice(AccountingTransaction):
         Permissions.AccessContentsInformation, 'getTotalNetPrice')
     def getTotalNetPrice(self):
       """ Returns the total net price for this invoice """
-      raise NotImplemented
+      raise NotImplementedError
       return self.Invoice_zGetTotalNetPrice()
