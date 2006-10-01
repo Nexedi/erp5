@@ -271,20 +271,16 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepCheckConfirmedInventory(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the inventoryinb state confirmed
+    Check the inventory in state confirmed
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 0 banknotes of 10000 in encaisse_paris
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 0.0)
+    import pdb;pdb.set_trace()
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 0.0)
      # check the final inventory of the bank account
-    try:
-      self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
-      self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 164000)
-    except:
-      import pdb
-      pdb.set_trace()
-      raise
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 164000)
 
 
   def stepPay(self, sequence=None, sequence_list=None, **kwd):
@@ -335,6 +331,7 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
                       'CreateCurrencyPurchase Tic ' \
                       'AssignToCounter ' \
                       'CreateValidIncomingLine ' \
+                      'Tic ' \
                       'CheckConfirmedInventory ' \
                       'Pay Tic ' \
                       'CheckFinalInventory '
