@@ -242,6 +242,7 @@ class DMSFile(XMLObject,File):
     getWikiSuccessorValueList - the way to find objects is on 
     implementation level
     '''
+    # XXX results should be cached as volatile attributes
     lst=[]
     for ref in self.getWikiSuccessorReferenceList():
       r=ref[1]
@@ -249,16 +250,6 @@ class DMSFile(XMLObject,File):
       if len(res)>0:
         lst.append(res[0].getObject())
     return lst
-    #def cached_getWikiSuccessorValueList():
-      #lst=[]
-      #for ref in self.getWikiSuccessorReferenceList():
-        #res=self.DMS_findDocument(ref)
-        #if len(res)>0:
-          #lst.append(res[0].getObject())
-      #return lst
-    #cached_getWikiSuccessorValueList = CachingMethod(cached_getWikiSuccessorValueList,
-        #id='DMSFile_getWikiSuccessorValueList')
-    #return cached_getWikiSuccessorValueList()
 
   security.declareProtected(Permissions.View, 'getWikiPredecessorValueList')
   def getWikiPredecessorValueList(self):
@@ -267,20 +258,12 @@ class DMSFile(XMLObject,File):
     document, and on how a doc must reference me to be my predecessor (reference only,
     or with a language, etc
     '''
+    # XXX results should be cached as volatile attributes
     lst=self.DMS_findPredecessors()
     lst=[r.getObject() for r in lst]
     di=dict.fromkeys(lst) # make it unique
     ref=self.getReference()
     return [o for o in di.keys() if o.getReference()!=ref] # every object has its own reference in SearchableText
-    #def cached_getWikiPredecessorValueList():
-      #lst=self.DMS_findPredecessors()
-      #lst=[r.getObject() for r in lst]
-      #di=dict.fromkeys(lst) # make it unique
-      #ref=self.getReference()
-      #return [o for o in di.keys() if o.getReference()!=ref] # every object has its own reference in SearchableText
-    #cached_getWikiPredecessorValueList=CachingMethod(cached_getWikiPredecessorValueList,
-        #id='DMSFile_getWikiPredecessorValueList')
-    #return cached_getWikiPredecessorValueList()
 
   # BG copied from File in case
   index_html = CMFFile.index_html
