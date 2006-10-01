@@ -115,7 +115,9 @@ elif resource <> 0 :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/money_deposit_rendering_workflow/scripts/validateVaultBalance</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

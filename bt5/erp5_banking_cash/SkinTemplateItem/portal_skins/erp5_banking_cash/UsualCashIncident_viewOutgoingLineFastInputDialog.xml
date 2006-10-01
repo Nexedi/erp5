@@ -100,7 +100,9 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/UsualCashIncident_viewOutgoingLineFastInputDialog</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

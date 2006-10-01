@@ -338,7 +338,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -388,7 +388,7 @@
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -446,6 +446,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

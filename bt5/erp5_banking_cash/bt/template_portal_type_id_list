@@ -1,5 +1,6 @@
 Account Incident
 Account Incident Module
+Banking Operation Line
 Cash Balance Regulation
 Cash Balance Regulation Module
 Cash Container
@@ -8,16 +9,26 @@ Cash Exchange
 Cash Exchange Module
 Cash Incident
 Cash Incident Module
+Cash Movement
+Cash Movement Module
 Cash Sorting
 Cash Sorting Incident
 Cash Sorting Incident Module
 Cash Sorting Module
+Cash To Currency Purchase
+Cash To Currency Purchase Module
+Cash To Currency Sale
+Cash To Currency Sale Module
 Classification Survey
 Classification Survey Module
 Container Cell
 Container Line
 Counter Rendering
 Counter Rendering Module
+Currency Purchase
+Currency Purchase Module
+Currency Sale
+Currency Sale Module
 Foreign Cash Reception
 Foreign Cash Reception Module
 Incoming Account Incident Line
@@ -26,6 +37,8 @@ Incoming Cash Exchange Line
 Incoming Cash Incident Line
 Incoming Cash Sorting Incident Line
 Incoming Cash Sorting Line
+Incoming Cash To Currency Purchase Line
+Incoming Cash To Currency Sale Line
 Incoming Classification Survey Line
 Incoming Usual Cash Incident Line
 Internal Money Deposit
@@ -57,6 +70,8 @@ Outgoing Cash Incident Line
 Outgoing Cash Sorting Cell
 Outgoing Cash Sorting Incident Line
 Outgoing Cash Sorting Line
+Outgoing Cash To Currency Purchase Line
+Outgoing Cash To Currency Sale Line
 Outgoing Classification Survey Cell
 Outgoing Classification Survey Line
 Outgoing Usual Cash Incident Line

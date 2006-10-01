@@ -88,7 +88,9 @@ context.setDestination("%s/caveau/reserve/encaisse_des_billets_et_monnaies" %(si
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/MonetaryIssue_init</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

@@ -452,6 +452,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -478,7 +482,7 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -488,7 +492,7 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>

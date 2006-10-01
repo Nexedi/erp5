@@ -370,7 +370,9 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/MonetaryReceptionModule_importMonetaryReceptionFromCDAction</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

@@ -80,7 +80,9 @@ obj.assignRoleToSecurityGroup()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/vault_transfer_interaction_workflow/scripts/Document_updateLocalRoles</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

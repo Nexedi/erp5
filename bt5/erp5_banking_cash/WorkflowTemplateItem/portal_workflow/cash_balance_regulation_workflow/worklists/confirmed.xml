@@ -42,7 +42,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Cash Balance Re
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cashs Balance Regulation To Confirm</string> </value>
+            <value> <string>Cash Balance Regulation To Confirm</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

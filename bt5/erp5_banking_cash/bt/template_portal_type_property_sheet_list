@@ -10,20 +10,42 @@ Cash Exchange | Resource
 Cash Exchange | Simulation
 Cash Incident | Amount
 Cash Incident | Price
+Cash Movement | Price
 Cash Sorting Incident | AccountingEvent
 Cash Sorting Incident | Amount
 Cash Sorting Incident | Price
 Cash Sorting | Price
+Cash To Currency Purchase | Amount
+Cash To Currency Purchase | Discount
+Cash To Currency Purchase | Price
+Cash To Currency Purchase | Reference
+Cash To Currency Purchase | Resource
+Cash To Currency Sale | Amount
+Cash To Currency Sale | Discount
+Cash To Currency Sale | Price
+Cash To Currency Sale | Reference
+Cash To Currency Sale | Resource
 Container Cell | CashContainer
 Container Line | CashContainer
 Counter Rendering | Amount
 Counter Rendering | Price
+Currency Purchase | Discount
+Currency Purchase | ItemAggregation
+Currency Purchase | Price
+Currency Purchase | Reference
+Currency Purchase | Resource
+Currency Sale | Discount
+Currency Sale | Price
+Currency Sale | Reference
+Currency Sale | Resource
 Incoming Account Incident Line | CashDeliveryLine
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
 Incoming Cash Incident Line | CashDeliveryLine
 Incoming Cash Sorting Incident Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
+Incoming Cash To Currency Purchase Line | CashDeliveryLine
+Incoming Cash To Currency Sale Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
 Incoming Usual Cash Incident Line | CashDeliveryLine
 Internal Money Deposit | Arrow
@@ -59,6 +81,8 @@ Outgoing Cash Incident Line | CashDeliveryLine
 Outgoing Cash Sorting Cell | CashDeliveryLine
 Outgoing Cash Sorting Incident Line | CashDeliveryLine
 Outgoing Cash Sorting Line | CashDeliveryLine
+Outgoing Cash To Currency Purchase Line | CashDeliveryLine
+Outgoing Cash To Currency Sale Line | CashDeliveryLine
 Outgoing Classification Survey Cell | CashDeliveryLine
 Outgoing Classification Survey Line | CashDeliveryLine
 Outgoing Usual Cash Incident Line | CashDeliveryLine

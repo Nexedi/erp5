@@ -4,28 +4,45 @@
   <item>Amount</item>
  </portal_type>
  <portal_type id="Cash Balance Regulation">
+  <item>Price</item>
   <item>Resource</item>
   <item>Amount</item>
-  <item>Price</item>
   <item>Simulation</item>
  </portal_type>
  <portal_type id="Cash Exchange">
-  <item>Price</item>
   <item>Simulation</item>
-  <item>Resource</item>
+  <item>Price</item>
   <item>Amount</item>
+  <item>Resource</item>
  </portal_type>
  <portal_type id="Cash Incident">
   <item>Amount</item>
+  <item>Price</item>
+ </portal_type>
+ <portal_type id="Cash Movement">
   <item>Price</item>
  </portal_type>
  <portal_type id="Cash Sorting">
   <item>Price</item>
  </portal_type>
  <portal_type id="Cash Sorting Incident">
+  <item>Price</item>
   <item>Amount</item>
   <item>AccountingEvent</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Purchase">
   <item>Price</item>
+  <item>Resource</item>
+  <item>Discount</item>
+  <item>Reference</item>
+  <item>Amount</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Sale">
+  <item>Discount</item>
+  <item>Reference</item>
+  <item>Amount</item>
+  <item>Price</item>
+  <item>Resource</item>
  </portal_type>
  <portal_type id="Container Cell">
   <item>CashContainer</item>
@@ -36,6 +53,19 @@
  <portal_type id="Counter Rendering">
   <item>Amount</item>
   <item>Price</item>
+ </portal_type>
+ <portal_type id="Currency Purchase">
+  <item>Resource</item>
+  <item>Reference</item>
+  <item>Price</item>
+  <item>Discount</item>
+  <item>ItemAggregation</item>
+ </portal_type>
+ <portal_type id="Currency Sale">
+  <item>Reference</item>
+  <item>Price</item>
+  <item>Discount</item>
+  <item>Resource</item>
  </portal_type>
  <portal_type id="Incoming Account Incident Line">
   <item>CashDeliveryLine</item>
@@ -55,6 +85,12 @@
  <portal_type id="Incoming Cash Sorting Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Incoming Cash To Currency Purchase Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Incoming Cash To Currency Sale Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Incoming Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
@@ -62,16 +98,16 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
+  <item>InternalMoney</item>
   <item>Arrow</item>
   <item>Task</item>
   <item>Price</item>
-  <item>InternalMoney</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
-  <item>Amount</item>
-  <item>Account</item>
   <item>Price</item>
+  <item>Account</item>
   <item>Task</item>
+  <item>Amount</item>
  </portal_type>
  <portal_type id="Monetary Issue">
   <item>Price</item>
@@ -94,22 +130,22 @@
   <item>CashContainer</item>
  </portal_type>
  <portal_type id="Monetary Survey">
-  <item>Task</item>
   <item>Amount</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Money Deposit">
   <item>Arrow</item>
   <item>Task</item>
-  <item>Price</item>
   <item>ItemAggregation</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Price</item>
   <item>Amount</item>
  </portal_type>
  <portal_type id="Money Deposit Transfer">
-  <item>Amount</item>
   <item>Price</item>
+  <item>Amount</item>
  </portal_type>
  <portal_type id="Outgoing Account Incident Line">
   <item>CashDeliveryLine</item>
@@ -132,6 +168,12 @@
  <portal_type id="Outgoing Cash Sorting Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Outgoing Cash To Currency Purchase Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash To Currency Sale Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Outgoing Classification Survey Cell">
   <item>CashDeliveryLine</item>
  </portal_type>
@@ -142,19 +184,19 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Usual Cash Incident">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Price</item>
   <item>Amount</item>
  </portal_type>
  <portal_type id="Usual Cash Transfer">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Vault Transfer">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
 </property_sheet_list>

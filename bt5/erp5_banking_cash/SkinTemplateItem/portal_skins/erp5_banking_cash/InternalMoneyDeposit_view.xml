@@ -101,6 +101,7 @@
                     <value>
                       <list>
                         <string>listbox_total_price</string>
+                        <string>listbox_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -108,10 +109,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_destination</string>
                         <string>my_source_reference</string>
+                        <string>my_destination</string>
                         <string>my_source_total_asset_price</string>
-                        <string>my_lettering</string>
+                        <string>my_grouping_reference</string>
                       </list>
                     </value>
                 </item>

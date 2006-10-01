@@ -68,11 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cash_detail_dict = {\'line_portal_type\'          : \'Cash Delivery Line\'\n
+            <value> <string>cash_status = [\'to_sort\']\n
+emission_letter = [\'not_defined\',]\n
+variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
+\n
+cash_detail_dict = {\'line_portal_type\'          : \'Cash Delivery Line\'\n
                     , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'          : [\'to_sort\']\n
-                    , \'emission_letter_list\'      : [\'not_defined\',]    #context.Baobab_getUserEmissionLetterList()\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(coin=1, banknote=1)\n
+                    , \'cash_status_list\'          : cash_status\n
+                    , \'emission_letter_list\'      : emission_letter    #context.Baobab_getUserEmissionLetterList()\n
+                    , \'variation_list\'           : variation\n
                     , \'currency_cash_portal_type\'  :  None\n
                     , \'read_only\'           : False\n
                     , \'column_base_category\'               : \'variation\'\n
@@ -97,7 +101,9 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/MoneyDeposit_viewMoneyDepositLineFastInputAction</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -133,8 +139,11 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>cash_status</string>
+                            <string>emission_letter</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>variation</string>
                             <string>None</string>
                             <string>False</string>
                             <string>cash_detail_dict</string>

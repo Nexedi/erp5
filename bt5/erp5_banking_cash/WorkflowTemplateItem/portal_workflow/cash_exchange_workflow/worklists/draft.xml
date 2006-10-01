@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>drafts de monnaies \xc3\xa0 valider (%(count)s)</string> </value>
+            <value> <string>Draft To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -42,7 +42,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash Exchange&reset=1
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Drafts to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

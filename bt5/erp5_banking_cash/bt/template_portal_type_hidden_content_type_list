@@ -8,16 +8,25 @@ Cash Exchange | Incoming Cash Exchange Line
 Cash Exchange | Outgoing Cash Exchange Line
 Cash Incident | Incoming Cash Incident Line
 Cash Incident | Outgoing Cash Incident Line
+Cash Movement | Cash Delivery Line
 Cash Sorting Incident | Incoming Cash Sorting Incident Line
 Cash Sorting Incident | Outgoing Cash Sorting Incident Line
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
+Cash To Currency Purchase | Incoming Cash To Currency Purchase Line
+Cash To Currency Purchase | Outgoing Cash To Currency Purchase Line
+Cash To Currency Sale | Incoming Cash To Currency Sale Line
+Cash To Currency Sale | Outgoing Cash To Currency Sale Line
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line
 Container Line | Container Cell
 Counter Rendering | Amount
 Counter Rendering | Cash Delivery Line
 Counter Rendering | Price
+Currency Purchase | Banking Operation Line
+Currency Purchase | Cash Delivery Line
+Currency Sale | Banking Operation Line
+Currency Sale | Cash Delivery Line
 Foreign Cash Reception | Cash Delivery Line
 Incoming Account Incident Line | Cash Delivery Cell
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
@@ -25,6 +34,8 @@ Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Incident Line | Cash Delivery Cell
 Incoming Cash Sorting Incident Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
+Incoming Cash To Currency Purchase Line | Cash Delivery Cell
+Incoming Cash To Currency Sale Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Incoming Usual Cash Incident Line | Cash Delivery Cell
 Internal Money Deposit | Banking Operation Line
@@ -50,6 +61,8 @@ Outgoing Cash Exchange Line | Cash Delivery Cell
 Outgoing Cash Incident Line | Cash Delivery Cell
 Outgoing Cash Sorting Incident Line | Cash Delivery Cell
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
+Outgoing Cash To Currency Purchase Line | Cash Delivery Cell
+Outgoing Cash To Currency Sale Line | Cash Delivery Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
 Outgoing Usual Cash Incident Line | Cash Delivery Cell
 Usual Cash Incident | Incoming Usual Cash Incident Line

@@ -88,7 +88,9 @@ transaction.Base_checkBaobabSourceAndDestination()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/money_deposit_workflow/scripts/validateSourceAndDestination</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

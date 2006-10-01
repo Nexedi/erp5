@@ -10,8 +10,14 @@
   <item>responsible</item>
  </portal_type>
  <portal_type id="Cash Sorting Incident">
-  <item>source_decision</item>
   <item>responsible</item>
+  <item>source_decision</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Purchase">
+  <item>currency_exchange_type</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Sale">
+  <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Container Cell">
   <item>variation</item>
@@ -19,9 +25,15 @@
   <item>emission_letter</item>
  </portal_type>
  <portal_type id="Container Line">
+  <item>variation</item>
   <item>emission_letter</item>
   <item>cash_status</item>
-  <item>variation</item>
+ </portal_type>
+ <portal_type id="Currency Purchase">
+  <item>currency_exchange_type</item>
+ </portal_type>
+ <portal_type id="Currency Sale">
+  <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
   <item>external_software</item>

@@ -99,7 +99,9 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/account_incident_workflow/scripts/checkConsistency</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

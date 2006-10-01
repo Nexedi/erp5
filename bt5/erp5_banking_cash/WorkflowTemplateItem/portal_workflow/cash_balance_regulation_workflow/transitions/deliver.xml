@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Delivered</string> </value>
+            <value> <string>Deliver</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -60,11 +60,11 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateSourceAndDestination</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delivered</string> </value>
+            <value> <string>Deliver</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

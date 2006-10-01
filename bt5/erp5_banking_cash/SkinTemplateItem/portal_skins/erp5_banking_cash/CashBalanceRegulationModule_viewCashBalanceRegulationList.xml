@@ -82,7 +82,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -94,17 +96,17 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_source_total_asset_price</string>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_source_logical_path</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                        <string>listbox_source_total_asset_price</string>
-                        <string>listbox_delivery_start_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

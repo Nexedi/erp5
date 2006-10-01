@@ -48,6 +48,15 @@ Cash Incident | metadata
 Cash Incident | out_view
 Cash Incident | outgoing_input
 Cash Incident | view
+Cash Movement Module | list_ui
+Cash Movement Module | print_pdf
+Cash Movement Module | sort_on
+Cash Movement Module | view
+Cash Movement | fastinput
+Cash Movement | history
+Cash Movement | metadata
+Cash Movement | print_pdf
+Cash Movement | view
 Cash Sorting Incident Module | list_ui
 Cash Sorting Incident Module | sort_on
 Cash Sorting Incident Module | view
@@ -69,6 +78,28 @@ Cash Sorting | metadata
 Cash Sorting | outgoing_fastinput
 Cash Sorting | outgoing_line_list
 Cash Sorting | view
+Cash To Currency Purchase Module | list_ui
+Cash To Currency Purchase Module | sort_on
+Cash To Currency Purchase Module | view
+Cash To Currency Purchase | History
+Cash To Currency Purchase | incoming_cash
+Cash To Currency Purchase | incoming_fastinput
+Cash To Currency Purchase | metadata
+Cash To Currency Purchase | outgoing_cash
+Cash To Currency Purchase | outgoing_fastinput
+Cash To Currency Purchase | print
+Cash To Currency Purchase | view
+Cash To Currency Sale Module | list_ui
+Cash To Currency Sale Module | sort_on
+Cash To Currency Sale Module | view
+Cash To Currency Sale | history
+Cash To Currency Sale | incoming_cash_view
+Cash To Currency Sale | incoming_fastinput
+Cash To Currency Sale | metadata
+Cash To Currency Sale | outgoing_cash_view
+Cash To Currency Sale | outgoing_fastinput
+Cash To Currency Sale | print
+Cash To Currency Sale | view
 Classification Survey Module | list
 Classification Survey Module | list_ui
 Classification Survey Module | sort_on
@@ -98,6 +129,24 @@ Counter Rendering | history
 Counter Rendering | metadata
 Counter Rendering | print_pdf
 Counter Rendering | view
+Currency Purchase Module | list_ui
+Currency Purchase Module | sort_on
+Currency Purchase Module | view
+Currency Purchase | FastInput
+Currency Purchase | History
+Currency Purchase | accounting_view
+Currency Purchase | metadata
+Currency Purchase | print
+Currency Purchase | view
+Currency Sale Module | list_ui
+Currency Sale Module | sort_on
+Currency Sale Module | view
+Currency Sale | accounting_view
+Currency Sale | fastInput
+Currency Sale | history
+Currency Sale | metadata
+Currency Sale | print
+Currency Sale | view
 Foreign Cash Reception Module | list_ui
 Foreign Cash Reception Module | print_pdf
 Foreign Cash Reception Module | sort_on
@@ -121,6 +170,12 @@ Incoming Cash Sorting Incident Line | metadata
 Incoming Cash Sorting Incident Line | view
 Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
+Incoming Cash To Currency Purchase Line | metadata
+Incoming Cash To Currency Purchase Line | print
+Incoming Cash To Currency Purchase Line | view
+Incoming Cash To Currency Sale Line | metadata
+Incoming Cash To Currency Sale Line | print
+Incoming Cash To Currency Sale Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
 Incoming Usual Cash Incident Line | metadata
@@ -217,17 +272,13 @@ Money Deposit | accouting_view
 Money Deposit | fast_input
 Money Deposit | history
 Money Deposit | metadata
-Money Deposit | print_pdf
+Money Deposit | print
 Money Deposit | view
 Outgoing Account Incident Line | metadata
 Outgoing Account Incident Line | view
-Outgoing Cash Balance Regulation Line | history
 Outgoing Cash Balance Regulation Line | metadata
-Outgoing Cash Balance Regulation Line | print
 Outgoing Cash Balance Regulation Line | view
-Outgoing Cash Exchange Line | history
 Outgoing Cash Exchange Line | metadata
-Outgoing Cash Exchange Line | print
 Outgoing Cash Exchange Line | view
 Outgoing Cash Incident Line | metadata
 Outgoing Cash Incident Line | view
@@ -237,6 +288,12 @@ Outgoing Cash Sorting Incident Line | metadata
 Outgoing Cash Sorting Incident Line | view
 Outgoing Cash Sorting Line | metadata
 Outgoing Cash Sorting Line | view
+Outgoing Cash To Currency Purchase Line | metadata
+Outgoing Cash To Currency Purchase Line | print
+Outgoing Cash To Currency Purchase Line | view
+Outgoing Cash To Currency Sale Line | metadata
+Outgoing Cash To Currency Sale Line | print
+Outgoing Cash To Currency Sale Line | view
 Outgoing Classification Survey Cell | metadata
 Outgoing Classification Survey Cell | view
 Outgoing Classification Survey Line | metadata

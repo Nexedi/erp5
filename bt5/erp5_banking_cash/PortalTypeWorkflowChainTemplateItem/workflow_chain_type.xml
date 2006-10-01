@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Cash Balance Regulation</type>
-  <workflow>edit_workflow, cash_balance_regulation_workflow</workflow>
+  <workflow>cash_balance_regulation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Cash Exchange</type>
@@ -16,6 +16,10 @@
   <workflow>edit_workflow, cash_incident_workflow</workflow>
  </chain>
  <chain>
+  <type>Cash Movement</type>
+  <workflow>edit_workflow, cash_movement_workflow</workflow>
+ </chain>
+ <chain>
   <type>Cash Sorting</type>
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
@@ -24,12 +28,20 @@
   <workflow>cash_sorting_incident_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Cash To Currency Purchase</type>
+  <workflow>cash_to_currency_purchase_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cash To Currency Sale</type>
+  <workflow>cash_to_currency_sale_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Classification Survey</type>
   <workflow>classification_survey_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Container Cell</type>
-  <workflow>packing_list_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, packing_list_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Container Line</type>
@@ -38,6 +50,14 @@
  <chain>
   <type>Counter Rendering</type>
   <workflow>counter_rendering_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Currency Purchase</type>
+  <workflow>currency_purchase_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Currency Sale</type>
+  <workflow>currency_sale_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Foreign Cash Reception</type>
@@ -53,7 +73,7 @@
  </chain>
  <chain>
   <type>Monetary Issue</type>
-  <workflow>edit_workflow, monetary_issue_workflow</workflow>
+  <workflow>monetary_issue_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Recall</type>
@@ -93,6 +113,6 @@
  </chain>
  <chain>
   <type>Vault Transfer</type>
-  <workflow>edit_workflow, vault_transfer_workflow</workflow>
+  <workflow>vault_transfer_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

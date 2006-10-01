@@ -99,7 +99,9 @@ if object_price != line_price:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/foreign_cash_reception_workflow/scripts/checkConsistency</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

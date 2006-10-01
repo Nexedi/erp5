@@ -68,6 +68,8 @@
             <value>
               <list>
                 <string>Default</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -78,10 +80,24 @@
                 <item>
                     <key> <string>Default</string> </key>
                     <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_price</string>
-                        <string>listbox_start_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_source_total_asset_price</string>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_destination_logical_path</string>
                       </list>
                     </value>
                 </item>

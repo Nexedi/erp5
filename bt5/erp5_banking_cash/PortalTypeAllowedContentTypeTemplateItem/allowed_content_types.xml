@@ -20,8 +20,8 @@
   <item>Container Line</item>
  </portal_type>
  <portal_type id="Cash Exchange">
-  <item>Incoming Cash Exchange Line</item>
   <item>Outgoing Cash Exchange Line</item>
+  <item>Incoming Cash Exchange Line</item>
  </portal_type>
  <portal_type id="Cash Exchange Module">
   <item>Cash Exchange</item>
@@ -32,6 +32,12 @@
  </portal_type>
  <portal_type id="Cash Incident Module">
   <item>Cash Incident</item>
+ </portal_type>
+ <portal_type id="Cash Movement">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Cash Movement Module">
+  <item>Cash Movement</item>
  </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
@@ -47,9 +53,23 @@
  <portal_type id="Cash Sorting Module">
   <item>Cash Sorting</item>
  </portal_type>
+ <portal_type id="Cash To Currency Purchase">
+  <item>Incoming Cash To Currency Purchase Line</item>
+  <item>Outgoing Cash To Currency Purchase Line</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Purchase Module">
+  <item>Cash To Currency Purchase</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Sale">
+  <item>Incoming Cash To Currency Sale Line</item>
+  <item>Outgoing Cash To Currency Sale Line</item>
+ </portal_type>
+ <portal_type id="Cash To Currency Sale Module">
+  <item>Cash To Currency Sale</item>
+ </portal_type>
  <portal_type id="Classification Survey">
-  <item>Outgoing Classification Survey Line</item>
   <item>Incoming Classification Survey Line</item>
+  <item>Outgoing Classification Survey Line</item>
  </portal_type>
  <portal_type id="Classification Survey Module">
   <item>Classification Survey</item>
@@ -62,6 +82,20 @@
  </portal_type>
  <portal_type id="Counter Rendering Module">
   <item>Counter Rendering</item>
+ </portal_type>
+ <portal_type id="Currency Purchase">
+  <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Currency Purchase Module">
+  <item>Currency Purchase</item>
+ </portal_type>
+ <portal_type id="Currency Sale">
+  <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Currency Sale Module">
+  <item>Currency Sale</item>
  </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>Cash Delivery Line</item>
@@ -87,6 +121,13 @@
  <portal_type id="Incoming Cash Sorting Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
+ <portal_type id="Incoming Cash To Currency Purchase Line">
+  <item>Delivery Cell</item>
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Incoming Cash To Currency Sale Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
  <portal_type id="Incoming Classification Survey Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
@@ -94,8 +135,8 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Internal Money Deposit Module">
   <item>Internal Money Deposit</item>
@@ -177,6 +218,12 @@
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
   <item>Outgoing Cash Sorting Cell</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash To Currency Purchase Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash To Currency Sale Line">
+  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Classification Survey Line">
   <item>Outgoing Classification Survey Cell</item>

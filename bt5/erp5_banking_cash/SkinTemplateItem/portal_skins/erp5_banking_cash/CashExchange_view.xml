@@ -87,7 +87,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_simulation_state_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -97,7 +99,6 @@
                         <string>my_source_reference</string>
                         <string>my_source_logical_path</string>
                         <string>my_source_total_asset_price</string>
-                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>

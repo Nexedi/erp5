@@ -42,7 +42,7 @@ Base_viewWorklist?money_deposit_state=confirmed&reset=1&portal_type=Money Deposi
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Internals Money Deposit To Confirm</string> </value>
+            <value> <string>Money Deposit To Confirm</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

@@ -377,7 +377,7 @@
                           <string>Vault</string>
                         </tuple>
                         <tuple>
-                          <string>delevery.start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -502,6 +502,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

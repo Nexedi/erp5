@@ -83,11 +83,16 @@ resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, p
 #context.log(\'resource_two\', resource_two)\n
 \n
 # Get total_price.\n
+amount = transaction.getSourceTotalAssetPrice()\n
 incoming_total = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash Balance Regulation Line\')\n
 outgoing_total = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash Balance Regulation Line\')\n
 \n
 #context.log(\'incoming_total\', incoming_total)\n
 #context.log(\'outgoing_total\', outgoing_total)\n
+\n
+if amount != incoming_total:\n
+  msg = Message(domain="ui", message="Amount differ from total price.")\n
+  raise ValidationFailed, (msg,)\n
 \n
 if resource_one == 2:\n
   msg = Message(domain="ui", message="No resource.")\n
@@ -119,7 +124,9 @@ if incoming_total != outgoing_total:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/cash_balance_regulation_workflow/scripts/validateVaultBalance</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -165,6 +172,7 @@ if incoming_total != outgoing_total:\n
                             <string>caisse</string>
                             <string>resource_one</string>
                             <string>resource_two</string>
+                            <string>amount</string>
                             <string>incoming_total</string>
                             <string>outgoing_total</string>
                             <string>msg</string>

@@ -86,7 +86,9 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination()
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/monetary_reception_workflow/scripts/checkDestination</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

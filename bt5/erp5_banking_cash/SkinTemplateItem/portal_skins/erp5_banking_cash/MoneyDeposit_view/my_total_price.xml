@@ -164,7 +164,9 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
@@ -274,6 +276,25 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.getTotalPrice(deliveryLineType=\'Cash Delivery Cell\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>string:-1 234.5 | preferences/getPreferredMoneyQuantityStyle</string> </value>
         </item>
       </dictionary>
     </pickle>

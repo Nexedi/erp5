@@ -66,9 +66,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -76,7 +74,6 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -85,7 +82,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -95,9 +91,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

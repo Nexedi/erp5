@@ -6,10 +6,16 @@ Cash Exchange | cash_exchange_workflow
 Cash Exchange | edit_workflow
 Cash Incident | cash_incident_workflow
 Cash Incident | edit_workflow
+Cash Movement | cash_movement_workflow
+Cash Movement | edit_workflow
 Cash Sorting Incident | cash_sorting_incident_workflow
 Cash Sorting Incident | edit_workflow
 Cash Sorting | cash_sorting_workflow
 Cash Sorting | edit_workflow
+Cash To Currency Purchase | cash_to_currency_purchase_workflow
+Cash To Currency Purchase | edit_workflow
+Cash To Currency Sale | cash_to_currency_sale_workflow
+Cash To Currency Sale | edit_workflow
 Classification Survey | classification_survey_workflow
 Classification Survey | edit_workflow
 Container Cell | edit_workflow
@@ -19,6 +25,10 @@ Container Line | packing_list_interaction_workflow
 Container Line | trade_matrix_workflow
 Counter Rendering | counter_rendering_workflow
 Counter Rendering | edit_workflow
+Currency Purchase | currency_purchase_workflow
+Currency Purchase | edit_workflow
+Currency Sale | currency_sale_workflow
+Currency Sale | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
 Internal Money Deposit | edit_workflow
