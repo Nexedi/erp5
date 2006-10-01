@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.ExternalDocument_spiderAndSetState()\n
+            <value> <string>context.resetTopObject()\n
+context.ExternalDocument_spiderAndSetState()\n
 return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_status_message=Done\')\n
 </string> </value>
         </item>

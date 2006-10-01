@@ -70,7 +70,8 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>External Document</string>
+                <string>External Library File</string>
+                <string>External Web Page</string>
               </list>
             </value>
         </item>

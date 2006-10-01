@@ -69,6 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>o=state_change.object\n
+o.resetTopObject()\n
 o.ExternalDocument_spiderAndSetState()\n
 </string> </value>
         </item>

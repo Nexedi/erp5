@@ -1,3 +1,6 @@
+2006-10-01
+Too many things to describe here - refer to svn log and bugtracker on dedibox
+
 2006-09-14
 Fixed some bugs and controls, implemented publication workflow side effects, check unique identifier upon submission.
 Added language and version to catalog (compatibility), updated scripts accordingly

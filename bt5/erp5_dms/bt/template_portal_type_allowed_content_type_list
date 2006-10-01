@@ -1,6 +1,7 @@
 DMS File | Role Definition
 Document Module | DMS File
-Document Module | External Document
+Document Module | External Library File
+Document Module | External Web Page
 Document Module | Graphic
 Document Module | PdfDocument
 Document Module | Presentation

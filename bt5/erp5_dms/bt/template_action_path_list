@@ -9,10 +9,16 @@ Document Module | list_ui
 Document Module | sort_on
 Document Module | view
 Document Module | webdav
-External Document | history
-External Document | metadata
-External Document | spider
-External Document | view
+External Library File | books
+External Library File | history
+External Library File | metadata
+External Library File | spider
+External Library File | view
+External Web Page | externalsite_subpages
+External Web Page | history
+External Web Page | metadata
+External Web Page | spider
+External Web Page | view
 Graphic | convert
 Graphic | create_snapshot
 Graphic | download

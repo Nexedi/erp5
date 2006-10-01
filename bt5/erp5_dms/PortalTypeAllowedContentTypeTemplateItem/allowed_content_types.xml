@@ -4,12 +4,13 @@
  </portal_type>
  <portal_type id="Document Module">
   <item>Text</item>
+  <item>External Library File</item>
   <item>Spreadsheet</item>
   <item>Presentation</item>
   <item>DMS File</item>
   <item>Graphic</item>
+  <item>External Web Page</item>
   <item>PdfDocument</item>
-  <item>External Document</item>
  </portal_type>
  <portal_type id="File">
   <item>Role Definition</item>
