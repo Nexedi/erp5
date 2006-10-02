@@ -531,8 +531,8 @@ class TemplateTool (BaseTool):
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('dialog_id', 'view')
         psm = N_("Business+Templates+Updated+Successfully")
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s&dialog_category=object_exchange&selection_name=business_template_selection"
-                                  % (ret_url, psm))
+        REQUEST.RESPONSE.redirect("%s?cancel_url=%s&portal_status_message=%s&dialog_category=object_exchange&selection_name=business_template_selection"
+                                  % (ret_url, REQUEST.form.get('cancel_url', ''), psm))
                 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryList' )
