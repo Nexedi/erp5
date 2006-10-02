@@ -160,7 +160,11 @@ class ExternalWebPage(ExternalDocument):
     self.urldict={}
     self._p_changed=1
 
-  def _processData(self,s):
+  def _processData(self,s, inf):
+    # since this is a web page, we don't want anything else
+    # XXX we should find another way - like this, we end up with empty draft objects
+    if (inf.getmaintype(),inf.getsubtype())!=('text','html'):
+      raise SpiderException(100,'this is %s/%s' % (inf.getmaintype(),inf.getsubtype()))
     top=self._findTopObject()
     # record my url in top object
     top.addUrl(self.getQualifiedUrl())
@@ -170,11 +174,11 @@ class ExternalWebPage(ExternalDocument):
       # first find links in text
       rx=re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
       for ref in re.findall(rx, s):
-        if ref.startswith('javascript'):
+        # eliminate anchors and specials, select internal links
+        if ref.startswith('javascript') or ref.startswith('mailto'):
           continue
-        # XXX not sure where to store those already spidered
-        # for now, the only precaution against infinite loop is recursion depth
-        # select internal links
+        ref=re.sub('#.*','',ref)
+        if ref=='':continue
         baseref='/'.join(self.getQualifiedUrl().split('/')[:-1])
         if not ref.startswith('http'):
           # complete relative paths
