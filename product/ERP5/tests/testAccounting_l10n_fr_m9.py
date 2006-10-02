@@ -43,17 +43,17 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
   """Test Accounting M9 and Invoice Transmission Sheets.
   """
   RUN_ALL_TESTS = 1
-  purchase_invoice_transmission_sheet_portal_type = \
-        'Purchase Invoice Transmission Sheet'
+  invoice_transmission_sheet_portal_type = \
+        'Invoice Transmission Sheet'
 
   def getTitle(self):
     return "ERP5 Accounting l10n M9"
   
-  def getPurchaseInvoiceTransmissionSheetModule(self):
+  def getInvoiceTransmissionSheetModule(self):
     """Returns the module for purchase invoice transmission sheets.
     """
     return getattr( self.portal,
-                    'purchase_invoice_transmission_sheet_module',
+                    'invoice_transmission_sheet_module',
                     None )
   
   def getAccountingModule(self):
@@ -135,8 +135,8 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     return invoice
   
   def test_TransmissionSheetModule(self):
-    """Checks the purchase invoice transmission sheet module is installed."""
-    self.assertNotEquals(None, self.getPurchaseInvoiceTransmissionSheetModule())
+    """Checks the invoice transmission sheet module is installed."""
+    self.assertNotEquals(None, self.getInvoiceTransmissionSheetModule())
   
   def test_AccountingPlanInstallation(self):
     """Tests that the accounting plan is well installed."""
@@ -150,9 +150,9 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     invoice = self._createPurchaseInvoice(
                             destination_section_value=self.section,
                             source_section_value=self.mirror_section, )
-    transmission_sheet_module = self.getPurchaseInvoiceTransmissionSheetModule()
+    transmission_sheet_module = self.getInvoiceTransmissionSheetModule()
     transmission_sheet = transmission_sheet_module.newContent(
-            portal_type=self.purchase_invoice_transmission_sheet_portal_type)
+            portal_type=self.invoice_transmission_sheet_portal_type)
     self.assertEquals(transmission_sheet.getValidationState(), 'draft')
     # add an invoice to the transamission sheet
     invoice.setAggregateValue(transmission_sheet)
@@ -166,9 +166,9 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
   def test_TransmissionSheetEmitRefusedIfNoInvoice(self):
     """Transmission sheet cannot be emitted if it doesn't contain any invoice.
     """
-    transmission_sheet_module = self.getPurchaseInvoiceTransmissionSheetModule()
+    transmission_sheet_module = self.getInvoiceTransmissionSheetModule()
     transmission_sheet = transmission_sheet_module.newContent(
-            portal_type=self.purchase_invoice_transmission_sheet_portal_type)
+            portal_type=self.invoice_transmission_sheet_portal_type)
     self.assertEquals(transmission_sheet.getValidationState(), 'draft')
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transmission_sheet, 'emit_action')
