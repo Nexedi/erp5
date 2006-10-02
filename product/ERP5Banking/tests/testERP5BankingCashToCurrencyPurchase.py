@@ -34,6 +34,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from DateTime import DateTime
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -235,6 +236,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     self.assertEqual(self.cash_to_currency_purchase.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1')
     # check that its destination is guichet_1
     self.assertEqual(self.cash_to_currency_purchase.getDestination(), None)
+    self.setDocumentSourceReference(self.cash_to_currency_purchase)
 
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -400,10 +402,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     Deliver the cash sorting with a good user
     and check that the deliver of a cash tranfer have achieved
     """
-    #self.cash_to_currency_purchase.setSourceTotalAssetPrice('52400.0')
-    #     self.security_manager = AccessControl.getSecurityManager()
-    #     self.user = self.security_manager.getUser()
-    # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.cash_to_currency_purchase, 'deliver_action', wf_id='cash_to_currency_purchase_workflow')
     # execute tic
     self.stepTic()
