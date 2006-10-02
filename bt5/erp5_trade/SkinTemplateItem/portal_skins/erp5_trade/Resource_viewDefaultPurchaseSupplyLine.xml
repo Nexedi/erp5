@@ -85,24 +85,32 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_comment</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>matrixbox_price</string>
-                        <string>matrixbox_predicate_category_list</string>
                         <string>matrixbox_variation_category_list</string>
+                        <string>matrixbox_predicate_category_list</string>
+                        <string>matrixbox_base_price</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
+                        <string>my_priced_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_purchase_supply_line_price_currency</string>
+                        <string>my_base_price</string>
+                        <string>my_price_currency</string>
+                        <string>my_purchase_supply_line_base_price</string>
+                        <string>my_purchase_supply_line_start_date_range_max</string>
                       </list>
                     </value>
                 </item>
@@ -110,8 +118,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>total_quantity</string>
-                        <string>total_price</string>
+                        <string>my_p_variation_base_category_list</string>
+                        <string>my_purchase_supply_line_quantity_step_list</string>
                       </list>
                     </value>
                 </item>
@@ -120,7 +128,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryLine_viewPrice</string> </value>
+            <value> <string>Resource_viewDefaultPurchaseSupplyLine</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,7 +136,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DeliveryLine_viewPrice</string> </value>
+            <value> <string>Resource_viewDefaultSupplyLine</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

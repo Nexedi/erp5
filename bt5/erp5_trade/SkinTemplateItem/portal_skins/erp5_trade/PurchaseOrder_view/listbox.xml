@@ -330,7 +330,7 @@
                           <string>Total Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
@@ -375,7 +375,7 @@
                           <string>Total Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
@@ -470,6 +470,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -515,7 +519,7 @@
                           <string>Total Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
@@ -569,7 +573,7 @@
                           <string>Total Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
