@@ -89,10 +89,9 @@
             <value>
               <tuple>
                 <list>
-                  <string>nexedi</string>
                   <string>acl_users</string>
                 </list>
-                <string>yo</string>
+                <string>zope</string>
               </tuple>
             </value>
         </item>
@@ -597,7 +596,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Built</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -609,6 +608,12 @@
                 <string>edit</string>
                 <string>rebuild_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -655,7 +660,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Draft</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -663,6 +668,12 @@
               <tuple>
                 <string>edit</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
@@ -711,7 +722,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Modified</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -721,6 +732,12 @@
                 <string>build_action</string>
                 <string>edit</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
