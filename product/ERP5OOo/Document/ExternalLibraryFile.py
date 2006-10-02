@@ -126,6 +126,7 @@ class ExternalLibraryFile(ExternalDocument):
       for atr in self.portal_types[self.getPortalType()].getInstanceBaseCategoryList():
         n.setProperty(atr,self.getProperty(atr))
       # partial commits (otherwise packet may exceed mysql max size)
+      # XXX this should probably be deferred as portal_activities
       if i % 50 ==0:
         get_transaction().commit()
     self.log(len(lista))
