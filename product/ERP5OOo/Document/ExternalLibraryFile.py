@@ -112,7 +112,7 @@ class ExternalLibraryFile(ExternalDocument):
                     , PropertySheet.ExternalDocument
                     )
 
-  def _processData(self,s):
+  def _processData(self,s,inf):
     # remove current subobjects
     self.manage_delObjects([i.getId() for i in self.searchFolder(portal_type='Book Information')])
     # parse xml file and iterate over results
