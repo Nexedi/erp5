@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Purchase Invoice Transmission Sheet</string> </value>
+            <value> <string>Invoice Transmission Sheet</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

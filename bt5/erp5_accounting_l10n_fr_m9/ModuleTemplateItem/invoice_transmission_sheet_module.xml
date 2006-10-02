@@ -1,5 +1,5 @@
 <module>
- <id>purchase_invoice_transmission_sheet_module</id>
+ <id>invoice_transmission_sheet_module</id>
  <permission_list>
   <permission type='list'>
    <name>Access Transient Objects</name>
@@ -572,6 +572,9 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
+   <name>Manage extensions</name>
+  </permission>
+  <permission type='list'>
    <name>Manage languages</name>
    <role>Manager</role>
   </permission>
@@ -718,5 +721,5 @@
   </permission>
  </permission_list>
  <portal_type>Purchase Invoice Transmission Sheet Module</portal_type>
- <title>Purchase Invoice Transmission Sheet Module</title>
+ <title>Invoice Transmission Sheet Module</title>
 </module>

@@ -93,7 +93,7 @@ be a problem).</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Purchase Invoice Transmission Sheet Module</string> </value>
+            <value> <string>Invoice Transmission Sheet Module</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

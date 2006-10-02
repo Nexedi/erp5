@@ -1,5 +1,5 @@
 Account | M9Account
-Purchase Invoice Transmission Sheet | DefaultRoleDefinition
-Purchase Invoice Transmission Sheet | PurchaseInvoiceTransmissionSheet
-Purchase Invoice Transmission Sheet | SortIndex
-Purchase Invoice Transmission Sheet | Task
+Invoice Transmission Sheet | DefaultRoleDefinition
+Invoice Transmission Sheet | PurchaseInvoiceTransmissionSheet
+Invoice Transmission Sheet | SortIndex
+Invoice Transmission Sheet | Task

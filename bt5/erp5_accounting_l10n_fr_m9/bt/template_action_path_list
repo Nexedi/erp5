@@ -1,11 +1,11 @@
+Invoice Transmission Sheet Module | list_ui
+Invoice Transmission Sheet Module | sort_on
+Invoice Transmission Sheet Module | view
+Invoice Transmission Sheet | add_invoice
+Invoice Transmission Sheet | history
+Invoice Transmission Sheet | metadata
+Invoice Transmission Sheet | process_action
+Invoice Transmission Sheet | remove_invoice
+Invoice Transmission Sheet | view
 Purchase Invoice Transaction | jump_transmission_sheet
-Purchase Invoice Transmission Sheet Module | list_ui
-Purchase Invoice Transmission Sheet Module | sort_on
-Purchase Invoice Transmission Sheet Module | view
-Purchase Invoice Transmission Sheet | add_invoice
-Purchase Invoice Transmission Sheet | history
-Purchase Invoice Transmission Sheet | metadata
-Purchase Invoice Transmission Sheet | process_action
-Purchase Invoice Transmission Sheet | remove_invoice
-Purchase Invoice Transmission Sheet | view
 Sale Invoice Transaction | jump_transmission_sheet

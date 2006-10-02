@@ -2,7 +2,7 @@
  <portal_type id="Account">
   <item>M9Account</item>
  </portal_type>
- <portal_type id="Purchase Invoice Transmission Sheet">
+ <portal_type id="Invoice Transmission Sheet">
   <item>PurchaseInvoiceTransmissionSheet</item>
   <item>SortIndex</item>
   <item>Task</item>

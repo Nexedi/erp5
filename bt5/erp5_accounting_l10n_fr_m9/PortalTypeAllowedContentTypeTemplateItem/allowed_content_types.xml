@@ -1,8 +1,8 @@
 <allowed_content_type_list>
- <portal_type id="Purchase Invoice Transmission Sheet">
+ <portal_type id="Invoice Transmission Sheet">
   <item>Role Definition</item>
  </portal_type>
- <portal_type id="Purchase Invoice Transmission Sheet Module">
-  <item>Purchase Invoice Transmission Sheet</item>
+ <portal_type id="Invoice Transmission Sheet Module">
+  <item>Invoice Transmission Sheet</item>
  </portal_type>
 </allowed_content_type_list>
