@@ -209,7 +209,6 @@ def parseField(f):\n
     # This is an encapsulated editor\n
     # call it\n
     encapsulated_editor_list.append(v)\n
-    context.log(\'parseField\', k)\n
   elif v is not MARKER:\n
     if k.startswith(\'my_\'):\n
       # We only take into account\n
