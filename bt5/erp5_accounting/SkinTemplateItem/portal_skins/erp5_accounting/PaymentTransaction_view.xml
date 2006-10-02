@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -107,6 +113,7 @@
                         <string>my_source_reference</string>
                         <string>my_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_reference</string>
                         <string>my_resource</string>
                       </list>
                     </value>

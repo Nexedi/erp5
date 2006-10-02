@@ -104,6 +104,8 @@
                     <value>
                       <list>
                         <string>your_transaction_simulation_state</string>
+                        <string>my_show_parent_accounts</string>
+                        <string>my_gap_list</string>
                       </list>
                     </value>
                 </item>

@@ -185,10 +185,15 @@
         </tr>\n
         <tal:block tal:condition="python: VAT_infos[\'ratio\'] != 0">\n
           <tr>\n
-            <td colspan=2 align=left tal:content="python:here.getDescription()"></td>\n
+            <td colspan=2 align=left>\n
+              <tal:block tal:repeat="description_line python:here.getDescription().split(\'\\n\')">\n
+                <p tal:content="description_line">\n
+                </p>\n
+              </tal:block>\n
+            </td>\n
             <th colspan=3 align=right>\n
               <tal:block tal:replace="python: VAT_infos[\'title\']">TVA / VAT</tal:block> <br> \n
-              <tal:block tal:replace="python: (VAT_infos[\'ratio\'] or 0.0) * 100.0"/> % (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
+              <tal:block tal:replace="python: \'%.02f\' % ((VAT_infos[\'ratio\'] or 0.0) * 100.0)"/> % (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
             <td colspan=1 align=right tal:content="python: \'%.02f\' % round(VAT_infos[\'total\'], 2)"></td>\n
           </tr>\n
         </tal:block>\n

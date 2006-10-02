@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -119,6 +125,7 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_description</string>
+                        <string>my_destination_reference</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>

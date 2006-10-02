@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
@@ -63,6 +69,7 @@
               <list>
                 <string>panel1</string>
                 <string>panel2</string>
+                <string>panel3</string>
               </list>
             </value>
         </item>
@@ -74,22 +81,28 @@
                     <key> <string>panel1</string> </key>
                     <value>
                       <list>
-                        <string>from_date</string>
-                        <string>at_date</string>
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>
+                        <string>at_date</string>
+                        <string>at_date_balance</string>
+                        <string>balance</string>
+                        <string>from_date</string>
+                        <string>from_date_balance</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>panel2</string> </key>
+                    <key>                 <string>panel2</string> </key>
                     <value>
                       <list>
                         <string>gap</string>
-                        <string>from_date_balance</string>
-                        <string>at_date_balance</string>
-                        <string>balance</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>panel3</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
