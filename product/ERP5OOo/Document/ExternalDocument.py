@@ -101,10 +101,11 @@ class ExternalDocument(DMSFile):
     op=Opener()
     f=op.open(self.getQualifiedUrl())
     s=f.read()
-    return s
+    inf=f.info()
+    return s, inf
 
   security.declarePrivate('_processData')
-  def _processData(self,s):
+  def _processData(self,s, inf):
     raise Exception('this should be implemented in subclass')
 
   security.declareProtected(Permissions.ModifyPortalContent,'resetTopObject')
@@ -124,7 +125,7 @@ class ExternalDocument(DMSFile):
     returned value tells us if it succeeded or failed
     """
     try:
-      s=self._spiderSource()
+      s,inf=self._spiderSource()
     except Exception,e:
       self.log(e,level=1)
       self.setStatusMessage("Tried on %s: %s" % (self._time(),str(e)))
@@ -134,7 +135,7 @@ class ExternalDocument(DMSFile):
       self.setStatusMessage("Tried on %s: got empty string" % self._time())
       return False
     try:
-      s=self._processData(s)
+      s=self._processData(s,inf)
     except Exception,e:
       self.log(e,level=1)
       self.setStatusMessage("Spidered on %s, %i chars, but could not process; reason: %s" % (self._time(), chars, str(e)))
