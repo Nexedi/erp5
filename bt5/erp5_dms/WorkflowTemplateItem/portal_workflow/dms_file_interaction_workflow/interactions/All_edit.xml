@@ -85,9 +85,7 @@
         <item>
             <key> <string>script_name</string> </key>
             <value>
-              <list>
-                <string>CreateNewOnUpload</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>

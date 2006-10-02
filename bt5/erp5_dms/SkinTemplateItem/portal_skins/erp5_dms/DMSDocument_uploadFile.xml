@@ -68,9 +68,41 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>o=state_change.object\n
-mod=o.aq_parent\n
-return context.REQUEST.RESPONSE.redirect(mod.absolute_url())\n
+            <value> <string>f=kw.get(\'file\',None)\n
+typ=context.getPortalType()\n
+\n
+if f is None or not f:\n
+  raise Exception(\'DMSDocument_uploadFile called without file argument\')\n
+\n
+fname=f.filename\n
+# we check for appropriate file type (by extension, using content_type_registry)\n
+# we accept or suggest appropriate portal type\n
+ctype=context.content_type_registry.findTypeName(fname,None,None)\n
+if ctype is None and typ!=\'DMS File\':\n
+  raise Exception(\'This file should be uploaded into DMS File\')\n
+if ctype is not None and ctype!=typ:\n
+  raise Exception(\'This file should be uploaded into \'+ctype)\n
+\n
+if hasattr(context,\'data\'): # this is a re-upload, we create a \'copy\'\n
+  docmod=context.restrictedTraverse(\'document_module\')\n
+  newob=docmod.newContent(portal_type=typ)\n
+  copylist=context.portal_types[typ].getInstanceBaseCategoryList()\n
+  # we copy many things, ingestion script may then overwrite some of these\n
+  # we rely on ingestion script to determine coordinates\n
+  copylist+=[\'title\',\'short_title\',\'index\',\'description\',\'subject\']\n
+  for a in copylist:\n
+    newob.setProperty(a,context.getProperty(a))\n
+  ob=newob\n
+  msg=\'object already had a file - a new object has been created\'\n
+else:\n
+  ob=context\n
+  msg=\'file uploaded\'\n
+\n
+ob.manage_upload(f)\n
+ob.DMS_ingestFile(f.filename)\n
+url=ob.absolute_url()  \n
+\n
+return context.REQUEST.RESPONSE.redirect(url+\'/view?portal_status_message=\'+msg)\n
 </string> </value>
         </item>
         <item>
@@ -87,7 +119,7 @@ return context.REQUEST.RESPONSE.redirect(mod.absolute_url())\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>*a,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -107,17 +139,31 @@ return context.REQUEST.RESPONSE.redirect(mod.absolute_url())\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
+                            <string>a</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>o</string>
-                            <string>mod</string>
+                            <string>None</string>
+                            <string>f</string>
                             <string>context</string>
+                            <string>typ</string>
+                            <string>Exception</string>
+                            <string>fname</string>
+                            <string>ctype</string>
+                            <string>hasattr</string>
+                            <string>docmod</string>
+                            <string>newob</string>
+                            <string>_getitem_</string>
+                            <string>copylist</string>
+                            <string>_getiter_</string>
+                            <string>ob</string>
+                            <string>msg</string>
+                            <string>url</string>
                           </tuple>
                         </value>
                     </item>
@@ -134,7 +180,7 @@ return context.REQUEST.RESPONSE.redirect(mod.absolute_url())\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CreateNewOnUpload</string> </value>
+            <value> <string>DMSDocument_uploadFile</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

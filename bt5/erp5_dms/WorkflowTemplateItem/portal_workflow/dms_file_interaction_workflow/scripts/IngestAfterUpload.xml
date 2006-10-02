@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=state_change.object\n
+            <value> <string># this will go away - we don\'t upload files in edit\n
+ob=state_change.object\n
 kw=ob.REQUEST\n
 f=kw.get(\'my_file\',None)\n
 \n
