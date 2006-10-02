@@ -113,10 +113,11 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
       need to be installed to run the test on.
     """
     return ('erp5_base'
-           , 'baobab_unit_test-0.1.bt5'
+           , 'erp5_trade'
+           , 'erp5_accounting'
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
            , 'erp5_banking_inventory'
-           , 'erp5_banking_cash_movement-0.1.bt5'
+           , 'erp5_banking_cash'
            # erp5_banking_cash contains all method for cash movement
            )
 
@@ -242,9 +243,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_movement.getSource(), 'site/testsite/paris/caveau/externes/encaisse_des_externes')
     # check that its destination is vault_destination
     self.assertEqual(self.cash_movement.getDestination(), 'site/testsite/madrid/caveau/reserve/encaisse_des_billets_et_monnaies')
-
-
-
+    self.setDocumentSourceReference(self.cash_movement)
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
     """
