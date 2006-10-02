@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>PurchaseInvoiceTransmissionSheet_addInvoice</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -67,10 +67,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
+                <string>Default</string>
                 <string>right</string>
                 <string>center</string>
-                <string>hidden</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -79,7 +79,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>Default</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -88,12 +94,6 @@
                 </item>
                 <item>
                     <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchaseInvoiceTransmissionSheetModule_viewPurchaseInvoiceTransmissionSheetList</string> </value>
+            <value> <string>InvoiceTransmissionSheet_viewAddInvoiceDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,15 +117,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewContentList</string> </value>
+            <value> <string>PurchaseInvoiceTransmissionSheet_viewAddInvoiceDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
-        </item>
-        <item>
-            <key> <string>rid</string> </key>
-            <value> <int>-1722436574</int> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -137,13 +133,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Purchase Invoice Transmission Sheet Module</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Add Invoice</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

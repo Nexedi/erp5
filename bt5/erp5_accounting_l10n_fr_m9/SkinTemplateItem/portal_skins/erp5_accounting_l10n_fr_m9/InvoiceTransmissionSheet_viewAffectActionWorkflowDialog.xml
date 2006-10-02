@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Workflow_statusModify</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -67,10 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
-                <string>right</string>
-                <string>center</string>
-                <string>hidden</string>
+                <string>left</string>
               </list>
             </value>
         </item>
@@ -79,29 +76,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>your_comment</string>
+                        <string>your_agent</string>
+                        <string>your_workflow_action</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -109,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchaseInvoiceTransmissionSheet_viewInvoiceList</string> </value>
+            <value> <string>InvoiceTransmissionSheet_viewAffectActionWorkflowDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,11 +98,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PurchaseInvoiceTransmissionSheet_viewInvoiceList</string> </value>
+            <value> <string>BaseWorkflow_viewWorkflowActionDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_view_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -133,7 +114,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Purchase Invoice Transmission Sheet</string> </value>
+            <value> <string>Validate Workflow Action</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

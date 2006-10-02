@@ -106,7 +106,7 @@ string:${object_url}/Folder_viewWorkflowActionDialog?workflow_action=process_act
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:request.get(\'form_id\', \'\') == "PurchaseInvoiceTransmissionSheet_viewInvoiceList"</string> </value>
+            <value> <string>python:request.get(\'form_id\', \'\') == "InvoiceTransmissionSheet_viewInvoiceList"</string> </value>
         </item>
       </dictionary>
     </pickle>

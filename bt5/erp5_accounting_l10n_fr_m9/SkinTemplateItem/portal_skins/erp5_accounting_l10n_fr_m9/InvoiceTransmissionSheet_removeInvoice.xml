@@ -168,7 +168,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchaseInvoiceTransmissionSheet_removeInvoice</string> </value>
+            <value> <string>InvoiceTransmissionSheet_removeInvoice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

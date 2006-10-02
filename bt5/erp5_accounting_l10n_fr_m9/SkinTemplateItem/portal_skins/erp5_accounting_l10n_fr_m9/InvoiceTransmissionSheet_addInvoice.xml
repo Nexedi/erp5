@@ -68,14 +68,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [(pers.getTitle(), pers.getRelativeUrl())\n
-        for pers in context.getPortalObject().person_module.contentValues()]\n
+            <value> <string>selection = context.portal_selections.getSelectionFor(\n
+                            "transmission_sheet_add_invoice_selection")\n
+\n
+for uid in uids:\n
+  invoice = context.portal_catalog.getObject(uid)\n
+  aggregate_list = invoice.getAggregateValueList()\n
+  invoice.setAggregateValueList(aggregate_list + [context])\n
+\n
+return context.REQUEST.RESPONSE.redirect(\n
+        "%s/view?portal_status_message=Invoice+Added." % context.absolute_url())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -92,7 +106,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>uids=[], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,18 +126,21 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
+                            <string>uids</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
-                            <string>pers</string>
+                            <string>context</string>
+                            <string>selection</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>invoice</string>
+                            <string>aggregate_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,17 +152,40 @@
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <list/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TransmissionSheet_getValidAssigneeItemList</string> </value>
+            <value> <string>InvoiceTransmissionSheet_addInvoice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

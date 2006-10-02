@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/TransmissionSheet_getValidAssigneeItemList</string> </value>
+            <value> <string>here/InvoiceTransmissionSheet_getValidAssigneeItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
