@@ -334,11 +334,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>installation_state</string>
+                          <string>translated_installation_state_title</string>
                           <string>Installation State</string>
                         </tuple>
                         <tuple>
-                          <string>building_state</string>
+                          <string>translated_building_state_title</string>
                           <string>Building State</string>
                         </tuple>
                       </list>
@@ -379,11 +379,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>installation_state</string>
+                          <string>translated_installation_state_title</string>
                           <string>Installation State</string>
                         </tuple>
                         <tuple>
-                          <string>building_state</string>
+                          <string>translated_building_state_title</string>
                           <string>Building State</string>
                         </tuple>
                       </list>
@@ -590,11 +590,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>installation_state</string>
+                          <string>translated_installation_state_title</string>
                           <string>Installation State</string>
                         </tuple>
                         <tuple>
-                          <string>building_state</string>
+                          <string>translated_building_state_title</string>
                           <string>Building State</string>
                         </tuple>
                       </list>

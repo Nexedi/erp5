@@ -113,8 +113,8 @@
                         <string>my_title</string>
                         <string>my_version</string>
                         <string>my_revision</string>
-                        <string>my_building_state</string>
-                        <string>my_installation_state</string>
+                        <string>my_translated_building_state_title</string>
+                        <string>my_translated_installation_state_title</string>
                         <string>my_description</string>
                         <string>my_maintainer_list</string>
                       </list>
