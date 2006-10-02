@@ -30,9 +30,7 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -44,23 +42,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>download</string> </value>
+            <value> <string>file_upload</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Modify portal content</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>40.0</float> </value>
+            <value> <float>5.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Original File</string> </value>
+            <value> <string>Upload file</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -83,26 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_download</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:object.hasFile()</string> </value>
+            <value> <string>string:${object_url}/DMS_FileUploadDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
