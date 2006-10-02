@@ -110,31 +110,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                     i18n:translate="" i18n:domain="ui">Go</span>\n
             </button>\n
           </div>\n
-          <div class="content">\n
-            <div tal:condition="python: len(left_group) > 0 or len(right_group) > 0"\n
-                class="top_group">\n
-              <div tal:condition="python: len(left_group) > 0"\n
-                  class="left">\n
-                <tal:block tal:repeat="field left_group">\n
-                  <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
-                </tal:block>\n
-              </div>\n
-              <div tal:condition="python: len(right_group) > 0"\n
-                  class="right">\n
-                <tal:block tal:repeat="field right_group">\n
-                  <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
-                </tal:block>\n
-              </div>\n
-              <p class="clear">&nbsp;</p>\n
-            </div>\n
-            <div tal:condition="python: len(center_group) > 0"\n
-                class="center">\n
-              <tal:block tal:repeat="field center_group">\n
-                <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
-                <p class="clear"></p>\n
+          <div class="content"\n
+                      tal:define="group_list   python: [];\n
+                      dummy        python: group_list.extend([here.ERP5XhtmlStyle_getFormGroupTitleAndId(x) for x in form.get_groups(include_empty=0) if x != \'bottom\']);\n
+                      gid_list     python: \' \'.join([x[0] for x in group_list]);">\n
+            <tal:block tal:repeat="group group_list">\n
+              <tal:block tal:define="gid     python: group[0];\n
+                                    gtitle  python: group[1];\n
+                                    goid    python: group[2];">\n
+                <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
+                  tal:attributes="class python: gid;\n
+                                  id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
+                  <legend tal:content="python: gtitle" class="group_title"/>\n
+                  <tal:block tal:repeat="field python: form.get_fields_in_group(goid)">\n
+                    <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+                  </tal:block>\n
+                </fieldset>\n
+                <p tal:condition="python: gid.find(\'right\') >= 0 or (gid.find(\'left\') >= 0 and \'right\' not in gid_list)" class="clear"/>\n
               </tal:block>\n
-            </div>\n
-          <p class="clear"></p>\n
+            </tal:block>\n
+            <p class="clear"></p>\n
           </div>\n
         </div>\n
       </tal:block>\n

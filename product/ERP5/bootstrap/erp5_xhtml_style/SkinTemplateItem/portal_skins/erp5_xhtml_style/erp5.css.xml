@@ -614,6 +614,13 @@ fieldset.bottom .field label {\n
   display: none;\n
 }\n
 \n
+.login fieldset,\n
+.dialog_box .left,\n
+.dialog_box .right,\n
+.dialog_box .center {\n
+  border-width: 0;\n
+}\n
+\n
 .content .field {\n
   padding-bottom: 5px;\n
 }\n
@@ -832,7 +839,6 @@ fieldset.bottom .field label {\n
 \n
 #logged_in_as {\n
   float: right;\n
-  font-size: 90%;\n
 }\n
 \n
 #logged_in_as .logged_txt{\n
@@ -951,7 +957,9 @@ fieldset.bottom .field label {\n
   padding-left: 10px;\n
 }\n
 \n
-.ListSummary * {\n
+.ListSummary #listbox_title,\n
+.ListSummary #listbox_record_number,\n
+.ListSummary #listbox_item_number {\n
   font-size: 90%;\n
 }\n
 \n
