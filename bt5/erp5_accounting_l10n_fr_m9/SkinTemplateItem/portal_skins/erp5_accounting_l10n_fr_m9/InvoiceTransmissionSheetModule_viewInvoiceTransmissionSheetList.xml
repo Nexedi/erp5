@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewContentList</string> </value>
+            <value> <string>InvoiceTransmissionSheetModule_viewInvoiceTransmissionSheetList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -137,7 +137,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Purchase Invoice Transmission Sheet Module</string> </value>
+            <value> <string>Invoice Transmission Sheet Module</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

@@ -720,6 +720,6 @@
    <role>Manager</role>
   </permission>
  </permission_list>
- <portal_type>Purchase Invoice Transmission Sheet Module</portal_type>
+ <portal_type>Invoice Transmission Sheet Module</portal_type>
  <title>Invoice Transmission Sheet Module</title>
 </module>

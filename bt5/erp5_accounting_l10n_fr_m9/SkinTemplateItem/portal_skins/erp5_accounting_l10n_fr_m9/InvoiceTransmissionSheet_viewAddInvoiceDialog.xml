@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>PurchaseInvoiceTransmissionSheet_addInvoice</string> </value>
+            <value> <string>InvoiceTransmissionSheet_addInvoice</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PurchaseInvoiceTransmissionSheet_viewAddInvoiceDialog</string> </value>
+            <value> <string>InvoiceTransmissionSheet_viewAddInvoiceDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
