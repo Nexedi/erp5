@@ -75,8 +75,8 @@ packing_list = sci.object\n
 delivery_tool = sci.getPortal().portal_deliveries\n
 LOG("packing_list : %s"%packing_list.getPath())\n
 \n
-if hasattr(delivery_tool, \'sale_invoice_builder\') :\n
-  delivery_tool.sale_invoice_builder.activate(\n
+if hasattr(delivery_tool, \'task_invoice_builder\') :\n
+  delivery_tool.task_invoice_builder.activate(\n
         after_method_id = [ \'expand\', \n
                             \'recursiveImmediateReindexObject\',\n
                             \'immediateReindexObject\' ],\n

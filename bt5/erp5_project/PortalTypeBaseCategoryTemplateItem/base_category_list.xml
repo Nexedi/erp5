@@ -10,6 +10,9 @@
   <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>source_project</item>
+ </portal_type>
  <portal_type id="Task">
   <item>predecessor</item>
  </portal_type>

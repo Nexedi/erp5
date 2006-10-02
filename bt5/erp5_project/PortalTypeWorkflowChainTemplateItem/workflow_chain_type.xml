@@ -21,6 +21,10 @@
  </chain>
  <chain>
   <type>Task Report</type>
-  <workflow>packing_list_causality_workflow, packing_list_interaction_workflow, edit_workflow, task_report_workflow</workflow>
+  <workflow>task_report_interaction_workflow, edit_workflow, task_report_causality_workflow, task_report_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Task Report Line</type>
+  <workflow>task_report_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

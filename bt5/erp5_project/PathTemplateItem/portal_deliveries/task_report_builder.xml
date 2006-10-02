@@ -67,7 +67,6 @@
               <tuple>
                 <string>OrderMovementGroup</string>
                 <string>DateMovementGroup</string>
-                <string>PathMovementGroup</string>
                 <string>SectionPathMovementGroup</string>
               </tuple>
             </value>
@@ -77,8 +76,9 @@
             <value>
               <tuple>
                 <string>ResourceMovementGroup</string>
+                <string>SourceProjectMovementGroup</string>
                 <string>TitleMovementGroup</string>
-                <string>AggregateMovementGroup</string>
+                <string>PathMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
               </tuple>
             </value>

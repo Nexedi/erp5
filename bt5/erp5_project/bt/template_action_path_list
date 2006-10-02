@@ -67,7 +67,6 @@ Task Report Module | list_ui
 Task Report Module | planning_report
 Task Report Module | sort_on
 Task Report Module | view
-Task Report | apply_trade_condition
 Task Report | expense_view
 Task Report | history
 Task Report | jump_to_related_purchase_packing_list
@@ -78,7 +77,6 @@ Task Report | print
 Task Report | profile_view
 Task Report | view
 Task Report | view_discount
-Task | apply_trade_condition
 Task | constraint
 Task | history
 Task | jump_to_related_purchase_packing_list

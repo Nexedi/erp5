@@ -73,6 +73,20 @@
 # First, copy Order properties\n
 packing_list.PackingList_copyOrderProperties()\n
 \n
+packing_list = context\n
+related_order = packing_list.getCausalityValue()\n
+\n
+if packing_list.getSimulationState()==\'draft\':\n
+  packing_list.edit(\n
+    comment = related_order.getComment(),\n
+    delivery_mode = related_order.getDeliveryMode(),\n
+    incoterm = related_order.getIncoterm(),\n
+    source_administration_value = related_order.getSourceAdministrationValue(),\n
+    title = related_order.getTitle(),\n
+    destination = related_order.getTitle()\n
+  )\n
+\n
+\n
 # If security definitions are implemented on the packing list, it is time to apply them\n
 packing_list.assignRoleToSecurityGroup()\n
 \n
@@ -154,6 +168,7 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                             <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
+                            <string>related_order</string>
                             <string>source_person</string>
                             <string>destination_decision_person</string>
                             <string>None</string>

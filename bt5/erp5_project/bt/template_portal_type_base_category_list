@@ -3,6 +3,7 @@ Project Line | requirement
 Project Milestone | predecessor
 Project Milestone | requirement
 Project | predecessor
+Sale Invoice Transaction | source_project
 Task Line | requirement
 Task Report Line | requirement
 Task Report | aggregate
