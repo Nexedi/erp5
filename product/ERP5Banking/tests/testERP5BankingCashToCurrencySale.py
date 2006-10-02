@@ -206,8 +206,15 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Create a cash sorting document and check it
     """
-    # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
-    self.cash_to_currency_sale = self.cash_to_currency_sale_module.newContent(id='cash_to_currency_sale_1', portal_type='Cash To Currency Sale', source_value=self.guichet, destination_value=None, resource_value = self.currency_2, source_total_asset_price=100.0, discount = 3000.0, quantity = 70000.0)
+    # Create Cash sorting 
+    self.cash_to_currency_sale = self.cash_to_currency_sale_module.newContent(
+                                  id='cash_to_currency_sale_1', 
+                                  portal_type='Cash To Currency Sale', 
+                                  source_value=self.guichet, 
+                                  destination_value=None, 
+                                  resource_value = self.currency_2, 
+                                  source_total_asset_price=100.0, 
+                                  discount = 3000.0, quantity = 70000.0)
     # execute tic
     self.stepTic()
     # check we have only one cash sorting
@@ -220,6 +227,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_to_currency_sale.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1')
     # check that its destination is guichet_1
     self.assertEqual(self.cash_to_currency_sale.getDestination(), None)
+    self.setDocumentSourceReference(self.cash_to_currency_sale)
 
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -433,7 +441,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'Tic CheckTotal ' \
                     + 'DeliverCashToCurrencySale Tic ' \
                     + 'CheckFinalInventoryGuichet_Entrante ' \
-                    + 'CheckFinalInventoryGuichet_Sortante'
+                    + 'CheckFinalInventoryGuichet_Sortante' 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
