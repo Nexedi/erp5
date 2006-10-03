@@ -75,39 +75,52 @@ from Products.ERP5Type.Utils import convertToUpperCase\n
 OOoParser = OOoParser()\n
 \n
 \n
-def getIdFromString(string=None):\n
+\n
+def getIDFromString(string=None):\n
   """\n
-    This function transform a string to a safe id.\n
-    It is used here to create a safe category id from a string.\n
+    This function transform a string to a safe and beautiful ID.\n
+    It is used here to create a safe category ID from a string.\n
   """\n
-  clean_id = \'\'\n
   if string == None:\n
     return None\n
-  translation_map = { "a": [\'\\xe0\']\n
-                    , "e": [\'\\xe9\', \'\\xe8\']\n
+  clean_id = \'\'\n
+  translation_map = { \'a\'  : [u\'\\xe0\', u\'\\xe3\']\n
+                    , \'e\'  : [u\'\\xe9\', u\'\\xe8\']\n
+                    , \'i\'  : [u\'\\xed\']\n
+                    , \'u\'  : [u\'\\xf9\']\n
+                    , \'_\'  : [\' \', \'+\']\n
+                    , \'-\'  : [\'-\', u\'\\u2013\']\n
+                    , \'and\': [\'&\']\n
                     }\n
+  # Replace odd chars by safe ascii\n
   string = string.lower()\n
   string = string.strip()\n
-  # oocalc inserts some strange chars when you press - key in a text cell.\n
-  # Following line is a workaround for this, because \\u2013 does not exist in latin1\n
-  string = string.replace(u\'\\u2013\', \'-\')\n
-  for char in string.encode(\'iso8859_1\'):\n
-    if char == \'_\' or char.isalnum():\n
+  for (safe_char, char_list) in translation_map.items():\n
+    for char in char_list:\n
+      string = string.replace(char, safe_char)\n
+  # Exclude all non alphanumeric chars\n
+  for char in string:\n
+    if char.isalnum() or char in translation_map.keys():\n
       clean_id += char\n
-    elif char.isspace() or char in (\'+\', \'-\'):\n
-      clean_id += \'_\'\n
-    else:\n
-      for (safe_char, char_list) in translation_map.items():\n
-        if char in char_list:\n
-          clean_id += safe_char\n
-          break\n
+  # Delete leading and trailing char which are not alpha-numerics\n
+  # This prevent having IDs with starting underscores\n
+  while len(clean_id) > 0 and not clean_id[0].isalnum():\n
+    clean_id = clean_id[1:]\n
+  while len(clean_id) > 0 and not clean_id[-1].isalnum():\n
+    clean_id = clean_id[:-1]\n
   return clean_id\n
+\n
 \n
 \n
 # Extract tables from the speadsheet file\n
 OOoParser.openFile(import_file)\n
 filename = OOoParser.getFilename()\n
 spreadsheets = OOoParser.getSpreadsheetsMapping()\n
+\n
+# Some statistics\n
+new_category_counter     = 0\n
+updated_category_counter = 0\n
+total_category_counter   = 0\n
 \n
 \n
 for table_name in spreadsheets.keys():\n
@@ -119,7 +132,7 @@ for table_name in spreadsheets.keys():\n
   column_index = 0\n
   path_index = 0\n
   for column in columns_header:\n
-    column_id = getIdFromString(column)\n
+    column_id = getIDFromString(column)\n
     # This give us the information that the path definition has started\n
     path_def_started = \'path_0\' in property_map.values()\n
     # The path of the category has started to be expressed\n
@@ -147,28 +160,51 @@ for table_name in spreadsheets.keys():\n
   # The first category is the Base category\n
   # 1 table = 1 base category\n
   base_category_name = table_name\n
-  base_category_id = getIdFromString(base_category_name)\n
-  categories.append({ \'path\'  : base_category_id\n
-                    , \'title\' : base_category_name\n
+  base_category_id = getIDFromString(base_category_name)\n
+  categories.append({ \'path\' : base_category_id\n
+                    , \'title\': base_category_name\n
                     })\n
+\n
   # This path_elements help us to reconstruct the absolute path\n
   path_elements = []\n
   for line in spreadsheets[table_name][1:]:\n
-    category_properties = {}\n
+\n
     # Exclude empty lines\n
     if line.count(\'\') + line.count(None) == len(line):\n
       continue\n
-    # Analyse every cells of the line\n
+\n
+    # Prefetch line datas\n
     cell_index = 0\n
+    line_data = {}\n
     for cell in line:\n
-      # Ignore empty cells, do the test on the generated id because getIdFromString() is more restrictive\n
-      cell_id = getIdFromString(cell)\n
+      # Get the property corresponding to the cell data\n
+      property_id = property_map[cell_index]\n
+      line_data[property_id] = cell\n
+      cell_index += 1\n
+\n
+    # Analyse every cells of the line\n
+    category_properties = {}\n
+    cell_index = 0\n
+    for (property_id, cell_data) in line_data.items():\n
+\n
+      # Try to generate a cell id from cell data\n
+      cell_id = getIDFromString(cell_data)\n
+      # Returned cell_id can be None or \'\' (empty string). Both have different meaning:\n
+      #   None : no data was inputed by the user.\n
+      #   \'\'   : data entered by the user, but no good transformation of the string to a safe ID.\n
+      # In case of an empty string, we should use the title as path id if present.\n
+\n
+      # If the cell_id tranformation return anything, and if the cell is a path item,\n
+      # we should try to use the line title (if exist) as basic info to get the safe id.\n
+      if cell_id == \'\' and property_id.startswith(\'path_\'):\n
+        if line_data.has_key(\'title\'):\n
+          cell_id = getIDFromString(line_data[\'title\'])\n
+\n
+      # Ignore empty cells\n
       if cell_id not in (\'\', None):\n
-        # Get the property corresponding to the cell data\n
-        property_id = property_map[cell_index]\n
         # Handle normal properties\n
         if not property_id.startswith(\'path_\'):\n
-          category_properties[property_id] = cell\n
+          category_properties[property_id] = cell_data\n
         # Handle \'path\' property\n
         else:\n
           path_element_id = cell_id\n
@@ -186,22 +222,28 @@ for table_name in spreadsheets.keys():\n
                 # Get the next depth\n
                 break\n
           category_properties[\'path\'] = \'/\'.join([base_category_id,] + absolut_path_element_list[::-1])\n
+\n
           # If no title, get it from raw cell value\n
           if \'title\' not in category_properties.keys():\n
-            clean_title = cell.strip()\n
+            clean_title = cell_data.strip()\n
             if clean_title != cell_id:\n
               category_properties[\'title\'] = clean_title\n
+\n
           # Save the path element\n
-          path_elements.append({ \'depth\' : element_depth\n
-                               , \'value\' : path_element_id\n
+          path_elements.append({ \'depth\': element_depth\n
+                               , \'value\': path_element_id\n
                                })\n
+\n
+      # Proceed to next cell\n
       cell_index += 1\n
+\n
     if len(category_properties) > 0 and \'path\' in category_properties.keys():\n
       categories.append(category_properties)\n
 \n
-\n
   # Create categories\n
+  total_category_counter += len(categories)\n
   for category in categories:\n
+    is_new_category = False\n
     keys = category.keys()\n
     if \'path\' in keys:\n
       base_path_obj = context.portal_categories\n
@@ -209,6 +251,7 @@ for table_name in spreadsheets.keys():\n
       for category_id in category[\'path\'].split(\'/\'):\n
         # The current category is not existing\n
         if category_id not in base_path_obj.contentIds():\n
+\n
           # Create the category\n
           if is_base_category:\n
             category_type = \'Base Category\'\n
@@ -218,6 +261,8 @@ for table_name in spreadsheets.keys():\n
                                   , id                = category_id\n
                                   , immediate_reindex = 1\n
                                   )\n
+          is_new_category = True\n
+          new_category_counter += 1\n
         base_path_obj = base_path_obj[category_id]\n
         is_base_category = False\n
       new_category = base_path_obj\n
@@ -225,20 +270,37 @@ for table_name in spreadsheets.keys():\n
       # Set the category properties\n
       for key in keys:\n
         if key != \'path\':\n
-          method_id = "set" + convertToUpperCase(key)\n
+          setter_method_id = "set" + convertToUpperCase(key)\n
+          getter_method_id = "get" + convertToUpperCase(key)\n
           value = category[key]\n
           if value not in (\'\', None):\n
-            if hasattr(new_category, method_id):\n
-              method = getattr(new_category, method_id)\n
-              if key != \'int_index\':\n
-                # Convert the value to something like \'\\xc3\\xa9\' not \'\\xc3\\xa9\'\n
-                method(value.encode(\'UTF-8\'))\n
-              else:\n
-                method(int(value))\n
+            # Get the current value of the attribute\n
+            if hasattr(new_category, getter_method_id):\n
+              getter = getattr(new_category, getter_method_id)\n
+              previous_value = getter()\n
+              new_value = value.encode(\'UTF-8\')\n
+              # Do not update or set object attribute if the vale remain the same.\n
+              if previous_value != new_value:\n
+                if hasattr(new_category, setter_method_id):\n
+                  setter = getattr(new_category, setter_method_id)\n
+                  setter(new_value)\n
+                # Update statistics\n
+                if not is_new_category:\n
+                  updated_category_counter += 1\n
+\n
 \n
 \n
 # Import is a success, go back to the portal_categories tool\n
-return context.REQUEST.RESPONSE.redirect(context.portal_categories.absolute_url() + \'/view?portal_status_message=\' + filename + \'+successfully+imported\')\n
+return context.REQUEST.RESPONSE.redirect(\n
+  "%s/view?portal_status_message=%s+categories+found+in+%s+:+%s+created,+%s+updated,+%s+untouched."\n
+  % ( context.portal_categories.absolute_url()\n
+    , total_category_counter\n
+    , filename\n
+    , new_category_counter\n
+    , updated_category_counter\n
+    , total_category_counter - new_category_counter - updated_category_counter\n
+    )\n
+)\n
 
 
 ]]></string> </value>
@@ -290,10 +352,13 @@ return context.REQUEST.RESPONSE.redirect(context.portal_categories.absolute_url(
                             <string>Products.ERP5Type.Utils</string>
                             <string>convertToUpperCase</string>
                             <string>None</string>
-                            <string>getIdFromString</string>
+                            <string>getIDFromString</string>
                             <string>_getattr_</string>
                             <string>filename</string>
                             <string>spreadsheets</string>
+                            <string>new_category_counter</string>
+                            <string>updated_category_counter</string>
+                            <string>total_category_counter</string>
                             <string>_getiter_</string>
                             <string>table_name</string>
                             <string>_getitem_</string>
@@ -311,12 +376,14 @@ return context.REQUEST.RESPONSE.redirect(context.portal_categories.absolute_url(
                             <string>base_category_id</string>
                             <string>path_elements</string>
                             <string>line</string>
-                            <string>category_properties</string>
                             <string>len</string>
                             <string>cell_index</string>
+                            <string>line_data</string>
                             <string>cell</string>
-                            <string>cell_id</string>
                             <string>property_id</string>
+                            <string>category_properties</string>
+                            <string>cell_data</string>
+                            <string>cell_id</string>
                             <string>path_element_id</string>
                             <string>absolut_path_element_list</string>
                             <string>int</string>
@@ -326,6 +393,8 @@ return context.REQUEST.RESPONSE.redirect(context.portal_categories.absolute_url(
                             <string>element</string>
                             <string>clean_title</string>
                             <string>category</string>
+                            <string>False</string>
+                            <string>is_new_category</string>
                             <string>keys</string>
                             <string>context</string>
                             <string>base_path_obj</string>
@@ -333,14 +402,17 @@ return context.REQUEST.RESPONSE.redirect(context.portal_categories.absolute_url(
                             <string>is_base_category</string>
                             <string>category_id</string>
                             <string>category_type</string>
-                            <string>False</string>
                             <string>new_category</string>
                             <string>key</string>
-                            <string>method_id</string>
+                            <string>setter_method_id</string>
+                            <string>getter_method_id</string>
                             <string>value</string>
                             <string>hasattr</string>
                             <string>getattr</string>
-                            <string>method</string>
+                            <string>getter</string>
+                            <string>previous_value</string>
+                            <string>new_value</string>
+                            <string>setter</string>
                           </tuple>
                         </value>
                     </item>
