@@ -2130,7 +2130,17 @@ class Base( CopyContainer,
     The code to support this is in the user folder.
     """
     def cashed_getAcquireLocalRoles(portal_type):
-      return self._getTypesTool()[self.getPortalType()].acquire_local_roles
+      types_tool = self._getTypesTool()
+      portal_type = self.getPortalType()
+      if hasattr(types_tool, portal_type):
+        # Property is defined on a portal type	      
+        return types_tool[portal_type].acquire_local_roles
+      else:
+        # Default behaviour for objects with not portal type definition
+        # ex. SyncML Subscription
+        # XXX - not sure if raising an error would not be better
+        # since this kind of behaviour should not exist
+        return 1
 
     cashed_getAcquireLocalRoles = CachingMethod(cashed_getAcquireLocalRoles,
                                                 id='Base__getAcquireLocalRoles')
