@@ -121,27 +121,8 @@ A good way might be to centralize all action in a single page template that woul
     </tal:block>\n
   </tal:block>\n
 </tal:block>\n
-<tal:block tal:replace="nothing">\n
-<!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
-                   Vincent Pelletier  <vincent@nexedi.com>\n
-\n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
 <html>\n
+  <tal:block metal:use-macro="here/global_definitions/macros/header_definitions" />\n
   <head>\n
     <title></title>\n
     <style type="text/css">\n
@@ -352,30 +333,30 @@ div.listbox_dataline:hover {\n
       </div>\n
       <tal:block tal:define="field_names python: (\'my_static_property_list\',);\n
                              structured_text_field_names python: (\'title\',);">\n
-        <tal:block metal:use-macro="here/documentation_view/macros/render_listbox"/>\n
+        <tal:block metal:use-macro="here/documentation_template/macros/render_listbox"/>\n
       </tal:block>\n
       <tal:block tal:define="field_names python: (\'my_dynamic_property_list\',);\n
                              structured_text_field_names python: (\'title\',);">\n
-        <tal:block metal:use-macro="here/documentation_view/macros/render_listbox"/>\n
+        <tal:block metal:use-macro="here/documentation_template/macros/render_listbox"/>\n
       </tal:block>\n
       <tal:block tal:define="field_names python: (\'my_dynamic_category_list\',)">\n
-        <tal:block metal:use-macro="here/documentation_view/macros/render_listbox"/>\n
+        <tal:block metal:use-macro="here/documentation_template/macros/render_listbox"/>\n
       </tal:block>\n
       <tal:block tal:define="field_names python: (\'my_static_method_list\',);\n
                              structured_text_field_names python: (\'title\',);\n
                              zope_structured_text_field_names python: (\'description\',);\n
                              toggleable_field_name python: \'source_code\';">\n
-        <tal:block metal:use-macro="here/documentation_view/macros/render_listbox"/>\n
+        <tal:block metal:use-macro="here/documentation_template/macros/render_listbox"/>\n
       </tal:block>\n
       <tal:block tal:define="field_names python: (\'my_dynamic_method_list\',);\n
                              structured_text_field_names python: (\'title\',);\n
                              zope_structured_text_field_names python: (\'description\',);">\n
-        <tal:block metal:use-macro="here/documentation_view/macros/render_listbox"/>\n
+        <tal:block metal:use-macro="here/documentation_template/macros/render_listbox"/>\n
       </tal:block>\n
       <tal:block tal:define="field_names python: (\'my_dynamic_accessor_list\',);\n
                              structured_text_field_names python: (\'accessors\',);\n
                              toggleable_field_name python: \'accessors\';">\n
-        <tal:block metal:use-macro="here/documentation_view/macros/render_listbox"/>\n
+        <tal:block metal:use-macro="here/documentation_template/macros/render_listbox"/>\n
       </tal:block>\n
     </tal:block>\n
   </body>\n
