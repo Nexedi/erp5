@@ -75,7 +75,7 @@ class BankAccount(Folder, Coordinate, MetaNode):
       """reference depends on the site configuration.
       """
       value = self._baseGetReference(*args, **kw)
-      if value is None:
+      if value in (None, ''):
         # Try to get a skin named PortalType_getReference.
         portal_type = self.getPortalType()
         method = getattr(self, '%s_getReference' % portal_type.replace(' ', ''), None)
