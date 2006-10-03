@@ -45,6 +45,8 @@ except ImportError:
   permissions.setDefaultRoles(permissions.ChangeLocalRoles,
                               ('Owner', 'Manager'))
 
+from AccessControl import Permissions as ac_permissions
+
 setDefaultRoles = permissions.setDefaultRoles
 
 # Default Zope Permissions
@@ -55,6 +57,7 @@ ChangePermissions = permissions.ChangePermissions
 ViewManagementScreens = permissions.ViewManagementScreens
 ManageProperties = permissions.ManageProperties
 FTPAccess = permissions.FTPAccess
+ImportExportObjects = ac_permissions.import_export_objects
 
 # Default CMF Core Permissions
 ListFolderContents = permissions.ListFolderContents
