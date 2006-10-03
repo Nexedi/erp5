@@ -66,6 +66,7 @@ class File(XMLObject, CMFFile):
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Data
                       )
 
     # Declarative interfaces

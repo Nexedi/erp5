@@ -100,6 +100,7 @@ class OOoDocument(DMSFile, CachingMixin):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Data
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.Document
@@ -111,9 +112,12 @@ class OOoDocument(DMSFile, CachingMixin):
   rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
   rx_compr=re.compile('\s+')
 
-  searchable_attrs=DMSFile.searchable_attrs+('text_content',)
+  searchable_attrs=DMSFile.searchable_attrs+('text_content',) # XXX - good idea - should'n this be made more general ?
 
-  def _getServerCoordinates(self):
+  def _getServerCoordinates(self):    # XXX - Naming - should be _getServerCoordinate or _getServerCoordinateList
+                                      # the reason why plural is not so good is because one never
+                                      # knows is plural returns a count (ie. the server has 3 coordinates)
+                                      # or if plural returns a list
     """
     Returns OOo conversion server data from 
     preferences
@@ -275,7 +279,8 @@ class OOoDocument(DMSFile, CachingMixin):
     #self.setReference(meta.get('reference',''))
 
   #security.declareProtected(Permissions.View,'getOOfile')
-  def getOOfile(self):
+  def getOOfile(self): # We must be consistent - OOoDocument and OOoFile is OK
+                       # XXX                     OODocument and OOFile is OK
     """
     Return the converted OOo document.
 
@@ -287,7 +292,8 @@ class OOoDocument(DMSFile, CachingMixin):
     return data
 
   security.declareProtected(Permissions.View,'hasOOfile')
-  def hasOOfile(self):
+  def hasOOfile(self): # We must be consistent - OOoDocument and OOoFile is OK
+                       # XXX                     OODocument and OOFile is OK
     """
     Checks whether we have an OOo converted file
     """
