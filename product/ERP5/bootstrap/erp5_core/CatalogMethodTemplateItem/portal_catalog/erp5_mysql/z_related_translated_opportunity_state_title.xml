@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>table_0</string>
+                            <string>table_0</string>
                           </list>
                         </value>
                     </item>
@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_translated_opportunity_state</string> </value>
+            <value> <string>z_related_translated_opportunity_state_title</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -103,7 +103,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_0>.original_message = catalog.opportunity_state\n
- AND <dtml-var table_0>.message_context = "opportunity_state"\n
+ AND <dtml-var table_0>.message_context = "opportunity_state_title"\n
  AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
 
 
@@ -144,7 +144,7 @@
                         <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_0>.original_message = catalog.opportunity_state\n
- AND <dtml-var table_0>.message_context = "opportunity_state"\n
+ AND <dtml-var table_0>.message_context = "opportunity_state_title"\n
  AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
 
 

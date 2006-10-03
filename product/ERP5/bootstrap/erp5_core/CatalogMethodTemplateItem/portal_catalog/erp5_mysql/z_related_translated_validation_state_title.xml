@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_translated_opportunity_state</string> </value>
+            <value> <string>z_related_translated_validation_state_title</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -102,10 +102,9 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.original_message = catalog.opportunity_state\n
- AND <dtml-var table_0>.message_context = "opportunity_state"\n
- AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
-
+<dtml-var table_0>.original_message = catalog.validation_state\n
+ AND <dtml-var table_0>.message_context = "validation_state_title"\n
+ AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">
 
 ]]></string> </value>
         </item>
@@ -143,10 +142,9 @@
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.original_message = catalog.opportunity_state\n
- AND <dtml-var table_0>.message_context = "opportunity_state"\n
- AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
-
+<dtml-var table_0>.original_message = catalog.validation_state\n
+ AND <dtml-var table_0>.message_context = "validation_state_title"\n
+ AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">
 
 ]]></string> </value>
                     </item>
