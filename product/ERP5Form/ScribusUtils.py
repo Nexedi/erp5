@@ -157,6 +157,7 @@ class ManageModule:
     title = title_module
     field_type = 'ListBox'
     form_view_list_object.manage_addField(id,title,field_type)
+    form_view_list_object.move_field_group(['listbox'], 'left', 'bottom')
     # manage ListBox settings
     values_settings = {}
     values_settings['pt'] = "form_list"
