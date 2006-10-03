@@ -1156,7 +1156,7 @@ def setDefaultProperties(property_holder, object=None):
           txn_prop['description'] = ''
           txn_prop['default'] = ''
           txn_prop['id'] = 'translation_domain'
-          txn_prop['type'] = 'string'          
+          txn_prop['type'] = 'string'
           txn_prop['mode'] = 'w'
           createDefaultAccessors(
                     property_holder,
@@ -1339,12 +1339,12 @@ except:
 #####################################################
 
 from Base import Base as BaseClass
-from Accessor import Base, List, Object, Acquired, Content,\
+from Accessor import Base, List, Acquired, Content,\
                      AcquiredProperty, ContentProperty
 import types
 
 # Compile accessors
-for accessor in [Base, List, Object, Acquired, Content]:
+for accessor in [Base, List, Acquired, Content]:
   for a_class in accessor.__dict__.items():
     if type(a_class) is types.ClassType:
       if hasattr(a_class, '__call__'):
@@ -1571,34 +1571,6 @@ def createDefaultAccessors(property_holder, id, prop = None,
           # List Getter
           ################# NOT YET
 
-
-    if prop['type'] == 'object':
-      #LOG('Value Object Accessor', 0, prop['id'])
-      # Base Getter
-      accessor_name = 'get' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-        setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
-        property_holder.security.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGet' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-        setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
-      # Default Getter
-      accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-        setattr(property_holder, accessor_name, default_accessor.dummy_copy(accessor_name))
-        property_holder.security.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGetDefault' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-        setattr(property_holder, accessor_name, default_accessor.dummy_copy(accessor_name))
-      # List Getter
-      accessor_name = 'get' + UpperCase(id) + 'ValueList'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-        setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
-        property_holder.security.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-        setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
-
   elif prop['type'] in list_types or prop.get('multivalued', 0):
     # The base accessor returns the first item in a list
     # and simulates a simple property
@@ -1764,75 +1736,6 @@ def createDefaultAccessors(property_holder, id, prop = None,
             property_holder.security.declareProtected( write_permission, accessor_name )
           # No default getter YET XXXXXXXXXXXXXX
           # No list getter YET XXXXXXXXXXXXXX
-  elif prop['type'] == 'object':
-    # Create url getters for an object property
-    accessor_name = 'get' + UpperCase(id)
-    base_accessor = Object.Getter(accessor_name, id, prop['type'],
-            portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-    # The default accessor returns the first item in a list
-    accessor_name = 'getDefault' + UpperCase(id)
-    default_accessor = Object.DefaultGetter(accessor_name, id, prop['type'],
-            portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-    # The list accessor returns the whole list
-    accessor_name = 'get' + UpperCase(id) + 'List'
-    list_accessor = Object.ListGetter(accessor_name, id, prop['type'],
-            portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-    # Create getters for a list property
-    accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
-      property_holder.security.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
-    accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, default_accessor.dummy_copy(accessor_name))
-      property_holder.security.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, default_accessor.dummy_copy(accessor_name))
-    accessor_name = 'get' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
-      property_holder.security.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
-    # Create getters for an object property
-    accessor_name = 'get' + UpperCase(id) + 'Value'
-    base_accessor = Object.ValueGetter(accessor_name, id, prop['type'],
-            portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-    # The default accessor returns the first item in a list
-    accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-    default_accessor = Object.DefaultValueGetter(accessor_name, id, prop['type'],
-            portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-    # The list accessor returns the whole list
-    accessor_name = 'get' + UpperCase(id) + 'ValueList'
-    list_accessor = Object.ValueListGetter(accessor_name, id, prop['type'],
-            portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-    # Create value getters for a list property
-    accessor_name = 'get' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
-      property_holder.security.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
-    accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, default_accessor.dummy_copy(accessor_name))
-      property_holder.security.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGetDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, default_accessor.dummy_copy(accessor_name))
-    accessor_name = 'get' + UpperCase(id) + 'ValueList'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
-      property_holder.security.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-      setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
   else:
     # Create getters for a simple property
     accessor_name = 'get' + UpperCase(id)
@@ -1990,70 +1893,6 @@ def createDefaultAccessors(property_holder, id, prop = None,
     setter_name = '_baseSetDefault' + UpperCase(id) + 'Value'
     if not hasattr(property_holder, setter_name):
       setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
-  elif prop['type'] == 'object':
-    # Create setters for an object property
-    # Create setters for a list property (reindexing)
-    # The base accessor sets the list to a singleton
-    # and allows simulates a simple property
-    setter_name = 'set' + UpperCase(id)
-    base_setter = Object.Setter(setter_name, id, prop['type'], reindex=1,
-             storage_id = prop.get('storage_id'))
-    # The default setter sets the first item of a list without changing other items
-    setter_name = 'setDefault' + UpperCase(id)
-    default_setter =  Object.DefaultSetter(setter_name, id, prop['type'], reindex=1,
-             storage_id = prop.get('storage_id'))
-    # Create setters for an object property
-    setter_name = 'set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
-      property_holder.security.declareProtected(write_permission, setter_name)
-    setter_name = 'setDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
-      property_holder.security.declareProtected(write_permission, setter_name)
-    setter_name = 'set' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
-      property_holder.security.declareProtected(write_permission, setter_name)
-    setter_name = 'setDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
-      property_holder.security.declareProtected(write_permission, setter_name)
-    # Create setters for a list property (no reindexing)
-    # The base accessor sets the list to a singleton
-    # and allows simulates a simple property
-    setter_name = '_set' + UpperCase(id)
-    base_setter = Object.Setter(setter_name, id, prop['type'], reindex=0,
-             storage_id = prop.get('storage_id'))
-    # The default setter sets the first item of a list without changing other items
-    setter_name = '_setDefault' + UpperCase(id)
-    default_setter =  Object.DefaultSetter(setter_name, id, prop['type'], reindex=0,
-             storage_id = prop.get('storage_id'))
-    # Create setters for an object property
-    setter_name = '_set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
-    setter_name = '_baseSet' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
-    setter_name = '_setDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
-    setter_name = '_baseSetDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
-    setter_name = '_set' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
-    setter_name = '_baseSet' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
-    setter_name = '_setDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
-    setter_name = '_baseSetDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
   else:
     # Create setters for a simple property
     setter_name = 'set' + UpperCase(id)
@@ -2075,16 +1914,6 @@ def createDefaultAccessors(property_holder, id, prop = None,
   if prop['type'] == 'content':
     tester_name = 'has' + UpperCase(id)
     tester = Content.Tester(tester_name, id, prop['type'],
-                                                  storage_id = prop.get('storage_id'))
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester)
-      BaseClass.security.declareProtected(read_permission, tester_name)
-    tester_name = '_baseHas' + UpperCase(id)
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
-  elif prop['type'] == 'object':
-    tester_name = 'has' + UpperCase(id)
-    tester = Object.Tester(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
     if not hasattr(BaseClass, tester_name):
       setattr(BaseClass, tester_name, tester)
