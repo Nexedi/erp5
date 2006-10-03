@@ -383,5 +383,7 @@ class Rule(XMLObject, Predicate):
       else:
         # movement not modifiable, we can decide to create a compensation
         # with negative quantity
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError(
+                "Can not create a compensation movement for %s" % \
+                movement.getRelativeUrl())
     return (add_list, modify_dict, delete_list)
