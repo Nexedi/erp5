@@ -62,6 +62,23 @@ class BaobabConduit(ERP5Conduit):
   If you need to handle a new property, the most important thing to know
   is what will be the property used in ERP5. Then you have to enter a
   new dictionary in the property_map variable.
+
+  # New changes on october 2006:
+  * on Compte
+    - numero become numero_interne
+    - add code_pays (ex K)
+    - add code etab (code etablissement), ex 0101
+    - add code_guichet
+    - add numero_compte : international account number
+    - add rib : ex 52
+    - add code_bic : ex SGBSSND0
+    - add overdraft_facility O/N (Yes/No)
+    - add swift_registered  O/N (Yes/No)
+  * on Client
+    - remove code_bic
+    - zone_residence is now well completed, we should find country
+         information. We should be a corresponding dictionary in order
+         to set the right region
   """
 
   global property_map
