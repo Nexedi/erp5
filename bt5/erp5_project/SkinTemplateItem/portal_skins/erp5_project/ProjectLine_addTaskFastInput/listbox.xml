@@ -318,7 +318,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>atask_title</string>
+                          <string>task_title</string>
                           <string>Task Title</string>
                         </tuple>
                         <tuple>
@@ -381,7 +381,7 @@
                         </tuple>
                         <tuple>
                           <string>task_requirement</string>
-                          <string>te</string>
+                          <string>Requeriment</string>
                         </tuple>
                       </list>
                     </value>
@@ -444,7 +444,7 @@
                         </tuple>
                         <tuple>
                           <string>task_requirement</string>
-                          <string>te</string>
+                          <string>Requeriment</string>
                         </tuple>
                       </list>
                     </value>
@@ -582,7 +582,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>FastInput_initialize</string> </value>
+            <value> <string>Project_initializeFastInput</string> </value>
         </item>
       </dictionary>
     </pickle>
