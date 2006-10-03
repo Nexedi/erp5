@@ -142,12 +142,15 @@ type_definition = {
                              'default' : [],
                              'isList'  : 1,
                            },
-    'content'             : { 'cast'    : identity,
+                           # Content are subdocuments (ex. default_career)
+    'content'             : { 'cast'    : identity,          
                              'null'    : ('', 'None', None,),
                              'default' : None,
                              'isList'  : 0,
                            },
-    'object'             : { 'cast'    : identity,
+                           # Object are properties of any type (ex. data)
+                           # and are considered as simple properties
+    'object'             : { 'cast'    : identity, 
                              'null'    : ('', 'None', None,),
                              'default' : None,
                              'isList'  : 0,
