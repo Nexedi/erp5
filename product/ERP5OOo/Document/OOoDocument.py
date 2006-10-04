@@ -47,7 +47,6 @@ dec=base64.decodestring
 
 class ConvertionError(Exception):pass
 
-#class OOoDocument(File):
 class OOoDocument(DMSFile, CachingMixin):
   """
     A file document able to convert OOo compatible files to
@@ -114,10 +113,7 @@ class OOoDocument(DMSFile, CachingMixin):
 
   searchable_attrs=DMSFile.searchable_attrs+('text_content',) # XXX - good idea - should'n this be made more general ?
 
-  def _getServerCoordinates(self):    # XXX - Naming - should be _getServerCoordinate or _getServerCoordinateList
-                                      # the reason why plural is not so good is because one never
-                                      # knows is plural returns a count (ie. the server has 3 coordinates)
-                                      # or if plural returns a list
+  def _getServerCoordinate(self):
     """
     Returns OOo conversion server data from 
     preferences
@@ -130,7 +126,7 @@ class OOoDocument(DMSFile, CachingMixin):
     return adr,nr
 
   def _mkProxy(self):
-    sp=xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinates(),allow_none=True)
+    sp=xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinate(),allow_none=True)
     return sp
 
   def returnMessage(self,msg,code=0):
@@ -148,13 +144,12 @@ class OOoDocument(DMSFile, CachingMixin):
     communicates with the conversion server
     and gets converted file as well as metadata
     """
-    if force==0 and self.hasOOfile():
+    if force==0 and self.hasOOFile():
       return self.returnMessage('OOo file is up do date',1)
     try:
       self._convert()
     except xmlrpclib.Fault,e:
       return self.returnMessage('Problem: %s' % str(e),2)
-    #self.setLastConvertTime(DateTime())
     return self.returnMessage('converted')
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
@@ -167,15 +162,15 @@ class OOoDocument(DMSFile, CachingMixin):
       XXX - what does this mean? I don't understand
     """
     # Caching method implementation
-    def cached_getTargetFormatItemList(mimetype):
+    def cached_getTargetFormatItemList(content_type):
       sp=self._mkProxy()
-      allowed=sp.getAllowedTargets(mimetype)
+      allowed=sp.getAllowedTargets(content_type)
       return [[y,x] for x,y in allowed] # have to reverse tuple order
 
     cached_getTargetFormatItemList = CachingMethod(cached_getTargetFormatItemList,
                                         id = "OOoDocument_getTargetFormatItemList" )
 
-    return cached_getTargetFormatItemList(self.getMimeType())
+    return cached_getTargetFormatItemList(self.getContentType())
 
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
@@ -191,7 +186,7 @@ class OOoDocument(DMSFile, CachingMixin):
     self.clearCache()
     self.oo_data=None
     m=self.returnMessage('new')
-    self.setStatusMessage(str(m[1]))
+    self.setExternalProcessingStatusMessage(str(m[1]))
 
   security.declareProtected(Permissions.ModifyPortalContent,'isAllowed')
   def isAllowed(self, format):
@@ -200,9 +195,8 @@ class OOoDocument(DMSFile, CachingMixin):
     into the specified format.
 
     """
-    if not self.hasOOfile(): return False
+    if not self.hasOOFile(): return False
     allowed=self.getTargetFormatItemList()
-    #self.log('allowed',allowed)
     if allowed is None: return False
     return (format in [x[1] for x in allowed])
 
@@ -213,10 +207,8 @@ class OOoDocument(DMSFile, CachingMixin):
     based on the values provided by the user. This is implemented
     through the invocation of the conversion server.
     """
-    #self.log('editMetadata',newmeta)
     sp=self._mkProxy()
     kw=sp.run_setmetadata(self.getTitle(),enc(self._unpackData(self.oo_data)),newmeta)
-    #self.log('res editMetadata',meta)
     self.oo_data=Pdata(dec(kw['data']))
     self._setMetaData(kw['meta'])
     return True # XXX why return ? - why not?
@@ -229,7 +221,6 @@ class OOoDocument(DMSFile, CachingMixin):
     on the object. Update metadata information.
     """
     sp=self._mkProxy()
-    #self.log('_convert',enc(self._unpackData(self.data))[:500])
     kw=sp.run_convert(self.getSourceReference(),enc(self._unpackData(self.data)))
     self.oo_data=Pdata(dec(kw['data']))
     # now we get text content 
@@ -266,21 +257,18 @@ class OOoDocument(DMSFile, CachingMixin):
           (user fields are so useful actually...)
           XXX - I think it does (BG)
     """
-    #self.log('meta',meta)
     for k,v in meta.items():
       meta[k]=v.encode('utf-8')
-    #self.log('meta',meta)
     self.setTitle(meta.get('title',''))
     self.setSubject(meta.get('keywords','').split())
     self.setDescription(meta.get('description',''))
     #self.setLanguage(meta.get('language',''))
     if meta.get('MIMEType',False):
-      self.setMimeType(meta['MIMEType'])
+      self.setContentType(meta['MIMEType'])
     #self.setReference(meta.get('reference',''))
 
-  #security.declareProtected(Permissions.View,'getOOfile')
-  def getOOfile(self): # We must be consistent - OOoDocument and OOoFile is OK
-                       # XXX                     OODocument and OOFile is OK
+  security.declareProtected(Permissions.View,'getOOFile')
+  def getOOFile(self):
     """
     Return the converted OOo document.
 
@@ -291,9 +279,8 @@ class OOoDocument(DMSFile, CachingMixin):
     data=self.oo_data
     return data
 
-  security.declareProtected(Permissions.View,'hasOOfile')
-  def hasOOfile(self): # We must be consistent - OOoDocument and OOoFile is OK
-                       # XXX                     OODocument and OOFile is OK
+  security.declareProtected(Permissions.View,'hasOOFile')
+  def hasOOFile(self):
     """
     Checks whether we have an OOo converted file
     """
@@ -418,7 +405,7 @@ class OOoDocument(DMSFile, CachingMixin):
       if REQUEST is not None:
         return self.returnMessage(errstr)
       raise ConvertionError(errstr)
-    if not self.hasOOfile():
+    if not self.hasOOFile():
       if REQUEST is not None:
         return self.returnMessage('needs conversion')
       raise ConvertionError('needs conversion')
@@ -448,7 +435,6 @@ class OOoDocument(DMSFile, CachingMixin):
     # real version:
     sp=self._mkProxy()
     kw=sp.run_generate(self.getSourceReference(),enc(self._unpackData(self.oo_data)),None,format)
-    #self.log('_makeFile',mime)
     return kw['mime'],Pdata(dec(kw['data']))
 
   # make sure to call the right edit methods
