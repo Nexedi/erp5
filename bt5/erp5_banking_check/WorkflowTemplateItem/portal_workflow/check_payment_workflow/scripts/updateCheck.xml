@@ -72,9 +72,8 @@
 #       to use checkbook_module.\n
 \n
 transaction = state_change[\'object\']\n
-if transaction.getExternalSoftwareTitle() == \'SICA\' and transaction.getSicaOperationType() == "sica_operation_type/030":\n
-  check = transaction.getAggregateValue()\n
-  check.deliver()\n
+check = transaction.getAggregateValue()\n
+check.deliver()\n
 </string> </value>
         </item>
         <item>
