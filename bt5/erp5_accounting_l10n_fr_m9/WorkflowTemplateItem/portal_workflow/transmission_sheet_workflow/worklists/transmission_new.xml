@@ -83,7 +83,7 @@ purchase_invoice_transmission_sheet_module/view?reset:int=1&validation_state=new
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Purchase Invoice Transmission Sheet</string>
+                        <string>Invoice Transmission Sheet</string>
                       </tuple>
                     </value>
                 </item>
