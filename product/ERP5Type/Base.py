@@ -2423,7 +2423,7 @@ class Base( CopyContainer,
                                     cached_getQuantityPrecisionFromResource,
                                     id='Base_getQuantityPrecisionFromResource')
 
-    return cached_getResourceQuantityPrecision(resource)
+    return cached_getQuantityPrecisionFromResource(resource)
 
 
   # Documentation Helpers
