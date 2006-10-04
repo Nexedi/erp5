@@ -2413,17 +2413,17 @@ class Base( CopyContainer,
       Provides a quick access to precision without accessing the resource
       value in ZODB
     """
-    def cashed_getQuantityPrecisionFromResource(resource):
+    def cached_getQuantityPrecisionFromResource(resource):
       resource_value = self.portal_categories.resolveCategory(resource)
       if resource_value is not None:
         return resource_value.getQuantityPrecision()
-      else:
-        return 0
+      return 0
 
-    cashed_getQuantityPrecisionFromResource = CachingMethod(cashed_getQuantityPrecisionFromResource,
-                                                        id='Base_getQuantityPrecisionFromResource')
+    cached_getQuantityPrecisionFromResource = CachingMethod(
+                                    cached_getQuantityPrecisionFromResource,
+                                    id='Base_getQuantityPrecisionFromResource')
 
-    return cashed_getResourceQuantityPrecision(resource)
+    return cached_getResourceQuantityPrecision(resource)
 
 
   # Documentation Helpers
