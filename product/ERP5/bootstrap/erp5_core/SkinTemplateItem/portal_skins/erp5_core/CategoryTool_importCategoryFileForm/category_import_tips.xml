@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>category_file_template</string> </value>
+            <value> <string>category_import_tips</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -201,7 +201,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-You can find an OpenOffice template at <a href="portal_skins/erp5_core/openoffice_category_file_template.sxc">/portal_skins/erp5_core/openoffice_category_file_template.sxc</a>
+<ul><li>An empty OpenOffice template is available at <a href="portal_skins/erp5_core/openoffice_category_file_template.sxc">/portal_skins/erp5_core/openoffice_category_file_template.sxc</a></li><li>Do not merge cells in the uploaded spreadsheet: this will confuse the parser and produce unpredictible results.</li><li>Do not use category IDs which are defined in Property Sheets as attribute IDs. Currently ERP5 is not able to make the difference between the a subobject ID and a property ID.</li><li>Even if this tool was designed to import OpenOffice v1.x documents, OASIS OpenDocument files are well parsed.</li></ul>
 
 ]]></string> </value>
                 </item>
@@ -247,7 +247,7 @@ You can find an OpenOffice template at <a href="portal_skins/erp5_core/openoffic
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Category File</string> </value>
+                    <value> <string>Tips</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
