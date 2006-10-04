@@ -97,7 +97,7 @@ params =  {\n
   , \'section_category\'            : transaction_section_category\n
   , \'simulation_state\'            : transaction_simulation_state\n
   , \'report_depth\'                : 5\n
-  , \'where_expression\'            : " section.portal_type = \'Organisation\' "\n
+  #, \'where_expression\'            : " section.portal_type = \'Organisation\' "\n
 }\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
@@ -111,15 +111,15 @@ simulation_tool = portal.portal_simulation\n
 \n
 entity_columns = [\n
                        (\'date\', \'Date\'),\n
-                       (\'parent_portal_type\', \'Type\'),\n
-                       (\'Entity_getAccountingTransactionGapId\', \'GAP\'),\n
-                       (\'parent_reference\', \'Invoice No\'),\n
-                       (\'parent_title\', \'Title\'),\n
-                       (\'parent_specific_reference\', \'Reference\'),\n
-                       (\'translated_simulation_state_title\', \'State\'),\n
-                       (\'debit\', \'Debit\'),\n
-                       (\'credit\', \'Credit\'),\n
-                       (\'net_balance\', \'Balance\'),\n
+                       (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
+                       (\'Movement_getNodeGapId\', \'GAP\'),\n
+                       (\'Movement_getExplanationReference\', \'Invoice No\'),\n
+                       (\'Movement_getExplanationTitle\', \'Title\'),\n
+                       (\'Movement_getSpecificReference\', \'Reference\'),\n
+                       (\'getTranslatedSimulationStateTitle\', \'State\'),\n
+                       (\'Movement_getDebitPrice\', \'Debit\'),\n
+                       (\'Movement_getCreditPrice\', \'Credit\'),\n
+                       (\'running_total_price\', \'Balance\'),\n
 ]\n
 \n
 # build a list of all accounts which _strictly_ belongs to categories \n
@@ -166,11 +166,11 @@ for party in context.Account_zDistinctSectionList():\n
                                level=1,\n
                                path=o.getPhysicalPath(),\n
                                form_id=\'Entity_viewAccountingTransactionList\',\n
-                               selection_name = \'accounting_selection\',\n
+                               selection_name = \'other_parties_report_selection\',\n
                                selection_params = params,\n
                                selection_columns = entity_columns,\n
-                               selection_sort_order=[(\'delivery.stop_date\',\n
-                                                      \'ascending\')], ) )\n
+                               selection_sort_order=[(\'stock.date\', \'ascending\'),\n
+                                                      (\'stock.uid\', \'ascending\'),],))\n
 \n
 return result\n
 
