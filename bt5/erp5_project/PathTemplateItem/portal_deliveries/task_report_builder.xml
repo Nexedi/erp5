@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>delivery_cell_portal_type</string> </key>
-            <value> <string>Purchase Packing List Cell</string> </value>
+            <value> <string>Sale Packing List Cell</string> </value>
         </item>
         <item>
             <key> <string>delivery_cell_separate_order</string> </key>
@@ -80,6 +80,7 @@
                 <string>TitleMovementGroup</string>
                 <string>PathMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
+                <string>RequirementMovementGroup</string>
               </tuple>
             </value>
         </item>
