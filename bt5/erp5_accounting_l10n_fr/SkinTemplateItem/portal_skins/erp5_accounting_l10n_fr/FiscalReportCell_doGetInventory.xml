@@ -107,11 +107,12 @@ params.update(kw)\n
 # \'net_balance\' is the sum of balance of all accounts found under the \'gap_id_list\' criterion\n
 net_balance = 0.0\n
 \n
+ctool = context.getPortalObject().portal_categories\n
 for gap_id in gap_id_list:\n
   gap_path = getURL(gap_id)\n
 \n
   # Checks the node category exists\n
-  if context.restrictedTraverse(\'portal_categories/%s\' % gap_path, None) is not None:\n
+  if ctool.restrictedTraverse(gap_path, None) is not None:\n
     params["node_category"] = gap_path\n
     new_balance = 0.0\n
 \n
