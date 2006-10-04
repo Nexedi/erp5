@@ -162,6 +162,9 @@ class DMSFile(XMLObject,File):
   searchable_attrs=('title','description','id','reference','version',
       'short_title','keywords','subject','source_reference','source_project_title')
 
+  # XXX a hack-around untill JPS's Data property sheets stops to break thins :)
+  content_type='application/unknown'
+
   ### Content indexing methods
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
