@@ -93,6 +93,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
   <body>\n
     <table width="100%" metal:define-macro="navigation_box">\n
+      <tal:block tal:define="global preferred_html_style_developper_mode   here/portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
+                             global preferred_html_style_translator_mode   here/portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
+                             global portal_path                            here/portal_url/getPortalPath;"/>\n
       <tr>\n
         <td valign="middle" align="center" nowrap="nowrap">\n
           <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n

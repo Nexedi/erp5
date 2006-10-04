@@ -55,16 +55,18 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="edit_link">\n
-  <a tal:condition="python: hasattr(object, \'meta_type\') and object.Base_getSourceVisibility()"\n
+  <a tal:condition="python: preferred_html_style_developper_mode and hasattr(object, \'meta_type\')"\n
      tal:attributes="href python: \'%s/%s\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):]), manage) # XXX: quick hack to get path;\n
-                     title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
+                     title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                                                        alt info;"/></a>\n
 </tal:block>\n
-<tal:block metal:define-macro="translate_link" tal:define="image image | python: \'translate.png\'">\n
-  <a tal:condition="python: context.Base_getTranslationVisibility()"\n
-     tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(context.Localizer.erp5_ui.getPhysicalPath()[len(context.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, context.Localizer.get_selected_language());\n
-                     title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
-                                                       alt info;"/></a>\n
+<tal:block metal:define-macro="translate_link">\n
+  <tal:block tal:condition="preferred_html_style_translator_mode">\n
+    <a tal:define="image image | python: \'translate.png\'"\n
+       tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(context.Localizer.erp5_ui.getPhysicalPath()[len(context.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, context.Localizer.get_selected_language());\n
+                       title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
+                                                         alt info;"/></a>\n
+  </tal:block>\n
 </tal:block>\n
 <tal:block metal:define-macro="form">\n
   <tal:block tal:define="image python: \'editform.png\';\n
@@ -92,14 +94,11 @@
                          image python: \'translate.png\'">\n
     <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
   </tal:block>\n
-  <tal:block tal:define="desc python: context.Base_getFieldDescription(field)">\n
-    <tal:block tal:condition="python: desc not in (None, \'\')">\n
-      <tal:block tal:define="info python: \'Translate this field description\';\n
-                             message desc;\n
-                             image python: \'translate_tooltip.png\'">\n
-        <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
-      </tal:block>\n
-    </tal:block>\n
+  <tal:block tal:define="message python: context.Base_getFieldDescription(field);\n
+                         info python: \'Translate this field description\';\n
+                         image python: \'translate_tooltip.png\'"\n
+             tal:condition="python: message not in (None, \'\')">\n
+    <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
   </tal:block>\n
 </tal:block>
 
