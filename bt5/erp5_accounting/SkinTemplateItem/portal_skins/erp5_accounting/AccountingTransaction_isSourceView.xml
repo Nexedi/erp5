@@ -71,7 +71,7 @@
             <value> <string>source = context.getSourceSectionValue()\n
 section_category = context.portal_preferences.getPreferredSectionCategory()\n
 if source is not None and section_category:\n
-  if source.isMemberOf(section_cat):\n
+  if source.isMemberOf(section_category):\n
     return 1\n
 \n
 return 0\n
@@ -126,7 +126,7 @@ return 0\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>source</string>
-                            <string>section_cat</string>
+                            <string>section_category</string>
                             <string>None</string>
                           </tuple>
                         </value>
