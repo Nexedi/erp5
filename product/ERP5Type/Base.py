@@ -2334,7 +2334,6 @@ class Base( CopyContainer,
         return None
     return None
 
-
   security.declareProtected(Permissions.ChangeLocalRoles,
                             'updateLocalRolesOnSecurityGroups')
   def updateLocalRolesOnSecurityGroups(self, **kw):
@@ -2347,8 +2346,8 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.ModifyPortalContent,
                             'assignRoleToSecurityGroup')
   def assignRoleToSecurityGroup(self, **kw):
-    """This is basically the same as `updateLocalRolesOnSecurityGroups`, but
-    with a different permission.
+    """DEPRECATED. This is basically the same as
+    `updateLocalRolesOnSecurityGroups`, but with a different permission.
     """
     warnings.warn('assignRoleToSecurityGroup is a deprecated alias to '
                   'updateLocalRolesOnSecurityGroups. Please note that the '
