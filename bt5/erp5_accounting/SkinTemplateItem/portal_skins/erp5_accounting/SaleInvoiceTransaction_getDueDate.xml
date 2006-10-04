@@ -70,13 +70,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-packing_list_list = context.getCausalityValueList(portal_type=[\'Sale Packing List\',\'Sales Packing List\'])\n
+packing_list_list = context.getCausalityValueList(portal_type=\'Sale Packing List\')\n
 \n
 if len(packing_list_list) > 0:\n
-  packing_list = context.getCausalityValueList(portal_type=[\'Sale Packing List\',\'Sales Packing List\'])[0]\n
-  order = packing_list.getCausalityValueList()[0]\n
+  packing_list = packing_list_list[0]\n
+  order = packing_list.getCausalityValue(portal_type=\'Sale Order\')\n
   from DateTime import DateTime\n
-  due_date = packing_list.getTargetStopDate( DateTime() )\n
+  due_date = order.getPaymentConditionPaymentDate( DateTime() )\n
   pat = None #order.getPaymentAdditionalTerm()\n
 else:\n
   due_date = context.getStartDate()\n
