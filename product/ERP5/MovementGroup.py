@@ -1068,3 +1068,26 @@ class SourceProjectMovementGroup(PropertyMovementGroup):
   _property = 'source_project'
 allow_class(SourceProjectMovementGroup)
 
+class RequirementMovementGroup(RootMovementGroup):
+  """
+  Group movements that have same Requirement.
+  """
+  def getRequirementList(self,movement):
+    order_value = movement.getOrderValue()
+    requirement_list = []
+    if order_value is not None:
+      if "Line" in order_value.getPortalType():
+        requirement_list = order_value.getRequirementList()
+    return requirement_list
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    requirement_list = self.getRequirementList(movement)
+    self.requirement_list = requirement_list
+    self.setGroupEdit(
+        requirement=requirement_list
+    )
+
+  def test(self,movement):
+    return self.getRequirementList(movement) == self.requirement_list
+
