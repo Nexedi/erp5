@@ -1,4 +1,5 @@
 Cash Delivery Cell | variation
+Check Model Type Variation | check_type
 Checkbook | check_amount
 Checkbook | resource
 Counter Date | site

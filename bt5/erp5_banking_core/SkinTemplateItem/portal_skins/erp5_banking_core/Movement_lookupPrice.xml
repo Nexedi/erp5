@@ -68,51 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# return context.getMovementList(portal_type=portal_type)\n
-# here we suppose we have only two level of portal type\n
-#context.log("Delivery_getMovementList", "portal_type = %s" %(portal_type,))\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
-if not same_type(portal_type, []):\n
-  return context.getMovementList(portal_type=portal_type)\n
-if len(portal_type) > 2 or len(portal_type) == 0:\n
-  # use catalog\n
-  return context.getMovementList(portal_type=portal_type)\n
-\n
-line_list = context.objectValues(portal_type=portal_type[0])\n
-invert = 0\n
-if len(line_list) == 0:\n
-  # try with the second portal type\n
-  line_list = context.objectValues(portal_type=portal_type[1])\n
-  invert = 1\n
-if len(line_list) == 0:\n
-  return []\n
-if len(portal_type) == 1:\n
-  return line_list\n
-cell_list = []\n
-for line in line_list:\n
-  if invert:\n
-    cell_type = portal_type[0]\n
+def Movement_lookupPrice():\n
+  resource = context.getResourceValue()\n
+  if resource is not None:\n
+    return resource.getPrice(context=context)\n
   else:\n
-    cell_type = portal_type[1]\n
-  cell_list.extend(list(line.objectValues(portal_type=cell_type)))\n
+    return None\n
 \n
-return cell_list\n
-
-
-]]></string> </value>
+return CachingMethod(Movement_lookupPrice, (\'erp5_banking_core/Movement_lookupPrice\', context.getResource()), cache_duration=None)()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -129,7 +100,7 @@ return cell_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=[], *argv, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,27 +120,19 @@ return cell_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>portal_type</string>
-                            <string>argv</string>
                             <string>kw</string>
-                            <string>same_type</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>Movement_lookupPrice</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>line_list</string>
-                            <string>invert</string>
-                            <string>cell_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>cell_type</string>
-                            <string>list</string>
+<string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,40 +144,17 @@ return cell_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <list/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_getMovementList</string> </value>
+            <value> <string>Movement_lookupPrice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

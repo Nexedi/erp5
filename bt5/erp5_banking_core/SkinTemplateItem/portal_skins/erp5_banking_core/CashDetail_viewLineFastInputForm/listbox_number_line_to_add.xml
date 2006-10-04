@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_number_line_to_add</string> </value>
         </item>
@@ -160,9 +166,7 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -267,22 +271,6 @@
                           <string>6</string>
                           <string>6</string>
                         </tuple>
-                        <tuple>
-                          <string>7</string>
-                          <string>7</string>
-                        </tuple>
-                        <tuple>
-                          <string>8</string>
-                          <string>8</string>
-                        </tuple>
-                        <tuple>
-                          <string>9</string>
-                          <string>9</string>
-                        </tuple>
-                        <tuple>
-                          <string>10</string>
-                          <string>10</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -308,25 +296,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:[[x,x] for x in range(0,7)]</string> </value>
         </item>
       </dictionary>
     </pickle>

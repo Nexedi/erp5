@@ -344,7 +344,7 @@ else :\n
     line[\'resource_translated_title\'] = resource_list[0].getObject().getTranslatedTitle()\n
     # get the number of lines to add\n
     if line.has_key(\'number_line_to_add\'):\n
-      lines_to_add = line[\'number_line_to_add\']\n
+      lines_to_add = int(line[\'number_line_to_add\'])\n
     else:\n
       lines_to_add = 0\n
     line[\'number_line_to_add\'] = 0\n
@@ -501,6 +501,7 @@ else :\n
                             <string>new_line_list</string>
                             <string>resource_id</string>
                             <string>resource_list</string>
+                            <string>int</string>
                             <string>lines_to_add</string>
                             <string>xrange</string>
                             <string>num</string>

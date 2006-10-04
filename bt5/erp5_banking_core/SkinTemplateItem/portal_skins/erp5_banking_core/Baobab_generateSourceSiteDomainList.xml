@@ -80,6 +80,7 @@ depth = len(parent.getPath().split(\'/\')[3:])\n
 \n
 for vault in vault_list:\n
   if vault[0] != \'\':\n
+    context.log("vault[0]", vault[0])\n
     if len(vault[0].split(\'/\')) == depth:      \n
       if depth > 1 and vault[0].split(\'/\')[-2] != parent.getId():\n
         # only add those from parent\n

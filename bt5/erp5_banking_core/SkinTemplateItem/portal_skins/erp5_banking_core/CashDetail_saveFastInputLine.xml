@@ -172,11 +172,11 @@ variation_not_defined = 0\n
 for resource_id in per_resource_dict.keys():\n
   variation_list_dict = per_resource_dict[resource_id].values()\n
   # get the resource\n
-  resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'), id = resource_id)\n
-  if len(resource_list) == 0:\n
-    #context.log(\'CashDetail_saveFastInputLine\', \'Cannot get the resource object for id = %s\' %(resource_id,))\n
-    continue\n
-  resource_object = resource_list[0].getObject()\n
+  #resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'), id = resource_id)\n
+  #if len(resource_list) == 0:\n
+  #  #context.log(\'CashDetail_saveFastInputLine\', \'Cannot get the resource object for id = %s\' %(resource_id,))\n
+  #  continue\n
+  resource_object = context.currency_cash_module[resource_id]\n
   # get the variation\n
   emission_letter_dict = {}\n
   cash_status_dict = {}\n
@@ -200,8 +200,8 @@ for resource_id in per_resource_dict.keys():\n
   variation_category_list = emission_letter_dict.keys() + cash_status_dict.keys() + variation_dict.keys()\n
   # create the cash line\n
   line = context.newContent(portal_type           = line_portal_type\n
-                            , resource_value      = resource_object # banknote or coin\n
-                            , quantity_unit_value = context.portal_categories.quantity_unit.unit\n
+                            , resource      = resource_object.getRelativeUrl() # banknote or coin\n
+                            , quantity_unit = \'unit\'\n
                             )\n
   # set base category list on line\n
   line.setVariationBaseCategoryList(base_category_list)\n
@@ -225,7 +225,7 @@ for resource_id in per_resource_dict.keys():\n
       c.edit(membership_criterion_category_list = category_list\n
              , mapped_value_property_list       = mapped_value_list\n
              , category_list                    = category_list\n
-             , price                            = line.getResourceValue().getBasePrice()\n
+             , price                            = resource_object.getBasePrice()\n
              , force_update                     = 1\n
              )\n
   # set quantity on cell to define quantity of bank notes / coins\n
@@ -264,6 +264,11 @@ if variation_not_defined:\n
                                 )\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
 else:\n
+  request_form = context.REQUEST.form\n
+  #request_form[\'pickle_string\'] = \'\'\n
+  #context.Base_updateDialogForm(pickle_string=\'\',portal_status_message=\'Lines Created\')\n
+  #main_form = getattr(context,form_id)\n
+  #return main_form(portal_status_message=\'Lines Created\')\n
   request  = context.REQUEST\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                   , \'portal_status_message=Lines%20Created\'\n
@@ -299,7 +304,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, **kw</string> </value>
+            <value> <string>listbox=None, form_id=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -327,13 +332,14 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>listbox</string>
+                            <string>form_id</string>
                             <string>kw</string>
                             <string>cell_base_id</string>
                             <string>line_kwd</string>
@@ -368,7 +374,6 @@ else:\n
                             <string>resource_id</string>
                             <string>variation_not_defined</string>
                             <string>variation_list_dict</string>
-                            <string>resource_list</string>
                             <string>resource_object</string>
                             <string>emission_letter_dict</string>
                             <string>cash_status_dict</string>
@@ -393,6 +398,7 @@ else:\n
                             <string>x</string>
                             <string>request</string>
                             <string>redirect_url</string>
+                            <string>request_form</string>
                           </tuple>
                         </value>
                     </item>
@@ -405,6 +411,7 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>

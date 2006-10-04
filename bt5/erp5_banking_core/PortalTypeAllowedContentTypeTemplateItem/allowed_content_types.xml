@@ -2,6 +2,9 @@
  <portal_type id="Cash Delivery Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
+ <portal_type id="Check Model">
+  <item>Check Model Type Variation</item>
+ </portal_type>
  <portal_type id="Check Module">
   <item>Check</item>
  </portal_type>

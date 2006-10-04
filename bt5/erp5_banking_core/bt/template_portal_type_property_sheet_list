@@ -5,6 +5,7 @@ Banking Operation Line | Task
 Cash Delivery Cell | CashDeliveryLine
 Cash Delivery Line | CashDeliveryLine
 Category | BaobabCategory
+Check Model Type Variation | Amount
 Check Model | CheckModel
 Check | Arrow
 Check | Task
