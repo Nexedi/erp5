@@ -3,7 +3,7 @@ class ExternalDocument:
   """
   """
   _properties = (
-        {   'id'          : 'status_message',
+        {   'id'          : 'external_processing_status_message',
             'description' : 'message about status',
             'type'        : 'string',
             'mode'        : 'w' },

@@ -204,7 +204,7 @@ class ExternalWebPage(ExternalDocument):
     try:
       s=recode(s)
     except CanNotDecode:
-      self.setStatusMessage("Spidered on %s, %i chars, but could not decode" % (self._time(), chars))
+      self.setExternalProcessingStatusMessage("Spidered on %s, %i chars, but could not decode" % (self._time(), chars))
       return False
     s=stripHtml(s) # remove headers, doctype and the like
     s=clearHtml(s) # remove tags

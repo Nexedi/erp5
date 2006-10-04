@@ -35,7 +35,7 @@ class OOoDocument:
     'description' : 'mime type of OOo version',
     'type'    : 'string',
     'mode'    : ''},
-    {   'id'          : 'status_message',
+    {   'id'          : 'external_processing_status_message',
         'description' : 'message about status',
         'type'        : 'string',
         'mode'        : 'w' },

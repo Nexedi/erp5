@@ -128,20 +128,20 @@ class ExternalDocument(DMSFile):
       s,inf=self._spiderSource()
     except Exception,e:
       self.log(e,level=1)
-      self.setStatusMessage("Tried on %s: %s" % (self._time(),str(e)))
+      self.setExternalProcessingStatusMessage("Tried on %s: %s" % (self._time(),str(e)))
       return False
     chars=len(s)
     if chars==0:
-      self.setStatusMessage("Tried on %s: got empty string" % self._time())
+      self.setExternalProcessingStatusMessage("Tried on %s: got empty string" % self._time())
       return False
     try:
       s=self._processData(s,inf)
     except Exception,e:
       self.log(e,level=1)
-      self.setStatusMessage("Spidered on %s, %i chars, but could not process; reason: %s" % (self._time(), chars, str(e)))
+      self.setExternalProcessingStatusMessage("Spidered on %s, %i chars, but could not process; reason: %s" % (self._time(), chars, str(e)))
       return False
     self.setTextContent(s)
-    self.setStatusMessage("Spidered on %s, %i chars, recorded %i chars" % (self._time(), chars, len(s)))
+    self.setExternalProcessingStatusMessage("Spidered on %s, %i chars, recorded %i chars" % (self._time(), chars, len(s)))
     return True
 
   security.declareProtected(Permissions.View, 'getProtocolItemList')
