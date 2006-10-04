@@ -84,7 +84,7 @@ def getFieldDescription():\n
           return property.get(\'description\', \'\')\n
   return desc\n
 \n
-getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', field.aq_parent.getId(), field.getId(), context.Localizer.get_selected_language()), cache_duration=None)\n
+getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', field.aq_parent.getId(), field.getId()), cache_duration=None)\n
 \n
 return getFieldDescription()\n
 </string> </value>
@@ -140,7 +140,6 @@ return getFieldDescription()\n
                             <string>CachingMethod</string>
                             <string>getFieldDescription</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>None</string>
                           </tuple>
                         </value>
