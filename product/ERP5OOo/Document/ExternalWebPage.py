@@ -166,8 +166,6 @@ class ExternalWebPage(ExternalDocument):
     if (inf.getmaintype(),inf.getsubtype())!=('text','html'):
       raise SpiderException(100,'this is %s/%s' % (inf.getmaintype(),inf.getsubtype()))
     top=self._findTopObject()
-    # record my url in top object
-    top.addUrl(self.getQualifiedUrl())
     # remove current subobjects
     self.manage_delObjects([i.getId() for i in self.searchFolder(portal_type='External Web Page')])
     if self.getOptionRecursively()>0 and self.getRecursionDepth()>0:
@@ -179,12 +177,18 @@ class ExternalWebPage(ExternalDocument):
           continue
         ref=re.sub('#.*','',ref)
         if ref=='':continue
-        baseref='/'.join(self.getQualifiedUrl().split('/')[:-1])
+        #baseref='/'.join(self.getQualifiedUrl().split('/'))
+        baseref=self.getQualifiedUrl()
         if not ref.startswith('http'):
           # complete relative paths
           ref=baseref+'/'+ref
+        # eliminate multiple slashes
+        rx=re.compile('([^:]{1})\/{2,}')
+        ref=re.sub(rx,'\1/',ref)
         # create subobjects
         if ref.startswith(baseref) and not top.checkUrl(ref):
+          # record my url in top object
+          top.addUrl(ref)
           n=self.newContent(portal_type='External Web Page')
           # set coordinates
           n.setUrlProtocol('http')
