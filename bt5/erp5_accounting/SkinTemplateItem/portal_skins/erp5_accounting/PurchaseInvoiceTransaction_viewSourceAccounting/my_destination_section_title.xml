@@ -259,7 +259,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source_section</string> </value>
+                    <value> <string>destination_section</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -343,6 +343,14 @@
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
