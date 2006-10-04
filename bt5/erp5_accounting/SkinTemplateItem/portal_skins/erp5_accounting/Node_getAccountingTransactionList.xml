@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Message import Message\n
 portal = context.getPortalObject()\n
 params = portal.ERP5Accounting_getParams(selection)\n
 N_ = lambda msg: Message(\'erp5_ui\', msg)\n
@@ -99,7 +101,7 @@ net_balance = 0.0\n
 \n
 if from_date:\n
   # Create a new parameter list to get the previous balance\n
-  get_inventory_kw = params.copy()\n
+  get_inventory_kw = params.copy() # do not include omit_grouping here\n
   get_inventory_kw[\'to_date\'] = from_date\n
   # TODO: using a list of section_uid \n
   # \'where_expression\': " section.portal_type = \'Organisation\' " \n
@@ -141,6 +143,8 @@ if from_date:\n
         getTranslatedSimulationStateTitle=\'\',\n
       )\n
     new_result = [previous_balance]\n
+    if selection.getParams().get(\'hide_grouping\'):\n
+      params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
     new_result.extend(\n
       portal.portal_simulation.getMovementHistoryList(\n
                    from_date=from_date,\n
@@ -162,8 +166,10 @@ context.log(\'sql\\nparams=%s\\nsort_on=%s\' % (params, sort_on),\n
                  sort_on=sort_on,\n
                  src__=1,\n
                  **params))\n
-  \n
-# We try not to convert to a list.\n
+\n
+if selection.getParams().get(\'hide_grouping\'):\n
+  params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
+# We try not to convert to a list, hence the copy & paste\n
 return portal.portal_simulation.getMovementHistoryList(\n
                  from_date=from_date,\n
                  initial_running_total_price=net_balance,\n
@@ -172,7 +178,9 @@ return portal.portal_simulation.getMovementHistoryList(\n
                  selection_domain_join_column=\'section_uid\',\n
                  sort_on=sort_on,\n
                  **params)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
