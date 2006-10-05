@@ -71,8 +71,9 @@
             <value> <string>"""Create a related payment transaction, using the account `node`, the payment\n
 `payment`, and setting the payment mode `payment_mode`.\n
 """\n
-from Products.ERP5Type.Message import Message\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+# translate with Base_translateString which is a bit more robust during activities\n
+# because it doesn\'t rely on REQUEST[\'PARENTS\']\n
+N_ = context.Base_translateString\n
 \n
 portal = context.getPortalObject()\n
 payment_dict = {}\n
@@ -160,7 +161,7 @@ if not batch_mode:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>node, payment_mode, payment=\'\', batch_mode=0</string> </value>
+            <value> <string>node, payment_mode, payment, batch_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -190,11 +191,9 @@ if not batch_mode:\n
                             <string>payment_mode</string>
                             <string>payment</string>
                             <string>batch_mode</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>N_</string>
                             <string>portal</string>
                             <string>payment_dict</string>
                             <string>is_source</string>
@@ -221,7 +220,6 @@ if not batch_mode:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
                 <int>0</int>
               </tuple>
             </value>
