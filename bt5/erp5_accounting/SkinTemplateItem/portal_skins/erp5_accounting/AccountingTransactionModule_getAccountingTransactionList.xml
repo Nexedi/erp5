@@ -91,7 +91,10 @@ if params.get(\'count\', 0):\n
 params[\'omit_input\'] = 0\n
 params[\'omit_output\'] = 0\n
 \n
-#context.log(\'LOG\',  context.AccountingTransactionModule_zGetAccountingTransactionList(src__ =1, selection_params=params, **params))\n
+if params.get(\'delivery_start_date\'):\n
+  params[\'delivery.start_date\'] = params[\'delivery_start_date\']\n
+\n
+#context.log(\'LOG (%s)\' % params,  context.AccountingTransactionModule_zGetAccountingTransactionList(src__ =1, selection_params=params, **params))\n
 return context.AccountingTransactionModule_zGetAccountingTransactionList(selection_params=params, **params)\n
 
 
@@ -146,6 +149,7 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList(selecti
                             <string>params</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>context</string>
                           </tuple>

@@ -73,6 +73,8 @@
 params[\'stat\'] = 1\n
 params[\'omit_output\'] = 1\n
 params[\'omit_input\'] = 0\n
+if params.get(\'delivery_start_date\'):\n
+  params[\'delivery.start_date\'] = params[\'delivery_start_date\']\n
 \n
 result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
                 selection=selection, selection_params = params, **params)\n
@@ -132,10 +134,10 @@ return float(\'%.02f\' % (row.total_price or 0.0))\n
                             <string>_getattr_</string>
                             <string>params</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>context</string>
                             <string>result</string>
-                            <string>_getitem_</string>
                             <string>row</string>
                             <string>float</string>
                           </tuple>
