@@ -73,6 +73,11 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action2&name=Print Portal 2&category=object_print&action=string:%24{portal_url}/view">Create another dummy action that redirects to the portal</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
   <td tal:content="string: ${here/portal_url}/foo_module/1/view">/erp5/foo_module/1/view</td>\n
   <td></td>\n
 </tr>\n
@@ -82,8 +87,28 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//select[@name=\'select_dialog\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_doDialog:method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>assertTextPresent</td>\n
   <td>Welcome to ERP5</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action2"></td>\n
   <td></td>\n
 </tr>\n
 </body>\n
