@@ -27,6 +27,7 @@ Currency Purchase | Banking Operation Line
 Currency Purchase | Cash Delivery Line
 Currency Sale | Banking Operation Line
 Currency Sale | Cash Delivery Line
+Destruction Survey | Cash Delivery Line
 Foreign Cash Reception | Cash Delivery Line
 Incoming Account Incident Line | Cash Delivery Cell
 Incoming Cash Balance Regulation Line | Cash Delivery Cell

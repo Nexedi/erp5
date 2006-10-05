@@ -29,6 +29,8 @@ Currency Purchase | currency_purchase_workflow
 Currency Purchase | edit_workflow
 Currency Sale | currency_sale_workflow
 Currency Sale | edit_workflow
+Destruction Survey | destruction_survey_workflow
+Destruction Survey | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
 Internal Money Deposit | edit_workflow

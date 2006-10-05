@@ -327,7 +327,7 @@
                         </tuple>
                         <tuple>
                           <string>destination_logical_path</string>
-                          <string>Destination Vaul</string>
+                          <string>Destination Vault</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -472,6 +472,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

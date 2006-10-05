@@ -67,6 +67,10 @@
   <item>Discount</item>
   <item>Resource</item>
  </portal_type>
+ <portal_type id="Destruction Survey">
+  <item>Amount</item>
+  <item>Task</item>
+ </portal_type>
  <portal_type id="Incoming Account Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>

@@ -74,8 +74,8 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 object = state_change.object\n
 \n
 if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination():\n
-  msg = Message(domain="ui", msg="Wrong Destination Selected.")\n
-  raise validationFailed, (msg,)\n
+  msg = Message(domain="ui", message="Wrong Destination Selected.")\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -126,7 +126,6 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination()
                             <string>_getattr_</string>
                             <string>object</string>
                             <string>msg</string>
-                            <string>validationFailed</string>
                           </tuple>
                         </value>
                     </item>

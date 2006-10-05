@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,16 +61,13 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
+                <string>Default</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -80,7 +77,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -88,31 +85,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_total_price</string>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_source_total_asset_price</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_total_price</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -120,7 +98,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CashExchangeLine_viewOutgoingLineList</string> </value>
+            <value> <string>DestructionSurveyModule_viewDestructionSurveyList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,11 +106,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CashExchangeLine_viewListOut</string> </value>
+            <value> <string>DestructionSurveyModule_viewDestructionSurveyList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -144,7 +122,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cash Detail Return</string> </value>
+            <value> <string>Destruction Surveys</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

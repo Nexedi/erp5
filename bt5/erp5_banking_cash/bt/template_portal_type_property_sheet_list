@@ -38,6 +38,8 @@ Currency Sale | Discount
 Currency Sale | Price
 Currency Sale | Reference
 Currency Sale | Resource
+Destruction Survey | Amount
+Destruction Survey | Task
 Incoming Account Incident Line | CashDeliveryLine
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine

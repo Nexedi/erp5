@@ -60,6 +60,9 @@
   <item>Banking Operation Line</item>
   <item>Cash Delivery Line</item>
  </portal_type>
+ <portal_type id="Destruction Survey">
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>Cash Delivery Line</item>
  </portal_type>

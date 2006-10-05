@@ -60,6 +60,10 @@
   <workflow>currency_sale_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Destruction Survey</type>
+  <workflow>edit_workflow, destruction_survey_workflow</workflow>
+ </chain>
+ <chain>
   <type>Foreign Cash Reception</type>
   <workflow>foreign_cash_reception_workflow, edit_workflow</workflow>
  </chain>

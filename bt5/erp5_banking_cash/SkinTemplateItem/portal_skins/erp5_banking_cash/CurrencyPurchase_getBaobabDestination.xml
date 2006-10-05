@@ -85,7 +85,6 @@ baobab_destination = None\n
 \n
 # Get the history of the workflow\n
 user_id=\'None\'\n
-context.log(\'workflow_item_list:\',context.Base_getWorkflowHistoryItemList(\'currency_purchase_workflow\',display=0))\n
 for workflow_item in context.Base_getWorkflowHistoryItemList(\'currency_purchase_workflow\',display=0):\n
   \n
   if workflow_item.getProperty(\'action\')==\'deliver_action\':\n

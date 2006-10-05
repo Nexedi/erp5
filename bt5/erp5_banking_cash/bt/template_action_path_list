@@ -147,6 +147,15 @@ Currency Sale | history
 Currency Sale | metadata
 Currency Sale | print
 Currency Sale | view
+Destruction Survey Module | list
+Destruction Survey Module | list_ui
+Destruction Survey Module | sort_on
+Destruction Survey Module | view
+Destruction Survey | fastInput
+Destruction Survey | history
+Destruction Survey | metadata
+Destruction Survey | print
+Destruction Survey | view
 Foreign Cash Reception Module | list_ui
 Foreign Cash Reception Module | print_pdf
 Foreign Cash Reception Module | sort_on

@@ -38,6 +38,8 @@ Currency Purchase | Cash Delivery Line
 Currency Sale Module | Currency Sale
 Currency Sale | Banking Operation Line
 Currency Sale | Cash Delivery Line
+Destruction Survey Module | Destruction Survey
+Destruction Survey | Cash Delivery Line
 Foreign Cash Reception Module | Foreign Cash Reception
 Foreign Cash Reception | Cash Delivery Line
 Incoming Account Incident Line | Cash Delivery Cell
