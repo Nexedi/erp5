@@ -84,6 +84,21 @@
     <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
   </tal:block>\n
 \n
+  <script type="text/javascript">\n
+    // The first input element with a "autofocus" class will get the focus,\n
+    // else, the first input is choosen.\n
+    function autoFocus() {\n
+      var inputs = document.getElementsByTagName("input");\n
+      var input_to_focus = inputs[0];\n
+      for (i=0;i<inputs.length;i++) {\n
+        if (inputs[i].className == "autofocus") {\n
+          input_to_focus = inputs[i];\n
+        }\n
+      }\n
+      input_to_focus.focus();\n
+    }\n
+  </script>\n
+\n
   <tal:block tal:repeat="js js_list">\n
     <script tal:attributes="src js" type="text/javascript"></script>\n
   </tal:block>\n
@@ -95,7 +110,7 @@
   <tal:block metal:use-macro="here/global_definitions/macros/planning_box_definitions"/>\n
 </head>\n
 \n
-<body>\n
+<body> <!-- TODO: This conflicts with tabber.js => onload="autoFocus()"-->\n
   <!-- Global form is used to save data of other fields when we edit one another (generally make sense in listbox and/or relation string field) -->\n
   <form id="main_form"\n
         tal:attributes="enctype python: here.ERP5XhtmlStyle_getFormEnctype(form);\n

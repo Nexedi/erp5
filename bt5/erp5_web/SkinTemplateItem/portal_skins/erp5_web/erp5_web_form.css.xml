@@ -114,6 +114,8 @@ li {margin-left: 1em}\n
 \n
 .doNotDisplay {display: none}\n
 \n
+.hiddenLabel label {display: none}\n
+\n
 table {\n
   border-collapse: collapse;\n
   border-spacing: 0;\n

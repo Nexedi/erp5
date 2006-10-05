@@ -128,14 +128,13 @@
       <li tal:repeat="link edit_links">\n
         <a tal:attributes="href python: link[\'url\']">\n
           <img tal:attributes="src   python: link[\'icon\'];\n
-                                title python: link[\'portal_type\'];\n
-                                alt   python: \'%s Icon\' % link[\'portal_type\'];"/>\n
+                               title python: link[\'portal_type\'];\n
+                               alt   python: \'%s Icon\' % link[\'portal_type\'];"/>\n
           <tal:block tal:replace="python: link[\'label\']"/>\n
         </a>\n
       </li>\n
     </ul>\n
   </div>\n
-\n
 \n
   <!-- Action drop-down contextual menu -->\n
   <div name="adminSection" class="adminSection">\n
