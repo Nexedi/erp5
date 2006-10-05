@@ -509,7 +509,8 @@ from Products.Formulator.Widget import SingleItemsWidget
 
 def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
   # get items
-  items = field.get_value('items', REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None))
+  items = field.get_value('items', REQUEST=REQUEST, 
+                          cell=getattr(REQUEST,'cell',None))
 
   # check if we want to select first item
   if not value and field.get_value('first_item') and len(items) > 0:
@@ -656,7 +657,8 @@ from Products.Formulator.Widget import ListWidget
 
 def ListWidget_render(self, field, key, value, REQUEST):
   rendered_items = self.render_items(field, key, value, REQUEST)
-  input_hidden = render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0") 
+  input_hidden = render_element('input', type='hidden', 
+                                name="default_%s:int" % (key, ), value="0") 
   list_widget = render_element(
                 'select',
                 name=key,
@@ -665,9 +667,24 @@ def ListWidget_render(self, field, key, value, REQUEST):
                 contents=string.join(rendered_items, "\n"),
                 extra=field.get_value('extra', REQUEST=REQUEST))
 
-  return "\n".join([list_widget,input_hidden])
+  return "\n".join([list_widget, input_hidden])
   
+def ListWidget_render_view(self, field, value):
+  """
+  This method is not as efficient as using a StringField in read only.
+  Always consider to change the field in your Form.
+  """
+  if value is None:
+      return ''
+  title_list = [x[0] for x in field.get_value("items") if x[1]==value]
+  if len(title_list) == 0:
+    return "??? (%s)" % value
+  else:
+    return title_list[0]
+  return value
+    
 ListWidget.render = ListWidget_render
+ListWidget.render_view = ListWidget_render_view
 
 # JPS - Subfield handling with listbox requires extension
 from Products.Formulator.StandardFields import DateTimeField
@@ -687,6 +704,7 @@ DateTimeField._get_default = DateTimeField_get_default
 
 from Products.Formulator.Widget import DateTimeWidget
 old_date_time_widget_property_names = DateTimeWidget.property_names
+from Products.Formulator.StandardFields import create_datetime_text_sub_form
 
 class PatchedDateTimeWidget(DateTimeWidget):
     """
@@ -722,7 +740,6 @@ class PatchedDateTimeWidget(DateTimeWidget):
         use_ampm = field.get_value('ampm_time_style')
         # FIXME: backwards compatibility hack:
         if not hasattr(field, 'sub_form'):
-            from StandardFields import create_datetime_text_sub_form
             field.sub_form = create_datetime_text_sub_form()
 
         if value is None and field.get_value('default_now'):
@@ -1098,3 +1115,20 @@ Field.render_htmlgrid = Field_render_htmlgrid
 #
 #   def render_pdf(self, field, key, value, REQUEST):
 #     return 'whatever for reportlab'
+
+from Products.Formulator.TALESField import TALESWidget
+def TALESWidget_render_view(self, field, value):
+  """
+  Render TALES as read only
+  """
+  if value == None:
+    text = field.get_value('default')
+  else:
+    if value != "":
+      text = value._text
+    else:
+      text = ""
+  return text
+
+TALESWidget.render_view = TALESWidget_render_view
+
