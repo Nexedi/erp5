@@ -97,6 +97,7 @@
                       <list>
                         <string>your_node</string>
                         <string>your_payment_mode</string>
+                        <string>your_payment</string>
                       </list>
                     </value>
                 </item>

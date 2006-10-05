@@ -76,7 +76,7 @@ if organisation is None : \n
 \n
 organisation = portal.restrictedTraverse(organisation)\n
 item_list = [(\'\', \'\')]\n
-for bank in organisation.objectValues(portal_type = [\'Bank Account\', \'Cash Register\']):\n
+for bank in organisation.objectValues(portal_type=portal.getPortalPaymentNodeTypeList()):\n
   item_list.append((bank.getTitle(), bank.getRelativeUrl()))\n
 \n
 return item_list\n

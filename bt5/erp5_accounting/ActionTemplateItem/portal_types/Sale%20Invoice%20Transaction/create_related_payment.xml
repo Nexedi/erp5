@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getCausalityRelatedValueList(portal_type=\'Payment Transaction\')</string> </value>
+            <value> <string>python: not object.getCausalityRelatedValueList(portal_type=\'Payment Transaction\')</string> </value>
         </item>
       </dictionary>
     </pickle>
