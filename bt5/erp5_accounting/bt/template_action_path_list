@@ -116,6 +116,7 @@ Organisation | jump_to_accounting
 Organisation | transactions
 Payment Transaction | create_reversal
 Payment Transaction | destination_asset
+Payment Transaction | destination_view
 Payment Transaction | details
 Payment Transaction | history
 Payment Transaction | metadata
