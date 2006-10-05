@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Create a related payment transaction, using the account `node`, and setting\n
+the payment mode `payment_mode`.\n
+"""\n
+\n
+from Products.ERP5Type.Message import Message\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+\n
+portal = context.getPortalObject()\n
+accounting_module = portal.accounting_module\n
+bank_account = None\n
+payment_dict = {}\n
+is_source = context.getPortalTypeName() in ( \'Sale Invoice Transaction\',\n
+                                             \'Accounting Transaction\' )\n
+if is_source:\n
+  organisation = context.getDestinationSectionValue()\n
+  if len(organisation.objectValues(portal_type = [\'Bank Account\'])) > 0 :\n
+    bank_account = organisation.objectValues(portal_type = [\'Bank Account\'])[0].getRelativeUrl()\n
+  payment_dict[\'destination_payment_value\'] = bank_account\n
+  payment_dict[\'source_payment_value\'] = context.getSourcePayment()\n
+else:\n
+  organisation = context.getSourceSectionValue()\n
+  if len(organisation.objectValues(portal_type = [\'Bank Account\'])) > 0 :\n
+    bank_account = organisation.objectValues(portal_type = [\'Bank Account\'])[0].getRelativeUrl()\n
+  payment_dict[\'destination_payment_value\'] = bank_account\n
+  payment_dict[\'source_payment_value\'] = context.getSourcePayment()\n
+\n
+portal_type_mapping = {\n
+   \'Purchase Invoice Transaction\': \'Purchase Payment Transaction\',\n
+   \'Sale Invoice Transaction\': \'Payment Transaction\',\n
+}\n
+\n
+related_payement = accounting_module.newContent(\n
+  portal_type=portal_type_mapping.get(\n
+            context.getPortalTypeName(), "Payment Transaction"),\n
+  title = "R\xc3\xa9glement de %s" % (context.getReference() or context.getTitle()),\n
+  source_section=context.getSourceSection(),\n
+  destination_section=context.getDestinationSection(),\n
+  stop_date=context.getStopDate(),\n
+  start_date=context.getStartDate(),\n
+  resource=context.getResource(),\n
+  causality_value=context,\n
+  created_by_builder=1,\n
+  payment_mode=payment_mode,\n
+  **payment_dict\n
+)\n
+\n
+bank = related_payement.newContent(\n
+      portal_type=\'Accounting Transaction Line\',\n
+      id=\'bank\',\n
+)\n
+\n
+bank_quantity = 0\n
+\n
+for line in context.objectValues(\n
+            portal_type=portal.getPortalAccountingMovementTypeList()):\n
+  if is_source:\n
+    account = line.getSourceValue(portal_type=\'Account\')\n
+  else:\n
+    account = line.getDestinationValue(portal_type=\'Account\')\n
+  \n
+  if account is not None and account.getAccountTypeId() in (\n
+                                            \'payable\', \'receivable\'):\n
+     related_payement.newContent(\n
+       source = line.getSource(),\n
+       destination = line.getDestination(),\n
+       quantity = - line.getQuantity())\n
+     bank_quantity += line.getQuantity()\n
+\n
+if is_source:\n
+  bank.edit( source=node,\n
+             quantity=bank_quantity )\n
+else:\n
+  bank.edit( destination=node,\n
+             quantity=bank_quantity )\n
+\n
+related_payement.stop()\n
+\n
+if not batch_mode:\n
+  return context.REQUEST.RESPONSE.redirect(\n
+    "%s/view?portal_status_message=%s" % (\n
+        related_payement.absolute_url(), N_(\'Related Payment Created\')))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>node, payment_mode, batch_mode=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>node</string>
+                            <string>payment_mode</string>
+                            <string>batch_mode</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>N_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>accounting_module</string>
+                            <string>None</string>
+                            <string>bank_account</string>
+                            <string>payment_dict</string>
+                            <string>is_source</string>
+                            <string>organisation</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>portal_type_mapping</string>
+                            <string>_apply_</string>
+                            <string>related_payement</string>
+                            <string>bank</string>
+                            <string>bank_quantity</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>account</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Invoice_createRelatedPaymentTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
