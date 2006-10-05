@@ -53,7 +53,7 @@
 --></tal:block>\n
 \n
 <ul><tal:block tal:repeat="sub_object python:context.objectValues()">\n
-  <li tal:condition="python: sub_object.getPortalType() in [\'Web Section\', \'Web Page\']">\n
+  <li tal:condition="python: sub_object.getPortalType() in [\'Web Section\', \'Web Page\'] and sub_object.getVisible()">\n
     <a tal:attributes="href python: sub_object.WebSite_getDocumentUrl()"\n
        tal:content="python: sub_object.ERP5Web_getVerboseTitle(priority=\'short_title\')"/>\n
   </li>\n
