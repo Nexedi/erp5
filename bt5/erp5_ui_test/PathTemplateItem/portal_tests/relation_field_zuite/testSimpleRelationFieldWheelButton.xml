@@ -134,6 +134,42 @@
   <td/>\n
 </tr>\n
 <!-- To be continued... this is currently failing here :( -->\n
+\n
+\n
+<!-- Type an unknown value, and validate -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_foo_category_title</td>\n
+  <td>aaaaaaaaaaaaaaaaaaaaaaaaaa</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <!-- XXX maybe a better locator for relation field -->\n
+  <td>//input[@value=\'update...\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Please select one object.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@id=\'listbox_record_number\']</td>\n
+  <!-- XXX this will probably fail ... -->\n
+  <td>0 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td/>\n
+</tr>\n
+\n
 </tbody></table>\n
 </body>\n
 </html>\n
