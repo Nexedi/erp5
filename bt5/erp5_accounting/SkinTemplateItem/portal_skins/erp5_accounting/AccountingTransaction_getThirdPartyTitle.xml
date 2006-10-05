@@ -68,11 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>section_category=selection.getParams().get(\'section_category\')\n
+            <value> <string>if selection is None:\n
+  # TODO: this should definitivly be REQUEST chached\n
+  selection = context.portal_selections.getSelectionFor(\'accounting_selection\')\n
+\n
+section_category=selection.getParams().get(\'section_category\')\n
 if not section_category:\n
   return\n
 \n
-transaction = brain.getObject()\n
+if brain is not None:\n
+  transaction = brain.getObject()\n
+else:\n
+  transaction = context\n
+\n
 source_section = transaction.getSourceSectionValue()\n
 if source_section is not None and source_section.isMemberOf(section_category):\n
   return transaction.getDestinationSectionTitle()\n
@@ -93,7 +101,7 @@ return transaction.getSourceSectionTitle()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection, **kw</string> </value>
+            <value> <string>brain=None, selection=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,11 +130,12 @@ return transaction.getSourceSectionTitle()\n
                             <string>brain</string>
                             <string>selection</string>
                             <string>kw</string>
+                            <string>None</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>section_category</string>
                             <string>transaction</string>
                             <string>source_section</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +147,10 @@ return transaction.getSourceSectionTitle()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

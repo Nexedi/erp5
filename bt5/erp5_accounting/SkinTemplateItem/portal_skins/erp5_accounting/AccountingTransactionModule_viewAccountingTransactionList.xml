@@ -85,6 +85,7 @@
                         <string>listbox_credit</string>
                         <string>listbox_debit</string>
                         <string>listbox_delivery_start_date</string>
+                        <string>listbox_delivery_mirror_section_title</string>
                       </list>
                     </value>
                 </item>

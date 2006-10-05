@@ -334,7 +334,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>delivery_mirror_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -403,7 +403,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>delivery_mirror_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -490,6 +490,10 @@
                         <tuple>
                           <string>delivery.start_date</string>
                           <string>delivery_start_date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mirror_section_title</string>
+                          <string>delivery_mirror_section_title</string>
                         </tuple>
                       </list>
                     </value>
@@ -618,7 +622,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>delivery_mirror_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -666,7 +670,40 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mirror_section_title</string>
+                          <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Invoice Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>specific_reference</string>
+                          <string>Transaction Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -699,7 +736,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>delivery_mirror_section_title</string>
                           <string>AccountingTransactionModule_getThirdPartyUrl</string>
                         </tuple>
                       </list>
