@@ -241,7 +241,7 @@
                 </item>
                 <item>
                     <key> <string>date_only</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>date_separator</string> </key>

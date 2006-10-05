@@ -73,13 +73,22 @@
 # to select them\n
 from DateTime import DateTime\n
 \n
+class Dummy:\n
+  pass\n
+\n
+dummy = Dummy()\n
+node = kw.get(\'node\',dummy)\n
+\n
 if item_portal_type_list is None:\n
   item_portal_type_list = ["Checkbook","Check"]\n
 \n
 if listbox is None:\n
 \n
-  if node is None:\n
+  if node is dummy:\n
+    node = None\n
+  else:\n
     node = context.getBaobabSource()\n
+\n
   reference_date = DateTime()\n
   item_list = []\n
   listbox = []\n
@@ -152,7 +161,7 @@ return context.asContext(context=None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,node=None,batch_mode=0,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -172,7 +181,7 @@ return context.asContext(context=None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -182,12 +191,14 @@ return context.asContext(context=None\n
                             <string>item_portal_type_list</string>
                             <string>destination_payment</string>
                             <string>model_filter_dict</string>
-                            <string>node</string>
                             <string>batch_mode</string>
                             <string>kw</string>
                             <string>DateTime</string>
-                            <string>None</string>
+                            <string>Dummy</string>
+                            <string>dummy</string>
                             <string>_getattr_</string>
+                            <string>node</string>
+                            <string>None</string>
                             <string>context</string>
                             <string>reference_date</string>
                             <string>item_list</string>
@@ -218,7 +229,6 @@ return context.asContext(context=None\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
                 <none/>
                 <none/>
                 <none/>

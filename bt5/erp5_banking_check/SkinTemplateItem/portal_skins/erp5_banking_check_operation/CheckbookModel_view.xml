@@ -107,7 +107,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_account_number_enabled</string>
-                        <string>my_quantity_required</string>
+                        <string>my_fixed_price</string>
                         <string>my_description</string>
                       </list>
                     </value>

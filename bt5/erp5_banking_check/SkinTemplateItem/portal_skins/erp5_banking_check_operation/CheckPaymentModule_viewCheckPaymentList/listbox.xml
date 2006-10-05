@@ -318,7 +318,44 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_logical_path</string>
+                          <string>Counter</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_payment_id</string>
+                          <string>Account Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_payment_title</string>
+                          <string>Account Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_free_text</string>
+                          <string>Check Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -481,6 +518,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

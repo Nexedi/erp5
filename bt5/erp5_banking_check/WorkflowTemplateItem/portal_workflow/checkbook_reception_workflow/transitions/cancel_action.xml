@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Annuler</string> </value>
+            <value> <string>Cancel</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

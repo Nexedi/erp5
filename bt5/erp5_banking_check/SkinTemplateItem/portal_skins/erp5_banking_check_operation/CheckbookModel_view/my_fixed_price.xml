@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity_required</string> </value>
+            <value> <string>my_fixed_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -165,7 +165,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Amount is mandatory</string> </value>
+                    <value> <string>Fixed price</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -187,7 +187,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.isAccountNumberEnabled()</string> </value>
+            <value> <string>python: here.isFixedPrice()</string> </value>
         </item>
       </dictionary>
     </pickle>
