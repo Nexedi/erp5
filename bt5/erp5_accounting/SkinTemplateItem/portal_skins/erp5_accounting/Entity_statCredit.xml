@@ -127,7 +127,7 @@ return - context.Node_statAccountingBalance(**kw) or 0\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
