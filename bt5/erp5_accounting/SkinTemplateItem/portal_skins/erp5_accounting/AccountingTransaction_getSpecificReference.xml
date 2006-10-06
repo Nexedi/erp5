@@ -86,8 +86,8 @@ else:\n
 \n
 source_section = transaction.getSourceSectionValue()\n
 if source_section is not None and source_section.isMemberOf(section_category):\n
-  return transaction.getDestinationReference()\n
-return transaction.getSourceReference()\n
+  return transaction.getSourceReference()\n
+return transaction.getDestinationReference()\n
 </string> </value>
         </item>
         <item>
