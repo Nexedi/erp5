@@ -86,6 +86,7 @@
                         <string>listbox_debit</string>
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_delivery_mirror_section_title</string>
+                        <string>listbox_specific_reference</string>
                       </list>
                     </value>
                 </item>
