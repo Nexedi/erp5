@@ -1,0 +1,27 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<b><br/>
+  <dtml-var expr="REQUEST.get('portal_status_message', '')">
+</b>
+
+<h3>Cache invalidation</h3>
+  <form action="clearCache" method="POST">
+    <input type="submit" value="Clear all cache factories"/>
+  </form>
+  <dtml-in expr="objectIds('ERP5 Cache Factory')">
+    <form action="clearCacheFactory" method="POST">
+      <input type="hidden" name="cache_factory_id" value="<dtml-var sequence-item>">
+      <input type="submit" value="Clear <dtml-var sequence-item>"/>
+    </form>
+  </dtml-in>
+  
+<h3>SQLCache configuration</h3>
+<p>Create SQL cache table(Note: you need to adjust later each SQLCache plugin to use this cache table name manually. Generally it is a good idea to use default sql cache table name)</p>
+<form action="createDBCacheTable" method="POST">
+  <input name="cache_table_name" value="cache">
+  <br/>
+  <input type="submit" value="Create (Recreate) sql cache table"/>
+</form>
+
+<dtml-var manage_page_footer>

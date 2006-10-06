@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-3.7.dtd">
+<!-- Project file for project ERP5Cache -->
+<!-- Saved: 2006-10-03, 20:15:31 -->
+<!-- Copyright (C) 2006 Ivan Tyagov, ivan.tyagov@brmtec.com -->
+<Project version="3.7">
+  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <UIType>Qt</UIType>
+  <Description></Description>
+  <Version>0.1</Version>
+  <Author>Ivan Tyagov</Author>
+  <Email>ivan.tyagov@brmtec.com</Email>
+  <Sources>
+    <Source>
+      <Name>CacheTool.py</Name>
+    </Source>
+    <Source>
+      <Name>__init__.py</Name>
+    </Source>
+    <Source>
+      <Name>interfaces.py</Name>
+    </Source>
+    <Source>
+      <Dir>CachePlugins</Dir>
+      <Name>BaseCache.py</Name>
+    </Source>
+    <Source>
+      <Dir>CachePlugins</Dir>
+      <Name>RamCache.py</Name>
+    </Source>
+    <Source>
+      <Dir>CachePlugins</Dir>
+      <Name>DistributedRamCache.py</Name>
+    </Source>
+    <Source>
+      <Dir>CachePlugins</Dir>
+      <Name>__init__.py</Name>
+    </Source>
+    <Source>
+      <Dir>CachePlugins</Dir>
+      <Name>DummyCache.py</Name>
+    </Source>
+    <Source>
+      <Dir>CachePlugins</Dir>
+      <Name>SQLCache.py</Name>
+    </Source>
+    <Source>
+      <Dir>tests</Dir>
+      <Name>__init__.py</Name>
+    </Source>
+    <Source>
+      <Dir>tests</Dir>
+      <Name>testCache.py</Name>
+    </Source>
+    <Source>
+      <Name>INSTALL</Name>
+    </Source>
+    <Source>
+      <Dir>Document</Dir>
+      <Name>__init__.py</Name>
+    </Source>
+    <Source>
+      <Dir>PropertySheet</Dir>
+      <Name>__init__.py</Name>
+    </Source>
+    <Source>
+      <Dir>PropertySheet</Dir>
+      <Name>CacheFactory.py</Name>
+    </Source>
+    <Source>
+      <Dir>PropertySheet</Dir>
+      <Name>BaseCachePlugin.py</Name>
+    </Source>
+    <Source>
+      <Dir>Document</Dir>
+      <Name>CacheFactory.py</Name>
+    </Source>
+    <Source>
+      <Dir>Document</Dir>
+      <Name>RamCachePlugin.py</Name>
+    </Source>
+    <Source>
+      <Dir>PropertySheet</Dir>
+      <Name>DistributedRamCachePlugin.py</Name>
+    </Source>
+    <Source>
+      <Dir>PropertySheet</Dir>
+      <Name>SQLCachePlugin.py</Name>
+    </Source>
+    <Source>
+      <Dir>Document</Dir>
+      <Name>DistributedRamCachePlugin.py</Name>
+    </Source>
+    <Source>
+      <Dir>Document</Dir>
+      <Name>SQLCachePlugin.py</Name>
+    </Source>
+    <Source>
+      <Dir>dtml</Dir>
+      <Name>cache_tool_configure.dtml</Name>
+    </Source>
+  </Sources>
+  <Forms>
+  </Forms>
+  <Translations>
+  </Translations>
+  <Interfaces>
+  </Interfaces>
+  <Others>
+    <Other>
+      <Dir></Dir>
+      <Dir>home</Dir>
+      <Dir>ivan</Dir>
+      <Name>Eric3-doc</Name>
+    </Other>
+  </Others>
+  <Vcs>
+    <VcsType>Subversion</VcsType>
+    <VcsOptions>{'status': [''], 'log': [''], 'global': [''], 'update': [''], 'remove': [''], 'add': [''], 'tag': [''], 'export': [''], 'diff': [''], 'commit': [''], 'checkout': [''], 'history': ['']}</VcsOptions>
+    <VcsOtherData>{'standardLayout': True}</VcsOtherData>
+  </Vcs>
+  <Eric3Doc>
+    <Eric3DocParams>{'outputDirectory': u'/home/ivan/Eric3-doc'}</Eric3DocParams>
+  </Eric3Doc>
+</Project>
