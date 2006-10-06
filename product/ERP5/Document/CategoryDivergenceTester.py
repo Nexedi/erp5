@@ -81,25 +81,25 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
       delivery_mvt_category_list.sort()
       simulation_category_list.sort()
       
-      if delivery_mvt_category_list != simulation_category_list:
-         
+      if delivery_mvt_category_list != simulation_category_list: 
         delivery_mvt_category_title_list = []
         for mvt_category in delivery_mvt_category_list:
           category_value = delivery_mvt.resolveCategory(mvt_category) 
-          if category_value.getPortalType() == 'Category':
-            delivery_mvt_category_title_list.append(category_value.getTranslatedTitle())
-          else:
-            delivery_mvt_category_title_list.append(category_value.getTitle())
+          if category_value is not None:
+            if category_value.getPortalType() == 'Category':
+              delivery_mvt_category_title_list.append(category_value.getTranslatedTitle())
+            else:
+              delivery_mvt_category_title_list.append(category_value.getTitle())
          
-            
         simulation_category_title_list = []
         for mvt_category in simulation_category_list:
           category_value = delivery_mvt.resolveCategory(mvt_category)
-          if category_value.getPortalType() == 'Category':
-            simulation_category_title_list.append(category_value.getTranslatedTitle())
-          else:
-            simulation_category_title_list.append(category_value.getTitle())
-
+          if category_value is not None:
+            if category_value.getPortalType() == 'Category':
+              simulation_category_title_list.append(category_value.getTranslatedTitle())
+            else:
+              simulation_category_title_list.append(category_value.getTitle())
+        
         delivery_mvt_property = ' , '.join(delivery_mvt_category_title_list)
         simulation_mvt_property = ' , '.join(simulation_category_title_list)
         
