@@ -1394,7 +1394,12 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                                                    props=chain_dict)
   def uninstall(self, context, **kw):
     (default_chain, chain_dict) = getChainByType(context)
-    for path in self._objects.keys():
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._objects.keys()
+    for path in object_keys:
       path_splitted = path.split('/', 1)
       if len(path_splitted) < 2:
         continue
