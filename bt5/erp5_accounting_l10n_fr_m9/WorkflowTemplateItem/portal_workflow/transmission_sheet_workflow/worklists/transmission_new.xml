@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_invoice_transmission_sheet_module/view?reset:int=1&validation_state=new
+invoice_transmission_sheet_module/view?reset:int=1&validation_state=new
 
 ]]></string> </value>
         </item>
