@@ -45,6 +45,7 @@ class PropertyTypeValidity(Constraint):
 
   # Initialize type dict
   _type_dict = {
+    'object':             (type('a'), ),
     'string':             (type('a'), ),
     'text':               (type('a'), ),
     'int':                (type(1), ),
