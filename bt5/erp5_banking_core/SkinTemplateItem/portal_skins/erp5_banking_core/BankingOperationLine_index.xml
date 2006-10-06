@@ -69,7 +69,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Reindex the given line with a tag so it can be found in the message table.\n
-line.reindexObject(tag=context.BankAccount_getMessageTag(line.getDestinationPaymentValue()))\n
+if source:\n
+  line.reindexObject(tag=context.BankAccount_getMessageTag(line.getSourcePaymentValue()))\n
+else:\n
+  line.reindexObject(tag=context.BankAccount_getMessageTag(line.getDestinationPaymentValue()))\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +95,7 @@ line.reindexObject(tag=context.BankAccount_getMessageTag(line.getDestinationPaym
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>line</string> </value>
+            <value> <string>line, source=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,15 +115,16 @@ line.reindexObject(tag=context.BankAccount_getMessageTag(line.getDestinationPaym
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>line</string>
+                            <string>source</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -132,7 +136,9 @@ line.reindexObject(tag=context.BankAccount_getMessageTag(line.getDestinationPaym
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
