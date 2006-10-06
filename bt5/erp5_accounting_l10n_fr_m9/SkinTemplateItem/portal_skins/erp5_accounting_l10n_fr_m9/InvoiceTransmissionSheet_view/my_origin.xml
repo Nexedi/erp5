@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_transmission_sheet_type</string> </value>
+            <value> <string>my_origin</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -257,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transmission Sheet Type</string> </value>
+                    <value> <string>Transmission Sheet Origin</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/transmission_sheet_type/getCategoryChildTranslatedTitleItemList</string> </value>
+            <value> <string>python: getattr(here.portal_categories.origin, here.getPortalType(), \'Accounting Transaction\').getCategoryChildTitleItemList(include_if_child=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

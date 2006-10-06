@@ -326,8 +326,8 @@
                           <string>Transmission Sheet Reference</string>
                         </tuple>
                         <tuple>
-                          <string>transmission_sheet_type_title</string>
-                          <string>Transmission Sheet Type</string>
+                          <string>origin_title</string>
+                          <string>Transmission Sheet Origin</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -363,8 +363,8 @@
                           <string>Transmission Sheet Reference</string>
                         </tuple>
                         <tuple>
-                          <string>transmission_sheet_type_title</string>
-                          <string>Transmission Sheet Type</string>
+                          <string>origin_title</string>
+                          <string>Transmission Sheet Origin</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -512,8 +512,8 @@
                           <string>Transmission Sheet Reference</string>
                         </tuple>
                         <tuple>
-                          <string>transmission_sheet_type_title</string>
-                          <string>Transmission Sheet Type</string>
+                          <string>origin_title</string>
+                          <string>Transmission Sheet Origin</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
