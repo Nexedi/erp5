@@ -101,6 +101,8 @@ for listbox_line in listbox:\n
     item_dict[\'destination_trade\'] = item.getDestinationTrade()\n
     item_dict["resource_value"] = item.getResourceValue()\n
     item_dict["check_amount"] = item.getCheckAmount()\n
+    item_dict["check_type"] = item.getCheckType()\n
+    item_dict["price_currency"] = item.getPriceCurrency()\n
     item_dict["aggregate_value"] = item\n
     item_dict["quantity"] = 1\n
     delivery_line.edit(**item_dict)\n

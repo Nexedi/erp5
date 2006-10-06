@@ -76,12 +76,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
                         <string>listbox_start_date</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

@@ -104,7 +104,7 @@ for movement in movement_list:\n
         msg = Message(domain = "ui", message="Sorry, the price was not defined on some traveler checks")\n
         raise ValidationFailed, (msg,)\n
 if total_debit>0:\n
-  total_debit = round(total_debit+0.5)\n
+  total_debit = round(total_debit)\n
   # Source and destination will be updated automaticaly based on the category of bank account\n
   # The default account chosen should act as some kind of *temp* account or *parent* account\n
   movement = transaction.get(\'movement\',None)\n

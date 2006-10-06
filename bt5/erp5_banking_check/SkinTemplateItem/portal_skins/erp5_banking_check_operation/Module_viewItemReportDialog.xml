@@ -76,11 +76,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>my_vault</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
