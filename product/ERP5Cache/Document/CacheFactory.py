@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Cache.PropertySheet import CacheFactory
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import CachingMethod, CacheFactory
+from Products.ERP5Type.Cache import CachingMethod
 
 class CacheFactory(XMLObject):
   """
