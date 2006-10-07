@@ -92,7 +92,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>panel2</string> </key>
+                    <key> <string>panel2</string> </key>
                     <value>
                       <list>
                         <string>gap</string>
@@ -100,7 +100,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>panel3</string> </key>
+                    <key> <string>panel3</string> </key>
                     <value>
                       <list/>
                     </value>

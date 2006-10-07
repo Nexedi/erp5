@@ -57,9 +57,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>table_0</string>
-<string>table_1</string>
-<string>query_table</string>
+                            <string>table_0</string>
+                            <string>table_1</string>
+                            <string>query_table</string>
                           </list>
                         </value>
                     </item>
