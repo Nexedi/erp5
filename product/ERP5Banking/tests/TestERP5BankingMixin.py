@@ -715,7 +715,7 @@ class TestERP5BankingMixin:
     variation = model.newContent(id='variant_1',
                                  portal_type='Check Model Type Variation',
                                  price=50)
-    model.setPriceCurrency(self.currency_2)
+    model.setPriceCurrency(self.currency_2.getRelativeUrl())
     return model
 
   def createCashContainer(self, document, container_portal_type, global_dict, line_list, delivery_line_type='Cash Delivery Line'):

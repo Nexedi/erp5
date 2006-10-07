@@ -97,8 +97,9 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
     # Add a line for traveler check
     self.line_2 = self.checkbook_vault_transfer.newContent(quantity=1,
                              resource_value=self.traveler_check_model,
-                             check_amount_value=self.traveler_check_model.variant_1,
+                             check_type_value=self.traveler_check_model.variant_1,
                              aggregate_value=self.traveler_check,
+                             price_currency_value=self.currency_2
                              )
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'plan_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
