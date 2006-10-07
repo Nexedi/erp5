@@ -37,15 +37,14 @@ Accounting Transaction Module | create_closing_transaction
 Accounting Transaction Module | create_related_payments
 Accounting Transaction Module | csv_export
 Accounting Transaction Module | general_ledger_report
+Accounting Transaction Module | journal_from_selection
 Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
 Accounting Transaction Module | jump_bank_accounts
 Accounting Transaction Module | list_ui
 Accounting Transaction Module | plan_transactions
 Accounting Transaction Module | print
-Accounting Transaction Module | report
 Accounting Transaction Module | search
-Accounting Transaction Module | social_report
 Accounting Transaction Module | sort_on
 Accounting Transaction Module | third_parties_report
 Accounting Transaction Module | trial_balance_report
