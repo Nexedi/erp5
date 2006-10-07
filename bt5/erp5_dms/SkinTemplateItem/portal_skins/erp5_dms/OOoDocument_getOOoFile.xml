@@ -69,10 +69,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request=context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', context.getMimeType())\n
-context.log(\'mimetype\',context.getMimeType())\n
+request.RESPONSE.setHeader(\'Content-type\', context.getContentType())\n
+context.log(\'mimetype\',context.getContentType())\n
 request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n
-return context.getOOfile()\n
+return context.getOOFile()\n
 </string> </value>
         </item>
         <item>

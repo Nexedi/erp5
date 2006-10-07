@@ -107,8 +107,8 @@
                         <string>my_int_index</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_source_reference</string>
-                        <string>my_status_message</string>
                         <string>my_contributor_title_list</string>
+                        <string>my_external_processing_status_message</string>
                       </list>
                     </value>
                 </item>
