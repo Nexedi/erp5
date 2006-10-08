@@ -1,3 +1,6 @@
+2006-10-08
+Fixes and implementation improvements
+
 2006-10-02
 Moved file uploading from /view form to object_exchange
 Uploading new file creates a new object with most properties copied
