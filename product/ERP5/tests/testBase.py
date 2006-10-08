@@ -931,6 +931,15 @@ class TestBase(ERP5TypeTestCase):
     self.assertRaises(BadRequest, obj.setProperty,
                      'workflow_history', property_value)
   
+  def test_12_editTempObject(self, quiet=quiet, run=run_all_test):
+    """Simple test to edit a temp object.
+    """
+    portal = self.getPortal()
+    from Products.ERP5Type.Document import newTempOrganisation
+    tmp_object = newTempOrganisation(portal, "a_wonderful_id")
+    tmp_object.edit(title='new title')
+    self.assertEquals('new title', tmp_object.getTitle())
+
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
   """
