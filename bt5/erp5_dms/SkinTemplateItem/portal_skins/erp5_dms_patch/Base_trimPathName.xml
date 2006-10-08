@@ -68,36 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def cached_DMSBaseCategoryHash(item_list,value_list,default_sub_field_property_dict,is_right_display):\n
-  if default_sub_field_property_dict is None:\n
-    default_sub_field_property_dict={\'field_type\': \'MultiListField\', \'item_list\': [], \'required\': 0, \'value\': [], \'is_right_display\': 0, \'key\': \'default\', \'title\': \'Categories\', \'size\': 5}\n
-\n
-  sub_field_dict={}\n
-  maximum_list_size=5\n
-\n
-  default_sub_field_property_dict[\'field_type\']=\'ListField\'\n
-  default_sub_field_property_dict[\'size\']=1\n
-\n
-  for base_category in item_list:\n
-    if not sub_field_dict.has_key(base_category):\n
-      basecatobject=context.portal_categories.resolveCategory(base_category)\n
-      sub_field_property_dict=default_sub_field_property_dict.copy()\n
-      sub_field_property_dict[\'key\']=base_category\n
-      sub_field_property_dict[\'title\']=basecatobject.getTranslatedTitle()\n
-      sub_field_property_dict[\'item_list\']=[(context.Base_trimPathName(x,100),y) for x,y in basecatobject.getCategoryChildLogicalPathItemList()]\n
-      sub_field_property_dict[\'value\']=context.aq_parent.aq_parent.getProperty(base_category)\n
-      \n
-      sub_field_dict[base_category]=sub_field_property_dict\n
-\n
-  return sub_field_dict.values()\n
-cached_DMSBaseCategoryHash=CachingMethod(cached_DMSBaseCategoryHash,id=\'DMSParallelListField_DMSBaseCategoryHash\')\n
-return cached_DMSBaseCategoryHash(item_list,value_list,default_sub_field_property_dict,is_right_display)\n
-\n
-\n
-# vim: syntax=python shiftwidth=2\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+if len(name)<chars:\n
+  return name\n
+a=name.split(\'/\')\n
+if a[0]==\'\':a=a[1:]\n
+dif=len(name)-chars\n
+ind=1\n
+while dif>0 and ind<len(a)-1:\n
+  dif=dif-len(a[ind])+2\n
+  a[ind]=\'..\'\n
+  ind+=1\n
+return \'/\'.join(a)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -113,7 +99,7 @@ return cached_DMSBaseCategoryHash(item_list,value_list,default_sub_field_propert
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>item_list, value_list=(), default_sub_field_property_dict=None, is_right_display=0</string> </value>
+            <value> <string>name,chars</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,19 +119,21 @@ return cached_DMSBaseCategoryHash(item_list,value_list,default_sub_field_propert
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>item_list</string>
-                            <string>value_list</string>
-                            <string>default_sub_field_property_dict</string>
-                            <string>is_right_display</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>cached_DMSBaseCategoryHash</string>
+                            <string>name</string>
+                            <string>chars</string>
+                            <string>len</string>
+                            <string>_getattr_</string>
+                            <string>a</string>
+                            <string>_getitem_</string>
+                            <string>dif</string>
+                            <string>ind</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,16 +145,12 @@ return cached_DMSBaseCategoryHash(item_list,value_list,default_sub_field_propert
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <tuple/>
-                <none/>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMSBaseCategoryHash</string> </value>
+            <value> <string>Base_trimPathName</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
