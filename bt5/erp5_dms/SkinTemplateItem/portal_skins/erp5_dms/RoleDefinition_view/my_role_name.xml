@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [r for r in here.valid_roles() if r!=\'Owner\']</string> </value>
+            <value> <string>python: [r for r in here.valid_roles() if r not in(\'Owner\',\'Manager\',\'Assignor\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
