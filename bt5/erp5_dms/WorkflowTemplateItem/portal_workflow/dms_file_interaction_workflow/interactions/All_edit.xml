@@ -43,6 +43,7 @@
                 <string>AssignCategories</string>
                 <string>ClearCacheUponUpload</string>
                 <string>IngestAfterUpload</string>
+                <string>UpdateLocalRoles</string>
               </list>
             </value>
         </item>
