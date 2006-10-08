@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_status_message</string> </value>
+            <value> <string>my_external_processing_status_message</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

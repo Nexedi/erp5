@@ -471,7 +471,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>base_view_local_permission_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
