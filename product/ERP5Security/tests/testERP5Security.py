@@ -39,6 +39,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                      get_request
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.Cache import clearCache
 from Products.PluggableAuthService import PluggableAuthService
@@ -47,14 +48,15 @@ try:
 except ImportError:
   from zope.interface.verify import verifyClass
 
-class TestERP5Security(ERP5TypeTestCase):
-  """Test ERP5 Security."""
+class TestUserManagement(ERP5TypeTestCase):
+  """Tests User Management in ERP5Security.
+  """
  
   RUN_ALL_TESTS = 1
   
   def getTitle(self):
     """Title of the test."""
-    return "ERP5 Security"
+    return "ERP5Security: User Management"
   
   def getBusinessTemplateList(self):
     """List of BT to install. """
@@ -196,13 +198,135 @@ class TestERP5Security(ERP5TypeTestCase):
     changed, = person_module.manage_pasteObjects(copy_data)
     self.assertNotEquals(person_module[changed['new_id']].getReference(),
                          person_module[changed['id']].getReference())
+  
+class TestLocalRoleManagement(ERP5TypeTestCase):
+  """Tests Local Role Management with ERP5Security.
 
+  This test should probably part of ERP5Type ?
+  """
+  def getTitle(self):
+    return "ERP5Security: User Role Management"
+
+  def afterSetUp(self):
+    """Called after setup completed.
+    """
+    self.portal = self.getPortal()
+    # configure group, site, function categories
+    for bc in ['group', 'site', 'function']:
+      base_cat = self.getCategoryTool()[bc]
+      code = bc[0].upper()
+      base_cat.newContent(portal_type='Category',
+                          id='subcat',
+                          codification="%s1" % code)
+    self.defined_category = "group/subcat\n"\
+                            "site/subcat\n"\
+                            "function/subcat"
+    # any member can add organisations
+    self.portal.organisation_module.manage_permission(
+            'Add portal content', roles=['Member', 'Manager'], acquire=1)
+
+    self.username = 'username'
+    # create a user and open an assignement
+    pers = self.getPersonModule().newContent(portal_type='Person',
+                                             career_role='internal',
+                                             reference=self.username,
+                                             password=self.username)
+    assignment = pers.newContent( portal_type='Assignment',
+                                  group='subcat',
+                                  site='subcat',
+                                  function='subcat' )
+    assignment.open()
+    get_transaction().commit()
+    self.tic()
+  
+  def beforeTearDown(self):
+    """Called before teardown."""
+    # clear base categories
+    for bc in ['group', 'site', 'function']:
+      base_cat = self.getCategoryTool()[bc]
+      base_cat.manage_delObjects([x for x in base_cat.objectIds()])
+    # clear role definitions
+    for ti in self.getTypesTool().objectValues(spec=('ERP5 Type Information',)):
+      ti._roles = ()
+    # clear modules
+    for module in self.portal.objectValues(spec=('ERP5 Folder',)):
+      module.manage_delObjects([x for x in module.objectIds()])
+    # commit this
+    get_transaction().commit()
+    clearCache()
+
+  def loginAsUser(self, username):
+    uf = self.portal.acl_users
+    user = uf.getUserById(username).__of__(uf)
+    newSecurityManager(None, user)
+  
+  def _getTypeInfo(self):
+    return self.getTypesTool()['Organisation']
+  
+  def _makeOne(self):
+    return self.getOrganisationModule().newContent(portal_type='Organisation')
+  
+  def getBusinessTemplateList(self):
+    """List of BT to install. """
+    return ('erp5_base',)
+  
+  def testMemberRole(self):
+    """Test users have the Member role.
+    """
+    self.loginAsUser(self.username)
+    self.failUnless('Member' in
+            getSecurityManager().getUser().getRolesInContext(self.portal))
+    self.failUnless('Member' in
+            getSecurityManager().getUser().getRoles())
+
+  def testSimpleLocalRole(self):
+    """Test simple case of setting a role.
+    """
+    ti = self._getTypeInfo()
+    ti.addRole(id='Assignor', description='desc.',
+           name='an Assignor role for testing',
+           condition='',
+           category=self.defined_category,
+           base_category_script='ERP5Type_getSecurityCategoryFromAssignment',
+           base_category='')
+    obj = self._makeOne()
+    self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    
+    self.loginAsUser(self.username)
+    self.failUnless('Assignor' in
+            getSecurityManager().getUser().getRolesInContext(obj))
+        
+  def testDynamicLocalRole(self):
+    """Test simple case of setting a dynamic role.
+    The site category is not defined explictly the role, and will have the
+    current site of the user.
+    """
+    return NotImplemented # FIXME: currently this test raises error
+                           
+    ti = self._getTypeInfo()
+    ti.addRole(id='Assignor', description='desc.',
+           name='an Assignor role for testing',
+           condition='',
+           category='group/subcat\nfunction/subcat',
+           base_category_script='ERP5Type_getSecurityCategoryFromAssignment',
+           base_category='site')
+    
+    self.loginAsUser(self.username)
+    obj = self._makeOne()
+    self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.failUnless('Assignor' in
+            getSecurityManager().getUser().getRolesInContext(obj))
+  
+  def testAcquireLocalRoles(self):
+    return NotImplemented # TODO
+    
 if __name__ == '__main__':
   framework()
 else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5Security))
+    suite.addTest(unittest.makeSuite(TestUserManagement))
+    suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
     return suite
 
