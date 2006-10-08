@@ -260,8 +260,11 @@ class RoleProviderBase:
       i = 0
       for brain in portal_catalog(portal_type = self.id):
         obj = brain.getObject()
-        userdb_path, user_id = obj.getOwnerTuple()
-        obj.assignRoleToSecurityGroup(user_name = user_id)
+        user_id = None
+        owner_tuple = obj.getOwnerTuple()
+        if owner_tuple is not None:
+          user_id = owner_tuple[1]
+        obj.updateLocalRolesOnSecurityGroups(user_name = user_id)
         i += 1
 
       return self.manage_editRolesForm(REQUEST, manage_tabs_message='%d objects updated' % (i,))

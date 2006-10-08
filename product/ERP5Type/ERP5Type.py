@@ -385,7 +385,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
         # First try to guess from the owner
         try:
           user_name = ob.getOwnerInfo()['id']
-        except AttributeError:
+        except (AttributeError, TypeError):
           pass
       if user_name is None:
         if ERP5UserManager is not None:
@@ -618,22 +618,6 @@ class ERP5TypeInformation( FactoryTypeInformation,
         from Products.ERP5Type.Base import _aq_reset
         _aq_reset() # XXX We should also call it whenever we change workflow defition
       return result
-
-    security.declareProtected( Permissions.ManagePortal,
-                              'manage_editLocalRolesForm' )
-    def manage_editLocalRolesForm( self, REQUEST, manage_tabs_message=None ):
-
-        """ Show the 'Local Roles' management tab.
-        """
-        role_list = []
-
-        return self._roles_form( self
-                                 , REQUEST
-                                 , roles=role_list
-                                 , possible_permissions=()
-                                 , management_view='Roles'
-                                 , manage_tabs_message=manage_tabs_message
-                                 )
 
     def reorderActions(self, REQUEST=None):
       """Reorder actions according to their priorities."""
