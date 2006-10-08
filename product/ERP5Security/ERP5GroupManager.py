@@ -87,100 +87,99 @@ class ERP5GroupManager(BasePlugin):
       sm = getSecurityManager()
       if sm.getUser() != SUPER_USER:
         newSecurityManager(self, self.getUser(SUPER_USER))
+      try:
+        # To get the complete list of groups, we try to call the
+        # ERP5Type_getSecurityCategoryMapping which should return a list
+        # of lists of two elements (script, base_category_list) like :
+        # (
+        #   ('script_1', ['base_category_1', 'base_category_2', ...]),
+        #   ('script_2', ['base_category_1', 'base_category_3', ...])
+        # )
+        #
+        # else, if the script does not exist, falls back to a list containng
+        # only one list :
+        # (('ERP5Type_getSecurityCategoryFromAssignment',
+        #   self.getPortalAssignmentBaseCategoryList() ),)
 
-      # To get the complete list of groups, we try to call the
-      # ERP5Type_getSecurityCategoryMapping which should return a list
-      # of lists of two elements (script, base_category_list) like :
-      # (
-      #   ('script_1', ['base_category_1', 'base_category_2', ...]),
-      #   ('script_2', ['base_category_1', 'base_category_3', ...])
-      # )
-      #
-      # else, if the script does not exist, falls back to a list containng
-      # only one list :
-      # (('ERP5Type_getSecurityCategoryFromAssignment',
-      #   self.getPortalAssignmentBaseCategoryList() ),)
+        mapping_method = getattr(self,
+            'ERP5Type_getSecurityCategoryMapping', None)
+        if mapping_method is None:
+          security_definition_list = ((
+              'ERP5Type_getSecurityCategoryFromAssignment',
+              self.getPortalAssignmentBaseCategoryList()
+          ),)
+        else:
+          security_definition_list = mapping_method()
 
-      mapping_method = getattr(self,
-          'ERP5Type_getSecurityCategoryMapping', None)
-      if mapping_method is None:
-        security_definition_list = ((
-            'ERP5Type_getSecurityCategoryFromAssignment',
-            self.getPortalAssignmentBaseCategoryList()
-        ),)
-      else:
-        security_definition_list = mapping_method()
+        # get the person from its reference
+        catalog_result = self.portal_catalog(
+            portal_type="Person", reference=user_name)
+        if len(catalog_result) != 1: # we won't proceed with groups
+          if len(catalog_result) > 1: # configuration is screwed
+            raise ConsistencyError, 'There is more than one Person whose \
+                login is %s : %s' % (user_name,
+                repr([r.getObject() for r in catalog_result]))
+          else: # no person is linked to this user login
+            return ()
+        person_object = catalog_result[0].getObject()
+        person_id = person_object.getId()
 
-      # get the person from its reference
-      catalog_result = self.portal_catalog(
-          portal_type="Person", reference=user_name)
-      if len(catalog_result) != 1: # we won't proceed with groups
-        if len(catalog_result) > 1: # configuration is screwed
-          raise ConsistencyError, 'There is more than one Person whose \
-              login is %s : %s' % (user_name,
-              repr([r.getObject() for r in catalog_result]))
-        else: # no person is linked to this user login
-          setSecurityManager(sm)
-          return ()
-      person_object = catalog_result[0].getObject()
-      person_id = person_object.getId()
+        # Fetch category values from defined scripts
+        for (method_name, base_category_list) in \
+            security_definition_list:
+          base_category_list = tuple(base_category_list)
+          method = getattr(self, method_name)
+          security_category_list = security_category_dict.setdefault(
+                                            base_category_list, [])
+          try:
+            security_category_list.extend(
+              method(base_category_list, user_name, person_object, '')
+            )
+          except ConflictError:
+            raise
+          except:
+            LOG('ERP5GroupManager', WARNING,
+                'could not get security categories from %s' % (method_name,),
+                error = sys.exc_info())
 
-      # Fetch category values from defined scripts
-      for (method_name, base_category_list) in \
-          security_definition_list:
-        base_category_list = tuple(base_category_list)
-        method = getattr(self, method_name)
-        security_category_list = security_category_dict.setdefault(
-                                          base_category_list, [])
-        try:
-          security_category_list.extend(
-            method(base_category_list, user_name, person_object, '')
-          )
-        except ConflictError:
-          raise
-        except:
-          LOG('ERP5GroupManager', WARNING,
-              'could not get security categories from %s' % (method_name,),
-              error = sys.exc_info())
-
-      # Get group names from category values
-      group_id_list_generator = getattr(self,
-                                    'ERP5Type_asSecurityGroupIdList', None)
-      if group_id_list_generator is not None:
-        for base_category_list, category_value_list in \
-            security_category_dict.items():
-          for category_dict in category_value_list:
-            try:
-              security_group_list.extend(
-                group_id_list_generator(category_order=base_category_list,
-                                        **category_dict)
-              )
-            except ConflictError:
-              raise
-            except:
-              LOG('ERP5GroupManager', WARNING,
-                  'could not get security groups from '
-                  'ERP5Type_asSecurityGroupIdList',
-                  error = sys.exc_info())
-      else:
-        group_id_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
-        for base_category_list, category_value_list in \
-            security_category_dict.items():
-          for category_dict in category_value_list:
-            try:
-              security_group_list.append(
-                group_id_generator(category_order=base_category_list,
-                                    **category_dict)
-              )
-            except ConflictError:
-              raise
-            except:
-              LOG('ERP5GroupManager', WARNING,
-                  'could not get security groups from '
-                  'ERP5Type_asSecurityGroupId',
-                  error = sys.exc_info())
-
-      setSecurityManager(sm)
+        # Get group names from category values
+        group_id_list_generator = getattr(self,
+                                      'ERP5Type_asSecurityGroupIdList', None)
+        if group_id_list_generator is not None:
+          for base_category_list, category_value_list in \
+              security_category_dict.items():
+            for category_dict in category_value_list:
+              try:
+                security_group_list.extend(
+                  group_id_list_generator(category_order=base_category_list,
+                                          **category_dict)
+                )
+              except ConflictError:
+                raise
+              except:
+                LOG('ERP5GroupManager', WARNING,
+                    'could not get security groups from '
+                    'ERP5Type_asSecurityGroupIdList',
+                    error = sys.exc_info())
+        else:
+          group_id_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
+          for base_category_list, category_value_list in \
+              security_category_dict.items():
+            for category_dict in category_value_list:
+              try:
+                security_group_list.append(
+                  group_id_generator(category_order=base_category_list,
+                                      **category_dict)
+                )
+              except ConflictError:
+                raise
+              except:
+                LOG('ERP5GroupManager', WARNING,
+                    'could not get security groups from '
+                    'ERP5Type_asSecurityGroupId',
+                    error = sys.exc_info())
+      finally:
+        setSecurityManager(sm)
       return tuple(security_group_list)
 
     _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
