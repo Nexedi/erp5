@@ -291,7 +291,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Preference_getPriorityAsText</string> </value>
+            <value> <string>python: here.getPriority()</string> </value>
         </item>
       </dictionary>
     </pickle>
