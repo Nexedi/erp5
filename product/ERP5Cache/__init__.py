@@ -6,15 +6,16 @@ this_module = sys.modules[ __name__ ]
 product_path = package_home( globals() )
 this_module._dtmldir = os.path.join( product_path, 'dtml' )
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+import CacheTool
 
 #import CacheTool
   
 object_classes = ()
 portal_tools = () #(CacheTool.CacheTool,)
-portal_tools = ()
 content_classes = ()
 content_constructors = ()
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
+portal_tools = ( CacheTool.CacheTool, )
 
 
 def initialize( context ):
