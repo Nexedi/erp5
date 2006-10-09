@@ -85,6 +85,7 @@ if selection.isInvertMode() :\n
   params[\'node_uid\'] = selection.getInvertModeUidList()\n
 elif \'title\' in selection_params or \\\n
    \'preferred_gap_id\' in selection_params or \\\n
+   \'id\' in selection_params or \\\n
    \'translated_validation_state_title\' in selection_params:\n
   # if list is filtered, apply the same filter here\n
   params[\'node_uid\'] = [x.uid for x in\n
