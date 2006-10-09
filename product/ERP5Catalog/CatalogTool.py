@@ -54,12 +54,22 @@ try:
   PAS_meta_type = PluggableAuthService.PluggableAuthService.meta_type
 except ImportError:
   PAS_meta_type = ''
+try:
+  from Products.ERP5Security import mergedLocalRoles as PAS_mergedLocalRoles
+except ImportError:
+  #pass
+  raise
 
 try:
   from Products.NuxUserGroups import UserFolderWithGroups
   NUG_meta_type = UserFolderWithGroups.meta_type
 except ImportError:
   NUG_meta_type = ''
+try:
+  from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
+  from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
+except ImportError:
+  pass
     
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
@@ -69,12 +79,6 @@ def getSecurityProduct(acl_users):
     return SECURITY_USING_PAS
   elif acl_users.meta_type == NUG_meta_type:
     return SECURITY_USING_NUX_USER_GROUPS
-
-try:
-  from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
-  from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
-except ImportError:
-  pass
 
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
@@ -92,13 +96,17 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         Used by PortalCatalog to filter out items you're not allowed to see.
         """
         ob = self.__ob
-        withnuxgroups = getSecurityProduct(ob.acl_users)\
-                              == SECURITY_USING_NUX_USER_GROUPS
+        security_product = getSecurityProduct(ob.acl_users)
+        withnuxgroups = security_product == SECURITY_USING_NUX_USER_GROUPS
+        withpas = security_product == SECURITY_USING_PAS
+
         allowed = {}
         for r in rolesForPermissionOn('View', ob):
           allowed[r] = 1
         if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
+        elif withpas:
+          localroles = PAS_mergedLocalRoles(ob)
         else:
           # CMF
           localroles = _mergedLocalRoles(ob)

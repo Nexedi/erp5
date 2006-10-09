@@ -15,6 +15,8 @@
 """ ERP5Security product initialization.
 """
 
+from copy import deepcopy
+
 from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
@@ -22,6 +24,37 @@ from Products.PluggableAuthService.permissions import ManageGroups
 import ERP5UserManager
 import ERP5GroupManager
 import ERP5RoleManager
+
+def mergedLocalRoles(object):
+    """Returns a merging of object and its ancestors'
+    __ac_local_roles__."""
+    # Modified to take into account _getAcquireLocalRoles
+    merged = {}
+    object = getattr(object, 'aq_inner', object)
+    while 1:
+        if hasattr(object, '__ac_local_roles__'):
+            dict = object.__ac_local_roles__ or {}
+            if callable(dict): dict = dict()
+            for k, v in dict.items():
+                if merged.has_key(k):
+                    merged[k] = merged[k] + v
+                else:
+                    merged[k] = v
+        # block acquisition
+        if hasattr(object, '_getAcquireLocalRoles'):
+            if not object._getAcquireLocalRoles():
+                break
+        if hasattr(object, 'aq_parent'):
+            object=object.aq_parent
+            object=getattr(object, 'aq_inner', object)
+            continue
+        if hasattr(object, 'im_self'):
+            object=object.im_self
+            object=getattr(object, 'aq_inner', object)
+            continue
+        break
+
+    return deepcopy(merged)
 
 registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
 registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
