@@ -107,14 +107,10 @@ if to_currency is not None:\n
     predicate_list = context.portal_domains.searchPredicateList(object,\n
         has_cell_content=0,\n
         sort_method=sort_by_date)\n
-    context.log(\'predicate_list with test\',predicate_list)\n
-    context.log(\'temp_object.showDict\',temp_object.showDict())\n
     predicate_list = context.portal_domains.searchPredicateList(object,\n
         has_cell_content=0,\n
         sort_method=sort_by_date,\n
         test=0)\n
-    context.log(\'predicate_list without test\',predicate_list)\n
-    context.log\n
     result = [getattr(mapped_value, \'base_price\', None), \n
               getattr(mapped_value, \'discount\', None)]\n
     return result\n
@@ -130,7 +126,6 @@ else:\n
                                                    sort_method=sort_by_date)\n
   result = [getattr(mapped_value, \'base_price\', None), \n
             getattr(mapped_value, \'discount\', None)]\n
-context.log(\'CurrencyExchange_getExchangeRateList,result:\',result)\n
 return result\n
 
 
@@ -140,6 +135,12 @@ return result\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -225,6 +226,27 @@ return result\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
