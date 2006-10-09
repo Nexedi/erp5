@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Jump to Active Preference</string> </value>
+            <value> <string>Active Preference</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
