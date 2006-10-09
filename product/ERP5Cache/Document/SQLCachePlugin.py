@@ -31,6 +31,7 @@ from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
+from Products.ERP5.PropertySheet.SortIndex import SortIndex
 from Products.ERP5Cache.PropertySheet.BaseCachePlugin import BaseCachePlugin
 from Products.ERP5Cache.PropertySheet.SQLCachePlugin import SQLCachePlugin
 
@@ -58,5 +59,6 @@ class SQLCachePlugin(XMLObject):
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
                     , BaseCachePlugin
+                    , SortIndex
                     , SQLCachePlugin 
                     )

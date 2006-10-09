@@ -38,13 +38,6 @@ from Products.ERP5Cache.CachePlugins.RamCache import RamCache
 from Products.ERP5Cache.CachePlugins.DistributedRamCache import DistributedRamCache
 from Products.ERP5Cache.CachePlugins.SQLCache import SQLCache
 
-##try:
-##  from Products.TimerService import getTimerService
-##except ImportError:
-##  def getTimerService(self):
-##    pass
-
-
 class CacheTool(BaseTool):
   """ Caches tool wrapper for ERP5 """
     
@@ -183,63 +176,13 @@ class CacheTool(BaseTool):
       ram_cache_root[cache_factory_id].clearCache()
     if REQUEST:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache factory %s cleared.' %cache_factory_id)
-
+    
+  security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactoryScope')
+  def clearCacheFactoryScope(self, cache_factory_id, scope, REQUEST=None):
+    """ Clear only cache factory. """
+    ram_cache_root = self.getRamCacheRoot()
+    if ram_cache_root.has_key(cache_factory_id):
+      ram_cache_root[cache_factory_id].clearCacheForScope(scope)
+    if REQUEST:
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache factory scope %s cleared.' %cache_factory_id)  
   
-  # Timer - checks for cache expiration triggered by Zope's TimerService
-##  def isSubscribed(self):
-##      """
-##      return True, if we are subscribed to TimerService.
-##      Otherwise return False.
-##      """
-##      service = getTimerService(self)
-##      if not service:
-##          LOG('AlarmTool', INFO, 'TimerService not available')
-##          return False
-##
-##      path = '/'.join(self.getPhysicalPath())
-##      if path in service.lisSubscriptions():
-##          return True
-##      return False
-##
-##  security.declareProtected(Permissions.ManageProperties, 'subscribe')
-##  def subscribe(self):
-##    """
-##      Subscribe to the global Timer Service.
-##    """
-##    service = getTimerService(self)
-##    if not service:
-##      LOG('AlarmTool', INFO, 'TimerService not available')
-##      return
-##    service.subscribe(self)
-##    return "Subscribed to Timer Service"
-##
-##  security.declareProtected(Permissions.ManageProperties, 'unsubscribe')
-##  def unsubscribe(self):
-##    """
-##      Unsubscribe from the global Timer Service.
-##    """
-##    service = getTimerService(self)
-##    if not service:
-##      LOG('AlarmTool', INFO, 'TimerService not available')
-##      return
-##    service.unsubscribe(self)
-##    return "Usubscribed from Timer Service"
-##
-##  def manage_beforeDelete(self, item, container):
-##    self.unsubscribe()
-##    BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
-##
-##  def manage_afterAdd(self, item, container):
-##    self.subscribe()
-##    BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
-##
-##  security.declarePrivate('process_timer')
-##  def process_timer(self, interval, tick, prev="", next=""):
-##    """
-##      This method is called by TimerService in the interval given
-##      in zope.conf. The Default is every 5 seconds. This method will
-##      try to expire cache entries.
-##    """
-##    ram_cache_root = self.getRamCacheRoot()
-##    for cf_id, cf_obj in ram_cache_root.items():
-##      cf_obj.expire()

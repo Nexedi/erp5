@@ -48,18 +48,35 @@ class DistributedRamCache(BaseCache):
   def __init__(self, params):
     self._servers = params.get('server', '')
     self._debugLevel = params.get('debugLevel', 7)
-    self._cache = memcache.Client(self._servers.split('\n'), self._debugLevel)
     self._last_cache_conn_creation_time = time()
     BaseCache.__init__(self)
         
   def getCacheStorage(self):
     ## if we use one connection object this causes  "MemCached: while expecting 'STORED', got unexpected response 'END'"
     ## messages in log files and thus sometimes can block the thread. For the moment we create
-    ## a new conn object for every memcache access which in turns cmeans another socket. 
+    ## a new conn object for every memcache access which in turns means another socket. 
     ## See  addiionaly expireOldCacheEntries() comments for one or many connections.
-    self._cache = memcache.Client(self._servers.split('\n'), debug=self._debugLevel)    
-    return self._cache
-
+    try:
+      from Products.ERP5Type.Utils import get_request
+      request = get_request()
+    except ImportError:
+      request = None
+      
+    if request:
+      ## Zope/ERP5 environment
+      memcache_conn = request.get('_erp5_memcache_connection', None)
+      if not memcache_conn:
+        ## we have not memcache_conn for this request
+        memcache_conn = memcache.Client(self._servers.split('\n'), debug=self._debugLevel)
+        request.set('_erp5_memcache_connection', memcache_conn)
+        return memcache_conn      
+      else:
+        ## we have memcache_conn for this request
+        return memcache_conn
+    else:
+      ## run from unit tests
+      return  memcache.Client(self._servers.split('\n'), debug=self._debugLevel)
+       
   def checkAndFixCacheId(self, cache_id, scope):
     ## memcached doesn't support namespaces (cache scopes) so to "emmulate"
     ## such behaviour when constructing cache_id we add scope in front

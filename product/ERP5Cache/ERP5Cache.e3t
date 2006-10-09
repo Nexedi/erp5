@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-3.7.dtd">
 <!-- Tasks file for project ERP5Cache -->
-<!-- Saved: 2006-10-05, 17:54:47 -->
+<!-- Saved: 2006-10-06, 20:07:54 -->
 <Tasks version="3.7">
   <Task priority="1" completed="0">
     <Description>TODO: move result file path generation to runBenchmark.</Description>
@@ -38,35 +38,13 @@
   </Task>
   <Task priority="1" completed="0">
     <Description>TODO: Based on above data we can have a different invalidation policy</Description>
-    <Created>2006-09-28, 13:08:57</Created>
+    <Created>2006-10-06, 20:00:38</Created>
     <Resource>
       <Filename>
         <Dir>CachePlugins</Dir>
         <Name>BaseCache.py</Name>
       </Filename>
-      <Linenumber>19</Linenumber>
-    </Resource>
-  </Task>
-  <Task priority="1" completed="0">
-    <Description>TODO: make check not always but each 100 or n calls</Description>
-    <Created>2006-09-28, 13:08:57</Created>
-    <Resource>
-      <Filename>
-        <Dir>CachePlugins</Dir>
-        <Name>BaseCache.py</Name>
-      </Filename>
-      <Linenumber>64</Linenumber>
-    </Resource>
-  </Task>
-  <Task priority="1" completed="0">
-    <Description>TODO: check how to avoid problems with memcache whe using one connection to</Description>
-    <Created>2006-10-05, 16:42:13</Created>
-    <Resource>
-      <Filename>
-        <Dir>CachePlugins</Dir>
-        <Name>DistributedRamCache.py</Name>
-      </Filename>
-      <Linenumber>25</Linenumber>
+      <Linenumber>47</Linenumber>
     </Resource>
   </Task>
 </Tasks>

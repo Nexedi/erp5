@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
+from Products.ERP5.PropertySheet.SortIndex import SortIndex
 from Products.ERP5Cache.PropertySheet.BaseCachePlugin import BaseCachePlugin
 from Products.ERP5Cache.PropertySheet.DistributedRamCachePlugin import DistributedRamCachePlugin
 
@@ -57,5 +58,6 @@ class DistributedRamCachePlugin(XMLObject):
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
                     , BaseCachePlugin
+                    , SortIndex
                     , DistributedRamCachePlugin 
                     )

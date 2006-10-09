@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-3.7.dtd">
 <!-- Project file for project ERP5Cache -->
-<!-- Saved: 2006-10-03, 20:15:31 -->
+<!-- Saved: 2006-10-06, 19:59:47 -->
 <!-- Copyright (C) 2006 Ivan Tyagov, ivan.tyagov@brmtec.com -->
 <Project version="3.7">
   <ProgLanguage mixed="0">Python</ProgLanguage>
@@ -98,6 +98,10 @@
     <Source>
       <Dir>dtml</Dir>
       <Name>cache_tool_configure.dtml</Name>
+    </Source>
+    <Source>
+      <Dir>tests</Dir>
+      <Name>testCacheTool.py</Name>
     </Source>
   </Sources>
   <Forms>

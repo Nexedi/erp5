@@ -1,3 +1,31 @@
+##############################################################################
+#
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                     Ivan Tyagov <ivan@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
 import random
 import unittest
 import time
@@ -14,15 +42,15 @@ class Foo:
 class TestRamCache(unittest.TestCase):
     
   def setUp(self):
-    self.cache_plugins = (#RamCache(), 
+    self.cache_plugins = (RamCache(), 
                           DistributedRamCache({'servers': '127.0.0.1:11211',
                                                  'debugLevel': 7,}),
-                          #SQLCache( {'server': '',
-                          #           'user': '',
-                          #           'passwd': '',
-                          #           'db': 'test',
-                          #           'cache_table_name': 'cache',
-                          #            }),
+                          SQLCache( {'server': '',
+                                     'user': '',
+                                     'passwd': '',
+                                     'db': 'test',
+                                     'cache_table_name': 'cache',
+                                      }),
                         )
 
   def testScope(self):
@@ -77,13 +105,13 @@ class TestRamCache(unittest.TestCase):
   def testSetGet(self):
     """ set value to cache and then get it back """
     for cache_plugin in self.cache_plugins:
-      self.generaltestSetGet(cache_plugin, 1000)
+      self.generaltestSetGet(cache_plugin, 100)
     
-##  def testExpire(self):
-##    """ Check expired by setting a key, wit for its timeout and check if in cache"""
-##    for cache_plugin in self.cache_plugins:
-##      self.generalExpire(cache_plugin, 2)
-##    pass
+  def testExpire(self):
+    """ Check expired by setting a key, wit for its timeout and check if in cache"""
+    for cache_plugin in self.cache_plugins:
+      self.generalExpire(cache_plugin, 2)
+
             
   def generalExpire(self, cache_plugin, iterations):
     print "TESTING (expire): ", cache_plugin

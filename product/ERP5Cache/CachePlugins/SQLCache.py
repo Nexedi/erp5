@@ -114,15 +114,37 @@ class SQLCache(BaseCache):
     
   def getCacheStorage(self):
     """ 
-    Return current DB connection or create a new one.
+    Return current DB connection or create a new one for his thread.
     See http://sourceforge.net/docman/display_doc.php?docid=32071&group_id=22307
     especially threadsafety part why we create every time a new MySQL db connection object.
     """
-    dbConn = MySQLdb.connect(host=self._db_server, \
+    try:
+      from Products.ERP5Type.Utils import get_request
+      request = get_request()
+    except ImportError:
+      request = None
+      
+    if request:
+      ## Zope/ERP5 environment
+      dbConn = request.get('_erp5_dbcache_connection', None)
+      if not dbConn:
+        ## we have not dbConn for this request
+        dbConn = MySQLdb.connect(host=self._db_server, \
+                                 user=self._db_user,\
+                                 passwd=self._db_passwd, \
+                                 db=self._db_name)
+        request.set('_erp5_dbcache_connection', dbConn)
+        return dbConn      
+      else:
+        ## we have already dbConn for this request
+        return dbConn
+    else:
+      ## run from unit tests
+      dbConn = MySQLdb.connect(host=self._db_server, \
                              user=self._db_user,\
                              passwd=self._db_passwd, \
                              db=self._db_name)
-    return dbConn
+      return dbConn
     
   def get(self, cache_id, scope, default=None):
     sql_query = self.get_key_sql %(self._db_cache_table_name, cache_id, scope)
@@ -162,7 +184,6 @@ class SQLCache(BaseCache):
     now = time.time()
     if forceCheck or (now > (self._last_cache_expire_check_at + self.cache_expire_check_interval)):
       ## time to check for expired cache items
-      #print "EXPIRE", self, self.cache_expire_check_interval
       self._last_cache_expire_check_at = now
       my_query = self.delete_expired_keys_sql %(self._db_cache_table_name, now)
       self.execSQLQuery(my_query)
