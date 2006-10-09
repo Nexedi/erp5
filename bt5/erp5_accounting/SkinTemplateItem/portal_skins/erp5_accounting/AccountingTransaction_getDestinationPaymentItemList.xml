@@ -79,7 +79,7 @@ if organisation is not None:\n
   for bank_account in bank_account_list:\n
     url = bank_account.getRelativeUrl()\n
     #label = bank_account.getIban()\n
-    label = bank_account.getTitle()\n
+    label = bank_account.getReference() or bank_account.getTitle()\n
     item_list.append([label, url])\n
 \n
 item_list.sort(sort)\n
