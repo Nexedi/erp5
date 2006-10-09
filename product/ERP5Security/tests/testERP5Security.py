@@ -263,6 +263,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
   def _getTypeInfo(self):
     return self.getTypesTool()['Organisation']
   
+  def _getModuleTypeInfo(self):
+    return self.getTypesTool()['Organisation Module']
+  
   def _makeOne(self):
     return self.getOrganisationModule().newContent(portal_type='Organisation')
   
@@ -318,7 +321,32 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
             getSecurityManager().getUser().getRolesInContext(obj))
   
   def testAcquireLocalRoles(self):
-    return NotImplemented # TODO
+    """Tests that document does not acquire loal roles from their parents if
+    "acquire local roles" is not checked."""
+    ti = self._getTypeInfo()
+    ti.acquire_local_roles = False
+    module_ti = self._getModuleTypeInfo()
+    module_ti.addRole(id='Assignor', description='desc.',
+           name='an Assignor role for testing',
+           condition='',
+           category=self.defined_category,
+           base_category_script='ERP5Type_getSecurityCategoryFromAssignment',
+           base_category='')
+    obj = self._makeOne()
+    module = obj.getParentValue()
+    module.updateLocalRolesOnSecurityGroups()
+    # we said the we do not want acquire local roles.
+    self.failIf(obj._getAcquireLocalRoles())
+    # the local role is set on the module
+    self.assertEquals(['Assignor'], module.__ac_local_roles__.get('F1_G1_S1'))
+    # but not on the document
+    self.assertEquals(None, obj.__ac_local_roles__.get('F1_G1_S1'))
+    # same testing with roles in context.
+    self.loginAsUser(self.username)
+    self.failUnless('Assignor' in
+            getSecurityManager().getUser().getRolesInContext(module))
+    self.failIf('Assignor' in
+            getSecurityManager().getUser().getRolesInContext(obj))
     
 if __name__ == '__main__':
   framework()

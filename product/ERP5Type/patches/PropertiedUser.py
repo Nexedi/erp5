@@ -19,7 +19,9 @@
 from Acquisition import aq_inner, aq_parent
 
 try:
-  from PluggableAuthService.PropertiedUser import PropertiedUser
+  from Products.PluggableAuthService.PropertiedUser import PropertiedUser
+  from Products.PluggableAuthService.PropertiedUser import\
+                                              _what_not_even_god_should_do
 except ImportError:
   PropertiedUser = None
   
