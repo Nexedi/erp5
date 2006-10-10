@@ -70,8 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+context.log(kw)\n
 args=context.parseSearchString(kw.get(\'SearchableText\',\'\'))\n
-args[\'portal_type\']=context.getPortalDocumentTypeList()\n
+if not args.has_key(\'portal_type\') or args[\'portal_type\']==():\n
+  args[\'portal_type\']=context.getPortalDocumentTypeList()\n
 cats=[]\n
 bases=context.portal_categories.getBaseCategoryList()\n
 for k,v in args.items():\n
@@ -163,13 +165,13 @@ return res\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>args</string>
+                            <string>_getitem_</string>
                             <string>_write_</string>
                             <string>cats</string>
                             <string>bases</string>
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
-                            <string>_getitem_</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>

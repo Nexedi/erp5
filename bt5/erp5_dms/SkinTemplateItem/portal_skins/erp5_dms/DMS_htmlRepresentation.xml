@@ -63,7 +63,7 @@
               <list>
                 <string>a</string>
                 <string>left</string>
-                <string>bottom</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -78,7 +78,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list>
                         <string>html_representation</string>
