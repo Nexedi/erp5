@@ -458,19 +458,26 @@ class ERP5TypeInformation( FactoryTypeInformation,
                       ' base categories : %s' % (base_category_script_id,
                                             ', '.join(dynamic_base_category_list))
           else:
+            # no base_category needs to be retrieved using the script, we use
+            # a list containing an empty dict to trick the system into
+            # creating one category_value_dict (which will only use statically
+            # defined categories)
             category_result = [{}]
-          # add the result to role_category_list_dict, aggregated with
-          # category_order and statically defined categories
+
           for role in role_text.split(';'):
+            # category_result is a list of dicts that represents the resolved
+            # categories we create a category_value_dict from each of these
+            # dicts aggregated with category_order and statically defined
+            # categories
             role = role.strip()
             role_category_list = role_category_list_dict.setdefault(role, [])
-            category_value_dict = {'category_order':category_order_list}
             for category_dict in category_result:
+              category_value_dict = {'category_order':category_order_list}
               category_value_dict.update(category_dict)
               for c in definition['category']:
                 bc, value = c.split('/', 1)
                 category_value_dict[bc] = value
-            role_category_list.append(category_value_dict)
+              role_category_list.append(category_value_dict)
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
