@@ -77,8 +77,9 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
-                        <string>my_subject_list</string>
+                        <string>my_source_project_title</string>
+                        <string>my_classification</string>
+                        <string>my_dms_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -107,7 +108,6 @@
                         <string>my_int_index</string>
                         <string>my_source_reference</string>
                         <string>my_translated_simulation_state_title</string>
-                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -115,10 +115,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_source_project_title</string>
-                        <string>my_classification</string>
-                        <string>my_dms_category_list</string>
                         <string>image_view</string>
+                        <string>my_description</string>
+                        <string>my_subject_list</string>
+                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>
