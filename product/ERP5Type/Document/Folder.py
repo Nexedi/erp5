@@ -655,10 +655,47 @@ be a problem)."""
     return Folder_asXML(self,ident=ident)
 
   # Optimized Menu System
+  security.declarePublic('getVisibleAllowedContentTypeOrIdList')
+  def getVisibleAllowedContentTypeList(self):
+    """
+      List portal_types' names wich can be added in this folder / object.
+      Cache results.
+
+      This function is *much* similar to allowedContentTypes, except it does
+      not returns portal types but their ids and filter out those listed as
+      hidden content types. It allows to be much faster when only the type id
+      is needed.
+    """
+    if not getSecurityManager().checkPermission(
+                      Permissions.AddPortalContent, self):
+      return []
+
+    portal = self.getPortalObject()
+
+    def _getVisibleAllowedContentTypeList():
+      hidden_type_list = portal.portal_types.getTypeInfo(self).getHiddenContentTypeList()
+      return [type.id for type in CMFBTreeFolder.allowedContentTypes(self) if type.id not in hidden_type_list]
+
+    user = str(_getAuthenticatedUser(self))
+    portal_type = self.getPortalType()
+    portal_path = portal.getPhysicalPath()
+
+    _getVisibleAllowedContentTypeList = CachingMethod(_getVisibleAllowedContentTypeList,
+                                                      id=("_getAllowedContentTypeTitleList",
+                                                          user, portal_path, portal_type),
+                                                      cache_duration=None)
+    return _getVisibleAllowedContentTypeList()
+  
   security.declarePublic('allowedContentTypes')
   def allowedContentTypes( self ):
     """ List portal_types which can be added in this folder / object.
-    Cache results.
+        Cache results.
+        Only paths are cached, because we must not cache objects.
+        This makes the result, even if based on cache, O(n) so it becomes quite 
+        costly with many allowed content types.
+        Example:
+         on Person (12 allowed content types): 1000 calls take 3s.
+         on Person Module (1 allowed content type): 1000 calls take 0.3s.
     """
     # if we don't have add portal content permission, return directly.
     # this prevents returning cached allowed types when the user no longer have
