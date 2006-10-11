@@ -124,7 +124,7 @@ class Url(Coordinate, Base):
 
       submsg = writer.nextpart()
       submsg.addheader("Content-Transfer-Encoding", "7bit")
-      FirstPartFile=submsg.startbody("text/plain", [("charset","US-ASCII")])
+      FirstPartFile=submsg.startbody("text/plain", [("charset","UTF8")])
       FirstPartFile.write(msg)
 
       if attachment_list!=None:
