@@ -141,7 +141,7 @@ def initialize( context ):
     FieldRegistry.registerField(MultiLinkField.MultiLinkField,
                                 'www/LinkField.gif')
     FieldRegistry.registerField(InputButtonField.InputButtonField,
-                                'www/StringField.gif')
+                                'www/StringField.gif') 
  
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)

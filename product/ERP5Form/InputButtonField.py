@@ -36,7 +36,6 @@ class InputButtonWidget(Widget.Widget):
     
     Displays an input button.
 
-    To hide the button label, apply
     """
     property_names = Widget.Widget.property_names + ['name', 'extra']
 
