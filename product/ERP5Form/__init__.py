@@ -43,7 +43,7 @@ document_classes = updateGlobals( this_module, globals(),
 import Form, FSForm, ListBox, MatrixBox, SelectionTool
 import ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField
-import RelationField, ImageField, MultiRelationField, MultiLinkField
+import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
 import ZPyChart
 import PreferenceTool
 
@@ -140,6 +140,8 @@ def initialize( context ):
                                 'www/LinkField.gif')
     FieldRegistry.registerField(MultiLinkField.MultiLinkField,
                                 'www/LinkField.gif')
+    FieldRegistry.registerField(InputButtonField.InputButtonField,
+                                'www/StringField.gif')
  
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
