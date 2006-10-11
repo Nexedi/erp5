@@ -2122,29 +2122,22 @@ class Base( CopyContainer,
     return None
 
   def _getAcquireLocalRoles(self):
-    """
-    This methods the value of acquire_local_roles of the object's portal_type
-    True means, local roles are acquired, which is the standard behavior of
-    Zope objects. False means that the role acquisition chain is cut.
+    """This method returns the value of acquire_local_roles of the object's
+    portal_type.
+      - True means local roles are acquired, which is the standard behavior of
+      Zope objects.
+      - False means that the role acquisition chain is cut.
 
-    The code to support this is in the user folder.
+    The code to support this is in the user folder, see
+    patches/PropertiedUser.py
     """
-    def cashed_getAcquireLocalRoles(portal_type):
-      types_tool = self._getTypesTool()
-      portal_type = self.getPortalType()
-      if hasattr(types_tool, portal_type):
-        # Property is defined on a portal type	      
-        return types_tool[portal_type].acquire_local_roles
-      else:
-        # Default behaviour for objects with not portal type definition
-        # ex. SyncML Subscription
-        # XXX - not sure if raising an error would not be better
-        # since this kind of behaviour should not exist
-        return 1
+    def cached_getAcquireLocalRoles(portal_type):
+      ti = self._getTypesTool().getTypeInfo(self)
+      return getattr(ti, 'acquire_local_roles', True)
 
-    cashed_getAcquireLocalRoles = CachingMethod(cashed_getAcquireLocalRoles,
+    cached_getAcquireLocalRoles = CachingMethod(cached_getAcquireLocalRoles,
                                                 id='Base__getAcquireLocalRoles')
-    return cashed_getAcquireLocalRoles(portal_type=self.getPortalType())
+    return cached_getAcquireLocalRoles(portal_type=self.getPortalType())
 
   security.declareProtected(Permissions.View, 'get_local_permissions')
   def get_local_permissions(self):
