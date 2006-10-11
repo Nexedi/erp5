@@ -57,8 +57,7 @@ except ImportError:
 try:
   from Products.ERP5Security import mergedLocalRoles as PAS_mergedLocalRoles
 except ImportError:
-  #pass
-  raise
+  pass
 
 try:
   from Products.NuxUserGroups import UserFolderWithGroups
