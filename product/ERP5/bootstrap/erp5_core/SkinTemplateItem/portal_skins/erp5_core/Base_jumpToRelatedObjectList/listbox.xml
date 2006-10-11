@@ -322,7 +322,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Portal Type</string>
                         </tuple>
                         <tuple>
@@ -355,7 +355,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Portal Type</string>
                         </tuple>
                         <tuple>
@@ -460,6 +460,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
