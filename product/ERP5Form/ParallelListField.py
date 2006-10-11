@@ -131,12 +131,18 @@ class ParallelListWidget(Widget.MultiListWidget,
       REQUEST.set('_v_plf_first_item', 0)
       REQUEST.set('_v_plf_items', sub_field_property_dict['item_list'])
       REQUEST.set('_v_plf_size', sub_field_property_dict['size'])
-      return self.sub_widget[sub_field_property_dict['field_type']].render(
-              field,
-              field.generate_subfield_key(sub_field_property_dict['key'],
-                                          key=key),
-              sub_field_property_dict['value'],
-              REQUEST)
+      if sub_field_property_dict.get('editable', 1):
+        return self.sub_widget[sub_field_property_dict['field_type']].render(
+                field,
+                field.generate_subfield_key(sub_field_property_dict['key'],
+                                            key=key),
+                sub_field_property_dict['value'],
+                REQUEST)
+      else:
+        return self.sub_widget[sub_field_property_dict['field_type']].render_view(
+                field,
+                sub_field_property_dict['value'],
+                )
 
 class ParallelListValidator(Validator.MultiSelectionValidator):
 
@@ -230,7 +236,8 @@ class ParallelListField(ZMIField):
       'item_list': [],
       'value': [],
       'is_right_display': 0,
-      'size': 5
+      'size': 5,
+      'editable' : self.get_value('editable')
     }
 
     hash_list = []
