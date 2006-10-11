@@ -120,10 +120,10 @@ class SimulationMovement(Movement):
   # Price should be acquired
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getPrice')
-  def getPrice(self, context=None, REQUEST=None, **kw):
+  def getPrice(self, default=None, context=None, REQUEST=None, **kw):
     """
     """
-    return self._baseGetPrice() # Call the price method
+    return self._baseGetPrice(default) # Call the price method
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getCausalityState')
