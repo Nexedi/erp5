@@ -82,7 +82,7 @@ if hasattr(delivery_tool, \'task_invoice_builder\') :\n
                             \'immediateReindexObject\' ],\n
         ).build()\n
 else :\n
-  context.log("ERP5 Simulation",\n
+  packing_list.log("ERP5 Simulation",\n
               "Unable to build Invoice from packing list at %s "\\\n
               ": no sale_invoice_builder" % packing_list.getPath())\n
 </string> </value>
@@ -133,7 +133,6 @@ else :\n
                             <string>packing_list</string>
                             <string>delivery_tool</string>
                             <string>hasattr</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
