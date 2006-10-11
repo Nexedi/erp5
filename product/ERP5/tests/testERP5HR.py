@@ -54,7 +54,7 @@ class TestHR(ERP5TypeTestCase):
 
   # pseudo constants
   RUN_ALL_TEST = 1
-  QUIET = 0
+  QUIET = 1
 
 
   ##################################
@@ -721,14 +721,14 @@ class TestHR(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    step_list = [ 'CreateOrganisation'
-                , 'SetOrganisationCategories'
-                , 'ResetOrganisationCategories'
-                , 'SetOrganisationAddress'
+    step_list = [ 'stepCreateOrganisation'
+                , 'stepSetOrganisationCategories'
+                , 'stepResetOrganisationCategories'
+                , 'stepSetOrganisationAddress'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 
   def test_02_Person(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -737,14 +737,14 @@ class TestHR(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    step_list = [ 'CreatePerson'
-                , 'CreateOrganisation'
-                , 'SetPersonCareer'
-                , 'CheckPersonCareer'
+    step_list = [ 'stepCreatePerson'
+                , 'stepCreateOrganisation'
+                , 'stepSetPersonCareer'
+                , 'stepCheckPersonCareer'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def test_03_Subordination(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -752,15 +752,15 @@ class TestHR(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    step_list = [ 'CreatePerson'
-                , 'CreateOrganisation'
-                , 'SetPersonCareer'
-                , 'AddCareerStepInAnotherOrganisation'
-                , 'CheckCareerSubordination'
+    step_list = [ 'stepCreatePerson'
+                , 'stepCreateOrganisation'
+                , 'stepSetPersonCareer'
+                , 'stepAddCareerStepInAnotherOrganisation'
+                , 'stepCheckCareerSubordination'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def test_04_SubordinationAndAddress(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -768,15 +768,15 @@ class TestHR(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    step_list = [ 'CreatePerson'
-                , 'CreateOrganisation'
-                , 'SetOrganisationAddress'
-                , 'SetPersonCareer'
-                , 'CheckChangePersonAddress'
+    step_list = [ 'stepCreatePerson'
+                , 'stepCreateOrganisation'
+                , 'stepSetOrganisationAddress'
+                , 'stepSetPersonCareer'
+                , 'stepCheckChangePersonAddress'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
   framework()
