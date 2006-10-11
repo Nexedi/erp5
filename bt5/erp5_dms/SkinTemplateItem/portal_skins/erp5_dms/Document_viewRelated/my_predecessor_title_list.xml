@@ -397,7 +397,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
+                    <value> <string>predecessor</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
