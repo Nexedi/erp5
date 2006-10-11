@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>return [(pers.getTitle(), pers.getRelativeUrl())\n
-        for pers in context.getPortalObject().person_module.contentValues()]\n
+        for pers in context.getPortalObject().person_module.searchFolder(role_id="internal")]\n
 </string> </value>
         </item>
         <item>
