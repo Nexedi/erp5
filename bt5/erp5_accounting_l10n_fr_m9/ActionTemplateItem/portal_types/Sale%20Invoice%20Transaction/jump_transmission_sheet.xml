@@ -83,7 +83,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Base_jumpToRelatedObject?related:int=1&base_category=aggregate&portal_type=Invoice+Transmission+Sheet
+string:${object_url}/Base_jumpToRelatedObject?base_category=aggregate&related:int=0&portal_type=Invoice%20Transmission%20Sheet
 
 ]]></string> </value>
         </item>
