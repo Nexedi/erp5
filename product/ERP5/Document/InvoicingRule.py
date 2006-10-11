@@ -108,23 +108,23 @@ class InvoicingRule(Rule):
         or destination_section is None:
       return []
     
-    invoice_line = {}
-    invoice_line.update(
-        price=context_movement.getPrice(),
-        quantity=context_movement.getCorrectedQuantity(),
-        quantity_unit=context_movement.getQuantityUnit(),
-        efficiency=context_movement.getEfficiency(),
-        resource=context_movement.getResource(),
-        variation_category_list=context_movement.getVariationCategoryList(),
-        variation_property_dict=context_movement.getVariationPropertyDict(),
-        start_date=context_movement.getStartDate(),
-        stop_date=context_movement.getStopDate(),
-        source=context_movement.getSource(), source_section=source_section,
-        destination=context_movement.getDestination(),
-        destination_section=destination_section,
+    invoice_line = {
+        'price': context_movement.getPrice(),
+        'quantity': context_movement.getCorrectedQuantity(),
+        'quantity_unit': context_movement.getQuantityUnit(),
+        'efficiency': context_movement.getEfficiency(),
+        'resource': context_movement.getResource(),
+        'variation_category_list': context_movement.getVariationCategoryList(),
+        'variation_property_dict': context_movement.getVariationPropertyDict(),
+        'start_date': context_movement.getStartDate(),
+        'stop_date': context_movement.getStopDate(),
+        'source': context_movement.getSource(),
+        'source_section': source_section,
+        'destination': context_movement.getDestination(),
+        'destination_section': destination_section,
         # We do need to collect invoice lines to build invoices
-        deliverable=1
-    )
+        'deliverable': 1
+        }
     return [invoice_line]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')

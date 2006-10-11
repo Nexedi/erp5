@@ -132,20 +132,20 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             LOG("InvoiceTransactionRule", PROBLEM,
                 "expanding %s: without resource" % applied_rule.getPath())
 
-        prevision_line = {}
-        prevision_line.update(
-            id = transaction_line.getId(),
-            source = transaction_line.getSource(),
-            destination = transaction_line.getDestination(),
-            source_section = context_movement.getSourceSection(),
-            destination_section = context_movement.getDestinationSection(),
-            resource = resource,
+        prevision_line = {
+            'id': transaction_line.getId(),
+            'source': transaction_line.getSource(),
+            'destination': transaction_line.getDestination(),
+            'source_section': context_movement.getSourceSection(),
+            'destination_section': context_movement.getDestinationSection(),
+            'resource': resource,
             # calculate (quantity * price) * cell_quantity
-            quantity = (context_movement.getCorrectedQuantity() *
+            'quantity': (context_movement.getCorrectedQuantity() *
               context_movement.getPrice()) * transaction_line.getQuantity(),
-            start_date = context_movement.getStartDate(),
-            stop_date = context_movement.getStopDate(),
-            force_update = 1)
+            'start_date': context_movement.getStartDate(),
+            'stop_date': context_movement.getStopDate(),
+            'force_update': 1,
+            }
         prevision_list.append(prevision_line)
 
     return prevision_list
