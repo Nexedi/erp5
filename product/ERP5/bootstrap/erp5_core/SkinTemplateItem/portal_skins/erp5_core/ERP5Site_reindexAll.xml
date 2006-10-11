@@ -180,7 +180,7 @@ context.portal_domains.reindexObject(tag=\'module\',\n
                                      sql_catalog_id=sql_catalog_id,\n
                                      passive_commit=passive_commit)\n
 for o in context.portal_domains.objectValues():\n
-  o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
+  o.recursiveReindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
                   sql_catalog_id=sql_catalog_id,\n
@@ -206,7 +206,7 @@ context.portal_deliveries.reindexObject(tag=\'module\',\n
                                         sql_catalog_id=sql_catalog_id,\n
                                         passive_commit=passive_commit)\n
 for o in context.portal_deliveries.objectValues():\n
-  o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
+  o.recursiveReindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
                   sql_catalog_id=sql_catalog_id,\n
@@ -219,7 +219,7 @@ context.portal_orders.reindexObject(tag=\'module\',\n
                                     sql_catalog_id=sql_catalog_id,\n
                                     passive_commit=passive_commit)\n
 for o in context.portal_orders.objectValues():\n
-  o.reindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
                   tag=\'document\',\n
                   priority=2,\n
                   sql_catalog_id=sql_catalog_id,\n
