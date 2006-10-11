@@ -778,6 +778,35 @@ class TestHR(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_05_DatesOnPerson(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """Tests dates on Person objects.
+    """
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    birthday = DateTime(1999, 01, 01)
+    now = DateTime()
+    pers.edit(birthday = birthday)
+    self.assertEquals(birthday, pers.getBirthday())
+    self.assertEquals(birthday, pers.getStartDate())
+    
+    for slot in ['year', 'month', 'day', 'hour', 'minute']:
+      self.assertEquals(getattr(now, slot)(),
+                        getattr(pers.getCreationDate(), slot)(),
+                        'Wrong creation date %s' % pers.getCreationDate())
+  
+  def test_06_DatesOnOrganisation(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """Tests dates on Organisation objects.
+    """
+    org = self.getOrganisationModule().newContent(portal_type='Organisation')
+    start_date = DateTime(1999, 01, 01)
+    now = DateTime()
+    org.edit(start_date = start_date)
+    self.assertEquals(start_date, org.getStartDate())
+    
+    for slot in ['year', 'month', 'day', 'hour', 'minute']:
+      self.assertEquals(getattr(now, slot)(),
+                        getattr(org.getCreationDate(), slot)(),
+                        'Wrong creation date %s' % org.getCreationDate())
+
 if __name__ == '__main__':
   framework()
 else:

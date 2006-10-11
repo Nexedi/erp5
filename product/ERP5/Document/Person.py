@@ -83,6 +83,7 @@ class Person(Node, XMLObject):
                       , PropertySheet.Reference
                       , PropertySheet.Person
                       , PropertySheet.Mapping
+                      , PropertySheet.Task
                       )
 
     def _setTitle(self, value):

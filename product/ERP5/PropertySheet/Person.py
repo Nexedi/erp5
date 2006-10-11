@@ -74,6 +74,7 @@ class Person:
     },
     { 'id'         : 'birthday'
     , 'description': 'Date of birth.'
+    , 'storage_id' : 'start_date'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },

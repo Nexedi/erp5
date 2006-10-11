@@ -66,6 +66,7 @@ class Organisation(MetaNode, XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Organisation
                       , PropertySheet.Mapping
+                      , PropertySheet.Task
                       )
 
 

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_creation_date</string> </value>
+            <value> <string>my_start_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
