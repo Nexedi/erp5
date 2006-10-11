@@ -338,7 +338,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getSourceSectionTitle</string>
+                          <string>mirror_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -404,6 +404,10 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>mirror_section_title</string>
+                          <string>Third Party</string>
+                        </tuple>
                         <tuple>
                           <string>total_price</string>
                           <string>Total Amount</string>
