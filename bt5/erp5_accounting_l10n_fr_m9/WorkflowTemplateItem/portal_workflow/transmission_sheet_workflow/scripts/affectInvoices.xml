@@ -76,10 +76,12 @@ portal = transmission_sheet.getPortalObject()\n
 \n
 transmission_sheet.setDefaultRoleDefinitionAgent(agent)\n
 transmission_sheet.setDefaultRoleDefinitionRoleName(\'Assignee\')\n
+transmission_sheet.updateLocalRolesOnSecurityGroups()\n
 \n
-for invoice in transmission_sheet.getAggregateRelatedList(\n
+for invoice in transmission_sheet.getAggregateRelatedValueList(\n
                   portal_type=portal.getPortalInvoiceTypeList()):\n
-  pass # do something ?\n
+  invoice.updateLocalRolesOnSecurityGroups()\n
+  invoice.reindexObject()\n
 </string> </value>
         </item>
         <item>
@@ -109,6 +111,24 @@ for invoice in transmission_sheet.getAggregateRelatedList(\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
