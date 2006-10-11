@@ -74,7 +74,7 @@ metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'la
 f=kw.get(\'my_file\',None)\n
 \n
 # edit metadata (only if we have OOo file)\n
-if ob.hasOOfile():\n
+if ob.hasOOFile():\n
   newmeta={}\n
   for mf in metafields:\n
     keymf=\'my_\'+mf\n
