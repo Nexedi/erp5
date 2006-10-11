@@ -174,6 +174,15 @@ class DMSFile(XMLObject,File):
     searchable_text = ' '.join(map(lambda x: self.getProperty(x) or ' ',self.searchable_attrs))
     return searchable_text
 
+  def get_size(self):
+    '''
+    has to be overwritted here, otherwise WebDAV fails
+    '''
+    try:
+      return len(self.data)
+    except AttributeError:
+      return 0
+
   security.declareProtected(Permissions.View,'hasFile')
   def hasFile(self):
     """
