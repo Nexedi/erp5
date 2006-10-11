@@ -343,7 +343,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Authorization Reference</string>
                         </tuple>
                         <tuple>
                           <string>getOriginTitle</string>
@@ -411,6 +411,10 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Amount</string>
+                        </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Invoice Transmission Reference</string>
                         </tuple>
                       </list>
                     </value>
