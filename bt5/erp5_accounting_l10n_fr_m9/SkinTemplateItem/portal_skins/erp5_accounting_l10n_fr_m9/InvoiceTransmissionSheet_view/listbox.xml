@@ -435,7 +435,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>PurchaseInvoiceTransmissionSheet_viewInvoiceList?form_id=PurchaseInvoiceTransmissionSheet_viewInvoiceList</string> </value>
+                    <value> <string>InvoiceTransmissionSheet_viewInvoiceList?form_id=PurchaseInvoiceTransmissionSheet_viewInvoiceList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

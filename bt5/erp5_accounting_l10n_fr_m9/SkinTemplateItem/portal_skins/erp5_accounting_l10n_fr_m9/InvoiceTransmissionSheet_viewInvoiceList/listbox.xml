@@ -248,7 +248,9 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -443,12 +445,12 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>PurchaseInvoiceTransmissionSheet_viewInvoiceList?form_id=PurchaseInvoiceTransmissionSheet_viewInvoiceList</string> </value>
+                    <value> <string>InvoiceTransmissionSheet_viewInvoiceList?form_id=PurchaseInvoiceTransmissionSheet_viewInvoiceList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -468,6 +470,10 @@
                         <tuple>
                           <string>Purchase Invoice Transaction</string>
                           <string>Purchase Invoice Transaction</string>
+                        </tuple>
+                        <tuple>
+                          <string>Sale Invoice Transaction</string>
+                          <string>Sale Invoice Transaction</string>
                         </tuple>
                       </list>
                     </value>
@@ -541,7 +547,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Purchase Invoices</string> </value>
+                    <value> <string>Invoices</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -556,6 +562,29 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+python:"accounting_module/view?reset:int=1&aggregate_title=%s" % here.getTitle()
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
