@@ -70,7 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-context.log(kw)\n
+mine=context.REQUEST.get(\'mine\',\'\')\n
+# if no args we return emtpy list\n
+if kw.get(\'SearchableText\',\'\')==\'\' and mine==\'\':return []\n
+\n
 args=context.parseSearchString(kw.get(\'SearchableText\',\'\'))\n
 if not args.has_key(\'portal_type\') or args[\'portal_type\']==():\n
   args[\'portal_type\']=context.getPortalDocumentTypeList()\n
@@ -108,7 +111,7 @@ if wheres!=[]:\n
 \n
 res=context.portal_catalog(**kw)\n
 \n
-if kw.get(\'mine\')==1: # user wants only his documents\n
+if mine!=\'\': # user wants only his documents\n
   from AccessControl import getSecurityManager\n
   sm=getSecurityManager()\n
   u=sm.getUser()\n
@@ -164,6 +167,7 @@ return res\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>mine</string>
                             <string>args</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
