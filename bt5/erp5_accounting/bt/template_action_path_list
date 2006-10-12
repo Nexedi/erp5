@@ -50,6 +50,7 @@ Accounting Transaction Module | third_parties_report
 Accounting Transaction Module | trial_balance_report
 Accounting Transaction Module | validate_transactions
 Accounting Transaction Module | view
+Accounting Transaction | add_accounting_transaction_line
 Accounting Transaction | create_reversal
 Accounting Transaction | destination_asset
 Accounting Transaction | details
@@ -62,6 +63,7 @@ Balance Transaction Line | history
 Balance Transaction Line | metadata
 Balance Transaction Line | print_pdf
 Balance Transaction Line | view
+Balance Transaction | add_balance_transaction_line
 Balance Transaction | history
 Balance Transaction | metadata
 Balance Transaction | print
@@ -79,6 +81,7 @@ Closing Transaction Line | history
 Closing Transaction Line | metadata
 Closing Transaction Line | print
 Closing Transaction Line | view
+Closing Transaction | add_closing_transaction_line
 Closing Transaction | create_reversal
 Closing Transaction | destination_asset
 Closing Transaction | details
@@ -114,6 +117,7 @@ Invoicing Rule | view
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions
+Payment Transaction | add_accounting_transaction_line
 Payment Transaction | create_reversal
 Payment Transaction | destination_asset
 Payment Transaction | destination_view
@@ -131,6 +135,7 @@ Purchase Invoice Transaction Line | history
 Purchase Invoice Transaction Line | metadata
 Purchase Invoice Transaction Line | print
 Purchase Invoice Transaction Line | view
+Purchase Invoice Transaction | add_purchase_invoice_transaction_line
 Purchase Invoice Transaction | create_related_payment
 Purchase Invoice Transaction | create_reversal
 Purchase Invoice Transaction | destination_asset
@@ -147,6 +152,7 @@ Sale Invoice Transaction Line | history
 Sale Invoice Transaction Line | metadata
 Sale Invoice Transaction Line | print
 Sale Invoice Transaction Line | view
+Sale Invoice Transaction | add_sale_invoice_transaction_line
 Sale Invoice Transaction | create_related_payment
 Sale Invoice Transaction | create_reversal
 Sale Invoice Transaction | destination_asset

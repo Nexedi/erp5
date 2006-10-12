@@ -1,11 +1,29 @@
 <hidden_content_type_list>
+ <portal_type id="Accounting Transaction">
+  <item>Accounting Transaction Line</item>
+ </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Balance Transaction</item>
+ </portal_type>
+ <portal_type id="Balance Transaction">
+  <item>Balance Transaction Line</item>
+ </portal_type>
+ <portal_type id="Closing Transaction">
+  <item>Closing Transaction Line</item>
  </portal_type>
  <portal_type id="Invoice Line">
   <item>Invoice Cell</item>
  </portal_type>
  <portal_type id="Invoice Transaction Rule">
   <item>Accounting Rule Cell</item>
+ </portal_type>
+ <portal_type id="Payment Transaction">
+  <item>Accounting Transaction Line</item>
+ </portal_type>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>Purchase Invoice Transaction Line</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>Sale Invoice Transaction Line</item>
  </portal_type>
 </hidden_content_type_list>
