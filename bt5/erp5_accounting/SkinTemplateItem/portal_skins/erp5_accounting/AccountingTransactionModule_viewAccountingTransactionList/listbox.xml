@@ -741,7 +741,7 @@
                       <list>
                         <tuple>
                           <string>delivery_mirror_section_title</string>
-                          <string>AccountingTransactionModule_getThirdPartyUrl</string>
+                          <string>AccountingTransaction_getThirdPartyUrl</string>
                         </tuple>
                       </list>
                     </value>
