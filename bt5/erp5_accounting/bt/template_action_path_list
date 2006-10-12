@@ -66,7 +66,6 @@ Balance Transaction Line | view
 Balance Transaction | add_balance_transaction_line
 Balance Transaction | history
 Balance Transaction | metadata
-Balance Transaction | print
 Balance Transaction | print_pdf
 Balance Transaction | view
 Bank Account | jump_active_accounting_pref
