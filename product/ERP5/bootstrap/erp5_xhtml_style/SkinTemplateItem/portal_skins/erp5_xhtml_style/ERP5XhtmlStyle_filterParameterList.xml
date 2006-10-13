@@ -70,11 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>kept_names = (\'editable_mode\', \'ignore_layout\',            # erp5_web\n
               \'selection_name\', \'selection_index\',         # list mode\n
-              \'form_id\',                                   # list mode and view mode\n
-              \'object_uid\', \'object_path\',                 # view mode\n
-              \'field_id\', \'form_pickle\', \'form_signature\', # related string field\n
               \'bt_list\',                                   # business template installation system\n
-              \'cancel_url\',\n
              )\n
 # Dialog mode is absent from the kept_name list on purpose :\n
 # none of its variable should ever get transmited because\n
@@ -83,20 +79,8 @@
 # a dialog. So this is safe to propagate it.\n
 \n
 kept_names = dict([(key, None) for key in kept_names])\n
-\n
-def isValid(value_name):\n
-  """\n
-    Return true when the given field name can be propagated, false otherwise.\n
-  """\n
-  if kept_names.has_key(value_name):\n
-    return True\n
-  return False\n
-\n
-for k in parameter_list.keys():\n
-  if not isValid(k):\n
-    del parameter_list[k]\n
-\n
-return parameter_list\n
+to_keep = kept_names.has_key\n
+return dict([(k, v) for k, v in parameter_list.items() if to_keep(k)])\n
 </string> </value>
         </item>
         <item>
@@ -147,10 +131,10 @@ return parameter_list\n
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>None</string>
-                            <string>isValid</string>
                             <string>_getattr_</string>
+                            <string>to_keep</string>
                             <string>k</string>
-                            <string>_write_</string>
+                            <string>v</string>
                           </tuple>
                         </value>
                     </item>

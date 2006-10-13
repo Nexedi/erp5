@@ -48,7 +48,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block metal:use-macro="here/form_dialog/macros/master" />\n
+<tal:block metal:use-macro="here/relation_form/macros/master" />\n
 
 
 ]]></string> </value>

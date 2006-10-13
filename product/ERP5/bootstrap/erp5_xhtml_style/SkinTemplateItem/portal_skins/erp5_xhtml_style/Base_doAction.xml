@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
-preserved_parameters={}\n
+preserved_parameters={\'form_id\': form_id, \'cancel_url\': cancel_url}\n
 request = context.REQUEST\n
 \n
 Base_doAction = select_action.split()\n
@@ -135,7 +135,7 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parame
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_action, **kw</string> </value>
+            <value> <string>select_action, form_id, cancel_url, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,13 +155,15 @@ return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parame
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>select_action</string>
+                            <string>form_id</string>
+                            <string>cancel_url</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
