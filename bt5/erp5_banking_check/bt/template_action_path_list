@@ -57,6 +57,16 @@ Checkbook Vault Transfer | history
 Checkbook Vault Transfer | metadata
 Checkbook Vault Transfer | print_pdf
 Checkbook Vault Transfer | view
+Stop Payment Module | list_ui
+Stop Payment Module | print
+Stop Payment Module | sort_on
+Stop Payment Module | view
+Stop Payment | accounting_view
+Stop Payment | fastinput
+Stop Payment | history
+Stop Payment | metadata
+Stop Payment | print_pdf
+Stop Payment | view
 Traveler Check Purchase Module | list_ui
 Traveler Check Purchase Module | print
 Traveler Check Purchase Module | sort_on

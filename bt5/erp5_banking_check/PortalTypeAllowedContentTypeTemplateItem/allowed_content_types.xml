@@ -36,6 +36,12 @@
  <portal_type id="Checkbook Vault Transfer Module">
   <item>Checkbook Vault Transfer</item>
  </portal_type>
+ <portal_type id="Stop Payment">
+  <item>Checkbook Delivery Line</item>
+ </portal_type>
+ <portal_type id="Stop Payment Module">
+  <item>Stop Payment</item>
+ </portal_type>
  <portal_type id="Traveler Check Purchase">
   <item>Checkbook Delivery Line</item>
  </portal_type>

@@ -68,6 +68,7 @@
             <value>
               <list>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,7 +81,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_start_date</string>
                       </list>
                     </value>
                 </item>

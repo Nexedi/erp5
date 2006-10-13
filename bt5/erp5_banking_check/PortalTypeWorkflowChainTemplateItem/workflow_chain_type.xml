@@ -24,6 +24,10 @@
   <workflow>checkbook_vault_transfer_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Stop Payment</type>
+  <workflow>edit_workflow, stop_payment_workflow</workflow>
+ </chain>
+ <chain>
   <type>Traveler Check Purchase</type>
   <workflow>edit_workflow, traveler_check_purchase_workflow</workflow>
  </chain>

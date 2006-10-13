@@ -10,6 +10,9 @@ Checkbook Usual Cash Transfer | Amount
 Checkbook Usual Cash Transfer | Price
 Checkbook Vault Transfer | Amount
 Checkbook Vault Transfer | Price
+Stop Payment | Amount
+Stop Payment | Price
+Stop Payment | StopPayment
 Traveler Check Purchase | Amount
 Traveler Check Purchase | Price
 Traveler Check Sale | Amount
