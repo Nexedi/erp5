@@ -125,7 +125,6 @@ It is possible to specify a group id and a group title by naming a group followi
             <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
           </tal:block>\n
         </fieldset>\n
-        <p tal:condition="python: gid.find(\'right\') >= 0 or (gid.find(\'left\') >= 0 and \'right\' not in gid_list)" class="clear"/>\n
       </tal:block>\n
     </tal:block>\n
 \n
