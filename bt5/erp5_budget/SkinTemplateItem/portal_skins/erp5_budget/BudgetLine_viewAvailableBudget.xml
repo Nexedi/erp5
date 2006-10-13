@@ -70,7 +70,7 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>buttom</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -80,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>buttom</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>matrixbox</string>
