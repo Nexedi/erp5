@@ -94,7 +94,7 @@ elif state == "ordered":\n
     \n
 # check outgoing line, we pay back\n
 elif state == "confirmed":\n
-  if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) != 0:\n
+  if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) == 0:\n
     msg = Message(domain = "ui", message="You must defined returned banknote.")\n
     raise ValidationFailed, (msg,)\n
   if ob.getDestinationTotalAssetPrice() != ob.getTotalPrice(portal_type="Outgoing Mutilated Banknote Line", fast=0):\n
