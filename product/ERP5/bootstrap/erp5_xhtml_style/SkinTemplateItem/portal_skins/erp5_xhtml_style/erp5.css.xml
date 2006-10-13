@@ -564,6 +564,13 @@ div.index_html table {\n
 \n
 div.top_group,\n
 fieldset.left,\n
+fieldset.center,\n
+fieldset.bottom {\n
+  clear: both;\n
+}\n
+\n
+div.top_group,\n
+fieldset.left,\n
 fieldset.right,\n
 fieldset.center,\n
 fieldset.bottom {\n
@@ -585,13 +592,13 @@ fieldset.center {\n
 fieldset.left {\n
   width: 50%;\n
   float: left;\n
-  margin-right: -11px; /* 5px margin *2 + 1px for left border width */\n
+  margin-right: -12px; /* 5px margin *2 + 2px for left & right border width */\n
 }\n
 \n
 fieldset.right {\n
   width: 50%;\n
   float: left;\n
-  margin-left: -11px; /* 5px margin *2 + 1px for right border width */\n
+  margin-left: -12px; /* 5px margin *2 + 2px for left & right border width */\n
 }\n
 \n
 div.top_group fieldset.left,\n

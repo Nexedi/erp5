@@ -90,6 +90,9 @@ function fixLeftRightHeight(){\n
     rfieldset.style.height = (lh>rh)? lh+"px" : rh+"px";\n
     lfieldset.style.borderRightWidth = 0;\n
     rfieldset.style.borderLeftWidth = 0;\n
+    /* XXX: hardcoded values required unless there is a way to compute "12px"-"1px" in js */\n
+    lfieldset.style.marginRight = "-11px";\n
+    rfieldset.style.marginLeft = "-11px";\n
   }\n
 }\n
 
