@@ -74,7 +74,7 @@ bug = state_change[\'object\']\n
 portal = bug.getPortalObject()\n
 from_name = portal.getProperty(\'email_from_name\', \'ERP5\')\n
 from_address = portal.getProperty(\'email_from_address\', \'postmaster@localhost\')\n
-to_address = portal.getProperty(\'email_to_address\', \'yo@nexedi.com\')\n
+to_address = portal.getProperty(\'email_to_address\', from_address)\n
 \n
 if not to_address:\n
   return\n

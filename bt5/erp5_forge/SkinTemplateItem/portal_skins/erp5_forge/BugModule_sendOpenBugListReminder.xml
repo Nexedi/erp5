@@ -112,7 +112,7 @@ if not_assigned_bug_list:\n
 \n
 mail_text = """From: "%s" <%s>\n
 To: %s\n
-Subject: %s: %s Opened bugs\n
+Subject: %s: %s Open Bugs\n
 MIME-Version: 1.0\n
 Content-Type: text/plain;\n
   charset="utf-8"\n
