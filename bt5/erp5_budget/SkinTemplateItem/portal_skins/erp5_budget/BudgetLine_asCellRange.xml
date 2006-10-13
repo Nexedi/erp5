@@ -75,15 +75,14 @@ base_category_list = context.getVariationBaseCategoryList()\n
 for base_category in base_category_list:\n
   if matrixbox == 1:\n
     # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
-    cell_range.append(map(lambda x: (x[1],x[0]), \n
-                                    context.getVariationCategoryItemList(\n
-                                           base_category_list=(base_category,),\n
-                                           display_base_category=1)))\n
+    cell_range.append([(x[1], x[0]) for x in context.getVariationCategoryItemList(\n
+        base_category_list=(base_category,), display_base_category=1)])\n
   else:\n
     cell_range.append(context.getVariationCategoryList(\n
-                                   base_category_list=(base_category,)))\n
+        base_category_list=(base_category,)))\n
 \n
-cell_range = filter(lambda x: x != [], cell_range )\n
+cell_range = [x for x in cell_range if x != []]\n
+\n
 \n
 return cell_range\n
 \n
@@ -188,8 +187,10 @@ return cell_range\n
                             <string>base_category_list</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
-                            <string>map</string>
-                            <string>filter</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
