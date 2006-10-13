@@ -68,40 +68,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
+            <value> <string># equivalent to for getCategoryChildLogicalPathItemList\n
+# the point is to display short_title if available else id\n
+# instead of title in case categories have long titles and deep nesting\n
+# use with care and caching, may be expensive\n
 \n
-def cached_DMSGetItemList(base_category):\n
-    basecatobject=context.portal_categories.resolveCategory(base_category)\n
-    #return [(context.Base_trimPathName(x,100),y) for x,y in basecatobject.getCategoryChildLogicalPathItemList()]\n
-    return basecatobject.Category_childShortTitleOrIdItemList()\n
+labelcache={} # so that we do not resolve all items in every path\n
 \n
-cached_DMSGetItemList=CachingMethod(cached_DMSGetItemList,id=\'DMGetItemListCachedMethodWhatever\')\n
+def getLabel(c):\n
+  return c.getShortTitle() or c.getId()\n
 \n
-if default_sub_field_property_dict is None:\n
-  default_sub_field_property_dict={\'field_type\': \'MultiListField\', \'item_list\': [], \'required\': 0, \'value\': [], \'is_right_display\': 0, \'key\': \'default\', \'title\': \'Categories\', \'size\': 5}\n
+def makeLogicalPathItem(o):\n
+  retval=[]\n
+  path=o.getRelativeUrl().split(\'/\')\n
+  pathlabels=[]\n
+  for i,p in enumerate(path):\n
+    pathhash=\'/\'.join(path[:i+1])\n
+    if not labelcache.has_key(pathhash):\n
+      cat=context.portal_categories.resolveCategory(pathhash)\n
+      labelcache[pathhash]=getLabel(cat)\n
+    pathlabels.append(labelcache[pathhash])\n
+  retval.append(\'/\'.join(pathlabels))\n
+  retval.append(\'/\'.join(path[1:]))\n
+  return retval\n
 \n
-sub_field_dict={}\n
-maximum_list_size=5\n
+#basecat=context.portal_categories.resolveCategory(\'function\')\n
+basecat=context\n
 \n
-default_sub_field_property_dict[\'field_type\']=\'ListField\'\n
-default_sub_field_property_dict[\'size\']=1\n
+children=basecat.getCategoryChildValueList()\n
+children=map(makeLogicalPathItem,children)\n
+children.insert(0,[\'\',\'\'])\n
 \n
-for base_category in item_list:\n
-  if not sub_field_dict.has_key(base_category):\n
-    basecatobject=context.portal_categories.resolveCategory(base_category)\n
-    sub_field_property_dict=default_sub_field_property_dict.copy()\n
-    sub_field_property_dict[\'key\']=base_category\n
-    sub_field_property_dict[\'title\']=basecatobject.getTranslatedTitle()\n
-    # we cache this, so that we can apply expensive path processing techniques\n
-    sub_field_property_dict[\'item_list\']=cached_DMSGetItemList(base_category)\n
-    sub_field_property_dict[\'value\']=context.aq_parent.aq_parent.getProperty(base_category)\n
-    \n
-    sub_field_dict[base_category]=sub_field_property_dict\n
-\n
-return sub_field_dict.values()\n
-\n
-\n
-# vim: syntax=python shiftwidth=2\n
+return children\n
 </string> </value>
         </item>
         <item>
@@ -124,7 +122,7 @@ return sub_field_dict.values()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>item_list, value_list=(), default_sub_field_property_dict=None, is_right_display=0</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,29 +142,20 @@ return sub_field_dict.values()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>item_list</string>
-                            <string>value_list</string>
-                            <string>default_sub_field_property_dict</string>
-                            <string>is_right_display</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>cached_DMSGetItemList</string>
-                            <string>None</string>
-                            <string>sub_field_dict</string>
-                            <string>maximum_list_size</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>base_category</string>
-                            <string>_getattr_</string>
+                            <string>labelcache</string>
+                            <string>getLabel</string>
+                            <string>makeLogicalPathItem</string>
                             <string>context</string>
-                            <string>basecatobject</string>
-                            <string>sub_field_property_dict</string>
+                            <string>basecat</string>
+                            <string>_getattr_</string>
+                            <string>children</string>
+                            <string>map</string>
                           </tuple>
                         </value>
                     </item>
@@ -178,16 +167,12 @@ return sub_field_dict.values()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <tuple/>
-                <none/>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMSBaseCategoryHash</string> </value>
+            <value> <string>Category_childShortTitleOrIdItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
