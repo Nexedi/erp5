@@ -91,7 +91,9 @@ return [(\'\',\'\')]+[(x.getTitle(), x.getRelativeUrl()) for x in budget_cell_li
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_budget/BudgetTransaction_getBudgetCellList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

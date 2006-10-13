@@ -95,7 +95,9 @@ if consistency != []:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/budget_transaction_workflow/scripts/BudgetTransaction_checkFeasability</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

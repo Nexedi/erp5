@@ -82,7 +82,9 @@ line.updateCellRange(base_id=base_id)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/budget_line_interaction_workflow/scripts/BudgetLine_updateCellRange</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

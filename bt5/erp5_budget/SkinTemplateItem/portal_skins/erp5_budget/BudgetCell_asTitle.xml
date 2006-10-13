@@ -81,7 +81,9 @@ return \'/\'.join([cat_value(x).getTitle() \\\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_budget/BudgetCell_asTitle</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
