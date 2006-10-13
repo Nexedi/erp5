@@ -45,7 +45,8 @@ def generateParts(context,text,sw,tags,trail,maxlines):
   sw=sw.translate(tr).strip().split()
   test=lambda w:w.translate(tr).strip().lower() in sw
   i=0
-  for aw in text:
+  length=len(text)
+  for counter,aw in enumerate(text):
     if i==maxlines:
       raise StopIteration
     if test(aw):
@@ -57,6 +58,10 @@ def generateParts(context,text,sw,tags,trail,maxlines):
         i+=1
         yield par
         par=Part(tags,trail)
+      if counter==length-1:
+        if par.has:
+          par.chain.reverse()
+          yield par # return the last marked part
 
 
 def cutFound(context,txt,sw,tags,trail,maxlines):
