@@ -80,7 +80,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                           right_group python: form.get_fields_in_group(\'right\');\n
                           center_left_group python: form.get_fields_in_group(\'center_left\');\n
                           center_right_group python: form.get_fields_in_group(\'center_right\');\n
-                          bottom_group python: form.get_fields_in_group(\'bottom\');">\n
+                          bottom_group python: form.get_fields_in_group(\'bottom\');\n
+                          field_render nocall: here/field_render/macros/field_render">\n
       <tal:block tal:define="template python: here.developper_shortcut_render">\n
         <tal:block metal:use-macro="template/macros/form" />\n
       </tal:block>\n
@@ -89,13 +90,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <fieldset tal:condition="python: len(left_group) > 0"\n
                   class="left">\n
           <tal:block tal:repeat="field left_group">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+            <tal:block metal:use-macro="field_render" />\n
           </tal:block>\n
         </fieldset>\n
         <fieldset tal:condition="python: len(right_group) > 0"\n
                   class="right">\n
           <tal:block tal:repeat="field right_group">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+            <tal:block metal:use-macro="field_render" />\n
           </tal:block>\n
         </fieldset>\n
         <p class="clear"></p>\n
@@ -105,13 +106,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <fieldset tal:condition="python: len(center_left_group) > 0"\n
              class="left">\n
           <tal:block tal:repeat="field center_left_group">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+            <tal:block metal:use-macro="field_render" />\n
           </tal:block>\n
         </fieldset>\n
         <fieldset tal:condition="python: len(center_right_group) > 0"\n
              class="right">\n
           <tal:block tal:repeat="field center_right_group">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+            <tal:block metal:use-macro="field_render" />\n
           </tal:block>\n
         </fieldset>\n
         <p class="clear"></p>\n
@@ -119,7 +120,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <fieldset tal:condition="python: len(bottom_group) > 0"\n
                 class="center">\n
         <tal:block tal:repeat="field python: form.get_fields_in_group(\'bottom\')">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+            <tal:block metal:use-macro="field_render" />\n
         </tal:block>\n
         <p class="clear"></p>\n
       </fieldset>\n
