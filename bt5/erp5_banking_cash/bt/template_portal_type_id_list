@@ -1,6 +1,5 @@
 Account Incident
 Account Incident Module
-Banking Operation Line
 Cash Balance Regulation
 Cash Balance Regulation Module
 Cash Container
@@ -31,6 +30,7 @@ Currency Sale
 Currency Sale Module
 Destruction Survey
 Destruction Survey Module
+Exchanged Mutilated Banknote Line
 Foreign Cash Reception
 Foreign Cash Reception Module
 Incoming Account Incident Line
@@ -42,6 +42,7 @@ Incoming Cash Sorting Line
 Incoming Cash To Currency Purchase Line
 Incoming Cash To Currency Sale Line
 Incoming Classification Survey Line
+Incoming Mutilated Banknote Line
 Incoming Usual Cash Incident Line
 Internal Money Deposit
 Internal Money Deposit Module
@@ -65,6 +66,8 @@ Money Deposit Rendering
 Money Deposit Rendering Module
 Money Deposit Transfer
 Money Deposit Transfer Module
+Mutilated Banknote
+Mutilated Banknote Module
 Outgoing Account Incident Line
 Outgoing Cash Balance Regulation Line
 Outgoing Cash Exchange Line
@@ -76,6 +79,7 @@ Outgoing Cash To Currency Purchase Line
 Outgoing Cash To Currency Sale Line
 Outgoing Classification Survey Cell
 Outgoing Classification Survey Line
+Outgoing Mutilated Banknote Line
 Outgoing Usual Cash Incident Line
 Usual Cash Incident
 Usual Cash Incident Module

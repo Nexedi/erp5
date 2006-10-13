@@ -56,6 +56,9 @@ Money Deposit Rendering | Cash Delivery Line
 Money Deposit Transfer | Cash Delivery Line
 Money Deposit | Banking Operation Line
 Money Deposit | Cash Delivery Line
+Mutilated Banknote | Exchanged Mutilated Banknote Line
+Mutilated Banknote | Incoming Mutilated Banknote Line
+Mutilated Banknote | Outgoing Mutilated Banknote Line
 Outgoing Account Incident Line | Cash Delivery Cell
 Outgoing Cash Balance Regulation Line | Cash Delivery Cell
 Outgoing Cash Exchange Line | Cash Delivery Cell

@@ -71,6 +71,9 @@
   <item>Amount</item>
   <item>Task</item>
  </portal_type>
+ <portal_type id="Exchanged Mutilated Banknote Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Incoming Account Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
@@ -96,6 +99,9 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Classification Survey Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Incoming Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Usual Cash Incident Line">
@@ -151,6 +157,10 @@
   <item>Price</item>
   <item>Amount</item>
  </portal_type>
+ <portal_type id="Mutilated Banknote">
+  <item>Amount</item>
+  <item>Price</item>
+ </portal_type>
  <portal_type id="Outgoing Account Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
@@ -182,6 +192,9 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Classification Survey Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Outgoing Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Usual Cash Incident Line">

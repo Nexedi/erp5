@@ -104,6 +104,10 @@
   <workflow>edit_workflow, money_deposit_transfer_workflow</workflow>
  </chain>
  <chain>
+  <type>Mutilated Banknote</type>
+  <workflow>edit_workflow, mutilated_banknote_workflow</workflow>
+ </chain>
+ <chain>
   <type>Usual Cash Incident</type>
   <workflow>edit_workflow, usual_cash_incident_workflow</workflow>
  </chain>

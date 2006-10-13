@@ -51,6 +51,8 @@ Money Deposit Transfer | edit_workflow
 Money Deposit Transfer | money_deposit_transfer_workflow
 Money Deposit | edit_workflow
 Money Deposit | money_deposit_workflow
+Mutilated Banknote | edit_workflow
+Mutilated Banknote | mutilated_banknote_workflow
 Usual Cash Incident | edit_workflow
 Usual Cash Incident | usual_cash_incident_workflow
 Usual Cash Rendering | edit_workflow

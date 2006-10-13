@@ -22,6 +22,7 @@ monetary_survey_workflow
 money_deposit_rendering_workflow
 money_deposit_transfer_workflow
 money_deposit_workflow
+mutilated_banknote_workflow
 usual_cash_incident_workflow
 usual_cash_rendering_workflow
 usual_cash_transfer_workflow

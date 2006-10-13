@@ -25,8 +25,8 @@
   <item>emission_letter</item>
  </portal_type>
  <portal_type id="Container Line">
-  <item>variation</item>
   <item>emission_letter</item>
+  <item>variation</item>
   <item>cash_status</item>
  </portal_type>
  <portal_type id="Currency Purchase">
@@ -43,6 +43,10 @@
  </portal_type>
  <portal_type id="Money Deposit">
   <item>external_software</item>
+ </portal_type>
+ <portal_type id="Mutilated Banknote">
+  <item>source_trade</item>
+  <item>source_decision</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>

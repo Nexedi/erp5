@@ -137,6 +137,11 @@
  <portal_type id="Money Deposit Transfer">
   <item>Cash Delivery Line</item>
  </portal_type>
+ <portal_type id="Mutilated Banknote">
+  <item>Outgoing Mutilated Banknote Line</item>
+  <item>Exchanged Mutilated Banknote Line</item>
+  <item>Incoming Mutilated Banknote Line</item>
+ </portal_type>
  <portal_type id="Outgoing Account Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>

@@ -17,6 +17,8 @@ Currency Sale | currency_exchange_type
 Internal Money Deposit | external_software
 Monetary Recall Cell | variation
 Money Deposit | external_software
+Mutilated Banknote | source_decision
+Mutilated Banknote | source_trade
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation
 Usual Cash Incident | incident_type

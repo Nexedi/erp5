@@ -156,6 +156,9 @@ Destruction Survey | history
 Destruction Survey | metadata
 Destruction Survey | print
 Destruction Survey | view
+Exchanged Mutilated Banknote Line | metadata
+Exchanged Mutilated Banknote Line | print
+Exchanged Mutilated Banknote Line | view
 Foreign Cash Reception Module | list_ui
 Foreign Cash Reception Module | print_pdf
 Foreign Cash Reception Module | sort_on
@@ -187,6 +190,9 @@ Incoming Cash To Currency Sale Line | print
 Incoming Cash To Currency Sale Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
+Incoming Mutilated Banknote Line | metadata
+Incoming Mutilated Banknote Line | print
+Incoming Mutilated Banknote Line | view
 Incoming Usual Cash Incident Line | metadata
 Incoming Usual Cash Incident Line | view
 Internal Money Deposit Module | list_ui
@@ -283,6 +289,20 @@ Money Deposit | history
 Money Deposit | metadata
 Money Deposit | print
 Money Deposit | view
+Mutilated Banknote Module | list_ui
+Mutilated Banknote Module | print_pdf
+Mutilated Banknote Module | sort_on
+Mutilated Banknote Module | view
+Mutilated Banknote | exchanged_line
+Mutilated Banknote | exchanged_line_fast_input
+Mutilated Banknote | history
+Mutilated Banknote | metadata
+Mutilated Banknote | print_pdf
+Mutilated Banknote | returned_line
+Mutilated Banknote | returned_line_fast_input
+Mutilated Banknote | supply_line
+Mutilated Banknote | supply_line_fast_input
+Mutilated Banknote | view
 Outgoing Account Incident Line | metadata
 Outgoing Account Incident Line | view
 Outgoing Cash Balance Regulation Line | metadata
@@ -307,6 +327,9 @@ Outgoing Classification Survey Cell | metadata
 Outgoing Classification Survey Cell | view
 Outgoing Classification Survey Line | metadata
 Outgoing Classification Survey Line | view
+Outgoing Mutilated Banknote Line | metadata
+Outgoing Mutilated Banknote Line | print
+Outgoing Mutilated Banknote Line | view
 Outgoing Usual Cash Incident Line | metadata
 Outgoing Usual Cash Incident Line | view
 Usual Cash Incident Module | list_ui
