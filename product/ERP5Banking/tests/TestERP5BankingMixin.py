@@ -480,6 +480,7 @@ class TestERP5BankingMixin:
         surface = c.newContent(id='surface', portal_type='Category', codification='',  vault_type='site/surface')
         caisse_courante = surface.newContent(id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
         caisse_courante.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        caisse_courante.newContent(id='encaisse_des_billets_mutiles', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
         # create counter for surface
         for s in ['banque_interne', 'gros_versement', 'gros_payement']:
           s = surface.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
