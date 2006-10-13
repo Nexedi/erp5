@@ -124,7 +124,7 @@ return ob\n
                             <string>fname</string>
                             <string>data</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>None</string>
                             <string>ctype</string>
                             <string>Exception</string>

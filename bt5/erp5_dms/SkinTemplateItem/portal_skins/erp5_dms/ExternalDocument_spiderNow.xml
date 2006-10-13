@@ -114,7 +114,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_s
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

@@ -63,7 +63,7 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string>  caching sources from outside\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -65,7 +65,7 @@
             <value> <string>  Special base class, different from File only in that it can contain things \n
   (like Role Definition, for example)\n
   will be merged with File when WebDAV issues are solved\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

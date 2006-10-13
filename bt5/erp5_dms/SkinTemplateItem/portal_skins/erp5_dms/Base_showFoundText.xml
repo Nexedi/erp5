@@ -73,6 +73,7 @@
 tags=(\'<div style="font-weight:bold;display:inline;">\',\'</div>\')\n
 trail=5\n
 maxlines=5\n
+\n
 txt=brain.getObject().SearchableText()\n
 sw=context.REQUEST.get(\'SearchableText\',None)\n
 if sw is None:\n
