@@ -68,9 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>http_parameter_list.update(kw)\n
-return context.ERP5XhtmlStyle_renderLink(link, context.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list))\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+http_parameter_list.update(kw)\n
+if len(http_parameter_list) == 0:\n
+  return link\n
+if \'?\' in link:\n
+  sep=\'&\'\n
+else:\n
+  sep=\'?\'\n
+\n
+return \'%s%s%s\' % (link, sep, context.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list))\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -122,6 +133,8 @@ return context.ERP5XhtmlStyle_renderLink(link, context.ERP5XhtmlStyle_renderHTTP
                             <string>http_parameter_list</string>
                             <string>kw</string>
                             <string>_getattr_</string>
+                            <string>len</string>
+                            <string>sep</string>
                             <string>context</string>
                           </tuple>
                         </value>
