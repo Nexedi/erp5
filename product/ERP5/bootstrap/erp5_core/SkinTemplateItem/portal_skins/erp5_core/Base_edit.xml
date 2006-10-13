@@ -81,7 +81,7 @@ if dialog_id not in (\'\', None):\n
   form_id = dialog_id\n
 \n
 # Prevent users who don\'t have rights to edit the object from\n
-# editing it by calling the Base_edit script with correct \n
+# editing it by calling the Base_edit script with correct\n
 # parameters directly.\n
 if not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', context) :\n
   redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % (context.absolute_url(), form_id, selection_index, selection_name, \'portal_status_message=You+don\\\'t+have+the+permissions+to+edit+the+object.\')\n
@@ -143,7 +143,7 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
       kd[\'base_id\'] = cell_base_id\n
       gv = {}\n
       if matrixbox_field.has_value(\'global_attributes\'):\n
-        hidden_attributes = map(lambda x:x[0], matrixbox_field.get_value(\'global_attributes\'))\n
+        hidden_attributes = [x[0] for x in matrixbox_field.get_value(\'global_attributes\')]\n
         for k in hidden_attributes:\n
           gv[k] = getattr(request, k, None)\n
       if matrixbox_field.get_value(\'update_cell_range\'):\n
@@ -151,11 +151,11 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
         lines = matrixbox_field.get_value(\'lines\')\n
         columns = matrixbox_field.get_value(\'columns\')\n
         tabs = matrixbox_field.get_value(\'tabs\')\n
-  \n
+\n
         column_ids = map(lambda x: x[0], columns)\n
         line_ids = map(lambda x: x[0], lines)\n
         tab_ids = map(lambda x: x[0], tabs)\n
-  \n
+\n
         # There are 3 cases\n
         # Case 1: we do 1 dimensional matrix\n
         # Case 2: we do 2 dimensional matrix\n
@@ -165,38 +165,38 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
           matrixbox_cell_range = [line_ids]\n
           if cell_range != matrixbox_cell_range:\n
             matrix_context.setCellRange(line_ids, base_id=cell_base_id)\n
-  \n
+\n
         elif (len(tab_ids) == 0) or (tab_ids[0] is None):\n
           matrixbox_cell_range = [line_ids, column_ids]\n
           if cell_range != matrixbox_cell_range:\n
             matrix_context.setCellRange(line_ids, column_ids, base_id=cell_base_id)\n
-  \n
+\n
         else:\n
           matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
           if cell_range != matrixbox_cell_range:\n
             matrix_context.setCellRange(line_ids, column_ids, tab_ids, base_id=cell_base_id)\n
-        \n
-        for k,v in matrixbox.items():\n
-            # Only update cells which still exist\n
-            if matrix_context.hasInRange(*k, **kd):\n
-              c = matrix_context.newCell(*k, **kd)\n
-              if c is not None:\n
-                c.edit(**gv)  # First update globals which include the def. of property_list\n
-                if v.has_key(\'variated_property\'):\n
-                  # For Variated Properties\n
-                  value = v[\'variated_property\']\n
-                  del v[\'variated_property\']\n
-                  if gv.has_key(\'mapped_value_property_list\'):\n
-                    # Change the property which is defined by the\n
-                    # first element of mapped_value_property_list\n
-                    # XXX May require some changes with Sets\n
-                    key = gv[\'mapped_value_property_list\'][0]\n
-                    v[key] = value\n
-                c.edit(**v) # and update the cell specific values\n
-              else:\n
-                return "Could not create cell %s" % str(k)\n
-            else:\n
-              return "Cell %s does not exist" % str(k)\n
+\n
+      for k,v in matrixbox.items():\n
+        # Only update cells which still exist\n
+        if matrix_context.hasInRange(*k, **kd):\n
+          c = matrix_context.newCell(*k, **kd)\n
+          if c is not None:\n
+            c.edit(**gv)  # First update globals which include the def. of property_list\n
+            if v.has_key(\'variated_property\'):\n
+              # For Variated Properties\n
+              value = v[\'variated_property\']\n
+              del v[\'variated_property\']\n
+              if gv.has_key(\'mapped_value_property_list\'):\n
+                # Change the property which is defined by the\n
+                # first element of mapped_value_property_list\n
+                # XXX May require some changes with Sets\n
+                key = gv[\'mapped_value_property_list\'][0]\n
+                v[key] = value\n
+            c.edit(**v) # and update the cell specific values\n
+          else:\n
+            return "Could not create cell %s" % str(k)\n
+        else:\n
+          return "Cell %s does not exist" % str(k)\n
 \n
 def parseField(f):\n
   """\n
