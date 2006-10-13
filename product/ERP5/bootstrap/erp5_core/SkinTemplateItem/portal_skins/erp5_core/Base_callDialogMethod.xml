@@ -225,7 +225,7 @@ listbox_uid = request_form.get(\'listbox_uid\', None)\n
 if listbox_uid is not None:\n
   uids = request_form.get(\'uids\')\n
   selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
-    selection_name,\n
+    request_form[\'selection_name\'],\n
     listbox_uid, uids)\n
 \n
 # Remove values which doesn\'t work with make_query.\n
