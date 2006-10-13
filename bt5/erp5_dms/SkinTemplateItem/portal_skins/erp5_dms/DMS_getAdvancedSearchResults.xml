@@ -75,6 +75,7 @@ mine=context.REQUEST.get(\'mine\',\'\')\n
 if kw.get(\'SearchableText\',\'\')==\'\' and mine==\'\':return []\n
 \n
 args=context.parseSearchString(kw.get(\'SearchableText\',\'\'))\n
+\n
 if not args.has_key(\'portal_type\') or args[\'portal_type\']==():\n
   args[\'portal_type\']=context.getPortalDocumentTypeList()\n
 cats=[]\n
@@ -111,7 +112,7 @@ if wheres!=[]:\n
 \n
 res=context.portal_catalog(**kw)\n
 \n
-if mine!=\'\': # user wants only his documents\n
+if mine not in (0,\'\'): # user wants only his documents\n
   from AccessControl import getSecurityManager\n
   sm=getSecurityManager()\n
   u=sm.getUser()\n
@@ -132,6 +133,12 @@ return res\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
