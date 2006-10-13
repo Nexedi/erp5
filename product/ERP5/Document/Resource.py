@@ -200,7 +200,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationCategoryList')
-    def getVariationCategoryList(self, base_category_list=(),
+    def getVariationCategoryList(self, default=[], base_category_list=(),
                                  omit_individual_variation=1, **kw):
       """
         Returns variations of the resource.

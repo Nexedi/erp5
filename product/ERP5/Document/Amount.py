@@ -73,7 +73,7 @@ class Amount(Base, Variated):
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryList')
-  def getVariationCategoryList(self, base_category_list=(),
+  def getVariationCategoryList(self, default=[], base_category_list=(),
                                omit_option_base_category=0):
     """
       Returns the possible discrete variations
@@ -150,7 +150,8 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryList')
-  def getVariationBaseCategoryList(self, omit_option_base_category=0):
+  def getVariationBaseCategoryList(self, default=[],
+      omit_option_base_category=0):
     """
       Return the list of base_category from all variation related to
       amount.
@@ -218,7 +219,8 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryList')
-  def getVariationRangeCategoryList(self, base_category_list=(), base=1, **kw):
+  def getVariationRangeCategoryList(self, default=[], base_category_list=(),
+      base=1, **kw):
     """
       Returns possible variation category values for the
       order line according to the default resource.
@@ -229,7 +231,7 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeBaseCategoryList')
-  def getVariationRangeBaseCategoryList(self, omit_option_base_category=0):
+  def getVariationRangeBaseCategoryList(self, default=[], omit_option_base_category=0):
     """
         Returns possible variations base categories for this amount ie.
         the variation base category of the resource (not the
