@@ -82,8 +82,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                           center_right_group python: form.get_fields_in_group(\'center_right\');\n
                           bottom_group python: form.get_fields_in_group(\'bottom\');\n
                           field_render nocall: here/field_render/macros/field_render">\n
-      <tal:block tal:define="template python: here.developper_shortcut_render">\n
-        <tal:block metal:use-macro="template/macros/form" />\n
+      <tal:block tal:condition="preferred_html_style_developper_mode">\n
+        <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
       </tal:block>\n
       <div tal:condition="python: len(left_group) > 0 or len(right_group) > 0"\n
            class="top_group">\n

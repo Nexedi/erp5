@@ -78,8 +78,8 @@ XXX: uses hardcoded indices values to access fields\n
   <tal:block metal:use-macro="here/dialog_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
       <div class="dialog_box">\n
-        <tal:block tal:define="template python: here.developper_shortcut_render">\n
-          <tal:block metal:use-macro="template/macros/form" />\n
+        <tal:block tal:condition="preferred_html_style_developper_mode">\n
+          <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
         </tal:block>\n
         <table tal:define="selection_name request/selection_name;\n
                           base_form python: getattr(here, request[\'form_id\']);\n

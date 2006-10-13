@@ -74,25 +74,34 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 <tal:block metal:define-macro="field_render">\n
   <tal:block tal:condition="python: field.meta_type != \'HiddenStringField\'"\n
-             tal:define="value        python: request.get(field.id, None);\n
+             tal:define="field_id     field/id;\n
+                         value        python: request.get(field_id, None);\n
                          field_errors python: request.get(\'field_errors\', {});\n
-                         html_render  python: field.render_htmlgrid(value, request)">\n
-    <div tal:repeat="html_tuple html_render"\n
-         tal:attributes="title python: here.Localizer.translate(\'erp5_ui\', here.Base_getFieldDescription(field));\n
-                         class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_errors.has_key(field.id) and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])">\n
-      <label>\n
-        <tal:block tal:content="structure python: html_tuple[0]"\n
-                   i18n:translate="" i18n:domain="ui"/>\n
-        <tal:block tal:define="template python: here.developper_shortcut_render">\n
-          <tal:block metal:use-macro="template/macros/field"/>\n
-        </tal:block>\n
-      </label>\n
-      <div class="input" tal:content="structure python: html_tuple[1]"/>\n
-      <span tal:condition="python: field_errors.has_key(field.id)"\n
-            class="error"\n
-            tal:content="python: field_errors[field.id].error_text"\n
-            i18n:translate="" i18n:domain="ui"/>\n
-      <p class="clear"></p>\n
+                         field_has_error  python: field_errors.has_key(field_id);\n
+                         global form_id form_id | python: form.id;\n
+                         field_description python: here.Base_getFieldDescription(form_id=form_id, field=field)">\n
+    <div tal:define="html_render  python: field.render_htmlgrid(value, request)"\n
+         tal:attributes="title field_description;\n
+                         class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
+         i18n:attributes="title" i18n:domain="ui">\n
+      <tal:block tal:repeat="html_tuple html_render">\n
+        <label>\n
+          <tal:block tal:content="structure python: html_tuple[0]"\n
+                    i18n:translate="" i18n:domain="ui"/>\n
+          <tal:block tal:condition="preferred_html_style_developper_mode">\n
+            <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
+          </tal:block>\n
+          <tal:block tal:condition="preferred_html_style_translator_mode">\n
+            <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
+          </tal:block>\n
+        </label>\n
+        <div class="input" tal:content="structure python: html_tuple[1]"/>\n
+        <span tal:condition="python: field_has_error"\n
+              class="error"\n
+              tal:content="python: field_errors[field_id].error_text"\n
+              i18n:translate="" i18n:domain="ui"/>\n
+        <p class="clear"></p>\n
+      </tal:block>\n
     </div>\n
   </tal:block>\n
 </tal:block>

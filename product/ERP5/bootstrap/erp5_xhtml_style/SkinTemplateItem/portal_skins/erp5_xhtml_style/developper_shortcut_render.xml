@@ -75,56 +75,55 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 \n
 <tal:block metal:define-macro="edit_link">\n
-  <a tal:condition="python: preferred_html_style_developper_mode and hasattr(object, \'meta_type\')"\n
-     tal:attributes="href python: \'%s/%s\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):]), manage) # XXX: quick hack to get path;\n
+  <a tal:condition="python: hasattr(object, \'meta_type\')"\n
+     tal:attributes="href python: \'%s/manage_main\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):])) # XXX: quick hack to get path;\n
                      title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                                                        alt info;"/></a>\n
 </tal:block>\n
 \n
 \n
 <tal:block metal:define-macro="translate_link">\n
-  <tal:block tal:condition="preferred_html_style_translator_mode">\n
-    <a tal:define="image image | python: \'translate.png\'"\n
-       tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, selected_language);\n
-                       title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
-                                                         alt info;"/></a>\n
-  </tal:block>\n
+  <a tal:define="image image | python: \'translate.png\'"\n
+     tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, selected_language);\n
+                     title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
+                                                       alt info;"/></a>\n
 </tal:block>\n
 \n
 \n
-<tal:block metal:define-macro="form" tal:condition="not: is_web_mode | nothing">\n
+<tal:block metal:define-macro="form">\n
   <tal:block tal:define="image python: \'editform.png\';\n
                          info python: \'Edit this form\';\n
-                         object python: form;\n
-                         manage python: \'manage\'">\n
-    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+                         object nocall: form;">\n
+    <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link"/>\n
   </tal:block>\n
   <tal:block tal:define="image python: \'editformaction.png\';\n
                          info python: \'Edit this form\\\'s action\';\n
-                         object python: getattr(here, form.action, None);\n
-                         manage python: \'manage_main\'">\n
-    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+                         object python: getattr(here, form.action, None);">\n
+    <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link"/>\n
   </tal:block>\n
 </tal:block>\n
 \n
 \n
-<tal:block metal:define-macro="field" tal:condition="not: is_web_mode | nothing">\n
+<tal:block metal:define-macro="field_developper">\n
   <tal:block tal:define="image python: \'editfield.png\';\n
                          info python: \'Edit this field\';\n
-                         object python: field;\n
-                         manage python: \'manage_main\'">\n
-    <tal:block metal:use-macro="template/macros/edit_link"/>\n
+                         object nocall: field;">\n
+    <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link"/>\n
   </tal:block>\n
+</tal:block>\n
+<tal:block metal:define-macro="field_translator">\n
   <tal:block tal:define="info python: \'Translate this field title\';\n
                          message python: field[\'title\'];\n
                          image python: \'translate.png\'">\n
-    <tal:block metal:use-macro="template/macros/translate_link"/>\n
+    <tal:block metal:use-macro="developper_shortcut_render/macros/translate_link"/>\n
   </tal:block>\n
-  <tal:block tal:define="message python: here.Base_getFieldDescription(field);\n
-                         info python: \'Translate this field description\';\n
-                         image python: \'translate_tooltip.png\'"\n
-             tal:condition="python: message not in (None, \'\')">\n
-    <tal:block metal:use-macro="template/macros/translate_link"/>\n
+  <tal:block tal:condition="field_description | nothing">\n
+    <tal:block tal:define="message field_description;\n
+                           info python: \'Translate this field description\';\n
+                           image python: \'translate_tooltip.png\'"\n
+               tal:condition="python: message not in (None, \'\')">\n
+      <tal:block metal:use-macro="developper_shortcut_render/macros/translate_link"/>\n
+    </tal:block>\n
   </tal:block>\n
 </tal:block>
 

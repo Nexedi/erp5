@@ -80,9 +80,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                              left_group python: form.get_fields_in_group(\'left\');\n
                              right_group python: form.get_fields_in_group(\'right\');\n
                              center_group python: form.get_fields_in_group(\'center\');\n
-                             dialog_actions python: actions.get(dialog_category, [])">\n
-        <tal:block tal:define="template python: here.developper_shortcut_render">\n
-          <tal:block metal:use-macro="template/macros/form" />\n
+                             dialog_actions python: actions.get(dialog_category, []);\n
+                             field_render here/field_render/macros/field_render">\n
+        <tal:block tal:condition="preferred_html_style_developper_mode">\n
+          <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
         </tal:block>\n
         <div tal:condition="python: len(left_group) or len(right_group) or len(center_group) or len(dialog_actions)>1"\n
              class="dialog_box">\n
@@ -111,22 +112,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             </button>\n
           </div>\n
           <div class="content"\n
-                      tal:define="group_list   python: [];\n
-                      dummy        python: group_list.extend([here.ERP5XhtmlStyle_getFormGroupTitleAndId(x) for x in form.get_groups(include_empty=0) if x != \'bottom\']);\n
-                      gid_list     python: \' \'.join([x[0] for x in group_list]);">\n
+                      tal:define="group_list python: here.ERP5XhtmlStyle_getFormGroupTitleAndId(form);\n
+                                  gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
             <tal:block tal:repeat="group group_list">\n
-              <tal:block tal:define="gid     python: group[0];\n
-                                    gtitle  python: group[1];\n
-                                    goid    python: group[2];">\n
-                <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
-                  tal:attributes="class python: gid;\n
-                                  id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
-                  <legend tal:content="python: gtitle" class="group_title"/>\n
-                  <tal:block tal:repeat="field python: form.get_fields_in_group(goid)">\n
-                    <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+              <tal:block tal:define="gid    group/gid">\n
+                <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
+                          tal:attributes="class gid;\n
+                                          id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
+                  <legend tal:content="group/gtitle" class="group_title"/>\n
+                  <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
+                    <tal:block metal:use-macro="field_render"/>\n
                   </tal:block>\n
                 </fieldset>\n
-                <p tal:condition="python: gid.find(\'right\') >= 0 or (gid.find(\'left\') >= 0 and \'right\' not in gid_list)" class="clear"/>\n
               </tal:block>\n
             </tal:block>\n
             <p class="clear"></p>\n
@@ -139,13 +136,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                               dummy python: request.set(\'here\', here);\n
                               bottom_group python: form.get_fields_in_group(\'bottom\')">\n
         <div tal:condition="python: len(bottom_group) > 0"\n
-            class="bottom">\n
+             class="bottom">\n
           <tal:block tal:repeat="field bottom_group">\n
-            <tal:block tal:define="template python: here.developper_shortcut_render">\n
-              <tal:block metal:use-macro="template/macros/field" />\n
+            <tal:block tal:condition="preferred_html_style_developper_mode">\n
+              <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
+            </tal:block>\n
+            <tal:block tal:define="field_description python: here.Base_getFieldDescription(form_id=form.id, field=field)"\n
+                       tal:condition="preferred_html_style_translator_mode">\n
+              <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
             </tal:block>\n
             <tal:block tal:define="value python:request.get(field.id, None)"\n
-                      tal:replace="structure python:field.render(value, request)" />\n
+                       tal:replace="structure python:field.render(value, request)" />\n
           </tal:block>\n
         </div>\n
       </tal:block>\n

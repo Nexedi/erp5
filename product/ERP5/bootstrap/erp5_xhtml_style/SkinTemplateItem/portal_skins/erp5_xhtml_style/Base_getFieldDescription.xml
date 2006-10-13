@@ -68,60 +68,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script split a form group id in two part:\n
-    * a group id,\n
-    * a group title.\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
-  The group should be named based on the following pattern: "group id (Group Title)" \n
+field_id = field.getId()\n
 \n
-  This script is a hack to let us merge two informations (id and title) into one (id) to get\n
-    over Formulator limitations. This script should disappear with Formulator\'s refactoring.\n
+def getFieldDescription():\n
+  desc = field.get_value(\'description\')\n
+  if desc in (\'\', None):\n
+    id = field_id.split(\'_\', 1)\n
+    if id[0] == \'my\':\n
+      try:\n
+        properties = context.propertyMap()\n
+      except AttributeError: # If context has no propertyMap, give up\n
+        properties = []\n
+      for property in properties:\n
+        if id[1] == property[\'id\']:\n
+          return property.get(\'description\', \'\')\n
+  return desc\n
 \n
-  Features: \n
-    * Multiple parenthesis allowed;\n
-    * Group id can continue after the title definition.\n
+getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', form_id, field_id), cache_duration=None)\n
 \n
-  Example:\n
-    A string like\n
-      "left webcontent (The Fantastic Group (and (funky) lisp-like parenthesis)) extra",\n
-    will return the following tuple:\n
-      ( \'left webcontent extra\'\n
-      , \'The Fantastic Group (and (funky) lisp-like parenthesis)\'\n
-      , \'left webcontent (The Fantastic Group (and (funky) lisp-like parenthesis)) extra\'\n
-      )\n
-"""\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getFormGroupTitleAndId():\n
-  res = []\n
-  for original_group_id in form.get_groups(include_empty=0):\n
-    # Separate the group id and the group title using parenthesis as marker from the original form group id\n
-    o_gid_list = original_group_id.strip().split(\'(\')\n
-    # Get the first part of the group id (which is the part before the first opened parenthesis)\n
-    group_id = o_gid_list[0]\n
-    # Get the end of the list (which is the part just after the first opened parenthesis)\n
-    group_title_list = \'(\'.join(o_gid_list[1:]).split(\')\')\n
-    # Get the last part of the group id (the part which stand after the last closing parenthesis)\n
-    group_id += group_title_list[-1]\n
-    # Normalize the group id (suppress unecessary multiple-space)\n
-    group_id_list = []\n
-    for group_word in group_id.split(\' \'):\n
-      if len(group_word):\n
-        group_id_list.append(group_word)\n
-    group_id = \' \'.join(group_id_list)\n
-    # Generate the group title\n
-    group_title = \')\'.join(group_title_list[:-1]).strip()\n
-    # Return the group id if no title found\n
-    if len(group_title) == 0:\n
-      group_title = group_id\n
-    res.append({\'gid\': group_id, \'gtitle\': group_title, \'goid\': original_group_id})\n
-  return res\n
-\n
-getFormGroupTitleAndId = CachingMethod(getFormGroupTitleAndId,\n
-                                       ("ERP5XhtmlStyle_getFormGroupTitleAndId", form.id),\n
-                                       cache_duration=None)\n
-return getFormGroupTitleAndId()\n
+return getFieldDescription()\n
 </string> </value>
         </item>
         <item>
@@ -138,7 +105,7 @@ return getFormGroupTitleAndId()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form</string> </value>
+            <value> <string>form_id, field</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -158,17 +125,19 @@ return getFormGroupTitleAndId()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form</string>
+                            <string>form_id</string>
+                            <string>field</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>getFormGroupTitleAndId</string>
                             <string>_getattr_</string>
+                            <string>field_id</string>
+                            <string>getFieldDescription</string>
                             <string>None</string>
                           </tuple>
                         </value>
@@ -186,7 +155,7 @@ return getFormGroupTitleAndId()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_getFormGroupTitleAndId</string> </value>
+            <value> <string>Base_getFieldDescription</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

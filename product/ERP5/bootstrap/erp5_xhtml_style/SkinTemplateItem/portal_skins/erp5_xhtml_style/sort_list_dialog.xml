@@ -76,8 +76,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <tal:block metal:use-macro="here/dialog_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
       <div class="dialog_box">\n
-        <tal:block tal:define="template python: here.developper_shortcut_render">\n
-          <tal:block metal:use-macro="template/macros/form" />\n
+        <tal:block tal:condition="preferred_html_style_developper_mode">\n
+          <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
         </tal:block>\n
         <div class="content"\n
             tal:define="items python:here.portal_selections.getSelectionSortOrder(request[\'selection_name\'], REQUEST=request);\n
