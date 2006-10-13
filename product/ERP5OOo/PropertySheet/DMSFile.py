@@ -31,6 +31,11 @@ class DMSFile:
   """
 
   _properties = (
+        {   'id'          : 'content_type',
+            'description' : 'content type',
+            'type'        : 'string',
+            'default'     : 'application/unknown',
+            'mode'        : 'w' },
     )
 
   _categories = ('destination','similar','predecessor','successor','source_project','publication_section','classification',

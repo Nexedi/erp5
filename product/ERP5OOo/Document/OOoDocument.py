@@ -99,7 +99,6 @@ class OOoDocument(DMSFile, CachingMixin):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.Data
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.Document
