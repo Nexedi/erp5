@@ -78,7 +78,8 @@ IDEAS:\n
 \n
 <tal:block metal:define-macro="master">\n
 \n
-<tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+<tal:block tal:define="global_definitions_macros here/global_definitions/macros">\n
+<tal:block metal:use-macro="global_definitions_macros/header_definitions"/>\n
 \n
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
 \n
@@ -92,16 +93,13 @@ IDEAS:\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
 \n
-    <tal:block metal:use-macro="here/global_definitions/macros/planning_box_definitions"/>\n
+    <tal:block metal:use-macro="global_definitions_macros/planning_box_definitions"/>\n
 \n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
-\n
   </head>\n
-\n
   <body onload="fixLeftRightHeight()">\n
-<!--     <tal:block tal:replace="structure request"/> -->\n
     <form id="main_form"\n
           tal:attributes="enctype python: here.ERP5XhtmlStyle_getFormEnctype(form);\n
                           action url;\n
@@ -111,7 +109,7 @@ IDEAS:\n
       <input tal:condition="form_action | nothing"\n
              id="hidden_button" type="submit" value="dummy"\n
              tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
-      <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
+      <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>\n
       <div id="bars">\n
         <div id="main_bar">\n
           <span class="first">\n
@@ -159,11 +157,10 @@ IDEAS:\n
                       tal:define="module_list here/ERP5Site_getModuleItemList;"\n
                       tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doModule\')">\n
                 <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
-                <tal:block tal:repeat="module module_list">\n
-                  <option value="something"\n
-                          tal:attributes="value python: module[1]"\n
-                          tal:content="python: module[0]"/>\n
-                </tal:block>\n
+                <option tal:repeat="module module_list"\n
+                        tal:attributes="value python: module[1]"\n
+                        tal:content="python: module[0]"\n
+                        tal:omit-tag="nothing"/>\n
               </select>\n
               <button type="submit" name="Base_doModule:method" title="Select Module"\n
                       i18n:attributes="title" i18n:domain="ui">\n
@@ -179,11 +176,11 @@ IDEAS:\n
                       tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doLanguage\')">\n
                 <option value=""\n
                         i18n:translate="" i18n:domain="ui">My language</option>\n
-                <tal:block tal:repeat="language python: here.Localizer.get_languages_map()">\n
-                  <option tal:attributes="value language/id;\n
-                                          selected python: language[\'selected\'] and \'selected\' or nothing;"\n
-                          tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])"></option>\n
-                </tal:block>\n
+                <option tal:repeat="language python: here.Localizer.get_languages_map()"\n
+                        tal:omit-tag="nothing"\n
+                        tal:attributes="value language/id;\n
+                                        selected python: language[\'selected\'] and \'selected\' or nothing;"\n
+                        tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])" />\n
               </select>\n
               <button type="submit" name="Base_doLanguage:method" title="Select Language"\n
                       i18n:attributes="title" i18n:domain="ui">\n
@@ -212,12 +209,8 @@ IDEAS:\n
       <div id="status">\n
         <div id="breadcrumb">\n
           <tal:block tal:repeat="item here/breadcrumbs">\n
-            <tal:block tal:condition="python: repeat[\'item\'].index < 2">\n
-              <a tal:attributes="href item/url" tal:content="item/title" i18n:translate="" i18n:domain="ui"/>\n
-            </tal:block>\n
-            <tal:block tal:condition="python: repeat[\'item\'].index >= 2">\n
-              <a tal:attributes="href item/url" tal:content="item/title"/>\n
-            </tal:block>\n
+            <a tal:condition="python: repeat[\'item\'].index < 2" tal:attributes="href item/url" tal:content="item/title" i18n:translate="" i18n:domain="ui"/>\n
+            <a tal:condition="python: repeat[\'item\'].index >= 2" tal:attributes="href item/url" tal:content="item/title"/>\n
             /\n
           </tal:block>\n
         </div>\n
@@ -236,6 +229,7 @@ IDEAS:\n
     </form>\n
   </body>\n
 </html>\n
+</tal:block>\n
 </tal:block>
 
 ]]></string> </value>
