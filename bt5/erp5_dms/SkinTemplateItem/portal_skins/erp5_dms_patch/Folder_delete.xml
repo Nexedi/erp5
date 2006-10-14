@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from ZODB.POSException import ConflictError\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+selected_uids = portal.portal_selections.updateSelectionCheckedUidList(\n
+                            selection_name,listbox_uid,uids)\n
+uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+\n
+error = context.portal_selections.selectionHasChanged(md5_object_uid_list,\n
+                                                      uids)\n
+\n
+REQUEST=context.REQUEST\n
+qs = \'\'\n
+ret_url = \'\'\n
+\n
+def Object_hasRelation(object):\n
+  # Check if there is some related objets.\n
+  result = 0\n
+  for o in object.getIndexableChildValueList():\n
+    for related in object.portal_categories.getRelatedValueList(object):\n
+      if related.getRelativeUrl().startswith(object.getRelativeUrl()):\n
+        continue\n
+      elif related.getRelativeUrl().startswith(\'portal_simulation\') :\n
+        continue\n
+      else:\n
+        result = 1\n
+        break\n
+  return result\n
+\n
+ret_url = context.absolute_url() + \'/\' + form_id\n
+if error:\n
+  message = N_("Sorry+your+selection+has+changed")\n
+  qs = \'?portal_status_message=%s\' % message\n
+elif uids is not None:\n
+  # Check if there is some related objets.\n
+  object_used = 0\n
+\n
+  object_list = [x.getObject() for x in context.portal_catalog(uid=uids)]\n
+  object_used = sum([Object_hasRelation(x) for x in object_list])\n
+\n
+  if object_used > 0:\n
+    if object_used == 1:\n
+      message = N_("Sorry,+1+Item+Is+In+Use.")\n
+    else:\n
+      message = N_("Sorry,+${count}+Items+Are+In+Use.",\n
+                   mapping={\'count\': repr(object_used)})\n
+    qs = \'?portal_status_message=%s\' % message  \n
+  else:\n
+\n
+    # Do not delete objects which have a workflow history    \n
+    object_to_remove_list = []\n
+    object_to_delete_list = []\n
+\n
+    for object in object_list:\n
+      \n
+      object_to_remove_list.append(object) # XXX FIXME this is a hack, because other workflows do not yet have delete_action\n
+                                           # and I have no time now to implement it\n
+      #history_dict = object.Base_getWorkflowHistory()\n
+      #history_dict.pop(\'edit_workflow\', None)\n
+      #if history_dict == {}:\n
+      #  object_to_remove_list.append(object)\n
+      #else:\n
+      #  # If a workflow manage a history, \n
+      #  # object should not be removed, but only put in state deleted\n
+      #  object_to_delete_list.append(object)\n
+\n
+    # Remove some objects\n
+    try: \n
+      if object_to_remove_list != []:\n
+        context.manage_delObjects(\n
+                      uids=[x.getUid() for x in object_to_remove_list],\n
+                      REQUEST=REQUEST)\n
+    except ConflictError: \n
+      raise\n
+    except Exception, message : \n
+      qs = \'?portal_status_message=%s\' % message\n
+    else:\n
+      object_ids = [x.getId() for x in object_to_remove_list]\n
+      comment = N_(\'Deleted objects: ${object_ids}\',\n
+                   mapping={\'object_ids\': object_ids})\n
+      if \'edit_action\' in [x.get(\'id\', \'\') for x in\n
+                           context.portal_workflow.getActionsFor(context)]:\n
+        # record object deletion in workflow history\n
+        context.getPortalObject().portal_workflow.doActionFor(\n
+                      context,\n
+                      \'edit_action\',\n
+                      comment=comment)\n
+\n
+      message = N_("Deleted.")\n
+\n
+      # Change workflow state of others objects\n
+      not_deleted_count = 0\n
+      for object in object_to_delete_list:\n
+        # Hidden transition (without a message displayed) \n
+        # are not returned by getActionsFor\n
+        try:\n
+          context.getPortalObject().portal_workflow.doActionFor(\n
+                      object,\n
+                      \'delete_action\')\n
+        except ConflictError:\n
+          raise\n
+        except Exception,e:\n
+          context.log(\'DELETE ERROR\',e)\n
+          not_deleted_count += 1\n
+          pass\n
+\n
+      # Generate message\n
+      if not_deleted_count == 1:\n
+        message = N_("Sorry+You+Can+Not+Delete+${count}+Item.",\n
+                     mapping={\'count\': not_deleted_count})\n
+      elif not_deleted_count > 1:\n
+        message = N_("Sorry+You+Can+Not+Delete+${count}+Items.",\n
+                     mapping={\'count\': not_deleted_count})\n
+      qs = \'?portal_status_message=%s\' % message\n
+\n
+else:\n
+  message = N_("Please+select+one+or+more+items+first.")\n
+  qs = \'?portal_status_message=%s\' % message\n
+\n
+return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,uids=None,cancel_url=\'\',listbox_uid=[],md5_object_uid_list=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>object_uid</string>
+                            <string>selection_name</string>
+                            <string>field_id</string>
+                            <string>uids</string>
+                            <string>cancel_url</string>
+                            <string>listbox_uid</string>
+                            <string>md5_object_uid_list</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>selected_uids</string>
+                            <string>error</string>
+                            <string>REQUEST</string>
+                            <string>qs</string>
+                            <string>ret_url</string>
+                            <string>Object_hasRelation</string>
+                            <string>message</string>
+                            <string>None</string>
+                            <string>object_used</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>object_list</string>
+                            <string>sum</string>
+                            <string>repr</string>
+                            <string>object_to_remove_list</string>
+                            <string>object_to_delete_list</string>
+                            <string>object</string>
+                            <string>Exception</string>
+                            <string>object_ids</string>
+                            <string>comment</string>
+                            <string>not_deleted_count</string>
+                            <string>e</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <string></string>
+                <list/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_delete</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Delete objects from a folder</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
