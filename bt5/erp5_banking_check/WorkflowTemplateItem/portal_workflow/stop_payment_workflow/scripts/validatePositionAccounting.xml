@@ -88,7 +88,7 @@ if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
 # if so, this means that we are saling such kinds of check, thus\n
 # we must change the position of the customer account\n
 movement_list = transaction.getMovementList()\n
-total_debit = context.getSourceTotalAssetPrice()\n
+total_debit = transaction.getSourceTotalAssetPrice()\n
 for movement in movement_list:\n
   aggregate_value_list = movement.getAggregateValueList()\n
   for item in aggregate_value_list:\n
@@ -122,15 +122,15 @@ if debit_required:\n
   bank_account.serialize()\n
 \n
   # Make sure there are no other operations pending for this account\n
-  if context.BankAccount_isMessagePending(bank_account):\n
+  if transaction.BankAccount_isMessagePending(bank_account):\n
     msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
     raise ValidationFailed, (msg,)\n
 \n
   # Index the banking operation line so it impacts account position\n
-  context.BankingOperationLine_index(line)\n
+  transaction.BankingOperationLine_index(line)\n
 \n
   # Test if the account balance is sufficient.\n
-  error = context.BankAccount_checkBalance(bank_account.getRelativeUrl(), total_debit)\n
+  error = transaction.BankAccount_checkBalance(bank_account.getRelativeUrl(), total_debit)\n
   if error[\'error_code\'] == 1:\n
     msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
     raise ValidationFailed, (msg,)\n
@@ -202,7 +202,6 @@ if debit_required:\n
                             <string>source</string>
                             <string>msg</string>
                             <string>movement_list</string>
-                            <string>context</string>
                             <string>total_debit</string>
                             <string>_getiter_</string>
                             <string>movement</string>
