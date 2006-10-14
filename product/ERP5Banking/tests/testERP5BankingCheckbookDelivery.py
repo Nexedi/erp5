@@ -48,48 +48,26 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
+class TestERP5BankingCheckbookDeliveryMixin:
 
-
-class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookUsualCashTransferMixin,
-                                                TestERP5BankingMixin, ERP5TypeTestCase):
-  """
-    This class is a unit test to check the module of Cash Transfer
-
-    Here are the following step that will be done in the test :
-
-    XXX to be completed
-
-  """
-
-  login = PortalTestCase.login
-
-  # pseudo constants
-  RUN_ALL_TEST = 1 # we want to run all test
-  QUIET = 0 # we don't want the test to be quiet
-
-
-  def getTitle(self):
+  def createCheckbookDelivery(self, sequence=None, sequence_list=None, **kwd):
     """
-      Return the title of the test
+    Create a checkbook delivery
     """
-    return "ERP5BankingCheckbookDelivery"
-
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_base',
-            'erp5_trade',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_inventory',
-            'erp5_banking_check',
-            )
-
+    # We will do the transfer ot two items.
+    self.checkbook_delivery = self.checkbook_delivery_module.newContent(
+                     id='checkbook_delivery', portal_type='Checkbook Delivery',
+                     source_value=self.source_site, destination_value=None,
+                     resource_value=self.currency_1,
+                     start_date=self.date)
+    self.line_2 = self.checkbook_delivery.newContent(quantity=1,
+                                 resource_value=self.check_model_1,
+                                 check_amount_value=None,
+                                 destination_trade_value=self.bank_account_2,
+                                 aggregate_value=self.check_1,
+                                 )
+    self.workflow_tool.doActionFor(self.checkbook_delivery, 'deliver_action', 
+                                   wf_id='checkbook_delivery_workflow')
 
   def afterSetUp(self):
     """
@@ -151,6 +129,48 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookUsualCashTransfer
     self.createCheckbookVaultTransfer()
     # open counter date and counter
     self.openCounterDate(site=self.paris)
+
+
+class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
+                                       TestERP5BankingCheckbookUsualCashTransferMixin,
+                                                TestERP5BankingMixin, ERP5TypeTestCase):
+  """
+    This class is a unit test to check the module of Cash Transfer
+
+    Here are the following step that will be done in the test :
+
+    XXX to be completed
+
+  """
+
+  login = PortalTestCase.login
+
+  # pseudo constants
+  RUN_ALL_TEST = 1 # we want to run all test
+  QUIET = 0 # we don't want the test to be quiet
+
+
+  def getTitle(self):
+    """
+      Return the title of the test
+    """
+    return "ERP5BankingCheckbookDelivery"
+
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates we need to run the test.
+      This method is called during the initialization of the unit test by
+      the unit test framework in order to know which business templates
+      need to be installed to run the test on.
+    """
+    return ('erp5_base',
+            'erp5_trade',
+            'erp5_accounting',
+            'erp5_banking_core',
+            'erp5_banking_inventory',
+            'erp5_banking_check',
+            )
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):

@@ -205,6 +205,12 @@ class TestERP5BankingMixin:
     """
     return getattr(self.getPortal(), 'check_payment_module', None)
 
+  def getStopPaymentModule(self):
+    """
+    Return the Stop Payment Module
+    """
+    return getattr(self.getPortal(), 'stop_payment_module', None)
+
   def getCheckDepositModule(self):
     """
     Return the Check Deposit Module
@@ -285,8 +291,8 @@ class TestERP5BankingMixin:
 
   def createCurrency(self, id='EUR', title='Euro'):
     # create the currency document for euro inside the currency module
-    currency = self.currency_module.newContent(id=id, title=title)
-    if id!='EUR':
+    currency = self.getCurrencyModule().newContent(id=id, title=title)
+    if id=='USD':
       # Create an exchange line
       exchange_line = currency.newContent(portal_type='Currency Exchange Line',
           start_date='01/01/1900',stop_date='01/01/2900',
@@ -454,6 +460,7 @@ class TestERP5BankingMixin:
     self.controleur_caisse_courante = self.banking.newContent(id='controleur_caisse_courante', portal_type='Category', codification='CCC')
     self.controleur_caveau = self.banking.newContent(id='controleur_caveau', portal_type='Category', codification='CCA')
     self.comptable = self.banking.newContent(id='comptable', portal_type='Category', codification='FXF')
+    self.commis_comptable = self.banking.newContent(id='commis_comptable', portal_type='Category', codification='CBM')
     self.chef_section_comptable = self.banking.newContent(id='chef_section_comptable', portal_type='Category', codification='CSB')
     self.chef_comptable = self.banking.newContent(id='chef_comptable', portal_type='Category', codification='CCB')
     self.chef_de_tri = self.banking.newContent(id='chef_de_tri', portal_type='Category', codification='CTR')

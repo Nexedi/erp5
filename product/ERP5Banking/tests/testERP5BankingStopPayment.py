@@ -1,0 +1,370 @@
+##############################################################################
+#
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Sebastien Robin <seb@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+##############################################################################
+
+
+# import requested python module
+import os
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
+     import TestERP5BankingCheckbookVaultTransferMixin
+from Products.ERP5Banking.tests.testERP5BankingCheckbookUsualCashTransfer \
+     import TestERP5BankingCheckbookUsualCashTransferMixin
+from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from Products.ERP5Banking.tests.testERP5BankingCheckbookDelivery \
+     import TestERP5BankingCheckbookDelivery, TestERP5BankingCheckbookDeliveryMixin
+from DateTime import DateTime
+from zLOG import LOG
+
+# Needed in order to have a log file inside the current folder
+os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
+# Define the level of log we want, here is all
+os.environ['EVENT_LOG_SEVERITY'] = '-300'
+
+# Define how to launch the script if we don't use runUnitTest script
+if __name__ == '__main__':
+  execfile(os.path.join(sys.path[0], 'framework.py'))
+
+class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
+                                  TestERP5BankingCheckbookUsualCashTransferMixin,
+                                  TestERP5BankingCheckbookVaultTransferMixin,
+                                       TestERP5BankingMixin, ERP5TypeTestCase):
+  """
+    This class is a unit test to check the module of Stop Payment
+  """
+
+  login = PortalTestCase.login
+
+  # pseudo constants
+  RUN_ALL_TEST = 1 # we want to run all test
+  QUIET = 0 # we don't want the test to be quiet
+
+
+  def getTitle(self):
+    """
+      Return the title of the test
+    """
+    return "ERP5BankingStopPayment"
+
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates we need to run the test.
+      This method is called during the initialization of the unit test by
+      the unit test framework in order to know which business templates
+      need to be installed to run the test on.
+    """
+    return ('erp5_base',
+            'erp5_trade',
+            'erp5_accounting',
+            'erp5_banking_core',
+            'erp5_banking_inventory',
+            'erp5_banking_check',
+            )
+
+  def getStopPaymentModule(self):
+    """
+    Return the Stop Payment Module
+    """
+    return getattr(self.getPortal(), 'stop_payment_module', None)
+
+
+  def afterSetUp(self):
+    """
+      Method called before the launch of the test to initialize some data
+    """
+    # Set some variables :
+
+    TestERP5BankingCheckbookDeliveryMixin.afterSetUp(self)
+    self.stepTic()
+    self.createCheckbookDelivery()
+    # the stop payment module
+    self.stop_payment_module = self.getStopPaymentModule()
+
+
+
+  def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check that all the objects we created in afterSetUp or
+    that were added by the business template and that we rely
+    on are really here.
+    """
+    self.checkResourceCreated()
+    # check that StopPayment Module was created
+    self.assertEqual(self.stop_payment_module.getPortalType(), 'Stop Payment Module')
+    # check module is empty
+    self.assertEqual(len(self.stop_payment_module.objectValues()), 0)
+
+
+  def stepCheckInitialAndFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check initial account inventory.
+
+    For this test, the intial inventory and the final inventory is the same
+    """
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
+
+  def stepCreateStopPayment(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create a stop payment
+    """
+    # We will do the transfer ot two items.
+    self.stop_payment = self.stop_payment_module.newContent(
+                     id='stop_payment', portal_type='Stop Payment',
+                     destination_payment_value=self.bank_account_2,
+                     resource_value=self.currency_1,
+                     start_date=self.date,
+                     source_total_asset_price=20000)
+    # check its portal type
+    self.assertEqual(self.stop_payment.getPortalType(), 'Stop Payment')
+    # check source
+    self.assertEqual(self.stop_payment.getBaobabSource(), 
+               'site/testsite/paris')
+    # check destination
+    self.assertEqual(self.stop_payment.getBaobabDestination(), None)
+
+  def stepSetStopPaymentDebit(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Set the debit required
+    """
+    self.stop_payment.setDebitRequired(1)
+
+  def stepDeleteStopPayment(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Set the debit required
+    """
+    self.stop_payment_module.manage_delObjects(['stop_payment',])
+
+  def stepCreateStopPaymentLineList(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the checkbook
+    """
+    # This is not required to create checkbook items, they will be
+    # automatically created with the confirm action worfklow transition
+
+    # Add a line for check
+    self.line_1 = self.stop_payment.newContent(quantity=1,
+                                 resource_value=self.check_model_1,
+                                 check_amount_value=None,
+                                 destination_trade_value=self.bank_account_2,
+                                 aggregate_value=self.check_1,
+                                 )
+
+  def stepConfirmStopPayment(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the stop payment
+    """
+    state = self.stop_payment.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'draft')
+    self.workflow_tool.doActionFor(self.stop_payment, 
+                                   'confirm_action', 
+                                   wf_id='stop_payment_workflow')
+    # get state of cash sorting
+    state = self.stop_payment.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'confirmed')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+                            name='history', wf_id='stop_payment_workflow')
+    self.assertEqual(len(workflow_history), 3)
+
+  def stepStartStopPayment(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the stop payment
+    """
+    state = self.stop_payment.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'confirmed')
+    self.workflow_tool.doActionFor(self.stop_payment, 
+                                   'start_action', 
+                                   wf_id='stop_payment_workflow')
+    # get state of cash sorting
+    state = self.stop_payment.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'started')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+                            name='history', wf_id='stop_payment_workflow')
+    self.assertEqual(len(workflow_history), 5)
+
+  def stepStopStopPayment(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the stop payment
+    """
+    state = self.stop_payment.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'started')
+    self.workflow_tool.doActionFor(self.stop_payment, 
+                                   'stop_action', 
+                                   wf_id='stop_payment_workflow')
+    # get state of cash sorting
+    state = self.stop_payment.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'stopped')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+                            name='history', wf_id='stop_payment_workflow')
+    self.assertEqual(len(workflow_history), 7)
+
+  def stepDebitStopStopPayment(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the stop payment
+    """
+    state = self.stop_payment.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'started')
+    self.workflow_tool.doActionFor(self.stop_payment, 
+                                   'debit_stop_action', 
+                                   wf_id='stop_payment_workflow')
+    # get state of cash sorting
+    state = self.stop_payment.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'stopped')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+                            name='history', wf_id='stop_payment_workflow')
+    self.assertEqual(len(workflow_history), 7)
+
+  def stepDeliverStopPayment(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the stop payment
+    """
+    state = self.stop_payment.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'stopped')
+    self.workflow_tool.doActionFor(self.stop_payment, 
+                                   'deliver_action', 
+                                   wf_id='stop_payment_workflow')
+    # get state of cash sorting
+    state = self.stop_payment.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'delivered')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+                            name='history', wf_id='stop_payment_workflow')
+    self.assertEqual(len(workflow_history), 9)
+
+  def stepDebitDeliverStopPayment(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the stop payment
+    """
+    state = self.stop_payment.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'stopped')
+    self.workflow_tool.doActionFor(self.stop_payment, 
+                                   'debit_deliver_action', 
+                                   wf_id='stop_payment_workflow')
+    # get state of cash sorting
+    state = self.stop_payment.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'delivered')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+                            name='history', wf_id='stop_payment_workflow')
+    self.assertEqual(len(workflow_history), 9)
+
+  def stepCheckConfirmedCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check cash checkbook in item table
+    """
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(
+                     payment=self.bank_account_2.getRelativeUrl()
+                     ,resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(
+                     payment=self.bank_account_2.getRelativeUrl()
+                     ,resource=self.currency_1.getRelativeUrl()), 80000)
+
+  def stepCheckCheckIsStopped(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that the check is stopped
+    """
+    self.assertEqual(self.check_1.getSimulationState(),'stopped')
+
+  def stepCheckCheckIsConfirmed(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that the check is confirmed
+    """
+    self.assertEqual(self.check_1.getSimulationState(),'confirmed')
+
+  ##################################
+  ##  Tests
+  ##################################
+
+  def test_01_ERP5BankingStopPayment(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+    Define the sequence of step that will be play
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # define the sequence
+    # Here we will debit the account
+    sequence_string = 'Tic CheckObjects Tic CheckInitialAndFinalCheckbookInventory ' \
+                    + 'CreateStopPayment Tic ' \
+                    + 'SetStopPaymentDebit Tic ' \
+                    + 'CreateStopPaymentLineList Tic ' \
+                    + 'ConfirmStopPayment Tic ' \
+                    + 'CheckConfirmedCheckbookInventory ' \
+                    + 'StartStopPayment Tic ' \
+                    + 'CheckCheckIsStopped Tic ' \
+                    + 'DebitStopStopPayment Tic ' \
+                    + 'DebitDeliverStopPayment Tic ' \
+                    + 'CheckCheckIsConfirmed Tic ' \
+                    + 'CheckInitialAndFinalCheckbookInventory '
+    sequence_list.addSequenceString(sequence_string)
+    # Here we will not debit the account
+    sequence_string = 'DeleteStopPayment ' \
+                    + 'Tic CheckObjects Tic CheckInitialAndFinalCheckbookInventory ' \
+                    + 'CreateStopPayment Tic ' \
+                    + 'CreateStopPaymentLineList Tic ' \
+                    + 'ConfirmStopPayment Tic ' \
+                    + 'CheckInitialAndFinalCheckbookInventory ' \
+                    + 'StartStopPayment Tic ' \
+                    + 'CheckCheckIsStopped Tic ' \
+                    + 'StopStopPayment Tic ' \
+                    + 'DeliverStopPayment Tic ' \
+                    + 'CheckCheckIsConfirmed Tic ' \
+                    + 'CheckInitialAndFinalCheckbookInventory '
+    sequence_list.addSequenceString(sequence_string)
+    # play the sequence
+    sequence_list.play(self)
+
+# define how we launch the unit test
+if __name__ == '__main__':
+  framework()
+else:
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestERP5BankingStopPayment))
+    return suite
