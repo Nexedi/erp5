@@ -69,14 +69,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>ob=context\n
-if ob.hasFile() and not ob.hasOOfile(): #doublecheck\n
+if ob.hasFile() and not ob.hasOOFile(): #doublecheck\n
   try:\n
     res=ob.convert()\n
     ob.log(res)\n
-    ob.setStatusMessage(str(res[1]))\n
+    ob.setExternalProcessingStatusMessage(str(res[1]))\n
   except Exception,e:\n
     ob.log(e)\n
-    ob.setStatusMessage(str(e))\n
+    ob.setExternalProcessingStatusMessage(str(e))\n
     #raise Exception(str(e)) # do we want the activity to keep trying?\n
 </string> </value>
         </item>

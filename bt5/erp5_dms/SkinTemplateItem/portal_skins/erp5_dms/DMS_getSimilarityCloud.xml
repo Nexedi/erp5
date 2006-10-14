@@ -90,7 +90,7 @@ def getSimilarities(self,level=0):\n
 \n
 getSimilarities(context)\n
 if lista.has_key(context):lista.pop(context)\n
-return [o.DMSDocument_getLastVersion() for o in lista.keys()]\n
+return [o.DMSDocument_getLatestVersion() for o in lista.keys()]\n
 </string> </value>
         </item>
         <item>

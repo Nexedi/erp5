@@ -77,14 +77,15 @@ if fname is None:\n
 else:\n
   context.setSourceReference(fname)\n
 if fname is not None:\n
+  context.log(fname)\n
   context.setPropertyListFromFilename(fname)\n
   context.guessMimeType(fname)\n
   if not context.getTitle():\n
     context.setTitle(fname)\n
   # use duck typing to check if it is OOo\n
-  if hasattr(context,\'convert\') and hasattr(context,\'hasFile\') and hasattr(context,\'hasOOfile\'):\n
+  if hasattr(context,\'convert\') and hasattr(context,\'hasFile\') and hasattr(context,\'hasOOFile\'):\n
     context.reset()\n
-    if context.hasFile() and not context.hasOOfile():\n
+    if context.hasFile() and not context.hasOOFile():\n
       context.activate( activity  = \'SQLQueue\').OOoDocument_convertAfter()\n
 </string> </value>
         </item>

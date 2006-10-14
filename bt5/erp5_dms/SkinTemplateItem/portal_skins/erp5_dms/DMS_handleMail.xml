@@ -71,7 +71,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 #from Products.ERP5Type.Message import Message\n
-context.log(\'themail\',theMail)\n
+\n
 noSenderInHeaderMsg="no sender in headers"\n
 noSenderMsg="you are not in user database"\n
 manySendersMsg="very serious error: your address has multiple entries"\n
@@ -157,13 +157,13 @@ return\n
                             <string>theMail</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>noSenderInHeaderMsg</string>
                             <string>noSenderMsg</string>
                             <string>manySendersMsg</string>
                             <string>_getitem_</string>
                             <string>fromraw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>senderemail</string>
                             <string>None</string>
                             <string>r</string>

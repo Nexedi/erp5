@@ -78,6 +78,7 @@ if context.getLanguage() is not None:\n
   ss.append(context.getReference()+\'-\'+context.getLanguage())\n
   if context.getVersion() is not None:\n
     ss.append(context.getReference()+\'-\'+context.getLanguage()+\'-\'+context.getVersion())\n
+context.log(ss)\n
 lst=[]\n
 for t in ss:\n
   lst+=context.portal_catalog(SearchableText=\'%\'+t+\'%\')\n
