@@ -1,6 +1,13 @@
+Book Information | view
 DMS File | download
 DMS File | file_upload
 DMS File | history
+DMS File | jump_to_all_related
+DMS File | jump_to_predecessor
+DMS File | jump_to_similar
+DMS File | jump_to_similarity_cloud
+DMS File | jump_to_successor
+DMS File | jump_to_wiki_predecessor
 DMS File | local_permission
 DMS File | metadata
 DMS File | related_document
@@ -28,6 +35,13 @@ Graphic | download_snapshot
 Graphic | export
 Graphic | file_upload
 Graphic | history
+Graphic | jump_to_all_related
+Graphic | jump_to_predecessor
+Graphic | jump_to_similar
+Graphic | jump_to_similarity_cloud
+Graphic | jump_to_successor
+Graphic | jump_to_wiki_predecessor
+Graphic | jump_to_wiki_successor
 Graphic | local_permission
 Graphic | metadata
 Graphic | print
@@ -40,6 +54,12 @@ ImageDocument | export
 ImageDocument | file_upload
 ImageDocument | fullsize_view
 ImageDocument | history
+ImageDocument | jump_to_all_related
+ImageDocument | jump_to_predecessor
+ImageDocument | jump_to_similar
+ImageDocument | jump_to_similarity_cloud
+ImageDocument | jump_to_successor
+ImageDocument | jump_to_wiki_predecessor
 ImageDocument | local_permission
 ImageDocument | metadata
 ImageDocument | print
@@ -49,6 +69,13 @@ PdfDocument | download
 PdfDocument | file_upload
 PdfDocument | history
 PdfDocument | html_view
+PdfDocument | jump_to_all_related
+PdfDocument | jump_to_predecessor
+PdfDocument | jump_to_similar
+PdfDocument | jump_to_similarity_cloud
+PdfDocument | jump_to_successor
+PdfDocument | jump_to_wiki_predecessor
+PdfDocument | jump_to_wiki_successor
 PdfDocument | local_permission
 PdfDocument | metadata
 PdfDocument | related_document
@@ -62,6 +89,13 @@ Presentation | download_snapshot
 Presentation | export
 Presentation | file_upload
 Presentation | history
+Presentation | jump_to_all_related
+Presentation | jump_to_predecessor
+Presentation | jump_to_similar
+Presentation | jump_to_similarity_cloud
+Presentation | jump_to_successor
+Presentation | jump_to_wiki_predecessor
+Presentation | jump_to_wiki_successor
 Presentation | local_permission
 Presentation | metadata
 Presentation | print
@@ -80,6 +114,13 @@ Spreadsheet | export
 Spreadsheet | file_upload
 Spreadsheet | history
 Spreadsheet | html_view
+Spreadsheet | jump_to_all_related
+Spreadsheet | jump_to_predecessor
+Spreadsheet | jump_to_similar
+Spreadsheet | jump_to_similarity_cloud
+Spreadsheet | jump_to_successor
+Spreadsheet | jump_to_wiki_predecessor
+Spreadsheet | jump_to_wiki_successor
 Spreadsheet | local_permission
 Spreadsheet | metadata
 Spreadsheet | print
@@ -97,6 +138,7 @@ Text | html_view
 Text | jump_to_all_related
 Text | jump_to_predecessor
 Text | jump_to_similar
+Text | jump_to_similarity_cloud
 Text | jump_to_successor
 Text | jump_to_wiki_predecessor
 Text | jump_to_wiki_successor
