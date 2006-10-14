@@ -334,6 +334,10 @@
                           <string>Old Value</string>
                         </tuple>
                         <tuple>
+                          <string>new_value</string>
+                          <string>New Value</string>
+                        </tuple>
+                        <tuple>
                           <string>current_value</string>
                           <string>Current Value</string>
                         </tuple>

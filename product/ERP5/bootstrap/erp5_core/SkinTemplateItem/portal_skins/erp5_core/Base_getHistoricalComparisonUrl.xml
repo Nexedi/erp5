@@ -70,8 +70,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-if getattr(brain, \'serial\', \'0.0.0.0\') != \'0.0.0.0\':\n
-  return \'Base_viewHistoricalComparison?serial=%s&time=%s\' % (brain.serial, brain.time)\n
+serial = getattr(brain, \'serial\', \'0.0.0.0\')\n
+next_serial = getattr(brain, \'next_serial\', \'0.0.0.0\')\n
+\n
+if serial != \'0.0.0.0\':\n
+  return \'Base_viewHistoricalComparison?serial=%s&next_serial=%s&time=%s\'\\\n
+      % ( serial, next_serial, brain.time )\n
 
 
 ]]></string> </value>
@@ -80,6 +84,12 @@ if getattr(brain, \'serial\', \'0.0.0.0\') != \'0.0.0.0\':\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -119,6 +129,8 @@ if getattr(brain, \'serial\', \'0.0.0.0\') != \'0.0.0.0\':\n
                             <string>brain</string>
                             <string>kw</string>
                             <string>getattr</string>
+                            <string>serial</string>
+                            <string>next_serial</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
@@ -142,6 +154,27 @@ if getattr(brain, \'serial\', \'0.0.0.0\') != \'0.0.0.0\':\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

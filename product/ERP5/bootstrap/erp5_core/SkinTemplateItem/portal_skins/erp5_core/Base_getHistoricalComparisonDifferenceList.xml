@@ -69,17 +69,36 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
+from ZODB.POSException import ConflictError\n
+\n
 serial = context.REQUEST[\'serial\']\n
+next_serial = context.REQUEST[\'next_serial\']\n
+\n
+try:\n
+  context.HistoricalRevisions[serial]\n
+except ConflictError:\n
+  raise\n
+except: # POSKeyError\n
+  return [Object(property_name=\'Historical revisions are not available, \'\n
+                               \'maybe the database has been packed\')]\n
+\n
+if next_serial == \'0.0.0.0\':\n
+  new_getProperty = context.getProperty\n
+else:\n
+  new = context.HistoricalRevisions[next_serial]\n
+  new_getProperty = new.getProperty\n
 old = context.HistoricalRevisions[serial]\n
 result = []\n
+\n
 for prop_dict in context.getPropertyMap():\n
   prop = prop_dict[\'id\']\n
   old_value = old.getProperty(prop)\n
-  current_value = context.getProperty(prop)\n
-  if current_value != old_value:\n
+  new_value = new_getProperty(prop)\n
+  if new_value != old_value:\n
     result.append( Object( property_name=prop,\n
+                           new_value=new_value,\n
                            old_value=old_value,\n
-                           current_value=current_value ))\n
+                           current_value=context.getProperty(prop)))\n
 return result\n
 </string> </value>
         </item>
@@ -87,6 +106,12 @@ return result\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -126,17 +151,22 @@ return result\n
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>serial</string>
+                            <string>next_serial</string>
+                            <string>new_getProperty</string>
+                            <string>new</string>
                             <string>old</string>
                             <string>result</string>
                             <string>_getiter_</string>
                             <string>prop_dict</string>
                             <string>prop</string>
                             <string>old_value</string>
-                            <string>current_value</string>
+                            <string>new_value</string>
                           </tuple>
                         </value>
                     </item>
@@ -159,6 +189,27 @@ return result\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -86,6 +86,7 @@ for history_name in [\'history\', \'building_history\', \'installation_history\'
 wf_states = context.portal_workflow[workflow_id].states\n
 wf_transitions = context.portal_workflow[workflow_id].transitions\n
 \n
+next_serial = None\n
 for workflow_item in workflow_item_list:\n
   # XXX removing str method generate a strange bug\n
   o = newTempBase(portal_object, str(i))\n
@@ -118,6 +119,12 @@ for workflow_item in workflow_item_list:\n
       if same_type(value, \'\') and key != \'error_message\':\n
         value = context.Localizer.erp5_ui.gettext(value)\n
     o.setProperty(key, value)\n
+ \n
+  # record current serial as "next serial" for the previous revision\n
+  if next_serial is not None:\n
+    previous_obj.setProperty(\'next_serial\', o.serial)\n
+  next_serial = getattr(o, \'serial\', None)\n
+  previous_obj = o\n
   result.append(o)\n
 \n
 return result\n
@@ -205,6 +212,8 @@ return result\n
                             <string>_getitem_</string>
                             <string>wf_states</string>
                             <string>wf_transitions</string>
+                            <string>None</string>
+                            <string>next_serial</string>
                             <string>workflow_item</string>
                             <string>str</string>
                             <string>o</string>
@@ -212,8 +221,9 @@ return result\n
                             <string>value</string>
                             <string>compatibility_name</string>
                             <string>len</string>
-                            <string>None</string>
                             <string>same_type</string>
+                            <string>previous_obj</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
