@@ -72,7 +72,7 @@
 transaction = state_change[\'object\']\n
 \n
 line_list = transaction.getMovementList()\n
-portal_worfklow = transaction.portal_workflow\n
+portal_workflow = transaction.portal_workflow\n
 \n
 for line in line_list:\n
   aggregate_list = line.getAggregateValueList()\n
@@ -134,12 +134,11 @@ for line in line_list:\n
                             <string>transaction</string>
                             <string>_getattr_</string>
                             <string>line_list</string>
-                            <string>portal_worfklow</string>
+                            <string>portal_workflow</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>aggregate_list</string>
                             <string>aggregate</string>
-                            <string>portal_workflow</string>
                           </tuple>
                         </value>
                     </item>
