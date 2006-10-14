@@ -91,7 +91,9 @@ if hasattr(context,\'data\'): # this is a re-upload, we create a \'copy\'\n
   # we rely on ingestion script to determine coordinates\n
   copylist+=[\'title\',\'short_title\',\'index\',\'description\',\'subject\']\n
   for a in copylist:\n
-    newob.setProperty(a,context.getProperty(a))\n
+    v=context.getProperty(a)\n
+    if v is not None:\n
+      newob.setProperty(a,v)\n
   ob=newob\n
   msg=\'object already had a file - a new object has been created\'\n
 else:\n
@@ -161,6 +163,7 @@ return context.REQUEST.RESPONSE.redirect(url+\'/view?portal_status_message=\'+ms
                             <string>_getitem_</string>
                             <string>copylist</string>
                             <string>_getiter_</string>
+                            <string>v</string>
                             <string>ob</string>
                             <string>msg</string>
                             <string>url</string>
