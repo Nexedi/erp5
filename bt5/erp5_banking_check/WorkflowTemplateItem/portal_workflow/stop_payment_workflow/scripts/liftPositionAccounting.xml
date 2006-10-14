@@ -88,7 +88,7 @@ if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
 # if so, this means that we are saling such kinds of check, thus\n
 # we must change the position of the customer account\n
 movement_list = transaction.getMovementList()\n
-total_debit = context.getSourceTotalAssetPrice()\n
+total_debit = transaction.getSourceTotalAssetPrice()\n
 for movement in movement_list:\n
   aggregate_value_list = movement.getAggregateValueList()\n
   for item in aggregate_value_list:\n
@@ -174,7 +174,6 @@ if debit_required:\n
                             <string>source</string>
                             <string>msg</string>
                             <string>movement_list</string>
-                            <string>context</string>
                             <string>total_debit</string>
                             <string>_getiter_</string>
                             <string>movement</string>
