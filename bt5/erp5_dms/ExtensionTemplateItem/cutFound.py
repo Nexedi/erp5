@@ -75,6 +75,7 @@ def cutFound(context,txt,sw,tags,trail,maxlines):
   txt=re.sub(r,'',txt)
   r=re.compile('\s+')
   txt=re.sub(r,' ',txt)
+  txt=txt.replace('-',' - ') # to find hyphenated occurrences
   text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
   return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
 
@@ -88,8 +89,7 @@ if __name__=='__main__':
   tags=('<b>','</b>')
   trail=5
   maxlines=5
-  sw=sw.split()
-  for p in cutFound(txt,sw,tags,trail,maxlines):
+  for p in cutFound(None,txt,sw,tags,trail,maxlines):
     print p
 
 
