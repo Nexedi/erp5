@@ -406,7 +406,28 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>version</string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string>language</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
