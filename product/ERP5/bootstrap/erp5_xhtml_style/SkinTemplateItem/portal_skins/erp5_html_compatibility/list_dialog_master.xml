@@ -48,13 +48,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/list_dialog/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block metal:define-slot="main" />\n
-    </tal:block>\n
-  </tal:block>\n
-</tal:block>
+<tal:block metal:use-macro="here/list_dialog/macros/master"/>
 
 ]]></string> </value>
         </item>
