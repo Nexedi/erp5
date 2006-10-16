@@ -86,7 +86,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>role/client</string>
+                <string>role/administration</string>
               </tuple>
             </value>
         </item>
@@ -108,7 +108,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Henner</string> </value>
+            <value> <string>Henner - GMC</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
