@@ -251,9 +251,6 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
     """
       Returns the number of items in the folder.
     """
-    # PERFORMANCE PROBLEM
-    # This should be improved in order to use
-    # SQL counting
     return self.countFolder(**kw)[0][0]
 
 class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
