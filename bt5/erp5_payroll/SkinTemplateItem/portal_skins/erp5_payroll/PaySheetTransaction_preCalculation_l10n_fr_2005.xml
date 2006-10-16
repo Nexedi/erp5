@@ -544,6 +544,12 @@ return default\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>ags_rate=None, industrial_accident_rate=None, transport_payment_rate=None</string> </value>
         </item>
