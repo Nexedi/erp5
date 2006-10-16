@@ -72,14 +72,20 @@
 
 from Products.ERP5Type.Message import Message\n
 portal = context.getPortalObject()\n
+stool = portal.portal_selections\n
 invoice_type_list = portal.getPortalInvoiceTypeList()\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
+selected_uids = stool.updateSelectionCheckedUidList(\n
                        selection_name, listbox_uid, uids)\n
 \n
+object_list = stool.callSelectionFor(selection_name)\n
 \n
-object_list = context.portal_selections.callSelectionFor(selection_name)\n
+# update selection params, because it\'ll be used in the selection dialog.\n
+stool.setSelectionParamsFor(\'accounting_selection\',\n
+          params=dict(node_for_related_payment=node,\n
+                      payment_mode_for_related_payment=payment_mode,\n
+                      payment_for_related_payment=payment))\n
 \n
 # XXX prevent to call this on the whole module:\n
 if len(object_list) > 100:\n
@@ -108,6 +114,12 @@ return context.REQUEST.RESPONSE.redirect(\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -156,10 +168,12 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>stool</string>
                             <string>invoice_type_list</string>
                             <string>N_</string>
                             <string>selected_uids</string>
                             <string>object_list</string>
+                            <string>dict</string>
                             <string>len</string>
                             <string>_getiter_</string>
                             <string>obj</string>
@@ -195,6 +209,27 @@ return context.REQUEST.RESPONSE.redirect(\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
