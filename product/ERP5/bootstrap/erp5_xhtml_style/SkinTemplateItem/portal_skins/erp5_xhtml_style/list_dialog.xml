@@ -49,9 +49,19 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/list_dialog/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block metal:define-slot="main" />\n
+  <tal:block tal:define="form_id form/id;\n
+                         list_mode python: True;\n
+                         listmode_default_listbox python: here.ERP5XhtmlStyle_getListbox(form=form);\n
+                         selection_name listmode_default_listbox/selection_name;\n
+                         selection_index request/selection_index | python:0;\n
+                         dummy python: selection_name and request.set(\'selection_name\', selection_name);\n
+\n
+                         local_parameter_list local_parameter_list | python: {};\n
+                         dummy python: local_parameter_list.update({\'selection_name\': selection_name, \'selection_index\': selection_index, \'form_id\': form_id});">\n
+    <tal:block metal:use-macro="here/dialog_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <tal:block metal:define-slot="main" />\n
+      </tal:block>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>
@@ -68,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>list_dialog_master</string> </value>
+            <value> <string>list_dialog</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
