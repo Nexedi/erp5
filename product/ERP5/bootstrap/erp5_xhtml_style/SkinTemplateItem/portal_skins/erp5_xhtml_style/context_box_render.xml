@@ -90,7 +90,7 @@ XXX: Folder_filter accesses selection directly\n
               i18n:translate="" i18n:domain="ui">Jump...</option>\n
       <tal:block tal:repeat="jump actions/object_jump | nothing">\n
         <option tal:attributes="value jump/url"\n
-                tal:content="jump/name"/>\n
+                tal:content="jump/name" i18n:translate="" i18n:domain="ui"/>\n
       </tal:block>\n
       <tal:block tal:condition="preferred_html_style_developper_mode">\n
         <tal:block tal:condition="python: here.getPortalTypeName() in here.portal_types.objectIds() and here.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
