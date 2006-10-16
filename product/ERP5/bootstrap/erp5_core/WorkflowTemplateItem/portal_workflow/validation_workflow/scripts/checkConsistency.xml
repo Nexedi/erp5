@@ -77,7 +77,10 @@ N_ = object.Base_translateString\n
 check_result = object.checkConsistency()\n
 \n
 if len(check_result) > 0:\n
-  raise ValidationFailed, N_(check_result[0][-1])\n
+  check_type    = N_(check_result[0][-1])\n
+  # TODO: use nice url encoding method there instead of replace()\n
+  check_details = check_result[0][-2].replace(\'<\', \'&lt;\').replace(\'>\', \'&gt;\')\n
+  raise ValidationFailed, "%s : %s" % (check_type, check_details)\n
 
 
 ]]></string> </value>
@@ -137,6 +140,8 @@ if len(check_result) > 0:\n
                             <string>N_</string>
                             <string>check_result</string>
                             <string>len</string>
+                            <string>check_type</string>
+                            <string>check_details</string>
                           </tuple>
                         </value>
                     </item>
