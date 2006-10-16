@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/surface/caisse_courante/encaisse_des_billets_mutiles" %(context.getSource(),)\n
+            <value> <string>return "%s/surface/caisse_courante/billets_mutiles" %(context.getSource(),)\n
 </string> </value>
         </item>
         <item>

@@ -101,7 +101,7 @@ elif state == "confirmed":\n
     msg = Message(domain = "ui", message="Returned value different from exchanged value.")\n
     raise ValidationFailed, (msg,)\n
   # check we are in an opened accounting day\n
-  vault = ob.getSource()\n
+  vault = \'%s/surface/caise_courante/billets_mutiles\' %(ob.getSource(),)\n
   date = ob.getStartDate()\n
   if not ob.Baobab_checkCounterDateOpen(site=vault, date=date):\n
     msg = Message(domain = "ui", message="Counter Date is not opened")\n
