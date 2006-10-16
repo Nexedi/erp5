@@ -993,3 +993,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',
                 title={'query': ('B', 'C'), 'range': 'minngt'})])
 
+  def test_DeferredConnection(self, quiet=quiet, run=run_all_test):
+    """ERP5Catalog uses a deferred connection for full text indexing.
+    """
+    if not run: return
+    erp5_sql_deferred_connection = getattr(self.getPortal(),
+                                    'erp5_sql_deferred_connection',
+                                    None)
+    self.failUnless(erp5_sql_deferred_connection is not None)
+    self.assertEquals('Z MySQL Deferred Database Connection',
+                      erp5_sql_deferred_connection.meta_type)
+    for method in ['z0_drop_fulltext',
+                   'z0_uncatalog_fulltext',
+                   'z_catalog_fulltext_list',
+                   'z_create_fulltext', ]:
+      self.assertEquals('erp5_sql_deferred_connection',
+                getattr(self.getCatalogTool().getSQLCatalog(),
+                              method).connection_id)
+
