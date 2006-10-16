@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>invalidated</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,17 +34,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed Account</string> </value>
+            <value> <string>Deleted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>validate</string>
-                <string>validate_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -78,37 +73,22 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Author</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
