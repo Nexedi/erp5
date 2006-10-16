@@ -260,7 +260,8 @@ XXX: Folder_filter accesses selection directly\n
           <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>\n
         </button>\n
         <button type="submit" name="Folder_filter:method" title="Filter"\n
-                tal:attributes="class python:(here.portal_selections.getSelectionFor(selection_name) is not None and here.portal_selections.getSelectionFor(selection_name).isInvertMode()) and \'filter_on\' or \'filter\';"\n
+                tal:define="selection python: here.portal_selections.getSelectionFor(request[\'selection_name\'])"\n
+                tal:attributes="class python:(selection is not None and selection.isInvertMode()) and \'filter_on\' or \'filter\';"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
