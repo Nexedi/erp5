@@ -335,7 +335,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Account Name</string>
                         </tuple>
                         <tuple>
                           <string>getAccountTypeTitle</string>
@@ -400,7 +400,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Account Name</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -580,7 +580,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Account Name</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

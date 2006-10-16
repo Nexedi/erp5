@@ -141,7 +141,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>An account can have a Credit or a Debit Normal Balance</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -165,7 +165,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Credit Account</string> </value>
+                    <value> <string>Credit Normal Balance</string> </value>
                 </item>
               </dictionary>
             </value>
