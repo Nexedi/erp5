@@ -71,45 +71,92 @@
             <value> <string>""" Create a reversal transaction from current tansaction. """\n
 \n
 N_ = context.Base_translateString\n
-\n
 accounting_module = context.getPortalObject().accounting_module\n
-reversal = accounting_module.newContent (\n
-  portal_type = \'Accounting Transaction\',\n
-  source_section = context.getSourceSection(), \n
-  destination_section = context.getDestinationSection(),\n
-  source_payment = context.getSourcePayment(),\n
-  stop_date = context.getStopDate(),\n
-  start_date = context.getStartDate(),\n
-  title = N_("Reversal Transaction for ${title}",\n
-                                      mapping={\'title\' : unicode(context.getTitleOrId(), \'utf8\')}),\n
-  description = N_("Reversal Transaction for ${title} (${source_reference})",\n
-                                      mapping={\'title\' : unicode(context.getTitleOrId(), \'utf8\'), \n
-                                                         \'source_reference\' : context.getSourceReference()}),\n
-  resource = context.getResource(), \n
-  reference = context.getReference(),\n
-  created_by_builder = 1\n
-)\n
+is_source = context.AccountingTransaction_isSourceView()\n
 \n
-for line in context.objectValues(portal_type = context.getPortalAccountingMovementTypeList()) : \n
-  reversal.newContent(\n
-    portal_type = line.getPortalType(),\n
-    source = line.getSource(),\n
-    destination = line.getDestination(),\n
-    destination_section = line.getDestinationSection(),\n
-    source_payment = line.getSourcePayment(),\n
-    quantity = - line.getQuantity()\n
+if is_source:\n
+  section = context.getSourceSection()\n
+  mirror_section = context.getDestinationSection()\n
+  payment = context.getSourcePayment()\n
+  mirror_payment = context.getDestinationPayment()\n
+  date = context.getStartDate()\n
+  mirror_date = context.getStopDate()\n
+  specific_reference = context.getSourceReference()\n
+else:\n
+  section = context.getDestinationSection()\n
+  mirror_section = context.getSourceSection()\n
+  payment = context.getDestinationPayment()\n
+  mirror_payment = context.getSourcePayment()\n
+  date = context.getStopDate()\n
+  mirror_date = context.getStartDate()\n
+  specific_reference = context.getDestinationReference()\n
+\n
+reversal = accounting_module.newContent (\n
+    portal_type=\'Accounting Transaction\',\n
+    source_section=section,\n
+    destination_section=mirror_section,\n
+    source_payment=payment,\n
+    destination_payment=mirror_payment,\n
+    start_date=date,\n
+    stop_date=mirror_date,\n
+    title = N_("Reversal Transaction for ${title}",\n
+              mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\')}),\n
+    description = N_(\n
+      "Reversal Transaction for ${title} (${specific_reference})",\n
+      mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\'),\n
+               \'specific_reference\': specific_reference}),\n
+    resource=context.getResource(),\n
+    reference=context.getReference(),\n
+    causality_value=context,\n
+    created_by_builder=1 # XXX to prevent init script to create lines\n
   )\n
+\n
+# use AccountingTransaction_getInvoiceTransactionLineList to keep a consistent\n
+# ordering\n
+line_list = context.AccountingTransaction_getInvoiceTransactionLineList(\n
+                portal_type=context.getPortalAccountingMovementTypeList())\n
+line_list.reverse()\n
+for line in line_list:\n
+  new_line = reversal.newContent( portal_type=\'Accounting Transaction Line\', )\n
+  if is_source:\n
+    new_line.edit(\n
+      source=line.getSource(portal_type=\'Account\'),\n
+      destination=line.getDestination(portal_type=\'Account\'),\n
+      destination_section=line.getDestinationSection(),\n
+      source_payment=line.getSourcePayment(),\n
+      destination_payment=line.getDestinationPayment(),\n
+      quantity= -line.getQuantity(),\n
+      source_total_asset_price=line.getSourceTotalAssetPrice(),\n
+      destination_total_asset_price=line.getDestinationTotalAssetPrice()\n
+    )\n
+  else:\n
+    new_line.edit(\n
+      source=line.getDestination(portal_type=\'Account\'),\n
+      destination=line.getSource(portal_type=\'Account\'),\n
+      destination_section=line.getSourceSection(),\n
+      source_payment=line.getDestinationPayment(),\n
+      destination_payment=line.getSourcePayment(),\n
+      quantity=line.getQuantity(),\n
+      source_total_asset_price=line.getDestinationTotalAssetPrice(),\n
+      destination_total_asset_price=line.getSourceTotalAssetPrice()\n
+    )\n
 \n
 return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
               (reversal.getPath(),\n
-               N_("Reversal Transaction for ${source_reference} created.",\n
-                       mapping={\'source_reference\' : context.getSourceReference()})))\n
+               N_("Reversal Transaction for ${specific_reference} created.",\n
+             mapping={\'specific_reference\': specific_reference})))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -150,10 +197,20 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
                             <string>context</string>
                             <string>N_</string>
                             <string>accounting_module</string>
+                            <string>is_source</string>
+                            <string>section</string>
+                            <string>mirror_section</string>
+                            <string>payment</string>
+                            <string>mirror_payment</string>
+                            <string>date</string>
+                            <string>mirror_date</string>
+                            <string>specific_reference</string>
                             <string>unicode</string>
                             <string>reversal</string>
+                            <string>line_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
+                            <string>new_line</string>
                           </tuple>
                         </value>
                     </item>
@@ -176,6 +233,27 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
