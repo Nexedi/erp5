@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Accounting Transaction Module">
+  <item>Pay Sheet Transaction</item>
+ </portal_type>
  <portal_type id="Pay Sheet Line">
   <item>Pay Sheet Cell</item>
  </portal_type>
