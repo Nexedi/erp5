@@ -77,7 +77,7 @@ if kw.get(\'SearchableText\',\'\')==\'\' and mine==\'\':return []\n
 args=context.parseSearchString(kw.get(\'SearchableText\',\'\'))\n
 \n
 if not args.has_key(\'portal_type\') or args[\'portal_type\']==():\n
-  args[\'portal_type\']=context.getPortalDocumentTypeList()\n
+  args[\'portal_type\']=context.getPortalDocumentTypeList()+(\'Conference\',\'Project\')\n
 cats=[]\n
 bases=context.portal_categories.getBaseCategoryList()\n
 for k,v in args.items():\n
