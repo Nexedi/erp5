@@ -340,7 +340,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getResourceTitle</string>
+                          <string>getResourceTranslatedTitle</string>
                           <string>Denomination</string>
                         </tuple>
                         <tuple>
@@ -393,7 +393,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Amount</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -445,6 +450,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -531,7 +540,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>folder_selection</string> </value>
+                    <value> <string>folder_cash_currency_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

@@ -261,6 +261,12 @@ if listbox is None:\n
           currency_dict[\'price\'] = price\n
           total_price += price\n
           line_number += 1\n
+          # set default value for column\n
+          for counter, column in enumerate(axis_list_dict[\'column\']):\n
+            col_key = \'column%d\' % (counter + 1)\n
+            if not currency_dict.has_key(col_key):\n
+              currency_dict[col_key] = 0\n
+          currency_dict[\'number_line_to_add\'] = 0\n
           listbox.append(currency_dict)\n
 \n
     if line_number == 0:\n
@@ -272,10 +278,14 @@ if listbox is None:\n
         \'cash_status\': cash_status_list[0],\n
         \'variation\': variation_list[0],\n
         \'additional_line_number\': 0,\n
-        \'price\': 0\n
+        \'price\': 0,\n
+        \'number_line_to_add\': 0\n
       }\n
+      # set default value for column\n
+      for counter, column in enumerate(axis_list_dict[\'column\']):\n
+        currency_dict[\'column%d\' % (counter + 1)] = 0\n
       listbox.append(currency_dict)\n
-\n
+      \n
   other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory)\n
   context.Base_updateDialogForm(listbox=listbox\n
                                 , calculated_price=total_price\n
@@ -489,6 +499,7 @@ else :\n
                             <string>column</string>
                             <string>quantity</string>
                             <string>price</string>
+                            <string>col_key</string>
                             <string>other_parameter_list</string>
                             <string>_apply_</string>
                             <string>other_parameter</string>

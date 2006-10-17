@@ -95,11 +95,17 @@ base_category_list = (\'emission_letter\', \'cash_status\', \'variation\')\n
 per_resource_dict = {}\n
 \n
 # remove previous line\n
-old_line = context.objectValues(portal_type=[line_portal_type,])\n
-#context.log("will erease old line", old_line)\n
-if len(old_line)>0:\n
-  for object_list in old_line:\n
-    context.deleteContent(object_list.getId())\n
+# specific case for monetary issue\n
+if context.getPortalType() == "Monetary Issue":\n
+  old_line = [id for id in context.objectIds()]\n
+  if len(old_line)>0:\n
+    for line_id in old_line:\n
+      context.deleteContent(line_id)\n
+else:\n
+  old_line = [x.getObject().getId() for x in context.objectValues(portal_type=[line_portal_type,])]\n
+  if len(old_line)>0:\n
+    for line_id in old_line:\n
+      context.deleteContent(line_id)\n
 \n
 # get the list of movement we need to create\n
 for line in listbox:\n
@@ -359,10 +365,14 @@ else:\n
                             <string>per_resource_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>id</string>
                             <string>old_line</string>
                             <string>len</string>
-                            <string>_getiter_</string>
-                            <string>object_list</string>
+                            <string>line_id</string>
+                            <string>x</string>
                             <string>line</string>
                             <string>xrange</string>
                             <string>counter</string>
@@ -393,9 +403,7 @@ else:\n
                             <string>mapped_value_list</string>
                             <string>variation_item</string>
                             <string>cell</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
+                            <string>object_list</string>
                             <string>request</string>
                             <string>redirect_url</string>
                             <string>request_form</string>
