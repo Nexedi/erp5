@@ -47,6 +47,8 @@ Requirement Module | view
 Requirement | fast_input
 Requirement | print_pdf
 Requirement | view
+Sale Order Line | project
+Sale Packing List Line | project
 Task Line | history
 Task Line | metadata
 Task Line | price_view

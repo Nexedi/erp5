@@ -1,4 +1,7 @@
-2006-07-09
+2006-10-17 rafael
+* Added new skin folder for integration with Sales.
+
+2006-07-09 rafael
 * Modified Task and Task Report Workflow
 * Modified Forms
 * Included task_invoice_builder
