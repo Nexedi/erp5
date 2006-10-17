@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Bank Account</type>
+  <workflow>bank_account_workflow, -validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Check</type>
   <workflow>edit_workflow, check_workflow</workflow>
  </chain>

@@ -1,3 +1,5 @@
+Bank Account | -validation_workflow
+Bank Account | bank_account_workflow
 Check | check_workflow
 Check | edit_workflow
 Checkbook Model | edit_workflow
