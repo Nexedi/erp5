@@ -126,7 +126,7 @@ class DeferredDB(DB):
             LOG('ZMySQLDA', INFO, "ignoring _finish")
             return
         # BEGIN commit
-        LOG('ZMySQLDDA', INFO, "BEGIN commit")
+        #LOG('ZMySQLDDA', INFO, "BEGIN commit")
         try:
             if self._transactions:
                 self.db.query("BEGIN")
@@ -154,9 +154,9 @@ class DeferredDB(DB):
                     c=db.store_result()
                 except OperationalError, m:
                     raise
-            LOG('ZMySQLDDA', INFO, "Execute %s" % qs)
+            #LOG('ZMySQLDDA', INFO, "Execute %s" % qs)
         # Finish commit
-        LOG('ZMySQLDDA', INFO, "FINISH commit")
+        #LOG('ZMySQLDDA', INFO, "FINISH commit")
         try:
             try:
                 if self._mysql_lock:
