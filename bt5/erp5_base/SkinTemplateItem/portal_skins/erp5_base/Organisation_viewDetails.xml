@@ -100,13 +100,13 @@
                     <value>
                       <list>
                         <string>my_social_form</string>
-                        <string>my_creation_date</string>
                         <string>my_corporate_registration_code</string>
                         <string>my_geographic_incorporate_code</string>
                         <string>my_ean13_code</string>
                         <string>my_activity_code</string>
                         <string>my_vat_code</string>
                         <string>my_market_segment_list</string>
+                        <string>my_start_date</string>
                       </list>
                     </value>
                 </item>
