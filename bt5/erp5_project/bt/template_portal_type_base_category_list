@@ -1,11 +1,9 @@
 Project Line | predecessor
-Project Line | requirement
 Project Milestone | predecessor
-Project Milestone | requirement
 Project | predecessor
 Sale Invoice Transaction | source_project
-Task Line | requirement
-Task Report Line | requirement
+Sale Order Line | predecessor
+Sale Packing List Line | predecessor
 Task Report | aggregate
 Task Report | predecessor
 Task | predecessor

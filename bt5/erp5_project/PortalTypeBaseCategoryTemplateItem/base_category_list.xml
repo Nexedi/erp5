@@ -3,27 +3,25 @@
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Project Line">
-  <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Project Milestone">
-  <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>source_project</item>
  </portal_type>
- <portal_type id="Task">
+ <portal_type id="Sale Order Line">
   <item>predecessor</item>
  </portal_type>
- <portal_type id="Task Line">
-  <item>requirement</item>
+ <portal_type id="Sale Packing List Line">
+  <item>predecessor</item>
+ </portal_type>
+ <portal_type id="Task">
+  <item>predecessor</item>
  </portal_type>
  <portal_type id="Task Report">
   <item>aggregate</item>
   <item>predecessor</item>
- </portal_type>
- <portal_type id="Task Report Line">
-  <item>requirement</item>
  </portal_type>
 </base_category_list>
