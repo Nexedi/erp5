@@ -80,11 +80,11 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>salary_range/france/forfait</string>
+                <string>tax_category/social/employer_share</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/state_insurance</string>
-                <string>salary_range/france/forfait</string>
                 <string>source/organisation_module/urssaf</string>
-                <string>tax_category/social/employer_share</string>
               </tuple>
             </value>
         </item>
@@ -114,6 +114,15 @@
             <key> <string>uid</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>tax_category</string>
+                <string>salary_range</string>
+              </tuple>
             </value>
         </item>
       </dictionary>
