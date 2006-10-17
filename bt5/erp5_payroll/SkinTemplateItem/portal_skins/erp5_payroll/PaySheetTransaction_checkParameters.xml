@@ -99,7 +99,8 @@ if employee_obj.getMaritalStatusId() in (\'\', None):\n
 if employer_obj.getCreationDate() in (\'\', None):\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+must+have+an+organisation+creation+date\')\n
 \n
-if employer_obj.getDefaultAddress().getZipCode() in (\'\', None):\n
+default_address = employer_obj.getDefaultAddress()\n
+if default_address in (\'\', None) or default_address.getZipCode() in (\'\', None):\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+must+have+a+zip+code\')\n
 \n
 # parameters are OK, go to the pre-calculation form\n
@@ -157,6 +158,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
                             <string>None</string>
                             <string>employee_obj</string>
                             <string>employer_obj</string>
+                            <string>default_address</string>
                           </tuple>
                         </value>
                     </item>

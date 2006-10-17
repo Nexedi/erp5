@@ -1,3 +1,6 @@
+2006-10-17 Kevin
+* Add Pay Sheet Transaction as deault type in Accounting Module.
+
 2006-09-07 Kevin
 * Add "Réduction Fillon" service and line.
 * Include unit/time/month category to describe social contributions.

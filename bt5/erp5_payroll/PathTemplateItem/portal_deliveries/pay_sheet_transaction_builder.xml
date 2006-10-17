@@ -137,7 +137,7 @@
         </item>
         <item>
             <key> <string>delivery_select_method_id</string> </key>
-            <value> <string>SaleInvoiceTransaction_selectDelivery</string> </value>
+            <value> <string>InvoiceTransaction_selectDelivery</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
