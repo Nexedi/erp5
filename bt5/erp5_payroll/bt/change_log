@@ -1,5 +1,7 @@
 2006-10-17 Kevin
-* Add Pay Sheet Transaction as deault type in Accounting Module.
+* Add Pay Sheet Transaction as default sub type in Accounting Module.
+* Use new InvoiceTransaction_something scripts instead of SaleInvoiceTransaction_something.
+* Don't show pay sheet calculation fast input action in states other than 'draft'.
 
 2006-09-07 Kevin
 * Add "Réduction Fillon" service and line.
