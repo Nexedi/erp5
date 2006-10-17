@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Bank Account</type>
-  <workflow>bank_account_workflow, edit_workflow</workflow>
+  <workflow>validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Career</type>

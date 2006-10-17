@@ -2,8 +2,8 @@ Address | edit_workflow
 Agent | edit_workflow
 Assignment | assignment_workflow
 Assignment | edit_workflow
-Bank Account | bank_account_workflow
 Bank Account | edit_workflow
+Bank Account | validation_workflow
 Career | career_workflow
 ChatAddress | edit_workflow
 Credit Card | edit_workflow
