@@ -83,8 +83,14 @@
                 <string>tax_category/primes/employer_share</string>
                 <string>product_line/salary</string>
                 <string>quantity_unit/time/month</string>
-                <string>salary_range/france/salaire_brut</string>
+                <string>salary_range/france/forfait</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -4,54 +4,14 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.Resource</string>
-          <string>Resource</string>
+          <string>Products.ERP5Type.Document.Category</string>
+          <string>Category</string>
         </tuple>
         <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Modify_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -71,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -80,17 +46,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>tax_category/retenue_maladie/employer_share</string>
-                <string>product_line/salary</string>
-                <string>quantity_unit/time/month</string>
-                <string>salary_range/france/forfait</string>
+                <string>tax_category/absences</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>contributors</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -100,34 +57,25 @@
             </value>
         </item>
         <item>
-            <key> <string>float_index</string> </key>
-            <value> <float>0.1</float> </value>
+            <key> <string>id</string> </key>
+            <value> <string>absences</string> </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>retenue_maladie</string> </value>
+            <key> <string>last_id</string> </key>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Maladie</string> </value>
+            <value> <string>Absences</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>variation_base_category_list</string> </key>
-            <value>
-              <tuple>
-                <string>tax_category</string>
-                <string>salary_range</string>
-              </tuple>
             </value>
         </item>
       </dictionary>
