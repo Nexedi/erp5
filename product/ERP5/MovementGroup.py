@@ -259,9 +259,7 @@ class OrderMovementGroup(RootMovementGroup):
 allow_class(OrderMovementGroup)
 
 class CausalityMovementGroup(RootMovementGroup):
-  """ Groups movement that comes from simulation movement that shares the
-  same explanation relation. For example, it groups in an Invoice
-  movements from the same Packing List. """
+  """ TODO: docstring """
   
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
@@ -298,10 +296,7 @@ class CausalityMovementGroup(RootMovementGroup):
 allow_class(CausalityMovementGroup)
 
 class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
-  """ Groups movement that comes from simulation movement that shares the
-  same explanation relation. For example, it groups in an Invoice
-  movements from the same Packing List. """
-  
+  """ Group movement whose root apply rules have the same causality."""
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     explanation_relative_url = self._getExplanationRelativeUrl(movement)
@@ -313,7 +308,7 @@ class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
     )
 
   def _getExplanationRelativeUrl(self, movement):
-    """ Get the order value for a movement """
+    """ TODO: docstring; method name is bad; variables names are bad """
     root_applied_rule = movement.getRootAppliedRule()
     explanation_value = root_applied_rule.getCausalityValue()
     explanation_relative_url = None
@@ -330,10 +325,7 @@ allow_class(RootAppliedRuleCausalityMovementGroup)
 # Sale invoices transactions lines. We need to put accounting lines
 # in the same invoices than invoice lines.
 class ParentExplanationMovementGroup(RootMovementGroup):
-  """ Groups movement that comes from simulation movement that shares the
-  same explanation relation. For example, it groups in an Invoice
-  movements from the same Packing List. """
-  
+  """ TODO: docstring """
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     explanation_value = self._getParentExplanationValue(movement)
@@ -370,7 +362,7 @@ class PathMovementGroup(RootMovementGroup):
 allow_class(PathMovementGroup)
 
 class ColourMovementGroup(RootMovementGroup):
-  """ Group movements that have the same source and the same destination."""
+  """ Group movements that have the same color category."""
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.colour = movement.getColour()
@@ -445,7 +437,7 @@ class QuantitySignMovementGroup(RootMovementGroup):
 allow_class(QuantitySignMovementGroup)
 
 class DateMovementGroup(RootMovementGroup):
-
+  """ Group movements that have exactly the same dates. """
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.start_date = movement.getStartDate()
@@ -465,7 +457,7 @@ class DateMovementGroup(RootMovementGroup):
 allow_class(DateMovementGroup)
 
 class CriterionMovementGroup(RootMovementGroup):
-
+  
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     if hasattr(movement, 'getGroupCriterion'):
@@ -484,7 +476,7 @@ class CriterionMovementGroup(RootMovementGroup):
 allow_class(CriterionMovementGroup)
 
 class ResourceMovementGroup(RootMovementGroup):
-
+  """ Group movements that have the same resource. """
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.resource = movement.getResource()
