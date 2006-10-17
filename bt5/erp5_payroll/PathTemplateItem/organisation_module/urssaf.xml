@@ -114,11 +114,21 @@
             <value> <string>753A</string> </value>
         </item>
         <item>
+            <key> <string>bic_code</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>role/administration</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -137,11 +147,316 @@
         </item>
         <item>
             <key> <string>destination_section_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>None</string> </value>
         </item>
         <item>
             <key> <string>ean13_code</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_aday</string> </key>
+                        <value> <string>Mon</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_amon</string> </key>
+                        <value> <string>Jan</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_d</string> </key>
+                        <value> <float>36525.2083333</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_day</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_dayoffset</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fday</string> </key>
+                        <value> <string>Monday</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fmon</string> </key>
+                        <value> <string>January</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hour</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_millis</string> </key>
+                        <value> <long>978325200000</long> </value>
+                    </item>
+                    <item>
+                        <key> <string>_minute</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_month</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_nearsec</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pday</string> </key>
+                        <value> <string>Mon.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pm</string> </key>
+                        <value> <string>am</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmhour</string> </key>
+                        <value> <int>12</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmon</string> </key>
+                        <value> <string>Jan.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_second</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_t</string> </key>
+                        <value> <float>978325200.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_tz</string> </key>
+                        <value> <string>US/Eastern</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_year</string> </key>
+                        <value> <int>2001</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>time</string> </key>
+                        <value> <float>0.208333333336</float> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>expiration_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_aday</string> </key>
+                        <value> <string>Mon</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_amon</string> </key>
+                        <value> <string>Jan</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_d</string> </key>
+                        <value> <float>36525.2083333</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_day</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_dayoffset</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fday</string> </key>
+                        <value> <string>Monday</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fmon</string> </key>
+                        <value> <string>January</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hour</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_millis</string> </key>
+                        <value> <long>978325200000</long> </value>
+                    </item>
+                    <item>
+                        <key> <string>_minute</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_month</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_nearsec</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pday</string> </key>
+                        <value> <string>Mon.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pm</string> </key>
+                        <value> <string>am</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmhour</string> </key>
+                        <value> <int>12</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmon</string> </key>
+                        <value> <string>Jan.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_second</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_t</string> </key>
+                        <value> <float>978325200.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_tz</string> </key>
+                        <value> <string>US/Eastern</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_year</string> </key>
+                        <value> <int>2001</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>time</string> </key>
+                        <value> <float>0.208333333336</float> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>financial_year_stop_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_aday</string> </key>
+                        <value> <string>Mon</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_amon</string> </key>
+                        <value> <string>Jan</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_d</string> </key>
+                        <value> <float>36525.2083333</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_day</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_dayoffset</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fday</string> </key>
+                        <value> <string>Monday</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fmon</string> </key>
+                        <value> <string>January</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hour</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_millis</string> </key>
+                        <value> <long>978325200000</long> </value>
+                    </item>
+                    <item>
+                        <key> <string>_minute</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_month</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_nearsec</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pday</string> </key>
+                        <value> <string>Mon.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pm</string> </key>
+                        <value> <string>am</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmhour</string> </key>
+                        <value> <int>12</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmon</string> </key>
+                        <value> <string>Jan.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_second</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_t</string> </key>
+                        <value> <float>978325200.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_tz</string> </key>
+                        <value> <string>US/Eastern</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_year</string> </key>
+                        <value> <int>2001</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>time</string> </key>
+                        <value> <float>0.208333333336</float> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value> <string>None</string> </value>
         </item>
         <item>
             <key> <string>geographic_incorporate_code</string> </key>
@@ -152,20 +467,42 @@
             <value> <string>urssaf</string> </value>
         </item>
         <item>
+            <key> <string>id_generator</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id_group</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Organisation</string> </value>
         </item>
         <item>
+            <key> <string>rights</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>segmentation</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>None</string> </value>
         </item>
         <item>
             <key> <string>social_capital</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>social_capital_currency</string> </key>
@@ -173,7 +510,15 @@
         </item>
         <item>
             <key> <string>social_code</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>subject</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -187,7 +532,9 @@
         </item>
         <item>
             <key> <string>vat_code</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
