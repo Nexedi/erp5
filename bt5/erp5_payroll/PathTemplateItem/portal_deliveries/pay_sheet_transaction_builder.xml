@@ -109,7 +109,7 @@
             <value>
               <tuple>
                 <string>DateMovementGroup</string>
-                <string>CausalityMovementGroup</string>
+                <string>RootAppliedRuleCausalityMovementGroup</string>
               </tuple>
             </value>
         </item>
