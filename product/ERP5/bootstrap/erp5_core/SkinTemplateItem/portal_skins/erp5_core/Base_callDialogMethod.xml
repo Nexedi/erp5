@@ -215,7 +215,10 @@ if dialog_category == "object_search" :\n
 \n
 # if we have checked line in listbox, modify the selection\n
 listbox_uid = kw.get(\'listbox_uid\', None)\n
-if listbox_uid is not None:\n
+# In some cases, the listbox exists, is editable, but the selection name\n
+# has no meaning, for example fast input dialogs.\n
+# In such cases, we must not try to update a non-existing selection.\n
+if listbox_uid is not None and kw.has_key(\'selection_name\'):\n
   uids = kw.get(\'uids\')\n
   selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
     kw[\'selection_name\'],\n
