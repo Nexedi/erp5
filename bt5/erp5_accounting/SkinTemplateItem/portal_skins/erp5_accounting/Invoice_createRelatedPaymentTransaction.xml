@@ -80,6 +80,12 @@ payment_dict = {}\n
 is_source = context.AccountingTransaction_isSourceView()\n
 line_portal_type = \'Accounting Transaction Line\'\n
 \n
+# update selection params, because it\'ll be used in the selection dialog.\n
+portal.portal_selections.setSelectionParamsFor(\'accounting_selection\',\n
+          params=dict(node_for_related_payment=node,\n
+                      payment_mode_for_related_payment=payment_mode,\n
+                      payment_for_related_payment=payment))\n
+\n
 related_payement = portal.accounting_module.newContent(\n
   portal_type="Payment Transaction",\n
   title = str(N_("Payment of ${invoice_title}",\n
@@ -198,8 +204,8 @@ if not batch_mode:\n
                             <string>payment_dict</string>
                             <string>is_source</string>
                             <string>line_portal_type</string>
-                            <string>str</string>
                             <string>dict</string>
+                            <string>str</string>
                             <string>unicode</string>
                             <string>related_payement</string>
                             <string>bank</string>

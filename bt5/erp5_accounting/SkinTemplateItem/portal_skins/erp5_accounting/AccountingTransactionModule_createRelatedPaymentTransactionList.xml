@@ -81,12 +81,6 @@ selected_uids = stool.updateSelectionCheckedUidList(\n
 \n
 object_list = stool.callSelectionFor(selection_name)\n
 \n
-# update selection params, because it\'ll be used in the selection dialog.\n
-stool.setSelectionParamsFor(\'accounting_selection\',\n
-          params=dict(node_for_related_payment=node,\n
-                      payment_mode_for_related_payment=payment_mode,\n
-                      payment_for_related_payment=payment))\n
-\n
 # XXX prevent to call this on the whole module:\n
 if len(object_list) > 100:\n
   return context.REQUEST.RESPONSE.redirect(\n
@@ -173,7 +167,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>N_</string>
                             <string>selected_uids</string>
                             <string>object_list</string>
-                            <string>dict</string>
                             <string>len</string>
                             <string>_getiter_</string>
                             <string>obj</string>
