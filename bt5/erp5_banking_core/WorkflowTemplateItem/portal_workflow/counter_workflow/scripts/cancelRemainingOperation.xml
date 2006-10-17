@@ -91,8 +91,6 @@ site_uid = transaction.getSiteUid()\n
 \n
 operation_list_object = transaction.Baobab_getRemainingOperationList(site_uid=site_uid, date=current_date, simulation_state=[\'confirmed\',])\n
 \n
-context.log(\'counter_workflow, cancelRemainingOperation\', \'operation list = %s\' %(operation_list_object,))\n
-\n
 for operation in operation_list_object:\n
   context.log(\'cancelling operations\', operation.getRelativeUrl())\n
   operation.reject()\n
