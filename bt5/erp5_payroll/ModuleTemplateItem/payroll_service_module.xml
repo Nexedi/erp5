@@ -389,10 +389,10 @@
    <name>Manage Groups</name>
   </permission>
   <permission type='list'>
-   <name>Manage Selenium test cases</name>
+   <name>Manage Transient Object Container</name>
   </permission>
   <permission type='list'>
-   <name>Manage Transient Object Container</name>
+   <name>Manage Translation Services</name>
   </permission>
   <permission type='list'>
    <name>Manage Vocabulary</name>

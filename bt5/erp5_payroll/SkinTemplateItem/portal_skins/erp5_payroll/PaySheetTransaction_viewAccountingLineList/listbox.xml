@@ -479,10 +479,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>page_template</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>

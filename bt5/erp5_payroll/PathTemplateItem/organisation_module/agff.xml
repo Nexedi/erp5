@@ -92,7 +92,9 @@
         </item>
         <item>
             <key> <string>corporate_name</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>

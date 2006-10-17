@@ -100,7 +100,6 @@
               <tuple>
                 <string>tax_category/ags/employer_share</string>
                 <string>tax_category/life_insurance/employer_share</string>
-                <string>product_line/social_service/state_insurance</string>
                 <string>tax_category/unemployment/employer_share</string>
                 <string>tax_category/syntec_insurance/employer_share</string>
                 <string>tax_category/taxes/employer_share</string>
@@ -108,6 +107,7 @@
                 <string>tax_category/argic/employer_share</string>
                 <string>tax_category/supplementary_pension/employer_share</string>
                 <string>tax_category/apec/employer_share</string>
+                <string>product_line/social_service/state_insurance</string>
               </tuple>
             </value>
         </item>
