@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX This script share some code with PaySheetTransaction_postCalculation\n
+# XXX It could be a good idea to merge similar code\n
+\n
+# std_lines = context.PaySheetTransaction_initializePreview()\n
+# user_line_index = 0\n
+#\n
+# # Scan every standard preview line to create an item for each service\n
+# for std_line in std_lines:\n
+#   salary_range_cat = std_line.getProperty(\'salary_range_cat\')\n
+#   tax_cat          = std_line.getProperty(\'tax_cat\')\n
+#   # Increment the user line index: we can use this strategy because preview lines (user or standard ones) are sorted\n
+#   user_line_index += 1\n
+#\n
+#   # Get user paysheet parameters stored in user preview line (=listbox)\n
+#   for user_line in listbox:\n
+#     # Base_viewSearchResultList the user preview line corresponding to the standard preview line\n
+#     if user_line.has_key(\'listbox_key\') and int(user_line[\'listbox_key\'])==user_line_index:\n
+#\n
+#       if user_line[\'base\'] not in (None, \'\') and salary_range_cat.endswith(\'forfait\') \\\n
+#         and  user_line[\'employer_share_rate\'] == 100.0 and user_line[\'employee_share_rate\'] in (0.0, None, \'\') \\\n
+#         and len(tax_cat) == 1:\n
+#\n
+# #        # Get the base salary if given by the user\n
+#  #       base = r_(user_line[\'base\'])\n
+#   #      # Scan allowed tax categories to get employee and/or employer share rate\n
+#    #     for cat in tax_cat:\n
+#\n
+#\n
+#\n
+#\n
+#\n
+#         context.log("Kev paysheet", repr(user_line[\'base\']))\n
+#         context.log("Kev paysheet", repr(tax_cat[0]))\n
+#         context.log("Kev paysheet", repr(        salary_range_cat))\n
+\n
+\n
+\n
+\n
+#context.log("Kev update >>>>>", repr(context.REQUEST.items()))\n
+\n
+return context.REQUEST.RESPONSE.redirect(\'%s/PaySheetTransaction_viewPreview?portal_status_message=Base+Salary+updated.\' % context.absolute_url())\n
+\n
+\n
+# Get all cells which are needed to calculate the base_salary\n
+\n
+# Scan the listbox and look for complementary lines to add to the gross salary\n
+#for user_line in listbox:\n
+ # if user_line[\'base\'] not in (None, \'\'):\n
+    # Get the base salary if given by the user\n
+  #  base = r_(user_line[\'base\'])\n
+\n
+\n
+\n
+# IDEA: compare normal _initializePreview returned rates and base with the current one and keep user-defined values. Then merge them with current one.\n
+# This is the only solution to mimic real user interaction without AJAX/DHTML-like UI.\n
+\n
+# Recalculate the preview with new base_salary\n
+#std_lines = context.PaySheetTransaction_initializePreview()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_updateCalculation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
