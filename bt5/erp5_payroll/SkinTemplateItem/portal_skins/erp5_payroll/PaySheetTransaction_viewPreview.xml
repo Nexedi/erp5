@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>PaySheetTransaction_postCalculation</string> </value>
         </item>
@@ -148,7 +154,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>PaySheetTransaction_updateCalculation</string> </value>
         </item>
       </dictionary>
     </pickle>
