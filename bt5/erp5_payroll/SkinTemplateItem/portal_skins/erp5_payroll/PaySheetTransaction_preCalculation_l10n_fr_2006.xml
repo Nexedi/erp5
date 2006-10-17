@@ -477,18 +477,26 @@ if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
   , \'base\'          : ceiling_salary\n
   }\n
 \n
-# Add blank lines for wickness holding (= retenue maladie) and pay bonus (= primes).\n
+# Add blank lines for:\n
+#   * wickness holding (= retenue maladie)\n
+#   * pay bonus (= primes)\n
+#   * non-working days (= absences)\n
 # Thanks to this, the accountant has the freedom to add the missing amount of money\n
 #   that this script can\'t guess.\n
-default[\'retenue_maladie/salaire_brut\'] = \\\n
+default[\'retenue_maladie/forfait\'] = \\\n
 { \'employer_rate\' : None\n
 , \'employee_rate\' : None\n
-, \'base\'          : gross_salary\n
+, \'base\'          : 100.0\n
 }\n
-default[\'primes/salaire_brut\'] = \\\n
+default[\'primes/forfait\'] = \\\n
 { \'employer_rate\' : None\n
 , \'employee_rate\' : None\n
-, \'base\'          : gross_salary\n
+, \'base\'          : 100.0\n
+}\n
+default[\'absences/forfait\'] = \\\n
+{ \'employer_rate\' : None\n
+, \'employee_rate\' : None\n
+, \'base\'          : 100.0\n
 }\n
 \n
 # Also add a brand new line for "Reduction Fillon", a negative contribution.\n
@@ -520,6 +528,12 @@ return default\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
