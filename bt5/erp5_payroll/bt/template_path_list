@@ -23,6 +23,8 @@ payroll_service_module/csg_deductible
 payroll_service_module/csg_non_deductible
 payroll_service_module/family_benefits
 payroll_service_module/fngs
+payroll_service_module/iccp
+payroll_service_module/indemnite_precarite
 payroll_service_module/industrial_accident
 payroll_service_module/labour
 payroll_service_module/life_insurance

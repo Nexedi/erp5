@@ -1,3 +1,6 @@
+2006-10-18 Kevin
+* Add new french payroll services.
+
 2006-10-17 Kevin
 * Add Pay Sheet Transaction as default sub type in Accounting Module.
 * Use new InvoiceTransaction_something scripts instead of SaleInvoiceTransaction_something.

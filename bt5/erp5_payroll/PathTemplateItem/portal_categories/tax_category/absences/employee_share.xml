@@ -40,7 +40,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>tax_category/retenue_maladie/employer_share</string>
+                <string>tax_category/absences/employee_share</string>
+                <string>tax_category/absences/employee_share</string>
               </tuple>
             </value>
         </item>
@@ -58,7 +59,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>employer_share</string> </value>
+            <value> <string>employee_share</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -72,7 +73,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employer Share</string> </value>
+            <value> <string>Employee Share</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

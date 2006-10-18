@@ -4,54 +4,14 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.Resource</string>
-          <string>Resource</string>
+          <string>Products.ERP5Type.Document.Category</string>
+          <string>Category</string>
         </tuple>
         <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Modify_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -71,12 +31,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -86,17 +40,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/forfait</string>
-                <string>tax_category/primes/employee_share</string>
-                <string>product_line/salary</string>
-                <string>quantity_unit/time/month</string>
+                <string>tax_category/indemnite_precarite/employee_share</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>contributors</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -106,34 +51,21 @@
             </value>
         </item>
         <item>
-            <key> <string>float_index</string> </key>
-            <value> <float>0.1</float> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>primes</string> </value>
+            <value> <string>employee_share</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Primes</string> </value>
+            <value> <string>Employee Share</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>variation_base_category_list</string> </key>
-            <value>
-              <tuple>
-                <string>tax_category</string>
-                <string>salary_range</string>
-              </tuple>
             </value>
         </item>
       </dictionary>

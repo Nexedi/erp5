@@ -87,9 +87,9 @@
             <value>
               <tuple>
                 <string>salary_range/france/forfait</string>
-                <string>tax_category/retenue_maladie/employee_share</string>
                 <string>product_line/salary</string>
                 <string>quantity_unit/time/month</string>
+                <string>tax_category/indemnite_precarite/employee_share</string>
               </tuple>
             </value>
         </item>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>retenue_maladie</string> </value>
+            <value> <string>indemnite_precarite</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -119,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Maladie</string> </value>
+            <value> <string encoding="base64">SW5kZW1uaXTDqXMgZGUgUHLDqWNhcml0w6k=</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

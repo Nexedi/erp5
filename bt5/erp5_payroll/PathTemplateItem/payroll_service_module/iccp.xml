@@ -87,9 +87,9 @@
             <value>
               <tuple>
                 <string>salary_range/france/forfait</string>
-                <string>tax_category/retenue_maladie/employee_share</string>
                 <string>product_line/salary</string>
                 <string>quantity_unit/time/month</string>
+                <string>tax_category/iccp/employer_share</string>
               </tuple>
             </value>
         </item>
@@ -101,9 +101,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string encoding="base64">SW5kZW1uaXTDqXMgQ29tcGVuc2F0b2lyZXMgZGUgQ29uZ8OpcyBQYXnDqXMu</string> </value>
         </item>
         <item>
             <key> <string>float_index</string> </key>
@@ -111,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>retenue_maladie</string> </value>
+            <value> <string>iccp</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -119,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Maladie</string> </value>
+            <value> <string>ICCP</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

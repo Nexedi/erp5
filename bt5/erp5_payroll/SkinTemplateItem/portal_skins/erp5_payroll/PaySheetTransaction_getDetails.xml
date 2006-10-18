@@ -177,7 +177,7 @@ for pay_sheet_line in object_list:\n
           cell_price       = cell.getPrice()\n
           cell_quantity    = cell.getQuantity()\n
           cell_total_price = r_(cell_price * cell_quantity)\n
-          # Hack not to display prime and ser\n
+          # Hack to not display things added to the gross salary\n
           if cell_total_price != 0 or cell.getResourceId() not in (\'primes\', \'retenue_maladie\'):\n
             if category.find(\'employee_share\') >= 0:\n
               pay_sheet_dict[\'base\'] = -cell_quantity # change the sign to beautify\n
