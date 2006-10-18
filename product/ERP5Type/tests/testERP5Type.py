@@ -877,12 +877,144 @@ class TestPropertySheet:
                         person.getProperty('validation_state_title'))
       self.assertEquals(other_state.title,
                         person.getProperty('translated_validation_state_title'))
+    
+    DEFAULT_ORGANISATION_TITLE_PROP = '''
+                      { 'id':         'organisation',
+                        'storage_id': 'default_organisation',
+                        'type':       'content',
+                        'portal_type': ('Organisation', ),
+                        'acquired_property_id': ('title', ),
+                        'mode':       'w', }'''
 
+    def test_18_SimpleContentAccessor(self):
+      """Tests a simple content accessor.
+      """
+      # For testing purposes, we add a default_organisation inside a person, 
+      # and we add code to generate a 'default_organisation_title' property on
+      # this person that will returns the organisation title.
+      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      self.failUnless(hasattr(person, 'getDefaultOrganisationTitle'))
+      self.failUnless(hasattr(person, 'setDefaultOrganisationTitle'))
+      person.setDefaultOrganisationTitle('The organisation title')
+      # XXX content generated properties are not in propertyMap. is it a bug ?
+      #self.failUnless(person.hasProperty('default_organisation_title'))
+      
+      # an organisation is created inside the person.
+      default_organisation = person._getOb('default_organisation', None)
+      self.assertNotEquals(None, default_organisation)
+      self.assertEquals('Organisation',
+                        default_organisation.getPortalTypeName())
+      self.assertEquals('The organisation title',
+                        default_organisation.getTitle())
+    
+    def test_18b_ContentAccessorWithIdClash(self):
+      """Tests a content setters do not set the property on acquired object
+      that may have the same id, using same scenario as test_18
+      Note that we only test Setter for now.
+      """
+      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      another_person = self.getPersonModule().newContent(
+                                        id='default_organisation',
+                                        portal_type='Person')
+      another_person_title = 'This is the other person'
+      another_person.setTitle(another_person_title)
+      person.setDefaultOrganisationTitle('The organisation title')
+      # here we want to make sure we didn't modify this 'default_organisation'
+      # we could have get by acquisition.
+      self.assertNotEquals(another_person_title,
+                           person.getDefaultOrganisationTitle())
+      # an organisation is created inside the person.
+      default_organisation = person._getOb('default_organisation', None)
+      self.assertNotEquals(None, default_organisation)
+      self.assertEquals('The organisation title',
+                        person.getDefaultOrganisationTitle())
+    
+    DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP = '''
+          { 'id':         'organisation',
+            'storage_id': 'default_organisation',
+            'type':       'content',
+            'portal_type': ('Organisation', ),
+            'acquired_property_id': ('title', ),
+            'acquisition_base_category': ( 'destination', ),
+            'acquisition_portal_type'  : ( 'Person', ),
+            'acquisition_accessor_id'  : 'getDefaultOrganisationValue',
+            'acquisition_copy_value'   : 0,
+            'acquisition_mask_value'   : 1,
+            'acquisition_sync_value'   : 0,
+            'acquisition_depends'      : None,
+            'mode':       'w', }'''
+    
+    def test_19_AcquiredContentAccessor(self):
+      """Tests an acquired content accessor.
+      """
+      # For testing purposes, we add a default_organisation inside a person, 
+      # and we add code to generate a 'default_organisation_title' property on
+      # this person that will returns the organisation title. If this is not
+      # defined, then we will acquire the default organisation title of the
+      # `destination` person. This is a stupid example, but it works with
+      # objects we have in our testing environnement
+      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
+      # add destination base category to Person TI
+      person_ti = self.getTypesTool().getTypeInfo('Person')
+      if 'destination' not in person_ti.base_category_list:
+          person_ti.base_category_list = tuple(list(
+                self.getTypesTool().getTypeInfo('Person').base_category_list) +
+                ['destination', ])
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      other_pers = self.getPersonModule().newContent(id='2', portal_type='Person')
+      other_pers_title = 'This is the title we should acquire'
+      other_pers.setDefaultOrganisationTitle(other_pers_title)
+      person.setDestinationValue(other_pers)
+      
+      # title is acquired from the other person
+      self.assertEquals(other_pers_title,
+                        person.getDefaultOrganisationTitle())
+      
+      # now if we save, it should create a default_organisation inside this
+      # person, but do not modify the other_pers.
+      person.setDefaultOrganisationTitle('Our organisation title')
+      self.assertEquals('Our organisation title',
+                        person.getDefaultOrganisationTitle())
+      self.assertEquals(other_pers_title,
+                        other_pers.getDefaultOrganisationTitle())
+      
+    def test_19b_AcquiredContentAccessorWithIdClash(self):
+      """Tests a content setters do not set the property on acquired object
+      that may have the same id, using same scenario as test_19
+      Note that we only test Setter for now.
+      """
+      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
+      # add destination base category to Person TI
+      person_ti = self.getTypesTool().getTypeInfo('Person')
+      if 'destination' not in person_ti.base_category_list:
+          person_ti.base_category_list = tuple(list(
+                self.getTypesTool().getTypeInfo('Person').base_category_list) +
+                ['destination', ])
+      
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      another_person = self.getPersonModule().newContent(
+                                        id='default_organisation',
+                                        portal_type='Person')
+      another_person_title = 'This is the other person'
+      another_person.setTitle(another_person_title)
+      person.setDefaultOrganisationTitle('The organisation title')
+      # here we want to make sure we didn't modify this 'default_organisation'
+      # we could have get by acquisition.
+      self.assertNotEquals(another_person_title,
+                           person.getDefaultOrganisationTitle())
+      # an organisation is created inside the person.
+      default_organisation = person._getOb('default_organisation', None)
+      self.assertNotEquals(None, default_organisation)
+      self.assertEquals('The organisation title',
+                        person.getDefaultOrganisationTitle())
+    
 if __name__ == '__main__':
-    framework()
+  framework()
 else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestERP5Type))
-        return suite
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestERP5Type))
+    return suite
