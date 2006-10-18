@@ -87,7 +87,7 @@ if lettering is None:\n
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=\'Cash Delivery Cell\')\n
+total_price = transaction.getTotalPrice(portal_type=[\'Internal Money Deposit\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 if amount != total_price:\n
   msg = Message(domain="ui", message="Amount differ from total price.")\n

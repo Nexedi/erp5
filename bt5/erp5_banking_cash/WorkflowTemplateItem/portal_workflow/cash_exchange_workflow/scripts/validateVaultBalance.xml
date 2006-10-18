@@ -93,8 +93,8 @@ if not transaction.Baobab_checkCounterDateOpen(site=counter_site, date=transacti
 resource_two = transaction.CashDelivery_checkCounterInventory(caisse_outgoing, portal_type=\'Outgoing Cash Exchange Line\')\n
 \n
 # Get total_price.\n
-incoming_total = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash Exchange Line\')\n
-outgoing_total = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash Exchange Line\')\n
+incoming_total = transaction.getTotalPrice(portal_type=[\'Incoming Cash Exchange Line\',\'Cash Delivery Cell\'],fast=0)\n
+outgoing_total = transaction.getTotalPrice(portal_type=[\'Outgoing Cash Exchange Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 \n
 amount_total = transaction.getSourceTotalAssetPrice()\n
@@ -120,6 +120,12 @@ if amount_total != outgoing_total:\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -203,6 +209,27 @@ if amount_total != outgoing_total:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

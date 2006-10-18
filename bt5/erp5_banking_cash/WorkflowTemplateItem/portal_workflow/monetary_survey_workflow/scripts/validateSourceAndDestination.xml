@@ -68,21 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>transaction = state_change.object\n
 \n
-object = state_change.object\n
-\n
-if not \'encaisse_des_devises\' in object.getDestination():\n
-  msg = Message(domain="ui", message="Wrong Destination Selected.")\n
-  raise validationFailed, (msg,)\n
-\n
-object_price = object.getSourceTotalAssetPrice()\n
-line_price = object.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-if object_price != line_price:\n
-  msg = Message(domain="ui", message="Amount differs between document and lines.")\n
-  raise ValidationFailed, (msg,)\n
+# Check getBaobabSource and getBaobabDestination\n
+transaction.Base_checkBaobabSourceAndDestination()\n
 </string> </value>
         </item>
         <item>
@@ -92,20 +81,20 @@ if object_price != line_price:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,16 +121,9 @@ if object_price != line_price:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>object</string>
-                            <string>msg</string>
-                            <string>validationFailed</string>
-                            <string>object_price</string>
-                            <string>line_price</string>
+                            <string>transaction</string>
                           </tuple>
                         </value>
                     </item>
@@ -158,33 +140,12 @@ if object_price != line_price:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkConsistency</string> </value>
+            <value> <string>validateSourceAndDestination</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

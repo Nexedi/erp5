@@ -83,8 +83,8 @@ if (var_type == \'reception\' and var_source_transport is None):\n
    raise ValidationFailed, (msg,)\n
 \n
 price = txn.getSourceTotalAssetPrice()\n
-in_price = txn.getTotalPrice(deliveryLineType=\'Incoming Usual Cash Incident Line\')\n
-out_price = txn.getTotalPrice(deliveryLineType=\'Outgoing Usual Cash Incident Line\')\n
+in_price = txn.getTotalPrice(portal_type=[\'Incoming Usual Cash Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
+out_price = txn.getTotalPrice(portal_type=[\'Outgoing Usual Cash Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 if len(in_list) != 0 and len(out_list) != 0:\n
   msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n

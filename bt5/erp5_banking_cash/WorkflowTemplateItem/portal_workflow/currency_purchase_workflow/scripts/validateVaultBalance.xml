@@ -103,7 +103,7 @@ if not transaction.Baobab_checkCounterDateOpen(site=baobab_destination, date=tra
   raise ValidationFailed, (msg,)\n
 \n
 \n
-billetage_entre = transaction.getTotalPrice(deliveryLineType=\'Cash Delivery Line\')\n
+billetage_entre = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 base_price = transaction.getSourceTotalAssetPrice()\n
 # Check the amount.\n

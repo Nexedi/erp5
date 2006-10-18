@@ -109,7 +109,7 @@ resource = transaction.CashDelivery_checkCounterInventory(source = source, porta
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
-cash_detail = transaction.getTotalPrice(portal_type = \'Cash Delivery Cell\')\n
+cash_detail = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
 #transaction.log("price vs cash detail", str((price, cash_detail)))\n
 if resource == 3:\n
   msg = Message(domain="ui", message="No banknote or coin defined.")\n

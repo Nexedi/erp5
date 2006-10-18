@@ -80,7 +80,7 @@ resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_t
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=\'Cash Delivery Cell\')\n
+total_price = transaction.getTotalPrice(portal_type=[\'Monetary Issue Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 if resource == 2:\n
   msg = Message(domain="ui", message="No Resource.")\n
@@ -99,6 +99,12 @@ elif resource <> 0 :\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -175,6 +181,27 @@ elif resource <> 0 :\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

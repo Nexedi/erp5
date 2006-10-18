@@ -79,8 +79,8 @@ resource =  transaction.CashDelivery_checkCounterInventory(source=vault, portal_
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
-input_cash = transaction.getTotalPrice(deliveryLineType=\'Incoming Classification Survey Line\')\n
-output_cash = transaction.getTotalPrice(deliveryLineType=\'Outgoing Classification Survey Line\')\n
+input_cash = transaction.getTotalPrice(portal_type=[\'Incoming Classification Survey Line\',\'Cash Delivery Cell\'],fast=0)\n
+output_cash = transaction.getTotalPrice(portal_type=[\'Outgoing Classification Survey Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 if input_cash != output_cash :\n
   msg=Message(domain="ui", message="Incoming cash amount is different from outgoing cash amount.")\n
@@ -97,6 +97,12 @@ elif resource != 0 :\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -174,6 +180,27 @@ elif resource != 0 :\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

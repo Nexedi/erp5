@@ -85,7 +85,7 @@ resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_t
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=\'Monetary Recall Cell\')\n
+total_price = transaction.getTotalPrice(portal_type=[\'Monetary Recall Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 \n
 if resource == 2:\n

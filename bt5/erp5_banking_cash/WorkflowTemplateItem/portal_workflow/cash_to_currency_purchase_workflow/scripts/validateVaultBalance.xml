@@ -111,8 +111,8 @@ if (fix_montant is None or fix_montant < 0) and (pourcentage is None or fix_mont
 \n
 resource_two = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Purchase Line\')\n
 \n
-billetage_entre = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash To Currency Purchase Line\')\n
-billetage_sorti = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash To Currency Purchase Line\')\n
+billetage_entre = transaction.getTotalPrice(portal_type=[\'Incoming Cash To Currency Purchase Line\', \'Cash Delivery Cell\'],fast=0)\n
+billetage_sorti = transaction.getTotalPrice(portal_type=[\'Outgoing Cash To Currency Purchase Line\', \'Cash Delivery Cell\'],fast=0)\n
 \n
 \n
 quantity = transaction.getQuantity()\n

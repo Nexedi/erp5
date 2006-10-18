@@ -84,8 +84,8 @@ resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, p
 \n
 # Get total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
-incoming_total = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash Balance Regulation Line\')\n
-outgoing_total = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash Balance Regulation Line\')\n
+incoming_total = transaction.getTotalPrice(portal_type =[\'Incoming Cash Balance Regulation Line\',\'Cash Delivery Cell\'],fast=0)\n
+outgoing_total = transaction.getTotalPrice(portal_type =[\'Outgoing Cash Balance Regulation Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 #context.log(\'incoming_total\', incoming_total)\n
 #context.log(\'outgoing_total\', outgoing_total)\n

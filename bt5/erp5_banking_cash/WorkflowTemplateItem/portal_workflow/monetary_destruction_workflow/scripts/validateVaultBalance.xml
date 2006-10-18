@@ -91,7 +91,7 @@ if \'encaisse_des_billets_neufs_non_emis\' in vault :\n
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=\'Cash Delivery Cell\')\n
+total_price = transaction.getTotalPrice(portal_type=[\'Monetary Destruction Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 if resource == 2:\n
   msg = Message(domain="ui", message="No Resource.")\n

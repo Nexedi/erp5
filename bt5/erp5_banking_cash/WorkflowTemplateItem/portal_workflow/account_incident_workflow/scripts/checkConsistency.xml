@@ -73,12 +73,12 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 txn = state_change[\'object\']\n
-in_list = txn.searchFolder(portal_type=\'Incoming Account Incident Line\')\n
-out_list = txn.searchFolder(portal_type=\'Outgoing Account Incident Line\')\n
+in_list = txn.objectValues(portal_type=\'Incoming Account Incident Line\')\n
+out_list = txn.objectValues(portal_type=\'Outgoing Account Incident Line\')\n
 \n
 price = txn.getSourceTotalAssetPrice()\n
-in_price = txn.getTotalPrice(deliveryLineType=\'Incoming Account Incident Line\')\n
-out_price = txn.getTotalPrice(deliveryLineType=\'Outgoing Account Incident Line\')\n
+in_price = txn.getTotalPrice(portal_type=[\'Incoming Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
+out_price = txn.getTotalPrice(portal_type=[\'Outgoing Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
 if len(in_list) != 0 and len(out_list) != 0:\n
   msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n
@@ -95,6 +95,12 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -168,6 +174,27 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
