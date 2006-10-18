@@ -52,14 +52,13 @@
 \n
 <document filename="report01.pdf"\n
    xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-   tal:define="employee python: here.getDestinationSectionValue();\n
-                  employer python: here.getSourceSectionValue();\n
-                  paysheet_details python: here.PaySheetTransaction_getDetails();\n
-                  paysheet_categories python: paysheet_details[\'paysheet_categories\'];\n
-                  urssaf python: employer.getDestinationSectionValue();\n
-                  start_date python: here.getStartDate();\n
-\n
-                  boldstyle python:\'(\\\'FONT\\\', \\\'Helvetica-Bold\\\', 7)\'">\n
+   tal:define="employee            python: here.getDestinationSectionValue();\n
+               employer            python: here.getSourceSectionValue();\n
+               paysheet_details    python: here.PaySheetTransaction_getDetails();\n
+               paysheet_categories python: paysheet_details[\'paysheet_categories\'];\n
+               urssaf              python: employer.getDestinationSectionValue();\n
+               start_date          python: here.getStartDate();\n
+               boldstyle           python: \'(\\\'FONT\\\', \\\'Helvetica-Bold\\\', 7)\'">\n
 \n
 \n
     <title>Pay Sheet</title>\n
@@ -70,13 +69,13 @@
          <tr>\n
            <td colwidth="4.318cm">Nature</td>\n
            <td colwidth="3.81cm">Assiette</td>\n
-           <td colwidth="1.524cm">Montant</td>\n
+           <td colwidth="1.524cm">Base</td>\n
            <td colwidth="2.77cm">Taux part patronale</td>\n
            <td colwidth="2.288cm">Part patronale</td>\n
            <td colwidth="2.397cm">Taux part salariale</td>\n
            <td colwidth="1.959cm">Part salariale</td>\n
          </tr>\n
-  \n
+\n
          <tr tal:attributes="stylecmd boldstyle"> <!--stylecmd="(\'FONT\', \'Helvetica-Bold\', 7)"> -->\n
             <td>Salaire brut</td>\n
             <td> </td>\n
@@ -86,7 +85,7 @@
             <td> </td>\n
             <td tal:content="python: \'%.2f\' % paysheet_details[\'gross_salary\']" tal:condition="python: paysheet_details[\'gross_salary\'] not in (None, \'\')">???</td>\n
          </tr>\n
-        \n
+\n
          <tal:block tal:condition="python: paysheet_categories.has_key(\'no_cat\')">\n
            <tal:block define="no_cat_lines python: paysheet_categories[\'no_cat\'][\'lines\']">\n
              <tr tal:repeat="line no_cat_lines">\n
@@ -133,7 +132,7 @@
            <td> </td>\n
            <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'total_employee_share\']" tal:condition="python: paysheet_details[\'total_employee_share\'] not in (\'\', None)"> </tal:block></td>\n
          </tr>\n
-    \n
+\n
          <tr tal:attributes="stylecmd boldstyle">\n
            <td>Salaire Net Imposable</td>\n
            <td> </td>\n
@@ -170,7 +169,7 @@
        </table>\n
 \n
        <table rowheight="0.6cm"><tr><td> </td></tr></table>\n
-       \n
+\n
        <table style="cumul_conges">\n
          <tr>\n
            <td colwidth="11cm"> <tal:block tal:replace="python: \'Cumuls annuels (%s)\' % start_date.year()" tal:condition="python: start_date not in (\'\', None)"/></td>\n
@@ -178,7 +177,7 @@
            <td colwidth="5cm"> <!-- <tal:block tal:replace="python: \'Dur\xc3\xa9e des cong\xc3\xa9s pay\xc3\xa9s : ???\'"/> --> </td>\n
          </tr>\n
        </table>\n
-       \n
+\n
 \n
        <table style="cumul_conges_corps">\n
          <tr>\n
@@ -200,9 +199,9 @@
            <td> </td>\n
          </tr>\n
        </table>\n
-      \n
+\n
     </content>\n
-  \n
+\n
 </document>
 
 ]]></string> </value>
