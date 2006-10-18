@@ -68,7 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/surface/caisse_courante/billets_mutiles" %(context.getSource(),)\n
+            <value> <string># if sent to headquarter, line must not exist\n
+if not \'siege\' in context.getSource():\n
+  # if we sent to headquarter, we have order the document at one time\n
+  for workflow_item in context.Base_getWorkflowHistoryItemList(\'mutilated_banknote_workflow\',display=0):\n
+    if workflow_item.getProperty(\'action\')==\'order_action\':\n
+      return None\n
+\n
+return contex.getDestination()\n
 </string> </value>
         </item>
         <item>
@@ -127,6 +134,10 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_getiter_</string>
+                            <string>workflow_item</string>
+                            <string>None</string>
+                            <string>contex</string>
                           </tuple>
                         </value>
                     </item>
