@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSource(),)\n
+            <value> <string>if context.getSimulationState() == "deliver":\n
+  return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSource(),)\n
+else:\n
+  return None\n
 </string> </value>
         </item>
         <item>
@@ -121,6 +124,7 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
