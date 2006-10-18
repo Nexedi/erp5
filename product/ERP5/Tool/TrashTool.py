@@ -117,8 +117,8 @@ class TrashTool(BaseTool):
         for action in action_list:
           subobjects_dict['action_list'].append(action._getCopy(obj))
         wf_chain = getChainByType(self.getPortalObject())[1]
-        if wf_chain.has_key(object_id):
-          subobjects_dict['workflow_chain'] = wf_chain[object_id]
+        if wf_chain.has_key('chain_%s' % object_id):
+          subobjects_dict['workflow_chain'] = wf_chain['chain_%s' % object_id]
         else:
           subobjects_dict['workflow_chain'] = ''
         return subobjects_dict
