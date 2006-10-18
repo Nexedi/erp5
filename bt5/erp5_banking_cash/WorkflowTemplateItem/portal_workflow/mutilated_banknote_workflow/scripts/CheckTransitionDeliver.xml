@@ -110,7 +110,7 @@ elif state == "confirmed":\n
     msg = Message(domain = "ui", message="Counter Date is not opened")\n
     raise ValidationFailed, (msg,)\n
   # now check balance\n
-  resource = ob.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Mutilated Banknote Line\')\n
+  resource = ob.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Mutilated Banknote Line\', same_source=1)\n
   if resource == 2:\n
     msg = Message(domain="ui", message="No Returned banknote defined.")\n
     raise ValidationFailed, (msg,)\n
