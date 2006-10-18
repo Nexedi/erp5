@@ -76,9 +76,8 @@ class BankAccount(Folder, Coordinate, MetaNode):
       """
       value = self._baseGetReference(*args, **kw)
       if value in (None, ''):
-        # Try to get a skin named PortalType_getReference.
-        portal_type = self.getPortalType()
-        method = getattr(self, '%s_getReference' % portal_type.replace(' ', ''), None)
+        # Try to get a skin from type name
+        method = self._getTypeBasedMethod('getReference')
         if method is not None:
           return method(*args, **kw)
       return value
