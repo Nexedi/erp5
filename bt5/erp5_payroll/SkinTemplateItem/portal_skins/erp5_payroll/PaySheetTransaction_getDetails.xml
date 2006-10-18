@@ -201,13 +201,10 @@ for pay_sheet_line in object_list:\n
               pay_sheet_dict[\'employer_share_rate\'] = cell_price * 100\n
               if pay_sheet_dict[\'employer_share\'] not in (\'\', None):\n
                 total_employer_share = r_(total_employer_share + r_(pay_sheet_dict[\'employer_share\']))\n
-\n
         if range.endswith(\'forfait\'):\n
           pay_sheet_dict[\'base\']                = \'\'\n
           pay_sheet_dict[\'employer_share_rate\'] = \'\'\n
           pay_sheet_dict[\'employee_share_rate\'] = \'\'\n
-\n
-\n
     for key in [\'employee_share\',\'employee_share_rate\',\'employer_share\',\'employer_share_rate\']:\n
       if not (pay_sheet_dict.has_key(key)):\n
         pay_sheet_dict[key] = \'\' # so that we can display nothing\n

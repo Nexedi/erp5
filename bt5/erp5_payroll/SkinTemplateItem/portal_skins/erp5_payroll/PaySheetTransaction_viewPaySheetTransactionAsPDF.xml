@@ -68,8 +68,8 @@
        <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="decompte">\n
          <tr>\n
            <td colwidth="4.318cm">Nature</td>\n
-           <td colwidth="3.81cm">Assiette</td>\n
-           <td colwidth="1.524cm">Base</td>\n
+           <td colwidth="3.81cm">Base</td>\n
+           <td colwidth="1.524cm">Assiette</td>\n
            <td colwidth="2.77cm">Taux part patronale</td>\n
            <td colwidth="2.288cm">Part patronale</td>\n
            <td colwidth="2.397cm">Taux part salariale</td>\n
