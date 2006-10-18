@@ -70,7 +70,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     return ('erp5_base'
             , 'erp5_trade'
             , 'erp5_accounting'
-            #, 'baobab_unit_test'
             , 'erp5_banking_core'
             , 'erp5_banking_inventory'
             , 'erp5_banking_cash'
@@ -92,7 +91,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.mutilated_banknote_module = self.getMutilatedBanknoteModule()
     self.createManagerAndLogin()
     # create categories
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list = ['siege', 'paris'])
     # create resources
     self.createBanknotesAndCoins()
     # Before the test, we need to input the inventory
@@ -105,8 +104,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     line_list = [inventory_dict_line_1,]
     self.mutilated_banknote_vault = self.paris.surface.caisse_courante.billets_mutiles
     self.usual_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
+    self.hq_mutilated_banknote_vault = self.siege.surface.caisse_courante.billets_mutiles
+    self.hq_usual_vault = self.siege.surface.caisse_courante.encaisse_des_billets_et_monnaies
+    
     self.openCounterDate(site=self.paris)
     self.createCashInventory(source=None, destination=self.usual_vault, currency=self.currency_1,
+                             line_list=line_list)
+    self.createCashInventory(source=None, destination=self.hq_usual_vault, currency=self.currency_1,
                              line_list=line_list)
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
@@ -114,9 +118,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/paris')
+    self.organisation = self.organisation_module.newContent(id='baobab_org_hq', portal_type='Organisation',
+                                                            function='banking', group='baobab',  site='testsite/siege')
     # define the user
     user_dict = {
-        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1'],
+        'hq_super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/siege/surface/banque_interne/guichet_1']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
@@ -253,10 +260,26 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepTryDeliverWithExchangedLine(self, sequence=None, sequence_list=None, **kw):
     """
-    Try to plan with no amount defined on the document
+    Try to plan with exchanged line defined
     """
     self.assertEqual(len(self.mutilated_banknote.objectValues(portal_type='Exchanged Mutilated Banknote Line')), 1.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+
+  def stepTryOrderWithExchangedLine(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to order with exchanged line defined
+    """
+    self.assertEqual(len(self.mutilated_banknote.objectValues(portal_type='Exchanged Mutilated Banknote Line')), 1.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'order_action', wf_id='mutilated_banknote_workflow')
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "planned")
+
+  def stepOrderDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+    Order mutilated banknote operation
+    """
+    self.workflow_tool.doActionFor(self.mutilated_banknote, 'order_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "ordered")
 
   def stepDelExchangedLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -270,6 +293,18 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.mutilated_banknote.setSourceTotalAssetPrice(50000.0)
     self.assertEqual(self.mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
+    self.workflow_tool.doActionFor(self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "delivered")
+
+  def stepDeliverDocumentAfterHQRequest(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver mutilated banknote operation
+    """
+    self.mutilated_banknote.setSourceTotalAssetPrice(50000.0)
+    self.assertEqual(self.mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
+    self.mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
+    self.assertEqual(self.mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "delivered")
@@ -320,6 +355,34 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.mutilated_banknote.objectValues(portal_type="Outgoing Mutilated Banknote Line")), 0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
 
+  def stepTryDeliverFromOrderedStateWithWrongAmountDefined(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to deliver with wrong amount defined on the document at state ordered
+    """
+    self.mutilated_banknote.setDestinationTotalAssetPrice(4000.0)
+    self.assertEqual(self.mutilated_banknote.getDestinationTotalAssetPrice(), 4000.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "ordered")
+
+  def stepTryDeliverWithWrongAmountDefined(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to deliver with wrong amount defined on the document at state ordered
+    """
+    self.mutilated_banknote.setDestinationTotalAssetPrice(4000.0)
+    self.assertEqual(self.mutilated_banknote.getDestinationTotalAssetPrice(), 4000.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "confirmed")
+
+  def stepDeliverDocumentFromOrderedState(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver mutilated banknote operation
+    """
+    self.mutilated_banknote.setDestinationTotalAssetPrice(0.0)
+    self.assertEqual(self.mutilated_banknote.getDestinationTotalAssetPrice(), 0.0)
+    self.workflow_tool.doActionFor(self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "delivered")
+
   def stepAddOutgoingLine(self, sequence=None, sequence_list=None, **kw):
     """
     """
@@ -328,7 +391,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                                ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
                                self.quantity_10000)
     self.stepTic()
-    self.assertEqual(len(self.mutilated_banknote.objectValues()), 3)
     # get the line
     self.outgoing_line = getattr(self.mutilated_banknote, 'outgoing_line')
     self.assertEqual(self.outgoing_line.getPortalType(), 'Outgoing Mutilated Banknote Line')
@@ -341,7 +403,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       cell = self.outgoing_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
-      self.assertEqual(cell.getBaobabSource(), self.usual_vault.getRelativeUrl())
+      self.assertEqual(cell.getBaobabSource(), None)
       self.assertEqual(cell.getBaobabDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
         self.assertEqual(cell.getQuantity(), 2.0)
@@ -349,15 +411,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
         self.assertEqual(cell.getQuantity(), 3.0)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
-
-  def stepDeliverDocument2(self, sequence=None, sequence_list=None, **kw):
-    """
-    deliver mutilated banknote operation
-    """
-    self.assertNotEqual(len(self.mutilated_banknote.objectValues(portal_type='Outgoing Mutilated Banknote Line')), 0)
-    self.workflow_tool.doActionFor(self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
-    self.assertEqual(self.mutilated_banknote.getSimulationState(), "delivered")
 
   def stepCheckFinalInventoryWithPayBack(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -368,7 +421,181 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
 
+  def stepCheckFinalInventoryWithPayBackAfterHQRequest(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
 
+  #
+  # Headquarter part
+  #
+  def stepHQLogin(self, sequence=None, sequence_list=None, **kw):
+    """
+    Login as a headquarter user    
+    """
+    self.logout()
+    self.login("hq_super_user")
+
+  def stepHQLogout(self, sequence=None, sequence_list=None, **kw):
+    """
+    Login as a headquarter user    
+    """
+    self.logout()
+    self.login("super_user")
+
+  def stepCheckHQInitialInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in mutilated_banknote
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we have 12 coin of 200 in mutilated_banknote
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+
+  def stepCreateHQMutilatedBanknote(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create a mutilated banknote document and check it
+    """
+    self.hq_mutilated_banknote = self.mutilated_banknote_module.newContent(id='hq_mutilated_banknote',
+                                                                        portal_type='Mutilated Banknote',
+                                                                        source_total_asset_price=0.0,
+                                                                        destination_total_asset_price=0.0
+                                                                        )
+    self.stepTic()
+    self.hq_mutilated_banknote.edit(source_trade='site/testsite/paris')
+    self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 2)
+    # get the document
+    self.hq_mutilated_banknote = getattr(self.mutilated_banknote_module, 'hq_mutilated_banknote')
+    self.assertEqual(self.hq_mutilated_banknote.getPortalType(), 'Mutilated Banknote')
+    self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege')
+    self.assertEqual(self.hq_mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
+    self.assertEqual(self.hq_mutilated_banknote.getDestination(), None)
+
+  def stepTryPlanHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to plan with no amount defined on the document
+    """
+    self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 0.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'plan_action', wf_id='mutilated_banknote_workflow')
+
+  def stepCreateHQIncomingLine(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the incoming mutilated banknote line with banknotes of 10000 and check it has been well created
+    """
+    # create the  line
+    self.addCashLineToDelivery(self.hq_mutilated_banknote, 'hq_incoming_line', 'Incoming Mutilated Banknote Line', self.billet_10000,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/mutilated') + self.variation_list,
+            self.quantity_10000)
+    self.stepTic()
+    self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 1)
+    # get the  line
+    self.hq_incoming_line = getattr(self.hq_mutilated_banknote, 'hq_incoming_line')
+    self.assertEqual(self.hq_incoming_line.getPortalType(), 'Incoming Mutilated Banknote Line')
+    self.assertEqual(self.hq_incoming_line.getResourceValue(), self.billet_10000)
+    self.assertEqual(self.hq_incoming_line.getPrice(), 10000.0)
+    self.assertEqual(self.hq_incoming_line.getQuantityUnit(), 'unit')
+    # check we have two delivery cells: (one for year 1992 and one for 2003)
+    self.assertEqual(len(self.hq_incoming_line.objectValues()), 2)
+    for variation in self.variation_list:
+      cell = self.hq_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/mutilated')
+      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getResourceValue(), self.billet_10000)
+      self.assertEqual(cell.getBaobabSourceValue(), None)
+      self.assertEqual(cell.getBaobabDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
+      if cell.getId() == 'movement_0_0_0':
+        self.assertEqual(cell.getQuantity(), 2.0)
+      elif cell.getId() == 'movement_0_1_0':
+        self.assertEqual(cell.getQuantity(), 3.0)
+      else:
+        self.fail('Wrong cell created : %s' % cell.getId())
+
+  def stepTryPlanHQWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to plan with no amount defined on the document
+    """
+    self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 0.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'plan_action', wf_id='mutilated_banknote_workflow')
+
+  def stepPlanHQDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+    Plan mutilated banknote operation
+    """
+    self.hq_mutilated_banknote.setSourceTotalAssetPrice(50000.0)
+    self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
+    self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'plan_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "planned")
+
+  def stepDeliverHQDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver mutilated banknote operation
+    """
+    self.hq_mutilated_banknote.setSourceTotalAssetPrice(50000.0)
+    self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
+    self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "delivered")
+
+  def stepCheckHQFinalInventoryWithNoPayBack(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+
+  def stepClearHQMutilatedBanknoteModule(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove all operations in module
+    """
+    self.mutilated_banknote_module.deleteContent('hq_mutilated_banknote')    
+
+  def stepAddHQExchangedLine(self, sequence=None, sequence_list=None, **kw):
+    """
+    """
+    # create an exchanged
+    self.addCashLineToDelivery(self.hq_mutilated_banknote, 'hq_exchanged_line', 'Exchanged Mutilated Banknote Line', self.billet_10000,
+                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
+                               self.quantity_10000)
+    self.stepTic()
+    self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 2)
+    # get the line
+    self.hq_exchanged_line = getattr(self.hq_mutilated_banknote, 'hq_exchanged_line')
+    self.assertEqual(self.hq_exchanged_line.getPortalType(), 'Exchanged Mutilated Banknote Line')
+    self.assertEqual(self.hq_exchanged_line.getResourceValue(), self.billet_10000)
+    self.assertEqual(self.hq_exchanged_line.getPrice(), 10000.0)
+    self.assertEqual(self.hq_exchanged_line.getQuantityUnit(), 'unit')
+    # check we have two delivery cells: (one for year 1992 and one for 2003)
+    self.assertEqual(len(self.hq_exchanged_line.objectValues()), 2)
+    for variation in self.variation_list:
+      cell = self.hq_exchanged_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
+      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getResourceValue(), self.billet_10000)
+      self.assertEqual(cell.getBaobabSourceValue(), None)
+      self.assertEqual(cell.getBaobabDestination(), self.hq_usual_vault.getRelativeUrl())
+      if cell.getId() == 'movement_0_0_0':
+        self.assertEqual(cell.getQuantity(), 2.0)
+      elif cell.getId() == 'movement_0_1_0':
+        self.assertEqual(cell.getQuantity(), 3.0)
+      else:
+        self.fail('Wrong cell created : %s' % cell.getId())
+
+  def stepCheckHQFinalInventoryWithPayBack(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
 
   ##################################
   ##  Tests
@@ -400,9 +627,43 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'ClearMutilatedBanknoteModule'
 
     # sequence 3 : ask headquarters then no payback
+    sequence_string_3 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                        + 'CreateMutilatedBanknote Tic TryPlanWithNoLineDefined ' \
+                        + 'CreateIncomingLine Tic TryPlanWithNoAmountDefined ' \
+                        + 'PlanDocument Tic AddExchangedLine Tic ' \
+                        + 'TryOrderWithExchangedLine DelExchangedLine Tic ' \
+                        + 'OrderDocument Tic ' \
+                        + 'HQLogin CheckHQInitialInventory CreateHQMutilatedBanknote '\
+                        + 'Tic TryPlanHQWithNoLineDefined ' \
+                        + 'CreateHQIncomingLine Tic TryPlanHQWithNoAmountDefined ' \
+                        + 'PlanHQDocument Tic DeliverHQDocument Tic ' \
+                        + 'HQLogout CheckHQFinalInventoryWithNoPayBack ' \
+                        + 'ClearHQMutilatedBanknoteModule Tic ' \
+                        + 'TryDeliverFromOrderedStateWithWrongAmountDefined DeliverDocumentFromOrderedState Tic ' \
+                        + 'CheckFinalInventoryWithNoPayBack ClearMutilatedBanknoteModule'
+    
     # sequence 4 : ask headquarters then payback
+    sequence_string_4 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                        + 'CreateMutilatedBanknote Tic TryPlanWithNoLineDefined ' \
+                        + 'CreateIncomingLine Tic TryPlanWithNoAmountDefined ' \
+                        + 'PlanDocument Tic AddExchangedLine Tic ' \
+                        + 'TryOrderWithExchangedLine DelExchangedLine Tic ' \
+                        + 'OrderDocument Tic ' \
+                        + 'HQLogin CheckHQInitialInventory CreateHQMutilatedBanknote '\
+                        + 'Tic TryPlanHQWithNoLineDefined ' \
+                        + 'CreateHQIncomingLine Tic TryPlanHQWithNoAmountDefined ' \
+                        + 'PlanHQDocument Tic AddHQExchangedLine Tic DeliverHQDocument Tic ' \
+                        + 'HQLogout CheckHQFinalInventoryWithPayBack ' \
+                        + 'ClearHQMutilatedBanknoteModule Tic '\
+                        + 'TryConfirmWithNoAmountDefined ConfirmDocument Tic ' \
+                        + 'TryDeliverWithNoLineDefined AddOutgoingLine Tic ' \
+                        + 'TryDeliverWithWrongAmountDefined DeliverDocumentAfterHQRequest Tic ' \
+                        + 'CheckFinalInventoryWithPayBackAfterHQRequest'
+
     sequence_list.addSequenceString(sequence_string_1)
     sequence_list.addSequenceString(sequence_string_2)
+    sequence_list.addSequenceString(sequence_string_3)
+    sequence_list.addSequenceString(sequence_string_4)
     # play the sequence
     sequence_list.play(self)
 
