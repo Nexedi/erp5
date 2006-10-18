@@ -82,6 +82,9 @@ if state == "planned":\n
     if \'siege\' not in ob.getSource() or ob.getSource() == ob.getSourceTrade():\n
       msg = Message(domain = "ui", message="You can\'t do this transition.")\n
       raise ValidationFailed, (msg,)\n
+  if ob.getDestinationTotalAssetPrice() != 0:\n
+    msg = Message(domain = "ui", message="Returned amount must be 0.")\n
+    raise ValidationFailed, (msg,)\n
 \n
 # check no banknote defined, no pay back\n
 elif state == "ordered":\n
