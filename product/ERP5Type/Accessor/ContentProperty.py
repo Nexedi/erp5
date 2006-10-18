@@ -208,7 +208,7 @@ class Setter(Method):
       o = None
       available_id = None
       for k in self._storage_id_list:
-        o = getattr(instance, k, None)
+        o = instance._getOb(k, None)
         if o is None: available_id = k
         if o is not None and o.portal_type in self._portal_type:
           if self._reindex:

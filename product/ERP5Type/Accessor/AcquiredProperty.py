@@ -154,7 +154,7 @@ class Setter(Method):
     def __call__(self, instance, value, *args, **kw):
       from Products.ERP5Type.Utils import assertAttributePortalType
       assertAttributePortalType(instance, self._storage_id, self._portal_type)
-      o = getattr(instance, self._storage_id, None)
+      o = instance._getOb(self._storage_id, None)
       if o is None:
         o = instance.newContent(id = self._storage_id, portal_type = self._portal_type[0])
       if self._reindex:
