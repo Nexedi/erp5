@@ -730,7 +730,7 @@ msgid "Cancel Transaction"
 msgstr "Annuler la transaction"
 
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulé"
 
 msgid "Career"
 msgstr "Carrière"
@@ -931,7 +931,7 @@ msgid "Validate Accounting Transaction"
 msgstr "Valider le brouillard"
 
 msgid "Closed"
-msgstr ""
+msgstr "Fermé"
 
 msgid "Closing Date"
 msgstr "Date de Cloture"
@@ -1471,10 +1471,10 @@ msgid "Employer share rate (%)"
 msgstr "Part employeur (%)"
 
 msgid "Enable Preference"
-msgstr ""
+msgstr "Activer la préférence"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Activé"
 
 msgid "End"
 msgstr "Fin"
@@ -2086,7 +2086,7 @@ msgid "Omit Empty Accounts"
 msgstr "Sans comptes vides"
 
 msgid "Open"
-msgstr ""
+msgstr "Ouvert"
 
 msgid "OpenOffice Source File"
 msgstr ""
@@ -2758,7 +2758,7 @@ msgid "Simulation Tool"
 msgstr ""
 
 msgid "Site"
-msgstr "Atelier"
+msgstr "Site"
 
 msgid "Site Properties"
 msgstr ""
