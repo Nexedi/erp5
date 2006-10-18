@@ -475,7 +475,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>MonetaryIssueModule_cviewMonetaryIssueList</string> </value>
+                    <value> <string>MonetaryIssueModule_viewMonetaryIssueList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -488,6 +488,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -526,7 +530,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>monetray_issue_list_selection</string> </value>
+                    <value> <string>monetary_issue_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

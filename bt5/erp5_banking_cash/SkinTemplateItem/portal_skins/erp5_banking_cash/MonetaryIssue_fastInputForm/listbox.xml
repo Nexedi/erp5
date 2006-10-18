@@ -458,6 +458,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -520,7 +524,36 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>selection</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>cash_number_range_start</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>cash_number_range_stop</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_translated_title</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+<string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

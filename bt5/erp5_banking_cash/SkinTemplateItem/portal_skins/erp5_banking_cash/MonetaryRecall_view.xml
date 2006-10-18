@@ -68,7 +68,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>rigth</string>
+                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
@@ -116,7 +116,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>rigth</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_start_date</string>
