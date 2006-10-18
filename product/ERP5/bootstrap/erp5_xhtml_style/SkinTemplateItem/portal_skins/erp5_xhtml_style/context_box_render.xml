@@ -51,6 +51,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -228,26 +234,31 @@ XXX: Folder_filter accesses selection directly\n
         <tal:block tal:condition="request/selection_index | nothing">\n
           <span class="separator"></span>\n
           <a class="jump_first" title="First"\n
-            tal:attributes="href python: \'portal_selections/viewFirst?%s\' % (http_parameters, )">\n
+            tal:attributes="href python: \'portal_selections/viewFirst?%s\' % (http_parameters, )"\n
+            i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">First</span>\n
           </a>\n
           <a class="jump_previous" title="Previous"\n
-            tal:attributes="href python: \'portal_selections/viewPrevious?%s\' % (http_parameters, )">\n
+            tal:attributes="href python: \'portal_selections/viewPrevious?%s\' % (http_parameters, )"\n
+            i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
           </a>\n
-          <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request[\'selection_name\'])">\n
+          <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request[\'selection_name\'])"\n
+             i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
           </a>\n
           <a class="jump_next" title="Next"\n
-            tal:attributes="href python: \'portal_selections/viewNext?%s\' % (http_parameters, )">\n
+            tal:attributes="href python: \'portal_selections/viewNext?%s\' % (http_parameters, )"\n
+            i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Next</span>\n
           </a>\n
           <a class="jump_last" title="Last"\n
-            tal:attributes="href python: \'portal_selections/viewLast?%s\' % (http_parameters, )">\n
+            tal:attributes="href python: \'portal_selections/viewLast?%s\' % (http_parameters, )"\n
+            i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Last</span>\n
           </a>\n
@@ -256,7 +267,8 @@ XXX: Folder_filter accesses selection directly\n
       <tal:block tal:condition="list_mode | nothing">\n
         <span class="separator"></span>\n
         <a tal:condition="search_actions" class="find" title="Find"\n
-           tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')">\n
+           tal:attributes="href python: here.ERP5XhtmlStyle_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
+           i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Find</span>\n
         </a>\n
@@ -343,7 +355,8 @@ XXX: Folder_filter accesses selection directly\n
 \n
   <p class="clear"></p>\n
 \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
