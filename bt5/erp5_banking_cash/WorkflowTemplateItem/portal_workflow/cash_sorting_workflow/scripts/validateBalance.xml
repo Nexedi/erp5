@@ -79,8 +79,8 @@ resource =  transaction.CashDelivery_checkCounterInventory(source=vault, portal_
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
-input_cash = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash Sorting Line\')\n
-output_cash = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash Sorting Line\')\n
+input_cash = transaction.getTotalPrice(fast=0,portal_type=(\'Incoming Cash Sorting Line\',\'Cash Delivery Cell\'))\n
+output_cash = transaction.getTotalPrice(fast=0,portal_type=(\'Outgoing Cash Sorting Line\',\'Cash Delivery Cell\'))\n
 \n
 if input_cash != output_cash :\n
   msg=Message(domain="ui", message="Incoming cash amount is different from outgoing cash amount.")\n

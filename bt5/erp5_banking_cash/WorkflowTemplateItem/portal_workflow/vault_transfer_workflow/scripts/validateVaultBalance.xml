@@ -74,9 +74,16 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
-\n
+date = transaction.getStartDate()\n
 vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
+\n
+# check we are in an opened accounting day\n
+if not transaction.Baobab_checkCounterDateOpen(site=vaultDestination, date=date):\n
+  msg = Message(domain = "ui", message="Counter Date is not opened")\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
 if \'reserve\' in vault and \'salle_tri\' in vaultDestination:\n
   msg = Message(domain="ui", message="Cannot transfer ressource to ${destination} from ${source}.",\n
                 mapping={\'source\':transaction.getSourceValue().getParentValue().getTitle(),\n
@@ -149,6 +156,7 @@ elif resource <> 0 :\n
                             <string>Message</string>
                             <string>_getattr_</string>
                             <string>transaction</string>
+                            <string>date</string>
                             <string>vault</string>
                             <string>vaultDestination</string>
                             <string>msg</string>

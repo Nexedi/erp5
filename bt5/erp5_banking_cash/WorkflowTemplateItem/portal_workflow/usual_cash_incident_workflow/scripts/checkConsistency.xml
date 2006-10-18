@@ -73,8 +73,14 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 txn = state_change[\'object\']\n
-in_list = txn.searchFolder(portal_type=\'Incoming Usual Cash Incident Line\')\n
-out_list = txn.searchFolder(portal_type=\'Outgoing Usual Cash Incident Line\')\n
+in_list = txn.objectValues(portal_type=\'Incoming Usual Cash Incident Line\')\n
+out_list = txn.objectValues(portal_type=\'Outgoing Usual Cash Incident Line\')\n
+\n
+var_type =txn.getIncidentType()\n
+var_source_transport =txn.getSourceTransport()\n
+if (var_type == \'reception\' and var_source_transport is None):\n
+   msg = Message(domain = "ui", message="Remote Site not null.")\n
+   raise ValidationFailed, (msg,)\n
 \n
 price = txn.getSourceTotalAssetPrice()\n
 in_price = txn.getTotalPrice(deliveryLineType=\'Incoming Usual Cash Incident Line\')\n
@@ -95,6 +101,12 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -141,11 +153,14 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>_getattr_</string>
                             <string>in_list</string>
                             <string>out_list</string>
+                            <string>var_type</string>
+                            <string>var_source_transport</string>
+                            <string>None</string>
+                            <string>msg</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>len</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
@@ -168,6 +183,27 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

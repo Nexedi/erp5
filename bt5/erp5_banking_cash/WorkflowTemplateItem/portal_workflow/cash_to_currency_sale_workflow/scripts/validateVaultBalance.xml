@@ -98,8 +98,10 @@ if not transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transa
 resource_one = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Sale Line\')\n
 \n
 \n
-billetage_entre = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash To Currency Sale Line\')\n
-billetage_sorti = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash To Currency Sale Line\')\n
+#billetage_entre = transaction.getTotalPrice(deliveryLineType=\'Incoming Cash To Currency Sale Line\')\n
+billetage_entre = transaction.getTotalPrice(portal_type=[\'Incoming Cash To Currency Sale Line\',\'Cash Delivery Cell\'],fast=0)\n
+#billetage_sorti = transaction.getTotalPrice(deliveryLineType=\'Outgoing Cash To Currency Sale Line\')\n
+billetage_sorti = transaction.getTotalPrice(portal_type=[\'Outgoing Cash To Currency Sale Line\', \'Cash Delivery Cell\'],fast=0)\n
 \n
 \n
 base_price = transaction.getSourceTotalAssetPrice()\n
