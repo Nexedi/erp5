@@ -583,7 +583,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           container_ids = container.objectIds()
           subobjects_dict = {}
           # Object already exists
-          if object_id in container_ids:
+          if object_id in container_ids:     
             old_obj = container._getOb(object_id)
             if hasattr(aq_base(old_obj), 'groups'):
               # we must keep original order groups
@@ -3458,13 +3458,15 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     localizer = context.getPortalObject().Localizer
-    for lang in self._archive.keys():
-      # Export only erp5_ui at the moment.
-      # This is safer against information leak.
-      for catalog in ('erp5_ui', ):
-        path = os.path.join(lang, catalog)
-        mc = localizer._getOb(catalog)
-        self._objects[path] = mc.manage_export(lang)
+    for lang_key in self._archive.keys():
+      if '|' in lang_key:
+        lang, catalog = lang_key.split(' | ')
+      else: # XXX backward compatibilty
+        lang = lang_key
+        catalog = 'erp5_ui'
+      path = os.path.join(lang, catalog)
+      mc = localizer._getOb(catalog)
+      self._objects[path] = mc.manage_export(lang)
 
   def preinstall(self, context, installed_bt, **kw):
     modified_object_list = {}
