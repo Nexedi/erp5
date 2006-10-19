@@ -465,10 +465,11 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a mutilated banknote document and check it
     """
     self.hq_mutilated_banknote = self.mutilated_banknote_module.newContent(id='hq_mutilated_banknote',
-                                                                        portal_type='Mutilated Banknote',
-                                                                        source_total_asset_price=0.0,
-                                                                        destination_total_asset_price=0.0
-                                                                        )
+                                                                           portal_type='Mutilated Banknote',
+                                                                           source_total_asset_price=0.0,
+                                                                           destination_total_asset_price=0.0,
+                                                                           destination_value=self.mutilated_banknote_vault
+                                                                           )
     self.stepTic()
     self.hq_mutilated_banknote.edit(source_trade='site/testsite/paris')
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 2)
@@ -477,7 +478,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getPortalType(), 'Mutilated Banknote')
     self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege')
     self.assertEqual(self.hq_mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
-    self.assertEqual(self.hq_mutilated_banknote.getDestination(), None)
+    self.assertEqual(self.hq_mutilated_banknote.getDestination(), self.mutilated_banknote_vault.getRelativeUrl())
 
   def stepTryPlanHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
