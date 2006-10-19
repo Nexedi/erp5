@@ -36,25 +36,30 @@ try:
 except ImportError:
   pass
 
+# Quiet messages when installing products
+install_product_quiet = 0
+# Quiet messages when installing business templates
+install_bt5_quiet = 0
+
 # Std Zope Products
-ZopeTestCase.installProduct('ExtFile')
-ZopeTestCase.installProduct('Photo')
-ZopeTestCase.installProduct('Formulator')
-ZopeTestCase.installProduct('FCKeditor')
-ZopeTestCase.installProduct('ZSQLMethods')
-ZopeTestCase.installProduct('ZMySQLDA')
-ZopeTestCase.installProduct('ZSQLCatalog')
-ZopeTestCase.installProduct('ZMailIn')
-ZopeTestCase.installProduct('ZGDChart')
-ZopeTestCase.installProduct('ZCTextIndex')
-ZopeTestCase.installProduct('MailHost')
-ZopeTestCase.installProduct('PageTemplates')
-ZopeTestCase.installProduct('PythonScripts')
-ZopeTestCase.installProduct('ExternalMethod')
+ZopeTestCase.installProduct('ExtFile', quiet=install_product_quiet)
+ZopeTestCase.installProduct('Photo', quiet=install_product_quiet)
+ZopeTestCase.installProduct('Formulator', quiet=install_product_quiet)
+ZopeTestCase.installProduct('FCKeditor', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZSQLMethods', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZMySQLDA', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZSQLCatalog', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZMailIn', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZGDChart', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZCTextIndex', quiet=install_product_quiet)
+ZopeTestCase.installProduct('MailHost', quiet=install_product_quiet)
+ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
+ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
 try:
   # Workaround iHotFix patch that doesn't work with
   # ZopeTestCase REQUESTs
-  ZopeTestCase.installProduct('iHotfix')
+  ZopeTestCase.installProduct('iHotfix', quiet=install_product_quiet)
   from Products import iHotfix
   from StringIO import StringIO as OrigStringIO
   from types import UnicodeType
@@ -71,41 +76,41 @@ try:
   iHotfix.iHotfixStringIO = UnicodeSafeStringIO
 except ImportError:
   pass
-ZopeTestCase.installProduct('Localizer')
-ZopeTestCase.installProduct('TimerService')
+ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
+ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
 
 # CMF
-ZopeTestCase.installProduct('CMFCore')
-ZopeTestCase.installProduct('CMFDefault')
-ZopeTestCase.installProduct('CMFTopic')
-ZopeTestCase.installProduct('DCWorkflow')
-ZopeTestCase.installProduct('CMFCalendar')
+ZopeTestCase.installProduct('CMFCore', quiet=install_product_quiet)
+ZopeTestCase.installProduct('CMFDefault', quiet=install_product_quiet)
+ZopeTestCase.installProduct('CMFTopic', quiet=install_product_quiet)
+ZopeTestCase.installProduct('DCWorkflow', quiet=install_product_quiet)
+ZopeTestCase.installProduct('CMFCalendar', quiet=install_product_quiet)
 
 # Based on CMF
-ZopeTestCase.installProduct('CMFPhoto')
-ZopeTestCase.installProduct('BTreeFolder2')
-ZopeTestCase.installProduct('CMFReportTool') # Not required by ERP5Type but required by ERP5Form
-ZopeTestCase.installProduct('CMFMailIn')
-ZopeTestCase.installProduct('TranslationService')
+ZopeTestCase.installProduct('CMFPhoto', quiet=install_product_quiet)
+ZopeTestCase.installProduct('BTreeFolder2', quiet=install_product_quiet)
+ZopeTestCase.installProduct('CMFReportTool', quiet=install_product_quiet) # Not required by ERP5Type but required by ERP5Form
+ZopeTestCase.installProduct('CMFMailIn', quiet=install_product_quiet)
+ZopeTestCase.installProduct('TranslationService', quiet=install_product_quiet)
 
 # Security Stuff
-ZopeTestCase.installProduct('NuxUserGroups')
-ZopeTestCase.installProduct('PluggableAuthService')
-ZopeTestCase.installProduct('ERP5Security')
+ZopeTestCase.installProduct('NuxUserGroups', quiet=install_product_quiet)
+ZopeTestCase.installProduct('PluggableAuthService', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5Security', quiet=install_product_quiet)
 
 # Debugging
-ZopeTestCase.installProduct('VerboseSecurity')
-ZopeTestCase.installProduct('Zelenium')
+ZopeTestCase.installProduct('VerboseSecurity', quiet=install_product_quiet)
+ZopeTestCase.installProduct('Zelenium', quiet=install_product_quiet)
 
 # ERP5
-ZopeTestCase.installProduct('CMFActivity')
-ZopeTestCase.installProduct('ERP5Catalog')
-ZopeTestCase.installProduct('ERP5Type')
-ZopeTestCase.installProduct('ERP5Form')
-ZopeTestCase.installProduct('ERP5SyncML')
-ZopeTestCase.installProduct('CMFCategory')
-ZopeTestCase.installProduct('ERP5')
-ZopeTestCase.installProduct('ZMySQLDDA')
+ZopeTestCase.installProduct('CMFActivity', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5Catalog', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5Type', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5Form', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5SyncML', quiet=install_product_quiet)
+ZopeTestCase.installProduct('CMFCategory', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZMySQLDDA', quiet=install_product_quiet)
 
 # Install everything else which looks like related to ERP5
 from OFS.Application import get_products
@@ -119,7 +124,7 @@ for priority, product_name, index, product_dir in get_products():
      or os.path.isdir(os.path.join(product_dir, product_name, 'PropertySheet')) \
      or os.path.isdir(os.path.join(product_dir, product_name, 'Constraint')) \
      or os.path.isdir(os.path.join(product_dir, product_name, 'Tool')):
-    ZopeTestCase.installProduct(product_name)
+    ZopeTestCase.installProduct(product_name, quiet=install_product_quiet)
 
 # Install Document types (circumvent different init order in ZopeTestCase)
 from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
@@ -297,6 +302,7 @@ class ERP5TypeTestCase(PortalTestCase):
                     portal_name=self.getPortalName(),
                     title=self.getTitle(),
                     create_activities=create_activities,
+                    quiet=install_bt5_quiet,
                     hot_reindexing=hot_reindexing)
       PortalTestCase.setUp(self)
       self._updateConnectionStrings()
