@@ -97,18 +97,23 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_title</string>
                         <string>listbox_base</string>
-                        <string>listbox_employer_share_rate</string>
-                        <string>listbox_base_name</string>
-                        <string>listbox_employee_share_rate</string>
+                        <string>listbox_service_id</string>
+                        <string>listbox_salary_range</string>
+                        <string>listbox_tax_category</string>
+                        <string>listbox_salary_range_title</string>
+                        <string>listbox_service_title</string>
+                        <string>listbox_employee_share</string>
+                        <string>listbox_employer_share</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>explanation</string>
+                      </list>
                     </value>
                 </item>
                 <item>

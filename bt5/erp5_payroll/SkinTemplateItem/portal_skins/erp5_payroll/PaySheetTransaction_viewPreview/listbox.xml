@@ -318,24 +318,36 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Tax Title</string>
+                          <string>service_title</string>
+                          <string>Contribution</string>
                         </tuple>
                         <tuple>
-                          <string>base_name</string>
-                          <string>Base Name</string>
+                          <string>salary_range_title</string>
+                          <string>Base Type</string>
                         </tuple>
                         <tuple>
                           <string>base</string>
                           <string>Base Value</string>
                         </tuple>
                         <tuple>
-                          <string>employer_share_rate</string>
-                          <string>Employer Share Rate (%)</string>
+                          <string>employer_share</string>
+                          <string>Employer Share</string>
                         </tuple>
                         <tuple>
-                          <string>employee_share_rate</string>
-                          <string>Employee Share Rate (%)</string>
+                          <string>employee_share</string>
+                          <string>Employee Share</string>
+                        </tuple>
+                        <tuple>
+                          <string>service_id</string>
+                          <string>Service ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>salary_range</string>
+                          <string>Salary Range</string>
+                        </tuple>
+                        <tuple>
+                          <string>tax_category</string>
+                          <string>Tax Category</string>
                         </tuple>
                       </list>
                     </value>
@@ -368,24 +380,36 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Tax Title</string>
+                          <string>service_title</string>
+                          <string>Contribution</string>
                         </tuple>
                         <tuple>
-                          <string>base_name</string>
-                          <string>Base Name</string>
+                          <string>salary_range_title</string>
+                          <string>Base Type</string>
                         </tuple>
                         <tuple>
                           <string>base</string>
                           <string>Base Value</string>
                         </tuple>
                         <tuple>
-                          <string>employer_share_rate</string>
-                          <string>Employer Share Rate (%)</string>
+                          <string>employer_share</string>
+                          <string>Employer Share</string>
                         </tuple>
                         <tuple>
-                          <string>employee_share_rate</string>
-                          <string>Employee Share Rate (%)</string>
+                          <string>employee_share</string>
+                          <string>Employee Share</string>
+                        </tuple>
+                        <tuple>
+                          <string>service_id</string>
+                          <string>Service ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>salary_range</string>
+                          <string>Salary Range</string>
+                        </tuple>
+                        <tuple>
+                          <string>tax_category</string>
+                          <string>Tax Category</string>
                         </tuple>
                       </list>
                     </value>
@@ -435,12 +459,24 @@
                           <string>Base Value</string>
                         </tuple>
                         <tuple>
-                          <string>employer_share_rate</string>
-                          <string>Employer Share Rate (%)</string>
+                          <string>employer_share</string>
+                          <string>Employer Share</string>
                         </tuple>
                         <tuple>
-                          <string>employee_share_rate</string>
-                          <string>Employee Share Rate (%)</string>
+                          <string>employee_share</string>
+                          <string>Employee Share</string>
+                        </tuple>
+                        <tuple>
+                          <string>service_id</string>
+                          <string>Service ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>salary_range</string>
+                          <string>Salary Range</string>
+                        </tuple>
+                        <tuple>
+                          <string>tax_category</string>
+                          <string>Tax Category</string>
                         </tuple>
                       </list>
                     </value>
@@ -484,6 +520,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -522,12 +562,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Tax Title</string>
+                          <string>service_title</string>
+                          <string>Contribution</string>
                         </tuple>
                         <tuple>
                           <string>base_name</string>
-                          <string>Base Name</string>
+                          <string>Base Type</string>
                         </tuple>
                       </list>
                     </value>

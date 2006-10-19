@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_base_name</string> </value>
+            <value> <string>listbox_tax_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Base Name</string> </value>
+                    <value> <string>Tax Category</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
