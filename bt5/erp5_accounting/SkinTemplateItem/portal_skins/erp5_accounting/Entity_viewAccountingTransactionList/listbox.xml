@@ -429,8 +429,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>group</string>
-                          <string>group</string>
+                          <string>account_type</string>
+                          <string>Account Type</string>
                         </tuple>
                       </list>
                     </value>
