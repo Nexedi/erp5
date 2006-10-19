@@ -75,7 +75,7 @@ if not \'siege\' in context.getSource():\n
     if workflow_item.getProperty(\'action\')==\'order_action\':\n
       return None\n
 \n
-return contex.getDestination()\n
+return context.getDestination()\n
 </string> </value>
         </item>
         <item>
@@ -137,7 +137,6 @@ return contex.getDestination()\n
                             <string>_getiter_</string>
                             <string>workflow_item</string>
                             <string>None</string>
-                            <string>contex</string>
                           </tuple>
                         </value>
                     </item>
