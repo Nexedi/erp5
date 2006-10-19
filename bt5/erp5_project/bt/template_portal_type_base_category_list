@@ -3,6 +3,7 @@ Project Milestone | predecessor
 Project | predecessor
 Sale Invoice Transaction | source_project
 Sale Order Line | predecessor
+Sale Order Milestone | predecessor
 Sale Packing List Line | predecessor
 Task Report | aggregate
 Task Report | predecessor

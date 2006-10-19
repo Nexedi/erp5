@@ -46,12 +46,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -88,9 +82,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_requirement_logical_path_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -103,8 +95,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_source_title</string>
                         <string>my_source_project_title</string>
-                        <string>my_destination_project_title</string>
                       </list>
                     </value>
                 </item>
@@ -112,7 +104,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_predecessor_title_list</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_project_title</string>
                       </list>
                     </value>
                 </item>
@@ -121,7 +114,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeLine_viewProject</string> </value>
+            <value> <string>TradeLine_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -129,7 +122,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TradeLine_view</string> </value>
+            <value> <string>TradeLine_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

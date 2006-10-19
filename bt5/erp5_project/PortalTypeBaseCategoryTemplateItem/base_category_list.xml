@@ -14,6 +14,9 @@
  <portal_type id="Sale Order Line">
   <item>predecessor</item>
  </portal_type>
+ <portal_type id="Sale Order Milestone">
+  <item>predecessor</item>
+ </portal_type>
  <portal_type id="Sale Packing List Line">
   <item>predecessor</item>
  </portal_type>

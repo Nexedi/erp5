@@ -47,7 +47,15 @@ Requirement Module | view
 Requirement | fast_input
 Requirement | print_pdf
 Requirement | view
+Sale Order Line | line_profile
 Sale Order Line | project
+Sale Order Milestone | history
+Sale Order Milestone | line_profile
+Sale Order Milestone | metadata
+Sale Order Milestone | print
+Sale Order Milestone | project
+Sale Order Milestone | view
+Sale Packing List Line | line_profile
 Sale Packing List Line | project
 Task Line | history
 Task Line | metadata
