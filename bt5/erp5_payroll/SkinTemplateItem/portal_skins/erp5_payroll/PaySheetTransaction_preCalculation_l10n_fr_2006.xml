@@ -75,6 +75,7 @@
     according french fiscal & social rules for a SME.\n
 """\n
 \n
+kw = {}\n
 \n
 \n
 ##########################\n
@@ -82,7 +83,6 @@
 # This part depend mostly of the current localisation.\n
 ##########################\n
 \n
-global paysheet\n
 paysheet      = context.getObject()\n
 paysheet_type = paysheet.getPortalType()\n
 \n
@@ -168,66 +168,13 @@ else:\n
 \n
 \n
 ##########################\n
-# This part of the script create the data structure designed to hold the result of pre calculation.\n
-# TODO: This part must be generic to be moved outside this localized script. Probably in PaySheetTransaction_preCalculation.\n
-##########################\n
-\n
-# \'d\' is the dict which contain the default values of the Pay Sheet fast input\n
-d = {}\n
-\n
-# During 06/2005 service module has been renamed service_module\n
-# both names are supported\n
-# XXX This should definitly use portal_catalog !!!\n
-# XXX The following code will be deprecated when the Payroll Service portal type will be used\n
-erp5site = context.portal_url.getPortalObject()\n
-if hasattr(erp5site, \'payroll_service_module\'):\n
-  service_module = erp5site.payroll_service_module\n
-elif hasattr(erp5site, \'service_module\'):\n
-  service_module = erp5site.service_module\n
-else:\n
-  service_module = erp5site.service\n
-\n
-# Check service validity\n
-# TODO: Use a validation workflow on Payroll Service and check the validity of a Service there\n
-# TODO: Only choose services of the current localisation.\n
-paysheet_services = []\n
-for service in service_module.objectValues():\n
-  base_cat = service.getVariationRangeBaseCategoryList()\n
-  if \'tax_category\' in base_cat and \'salary_range\' in base_cat:\n
-    paysheet_services.append(service)\n
-\n
-\n
-for service in paysheet_services:\n
-  # XXX Is there a better way to get categorylist ? Something like getCategoryList(base=\'tax_category\') will be nice to have.\n
-  service_categories = service.getCategoryList()\n
-  tax_categories          = []\n
-  salary_range_categories = []\n
-  for category in service_categories:\n
-    if   category.startswith(\'tax_category/\'): tax_categories.append(category)\n
-    elif category.startswith(\'salary_range/\'): salary_range_categories.append(category)\n
-  for salary_range in salary_range_categories:\n
-    salary_range_object = context.portal_categories.resolveCategory(salary_range)\n
-    if salary_range_object is None:\n
-      context.log( "PaySheetTransaction_preCalculation"\n
-                 , "WARNING! Category not found: %s" % salary_range\n
-                 )\n
-    else:\n
-      preview_line_uid = "%s/%s" % (service.getId(), salary_range_object.getId())\n
-      d[preview_line_uid] = { \'employer_rate\': None\n
-                            , \'employee_rate\': None\n
-                            , \'base\'         : None\n
-                            }\n
-\n
-\n
-\n
-##########################\n
 # This part of the script calculate the default salaey range and rates.\n
 # This part is the core of the script: all rates and amounts are defined below.\n
 #\n
 # Here is a model of a line definition:\n
-#   d[\'payroll_service_id/salary_range_category_id\'] = \\\n
-#   { \'employer_rate\' : employer_rate_in_percent\n
-#   , \'employee_rate\' : employee_rate_in_percent\n
+#   kw[\'payroll_service_id/salary_range_category_id\'] = \\\n
+#   { \'employer_share\': employer_rate_in_percent\n
+#   , \'employee_share\': employee_rate_in_percent\n
 #   , \'base\'          : contribution_base_in_currency\n
 #   }\n
 # Rates and base must be floats.\n
@@ -241,93 +188,93 @@ if executive:\n
 else:\n
   employer_rate = 13.10\n
   employee_rate = 0.75\n
-d[\'sickness_insurance/salaire_brut\'] = \\\n
-{ \'employer_rate\' : employer_rate\n
-, \'employee_rate\' : employee_rate\n
+kw[\'sickness_insurance/salaire_brut\'] = \\\n
+{ \'employer_share\': employer_rate\n
+, \'employee_share\': employee_rate\n
 , \'base\'          : gross_salary\n
 }\n
 \n
 # Old-age insurance = Assurance vieillesse\n
 if executive:\n
-  d[\'oldage_insurance/salaire_plafonne\'] = \\\n
-  { \'employer_rate\' : None\n
-  , \'employee_rate\' : 6.65\n
+  kw[\'oldage_insurance/salaire_plafonne\'] = \\\n
+  { \'employer_share\': None\n
+  , \'employee_share\': 6.65\n
   , \'base\'          : limited_salary\n
   }\n
 else:\n
-  d[\'oldage_insurance/salaire_brut\'] = \\\n
-  { \'employer_rate\' : 1.60\n
-  , \'employee_rate\' : 0.10\n
+  kw[\'oldage_insurance/salaire_brut\'] = \\\n
+  { \'employer_share\': 1.60\n
+  , \'employee_share\': 0.10\n
   , \'base\'          : gross_salary\n
   }\n
-  d[\'oldage_insurance/salaire_plafonne\'] = \\\n
-  { \'employer_rate\' : 8.30\n
-  , \'employee_rate\' : 6.65\n
+  kw[\'oldage_insurance/salaire_plafonne\'] = \\\n
+  { \'employer_share\': 8.30\n
+  , \'employee_share\': 6.65\n
   , \'base\'          : limited_salary\n
   }\n
 \n
 # Family benefits = Allocations familliale\n
 if not executive:\n
-  d[\'family_benefits/salaire_brut\'] = \\\n
-  { \'employer_rate\' : 5.40\n
-  , \'employee_rate\' : None\n
+  kw[\'family_benefits/salaire_brut\'] = \\\n
+  { \'employer_share\': 5.40\n
+  , \'employee_share\': None\n
   , \'base\'          : gross_salary\n
   }\n
 \n
 # Industrial accident = Accidents du travail\n
 if not executive:\n
-  d[\'industrial_accident/salaire_brut\'] = \\\n
-  { \'employer_rate\' : 1.10\n
-  , \'employee_rate\' : None\n
+  kw[\'industrial_accident/salaire_brut\'] = \\\n
+  { \'employer_share\': 1.10\n
+  , \'employee_share\': None\n
   , \'base\'          : gross_salary\n
   }\n
 \n
 # Lodging helps = Aide au logemenent\n
 # if company_size > 9:\n
-#   d[\'lodging_helps/salaire_brut\'] = \\\n
-#   { \'employer_rate\' : 0.40\n
-#   , \'employee_rate\' : None\n
+#   kw[\'lodging_helps/salaire_brut\'] = \\\n
+#   { \'employer_share\': 0.40\n
+#   , \'employee_share\': None\n
 #   , \'base\'          : gross_salary\n
 #   }\n
 # else:\n
-#   d[\'lodging_helps/salaire_plafonne\'] = \\\n
-#   { \'employer_rate\' : 0.10\n
-#   , \'employee_rate\' : None\n
+#   kw[\'lodging_helps/salaire_plafonne\'] = \\\n
+#   { \'employer_share\': 0.10\n
+#   , \'employee_share\': None\n
 #   , \'base\'          : limited_salary\n
 #   }\n
 \n
 # Transport payment\n
 # TODO: rate depending of the town, 1.80 is the \'default\' value (when the town isn\'t referenced by laws)\n
 if company_size > 9:\n
-  d[\'transport_payment/salaire_brut\'] = \\\n
-  { \'employer_rate\' : 1.80\n
-  , \'employee_rate\' : None\n
+  kw[\'transport_payment/salaire_brut\'] = \\\n
+  { \'employer_share\': 1.80\n
+  , \'employee_share\': None\n
   , \'base\'          : gross_salary\n
   }\n
 \n
 # CSG\n
-d[\'csg_deductible/salaire_brut_csg\'] = \\\n
-{ \'employer_rate\' : None\n
-, \'employee_rate\' : 5.10\n
+kw[\'csg_deductible/salaire_brut_csg\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': 5.10\n
 , \'base\'          : 0.97 * gross_salary\n
 }\n
-d[\'csg_non_deductible/salaire_brut_csg\'] = \\\n
-{ \'employer_rate\' : None\n
-, \'employee_rate\' : 2.9\n
+kw[\'csg_non_deductible/salaire_brut_csg\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': 2.9\n
 , \'base\'          : 0.97 * gross_salary\n
 }\n
 \n
 # CRDS\n
-# d[\'crds/salaire_brut_crds\'] = \\\n
-# { \'employer_rate\' : None\n
-# , \'employee_rate\' : 0.50\n
+# kw[\'crds/salaire_brut_crds\'] = \\\n
+# { \'employer_share\': None\n
+# , \'employee_share\': 0.50\n
 # , \'base\'          : 0.97 * gross_salary\n
 # }\n
 \n
 # Unemployment insurance = Assurance chomage\n
-d[\'unemployment_insurance/salaire_brut\'] = \\\n
-{ \'employer_rate\' : 4.04\n
-, \'employee_rate\' : 2.44\n
+kw[\'unemployment_insurance/salaire_brut\'] = \\\n
+{ \'employer_share\': 4.04\n
+, \'employee_share\': 2.44\n
 , \'base\'          : gross_salary\n
 }\n
 \n
@@ -336,18 +283,18 @@ d[\'unemployment_insurance/salaire_brut\'] = \\\n
 fngs_employer_rate = 0.25\n
 if start_date >= DateTime(2006, 7, 1):\n
   fngs_employer_rate = 0.15\n
-d[\'fngs/salaire_brut\'] = \\\n
-{ \'employer_rate\' : fngs_employer_rate\n
-, \'employee_rate\' : None\n
+kw[\'fngs/salaire_brut\'] = \\\n
+{ \'employer_share\': fngs_employer_rate\n
+, \'employee_share\': None\n
 , \'base\'          : gross_salary\n
 }\n
 \n
 # ARRCO\n
 if not executive:\n
   if salary_slices.has_key(\'1\'):\n
-    d[\'arrco/tranche_1\'] = \\\n
-    { \'employer_rate\' : 4.5\n
-    , \'employee_rate\' : 3.0\n
+    kw[\'arrco/tranche_1\'] = \\\n
+    { \'employer_share\': 4.5\n
+    , \'employee_share\': 3.0\n
     , \'base\'          : salary_slices[\'1\']\n
     }\n
   if salary_slices.has_key(\'2\'):\n
@@ -357,43 +304,43 @@ if not executive:\n
     else:\n
       employee_share_rate = 8.0\n
       employer_share_rate = 12.0\n
-    d[\'arrco/tranche_2\'] = \\\n
-    { \'employer_rate\' : employer_share_rate\n
-    , \'employee_rate\' : employee_share_rate\n
+    kw[\'arrco/tranche_2\'] = \\\n
+    { \'employer_share\': employer_share_rate\n
+    , \'employee_share\': employee_share_rate\n
     , \'base\'          : salary_slices[\'2\']\n
     }\n
 elif salary_slices.has_key(\'A\'):\n
-  d[\'arrco/tranche_a\'] = \\\n
-  { \'employer_rate\' : 4.5\n
-  , \'employee_rate\' : 3.0\n
+  kw[\'arrco/tranche_a\'] = \\\n
+  { \'employer_share\': 4.5\n
+  , \'employee_share\': 3.0\n
   , \'base\'          : salary_slices[\'A\']\n
   }\n
 \n
 # AGFF\n
 if executive:\n
   if salary_slices.has_key(\'A\'):\n
-    d[\'agff_tranche_a/tranche_a\'] = \\\n
-    { \'employer_rate\' : 1.20\n
-    , \'employee_rate\' : 0.80\n
+    kw[\'agff_tranche_a/tranche_a\'] = \\\n
+    { \'employer_share\': 1.20\n
+    , \'employee_share\': 0.80\n
     , \'base\'          : salary_slices[\'A\']\n
     }\n
   if salary_slices.has_key(\'B\'):\n
-    d[\'agff_tranche_b/tranche_b\'] = \\\n
-    { \'employer_rate\' : 1.30\n
-    , \'employee_rate\' : 0.90\n
+    kw[\'agff_tranche_b/tranche_b\'] = \\\n
+    { \'employer_share\': 1.30\n
+    , \'employee_share\': 0.90\n
     , \'base\'          : salary_slices[\'B\']\n
     }\n
 else:\n
   if salary_slices.has_key(\'1\'):\n
-    d[\'agff_tranche_a/tranche_1\'] = \\\n
-    { \'employer_rate\' : 1.20\n
-    , \'employee_rate\' : 0.80\n
+    kw[\'agff_tranche_a/tranche_1\'] = \\\n
+    { \'employer_share\': 1.20\n
+    , \'employee_share\': 0.80\n
     , \'base\'          : salary_slices[\'1\']\n
     }\n
   if salary_slices.has_key(\'2\'):\n
-    d[\'agff_tranche_b/tranche_2\'] = \\\n
-    { \'employer_rate\' : 1.30\n
-    , \'employee_rate\' : 0.90\n
+    kw[\'agff_tranche_b/tranche_2\'] = \\\n
+    { \'employer_share\': 1.30\n
+    , \'employee_share\': 0.90\n
     , \'base\'          : salary_slices[\'2\']\n
     }\n
 \n
@@ -401,82 +348,82 @@ else:\n
 # TODO: fix the repartition of share rate in case of slice C\n
 if executive:\n
   if salary_slices.has_key(\'B\'):\n
-    d[\'argic/tranche_b\'] = \\\n
-    { \'employer_rate\' : 12.60\n
-    , \'employee_rate\' : 7.70\n
+    kw[\'argic/tranche_b\'] = \\\n
+    { \'employer_share\': 12.60\n
+    , \'employee_share\': 7.70\n
     , \'base\'          : salary_slices[\'B\']\n
     }\n
   if salary_slices.has_key(\'C\'):\n
     # free repartition (20.30% to share between employee & employer)\n
-    d[\'argic/tranche_c\'] = \\\n
-    { \'employer_rate\' : 10.15\n
-    , \'employee_rate\' : 10.15\n
+    kw[\'argic/tranche_c\'] = \\\n
+    { \'employer_share\': 10.15\n
+    , \'employee_share\': 10.15\n
     , \'base\'          : salary_slices[\'C\']\n
     }\n
 \n
 # CET\n
 if executive:\n
   if salary_slices.has_key(\'A\'):\n
-    d[\'cet/tranche_a\'] = \\\n
-    { \'employer_rate\' : 0.22\n
-    , \'employee_rate\' : 0.13\n
+    kw[\'cet/tranche_a\'] = \\\n
+    { \'employer_share\': 0.22\n
+    , \'employee_share\': 0.13\n
     , \'base\'          : salary_slices[\'A\']\n
     }\n
   if salary_slices.has_key(\'B\'):\n
-    d[\'cet/tranche_b\'] = \\\n
-    { \'employer_rate\' : 0.22\n
-    , \'employee_rate\' : 0.13\n
+    kw[\'cet/tranche_b\'] = \\\n
+    { \'employer_share\': 0.22\n
+    , \'employee_share\': 0.13\n
     , \'base\'          : salary_slices[\'B\']\n
     }\n
   if salary_slices.has_key(\'C\'):\n
-    d[\'cet/tranche_c\'] = \\\n
-    { \'employer_rate\' : 0.22\n
-    , \'employee_rate\' : 0.13\n
+    kw[\'cet/tranche_c\'] = \\\n
+    { \'employer_share\': 0.22\n
+    , \'employee_share\': 0.13\n
     , \'base\'          : salary_slices[\'C\']\n
     }\n
 \n
 # Life insurance = Assurance vie\n
 # if executive == True and salary_slices.has_key(\'A\'):\n
-#   d[\'life_insurance/tranche_a\'] = \\\n
-#   { \'employer_rate\' : 1.5\n
-#   , \'employee_rate\' : None\n
+#   kw[\'life_insurance/tranche_a\'] = \\\n
+#   { \'employer_share\': 1.5\n
+#   , \'employee_share\': None\n
 #   , \'base\'          : salary_slices[\'A\']\n
 #   }\n
 \n
 # APEC forfaitaire\n
 if executive:\n
-  d[\'apec/forfait\'] = \\\n
-  { \'employer_rate\' : 3.72\n
-  , \'employee_rate\' : 2.49\n
+  kw[\'apec/forfait\'] = \\\n
+  { \'employer_share\': 3.72\n
+  , \'employee_share\': 2.49\n
   , \'base\'          : 1.0\n
   }\n
   if salary_slices.has_key(\'B\'):\n
-    d[\'apec/tranche_b\'] = \\\n
-    { \'employer_rate\' : 0.036\n
-    , \'employee_rate\' : 0.024\n
+    kw[\'apec/tranche_b\'] = \\\n
+    { \'employer_share\': 0.036\n
+    , \'employee_share\': 0.024\n
     , \'base\'          : salary_slices[\'B\']\n
     }\n
 \n
 # Retirement = Retraite Cadre forfaitaire\n
 if executive:\n
-  d[\'cavcic/forfait\'] = \\\n
-  { \'employer_rate\' : 35.62\n
-  , \'employee_rate\' : 21.21\n
+  kw[\'cavcic/forfait\'] = \\\n
+  { \'employer_share\': 35.62\n
+  , \'employee_share\': 21.21\n
   , \'base\'          : 1.0\n
   }\n
 \n
 # construction tax\n
 # if company_size > 9:\n
-#   d[\'construction_tax/salaire_brut\'] = \\\n
-#   { \'employer_rate\' : 0.45\n
-#   , \'employee_rate\' : None\n
+#   kw[\'construction_tax/salaire_brut\'] = \\\n
+#   { \'employer_share\': 0.45\n
+#   , \'employee_share\': None\n
 #   , \'base\'          : gross_salary\n
 #   }\n
 \n
 # training tax\n
-# d[\'training_tax/salaire_brut\'] = \\\n
-# { \'employer_rate\' : 0.50\n
-# , \'employee_rate\' : None\n
+# kw[\'training_tax/salaire_brut\'] = \\\n
+# { \'employer_share\': 0.50\n
+# , \'employee_share\': None\n
 # , \'base\'          : gross_salary\n
 # }\n
 \n
@@ -485,9 +432,9 @@ if executive:\n
 #   rate = 0.15\n
 # else:\n
 #   rate = 1.5\n
-# d[\'courses_tax/salaire_brut\'] = \\\n
-# { \'employer_rate\' : rate\n
-# , \'employee_rate\' : None\n
+# kw[\'courses_tax/salaire_brut\'] = \\\n
+# { \'employer_share\': rate\n
+# , \'employee_share\': None\n
 # , \'base\'          : gross_salary\n
 # }\n
 \n
@@ -501,9 +448,9 @@ if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
   syntec_rate = 0.96\n
   if employee.getMaritalStatusId() == \'married\':\n
     syntec_rate *= 2\n
-  d[\'syntec_insurance/salaire_plafonne_syntec\'] = \\\n
-  { \'employer_rate\' : syntec_rate\n
-  , \'employee_rate\' : syntec_rate\n
+  kw[\'syntec_insurance/salaire_plafonne_syntec\'] = \\\n
+  { \'employer_share\': syntec_rate\n
+  , \'employee_share\': syntec_rate\n
   , \'base\'          : ceiling_salary\n
   }\n
 \n
@@ -513,19 +460,19 @@ if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
 #   * non-working days (= absences)\n
 # Thanks to this, the accountant has the freedom to add the missing amount of money\n
 #   that this script can\'t guess.\n
-d[\'retenue_maladie/forfait\'] = \\\n
-{ \'employer_rate\' : None\n
-, \'employee_rate\' : None\n
+kw[\'retenue_maladie/forfait\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-d[\'primes/forfait\'] = \\\n
-{ \'employer_rate\' : None\n
-, \'employee_rate\' : None\n
+kw[\'primes/forfait\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-d[\'absences/forfait\'] = \\\n
-{ \'employer_rate\' : None\n
-, \'employee_rate\' : None\n
+kw[\'absences/forfait\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
 \n
@@ -533,27 +480,13 @@ d[\'absences/forfait\'] = \\\n
 # This tax can be calculated automaticcaly.\n
 # Because of lack of time we just let the accountant do the work.\n
 # See coresponding service description for more details.\n
-d[\'reduction_fillon_forfait/forfait\'] = \\\n
-{ \'employer_rate\' : None\n
-, \'employee_rate\' : None\n
+kw[\'reduction_fillon_forfait/forfait\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
 \n
-# Because all rates above are written in percents, we must convert them in pure floats.\n
-# TODO: this part is generic, so move it to PaySheetTransaction_preCalculation script.\n
-for line_id in d.keys():\n
-  # Only \'Fixed\' (or \'Forfait\' in french) base are expressed in percents\n
-  if not line_id.endswith(\'/forfait\'):\n
-    # Fix percents\n
-    for share_type in [\'employer_rate\', \'employee_rate\']:\n
-      share_value = d[line_id][share_type]\n
-      if share_value not in (\'\', None):\n
-        d[line_id][share_type] = share_value / 100.0\n
-  # Normalize the value of \'Fixed\' (or \'Forfait\' in french) base to 1.0\n
-  else:\n
-    d[line_id][\'base\'] = 1.0\n
-\n
-return d\n
+return kw\n
 
 
 ]]></string> </value>
@@ -610,6 +543,7 @@ return d\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>paysheet</string>
@@ -644,22 +578,7 @@ return d\n
                             <string>DateTime</string>
                             <string>old_limit</string>
                             <string>comp_type</string>
-                            <string>d</string>
-                            <string>erp5site</string>
-                            <string>hasattr</string>
-                            <string>service_module</string>
-                            <string>paysheet_services</string>
-                            <string>_getiter_</string>
-                            <string>service</string>
-                            <string>base_cat</string>
-                            <string>service_categories</string>
-                            <string>tax_categories</string>
-                            <string>salary_range_categories</string>
-                            <string>category</string>
-                            <string>salary_range</string>
-                            <string>salary_range_object</string>
                             <string>None</string>
-                            <string>preview_line_uid</string>
                             <string>employer_rate</string>
                             <string>employee_rate</string>
                             <string>fngs_employer_rate</string>
@@ -667,9 +586,6 @@ return d\n
                             <string>employer_share_rate</string>
                             <string>col_agr</string>
                             <string>syntec_rate</string>
-                            <string>line_id</string>
-                            <string>share_type</string>
-                            <string>share_value</string>
                           </tuple>
                         </value>
                     </item>
