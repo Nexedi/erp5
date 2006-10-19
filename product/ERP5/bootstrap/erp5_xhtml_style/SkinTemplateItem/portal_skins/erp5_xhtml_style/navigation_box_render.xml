@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here)">\n
+  <span class="first">\n
+    <span id="favourites">\n
+      <select name="select_favorite"\n
+              tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
+                          user_actions actions/user;"\n
+              tal:attributes="onChange string:submitAction(this.form,\'Base_doFavorite\')">\n
+        <option selected="selected" value=""\n
+                i18n:translate="" i18n:domain="ui">My favourites</option>\n
+        <tal:block tal:repeat="action ordered_global_actions">\n
+          <option tal:condition="action/disabled"\n
+                  disabled="disabled">-- <tal:block tal:content="action/title" i18n:translate="" i18n:domain="ui" /> --</option>\n
+          <tal:block tal:condition="not:action/disabled"\n
+                    tal:define="name python: action.get(\'name\', \'\');\n
+                                index python: name.find(\' (\');">\n
+            <option tal:condition="python: index >= 0"\n
+                    tal:attributes="value action/url"><tal:block tal:content="python: name[:index]" i18n:translate="" i18n:domain="ui"></tal:block><tal:block tal:replace="python: name[index:]" /></option>\n
+            <option tal:condition="python: index < 0"\n
+                    tal:attributes="value action/url"\n
+                    tal:content="action/name"\n
+                    i18n:translate="" i18n:domain="ui"></option>\n
+          </tal:block>\n
+        </tal:block>\n
+        <tal:block tal:condition="user_actions">\n
+          <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">User</tal:block> --</option>\n
+          <option tal:repeat="action user_actions"\n
+                  tal:content="action/name"\n
+                  tal:attributes="value action/url"\n
+                  i18n:translate="" i18n:domain="ui"></option>\n
+        </tal:block>\n
+      </select>\n
+      <button type="submit" name="Base_doFavorite:method" title="Select Favorite"\n
+              i18n:attributes="title" i18n:domain="ui">\n
+        <span class="image"></span>\n
+        <span class="description"\n
+              i18n:translate="" i18n:domain="ui">Select Favorite</span>\n
+      </button>\n
+    </span>\n
+    <span class="separator"></span>\n
+    <span id="modules">\n
+      <select name="select_module"\n
+              tal:define="module_list here/ERP5Site_getModuleItemList;"\n
+              tal:attributes="onChange string:submitAction(this.form,\'Base_doModule\')">\n
+        <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
+        <option tal:repeat="module module_list"\n
+                tal:attributes="value python: module[1]"\n
+                tal:content="python: module[0]"\n
+                tal:omit-tag="nothing"/>\n
+      </select>\n
+      <button type="submit" name="Base_doModule:method" title="Select Module"\n
+              i18n:attributes="title" i18n:domain="ui">\n
+        <span class="image"></span>\n
+        <span class="description"\n
+              i18n:translate="" i18n:domain="ui">Select Module</span>\n
+      </button>\n
+    </span>\n
+  </span>\n
+  <span class="second">\n
+    <span id="language">\n
+      <select name="select_language"\n
+              tal:attributes="onChange string:submitAction(this.form,\'Base_doLanguage\')">\n
+        <option value=""\n
+                i18n:translate="" i18n:domain="ui">My language</option>\n
+        <option tal:repeat="language python: here.Localizer.get_languages_map()"\n
+                tal:omit-tag="nothing"\n
+                tal:attributes="value language/id;\n
+                                selected python: language[\'selected\'] and \'selected\' or nothing;"\n
+                tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])" />\n
+      </select>\n
+      <button type="submit" name="Base_doLanguage:method" title="Select Language"\n
+              i18n:attributes="title" i18n:domain="ui">\n
+        <span class="image"></span>\n
+        <span class="description"\n
+              i18n:translate="" i18n:domain="ui">Select Language</span>\n
+      </button>\n
+    </span>\n
+    <span class="separator"></span>\n
+    <span id="search">\n
+      <input type="text" name="SearchableText" />\n
+      <button type="submit" name="Base_viewSearchResultList:method" title="Search"\n
+              i18n:attributes="title" i18n:domain="ui">\n
+        <span class="image"></span>\n
+        <span class="description"\n
+              i18n:translate="" i18n:domain="ui">Search</span>\n
+      </button>\n
+    </span>\n
+  </span>\n
+  <p class="clear"></p>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>navigation_box_render</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
