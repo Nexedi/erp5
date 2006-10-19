@@ -561,6 +561,7 @@ class TestERP5BankingMixin:
       site = self.testsite
     # create a counter date
     counter_date_module = self.getCounterDateModule()
+
     counter_date = counter_date_module.newContent(id='counter_date_1', portal_type="Counter Date",
                                                             site_value = site,
                                                             start_date = date)
@@ -568,13 +569,13 @@ class TestERP5BankingMixin:
     counter_date.open()
 
 
-  def openCounter(self, site=None):
+  def openCounter(self, site=None, id='counter_1'):
     """
     open a counter for the givent site
     """
     # create a counter
     counter_module = self.getCounterModule()
-    counter = counter_module.newContent(id='counter_1', site_value=site)
+    counter = counter_module.newContent(id=id, site_value=site)
     # open it
     counter.open()
 
