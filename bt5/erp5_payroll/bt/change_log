@@ -1,5 +1,12 @@
 2006-10-19 Kevin
+* Better dynamic display of PaySheet fast input.
+* Pass preview line details within the line and don't try to guess the line service according its order.
+* Change naming convention to make naming consistent.
+* Move PaySheetTransaction_preCalculation code to PaySheetTransaction_initializePreview script.
+* Move generic code of _preCalculation_l10n_fr to PaySheetTransaction_initializePreview.
+* Normalize "Fixed/forfait" datas.
 * Update french paysheet rates.
+* Add comments and TODOs in scripts.
 
 2006-10-18 Kevin
 * Add new french payroll services.
