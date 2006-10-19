@@ -163,7 +163,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                                                                         portal_type='Mutilated Banknote',
                                                                         source_total_asset_price=0.0,
                                                                         destination_total_asset_price=0.0,
-                                                                        destination_value=self.mutilated_banknote_vault
+                                                                        destination_value=self.hq_mutilated_banknote_vault
                                                                         )
     self.stepTic()
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 1)
@@ -172,7 +172,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.mutilated_banknote.getPortalType(), 'Mutilated Banknote')
     self.assertEqual(self.mutilated_banknote.getSource(), 'site/testsite/paris')
     self.assertEqual(self.mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
-    self.assertEqual(self.mutilated_banknote.getDestination(), self.mutilated_banknote_vault.getRelativeUrl())
+    self.assertEqual(self.mutilated_banknote.getDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
 
   def stepTryPlanWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
