@@ -116,14 +116,14 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
     self.checkUserFolderType()
-    self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
+    self.organisation_1 = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/paris')
-    self.organisation = self.organisation_module.newContent(id='baobab_org_hq', portal_type='Organisation',
+    self.organisation_2 = self.organisation_module.newContent(id='baobab_org_hq', portal_type='Organisation',
                                                             function='banking', group='baobab',  site='testsite/siege')
     # define the user
     user_dict = {
-        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1'],
-        'hq_super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/siege/surface/banque_interne/guichet_1']
+        'super_user' : [['Manager'], self.organisation_1, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1'],
+        'hq_super_user' : [['Manager'], self.organisation_2, 'banking/comptable', 'baobab', 'testsite/siege/surface/banque_interne/guichet_1']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
@@ -162,7 +162,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.mutilated_banknote = self.mutilated_banknote_module.newContent(id='mutilated_banknote',
                                                                         portal_type='Mutilated Banknote',
                                                                         source_total_asset_price=0.0,
-                                                                        destination_total_asset_price=0.0
+                                                                        destination_total_asset_price=0.0,
+                                                                        destination_value=self.mutilated_banknote_vault
                                                                         )
     self.stepTic()
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 1)
@@ -171,7 +172,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.mutilated_banknote.getPortalType(), 'Mutilated Banknote')
     self.assertEqual(self.mutilated_banknote.getSource(), 'site/testsite/paris')
     self.assertEqual(self.mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
-    self.assertEqual(self.mutilated_banknote.getDestination(), None)
+    self.assertEqual(self.mutilated_banknote.getDestination(), self.mutilated_banknote_vault.getRelativeUrl())
 
   def stepTryPlanWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
