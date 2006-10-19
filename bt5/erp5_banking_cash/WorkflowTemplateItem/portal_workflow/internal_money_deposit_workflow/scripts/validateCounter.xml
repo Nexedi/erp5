@@ -85,18 +85,9 @@ if lettering is None:\n
   msg = Message(domain=\'ui\', message=\'No lettering defined.\')\n
   raise ValidationFailed, (msg,)\n
 \n
-# Get price and total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=[\'Internal Money Deposit\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-if amount != total_price:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-\n
 if destination is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
-\n
 \n
 # check we are in an opened accounting day\n
 if not transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate()):\n
@@ -112,15 +103,13 @@ if len(counter_list) == 0:\n
   msg = Message(domain = "ui", message="Counter is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
-\n
 source = transaction.getSource()\n
 resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\')\n
-#transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
-cash_detail = transaction.getTotalPrice(portal_type = \'Cash Delivery Cell\')\n
-#transaction.log("price vs cash detail", str((price, cash_detail)))\n
+cash_detail = transaction.getTotalPrice(portal_type = [\'Cash Delivery Line\', \'Cash Delivery Cell\'], fast=0)\n
+\n
 if resource == 3:\n
   msg = Message(domain="ui", message="No banknote or coin defined.")\n
   raise ValidationFailed, (msg,)\n
@@ -199,8 +188,6 @@ elif price != cash_detail:\n
                             <string>destination</string>
                             <string>lettering</string>
                             <string>msg</string>
-                            <string>amount</string>
-                            <string>total_price</string>
                             <string>site</string>
                             <string>append</string>
                             <string>$append0</string>
