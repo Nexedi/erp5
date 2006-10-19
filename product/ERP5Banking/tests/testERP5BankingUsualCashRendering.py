@@ -164,8 +164,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.caisse_courante, currency=self.currency_1,
                              line_list=line_list)
-
-
+    self.openCounterDate(site=self.paris)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):

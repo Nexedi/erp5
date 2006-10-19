@@ -168,6 +168,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createCashInventory(source=None, destination=self.auxiliaire, currency=self.currency_1,
                              line_list=line_list)
     self.salle_tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
+    self.openCounterDate(site=self.paris)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
