@@ -68,50 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# XXX This script share some code with PaySheetTransaction_postCalculation\n
-# XXX It could be a good idea to merge similar code\n
-\n
-# std_lines = context.PaySheetTransaction_initializePreview()\n
-# user_line_index = 0\n
-#\n
-# # Scan every standard preview line to create an item for each service\n
-# for std_line in std_lines:\n
-#   salary_range_cat = std_line.getProperty(\'salary_range_cat\')\n
-#   tax_cat          = std_line.getProperty(\'tax_cat\')\n
-#   # Increment the user line index: we can use this strategy because preview lines (user or standard ones) are sorted\n
-#   user_line_index += 1\n
-#\n
-#   # Get user paysheet parameters stored in user preview line (=listbox)\n
-#   for user_line in listbox:\n
-#     # Base_viewSearchResultList the user preview line corresponding to the standard preview line\n
-#     if user_line.has_key(\'listbox_key\') and int(user_line[\'listbox_key\'])==user_line_index:\n
-#\n
-#       if user_line[\'base\'] not in (None, \'\') and salary_range_cat.endswith(\'forfait\') \\\n
-#         and  user_line[\'employer_share_rate\'] == 100.0 and user_line[\'employee_share_rate\'] in (0.0, None, \'\') \\\n
-#         and len(tax_cat) == 1:\n
-#\n
-# #        # Get the base salary if given by the user\n
-#  #       base = r_(user_line[\'base\'])\n
-#   #      # Scan allowed tax categories to get employee and/or employer share rate\n
-#    #     for cat in tax_cat:\n
-#\n
-#\n
-#\n
-#\n
-#\n
-#         context.log("Kev paysheet", repr(user_line[\'base\']))\n
-#         context.log("Kev paysheet", repr(tax_cat[0]))\n
-#         context.log("Kev paysheet", repr(        salary_range_cat))\n
-\n
-\n
-\n
-\n
-#context.log("Kev update >>>>>", repr(context.REQUEST.items()))\n
-\n
-return context.REQUEST.RESPONSE.redirect(\'%s/PaySheetTransaction_viewPreview?portal_status_message=Base+Salary+updated.\' % context.absolute_url())\n
-\n
+            <value> <string>return context.REQUEST.RESPONSE.redirect(\'%s/PaySheetTransaction_viewPreview?portal_status_message=Base+Salary+updated.\' % context.absolute_url())\n
 \n
 # Get all cells which are needed to calculate the base_salary\n
 \n
@@ -121,16 +78,12 @@ return context.REQUEST.RESPONSE.redirect(\'%s/PaySheetTransaction_viewPreview?po
     # Get the base salary if given by the user\n
   #  base = r_(user_line[\'base\'])\n
 \n
-\n
-\n
 # IDEA: compare normal _initializePreview returned rates and base with the current one and keep user-defined values. Then merge them with current one.\n
 # This is the only solution to mimic real user interaction without AJAX/DHTML-like UI.\n
 \n
 # Recalculate the preview with new base_salary\n
 #std_lines = context.PaySheetTransaction_initializePreview()\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
