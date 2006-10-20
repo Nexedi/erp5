@@ -113,7 +113,7 @@
 <body> <!-- TODO: This conflicts with tabber.js => onload="autoFocus()"-->\n
   <!-- Global form is used to save data of other fields when we edit one another (generally make sense in listbox and/or relation string field) -->\n
   <form id="main_form"\n
-        tal:attributes="enctype python: here.ERP5XhtmlStyle_getFormEnctype(form);\n
+        tal:attributes="enctype python: here.ERP5Site_getFormEnctype(form);\n
                         action url;\n
                         method form/method | string:post">\n
 \n
