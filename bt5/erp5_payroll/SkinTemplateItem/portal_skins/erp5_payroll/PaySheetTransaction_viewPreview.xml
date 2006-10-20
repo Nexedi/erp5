@@ -105,6 +105,7 @@
                         <string>listbox_employee_share</string>
                         <string>listbox_employer_share</string>
                         <string>listbox_tax_category</string>
+                        <string>listbox_description</string>
                       </list>
                     </value>
                 </item>

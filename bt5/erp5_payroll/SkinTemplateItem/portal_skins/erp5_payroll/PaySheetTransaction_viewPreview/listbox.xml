@@ -338,6 +338,10 @@
                           <string>Employee Share</string>
                         </tuple>
                         <tuple>
+                          <string>description</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
                           <string>service_id</string>
                           <string>Service ID</string>
                         </tuple>
@@ -398,6 +402,10 @@
                         <tuple>
                           <string>employee_share</string>
                           <string>Employee Share</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Comment</string>
                         </tuple>
                         <tuple>
                           <string>service_id</string>
@@ -465,6 +473,10 @@
                         <tuple>
                           <string>employee_share</string>
                           <string>Employee Share</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Comment</string>
                         </tuple>
                         <tuple>
                           <string>service_id</string>

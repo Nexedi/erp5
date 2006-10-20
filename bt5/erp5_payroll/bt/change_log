@@ -2,6 +2,11 @@
 * Change matrix box rendering dynamically depending of the type of the contribution.
 * Use LinesField instead of StringField to handle tax_category value, which is a list of categories.
 * Do not call initializePreview anylonger. Use data from the listbox instead (much more flexible way to analyze data).
+* Add new solidarity_day service.
+* Reactivate lodging helps contribution.
+* De-activate transportation contibution and add comments about how subtile is it to calculate it.
+* Executive contributions (APEC) are due to march only.
+* Support comments on Pay Sheet Lines (usefull for the accountant to add details about why he altered one contribution).
 
 2006-10-19 Kevin
 * Better dynamic display of PaySheet fast input.
