@@ -87,7 +87,7 @@
             <value>
               <tuple>
                 <string>salary_range/france/forfait</string>
-                <string>tax_category/primes/employee_share</string>
+                <string>tax_category/primes/employer_share</string>
                 <string>product_line/salary</string>
                 <string>quantity_unit/time/month</string>
               </tuple>

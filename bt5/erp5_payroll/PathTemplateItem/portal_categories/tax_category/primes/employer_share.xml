@@ -40,8 +40,17 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>tax_category/indemnite_precarite/employee_share</string>
+                <string>tax_category/primes/employer_share</string>
+                <string>tax_category/primes/employer_share</string>
+                <string>tax_category/primes/employer_share</string>
+                <string>tax_category/primes/employer_share</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>codification</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -52,7 +61,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>employee_share</string> </value>
+            <value> <string>employer_share</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -60,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employee Share</string> </value>
+            <value> <string>Employer Share</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

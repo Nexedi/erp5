@@ -130,6 +130,9 @@ company_size  = len(employee_list)\n
 salary_slices = {}\n
 \n
 # "Char" slice type\n
+# TODO: Slices should be calculated based on the total gross salary over the year divided by 12 month.\n
+#       This is why there is a problem for people who have changing gross salary over the year.\n
+#       That\'s why accountants must do manual regulations in those cases.\n
 slice_a_value = ceiling_salary\n
 slice_b_value = ceiling_salary * 4\n
 slice_c_value = ceiling_salary * 8\n
@@ -422,7 +425,7 @@ if executive and start_date <= comp_date <= stop_date:\n
     }\n
 \n
 # Retirement = Retraite Cadre forfaitaire\n
-if executive:\n
+if executive and not salary_slices.has_key(\'B\') and not salary_slices.has_key(\'C\'):\n
   kw[\'cavcic/forfait\'] = \\\n
   { \'employer_share\': 35.62\n
   , \'employee_share\': 21.21\n
@@ -481,11 +484,7 @@ kw[\'reduction_fillon_forfait/forfait\'] = \\\n
 , \'base\'          : 1.0\n
 }\n
 \n
-# Add blank lines for:\n
-#   * wickness holding (= retenue maladie)\n
-#   * pay bonus (= primes)\n
-#   * non-working days (= absences)\n
-#   * vacation compensation (= ICCP)\n
+# Add blank lines for services which is a variable part od the gross salary.\n
 # Thanks to this, the accountant has the freedom to add the missing amount of money\n
 #   that this script can\'t guess.\n
 kw[\'retenue_maladie/forfait\'] = \\\n
@@ -508,7 +507,11 @@ kw[\'iccp/forfait\'] = \\\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-\n
+kw[\'precarite/forfait\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
+, \'base\'          : 1.0\n
+}\n
 \n
 return kw\n
 
