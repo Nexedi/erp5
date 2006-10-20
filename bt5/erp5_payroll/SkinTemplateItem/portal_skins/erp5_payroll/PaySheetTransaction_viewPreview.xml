@@ -100,11 +100,11 @@
                         <string>listbox_base</string>
                         <string>listbox_service_id</string>
                         <string>listbox_salary_range</string>
-                        <string>listbox_tax_category</string>
                         <string>listbox_salary_range_title</string>
                         <string>listbox_service_title</string>
                         <string>listbox_employee_share</string>
                         <string>listbox_employer_share</string>
+                        <string>listbox_tax_category</string>
                       </list>
                     </value>
                 </item>
