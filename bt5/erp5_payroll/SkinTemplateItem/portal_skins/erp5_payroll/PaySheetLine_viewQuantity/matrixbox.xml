@@ -259,11 +259,11 @@
                       <list>
                         <tuple>
                           <string>quantity</string>
-                          <string>Base Salary</string>
+                          <string>Base Value</string>
                         </tuple>
                         <tuple>
                           <string>price</string>
-                          <string>Rate</string>
+                          <string>Share</string>
                         </tuple>
                       </list>
                     </value>
@@ -331,7 +331,7 @@
                       <list>
                         <tuple>
                           <string>None</string>
-                          <string>Salary base</string>
+                          <string>Base Value</string>
                         </tuple>
                       </list>
                     </value>
