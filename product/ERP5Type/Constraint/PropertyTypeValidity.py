@@ -32,9 +32,9 @@ from Constraint import Constraint
 from DateTime import DateTime
 
 try:
-  boolean_types = (type(1), type(True))
+  boolean_types = (int, bool)
 except NameError:
-  boolean_types = (type(1), )
+  boolean_types = (int, )
 
 class PropertyTypeValidity(Constraint):
   """
@@ -45,20 +45,22 @@ class PropertyTypeValidity(Constraint):
 
   # Initialize type dict
   _type_dict = {
-    'object':             (type('a'), ),
-    'string':             (type('a'), ),
-    'text':               (type('a'), ),
-    'int':                (type(1), ),
+    'string':             (str, ),
+    'text':               (str, ),
+    'int':                (int, ),
     'boolean':            boolean_types,
-    'float':              (type(1.0), ),
-    'long':               (type(1L), ),
-    'tales':              (type('string:3'), ),
-    'lines':              (type([]), type(())),
-    'tokens':             (type([]), type(())),
-    'selection':          (type([]), type(())),
-    'multiple selection': (type([]), type(())),
-    'date':               (type(DateTime()), ),
+    'float':              (float, ),
+    'long':               (long, ),
+    'tales':              (str, ),
+    'lines':              (list, tuple),
+    'tokens':             (list, tuple),
+    'selection':          (list, tuple),
+    'multiple selection': (list, tuple),
+    'date':               (DateTime, ),
   }
+
+  # Properties of type eg. "object" can hold anything
+  _permissive_type_list = ('object')
 
   def checkConsistency(self, obj, fixit=0):
     """
@@ -73,6 +75,8 @@ class PropertyTypeValidity(Constraint):
         property_type = 'lines'
       else:
         property_type = prop['type']
+      if property_type in self._permissive_type_list:
+        continue
       wrong_type = 0
       if property_type == 'tales':
         value = obj.getProperty(property_id, evaluate=0)
@@ -81,7 +85,7 @@ class PropertyTypeValidity(Constraint):
       if value is not None:
         # Check known type
         try:
-          wrong_type = (type(value) not in self._type_dict[property_type])
+          wrong_type = not isinstance(value, self._type_dict[property_type])
         except KeyError:
           wrong_type = 0
           error_message = "Attribute %s is defined with unknown type %s" % \
