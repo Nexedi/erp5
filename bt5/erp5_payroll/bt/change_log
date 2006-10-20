@@ -1,3 +1,8 @@
+2006-10-20 Kevin
+* Change matrix box rendering dynamically depending of the type of the contribution.
+* Use LinesField instead of StringField to handle tax_category value, which is a list of categories.
+* Do not call initializePreview anylonger. Use data from the listbox instead (much more flexible way to analyze data).
+
 2006-10-19 Kevin
 * Better dynamic display of PaySheet fast input.
 * Pass preview line details within the line and don't try to guess the line service according its order.
