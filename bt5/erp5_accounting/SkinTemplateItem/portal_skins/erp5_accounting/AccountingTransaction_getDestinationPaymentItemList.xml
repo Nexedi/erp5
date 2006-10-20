@@ -73,9 +73,10 @@
 \n
 item_list = [[\'\', \'\']]\n
 \n
-organisation = context.getDestinationSectionValue()\n
-if organisation is not None:\n
-  bank_account_list = organisation.contentValues(filter={\'portal_type\': [\'Bank Account\', \'Cash Register\', \'Credit Card\']})\n
+entity = context.getDestinationSectionValue()\n
+if entity is not None:\n
+  bank_account_list = entity.contentValues(filter={\'portal_type\':\n
+                 entity.getPortalPaymentNodeTypeList()})\n
   for bank_account in bank_account_list:\n
     url = bank_account.getRelativeUrl()\n
     #label = bank_account.getIban()\n
@@ -90,6 +91,12 @@ return item_list\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -130,7 +137,7 @@ return item_list\n
                             <string>item_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>organisation</string>
+                            <string>entity</string>
                             <string>None</string>
                             <string>bank_account_list</string>
                             <string>_getiter_</string>
@@ -159,6 +166,27 @@ return item_list\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
