@@ -280,7 +280,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.salary_range.endswith("forfait") and "-1 234.5" or "-12.3%"</string> </value>
+            <value> <string>python: cell.salary_range.split(\'/\')[2] == \'fixed\' and "-1 234.5" or "-12.3%"</string> </value>
         </item>
       </dictionary>
     </pickle>

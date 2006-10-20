@@ -96,8 +96,7 @@ for object in context.objectValues():\n
           gross_salary = r_(cell.getPrice())\n
         elif cell.getCategoriesList() == [\'tax_category/social/employee_share\', \'salary_range/france\']:\n
           net_salary = r_(cell.getPrice())\n
-    else:\n
-      object_list += [object]\n
+    object_list += [object]\n
 \n
 # change the sign\n
 gross_salary = r_(-gross_salary)\n

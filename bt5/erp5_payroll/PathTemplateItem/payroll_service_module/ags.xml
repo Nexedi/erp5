@@ -87,11 +87,11 @@
             <value>
               <tuple>
                 <string>tax_category/ags/employer_share</string>
-                <string>salary_range/france/tranche_a</string>
-                <string>salary_range/france/tranche_b</string>
                 <string>source/organisation_module/assedic</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/unemployment_insurance</string>
+                <string>salary_range/france/variable/tranche_a</string>
+                <string>salary_range/france/variable/tranche_b</string>
               </tuple>
             </value>
         </item>

@@ -312,7 +312,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (\'salary_range/france\' in cell.getCategoryList() or \'salary_range/france/forfait\' in cell.getCategoryList()) and True or False</string> </value>
+            <value> <string>python: cell.getSalaryRange().split(\'/\')[1] == \'fixed\' and True or False</string> </value>
         </item>
       </dictionary>
     </pickle>

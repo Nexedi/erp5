@@ -87,10 +87,10 @@
             <value>
               <tuple>
                 <string>tax_category/taxes/employer_share</string>
-                <string>salary_range/france/salaire_brut</string>
                 <string>source/organisation_module/etat</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/tax</string>
+                <string>salary_range/france/variable/salaire_brut</string>
               </tuple>
             </value>
         </item>

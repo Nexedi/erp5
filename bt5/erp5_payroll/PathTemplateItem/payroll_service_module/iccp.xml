@@ -86,10 +86,10 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/forfait</string>
+                <string>salary_range/france/fixed/base</string>
                 <string>product_line/salary</string>
                 <string>quantity_unit/time/month</string>
-                <string>tax_category/iccp/employer_share</string>
+                <string>tax_category/salaire_base/employer_share</string>
               </tuple>
             </value>
         </item>

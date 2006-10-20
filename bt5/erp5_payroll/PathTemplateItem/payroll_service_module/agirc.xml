@@ -86,12 +86,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/tranche_b</string>
                 <string>tax_category/supplementary_pension/employee_share</string>
                 <string>source/organisation_module/agirc</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/retirement_plan</string>
-                <string>salary_range/france/tranche_c</string>
+                <string>salary_range/france/variable/tranche_b</string>
+                <string>salary_range/france/variable/tranche_c</string>
                 <string>tax_category/supplementary_pension/employer_share</string>
               </tuple>
             </value>

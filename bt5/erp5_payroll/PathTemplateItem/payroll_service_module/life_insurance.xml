@@ -87,10 +87,10 @@
             <value>
               <tuple>
                 <string>tax_category/life_insurance/employer_share</string>
-                <string>salary_range/france/tranche_a</string>
                 <string>source/organisation_module/urssaf</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/state_insurance</string>
+                <string>salary_range/france/variable/tranche_a</string>
               </tuple>
             </value>
         </item>

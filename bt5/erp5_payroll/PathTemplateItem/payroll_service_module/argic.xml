@@ -80,12 +80,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/tranche_b</string>
                 <string>tax_category/argic/employee_share</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/retirement_plan</string>
                 <string>source/organisation_module/483</string>
-                <string>salary_range/france/tranche_c</string>
+                <string>salary_range/france/variable/tranche_b</string>
+                <string>salary_range/france/variable/tranche_c</string>
                 <string>tax_category/argic/employer_share</string>
               </tuple>
             </value>

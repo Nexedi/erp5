@@ -236,17 +236,26 @@ if labour_service is None:\n
 \n
 gross_salary = r_(context.getGrossSalary())\n
 \n
-createPaySheetItem( title    = \'Salary\'\n
+labour_employee_share_category = None\n
+labour_employer_share_category = None\n
+for c in labour_service.getCategoryList():\n
+  if c.startswith(\'tax_category\'):\n
+    if c.endswith(\'employee_share\'): labour_employee_share_category = c\n
+    if c.endswith(\'employer_share\'): labour_employer_share_category = c\n
+  if c.startswith(\'salary_range\'):\n
+    labour_salary_range = c\n
+\n
+createPaySheetItem( title    = \'Salary\' # labour_service.getTitleOrId()\n
                   , res      = labour_service.getRelativeUrl()\n
                   , dest_org = context.getDestinationSection()\n
-                  , cells    = [{ "x"    : \'tax_category/social/employee_share\'\n
-                                , "y"    : \'salary_range/france\'\n
-                                , "base" : 1\n
+                  , cells    = [{ "x"    : labour_employee_share_category\n
+                                , "y"    : labour_salary_range\n
+                                , "base" : 1.0\n
                                 , "rate" : r_(total_employee_share - gross_salary)\n
                                 },\n
-                                { "x"    : \'tax_category/social/employer_share\'\n
-                                , "y"    : \'salary_range/france\'\n
-                                , "base" : 1\n
+                                { "x"    : labour_employer_share_category\n
+                                , "y"    : labour_salary_range\n
+                                , "base" : 1.0\n
                                 , "rate" : -gross_salary\n
                                 }]\n
                   )\n
@@ -341,6 +350,10 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
                             <string>labour_service</string>
                             <string>ValueError</string>
                             <string>gross_salary</string>
+                            <string>labour_employee_share_category</string>
+                            <string>labour_employer_share_category</string>
+                            <string>c</string>
+                            <string>labour_salary_range</string>
                             <string>True</string>
                           </tuple>
                         </value>

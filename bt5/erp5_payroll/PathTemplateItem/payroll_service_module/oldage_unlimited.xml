@@ -80,11 +80,11 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/salaire_brut</string>
                 <string>tax_category/social/employee_share</string>
                 <string>source/organisation_module/urssaf</string>
                 <string>product_line/social_service/state_insurance</string>
                 <string>quantity_unit/time/month</string>
+                <string>salary_range/france/variable/salaire_brut</string>
                 <string>tax_category/social/employer_share</string>
               </tuple>
             </value>

@@ -86,13 +86,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/tranche_a</string>
                 <string>tax_category/supplementary_pension/employee_share</string>
                 <string>source/organisation_module/arrco</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/retirement_plan</string>
-                <string>salary_range/france/tranche_1</string>
-                <string>salary_range/france/tranche_2</string>
+                <string>salary_range/france/variable/tranche_1</string>
+                <string>salary_range/france/variable/tranche_2</string>
+                <string>salary_range/france/variable/tranche_a</string>
                 <string>tax_category/supplementary_pension/employer_share</string>
               </tuple>
             </value>

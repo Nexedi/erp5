@@ -86,10 +86,10 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/salaire_brut</string>
-                <string>product_line/salary</string>
-                <string>quantity_unit/time/month</string>
+                <string>salary_range/france/variable/salaire_brut</string>
                 <string>tax_category/social/employer_share</string>
+                <string>quantity_unit/time/month</string>
+                <string>product_line/social_service/state_insurance</string>
               </tuple>
             </value>
         </item>

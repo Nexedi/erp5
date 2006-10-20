@@ -86,7 +86,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/salaire_brut_crds</string>
+                <string>salary_range/france/variable/salaire_brut_crds</string>
                 <string>source/organisation_module/urssaf</string>
                 <string>tax_category/crds/employee_share</string>
                 <string>quantity_unit/time/month</string>

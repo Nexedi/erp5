@@ -60,9 +60,8 @@
                start_date          python: here.getStartDate();\n
                boldstyle           python: \'(\\\'FONT\\\', \\\'Helvetica-Bold\\\', 7)\'">\n
 \n
-\n
     <title>Pay Sheet</title>\n
-    <author>Nexedi</author>\n
+    <author>Nexedi ERP5</author>\n
     <subject>Pay Sheet</subject>\n
     <content>\n
        <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="decompte">\n

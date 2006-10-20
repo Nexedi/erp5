@@ -86,7 +86,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/salaire_plafonne_syntec</string>
+                <string>salary_range/france/variable/salaire_plafonne_syntec</string>
                 <string>source/organisation_module/henner</string>
                 <string>tax_category/syntec_insurance/employee_share</string>
                 <string>tax_category/syntec_insurance/employer_share</string>
