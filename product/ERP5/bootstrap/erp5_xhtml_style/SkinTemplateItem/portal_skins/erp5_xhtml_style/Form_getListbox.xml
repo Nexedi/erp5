@@ -68,8 +68,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [\'erp5.css\',]\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Return first listbox in a form that is enabled and not hidden\n
+# Christophe Dumez <christophe@nexedi.com>\n
+# This script should be used to detect a listbox without having to name it "listbox"\n
+\n
+form=context\n
+\n
+if form.meta_type != \'ERP5 Form\':\n
+  return None\n
+\n
+# we start with \'bottom\' because most of the time\n
+# the listbox is there.\n
+for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
+  for field in form.get_fields_in_group(group):\n
+     if field.meta_type == \'ListBox\' and not(field[\'hidden\']) and field[\'enabled\']:\n
+       return field\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -79,6 +97,12 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -110,7 +134,16 @@
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>context</string>
+                            <string>form</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>group</string>
+                            <string>field</string>
+                            <string>_getitem_</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -126,7 +159,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_getCSSList</string> </value>
+            <value> <string>Form_getListbox</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

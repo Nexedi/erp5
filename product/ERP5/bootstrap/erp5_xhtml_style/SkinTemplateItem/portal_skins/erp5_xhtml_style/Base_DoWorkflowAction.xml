@@ -84,7 +84,7 @@ try :\n
 except ValidationFailed, message:\n
   kw[\'portal_status_message\'] = message\n
 \n
-return context.ERP5XhtmlStyle_redirect("%s/view" % (context.absolute_url(), ), **kw)\n
+return context.ERP5Site_redirect("%s/view" % (context.absolute_url(), ), **kw)\n
 # vim: syntax=python\n
 </string> </value>
         </item>

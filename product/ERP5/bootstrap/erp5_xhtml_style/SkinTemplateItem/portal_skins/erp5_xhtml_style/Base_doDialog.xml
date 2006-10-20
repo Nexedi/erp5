@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>kw.update(context.REQUEST.form)\n
-return context.ERP5XhtmlStyle_redirect(select_dialog.split()[0], keep_items={\'dialog_category\': dialog_category, \'form_id\': form_id, \'cancel_url\': cancel_url}, **kw)\n
+return context.ERP5Site_redirect(select_dialog.split()[0], keep_items={\'dialog_category\': dialog_category, \'form_id\': form_id, \'cancel_url\': cancel_url}, **kw)\n
 </string> </value>
         </item>
         <item>

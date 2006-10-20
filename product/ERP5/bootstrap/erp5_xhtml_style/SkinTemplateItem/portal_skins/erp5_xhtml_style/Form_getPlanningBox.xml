@@ -70,13 +70,21 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-if len(http_parameters) == 0:\n
-  return link\n
-if \'?\' in link:\n
-  sep=\'&\'\n
-else:\n
-  sep=\'?\'\n
-return \'%s%s%s\' % (link, sep, http_parameters)\n
+# Return first listbox in a form that is enabled and not hidden\n
+# Christophe Dumez <christophe@nexedi.com>\n
+# This script should be used to detect a listbox without having to name it "listbox"\n
+\n
+form=context\n
+\n
+if form.meta_type != \'ERP5 Form\':\n
+  return None\n
+\n
+# we start with \'bottom\' because most of the time\n
+# the listbox is there.\n
+for group in (\'bottom\', \'center\', \'left\', \'right\'):\n
+  for field in form.get_fields_in_group(group):\n
+     if field.meta_type == \'PlanningBox\' and not(field[\'hidden\']) and field[\'enabled\']:\n
+       return field\n
 
 
 ]]></string> </value>
@@ -101,7 +109,7 @@ return \'%s%s%s\' % (link, sep, http_parameters)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>link, http_parameters</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,16 +129,20 @@ return \'%s%s%s\' % (link, sep, http_parameters)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>link</string>
-                            <string>http_parameters</string>
-                            <string>len</string>
-                            <string>sep</string>
+                            <string>context</string>
+                            <string>form</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>group</string>
+                            <string>field</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -147,7 +159,7 @@ return \'%s%s%s\' % (link, sep, http_parameters)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_renderLink</string> </value>
+            <value> <string>Form_getPlanningBox</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

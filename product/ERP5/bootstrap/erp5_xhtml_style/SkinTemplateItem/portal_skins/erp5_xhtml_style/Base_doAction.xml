@@ -79,7 +79,7 @@ if len(Base_doAction) == 0:\n
 doAction0 = Base_doAction[0]\n
 \n
 kw.update(request.form)\n
-context.ERP5XhtmlStyle_prepareAction(**kw)\n
+context.ERP5Site_prepareAction(**kw)\n
 \n
 # If this is an object, a workflow or a folder, then jump to that view\n
 if doAction0 in (\'object\', \'workflow\', \'folder\'):\n
@@ -118,7 +118,7 @@ else:\n
   redirect_url = request[\'ACTUAL_URL\']\n
   preserved_parameters[\'portal_status_message\'] = N_(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
 \n
-return context.ERP5XhtmlStyle_redirect(redirect_url, keep_items=preserved_parameters, **kw)\n
+return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, **kw)\n
 </string> </value>
         </item>
         <item>

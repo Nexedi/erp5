@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [\'erp5.js\',]\n
+            <value> <string>enctype = context[\'enctype\']\n
+if enctype in (\'\', None):\n
+  return None\n
+return enctype\n
 </string> </value>
         </item>
         <item>
@@ -79,6 +82,12 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -110,7 +119,12 @@
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>_getitem_</string>
+                            <string>context</string>
+                            <string>enctype</string>
+                            <string>None</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -126,7 +140,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_getJSList</string> </value>
+            <value> <string>Form_getEnctype</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

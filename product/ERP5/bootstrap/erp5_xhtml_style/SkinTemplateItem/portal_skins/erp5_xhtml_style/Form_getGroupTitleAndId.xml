@@ -68,27 +68,63 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Return first listbox in a form that is enabled and not hidden\n
-# Christophe Dumez <christophe@nexedi.com>\n
-# This script should be used to detect a listbox without having to name it "listbox"\n
+            <value> <string>"""\n
+  This script split a form group id in two part:\n
+    * a group id,\n
+    * a group title.\n
 \n
-if form is None:\n
-  form=context\n
+  The group should be named based on the following pattern: "group id (Group Title)" \n
 \n
-if form.meta_type != \'ERP5 Form\':\n
-  return None\n
+  This script is a hack to let us merge two informations (id and title) into one (id) to get\n
+    over Formulator limitations. This script should disappear with Formulator\'s refactoring.\n
 \n
-# we start with \'bottom\' because most of the time\n
-# the listbox is there.\n
-for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
-  for field in form.get_fields_in_group(group):\n
-     if field.meta_type == \'ListBox\' and not(field[\'hidden\']) and field[\'enabled\']:\n
-       return field\n
-
-
-]]></string> </value>
+  Features: \n
+    * Multiple parenthesis allowed;\n
+    * Group id can continue after the title definition.\n
+\n
+  Example:\n
+    A string like\n
+      "left webcontent (The Fantastic Group (and (funky) lisp-like parenthesis)) extra",\n
+    will return the following tuple:\n
+      ( \'left webcontent extra\'\n
+      , \'The Fantastic Group (and (funky) lisp-like parenthesis)\'\n
+      , \'left webcontent (The Fantastic Group (and (funky) lisp-like parenthesis)) extra\'\n
+      )\n
+"""\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+form=context\n
+\n
+def getFormGroupTitleAndId():\n
+  res = []\n
+  for original_group_id in form.get_groups(include_empty=0):\n
+    # Separate the group id and the group title using parenthesis as marker from the original form group id\n
+    o_gid_list = original_group_id.strip().split(\'(\')\n
+    # Get the first part of the group id (which is the part before the first opened parenthesis)\n
+    group_id = o_gid_list[0]\n
+    # Get the end of the list (which is the part just after the first opened parenthesis)\n
+    group_title_list = \'(\'.join(o_gid_list[1:]).split(\')\')\n
+    # Get the last part of the group id (the part which stand after the last closing parenthesis)\n
+    group_id += group_title_list[-1]\n
+    # Normalize the group id (suppress unecessary multiple-space)\n
+    group_id_list = []\n
+    for group_word in group_id.split(\' \'):\n
+      if len(group_word):\n
+        group_id_list.append(group_word)\n
+    group_id = \' \'.join(group_id_list)\n
+    # Generate the group title\n
+    group_title = \')\'.join(group_title_list[:-1]).strip()\n
+    # Return the group id if no title found\n
+    if len(group_title) == 0:\n
+      group_title = group_id\n
+    res.append({\'gid\': group_id, \'gtitle\': group_title, \'goid\': original_group_id})\n
+  return res\n
+\n
+getFormGroupTitleAndId = CachingMethod(getFormGroupTitleAndId,\n
+                                       ("ERP5Site_getFormGroupTitleAndId", form.id),\n
+                                       cache_duration=None)\n
+return getFormGroupTitleAndId()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -103,14 +139,8 @@ for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,20 +160,19 @@ for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form</string>
-                            <string>None</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>context</string>
+                            <string>form</string>
+                            <string>getFormGroupTitleAndId</string>
                             <string>_getattr_</string>
-                            <string>_getiter_</string>
-                            <string>group</string>
-                            <string>field</string>
-                            <string>_getitem_</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -155,14 +184,12 @@ for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5XhtmlStyle_getListbox</string> </value>
+            <value> <string>Form_getGroupTitleAndId</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

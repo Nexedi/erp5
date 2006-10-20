@@ -59,7 +59,7 @@
     global url              python: \'%s%s\' % (request[\'SERVER_URL\'], here.getPath(), );\n
     global current_form_id  python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
     global current_url      python: \'%s/%s\' % (url, current_form_id);\n
-    global current_action   python: here.ERP5XhtmlStyle_getCurrentAction(current_url, actions);\n
+    global current_action   python: here.ERP5Site_getCurrentAction(current_url, actions);\n
 \n
            dummy       python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\');\n
            dummy  python: request.set(\'here\', here);\n
@@ -69,9 +69,9 @@
     global js_list   js_list | python: [];\n
            dummy     python: js_list.append(\'%s/erp5.js\' % (portal_path, ));\n
 \n
-    global http_parameter_list  python: here.ERP5XhtmlStyle_filterParameterList(request.form);\n
+    global http_parameter_list  python: here.ERP5Site_filterParameterList(request.form);\n
            dummy                python: http_parameter_list.update(local_parameter_list);\n
-    global http_parameters      python: here.ERP5XhtmlStyle_renderHTTPParameterList(http_parameter_list);\n
+    global http_parameters      python: here.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
     global form                 nocall:form | nothing;\n
            portal_preferences   python: here.getPortalObject().portal_preferences;\n
     global preferred_html_style_developper_mode   portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
@@ -106,7 +106,7 @@
 \n
 <tal:block metal:define-macro="planning_box_definitions">\n
   <tal:block tal:condition="form/pt | nothing">\n
-    <tal:block tal:define="planning_box python: here.ERP5XhtmlStyle_getPlanningBox(form)">\n
+    <tal:block tal:define="planning_box python: form.Form_getPlanningBox()">\n
       <tal:block tal:condition="python: planning_box">\n
         <!-- PlanningBox generic stuff -->\n
         <style tal:content="structure python: planning_box.render_css(None,REQUEST=request)"\n

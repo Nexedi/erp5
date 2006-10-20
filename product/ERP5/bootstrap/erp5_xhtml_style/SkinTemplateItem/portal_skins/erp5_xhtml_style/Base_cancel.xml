@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.ERP5XhtmlStyle_redirect(cancel_url, **kw)\n
+            <value> <string>return context.ERP5Site_redirect(cancel_url, **kw)\n
 </string> </value>
         </item>
         <item>

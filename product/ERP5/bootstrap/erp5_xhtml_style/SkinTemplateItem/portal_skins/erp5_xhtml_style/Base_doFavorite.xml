@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>if select_favorite == \'\':\n
   return\n
-return context.ERP5XhtmlStyle_redirect(select_favorite, **kw)\n
+return context.ERP5Site_redirect(select_favorite, **kw)\n
 </string> </value>
         </item>
         <item>
