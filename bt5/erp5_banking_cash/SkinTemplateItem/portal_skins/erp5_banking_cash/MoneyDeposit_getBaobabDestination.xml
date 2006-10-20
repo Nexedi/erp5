@@ -72,14 +72,10 @@
 baobab_destination = None\n
 # Get the history of the workflow\n
 user_id=\'None\'\n
-context.log(\'workflow_item_list:\',context.Base_getWorkflowHistoryItemList(\'money_deposit_workflow\',display=0))\n
 for workflow_item in context.Base_getWorkflowHistoryItemList(\'money_deposit_workflow\',display=0):\n
-  context.log(\'workflow_item.getProperty(action)\',workflow_item.getProperty(\'action\'))\n
   if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
     user_id=workflow_item.getProperty(\'actor\')\n
-context.log(\'user_id\',user_id)\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-context.log(\'MoneyDeposit_getBaobabDestination site_list\',site_list)\n
 for site in site_list:\n
   site_value = context.portal_categories.getCategoryValue(site)\n
   if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
