@@ -237,20 +237,32 @@ if not executive:\n
 #   , \'base\'          : gross_salary\n
 #   }\n
 # else:\n
-#   kw[\'lodging_helps/salaire_plafonne\'] = \\\n
-#   { \'employer_share\': 0.10\n
-#   , \'employee_share\': None\n
-#   , \'base\'          : limited_salary\n
-#   }\n
+kw[\'lodging_helps/salaire_plafonne\'] = \\\n
+{ \'employer_share\': 0.10\n
+, \'employee_share\': None\n
+, \'base\'          : limited_salary\n
+}\n
+\n
+# Solidarity day = Journ\xe9e de Solidarit\xe9\n
+kw[\'solidarity_day/salaire_brut\'] = \\\n
+{ \'employer_share\': 0.30\n
+, \'employee_share\': None\n
+, \'base\'          : gross_salary\n
+}\n
 \n
 # Transport payment\n
 # TODO: rate depending of the town, 1.80 is the \'default\' value (when the town isn\'t referenced by laws)\n
-if company_size > 9:\n
-  kw[\'transport_payment/salaire_brut\'] = \\\n
-  { \'employer_share\': 1.80\n
-  , \'employee_share\': None\n
-  , \'base\'          : gross_salary\n
-  }\n
+# TODO: Even if the company size is more than 9, you don\'t pay this contribution until 3 years.\n
+#       The 4th year you pay 25%\n
+#       The 5th year you pay 50%\n
+#       The 6th year you pay 75%\n
+#       Starting from the 7th year you pay 100%\n
+# if company_size > 9:\n
+#   kw[\'transport_payment/salaire_brut\'] = \\\n
+#   { \'employer_share\': 1.80\n
+#   , \'employee_share\': None\n
+#   , \'base\'          : gross_salary\n
+#   }\n
 \n
 # CSG\n
 kw[\'csg_deductible/salaire_brut_csg\'] = \\\n
@@ -391,7 +403,12 @@ if executive:\n
 #   }\n
 \n
 # APEC forfaitaire\n
-if executive:\n
+# This contribution is due for March only\n
+comp_date = DateTime(start_date.year(), 3, 31)\n
+while comp_date < comp_date:\n
+  comp_date = DateTime(comp_date.year() + 1, 3, 31)\n
+context.log("kev date", repr(comp_date))\n
+if executive and start_date <= comp_date <= stop_date:\n
   kw[\'apec/forfait\'] = \\\n
   { \'employer_share\': 3.72\n
   , \'employee_share\': 2.49\n
@@ -454,10 +471,21 @@ if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
   , \'base\'          : ceiling_salary\n
   }\n
 \n
+# Also add a brand new line for "Reduction Fillon", a negative contribution.\n
+# This tax can be calculated automaticcaly.\n
+# Because of lack of time we just let the accountant do the work.\n
+# See coresponding service description for more details.\n
+kw[\'reduction_fillon_forfait/forfait\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
+, \'base\'          : 1.0\n
+}\n
+\n
 # Add blank lines for:\n
 #   * wickness holding (= retenue maladie)\n
 #   * pay bonus (= primes)\n
 #   * non-working days (= absences)\n
+#   * vacation compensation (= ICCP)\n
 # Thanks to this, the accountant has the freedom to add the missing amount of money\n
 #   that this script can\'t guess.\n
 kw[\'retenue_maladie/forfait\'] = \\\n
@@ -475,16 +503,12 @@ kw[\'absences/forfait\'] = \\\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-\n
-# Also add a brand new line for "Reduction Fillon", a negative contribution.\n
-# This tax can be calculated automaticcaly.\n
-# Because of lack of time we just let the accountant do the work.\n
-# See coresponding service description for more details.\n
-kw[\'reduction_fillon_forfait/forfait\'] = \\\n
+kw[\'iccp/forfait\'] = \\\n
 { \'employer_share\': None\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
+\n
 \n
 return kw\n
 
@@ -584,6 +608,8 @@ return kw\n
                             <string>fngs_employer_rate</string>
                             <string>employee_share_rate</string>
                             <string>employer_share_rate</string>
+                            <string>comp_date</string>
+                            <string>repr</string>
                             <string>col_agr</string>
                             <string>syntec_rate</string>
                           </tuple>
