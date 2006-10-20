@@ -74,12 +74,12 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
       need to be installed to run the test on.
     """
     return ( 'erp5_base'
-  	   , 'erp5_trade'
-  	   , 'erp5_accounting'
-           , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
-           , 'erp5_banking_inventory'  #, 'currency_exchange_patch'
-           , 'erp5_banking_cash' # erp5_banking_money_deposit contains all method for cash sorting
-           )
+             , 'erp5_trade'
+             , 'erp5_accounting'
+             , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
+             , 'erp5_banking_inventory'  #, 'currency_exchange_patch'
+             , 'erp5_banking_cash' # erp5_banking_money_deposit contains all method for cash sorting
+             )
   
   def getMoneyDepositModule(self):
     """
@@ -99,7 +99,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
 
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=['paris',])
     self.createBanknotesAndCoins()
 
     """
