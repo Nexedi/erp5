@@ -68,32 +68,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>N_ = context.getPortalObject().Base_translateString\n
+            <value> <string>"""Add an object of the same type as self in the container, unless\n
+this type cannot be added in the container.\n
+"""\n
+N_ = context.getPortalObject().Base_translateString\n
 REQUEST=context.REQUEST\n
-\n
-# Add an object of the same type as self in the container.\n
 parent = context.aq_parent\n
+allowed_type_list = parent.getVisibleAllowedContentTypeList()\n
 \n
-# XXX May be this need to be changed in order to get something else than\n
-# the permission "Add portal content"\n
-if not parent.allowedContentTypes():\n
-  return context.ERP5Site_redirect(\'%s/%s/view\' % (parent.getUrl(), context.getId()), \n
-                                         keep_items={\'portal_status_message\': N_("You are not allowed to add new content in this context.")})\n
+if not allowed_type_list:\n
+  return context.ERP5Site_redirect(\'%s/%s/view\' % (\n
+        parent.getUrl(), context.getId()),\n
+        keep_items={\'portal_status_message\':\n
+           N_("You are not allowed to add new content in this context.")})\n
+\n
+if context.getPortalType() not in allowed_type_list:\n
+  return context.ERP5Site_redirect(\'%s/%s/view\' % (\n
+        parent.getUrl(), context.getId()),\n
+        keep_items={\'portal_status_message\':\n
+           N_("You are not allowed to add ${portal_type} in this context.",\n
+              mapping=dict(portal_type=context.getTranslatedPortalType()))})\n
   \n
-else:\n
-  new_id = parent.generateNewId()\n
-  context.portal_types.constructContent(type_name=context.portal_type,\n
-                        container=parent,\n
-                        id=str(new_id),\n
-                        RESPONSE=REQUEST.RESPONSE)\n
-  return context.ERP5Site_redirect(\'%s/%s/view\' % (parent.getUrl(), new_id), \n
-                                         keep_items={\'portal_status_message\': N_("Object Created.")})\n
+new_id = parent.generateNewId()\n
+context.portal_types.constructContent(type_name=context.portal_type,\n
+                      container=parent,\n
+                      id=str(new_id),\n
+                      RESPONSE=REQUEST.RESPONSE)\n
+return context.ERP5Site_redirect(\'%s/%s/view\' % (parent.getUrl(), new_id),\n
+              keep_items={\'portal_status_message\': N_("Object Created.")})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -135,6 +149,8 @@ else:\n
                             <string>N_</string>
                             <string>REQUEST</string>
                             <string>parent</string>
+                            <string>allowed_type_list</string>
+                            <string>dict</string>
                             <string>new_id</string>
                             <string>str</string>
                           </tuple>
@@ -159,6 +175,27 @@ else:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
