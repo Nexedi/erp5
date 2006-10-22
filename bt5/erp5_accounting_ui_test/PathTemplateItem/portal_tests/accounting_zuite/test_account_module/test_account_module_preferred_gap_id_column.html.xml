@@ -113,7 +113,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- sort by title, to reset any sort on preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>link=Title</td>\n
+  <td>link=Account Name</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
