@@ -186,6 +186,8 @@ else:\n
   message = N_("Please+select+one+or+more+items+first.")\n
   qs = \'?portal_status_message=%s\' % message\n
 \n
+# make sure nothing is checked after\n
+context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
 return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
 
 
