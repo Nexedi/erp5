@@ -80,9 +80,10 @@ kw[\'omit_output\'] = 1\n
 kw[\'transaction_uid\'] = context.getUid()\n
 \n
 result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
-                  selection=selection, selection_params=kw, **kw)\n
+                selection=selection, selection_params=kw, **kw)\n
+\n
 if result:\n
-  return result[0].total_price\n
+  return result[0].total_price or 0\n
 return 0.\n
 </string> </value>
         </item>
