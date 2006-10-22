@@ -68,7 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [(pers.getTitle(), pers.getRelativeUrl())\n
+            <value> <string>"""Returns an item list of all person we can affect this transmission sheet to.\n
+This script returns all persons with internal roles, you can customize it according\n
+to your security configuration (eg. using function)\n
+"""\n
+return [(pers.getTitle(), pers.getRelativeUrl())\n
         for pers in context.getPortalObject().person_module.searchFolder(role_id="internal")]\n
 </string> </value>
         </item>

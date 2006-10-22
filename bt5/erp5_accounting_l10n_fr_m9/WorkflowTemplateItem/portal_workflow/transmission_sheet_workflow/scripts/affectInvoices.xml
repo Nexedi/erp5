@@ -68,14 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Add a local roles on this transmission sheet and all related invoices\n
+            <value> <string>"""Affect this transmission sheet and all related invoices\n
 """\n
 transmission_sheet = sci[\'object\']\n
 agent = sci[\'kwargs\'][\'agent\']\n
 portal = transmission_sheet.getPortalObject()\n
 \n
-transmission_sheet.setDefaultRoleDefinitionAgent(agent)\n
-transmission_sheet.setDefaultRoleDefinitionRoleName(\'Assignee\')\n
+transmission_sheet.setSourceAdministration(agent)\n
 transmission_sheet.updateLocalRolesOnSecurityGroups()\n
 \n
 for invoice in transmission_sheet.getAggregateRelatedValueList(\n

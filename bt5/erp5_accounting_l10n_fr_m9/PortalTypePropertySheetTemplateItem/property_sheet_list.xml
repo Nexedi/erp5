@@ -5,7 +5,7 @@
  <portal_type id="Invoice Transmission Sheet">
   <item>PurchaseInvoiceTransmissionSheet</item>
   <item>SortIndex</item>
+  <item>Arrow</item>
   <item>Task</item>
-  <item>DefaultRoleDefinition</item>
  </portal_type>
 </property_sheet_list>

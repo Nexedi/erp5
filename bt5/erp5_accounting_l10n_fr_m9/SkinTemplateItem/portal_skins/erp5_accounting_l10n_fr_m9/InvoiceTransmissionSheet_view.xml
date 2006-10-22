@@ -100,6 +100,8 @@
                     <value>
                       <list>
                         <string>listbox_total_price</string>
+                        <string>listbox_mirror_section_title</string>
+                        <string>listbox_int_index</string>
                       </list>
                     </value>
                 </item>
@@ -109,10 +111,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
-                        <string>my_default_role_definition_agent_title</string>
                         <string>total_amount</string>
-                        <string>listbox_mirror_section_title</string>
-                        <string>listbox_int_index</string>
+                        <string>my_source_administration_title</string>
                       </list>
                     </value>
                 </item>
