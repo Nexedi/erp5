@@ -307,6 +307,13 @@ class BaobabConduit(ERP5Conduit):
                                                    , id          = object_id
                                                    )
         subobject.setCareerRole('client')
+        # We first try to get the organisation corresponding
+        organisation_id = 'site_%s' % object_id[:3]
+        organisation = person_module_object.portal_catalog(
+                                              portal_type='Organisation',
+                                              id=organisation_id
+                                              )[0].getObject()
+        subobject.setCareerSubordinationValue(organisation)
       else: # This is an organisation object
         subobject = organisation_module_object.newContent( portal_type = 'Organisation'
                                                          , id          = object_id
