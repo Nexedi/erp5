@@ -70,250 +70,446 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# Get Precision\n
+"""\n
+  This script get current Pay Sheet Lines and reorganize them for PDF print.\n
+  TODO: What is missing in this script is the support of line ordering. The data structure (= the \'details\' dict) was design to support such a feature (thanks to a combination of dicts and lists), so normally little code is needed to make this feature working.\n
+"""\n
+\n
+# Some globals\n
+portal = context.getPortalObject()\n
+\n
+\n
+# Initialize total share\n
+gross_salary         = 0.0\n
+net_salary           = 0.0\n
+total_employer_share = 0.0\n
+total_employee_share = 0.0   # total_employee_share = r_(gross_salary - net_salary)\n
+taxable_net_salary   = 0.0\n
+\n
+\n
+\n
+##############################################################################\n
+# General purpose method to manipulate the \'details\' data structure.\n
+##############################################################################\n
+\n
+# This dict contain all paysheet details for printing\n
+details = { \'groups\': []  # Current month pay sheet line details\n
+          , \'totals\': {}  # Current month and yearly totals\n
+          }\n
+\n
+\n
+def getPSLGroupIdList():\n
+  """\n
+    This method get the list of group IDs registered in the details dict.\n
+  """\n
+  id_list = []\n
+  for group in details[\'groups\']:\n
+    gid = group[\'id\']\n
+    if gid != None:\n
+      id_list.append(gid)\n
+  return id_list\n
+\n
+\n
+def groupExist(group_id):\n
+  return (group_id not in [\'\', None] and group_id in getPSLGroupIdList()) and True or False\n
+\n
+\n
+def getGroup(group_id):\n
+  for group in details[\'groups\']:\n
+    if group[\'id\'] == group_id:\n
+      return group\n
+  return None\n
+\n
+\n
+def getGroupSubLineIdList(group_id=None):\n
+  """\n
+    This method get the list of subline IDs for a given group.\n
+  """\n
+  id_list = []\n
+  group = getGroup(group_id)\n
+  if group != None:\n
+    sublines = group[\'sublines\']\n
+    if sublines != None and len(sublines) > 0:\n
+      for subline in sublines:\n
+        id_list.append(subline[\'id\'])\n
+  return id_list\n
+\n
+\n
+def sublineExist(group_id, subline_id):\n
+  return (groupExist(group_id) and subline_id not in [\'\', None] and subline_id in getGroupSubLineIdList(group_id)) and True or False\n
+\n
+\n
+def getSubLine(group_id, subline_id):\n
+  """\n
+    This method get subline content based on its ID\n
+  """\n
+  group = getGroup(group_id)\n
+  if group != None:\n
+    for subline in group[\'sublines\']:\n
+      if subline[\'id\'] == subline_id:\n
+        return subline\n
+  return None\n
+\n
+\n
+def updateSubLine(group_id, subline_id, property, value):\n
+  """\n
+    This method update a subline property.\n
+  """\n
+  subline = getSubLine(group_id, subline_id)\n
+  if subline != None:\n
+    subline[property] = value\n
+    return\n
+  context.log("PaySheetTransaction_getDetails() error: ", "Can\'t update subline %s from %s group with %s=%s" % (subline_id, group_id, property, value))\n
+\n
+\n
+\n
+##############################################################################\n
+# Build an empty \'details\' dict.\n
+##############################################################################\n
+\n
+# Scan each pay sheet line\n
+for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
+\n
+  service           = context.restrictedTraverse(psl.getResource())\n
+  salary_range_list = psl.getSalaryRangeList()\n
+  tax_category_list = psl.getTaxCategoryList()\n
+\n
+\n
+  # Create a new pay sheet line group for each new tax_category\n
+  for tax_category in tax_category_list:\n
+    group_id = tax_category.split(\'/\')[0]\n
+    if not groupExist(group_id):\n
+      group = portal.portal_categories.resolveCategory(\'tax_category/%s\' % group_id)\n
+      # New pay sheet line group data structure\n
+      new_group = { \'title\'   : group.getTitle()\n
+                  , \'id\'      : group_id\n
+                  , \'sublines\': []\n
+                  }\n
+      details[\'groups\'] = details[\'groups\'] + [new_group]\n
+\n
+\n
+    # Create a new line for each salary range to contain cells\n
+    for salary_range_path in salary_range_list:\n
+      salary_range = portal.portal_categories.resolveCategory(\'salary_range/%s\' % salary_range_path)\n
+      # Compose a unique ID for the combination of service and salary_range\n
+      subline_id = "%s/%s" % (service.getId(), salary_range.getId())\n
+\n
+      # Here we decide if a Pay Sheet Line is taxable or not, according its payroll service\n
+      # TODO: use a \'taxable\' category to test this in a more generic way\n
+      service_id = service.getId()\n
+      taxable = False\n
+      if service_id.endswith(\'non_deductible\') or \\\n
+         service_id.endswith(\'crds\')           or \\\n
+         service_id.endswith(\'taxable\'):\n
+        taxable = True\n
+      elif service_id.endswith(\'deductible\'):\n
+        taxable = False\n
+\n
+      # Check that the subline doesn\'t exist in this group\n
+      if not sublineExist(group_id, subline_id):\n
+        new_subline = { \'id\'                : subline_id\n
+                      , \'service_title\'     : service.getTitle()\n
+                      , \'salary_range_title\': salary_range.getTitle()\n
+                      , \'base\'              : None # Base Value                  (Assiette)\n
+                      , \'employer_rate\'     : None # Employer Share Rate, if any (Taux part patronale)\n
+                      , \'employer_share\'    : None # Employer Share              (Part patronale)\n
+                      , \'employee_rate\'     : None # Employee Share Rate, if any (Taux part salariale)\n
+                      , \'employee_share\'    : None # Employee Share              (Part salariale)\n
+                      , \'taxable\'           : taxable\n
+#                       , \'description\'       : None # Comment\n
+#                       , \'service_id\'        : None # Service ID\n
+#                       , \'salary_range\'      : None # Salary Range\n
+#                       , \'tax_category\'      : None # Tax Category\n
+                      }\n
+        # Update group\'s sublines\n
+        groups = details[\'groups\']\n
+        old_group = groups.pop(groups.index(getGroup(group_id)))\n
+        old_group[\'sublines\'] = old_group[\'sublines\'] + [new_subline]\n
+        details[\'groups\'] = groups + [old_group]\n
+\n
+\n
+\n
+##############################################################################\n
+# Fill the \'details\' dict with cell and calculated datas.\n
+# Here there is some specific code that must be modified to generic one.\n
+##############################################################################\n
+\n
+# Get Precision and precise rounding methods\n
 precision = context.Base_getPreferredPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
-# this dict contain all paysheet details\n
-details = {}\n
+# Scan each pay sheet line and save it in the right place in the data structure\n
+for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
+  # Add each cell to the data structure\n
+  for cell in psl.objectValues(portal_type=\'Pay Sheet Cell\'):\n
+    # There is no getSalaryRangeList() accessor on cells, so sort categories manually\n
+    salary_range_path = None\n
+    tax_category_path = None\n
+    for c in cell.getCategoryList():\n
+      if c.startswith(\'tax_category\'): tax_category_path = c\n
+      if c.startswith(\'salary_range\'): salary_range_path = c\n
 \n
-# initialize total share\n
-total_employer_share         = 0.0\n
-total_taxable_employee_share = 0.0\n
+    # Get the cell tax category as group\n
+    cell_group_id = tax_category_path.split(\'/\')[1]\n
 \n
-paysheet_cat = {}\n
-object_list = []\n
+    # Get the cell subline_id\n
+    service         = context.restrictedTraverse(psl.getResource())\n
+    salary_range    = portal.portal_categories.resolveCategory(salary_range_path)\n
+    cell_subline_id = "%s/%s" % (service.getId(), salary_range.getId())\n
 \n
-# get all Pay Sheet Line\n
-gross_salary   = 0.0\n
-net_salary     = 0.0\n
-for object in context.objectValues():\n
-  if object.getPortalType()==\'Pay Sheet Line\':\n
-    # get the gross salary\n
-    if object.getResource() == \'payroll_service_module/labour\':\n
-      for cell in object.objectValues():\n
-        if cell.getCategoriesList() == [\'tax_category/social/employer_share\', \'salary_range/france\']:\n
-          gross_salary = r_(cell.getPrice())\n
-        elif cell.getCategoriesList() == [\'tax_category/social/employee_share\', \'salary_range/france\']:\n
-          net_salary = r_(cell.getPrice())\n
-    object_list += [object]\n
+    # Get money-related datas\n
+    # The code below is broken if category naming conventions are not respected\n
+    range_type = \'/\'.join(salary_range_path.split(\'/\')[2:])   # \'fixed\', \'fixed/gross\', \'variable\'...\n
+    share_type = tax_category_path.split(\'/\')[-1]             # \'employee_share\' or \'employer_share\'\n
+    share_type = share_type.split(\'_\')[0]                     # \'employee\' or \'employer\'\n
 \n
-# change the sign\n
-gross_salary = r_(-gross_salary)\n
-net_salary   = r_(-net_salary)\n
+    ### Gross salary group handling\n
+    if range_type.startswith("fixed/gross"):\n
+      # Ignore the base and rates, ignore employee share, move employer share to employee share\n
+      cell_value = r_(cell.getPrice())\n
+      if share_type == \'employer\':\n
+        updateSubLine( group_id   = cell_group_id\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'employee_share\'\n
+                     , value      = \'%.2f\' % cell_value  #TODO: the "%.2f" format should be based on currency precision\n
+                     )\n
+        gross_salary = r_(gross_salary + cell_value)\n
+        # Do not display base type for non-base salary\n
+        if not range_type.startswith("fixed/gross/base"):\n
+          updateSubLine( group_id   = cell_group_id\n
+                       , subline_id = cell_subline_id\n
+                       , property   = \'salary_range_title\'\n
+                       , value      = None\n
+                       )\n
 \n
-total_employee_share = r_(gross_salary - net_salary)\n
+      ### Net Salary handling\n
+      elif share_type == \'employee\':\n
+        net_salary = \'%.2f\' % cell_value  #TODO: the "%.2f" format should be based on currency precision\n
 \n
+    ### Addendum group handling\n
+    elif range_type.startswith("fixed/addendum"):\n
+      # TODO: support addendum\n
+      pass\n
 \n
-# Get the CSG salary\n
-# This is only used for report\n
-csg_salary = r_(0.97 * gross_salary)\n
-\n
-# Calculate the ceiling salary\n
-# This is only used for report\n
-ceiling_salary = 0.0\n
-ceiling_salary_list = { 2003 : 2432.0\n
-                      , 2004 : 2476.0\n
-                      , 2005 : 2516.0\n
-                      , 2006 : 2589.0\n
-                      }\n
-# the default ceiling salary is the last one\n
-paysheet_year = context.getStartDate().year()\n
-ceiling_salary_available_years = ceiling_salary_list.keys()\n
-if paysheet_year not in ceiling_salary_available_years:\n
-  paysheet_year = ceiling_salary_available_years[-1]\n
-salary_limit = ceiling_salary_list[paysheet_year]\n
-# limited salary = salaire plafonnee\n
-if gross_salary < salary_limit:\n
-  ceiling_salary = gross_salary\n
-else:\n
-  ceiling_salary = salary_limit\n
-\n
-# Get the list of all slice the employee fall in\n
-# This is only used for report\n
-slice_a_salary = 0.0\n
-slice_b_salary = 0.0\n
-slice_c_salary = 0.0\n
-# "Char" slice type\n
-slice_a_value = salary_limit\n
-slice_b_value = salary_limit * 4\n
-slice_c_value = salary_limit * 8\n
-if gross_salary < slice_a_value:\n
-  slice_a_salary = gross_salary\n
-else:\n
-  slice_a_salary = slice_a_value\n
-  if gross_salary < slice_b_value:\n
-    slice_b_salary = float(gross_salary) - float(slice_a_value)\n
-  else:\n
-    slice_b_salary = slice_b_value\n
-    if gross_salary < slice_c_value:\n
-      slice_c_salary = float(gross_salary) - float(slice_b_value)\n
+    ### Default/Standard line group handling\n
     else:\n
-      slice_c_salary = slice_c_value\n
+      cell_rate  = cell.getPrice()\n
+      cell_base  = - cell.getQuantity() # Change sign for beauty\n
+      # BUG: why cell.getTotalPrice() use the method from Amount instead of the one defined in Movement class ?\n
+      cell_share = r_(cell_base * cell_rate)\n
 \n
-# Sort the list by id since lines are already ordered by id.\n
-object_list.sort(lambda x, y: cmp(int(x.getId()), int(y.getId())))\n
-for pay_sheet_line in object_list:\n
-  variation_list = pay_sheet_line.getVariationCategoryList()\n
-  range_variation = []\n
-  for variation in variation_list:\n
-    if variation.find(\'salary_range\') == 0:\n
-      if not variation in range_variation: # Extra checking because\n
-                                           # get VariationCategoryList returns\n
-                                           # the same 1 items 2 times\n
-                                           # This is normally no longer true, I fix this bug years ago (!)\n
-        range_variation += [variation]\n
-  for range in range_variation:\n
-    pay_sheet_dict = {}\n
-    pay_sheet_dict[\'id\'] = pay_sheet_line.getId()\n
-    pay_sheet_dict[\'title\'] = pay_sheet_line.getResourceTitle()\n
-    for cell in pay_sheet_line.objectValues():\n
-      cat_list = cell.getCategoryList()\n
-      if range in cat_list:\n
-        pay_sheet_dict[\'base_name\'] = context.portal_categories.resolveCategory(range).getTitleOrId()\n
-        for category in cat_list:\n
-          # BUG: why cell.getTotalPrice() use the method from Amount instead of the one defined in Movement ?\n
-          cell_price       = cell.getPrice()\n
-          cell_quantity    = cell.getQuantity()\n
-          cell_total_price = r_(cell_price * cell_quantity)\n
-          # Hack to not display things added to the gross salary\n
-          if cell_total_price != 0 or cell.getResourceId() not in (\'primes\', \'retenue_maladie\'):\n
-            if category.find(\'employee_share\') >= 0:\n
-              pay_sheet_dict[\'base\'] = -cell_quantity # change the sign to beautify\n
-              pay_sheet_dict[\'employee_share\'] = -cell_total_price\n
-              pay_sheet_dict[\'employee_share_rate\'] = cell_price * 100\n
-              # here we decide if a resource is taxable\n
-              if str(pay_sheet_line.getResource())[-14:] == \'non_deductible\' or \\\n
-                 str(pay_sheet_line.getResource())[-4:]  == \'crds\'           or \\\n
-                 str(pay_sheet_line.getResource())[-7:]  == \'taxable\':\n
-                pay_sheet_dict[\'taxable\'] = \'yes\'\n
-              elif str(pay_sheet_line.getResource())[-10:] == \'deductible\':\n
-                pay_sheet_dict[\'taxable\'] = \'no\'\n
-              else:\n
-                pay_sheet_dict[\'taxable\'] = \'no\'\n
-              if pay_sheet_dict[\'taxable\'] == \'yes\':\n
-                if pay_sheet_dict[\'employee_share\'] not in (\'\', None):\n
-                  total_taxable_employee_share = r_(total_taxable_employee_share + r_(pay_sheet_dict[\'employee_share\']))\n
-            elif category.find(\'employer_share\') >= 0:\n
-              pay_sheet_dict[\'base\'] = -cell_quantity # change the sign for the beautification effect\n
-              pay_sheet_dict[\'employer_share\'] = -cell_total_price\n
-              pay_sheet_dict[\'employer_share_rate\'] = cell_price * 100\n
-              if pay_sheet_dict[\'employer_share\'] not in (\'\', None):\n
-                total_employer_share = r_(total_employer_share + r_(pay_sheet_dict[\'employer_share\']))\n
-        if range.endswith(\'forfait\'):\n
-          pay_sheet_dict[\'base\']                = \'\'\n
-          pay_sheet_dict[\'employer_share_rate\'] = \'\'\n
-          pay_sheet_dict[\'employee_share_rate\'] = \'\'\n
-    for key in [\'employee_share\',\'employee_share_rate\',\'employer_share\',\'employer_share_rate\']:\n
-      if not (pay_sheet_dict.has_key(key)):\n
-        pay_sheet_dict[key] = \'\' # so that we can display nothing\n
+      ### Fixed Pay Sheet Lines (= \'forfait\')\n
+      if range_type.startswith("fixed"):\n
+        # Ignore the base and rates\n
+        updateSubLine( group_id   = cell_group_id\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'%s_share\' % share_type\n
+                     , value      = \'%.2f\' % cell_share  #TODO: the "%.2f" format should be based on currency precision\n
+                     )\n
 \n
-    # find the category of the current pay sheet line\n
-    cat_id = None\n
-    cat_path = None\n
-    for var in variation_list:\n
-      sub_cat = var.split(\'/\')\n
-      if sub_cat[0] == \'tax_category\':\n
-        cat_id = sub_cat[1]\n
-        cat_path = sub_cat[0] + \'/\' + sub_cat[1]\n
-        break\n
-    if cat_id == None:\n
-      cat_id = \'no_cat\'\n
-    # add the current pay sheet line to its category\n
-    if not paysheet_cat.has_key(cat_id):\n
-      paysheet_cat[cat_id] = {}\n
-      paysheet_cat[cat_id][\'lines\'] = []\n
-    if cat_path != None:\n
-      paysheet_cat[cat_id][\'title\'] = context.portal_categories.resolveCategory(cat_path).getTitleOrId()\n
-    paysheet_cat[cat_id][\'lines\'].append(pay_sheet_dict)\n
+      ### Other Pay Sheet Lines (= variable)\n
+      else:\n
+        # Get the rate and the base, calculate the share\n
+        updateSubLine( group_id   = cell_group_id\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'%s_rate\' % share_type\n
+                     , value      = \'%.3f %%\' % r_(cell_rate * 100.0) # The "%.3f" format is arbitrary. "3" was choose because there is no rate with precision above 3. Feel Free to update this format if required.\n
+                     )\n
+        updateSubLine( group_id   = cell_group_id\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'base\'\n
+                     , value      = \'%.2f\' % r_(cell_base) #TODO: the "%.2f" format should be based on currency precision\n
+                     )\n
+        updateSubLine( group_id   = cell_group_id\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'%s_share\' % share_type\n
+                     , value      = \'%.2f\' % cell_share #TODO: the "%.2f" format should be based on currency precision\n
+                     )\n
+      # Sum up employee and employer share grand total\n
+      if share_type == \'employee\':\n
+        total_employee_share = r_(total_employee_share + cell_share)\n
+      elif share_type == \'employer\':\n
+        total_employer_share = r_(total_employer_share + cell_share)\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+# # Sort the list by id since lines are already ordered by id.\n
+# object_list.sort(lambda x, y: cmp(int(x.getId()), int(y.getId())))\n
+# for pay_sheet_line in object_list:\n
+#   variation_list = pay_sheet_line.getVariationCategoryList()\n
+#   range_variation = []\n
+#   for variation in variation_list:\n
+#     if variation.find(\'salary_range\') == 0:\n
+#       if not variation in range_variation: # Extra checking because\n
+#                                            # get VariationCategoryList returns\n
+#                                            # the same 1 items 2 times\n
+#                                            # This is normally no longer true, I fix this bug years ago (!)\n
+#         range_variation += [variation]\n
+#   for range in range_variation:\n
+#     pay_sheet_dict = {}\n
+#     pay_sheet_dict[\'id\'] = pay_sheet_line.getId()\n
+#     pay_sheet_dict[\'title\'] = pay_sheet_line.getResourceTitle()\n
+#     for cell in pay_sheet_line.objectValues():\n
+#       cat_list = cell.getCategoryList()\n
+#       if range in cat_list:\n
+#         pay_sheet_dict[\'base_name\'] = context.portal_categories.resolveCategory(range).getTitleOrId()\n
+#         for category in cat_list:\n
+#           # BUG: why cell.getTotalPrice() use the method from Amount instead of the one defined in Movement ?\n
+#           cell_price       = cell.getPrice()\n
+#           cell_quantity    = cell.getQuantity()\n
+#           cell_total_price = r_(cell_price * cell_quantity)\n
+#           # Hack to not display things added to the gross salary\n
+#           if cell_total_price != 0 or cell.getResourceId() not in (\'primes\', \'retenue_maladie\'):\n
+#             if category.find(\'employee_share\') >= 0:\n
+#               pay_sheet_dict[\'base\'] = -cell_quantity # change the sign to beautify\n
+#               pay_sheet_dict[\'employee_share\'] = -cell_total_price\n
+#               pay_sheet_dict[\'employee_share_rate\'] = cell_price * 100\n
+#               # here we decide if a resource is taxable\n
+#               if str(pay_sheet_line.getResource())[-14:] == \'non_deductible\' or \\\n
+#                  str(pay_sheet_line.getResource())[-4:]  == \'crds\'           or \\\n
+#                  str(pay_sheet_line.getResource())[-7:]  == \'taxable\':\n
+#                 pay_sheet_dict[\'taxable\'] = \'yes\'\n
+#               elif str(pay_sheet_line.getResource())[-10:] == \'deductible\':\n
+#                 pay_sheet_dict[\'taxable\'] = \'no\'\n
+#               else:\n
+#                 pay_sheet_dict[\'taxable\'] = \'no\'\n
+#               if pay_sheet_dict[\'taxable\'] == \'yes\':\n
+#                 if pay_sheet_dict[\'employee_share\'] not in (\'\', None):\n
+#                   total_taxable_employee_share = r_(total_taxable_employee_share + r_(pay_sheet_dict[\'employee_share\']))\n
+#             elif category.find(\'employer_share\') >= 0:\n
+#               pay_sheet_dict[\'base\'] = -cell_quantity # change the sign for the beautification effect\n
+#               pay_sheet_dict[\'employer_share\'] = -cell_total_price\n
+#               pay_sheet_dict[\'employer_share_rate\'] = cell_price * 100\n
+#               if pay_sheet_dict[\'employer_share\'] not in (\'\', None):\n
+#                 total_employer_share = r_(total_employer_share + r_(pay_sheet_dict[\'employer_share\']))\n
+#         if range.endswith(\'forfait\'):\n
+#           pay_sheet_dict[\'base\']                = \'\'\n
+#           pay_sheet_dict[\'employer_share_rate\'] = \'\'\n
+#           pay_sheet_dict[\'employee_share_rate\'] = \'\'\n
+#     for key in [\'employee_share\',\'employee_share_rate\',\'employer_share\',\'employer_share_rate\']:\n
+#       if not (pay_sheet_dict.has_key(key)):\n
+#         pay_sheet_dict[key] = \'\' # so that we can display nothing\n
+#\n
+#     # find the category of the current pay sheet line\n
+#     cat_id = None\n
+#     cat_path = None\n
+#     for var in variation_list:\n
+#       sub_cat = var.split(\'/\')\n
+#       if sub_cat[0] == \'tax_category\':\n
+#         cat_id = sub_cat[1]\n
+#         cat_path = sub_cat[0] + \'/\' + sub_cat[1]\n
+#         break\n
+#     if cat_id == None:\n
+#       cat_id = \'no_cat\'\n
+#     # add the current pay sheet line to its category\n
+#     if not paysheet_cat.has_key(cat_id):\n
+#       paysheet_cat[cat_id] = {}\n
+#       paysheet_cat[cat_id][\'lines\'] = []\n
+#     if cat_path != None:\n
+#       paysheet_cat[cat_id][\'title\'] = context.portal_categories.resolveCategory(cat_path).getTitleOrId()\n
+#     paysheet_cat[cat_id][\'lines\'].append(pay_sheet_dict)\n
 \n
 \n
 # get all paysheet transaction to calculate the sum of different value in a year\n
-accounting_folder = context.aq_parent\n
-paysheet_transactions = accounting_folder.searchFolder(portal_type=\'Pay Sheet Transactionss\')\n
+# accounting_folder = context.aq_parent\n
+# paysheet_transactions = accounting_folder.searchFolder(portal_type=\'Pay Sheet Transactionss\')\n
+#\n
+# # initialize every yearly variable\n
+# yearly_net_salary         = 0.0\n
+# yearly_gross_salary       = 0.0\n
+# yearly_csg_salary         = 0.0\n
+# yearly_ceiling_salary     = 0.0\n
+# yearly_slice_a_salary     = 0.0\n
+# yearly_slice_b_salary     = 0.0\n
+# yearly_slice_c_salary     = 0.0\n
+# yearly_employee_share     = 0.0\n
+# yearly_employer_share     = 0.0\n
+# yearly_taxable_net_salary = 0.0\n
+#\n
+# # get the current paysheet start date and employee\n
+# from DateTime import DateTime\n
+# start_date = context.getStartDate()\n
+# start_date = DateTime("%i/01/01" % start_date.year())\n
+# stop_date  = context.getStopDate()\n
+# employee   = context.restrictedTraverse(context.getDestinationSectionRelativeUrl())\n
+#\n
+# #start_date = start_date.strftime(\'%Y-%m-%d\')\n
+# #stop_date = start_date.strftime(\'%Y-%m-%d\')\n
+# #yearly_employee_share = -float(context.PaySheetTransaction_zGetDetailedTotal(start_date=start_date,stop_date=stop_date,tax_category=\'employee_share\')[0].total)\n
+# #yearly_employer_share = -float(context.PaySheetTransaction_zGetDetailedTotal(start_date=start_date,stop_date=stop_date,tax_category=\'employer_share\')[0].total)\n
+#\n
+# #try:\n
+# #  yearly_employer_share = -float(context.PaySheetTransaction_zGetDetailedTotal(start_date=start_date,stop_date=stop_date,tax_category=\'employer_share\')[0].total)\n
+# #except KeyError:\n
+# #  pass\n
+#\n
+# # browse through paysheet transaction\n
+# for paysheet_obj in paysheet_transactions:\n
+#   # ignore the current paysheet to avoid infinite loop\n
+#   if paysheet_obj.getId() != context.getId():\n
+#     # the paysheet must have the same employee\n
+#     if (employee == None) or \\\n
+#        (employee != None and \\\n
+#          context.restrictedTraverse(paysheet_obj.getDestinationSectionRelativeUrl()) == employee):\n
+#       # check the date\n
+#       if (start_date == None) or \\\n
+#          (start_date != None                                       and \\\n
+#            paysheet_obj.getStartDate() != None                     and \\\n
+#            start_date.year() == paysheet_obj.getStartDate().year() and \\\n
+#            paysheet_obj.getStartDate() <= start_date):\n
+#         # get all detailed values of the paysheet\n
+#         old_ps = paysheet_obj.PaySheetTransaction_getDetails()\n
+#         # sum of yearly values\n
+#         yearly_net_salary         = r_(yearly_net_salary         + r_(old_ps[\'net_salary\']))\n
+#         yearly_gross_salary       = r_(yearly_gross_salary       + r_(old_ps[\'gross_salary\']))\n
+#         yearly_csg_salary         = r_(yearly_csg_salary         + r_(old_ps[\'csg_salary\']))\n
+#         yearly_ceiling_salary     = r_(yearly_ceiling_salary     + r_(old_ps[\'ceiling_salary\']))\n
+#         yearly_slice_a_salary     = r_(yearly_slice_a_salary     + r_(old_ps[\'slice_a_salary\']))\n
+#         yearly_slice_b_salary     = r_(yearly_slice_b_salary     + r_(old_ps[\'slice_b_salary\']))\n
+#         yearly_slice_c_salary     = r_(yearly_slice_c_salary     + r_(old_ps[\'slice_c_salary\']))\n
+#         yearly_employee_share     = r_(yearly_employee_share     + r_(old_ps[\'total_employee_share\']))\n
+#         yearly_employer_share     = r_(yearly_employer_share     + r_(old_ps[\'total_employer_share\']))\n
+#         yearly_taxable_net_salary = r_(yearly_taxable_net_salary + r_(old_ps[\'taxable_net_salary\']))\n
+#\n
+# # save the total share values in the exported dict\n
+# details[\'net_salary\']                   = net_salary\n
+# details[\'gross_salary\']                 = gross_salary\n
+# details[\'csg_salary\']                   = csg_salary\n
+# details[\'ceiling_salary\']               = ceiling_salary\n
+# details[\'slice_a_salary\']               = slice_a_salary\n
+# details[\'slice_b_salary\']               = slice_b_salary\n
+# details[\'slice_c_salary\']               = slice_c_salary\n
+# details[\'paysheet_categories\']          = paysheet_cat\n
+# details[\'total_employee_share\']         = total_employee_share\n
+# details[\'total_employer_share\']         = total_employer_share\n
+# details[\'total_taxable_employee_share\'] = -total_taxable_employee_share # change the sign for the beautification effect\n
+# details[\'taxable_net_salary\']           = r_(total_taxable_employee_share + r_(details[\'net_salary\']))\n
+#\n
+# # don\'t forget to add the current values to the yearly sum\n
+# details[\'yearly_net_salary\']         = r_(yearly_net_salary         + r_(details[\'net_salary\']))\n
+# details[\'yearly_gross_salary\']       = r_(yearly_gross_salary       + r_(details[\'gross_salary\']))\n
+# details[\'yearly_csg_salary\']         = r_(yearly_csg_salary         + r_(details[\'csg_salary\']))\n
+# details[\'yearly_ceiling_salary\']     = r_(yearly_ceiling_salary     + r_(details[\'ceiling_salary\']))\n
+# details[\'yearly_slice_a_salary\']     = r_(yearly_slice_a_salary     + r_(details[\'slice_a_salary\']))\n
+# details[\'yearly_slice_b_salary\']     = r_(yearly_slice_b_salary     + r_(details[\'slice_b_salary\']))\n
+# details[\'yearly_slice_c_salary\']     = r_(yearly_slice_c_salary     + r_(details[\'slice_c_salary\']))\n
+# details[\'yearly_employee_share\']     = r_(yearly_employee_share     + r_(details[\'total_employee_share\']))\n
+# details[\'yearly_employer_share\']     = r_(yearly_employer_share     + r_(details[\'total_employer_share\']))\n
+# details[\'yearly_taxable_net_salary\'] = r_(yearly_taxable_net_salary + r_(details[\'taxable_net_salary\']))\n
 \n
-# initialize every yearly variable\n
-yearly_net_salary         = 0.0\n
-yearly_gross_salary       = 0.0\n
-yearly_csg_salary         = 0.0\n
-yearly_ceiling_salary     = 0.0\n
-yearly_slice_a_salary     = 0.0\n
-yearly_slice_b_salary     = 0.0\n
-yearly_slice_c_salary     = 0.0\n
-yearly_employee_share     = 0.0\n
-yearly_employer_share     = 0.0\n
-yearly_taxable_net_salary = 0.0\n
 \n
-# get the current paysheet start date and employee\n
-from DateTime import DateTime\n
-start_date = context.getStartDate()\n
-start_date = DateTime("%i/01/01" % start_date.year())\n
-stop_date  = context.getStopDate()\n
-employee   = context.restrictedTraverse(context.getDestinationSectionRelativeUrl())\n
-\n
-#start_date = start_date.strftime(\'%Y-%m-%d\')\n
-#stop_date = start_date.strftime(\'%Y-%m-%d\')\n
-#yearly_employee_share = -float(context.PaySheetTransaction_zGetDetailedTotal(start_date=start_date,stop_date=stop_date,tax_category=\'employee_share\')[0].total)\n
-#yearly_employer_share = -float(context.PaySheetTransaction_zGetDetailedTotal(start_date=start_date,stop_date=stop_date,tax_category=\'employer_share\')[0].total)\n
-\n
-#try:\n
-#  yearly_employer_share = -float(context.PaySheetTransaction_zGetDetailedTotal(start_date=start_date,stop_date=stop_date,tax_category=\'employer_share\')[0].total)\n
-#except KeyError:\n
-#  pass\n
-\n
-# browse through paysheet transaction\n
-for paysheet_obj in paysheet_transactions:\n
-  # ignore the current paysheet to avoid infinite loop\n
-  if paysheet_obj.getId() != context.getId():\n
-    # the paysheet must have the same employee\n
-    if (employee == None) or \\\n
-       (employee != None and \\\n
-         context.restrictedTraverse(paysheet_obj.getDestinationSectionRelativeUrl()) == employee):\n
-      # check the date\n
-      if (start_date == None) or \\\n
-         (start_date != None                                       and \\\n
-           paysheet_obj.getStartDate() != None                     and \\\n
-           start_date.year() == paysheet_obj.getStartDate().year() and \\\n
-           paysheet_obj.getStartDate() <= start_date):\n
-        # get all detailed values of the paysheet\n
-        old_ps = paysheet_obj.PaySheetTransaction_getDetails()\n
-        # sum of yearly values\n
-        yearly_net_salary         = r_(yearly_net_salary         + r_(old_ps[\'net_salary\']))\n
-        yearly_gross_salary       = r_(yearly_gross_salary       + r_(old_ps[\'gross_salary\']))\n
-        yearly_csg_salary         = r_(yearly_csg_salary         + r_(old_ps[\'csg_salary\']))\n
-        yearly_ceiling_salary     = r_(yearly_ceiling_salary     + r_(old_ps[\'ceiling_salary\']))\n
-        yearly_slice_a_salary     = r_(yearly_slice_a_salary     + r_(old_ps[\'slice_a_salary\']))\n
-        yearly_slice_b_salary     = r_(yearly_slice_b_salary     + r_(old_ps[\'slice_b_salary\']))\n
-        yearly_slice_c_salary     = r_(yearly_slice_c_salary     + r_(old_ps[\'slice_c_salary\']))\n
-        yearly_employee_share     = r_(yearly_employee_share     + r_(old_ps[\'total_employee_share\']))\n
-        yearly_employer_share     = r_(yearly_employer_share     + r_(old_ps[\'total_employer_share\']))\n
-        yearly_taxable_net_salary = r_(yearly_taxable_net_salary + r_(old_ps[\'taxable_net_salary\']))\n
-\n
-# save the total share values in the exported dict\n
-details[\'net_salary\']                   = net_salary\n
-details[\'gross_salary\']                 = gross_salary\n
-details[\'csg_salary\']                   = csg_salary\n
-details[\'ceiling_salary\']               = ceiling_salary\n
-details[\'slice_a_salary\']               = slice_a_salary\n
-details[\'slice_b_salary\']               = slice_b_salary\n
-details[\'slice_c_salary\']               = slice_c_salary\n
-details[\'paysheet_categories\']          = paysheet_cat\n
-details[\'total_employee_share\']         = total_employee_share\n
-details[\'total_employer_share\']         = total_employer_share\n
-details[\'total_taxable_employee_share\'] = -total_taxable_employee_share # change the sign for the beautification effect\n
-details[\'taxable_net_salary\']           = r_(total_taxable_employee_share + r_(details[\'net_salary\']))\n
-\n
-# don\'t forget to add the current values to the yearly sum\n
-details[\'yearly_net_salary\']         = r_(yearly_net_salary         + r_(details[\'net_salary\']))\n
-details[\'yearly_gross_salary\']       = r_(yearly_gross_salary       + r_(details[\'gross_salary\']))\n
-details[\'yearly_csg_salary\']         = r_(yearly_csg_salary         + r_(details[\'csg_salary\']))\n
-details[\'yearly_ceiling_salary\']     = r_(yearly_ceiling_salary     + r_(details[\'ceiling_salary\']))\n
-details[\'yearly_slice_a_salary\']     = r_(yearly_slice_a_salary     + r_(details[\'slice_a_salary\']))\n
-details[\'yearly_slice_b_salary\']     = r_(yearly_slice_b_salary     + r_(details[\'slice_b_salary\']))\n
-details[\'yearly_slice_c_salary\']     = r_(yearly_slice_c_salary     + r_(details[\'slice_c_salary\']))\n
-details[\'yearly_employee_share\']     = r_(yearly_employee_share     + r_(details[\'total_employee_share\']))\n
-details[\'yearly_employer_share\']     = r_(yearly_employer_share     + r_(details[\'total_employer_share\']))\n
-details[\'yearly_taxable_net_salary\'] = r_(yearly_taxable_net_salary + r_(details[\'taxable_net_salary\']))\n
+#TODO: the "%.2f" format should be based on currency precision\n
+details[\'totals\'][\'gross_salary\']         = gross_salary\n
+details[\'totals\'][\'net_salary\']           = net_salary\n
+details[\'totals\'][\'taxable_net_salary\']   = taxable_net_salary\n
+details[\'totals\'][\'total_employer_share\'] = total_employer_share\n
+details[\'totals\'][\'total_employee_share\'] = total_employee_share\n
 \n
 return details\n
 
@@ -368,70 +564,55 @@ return details\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>precision</string>
-                            <string>r_</string>
-                            <string>details</string>
-                            <string>total_employer_share</string>
-                            <string>total_taxable_employee_share</string>
-                            <string>paysheet_cat</string>
-                            <string>object_list</string>
+                            <string>portal</string>
                             <string>gross_salary</string>
                             <string>net_salary</string>
-                            <string>_getiter_</string>
-                            <string>object</string>
-                            <string>cell</string>
+                            <string>total_employer_share</string>
                             <string>total_employee_share</string>
-                            <string>csg_salary</string>
-                            <string>ceiling_salary</string>
-                            <string>ceiling_salary_list</string>
-                            <string>paysheet_year</string>
-                            <string>ceiling_salary_available_years</string>
-                            <string>_getitem_</string>
-                            <string>salary_limit</string>
-                            <string>slice_a_salary</string>
-                            <string>slice_b_salary</string>
-                            <string>slice_c_salary</string>
-                            <string>slice_a_value</string>
-                            <string>slice_b_value</string>
-                            <string>slice_c_value</string>
-                            <string>float</string>
-                            <string>pay_sheet_line</string>
-                            <string>variation_list</string>
-                            <string>range_variation</string>
-                            <string>variation</string>
-                            <string>range</string>
-                            <string>pay_sheet_dict</string>
-                            <string>_write_</string>
-                            <string>cat_list</string>
-                            <string>category</string>
-                            <string>cell_price</string>
-                            <string>cell_quantity</string>
-                            <string>cell_total_price</string>
-                            <string>str</string>
+                            <string>taxable_net_salary</string>
+                            <string>details</string>
+                            <string>getPSLGroupIdList</string>
+                            <string>groupExist</string>
+                            <string>getGroup</string>
                             <string>None</string>
-                            <string>key</string>
-                            <string>cat_id</string>
-                            <string>cat_path</string>
-                            <string>var</string>
-                            <string>sub_cat</string>
-                            <string>accounting_folder</string>
-                            <string>paysheet_transactions</string>
-                            <string>yearly_net_salary</string>
-                            <string>yearly_gross_salary</string>
-                            <string>yearly_csg_salary</string>
-                            <string>yearly_ceiling_salary</string>
-                            <string>yearly_slice_a_salary</string>
-                            <string>yearly_slice_b_salary</string>
-                            <string>yearly_slice_c_salary</string>
-                            <string>yearly_employee_share</string>
-                            <string>yearly_employer_share</string>
-                            <string>yearly_taxable_net_salary</string>
-                            <string>DateTime</string>
-                            <string>start_date</string>
-                            <string>stop_date</string>
-                            <string>employee</string>
-                            <string>paysheet_obj</string>
-                            <string>old_ps</string>
+                            <string>getGroupSubLineIdList</string>
+                            <string>sublineExist</string>
+                            <string>getSubLine</string>
+                            <string>updateSubLine</string>
+                            <string>_getiter_</string>
+                            <string>psl</string>
+                            <string>service</string>
+                            <string>salary_range_list</string>
+                            <string>tax_category_list</string>
+                            <string>tax_category</string>
+                            <string>_getitem_</string>
+                            <string>group_id</string>
+                            <string>group</string>
+                            <string>new_group</string>
+                            <string>_write_</string>
+                            <string>salary_range_path</string>
+                            <string>salary_range</string>
+                            <string>subline_id</string>
+                            <string>service_id</string>
+                            <string>False</string>
+                            <string>taxable</string>
+                            <string>True</string>
+                            <string>new_subline</string>
+                            <string>groups</string>
+                            <string>old_group</string>
+                            <string>precision</string>
+                            <string>r_</string>
+                            <string>cell</string>
+                            <string>tax_category_path</string>
+                            <string>c</string>
+                            <string>cell_group_id</string>
+                            <string>cell_subline_id</string>
+                            <string>range_type</string>
+                            <string>share_type</string>
+                            <string>cell_value</string>
+                            <string>cell_rate</string>
+                            <string>cell_base</string>
+                            <string>cell_share</string>
                           </tuple>
                         </value>
                     </item>
