@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Creating Payment Transactions related to some Invoices</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test for Creating Payment Transactions related to some Invoices\n
+</td></tr>\n
+<!-- XXX we do not need init method here ! -->\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+<!-- Setup {{{ -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_markChanged</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Select {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Show All\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id=\'listbox_search_line\']/td[4]/span/input</td>\n
+  <td>Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>listbox_select</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- select create payment action {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Create Related Payments</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_your_node</td>\n
+  <td>label=5 - Bank</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_your_payment_mode</td>\n
+  <td>label=Cash</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_your_payment</td>\n
+  <td>label=My default bank account</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Payments Creation for 2 on 2 Invoices in Progress</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- show the dialog again, to check it remembers values {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Create Related Payments</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_your_node</td>\n
+  <td>account_module/bank</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_your_payment_mode</td>\n
+  <td>cash</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_your_payment</td>\n
+  <td>organisation_module/my_organisation/my_bank</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_cancel:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Check accounting transactions are created {{{ -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/accounting_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Show All\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>6 record(s)</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_accounting_transaction_module_create_related_payment.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

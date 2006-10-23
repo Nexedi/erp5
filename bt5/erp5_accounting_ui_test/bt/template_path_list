@@ -29,6 +29,8 @@ portal_categories/group/demo_group
 portal_categories/group/demo_group/**
 portal_categories/group/vendor
 portal_categories/group/vendor/**
+portal_categories/payment_mode/cash
+portal_categories/payment_mode/check
 portal_preferences/accounting_zuite_preference
 portal_tests/accounting_zuite
 portal_tests/accounting_zuite/**
