@@ -86,12 +86,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/tranche_a</string>
                 <string>tax_category/unemployment/employer_share</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/unemployment_insurance</string>
                 <string>source/organisation_module/assedic</string>
-                <string>salary_range/france/salaire_brut</string>
+                <string>salary_range/france/variable/salaire_brut</string>
+                <string>salary_range/france/variable/tranche_a</string>
               </tuple>
             </value>
         </item>
