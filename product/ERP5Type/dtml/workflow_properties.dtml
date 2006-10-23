@@ -41,4 +41,10 @@
 
 <input type="submit" name="submit" value="Save changes" />
 </form>
+<hr />
+Click the button below to update the security settings of all
+objects using this workflow in this portal.
+<form action="updateRoleMappings" method="GET">
+<input type="submit" name="submit" value="Update security settings" />
+</form>
 <dtml-var manage_page_footer>

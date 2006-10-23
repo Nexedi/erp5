@@ -326,6 +326,47 @@ def updateRoleMappingsFor(self, ob):
 
 DCWorkflowDefinition.updateRoleMappingsFor = updateRoleMappingsFor
 
+# This patch allows to update all objects using one workflow, for example
+# after the permissions per state for this workflow were modified
+def updateRoleMappings(self, REQUEST=None):
+  """
+  Changes permissions of all objects related to this workflow
+  """
+  wf_tool = aq_parent(aq_inner(self))
+  chain_by_type = wf_tool._chains_by_type
+  type_info_list = wf_tool._listTypeInfo()
+  wf_id = self.id
+  portal_type_list = []
+  # get the list of portal types to update
+  if wf_id in wf_tool._default_chain:
+    include_default = 1
+  else:
+    include_default = 0
+  for type_info in type_info_list:
+    tid = type_info.getId()
+    if chain_by_type.has_key(tid):
+      if wf_id in chain_by_type[tid]:
+        portal_type_list.append(tid)
+    elif include_default == 1:
+      portal_type_list.append(tid)
+
+  count = 0
+  #update the objects using these portal types
+  if len(portal_type_list) > 0:
+    portal_catalog = self.portal_catalog
+    for brain in portal_catalog(portal_type=portal_type_list):
+      obj = brain.getObject()
+      self.updateRoleMappingsFor(obj)
+      count += 1
+
+  if REQUEST is not None:
+    return self.manage_properties(REQUEST,
+        manage_tabs_message='%d object(s) updated.' % count)
+  else:
+    return count
+
+DCWorkflowDefinition.updateRoleMappings = updateRoleMappings
+
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
 # as well as workflow inheritance. This way, different user actions and dialogs can be specified easliy
