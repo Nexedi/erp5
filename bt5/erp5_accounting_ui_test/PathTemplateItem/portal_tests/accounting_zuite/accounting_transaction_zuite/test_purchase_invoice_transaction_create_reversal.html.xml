@@ -68,6 +68,21 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction\n
 \n
 <!-- Setup {{{ -->\n
 <tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_markChanged</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>selectAndWait</td>\n
   <td>select_module</td>\n
   <td>Accounting</td>\n
