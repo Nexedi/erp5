@@ -81,7 +81,8 @@ is_source = context.AccountingTransaction_isSourceView()\n
 line_portal_type = \'Accounting Transaction Line\'\n
 \n
 # update selection params, because it\'ll be used in the selection dialog.\n
-portal.portal_selections.setSelectionParamsFor(\'accounting_selection\',\n
+portal.portal_selections.setSelectionParamsFor(\n
+          \'accounting_create_related_payment_selection\',\n
           params=dict(node_for_related_payment=node,\n
                       payment_mode_for_related_payment=payment_mode,\n
                       payment_for_related_payment=payment))\n

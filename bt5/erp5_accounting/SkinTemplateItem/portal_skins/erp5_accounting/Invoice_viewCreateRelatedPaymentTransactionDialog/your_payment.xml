@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_selections.getSelectionParamsFor(\'accounting_selection\').get(\'payment_for_related_payment\')</string> </value>
+            <value> <string>python:here.portal_selections.getSelectionParamsFor(\'accounting_create_related_payment_selection\').get(\'payment_for_related_payment\')</string> </value>
         </item>
       </dictionary>
     </pickle>
