@@ -247,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Gross Salary</string> </value>
+                    <value> <string>Base Salary</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_expression</string> </key>
