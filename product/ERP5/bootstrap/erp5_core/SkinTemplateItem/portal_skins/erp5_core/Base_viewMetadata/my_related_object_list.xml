@@ -317,7 +317,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [x.getPath() for x in here.portal_categories.getRelatedValueList(here)]</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: [\'<a href="%s">%s</a>\' % (x.absolute_url(), x.getPath()) for x in here.portal_categories.getRelatedValueList(here)]
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
