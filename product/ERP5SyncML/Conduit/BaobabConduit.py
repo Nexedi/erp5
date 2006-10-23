@@ -135,7 +135,31 @@ class BaobabConduit(ERP5Conduit):
       }],
     'code_bic': [{
         'erp5_property': 'bic_code'
-      , 'conditions'   : {'erp5_portal_type':'Organisation'}
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
+    'code_pays': [{
+        'erp5_property': 'bank_country_code'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
+    'code_etab': [{
+        'erp5_property': 'bank_code'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
+    'code_guichet': [{
+        'erp5_property': 'branch'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
+    'numero_compte': [{
+        'erp5_property': 'bank_account_number'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
+    'rib': [{
+        'erp5_property': 'bank_account_key'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
+    'numero_interne': [{
+        'erp5_property': 'internal_bank_account_number'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
       }],
     'intitule': [{
         'erp5_property': 'title'
@@ -158,7 +182,7 @@ class BaobabConduit(ERP5Conduit):
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory'}
       }],
     'amount': [{
-        'erp5_property': 'inventory'
+        'erp5_property': 'quantity'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory Line'}
       }],
     'cle': [{
@@ -508,6 +532,7 @@ class BaobabConduit(ERP5Conduit):
                            , 'ATR' : 'to_sort'
                            , 'MUT' : 'mutilated'
                            , 'EAV' : 'to_ventilate'
+                           , 'ANN' : 'cancelled'
                            }
             category = status_table[kw[base_key]]
           else:
@@ -544,19 +569,20 @@ class BaobabConduit(ERP5Conduit):
         # we should get only 1 bank account
         bank_account_list = [x.getObject() for x in object.portal_catalog(
                                portal_type=('Bank Account'),
-                               reference='%%%s%%' % bank_account_number)]
+                               )]
         LOG( 'bank_account_list:'
                  , 200
                  , bank_account_list
                  )
         # Make sure we have found the right bank account
         for bank_account in bank_account_list:
-           if bank_account.getBankAccountNumber() == bank_account_number:
+           if bank_account.getInternalBankAccountNumber() == bank_account_number:
              bank_account_object = bank_account
              break
         if bank_account_object != None:
           # Se the right account on the inventory line
           object.setDestinationValue(bank_account_object)
+          object.setDestinationPaymentValue(bank_account_object)
           if currency_id != None:
             # verify or add the currency
             current_currency_id = bank_account_object.getPriceCurrencyId()
@@ -573,6 +599,8 @@ class BaobabConduit(ERP5Conduit):
                , 200
                , 'no bank account found'
                )
+            import pdb;pdb.set_trace()
+            raise KeyError, 'No bank account Found'
 
 
     """
@@ -666,7 +694,8 @@ class BaobabConduit(ERP5Conduit):
                  , 'DER': 'depositories/savings'
                  , 'DAU': 'depositories/other'
                  }
-      document.setActivity('banking_finance/' + id_table[value])
+      #document.setActivity('banking_finance/' + id_table[value])
+      document.setActivity('banking_finance/' + value)
     else:
       LOG('BaobabConduit:', 0, 'Person\'s category ignored')
 
@@ -720,6 +749,18 @@ class BaobabConduit(ERP5Conduit):
     # Convert compte_devise to price_currency
     document.setPriceCurrency('currency_module/' + value)
 
+  def editCompteOverdraftFacility(self, document, value):
+    new_value = False
+    if value=='O':
+      new_value = True
+    document.setOverdraftFacility(new_value)
+
+  def editCompteSwiftRegistered(self, document, value):
+    new_value = False
+    if value=='O':
+      new_value = True
+    document.setSwiftRegistered(new_value)
+
   def editCompteDateOuverture(self, document, value):
     # Convert date_ouverture to start_date and stop_date
     if document.getStopDate() in ('', None):
@@ -731,15 +772,6 @@ class BaobabConduit(ERP5Conduit):
     if document.getStartDate() in ('', None):
       document.setStartDate(str(datetime.datetime.min))
     document.setStopDate(value)
-
-  def editCompteNumero(self, document, value):
-    # Here we have several properties in ERP5 for only
-    # one property in sql, so we need this particular method.
-    document.setBankCode(value[0])
-    document.setBranch(value[1:3])
-    document.setBankAccountNumber(value)
-
-
 
   ### Agent-related-properties functions
 
@@ -860,7 +892,10 @@ class BaobabConduit(ERP5Conduit):
 
     # Parse the category tree in order to find the category corresponding
     # to the agency
-    for site_item in site_base_object.getCategoryChildItemList(base=1)[1:]:
+    for site_item in site_base_object.Delivery_getVaultItemList(
+                 vault_type=('site',),
+                 strict_membership=1,leaf_node=0,
+                 user_site=0,with_base=1)[1:]:
       site_path = site_item[1]
       site_object = category_tool.resolveCategory(site_path)
       if site_object.getPortalType() == 'Category':
@@ -868,6 +903,7 @@ class BaobabConduit(ERP5Conduit):
         if site_code not in (None, '') and site_code.upper() == agency_code.upper():
           agency_path = site_path
           break
+    #import pdb;pdb.set_trace()
     if inventory_code in (None, ''):
       return agency_path
     # Get the site path corresponding to the inventory type
@@ -1003,3 +1039,8 @@ class BaobabConduit(ERP5Conduit):
       date  = '/'.join([year, month, day])
     document.setStopDate(date)
 
+  def editBankAccountInventoryLineCurrency(self, document, value):
+    # Convert bank_account_inventory_date to stop_date property
+    resource_url = 'currency_module/%s' % value
+    resource_value = document.getPortalObject().restrictedTraverse(resource_url)
+    document.setResourceValue(resource_value)
