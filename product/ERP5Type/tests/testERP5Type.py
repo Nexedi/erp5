@@ -225,8 +225,22 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(o.isTempObject(), 1)
 
       # Create a subobject and make sure it is a Temp Object
-      a = o.newContent(portal_type = 'Telephone')
+      a = o.newContent(portal_type = 'Telephone')      
       self.assertEquals(a.isTempObject(), 1)
+
+      # Test newContent with the temp_object parameter
+      o = portal.person_module.newContent(id=987, portal_type="Person", temp_object=1)
+      o.setTitle('bar')
+      self.assertEquals(o.getTitle(), 'bar')
+      self.assertEquals(str(o.getId()), str(987))
+      self.assertEquals(o.isTempObject(), 1)
+      a = o.newContent(id=1, portal_type="Telephone", temp_object=1)
+      self.assertEquals(str(a.getId()), str(1))
+      self.assertEquals(a.isTempObject(), 1)
+      b = o.newContent(id=2, portal_type="Telephone")
+      self.assertEquals(b.isTempObject(), 1)
+      self.assertEquals(b.getId(), str(2))
+      
 
     def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
       """
