@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_predecessor_title_list</string> </value>
+            <value> <string>my_requirement_logical_path_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,10 +243,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>container_getter_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -304,7 +300,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <none/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>jump_method</string> </key>
@@ -328,9 +326,7 @@
                 </item>
                 <item>
                     <key> <string>parameter_list</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -397,7 +393,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>predecessor</string> </value>
+                    <value> <string>requirement</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -425,7 +421,7 @@
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
-                    <value> <string>task_module</string> </value>
+                    <value> <string>requirement</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -465,7 +461,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>4</int> </value>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -508,20 +504,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Sale Order Line</string>
-                          <string>Sale Order Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Order Milestone</string>
-                          <string>Sale Order Milestone</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Packing List Line</string>
-                          <string>Sale Packing List Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Packing List Milestone</string>
-                          <string>Sale Packing List Milestone</string>
+                          <string>Requirement</string>
+                          <string>Requirement</string>
                         </tuple>
                       </list>
                     </value>
@@ -546,7 +530,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Predecessor</string> </value>
+                    <value> <string>Requirements</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -570,29 +554,10 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'parent_uid\', here.getParentUid())]</string> </value>
         </item>
       </dictionary>
     </pickle>
