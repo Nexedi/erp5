@@ -83,7 +83,7 @@ portal = context.getPortalObject()\n
 gross_salary         = 0.0\n
 net_salary           = 0.0\n
 total_employer_share = 0.0\n
-total_employee_share = 0.0   # total_employee_share = r_(gross_salary - net_salary)\n
+total_employee_share = 0.0   # Alternative: total_employee_share = r_(gross_salary - net_salary)\n
 taxable_net_salary   = 0.0\n
 \n
 \n
@@ -235,7 +235,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 ##############################################################################\n
 \n
 # Get Precision and precise rounding methods\n
-precision = context.Base_getPreferredPrecision()\n
+precision = context.getResourceValue().getQuantityPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
 # Scan each pay sheet line and save it in the right place in the data structure\n
@@ -271,7 +271,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
         updateSubLine( group_id   = cell_group_id\n
                      , subline_id = cell_subline_id\n
                      , property   = \'employee_share\'\n
-                     , value      = \'%.2f\' % cell_value  #TODO: the "%.2f" format should be based on currency precision\n
+                     , value      = cell_value\n
                      )\n
         gross_salary = r_(gross_salary + cell_value)\n
         # Do not display base type for non-base salary\n
@@ -284,7 +284,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
       ### Net Salary handling\n
       elif share_type == \'employee\':\n
-        net_salary = \'%.2f\' % cell_value  #TODO: the "%.2f" format should be based on currency precision\n
+        net_salary = cell_value\n
 \n
     ### Addendum group handling\n
     elif range_type.startswith("fixed/addendum"):\n
@@ -304,7 +304,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
         updateSubLine( group_id   = cell_group_id\n
                      , subline_id = cell_subline_id\n
                      , property   = \'%s_share\' % share_type\n
-                     , value      = \'%.2f\' % cell_share  #TODO: the "%.2f" format should be based on currency precision\n
+                     , value      = cell_share\n
                      )\n
 \n
       ### Other Pay Sheet Lines (= variable)\n
@@ -318,12 +318,12 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
         updateSubLine( group_id   = cell_group_id\n
                      , subline_id = cell_subline_id\n
                      , property   = \'base\'\n
-                     , value      = \'%.2f\' % r_(cell_base) #TODO: the "%.2f" format should be based on currency precision\n
+                     , value      = r_(cell_base)\n
                      )\n
         updateSubLine( group_id   = cell_group_id\n
                      , subline_id = cell_subline_id\n
                      , property   = \'%s_share\' % share_type\n
-                     , value      = \'%.2f\' % cell_share #TODO: the "%.2f" format should be based on currency precision\n
+                     , value      = cell_share\n
                      )\n
       # Sum up employee and employer share grand total\n
       if share_type == \'employee\':\n
@@ -334,10 +334,9 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
 \n
 \n
-\n
-\n
-\n
-\n
+#####################\n
+###   JUNK CODE   ###\n
+#####################\n
 \n
 # # Sort the list by id since lines are already ordered by id.\n
 # object_list.sort(lambda x, y: cmp(int(x.getId()), int(y.getId())))\n
@@ -504,7 +503,11 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 # details[\'yearly_taxable_net_salary\'] = r_(yearly_taxable_net_salary + r_(details[\'taxable_net_salary\']))\n
 \n
 \n
-#TODO: the "%.2f" format should be based on currency precision\n
+############################\n
+###   END OF JUNK CODE   ###\n
+############################\n
+\n
+\n
 details[\'totals\'][\'gross_salary\']         = gross_salary\n
 details[\'totals\'][\'net_salary\']           = net_salary\n
 details[\'totals\'][\'taxable_net_salary\']   = taxable_net_salary\n

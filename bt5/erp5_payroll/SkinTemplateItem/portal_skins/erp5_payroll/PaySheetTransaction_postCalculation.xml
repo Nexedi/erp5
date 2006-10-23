@@ -81,7 +81,7 @@ portal = context.getPortalObject()\n
 N_     = portal.Base_translateString\n
 \n
 # Get Precision\n
-precision = context.Base_getPreferredPrecision()\n
+precision = context.getResourceValue().getQuantityPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
 # Delete all objects in the paysheet\n

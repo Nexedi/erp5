@@ -1,5 +1,6 @@
 2006-10-23 Kevin
 * Change category structure to support additional lines beside base salary to constitute the gross salary. Now the gross salary can be composed of several lines, variable or fixed.
+* Use Paysheet currency for precision rounding.
 
 2006-10-20 Kevin
 * Change matrix box rendering dynamically depending of the type of the contribution.
