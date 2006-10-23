@@ -250,13 +250,13 @@ createPaySheetItem( title    = \'Salary\' # labour_service.getTitleOrId()\n
                   , dest_org = context.getDestinationSection()\n
                   , cells    = [{ "x"    : labour_employee_share_category\n
                                 , "y"    : labour_salary_range\n
-                                , "base" : 1.0\n
-                                , "rate" : r_(total_employee_share - gross_salary)\n
+                                , "base" : -1.0\n
+                                , "rate" : r_(gross_salary - total_employee_share)\n
                                 },\n
                                 { "x"    : labour_employer_share_category\n
                                 , "y"    : labour_salary_range\n
-                                , "base" : 1.0\n
-                                , "rate" : -gross_salary\n
+                                , "base" : -1.0\n
+                                , "rate" : gross_salary\n
                                 }]\n
                   )\n
 \n

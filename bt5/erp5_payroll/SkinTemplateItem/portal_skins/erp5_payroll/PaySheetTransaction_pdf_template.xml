@@ -50,12 +50,10 @@
 
 <?xml version="1.0" encoding="iso-8859-1" ?>\n
 \n
-<tal:block tal:define="employee python: here.getDestinationSectionValue();\n
-                       employer python: here.getSourceSectionValue();\n
-                       paysheet_details python: here.PaySheetTransaction_getDetails();\n
-                       paysheet_categories python: paysheet_details[\'paysheet_categories\'];\n
-                       urssaf python: employer.getDestinationSectionValue();\n
-                       start_date python: here.getStartDate()">\n
+<tal:block tal:define="employee            python: here.getDestinationSectionValue();\n
+                       employer            python: here.getSourceSectionValue();\n
+                       urssaf              python: employer.getDestinationSectionValue();\n
+                       start_date          python: here.getStartDate()">\n
 \n
   <template bottommargin=\'0.665cm\'\n
             showboundary=\'0\'\n
@@ -66,8 +64,8 @@
             allowsplitting=\'1\'\n
             landscape=\'0\'\n
             leftmargin=\'0.635cm\'\n
-            tal:define=\'portal python:here.portal_url.getPortalObject()\'>\n
-    \n
+            tal:define=\'portal python: here.portal_url.getPortalObject()\'>\n
+\n
     <stylesheet>\n
       <tablestyle name="decompte">\n
         <stylecmd expr="(\'FONTSIZE\', (0,0), (-1,-1), 7)"/>\n
@@ -110,7 +108,7 @@
         <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (0,0), 0)"/>\n
         <stylecmd expr="(\'ALIGNMENT\', (0,0), (0,0), \'CENTER\')"/>\n
         <stylecmd expr="(\'VALIGN\', (0,0), (0,0), \'MIDDLE\')"/>\n
-                \n
+\n
         <!-- Premiere ligne de droite\n
              <stylecmd expr="(\'LINEABOVE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
              <stylecmd expr="(\'LINEBEFORE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
@@ -132,7 +130,7 @@
              <stylecmd expr="(\'LINEBEFORE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
              <stylecmd expr="(\'LINEAFTER\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
         -->\n
-        <stylecmd expr="(\'OUTLINE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>        \n
+        <stylecmd expr="(\'OUTLINE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
       </tablestyle>\n
 \n
     </stylesheet>\n

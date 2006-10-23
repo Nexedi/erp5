@@ -487,27 +487,27 @@ kw[\'reduction_fillon_forfait/forfait\'] = \\\n
 # Add blank lines for services which is a variable part od the gross salary.\n
 # Thanks to this, the accountant has the freedom to add the missing amount of money\n
 #   that this script can\'t guess.\n
-kw[\'retenue_maladie/base\'] = \\\n
+kw[\'retenue_maladie/gross\'] = \\\n
 { \'employer_share\': None\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-kw[\'primes/base\'] = \\\n
+kw[\'primes/gross\'] = \\\n
 { \'employer_share\': None\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-kw[\'absences/base\'] = \\\n
+kw[\'absences/gross\'] = \\\n
 { \'employer_share\': None\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-kw[\'iccp/base\'] = \\\n
+kw[\'iccp/gross\'] = \\\n
 { \'employer_share\': None\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
-kw[\'precarite/base\'] = \\\n
+kw[\'precarite/gross\'] = \\\n
 { \'employer_share\': None\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n

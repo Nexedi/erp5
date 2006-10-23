@@ -195,7 +195,6 @@ num = 0\n
 INT_LEN = 3\n
 for (preview_line_id, preview_line_item) in pre_calculation.items():\n
   num += 1\n
-  context.log("Kev dfsdfsdfsdff", repr((preview_line_id, preview_line_item)))\n
   service      = preview_line_item[\'service\']\n
   salary_range = preview_line_item[\'salary_range\']\n
   service_id   = service.getId()\n
@@ -316,7 +315,6 @@ return preview_line_list\n
                             <string>INT_LEN</string>
                             <string>preview_line_id</string>
                             <string>preview_line_item</string>
-                            <string>repr</string>
                             <string>service_id</string>
                             <string>o</string>
                           </tuple>
