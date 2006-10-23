@@ -114,8 +114,7 @@ class Domain(Predicate, MetaNode, MetaResource):
     """
     We generate temp domain here because we must set an aquisition wrapper
     """
-    from Products.ERP5Type.Document import newTempDomain
-    domain = newTempDomain(self, id)
+    domain = self.newContent(id=id, portal_type='Domain', temp_object=1)
     domain = domain.__of__(self)
     return domain
 
