@@ -702,7 +702,7 @@ class BaobabConduit(ERP5Conduit):
                  , 'DAU': 'depositories/other'
                  }
       #document.setActivity('banking_finance/' + id_table[value])
-      document.setActivity('banking_finance/' + value)
+      document.setActivity(value)
     else:
       LOG('BaobabConduit:', 0, 'Person\'s category ignored')
 
