@@ -409,27 +409,27 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'mode'    : 'w' },
   )
 
-  sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
-  sql_catalog_clear_reserved = 'z_clear_reserved'
-  sql_catalog_reserve_uid = 'z_reserve_uid'
-  sql_catalog_object_list = ('z_catalog_object_list',)
-  sql_uncatalog_object = ('z_uncatalog_object',)
-  sql_clear_catalog = ('z_drop_catalog', 'z_create_catalog')
-  sql_catalog_translation_list = 'z_catalog_translation_list'
-  sql_delete_translation_list = 'z_delete_translation_list'
-  sql_record_object_list = 'z_record_object_list'
-  sql_read_recorded_object_list = 'z_read_recorded_object_list'
-  sql_delete_recorded_object_list = 'z_delete_recorded_object_list'
-  sql_search_results = 'z_search_results'
-  sql_count_results = 'z_count_results'
-  sql_getitem_by_path = 'z_getitem_by_path'
-  sql_getitem_by_uid = 'z_getitem_by_uid'
-  sql_catalog_tables = 'z_catalog_tables'
-  sql_search_tables = ('catalog',)
-  sql_catalog_schema = 'z_catalog_schema'
-  sql_unique_values = 'z_unique_values'
-  sql_catalog_paths = 'z_catalog_paths'
-  sql_catalog_keyword_search_keys =  ('Description', 'Title', 'SearchableText')
+  sql_catalog_produce_reserved = ''
+  sql_catalog_clear_reserved = ''
+  sql_catalog_reserve_uid = ''
+  sql_catalog_object_list = ()
+  sql_uncatalog_object = ()
+  sql_clear_catalog = ()
+  sql_catalog_translation_list = ''
+  sql_delete_translation_list = ''
+  sql_record_object_list = ''
+  sql_read_recorded_object_list = ''
+  sql_delete_recorded_object_list = ''
+  sql_search_results = ''
+  sql_count_results = ''
+  sql_getitem_by_path = ''
+  sql_getitem_by_uid = ''
+  sql_catalog_tables = ''
+  sql_search_tables = ()
+  sql_catalog_schema = ''
+  sql_unique_values = ''
+  sql_catalog_paths = ''
+  sql_catalog_keyword_search_keys =  ()
   sql_catalog_full_text_search_keys = ()
   sql_catalog_request_keys = ()
   sql_search_result_keys = ()
@@ -465,6 +465,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     self.schema = {}  # mapping from attribute name to column
     self.names = {}   # mapping from column to attribute name
     self.indexes = {}   # empty mapping
+    self.filter_dict = PersistentMapping()
 
   def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
     """
