@@ -32,11 +32,10 @@ class Account:
   """
 
   _properties = (
-      { 'id'          : 'is_credit_account', # XXX: this property should be
-                                             # named diferently : an account can
-                                             # be naturally debitor, creditor,
-                                             # or none of those
-      'description' : 'Some accounts are',
+      { 'id'        : 'credit_account',
+      'storage_id'  : 'is_credit_account',
+      'description' : 'Set to true if this account have a normal balance of'\
+                      ' debit.',
       'type'        : 'boolean',
       'mode'        : 'w' ,
       'default'     : 0 },

@@ -1318,6 +1318,21 @@ class TestAccounting(ERP5TypeTestCase):
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transaction, 'stop_action')
 
+  def test_Account_isCreditAccount(self):
+    """Tests the 'credit_account' property on account, which was named
+    is_credit_account, which generated isIsCreditAccount accessor"""
+    account = self.getAccountModule().newContent(portal_type='Account')
+    # simulate an old object
+    account.is_credit_account = True
+
+    account.setCreditAccount(True)
+    self.failUnless(account.isCreditAccount())
+    
+    # this is what Account_view would do when you update the code before
+    # without updating business template.
+    account.edit(is_credit_account=False)
+    self.failIf(account.isCreditAccount())
+    
 if __name__ == '__main__':
   framework()
 else:
