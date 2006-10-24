@@ -129,7 +129,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>sale_invoice_list</string> </value>
+            <value> <string>PaySheetTransaction_viewAccountingLineList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -145,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sale Invoice Transaction</string> </value>
+            <value> <string>Pay Sheet Transaction</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

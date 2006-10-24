@@ -104,13 +104,15 @@
             <key> <string>membership_criterion_category</string> </key>
             <value>
               <tuple>
+                <string>tax_category/addendum/employee_share</string>
                 <string>tax_category/apec/employee_share</string>
+                <string>tax_category/argic/employee_share</string>
                 <string>tax_category/crds/employee_share</string>
                 <string>tax_category/csg/employee_share</string>
-                <string>tax_category/argic/employee_share</string>
-                <string>tax_category/syntec_insurance/employee_share</string>
+                <string>tax_category/gross/employee_share</string>
                 <string>tax_category/social/employee_share</string>
                 <string>tax_category/supplementary_pension/employee_share</string>
+                <string>tax_category/syntec_insurance/employee_share</string>
                 <string>tax_category/unemployment/employee_share</string>
                 <string>product_line/social_service/mutual_insurance</string>
               </tuple>
