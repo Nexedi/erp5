@@ -260,9 +260,13 @@ createPaySheetItem( title    = \'Salary\' # labour_service.getTitleOrId()\n
                                 }]\n
                   )\n
 \n
-# Return to pay sheet\n
+\n
 if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Pay+sheet+calculation+done.\')\n
+  # Return to pay sheet default view\n
+  from ZTUtils import make_query\n
+  params = { \'portal_status_message\': N_(\'Pay Sheet Calculation Done. Lines are currently build. Wait some Seconds and Refresh to See lines.\')}\n
+  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), \'view\', make_query(params))\n
+  return context.REQUEST.RESPONSE.redirect(redirect_url)\n
 
 
 ]]></string> </value>
@@ -355,6 +359,10 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
                             <string>c</string>
                             <string>labour_salary_range</string>
                             <string>True</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>params</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
