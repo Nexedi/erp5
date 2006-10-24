@@ -542,11 +542,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>source_debit</string>
                           <string>AccountingTransactionLine_statSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>source_credit</string>
                           <string>AccountingTransactionLine_statSourceCredit</string>
                         </tuple>
                       </list>
