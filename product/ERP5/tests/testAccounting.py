@@ -1332,6 +1332,8 @@ class TestAccounting(ERP5TypeTestCase):
     # without updating business template.
     account.edit(is_credit_account=False)
     self.failIf(account.isCreditAccount())
+    account.edit(is_credit_account=True)
+    self.failUnless(account.getProperty('is_credit_account'))
     
 if __name__ == '__main__':
   framework()
