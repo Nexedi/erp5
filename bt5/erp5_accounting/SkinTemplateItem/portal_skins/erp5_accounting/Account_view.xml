@@ -91,7 +91,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_is_credit_account</string>
+                        <string>my_credit_account</string>
                         <string>my_gap</string>
                         <string>my_account_type</string>
                         <string>my_financial_section</string>
