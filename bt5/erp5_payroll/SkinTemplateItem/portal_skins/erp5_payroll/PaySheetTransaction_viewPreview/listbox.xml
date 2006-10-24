@@ -409,15 +409,15 @@
                         </tuple>
                         <tuple>
                           <string>service_id</string>
-                          <string>Service ID</string>
+<string></string>
                         </tuple>
                         <tuple>
                           <string>salary_range</string>
-                          <string>Salary Range</string>
+<string></string>
                         </tuple>
                         <tuple>
                           <string>tax_category</string>
-                          <string>Tax Category</string>
+<string></string>
                         </tuple>
                       </list>
                     </value>
