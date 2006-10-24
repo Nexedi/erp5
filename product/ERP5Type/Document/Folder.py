@@ -663,7 +663,7 @@ be a problem)."""
     return Folder_asXML(self,ident=ident)
 
   # Optimized Menu System
-  security.declarePublic('getVisibleAllowedContentTypeOrIdList')
+  security.declarePublic('getVisibleAllowedContentTypeList')
   def getVisibleAllowedContentTypeList(self):
     """
       List portal_types' names wich can be added in this folder / object.
