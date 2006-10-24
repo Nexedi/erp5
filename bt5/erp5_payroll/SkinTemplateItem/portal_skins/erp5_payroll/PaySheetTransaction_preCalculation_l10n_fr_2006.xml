@@ -516,6 +516,21 @@ kw[\'precarite/gross\'] = \\\n
 , \'employee_share\': None\n
 , \'base\'          : 1.0\n
 }\n
+kw[\'acompte/addendum\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
+, \'base\'          : 1.0\n
+}\n
+kw[\'remboursement_loyer/addendum\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
+, \'base\'          : 1.0\n
+}\n
+kw[\'frais_deplacement/addendum\'] = \\\n
+{ \'employer_share\': None\n
+, \'employee_share\': None\n
+, \'base\'          : 1.0\n
+}\n
 \n
 \n
 # Normalize\n

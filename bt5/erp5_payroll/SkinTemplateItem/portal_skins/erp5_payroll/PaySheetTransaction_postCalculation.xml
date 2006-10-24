@@ -209,8 +209,9 @@ for line in listbox:\n
                    , "base" : -base\n
                    , "rate" : share\n
                    }\n
-        # Update the total employee share\n
-        total_employee_share = r_(total_employee_share + r_(base * float(share)))\n
+        # Update the total employee share but ignore addendum\n
+        if not salary_range.endswith(\'/fixed/addendum\'):\n
+          total_employee_share = r_(total_employee_share + r_(base * float(share)))\n
       # Add the cell to the conresponding paysheet item\n
       if new_cell != None:\n
         paysheet_items[service_id][\'cells\'].append(new_cell)\n
