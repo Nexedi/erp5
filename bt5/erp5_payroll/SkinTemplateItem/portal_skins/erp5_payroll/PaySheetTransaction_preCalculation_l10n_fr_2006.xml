@@ -73,6 +73,9 @@
 """\n
   This script define all rates to apply in 2006 to calculate an entire paysheet\n
     according french fiscal & social rules for a SME.\n
+\n
+  This script accept gross_salary parameter to override the default one.\n
+  This is helpfull in case of update made on PaySheetTransaction_viewPreview fast input.\n
 """\n
 \n
 kw = {}\n
@@ -89,8 +92,10 @@ paysheet_type = paysheet.getPortalType()\n
 employee = paysheet.getDestinationSectionValue()\n
 company  = paysheet.getSourceSectionValue()\n
 \n
-# Get Paysheet datas\n
-gross_salary = abs(paysheet.getGrossSalary())\n
+# Use the gross salary given as parameter or not\n
+if gross_salary == None:\n
+  gross_salary = abs(paysheet.getGrossSalary())\n
+\n
 start_date   = paysheet.getStartDate()\n
 stop_date    = paysheet.getStopDate()\n
 \n
@@ -410,7 +415,6 @@ if executive:\n
 comp_date = DateTime(start_date.year(), 3, 31)\n
 while comp_date < comp_date:\n
   comp_date = DateTime(comp_date.year() + 1, 3, 31)\n
-context.log("kev date", repr(comp_date))\n
 if executive and start_date <= comp_date <= stop_date:\n
   kw[\'apec/forfait\'] = \\\n
   { \'employer_share\': 3.72\n
@@ -513,6 +517,25 @@ kw[\'precarite/gross\'] = \\\n
 , \'base\'          : 1.0\n
 }\n
 \n
+\n
+# Normalize\n
+for line_key in kw.keys():\n
+  # Only \'variable\' contribution are expressed in percents of a base\n
+  line = kw[line_key]\n
+  # \'Fixed\' contributions\n
+  if line_key.endswith(\'/gross\')  or \\\n
+     line_key.endswith(\'/forfait\'):\n
+    # Defensive programming: be sure conventions are respected\n
+    kw[line_key][\'base\'] = 1.0\n
+  # \'Variable\' contributions\n
+  else:\n
+    # All rates in this script are written in percents, we must convert them in pure floats.\n
+    for share_type in [\'employer_share\', \'employee_share\']:\n
+      share_value = line[share_type]\n
+      if share_value not in [\'\', None]:\n
+        # Fix percents\n
+        kw[line_key][share_type] = share_value / 100.0\n
+\n
 return kw\n
 
 
@@ -544,7 +567,7 @@ return kw\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>gross_salary=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -564,12 +587,13 @@ return kw\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>gross_salary</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -577,8 +601,8 @@ return kw\n
                             <string>paysheet_type</string>
                             <string>employee</string>
                             <string>company</string>
+                            <string>None</string>
                             <string>abs</string>
-                            <string>gross_salary</string>
                             <string>start_date</string>
                             <string>stop_date</string>
                             <string>ceiling_salary_list</string>
@@ -605,16 +629,19 @@ return kw\n
                             <string>DateTime</string>
                             <string>old_limit</string>
                             <string>comp_type</string>
-                            <string>None</string>
                             <string>employer_rate</string>
                             <string>employee_rate</string>
                             <string>fngs_employer_rate</string>
                             <string>employee_share_rate</string>
                             <string>employer_share_rate</string>
                             <string>comp_date</string>
-                            <string>repr</string>
                             <string>col_agr</string>
                             <string>syntec_rate</string>
+                            <string>_getiter_</string>
+                            <string>line_key</string>
+                            <string>line</string>
+                            <string>share_type</string>
+                            <string>share_value</string>
                           </tuple>
                         </value>
                     </item>
@@ -626,7 +653,9 @@ return kw\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

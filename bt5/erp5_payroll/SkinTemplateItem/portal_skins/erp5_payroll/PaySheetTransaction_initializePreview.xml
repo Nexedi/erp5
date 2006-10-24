@@ -68,15 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This script create the data structure of the pay sheet preview (= the PaySheetTransaction_viewPreview fast input).\n
   Then it fill this data structure with rates and amounts of money from the localized pre calculation script.\n
 """\n
 \n
-import random\n
 from Products.ERP5Type.Document import newTempBase\n
 from string import zfill\n
 \n
+# Get Precision\n
+precision = context.getResourceValue().getQuantityPrecision()\n
+r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
 \n
 ##########################\n
@@ -107,7 +111,6 @@ for service in service_module.objectValues():\n
   # TODO: Use a validation workflow on Payroll Service and check the validity of a Service there\n
   base_categories = service.getVariationBaseCategoryList()\n
   if \'salary_range\' in base_categories and \'tax_category\' in base_categories:\n
-    # XXX add "and service.getId() != \'labour\':" ??\n
     paysheet_services.append(service)\n
 \n
 # Create the pre-calculation data structure\n
@@ -142,7 +145,71 @@ for service in paysheet_services:\n
 \n
 \n
 #########################################\n
-# This part of the script select the right localized version of PaySheetTransaction_preCalculation_l10n script.\n
+# Get new values that came from "Update" action on Pay Sheet fast input.\n
+# Currently we only keep fixed values which are part of the gross salary and addendum calculation.\n
+#\n
+# IDEA: Compare values from preCalculation script (rates and base) with the updated listbox\n
+#       to keep user-defined values. Then merge them with current one. This is a good idea but\n
+#       the decision algorithm must be smart.\n
+#########################################\n
+\n
+UPDATE_SCRIPT = \'PaySheetTransaction_updateCalculation\'\n
+# Get the updated listbox\n
+selection_params = context.portal_selections.getSelectionParams(UPDATE_SCRIPT)\n
+# Reset the selection (defensive strategy)\n
+context.portal_selections.setSelectionParamsFor(UPDATE_SCRIPT, {})\n
+updated_listbox = []\n
+if selection_params.has_key(\'updated_listbox\'):\n
+  updated_listbox = selection_params[\'updated_listbox\']\n
+\n
+\n
+# Scan the listbox and look for complementary lines to add to the gross salary\n
+new_gross_salary = 0.0\n
+for line in updated_listbox:\n
+  salary_range = line[\'salary_range\']\n
+  if salary_range not in [None, \'\'] and salary_range.startswith(\'salary_range/france/fixed/gross\'):\n
+    # Get the employee or employer share as part of the multiline gross salary\n
+    # The payroll service "setup convention" require that the fixed value should be defined on \'employer_share\'\n
+    share_value = line[\'employer_share\']\n
+    if share_value not in [None, \'\']:\n
+      new_gross_salary = r_(new_gross_salary + r_(share_value))\n
+\n
+if new_gross_salary > 0.0:\n
+  # Don\'t forget to add the base salary\n
+  new_gross_salary = r_(new_gross_salary + r_(context.getGrossSalary()))\n
+else:\n
+  new_gross_salary = None\n
+\n
+\n
+# Everything which is part of gross salary and addendum calculation should be kept untouched.\n
+# To keep thoses value, we should use the same dict format as in preCalculation script.\n
+update_kw = {}\n
+for line in updated_listbox:\n
+  salary_range   = line[\'salary_range\']\n
+  service_id     = line[\'service_id\']\n
+  employee_share = line[\'employee_share\']\n
+  employer_share = line[\'employer_share\']\n
+  base           = line[\'base\']\n
+  if salary_range not in [None, \'\']                                and \\\n
+     service_id   not in [None, \'\']                                and \\\n
+     base         not in [None, \'\']                                and \\\n
+     (salary_range.startswith(\'salary_range/france/fixed/gross\')    or \\\n
+      salary_range.startswith(\'salary_range/france/fixed/addendum\') ) and \\\n
+     (employee_share not in [None, \'\'] or employer_share not in [None, \'\']):\n
+    salary_range_id = salary_range.split(\'/\')[-1]\n
+    line_uid = "%s/%s" % (service_id, salary_range_id)\n
+    new_dict = { \'employer_share\': employer_share\n
+               , \'employee_share\': employee_share\n
+               , \'base\'          : base\n
+               }\n
+    update_kw[line_uid] = new_dict\n
+\n
+\n
+\n
+#########################################\n
+# This part of the script select the right localized version of\n
+#   PaySheetTransaction_preCalculation_l10n script.\n
+#\n
 # TODO: implement here a generic method to get the right precalculation script automaticcaly.\n
 #########################################\n
 \n
@@ -155,38 +222,25 @@ script_name = \'_\'.join([ "PaySheetTransaction_preCalculation_l10n"\n
                        , year\n
                        ])\n
 calculation_method = getattr(context, script_name)\n
+pre_calculation = calculation_method(gross_salary=new_gross_salary)\n
 \n
-pre_calculation = calculation_method()\n
-\n
-# Merge pre_calculation and preview line dict\n
+# Merge pre_calculation and preview line dict, or finaly override value from the update dict\n
 preview_line_keys = d.items()[0][1].keys()\n
 for k in pre_calculation.keys():\n
   if k in d.keys():\n
     for required_key in preview_line_keys:\n
+      # Merge\n
       if not pre_calculation[k].has_key(required_key):\n
         pre_calculation[k][required_key] = d[k][required_key]\n
+      # Override\n
+      if update_kw.has_key(k) and update_kw[k].has_key(required_key):\n
+        pre_calculation[k][required_key] = update_kw[k][required_key]\n
   else:\n
     context.log( "PaySheetTransaction_initializePreview"\n
                , "Preview line key \'%s\' not found in default services" % k\n
                )\n
     # Remove line\n
     del pre_calculation[k]\n
-\n
-# Because all rates in the localized file are written in percents, we must convert them in pure floats.\n
-for preview_line_uid in pre_calculation.keys():\n
-  # Only \'Fixed\' (or \'Forfait\' in french) base are expressed in percents\n
-  # TODO: base this test on "/forfait" string is bad. A more generic way must be found.\n
-  preview_line = pre_calculation[preview_line_uid]\n
-  if not preview_line_uid.endswith(\'/forfait\'):\n
-    # Fix percents\n
-    for share_type in [\'employer_share\', \'employee_share\']:\n
-      share_value = preview_line[share_type]\n
-      if share_value not in (\'\', None):\n
-        preview_line[share_type] = share_value / 100.0\n
-  # Normalize the value of \'Fixed\' (or \'Forfait\' in french) base to 1.0\n
-  else:\n
-    preview_line[\'base\'] = 1.0\n
-  pre_calculation[preview_line_uid] = preview_line\n
 \n
 # Create a preview line for every salary_range value of the service\n
 portal_object = context.getPortalObject()\n
@@ -215,7 +269,9 @@ for (preview_line_id, preview_line_item) in pre_calculation.items():\n
 \n
 # return the list of preview lines\n
 return preview_line_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -272,14 +328,15 @@ return preview_line_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>random</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>string</string>
                             <string>zfill</string>
-                            <string>d</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>precision</string>
+                            <string>r_</string>
+                            <string>d</string>
                             <string>erp5site</string>
                             <string>hasattr</string>
                             <string>service_module</string>
@@ -296,26 +353,36 @@ return preview_line_list\n
                             <string>None</string>
                             <string>preview_line_uid</string>
                             <string>_write_</string>
+                            <string>UPDATE_SCRIPT</string>
+                            <string>selection_params</string>
+                            <string>updated_listbox</string>
+                            <string>_getitem_</string>
+                            <string>new_gross_salary</string>
+                            <string>line</string>
+                            <string>share_value</string>
+                            <string>update_kw</string>
+                            <string>service_id</string>
+                            <string>employee_share</string>
+                            <string>employer_share</string>
+                            <string>base</string>
+                            <string>salary_range_id</string>
+                            <string>line_uid</string>
+                            <string>new_dict</string>
                             <string>country</string>
                             <string>year</string>
                             <string>script_name</string>
                             <string>getattr</string>
                             <string>calculation_method</string>
                             <string>pre_calculation</string>
-                            <string>_getitem_</string>
                             <string>preview_line_keys</string>
                             <string>k</string>
                             <string>required_key</string>
-                            <string>preview_line</string>
-                            <string>share_type</string>
-                            <string>share_value</string>
                             <string>portal_object</string>
                             <string>preview_line_list</string>
                             <string>num</string>
                             <string>INT_LEN</string>
                             <string>preview_line_id</string>
                             <string>preview_line_item</string>
-                            <string>service_id</string>
                             <string>o</string>
                           </tuple>
                         </value>

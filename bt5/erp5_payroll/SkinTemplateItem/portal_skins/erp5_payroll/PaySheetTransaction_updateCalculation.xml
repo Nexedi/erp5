@@ -68,22 +68,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.REQUEST.RESPONSE.redirect(\'%s/PaySheetTransaction_viewPreview?portal_status_message=Base+Salary+updated.\' % context.absolute_url())\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script get the new listbox content and save it in a selection to let the\n
+  listbox script (PaySheetTransaction_initializePreview) recalculate necessary contributions.\n
+"""\n
 \n
-# Get all cells which are needed to calculate the base_salary\n
+portal = context.getPortalObject()\n
+N_     = portal.Base_translateString\n
 \n
-# Scan the listbox and look for complementary lines to add to the gross salary\n
-#for user_line in listbox:\n
- # if user_line[\'base\'] not in (None, \'\'):\n
-    # Get the base salary if given by the user\n
-  #  base = r_(user_line[\'base\'])\n
+# Save listbox dict in a selection for recalculation\n
+if len(listbox) > 0:\n
+  # XXX Don\'t know how the selection is supposed to behave in case of simultaneous\n
+  #     pay sheet edition by the same user.\n
+  context.portal_selections.setSelectionParamsFor(script.id, {\'updated_listbox\': listbox})\n
 \n
-# IDEA: compare normal _initializePreview returned rates and base with the current one and keep user-defined values. Then merge them with current one.\n
-# This is the only solution to mimic real user interaction without AJAX/DHTML-like UI.\n
-\n
-# Recalculate the preview with new base_salary\n
-#std_lines = context.PaySheetTransaction_initializePreview()\n
-</string> </value>
+from ZTUtils import make_query\n
+params = { \'portal_status_message\': N_(\'Gross Salary and Depending Contributions Updated.\')}\n
+redirect_url = \'%s/%s?%s\' % (context.absolute_url(), \'PaySheetTransaction_viewPreview\', make_query(params))\n
+return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -135,6 +142,14 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>len</string>
+                            <string>script</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>params</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
