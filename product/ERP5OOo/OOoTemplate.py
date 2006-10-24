@@ -295,8 +295,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
             replacement = """
             <draw:object draw:style-name="%s" draw:name="ERP5IncludedObject%d"
             text:anchor-type="paragraph" svg:x="%.3fcm" svg:y="%.3fcm"
-            svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="#./%s"
-            xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+            svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="#./%s
+            " xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
             """%(options_dict['style'], actual_idx, x, y, w, h, dir_name.split('/')[-1])
             if not self.content_type.endswith('draw'):
                 replacement = '<text:p text:style-name="Standard">'+replacement+'</text:p>'
@@ -471,6 +471,34 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
                               'title': 'This template has an error'},)
         return icons
 
+    def asPdf(self, REQUEST=None):
+        """
+        Return OOo report as pdf
+        """
+        # first get ooo data
+        extra_context = {}
+        extra_context['batch_mode'] = 1
+        ooo = self.pt_render(self, extra_context=extra_context)
+        # now create a temp OOoDocument to convert data to pdf
+        from Products.ERP5Type.Document import newTempOOoDocument
+        tmp_ooo = newTempOOoDocument(self, self.title_or_id())
+        tmp_ooo.edit(data = ooo,
+                     fname =  self.title_or_id(),
+                     source_reference = self.title_or_id(),
+                     content_type = self.content_type,)
+        tmp_ooo.oo_data = ooo
+        # now convert it to pdf
+        tgts=[x[1] for x in tmp_ooo.getTargetFormatItemList() if x[1].endswith('pdf')]
+        if len(tgts)>1:
+            return tmp_ooo.returnMessage('multiple pdf formats found - this shouldnt happen')
+        if len(tgts)==0:
+            return tmp_ooo.returnMessage('no pdf format found')
+        fmt=tgts[0]
+        mime, data = tmp_ooo._makeFile(fmt)
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
+            REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.pdf"' % self.title_or_id())
+        return data
 
 InitializeClass(OOoTemplate)
 
