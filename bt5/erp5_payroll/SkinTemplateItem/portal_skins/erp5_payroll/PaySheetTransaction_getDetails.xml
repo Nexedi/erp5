@@ -82,10 +82,10 @@ portal = context.getPortalObject()\n
 # Initialize total share\n
 gross_salary         = 0.0\n
 net_salary           = 0.0\n
+taxable_net_salary   = 0.0\n
 total_employer_share = 0.0\n
 total_employee_share = 0.0   # Alternative: total_employee_share = r_(gross_salary - net_salary)\n
-taxable_net_salary   = 0.0\n
-\n
+total_addendum       = 0.0\n
 \n
 \n
 ##############################################################################\n
@@ -288,8 +288,16 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
     ### Addendum group handling\n
     elif range_type.startswith("fixed/addendum"):\n
-      # TODO: support addendum\n
-      pass\n
+      # Ignore the base, rates and employer share\n
+      cell_value = r_(cell.getPrice())\n
+      if share_type == \'employee\':\n
+        updateSubLine( group_id   = cell_group_id\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'employee_share\'\n
+                     , value      = cell_value\n
+                     )\n
+        # Update total addendum\n
+        total_addendum = r_(total_addendum + cell_value)\n
 \n
     ### Default/Standard line group handling\n
     else:\n
@@ -344,6 +352,7 @@ details[\'totals\'][\'net_salary\']           = net_salary\n
 details[\'totals\'][\'taxable_net_salary\']   = taxable_net_salary\n
 details[\'totals\'][\'total_employer_share\'] = total_employer_share\n
 details[\'totals\'][\'total_employee_share\'] = total_employee_share\n
+details[\'totals\'][\'total_addendum\']       = total_addendum\n
 \n
 return details\n
 
@@ -401,9 +410,10 @@ return details\n
                             <string>portal</string>
                             <string>gross_salary</string>
                             <string>net_salary</string>
+                            <string>taxable_net_salary</string>
                             <string>total_employer_share</string>
                             <string>total_employee_share</string>
-                            <string>taxable_net_salary</string>
+                            <string>total_addendum</string>
                             <string>details</string>
                             <string>getPSLGroupIdList</string>
                             <string>groupExist</string>
