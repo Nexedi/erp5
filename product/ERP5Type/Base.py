@@ -2015,6 +2015,13 @@ class Base( CopyContainer,
     """
     return []
 
+  security.declarePublic('getVisibleAllowedContentTypeList')
+  def getVisibleAllowedContentTypeList(self):
+    """
+    List portal_types which can be added in this folder / object.
+    """
+    return []
+
   security.declareProtected(Permissions.View, 'getBinaryData')
   def getBinaryData(self):
     """
