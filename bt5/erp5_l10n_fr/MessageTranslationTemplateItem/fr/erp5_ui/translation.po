@@ -24,6 +24,39 @@ msgstr "${number} enregistrements "
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
 
+msgid "Asset"
+msgstr "Actif"
+
+msgid "Income"
+msgstr "Produits"
+
+msgid "Expense"
+msgstr "Charges"
+
+msgid "Liability"
+msgstr "Passif"
+
+msgid "Receivable"
+msgstr "Créances"
+
+msgid "Equity"
+msgstr "Capital"
+
+msgid "Refundable VAT"
+msgstr "TVA déductible"
+
+msgid "Collected VAT"
+msgstr "TVA collectée"
+
+msgid "Bank"
+msgstr "Trésorerie"
+
+msgid "Payable"
+msgstr "Dettes"
+
+msgid "Cash"
+msgstr "Caisse"
+
 msgid "-- Object --"
 msgstr "-- Action sur l'Objet --"
 
@@ -160,7 +193,7 @@ msgid "A version identifier"
 msgstr ""
 
 msgid "Accept"
-msgstr ""
+msgstr "Accepter"
 
 msgid "Account"
 msgstr "Compte"
@@ -299,9 +332,6 @@ msgstr "Composants indiqués sur le Modèle"
 
 msgid "Aggregated Industrial Process"
 msgstr "Explications données sur le Modèle"
-
-msgid "Agriculteur"
-msgstr ""
 
 msgid "Alarm"
 msgstr "Alarme"
@@ -522,9 +552,6 @@ msgstr "N° de compte complet"
 msgid "BBAN Key"
 msgstr "Clé n° de compte"
 
-msgid "BIGNONA"
-msgstr ""
-
 msgid "BT Title"
 msgstr ""
 
@@ -542,9 +569,6 @@ msgstr "Lignes comptables"
 
 msgid "Balance at Stop Date (${date})"
 msgstr "Solde a la fin de la période (${date})"
-
-msgid "Bank"
-msgstr "Banque"
 
 msgid "Bank Account"
 msgstr "Compte bancaire"
@@ -736,16 +760,16 @@ msgid "Career"
 msgstr "Carrière"
 
 msgid "Career Comments"
-msgstr ""
+msgstr "Commentaires sur la carrière"
 
 msgid "Career End"
-msgstr ""
+msgstr "Fin de carrière"
 
 msgid "Career Function"
-msgstr ""
+msgstr "Fonction exercée"
 
 msgid "Career Start"
-msgstr ""
+msgstr "Début de carrière"
 
 msgid "Career Step"
 msgstr "Étape De Carrière"
@@ -754,28 +778,10 @@ msgid "Career Steps"
 msgstr "Etapes de Carrière"
 
 msgid "Career Title"
-msgstr ""
+msgstr "Carrière"
 
 msgid "Career end"
 msgstr "Fin de carrière"
-
-msgid "Career function"
-msgstr "Fonction liée à la carrière"
-
-msgid "Career start"
-msgstr "Début de carrière"
-
-msgid "Career step end"
-msgstr "Fin d'étape de carrière"
-
-msgid "Career step list"
-msgstr "Liste d'étape de carrière"
-
-msgid "Career step start"
-msgstr "Début d'étape de carrière"
-
-msgid "Career title"
-msgstr "Carrière"
 
 msgid "Cash Classification"
 msgstr "Ventilation de billets reçus"
