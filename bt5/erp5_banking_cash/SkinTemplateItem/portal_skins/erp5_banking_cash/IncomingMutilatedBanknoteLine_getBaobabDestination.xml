@@ -71,7 +71,7 @@
             <value> <string># if sent to headquarter, line must not exist\n
 if not \'siege\' in context.getSource():\n
   # if we sent to headquarter, we have order the document at one time\n
-  for workflow_item in context.Base_getWorkflowHistoryItemList(\'mutilated_banknote_workflow\',display=0):\n
+  for workflow_item in context.getParentValue().Base_getWorkflowHistoryItemList(\'mutilated_banknote_workflow\',display=0):\n
     if workflow_item.getProperty(\'action\')==\'order_action\':\n
       return None\n
 \n
