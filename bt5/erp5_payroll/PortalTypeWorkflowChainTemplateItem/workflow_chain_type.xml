@@ -15,4 +15,8 @@
   <type>Pay Sheet Transaction Line</type>
   <workflow>edit_workflow, delivery_edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Payroll Service</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
 </workflow_chain>

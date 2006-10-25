@@ -7,3 +7,5 @@ Pay Sheet Transaction Line | edit_workflow
 Pay Sheet Transaction | accounting_workflow
 Pay Sheet Transaction | delivery_edit_workflow
 Pay Sheet Transaction | edit_workflow
+Payroll Service | edit_workflow
+Payroll Service | validation_workflow

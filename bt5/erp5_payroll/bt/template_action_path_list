@@ -18,3 +18,11 @@ Pay Sheet Transaction | history
 Pay Sheet Transaction | metadata
 Pay Sheet Transaction | print
 Pay Sheet Transaction | view
+Payroll Service Module | list_ui
+Payroll Service Module | print_pdf
+Payroll Service Module | sort_on
+Payroll Service Module | view
+Payroll Service | history
+Payroll Service | metadata
+Payroll Service | print_pdf
+Payroll Service | view
