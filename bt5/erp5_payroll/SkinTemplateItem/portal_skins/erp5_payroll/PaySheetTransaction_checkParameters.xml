@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+  Check that all datas necessary to auto-calculate the pay sheet are set.\n
+  TODO: Translate portal status message.\n
+"""\n
 paysheet      = context.getObject()\n
 paysheet_type = paysheet.getPortalType()\n
 employee      = paysheet.getDestinationSection()\n
@@ -77,6 +81,9 @@ employer      = paysheet.getSourceSection()\n
 \n
 if paysheet.getGrossSalary() == None:\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Gross+salary+is+required\')\n
+\n
+if paysheet.getResource() == None:\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Currency+is+required\')\n
 \n
 if paysheet.getStartDate() == None:\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Start+date+is+required\')\n
