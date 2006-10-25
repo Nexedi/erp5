@@ -923,8 +923,8 @@ class ERP5Generator(PortalGenerator):
                    cmf_activity_sql_connection_string, 'string')
     # XXX hardcoded charset
     p._setProperty('management_page_charset', 'UTF-8', 'string')
-    self.setup(p, create_userfolder,
-               create_activities=create_activities, **kw)
+    self.setup(p, create_userfolder, create_activities=create_activities,
+        reindex=reindex, **kw)
     return p
 
   def setupLastTools(self, p, **kw):
@@ -1073,18 +1073,11 @@ class ERP5Generator(PortalGenerator):
 
     portal_catalog = getToolByName(p, 'portal_catalog')
     if (not update) and (not portal_catalog.getSQLCatalog('erp5_mysql')):
-      # Add a default SQL Catalog
-      portal_catalog.addDefaultSQLMethods()
-      if (p.erp5_sql_connection_type is not None):
-        portal_catalog.manage_catalogClear()
-      # TODO: Replace previous lines with the commented below
-      # (not working actually).
-      # The goal is to delete addDefaultSQLMethods() method and duplicated zsql
-      # method from /ERP5Catalog/sql/mysql_erp5.
-      #addSQLCatalog = portal_catalog.manage_addProduct['ZSQLCatalog']\
-      #                                .manage_addSQLCatalog
-      #addSQLCatalog('erp5_mysql', '')
-      #portal_catalog.default_sql_catalog_id = 'erp5_mysql'
+      # Add a empty SQL Catalog, which will be filled when installing
+      # erp5_core business template
+      portal_catalog.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(
+          'erp5_mysql', '')
+      portal_catalog.default_sql_catalog_id = 'erp5_mysql'
 
     # Add ERP5Form Tools
     addTool = p.manage_addProduct['ERP5Form'].manage_addTool
@@ -1192,7 +1185,7 @@ class ERP5Generator(PortalGenerator):
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
-    if kw.has_key('reindex') and kw['reindex']==0:
+    if not kw.get('reindex', 1):
       return
     skins_tool = getToolByName(p, 'portal_skins', None)
     if skins_tool is None:
