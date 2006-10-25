@@ -354,6 +354,7 @@ class BaseTemplateItem(Implicit, Persistent):
     remove_dict = kw.get('remove_object_dict', {})
     keys = self._objects.keys()
     keys.sort()
+    keys.reverse()
     # if you choose remove, the object and all its subobjects will be removed
     # even if you choose backup or keep for subobjects
     # it is same behaviour for backup_and_remove, all we be save
@@ -4115,6 +4116,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if action == 'remove' or action == 'save_and_remove':
           remove_object_dict[path] = action
           object_to_update.pop(path)
+
       # remove object from old business template
       if len(remove_object_dict) > 0:
         for item_name in installed_bt._item_name_list:
