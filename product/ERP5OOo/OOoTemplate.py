@@ -484,7 +484,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         extra_context['options'] = kw
         extra_context['batch_mode'] = 1
         # first get ooo data
-        ooo = self.pt_render(self, extra_context=extra_context)
+        ooo = self.pt_render(extra_context=extra_context)
         # now create a temp OOoDocument to convert data to pdf
         from Products.ERP5Type.Document import newTempOOoDocument
         tmp_ooo = newTempOOoDocument(self, self.title_or_id())
