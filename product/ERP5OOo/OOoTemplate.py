@@ -35,7 +35,7 @@ from Products.Formulator.Form import fields
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
-
+from AccessControl import getSecurityManager
 from urllib import quote
 from Globals import InitializeClass, DTMLFile, get_request
 from AccessControl import ClassSecurityInfo
@@ -471,13 +471,19 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
                               'title': 'This template has an error'},)
         return icons
 
-    def asPdf(self, REQUEST=None):
+    def asPdf(self, REQUEST=None, *args, **kw):
         """
         Return OOo report as pdf
         """
-        # first get ooo data
+        # create argument dict for pt_render
         extra_context = {}
+        security=getSecurityManager()
+        extra_context['user'] = security.getUser()
+        if not kw.has_key('args'):
+            kw['args'] = args
+        extra_context['options'] = kw
         extra_context['batch_mode'] = 1
+        # first get ooo data
         ooo = self.pt_render(self, extra_context=extra_context)
         # now create a temp OOoDocument to convert data to pdf
         from Products.ERP5Type.Document import newTempOOoDocument
