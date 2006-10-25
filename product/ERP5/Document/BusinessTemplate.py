@@ -777,10 +777,11 @@ class PathTemplateItem(ObjectTemplateItem):
     object_keys.sort()
     object_keys.reverse()
     p = context.getPortalObject()
-    object_keys.sort()
-    object_keys.reverse()
     for path in object_keys:
-      for relative_url in self._resolvePath(p, [], path.split('/')):
+      path_list = self._resolvePath(p, [], path.split('/'))
+      path_list.sort()
+      path_list.reverse()
+      for relative_url in path_list:
         try:
           container_path = relative_url.split('/')[0:-1]
           object_id = relative_url.split('/')[-1]
