@@ -1076,7 +1076,7 @@ class ERP5Generator(PortalGenerator):
       # Add a empty SQL Catalog, which will be filled when installing
       # erp5_core business template
       portal_catalog.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(
-          'erp5_mysql', '')
+          'erp5_mysql', 'ERP5/MySQL')
       portal_catalog.default_sql_catalog_id = 'erp5_mysql'
 
     # Add ERP5Form Tools
