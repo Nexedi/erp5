@@ -13,9 +13,7 @@ portal_categories/product_line/social_service/**
 portal_categories/product_line/tax
 portal_categories/quantity_unit/time
 portal_categories/quantity_unit/time/month
-portal_categories/salary_range
 portal_categories/salary_range/**
-portal_categories/tax_category
 portal_categories/tax_category/**
 portal_deliveries/pay_sheet_transaction_builder
 portal_rules/default_pay_sheet_transaction_rule
