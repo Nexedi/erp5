@@ -566,8 +566,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             action = update_dict[path]
             if action == 'nothing':
               continue
-          else:
-            action = 'backup'
+          action = 'backup'
           # get subobjects in path
           path_list = path.split('/')
           container_path = path_list[:-1]
@@ -639,7 +638,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             wf_chain = subobjects_dict['workflow_chain']
             chain_dict = getChainByType(context)[1]
             default_chain = ''
-            chain_dict['chain_%s' %(object_id)] = wf_chain
+            chain_dict['chain_%s' % (object_id)] = wf_chain
             context.portal_workflow.manage_changeWorkflows(default_chain, props=chain_dict)
           # import sub objects if there is
           elif len(subobjects_dict) > 0:
@@ -1394,6 +1393,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           chain_dict['chain_%s' % portal_type] = self._objects[path]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
+
   def uninstall(self, context, **kw):
     (default_chain, chain_dict) = getChainByType(context)
     object_path = kw.get('object_path', None)
