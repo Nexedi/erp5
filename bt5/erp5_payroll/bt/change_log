@@ -3,6 +3,7 @@
 * New portal types and forms dedicated to Payroll Service.
 * Migration of all old service to the new Payroll Service type.
 * Take care of description on preview update.
+* Generate stable UID on listbox to prevent lines mix.
 
 2006-10-24 Kevin
 * So much things changed since the 0.1 version. Bump version to 0.2.

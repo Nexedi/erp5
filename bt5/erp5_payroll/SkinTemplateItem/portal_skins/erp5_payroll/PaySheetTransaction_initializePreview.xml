@@ -78,6 +78,8 @@
 from Products.ERP5Type.Document import newTempBase\n
 from string import zfill\n
 \n
+portal = context.getPortalObject()\n
+\n
 # Get Precision\n
 precision = context.getResourceValue().getQuantityPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
@@ -95,13 +97,12 @@ d = {}\n
 # both names are supported\n
 # XXX This should definitly use portal_catalog !!!\n
 # XXX The following code will be deprecated when the Payroll Service portal type will be used.\n
-erp5site = context.portal_url.getPortalObject()\n
-if hasattr(erp5site, \'payroll_service_module\'):\n
-  service_module = erp5site.payroll_service_module\n
-elif hasattr(erp5site, \'service_module\'):\n
-  service_module = erp5site.service_module\n
+if hasattr(portal, \'payroll_service_module\'):\n
+  service_module = portal.payroll_service_module\n
+elif hasattr(portal, \'service_module\'):\n
+  service_module = portal.service_module\n
 else:\n
-  service_module = erp5site.service\n
+  service_module = portal.service\n
 \n
 # Get all services related to pay sheet transaction\n
 # TODO: Only choose services of the current localisation.\n
@@ -246,19 +247,17 @@ for k in pre_calculation.keys():\n
     del pre_calculation[k]\n
 \n
 # Create a preview line for every salary_range value of the service\n
-portal_object = context.getPortalObject()\n
 preview_line_list = []\n
-num = 0\n
-INT_LEN = 3\n
 for (preview_line_id, preview_line_item) in pre_calculation.items():\n
-  num += 1\n
   service      = preview_line_item[\'service\']\n
   salary_range = preview_line_item[\'salary_range\']\n
   service_id   = service.getId()\n
-  o = newTempBase(portal_object, service_id)\n
-  o.setUid(  \'new_%s\' % zfill(num, INT_LEN)) # XXX There is a security issue here\n
-  o.edit(uid=\'new_%s\' % zfill(num, INT_LEN)) # XXX There is a security issue here\n
-  o.edit( id                 = service_id\n
+  # Create stable UID based on a combination of unique data per lines\n
+  new_uid = "new_%s_%s" % (service_id, salary_range)\n
+  o = newTempBase(portal, new_uid)\n
+  o.setUid(new_uid)\n
+  o.edit(uid=new_uid)\n
+  o.edit( id                 = new_uid\n
         , base               = preview_line_item[\'base\']\n
         , employer_share     = preview_line_item[\'employer_share\']\n
         , employee_share     = preview_line_item[\'employee_share\']\n
@@ -338,10 +337,10 @@ return preview_line_list\n
                             <string>zfill</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>precision</string>
                             <string>r_</string>
                             <string>d</string>
-                            <string>erp5site</string>
                             <string>hasattr</string>
                             <string>service_module</string>
                             <string>paysheet_services</string>
@@ -382,12 +381,10 @@ return preview_line_list\n
                             <string>preview_line_keys</string>
                             <string>k</string>
                             <string>required_key</string>
-                            <string>portal_object</string>
                             <string>preview_line_list</string>
-                            <string>num</string>
-                            <string>INT_LEN</string>
                             <string>preview_line_id</string>
                             <string>preview_line_item</string>
+                            <string>new_uid</string>
                             <string>o</string>
                           </tuple>
                         </value>
