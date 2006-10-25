@@ -81,11 +81,11 @@
             <value>
               <tuple>
                 <string>tax_category/social/employee_share</string>
-                <string>source/organisation_module/urssaf</string>
                 <string>product_line/social_service/state_insurance</string>
                 <string>quantity_unit/time/month</string>
                 <string>salary_range/france/variable/salaire_brut</string>
                 <string>tax_category/social/employer_share</string>
+                <string>source/organisation_module/urssaf</string>
               </tuple>
             </value>
         </item>
@@ -95,16 +95,12 @@
 The exact meaning of this is unknown for the moment, so this service is disabled.</string> </value>
         </item>
         <item>
-            <key> <string>float_index</string> </key>
-            <value> <float>200.0</float> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>oldage_unlimited</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string>Payroll Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

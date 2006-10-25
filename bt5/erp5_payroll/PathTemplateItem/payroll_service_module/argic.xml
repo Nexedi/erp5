@@ -83,17 +83,11 @@
                 <string>tax_category/argic/employee_share</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/retirement_plan</string>
-                <string>source/organisation_module/483</string>
                 <string>salary_range/france/variable/tranche_b</string>
                 <string>salary_range/france/variable/tranche_c</string>
                 <string>tax_category/argic/employer_share</string>
+                <string>source/organisation_module/483</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>default_source_title</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -101,16 +95,12 @@
             <value> <string>ARGIC.</string> </value>
         </item>
         <item>
-            <key> <string>float_index</string> </key>
-            <value> <float>9.0</float> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>argic</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string>Payroll Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

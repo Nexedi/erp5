@@ -4,7 +4,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Document.Resource</string>
+          <string>Products.ERP5Type.Document.Resource</string>
           <string>Resource</string>
         </tuple>
         <none/>
@@ -77,32 +77,18 @@
             </value>
         </item>
         <item>
-            <key> <string>base_price</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>tax_category/supplementary_pension/employee_share</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/retirement_plan</string>
-                <string>source/organisation_module/483</string>
                 <string>salary_range/france/variable/tranche_2</string>
                 <string>salary_range/france/variable/tranche_b</string>
                 <string>tax_category/supplementary_pension/employer_share</string>
+                <string>source/organisation_module/483</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>default_source_title</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<Products.ERP5Form.RelationField.RelationEditor instance at 0x47f8736c>
-
-]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -114,13 +100,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
-        </item>
-        <item>
-            <key> <string>source_base_price</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Payroll Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

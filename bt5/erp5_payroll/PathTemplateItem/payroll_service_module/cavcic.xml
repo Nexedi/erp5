@@ -81,11 +81,11 @@
             <value>
               <tuple>
                 <string>tax_category/supplementary_pension/employee_share</string>
-                <string>source/organisation_module/483</string>
                 <string>product_line/social_service/retirement_plan</string>
                 <string>quantity_unit/time/month</string>
                 <string>salary_range/france/fixed/forfait</string>
                 <string>tax_category/supplementary_pension/employer_share</string>
+                <string>source/organisation_module/483</string>
               </tuple>
             </value>
         </item>
@@ -94,16 +94,12 @@
             <value> <string>"Service Social" rendu \xc3\xa0 un employeur et au salari\xc3\xa9. La facture de ce service est vu comme une cotisation sociale dans une feuille de paie.</string> </value>
         </item>
         <item>
-            <key> <string>float_index</string> </key>
-            <value> <float>10.0</float> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>cavcic</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string>Payroll Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

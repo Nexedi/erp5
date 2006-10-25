@@ -4,7 +4,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Document.Resource</string>
+          <string>Products.ERP5Type.Document.Resource</string>
           <string>Resource</string>
         </tuple>
         <none/>
@@ -77,69 +77,31 @@
             </value>
         </item>
         <item>
-            <key> <string>base_price</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>tax_category/supplementary_pension/employee_share</string>
-                <string>source/organisation_module/arrco</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/social_service/retirement_plan</string>
                 <string>salary_range/france/variable/tranche_1</string>
                 <string>salary_range/france/variable/tranche_2</string>
                 <string>salary_range/france/variable/tranche_a</string>
                 <string>tax_category/supplementary_pension/employer_share</string>
+                <string>source/organisation_module/arrco</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>contributors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>default_source_title</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<Products.ERP5Form.RelationField.RelationEditor instance at 0x48eb334c>
-
-]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string>"Service Social" rendu par l\'ARRCO \xc3\xa0 un employeur. La facture de ce service est vu comme une cotisation sociale dans une feuille de paie.</string> </value>
         </item>
         <item>
-            <key> <string>format</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>arrco</string> </value>
         </item>
         <item>
-            <key> <string>language</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
-        </item>
-        <item>
-            <key> <string>rights</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>source_base_price</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Payroll Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -154,10 +116,10 @@
         <item>
             <key> <string>variation_base_category_list</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>tax_category</string>
                 <string>salary_range</string>
-              </list>
+              </tuple>
             </value>
         </item>
       </dictionary>
