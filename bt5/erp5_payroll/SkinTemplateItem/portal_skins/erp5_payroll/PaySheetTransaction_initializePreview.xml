@@ -140,6 +140,7 @@ for service in paysheet_services:\n
                             , \'employer_share\': None\n
                             , \'employee_share\': None\n
                             , \'base\'          : None\n
+                            , \'description\'   : None\n
                             }\n
 \n
 \n
@@ -190,6 +191,7 @@ for line in updated_listbox:\n
   employee_share = line[\'employee_share\']\n
   employer_share = line[\'employer_share\']\n
   base           = line[\'base\']\n
+  description    = line[\'description\']\n
   if salary_range not in [None, \'\']                                and \\\n
      service_id   not in [None, \'\']                                and \\\n
      base         not in [None, \'\']                                and \\\n
@@ -201,6 +203,7 @@ for line in updated_listbox:\n
     new_dict = { \'employer_share\': employer_share\n
                , \'employee_share\': employee_share\n
                , \'base\'          : base\n
+               , \'description\'   : description\n
                }\n
     update_kw[line_uid] = new_dict\n
 \n
@@ -264,6 +267,7 @@ for (preview_line_id, preview_line_item) in pre_calculation.items():\n
         , salary_range       = salary_range\n
         , salary_range_title = context.portal_categories.resolveCategory(salary_range).getTitleOrId()\n
         , tax_category       = preview_line_item[\'tax_categories\']\n
+        , description        = preview_line_item[\'description\']\n
         )\n
   preview_line_list.append(o)\n
 \n
@@ -365,6 +369,7 @@ return preview_line_list\n
                             <string>employee_share</string>
                             <string>employer_share</string>
                             <string>base</string>
+                            <string>description</string>
                             <string>salary_range_id</string>
                             <string>line_uid</string>
                             <string>new_dict</string>
