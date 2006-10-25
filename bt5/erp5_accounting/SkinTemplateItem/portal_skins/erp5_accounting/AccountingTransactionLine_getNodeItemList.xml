@@ -70,13 +70,24 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Return item list of accounts that can be used as node for this accounting\n
 transaction line.\n
-The id of the line is used to filter the list. If `mirror` is set to a true\n
-value, the list will be filtered for the mirror node.\n
+The id of the line is used to filter the list, unless `omit_filter` is true.\n
+If `mirror` is set to a true value, the list will be filtered for the mirror\n
+node.\n
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
 \n
-if not mirror:\n
+if omit_filter:\n
+  category_dict = {\n
+    \'income\': \'account_type\',\n
+    \'expense\': \'account_type\',\n
+    \'payable\': \'account_type\',\n
+    \'receivable\': \'account_type\',\n
+    \'collected_vat\': \'account_type\',\n
+    \'refundable_vat\': \'account_type\',\n
+    \'bank\': \'account_type/asset\',\n
+    \'cash\': \'account_type/asset\', }\n
+elif not mirror:\n
   category_dict = {\n
     \'income\': \'account_type/income\',\n
     \'expense\': \'account_type/expense\',\n
@@ -87,7 +98,7 @@ if not mirror:\n
     \'bank\': \'account_type/asset/cash\',\n
     \'cash\': \'account_type/asset/cash\', }\n
 else:\n
-   category_dict = {\n
+  category_dict = {\n
     \'income\': \'account_type/expense\',\n
     \'expense\': \'account_type/income\',\n
     \'payable\': \'account_type/asset/receivable\',\n
@@ -128,9 +139,6 @@ def getItemList(category=None, portal_path=None, mirror=0,\n
                               base=0,\n
                               display_method=display,\n
                               sort_method=sort,\n
-                              # we don\'t want strict membership if now category\n
-                              # has been found.\n
-                              strict_membership=0,\n
                               filter=filter_dict)\n
   return item_list\n
 \n
@@ -143,6 +151,7 @@ getItemList = CachingMethod(getItemList,\n
 return getItemList( category=category,\n
                     portal_path=context.getPortalObject().getPhysicalPath(),\n
                     mirror=mirror,\n
+                    omit_filter=omit_filter, # XXX possible optim: only one cache if omit_filter\n
                     user_name=context.REQUEST.AUTHENTICATED_USER,\n
                     simulation_state=context.getProperty(\n
                           \'simulation_state\', \'no_simulation_state\') )\n
@@ -174,7 +183,7 @@ return getItemList( category=category,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>mirror=0</string> </value>
+            <value> <string>mirror=0, omit_filter=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -194,13 +203,14 @@ return getItemList( category=category,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>mirror</string>
+                            <string>omit_filter</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>_getattr_</string>
@@ -226,6 +236,7 @@ return getItemList( category=category,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>
