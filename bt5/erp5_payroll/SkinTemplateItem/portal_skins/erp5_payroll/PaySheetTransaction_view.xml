@@ -98,9 +98,9 @@
                       <list>
                         <string>my_title</string>
                         <string>my_source_reference</string>
-                        <string>my_description</string>
                         <string>my_source_section_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
