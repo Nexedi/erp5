@@ -20,6 +20,7 @@
                 <string>Assignor</string>
                 <string>Auditor</string>
                 <string>Manager</string>
+                <string>Member</string>
               </list>
             </value>
         </item>
