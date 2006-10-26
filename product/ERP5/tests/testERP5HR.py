@@ -706,10 +706,35 @@ class TestHR(ERP5TypeTestCase):
     person = sequence.get('person')
     organisation = sequence.get('organisation')
     self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
     self.assertEquals(person.getDefaultAddressCity(),'Lille')
-    person.setDefaultAddressCity('La Garnache')
+    self.assertEquals(person.getDefaultAddressZipCode(), '59000')
+
+    # here, the parameters we pass to edit are the same as the one acquired
+    # from the organisation, edit shouldn't do anything
+    person.edit(
+        default_address_city='Lille',
+        default_address_zip_code='59000')
+
+    self.assertEquals(person.getDefaultAddress(),
+        organisation.getDefaultAddress())
+    self.assertEquals(person.getDefaultAddressCity(),'Lille')
+    self.assertEquals(person.getDefaultAddressZipCode(), '59000')
+
+    # here, the first parameter we pass will trigger the creation of a
+    # subobject on person, and we need to make sure that the second one gets
+    # copied (when calling edit from the interface, all displayed fields are
+    # passed to edit)
+    person.edit(
+        default_address_city='La Garnache',
+        default_address_zip_code='59000')
+
+    self.assertNotEquals(person.getDefaultAddress(),
+        organisation.getDefaultAddress())
     self.assertEquals(person.getDefaultAddressCity(),'La Garnache')
+    self.assertEquals(person.getDefaultAddressZipCode(), '59000')
     self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
 
   ##################################
   ##  Tests

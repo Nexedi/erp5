@@ -156,7 +156,9 @@ class Setter(Method):
       assertAttributePortalType(instance, self._storage_id, self._portal_type)
       o = instance._getOb(self._storage_id, None)
       if o is None:
-        o = instance.newContent(id = self._storage_id, portal_type = self._portal_type[0])
+        o = instance.newContent(id=self._storage_id,
+            portal_type=self._portal_type[0])
+        instance._v_accessor_created_object = 1
       if self._reindex:
         o.setProperty(self._acquired_property, value, *args, **kw)
       else:
