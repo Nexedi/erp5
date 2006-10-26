@@ -69,9 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.log(\'erp5_accounting\',\n
- \'InvoiceTransactionLine_getDestinationItemList is a deprecated compatibility\'\n
- \' alias to AccountingTransactionLine_getNodeItemList(mirror=1)\')\n
-return context.AccountingTransactionLine_getNodeItemList(mirror=1)\n
+ \'InvoiceTransactionLine_getSourceItemList is a deprecated compatibility\'\n
+ \' alias to AccountingTransactionLine_getNodeItemList()\')\n
+return context.AccountingTransactionLine_getNodeItemList()\n
 </string> </value>
         </item>
         <item>
@@ -93,8 +93,14 @@ return context.AccountingTransactionLine_getNodeItemList(mirror=1)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>category_dict=None, caching_method_id=\'InvoiceTransactionLine_getSourceItemList\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,12 +120,14 @@ return context.AccountingTransactionLine_getNodeItemList(mirror=1)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>category_dict</string>
+                            <string>caching_method_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
@@ -133,12 +141,15 @@ return context.AccountingTransactionLine_getNodeItemList(mirror=1)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <string>InvoiceTransactionLine_getSourceItemList</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InvoiceTransactionLine_getDestinationItemList</string> </value>
+            <value> <string>InvoiceTransactionLine_getSourceItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
