@@ -109,6 +109,19 @@ class TestBase(ERP5TypeTestCase):
     #portal_catalog.manage_catalogClear()
     self.createCategories()
 
+    #Overwrite immediateReindexObject() with a crashing method
+    def crashingMethod(self):
+      self.ImmediateReindexObjectIsCalled()
+    from Products.ERP5Type.Document.Organisation import Organisation
+    Organisation.immediateReindexObject = crashingMethod
+    Organisation.recursiveImmediateReindexObject = crashingMethod
+
+  def beforeTearDown(self):
+    # Remove crashing method
+    from Products.ERP5Type.Document.Organisation import Organisation
+    del Organisation.immediateReindexObject
+    del Organisation.recursiveImmediateReindexObject
+
   def createCategories(self):
     """ 
       Light install create only base categories, so we create 
@@ -217,16 +230,6 @@ class TestBase(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list), 0)
 
-  def stepMakeImmediateReindexObjectCrashing(self, sequence=None, sequence_list=None, **kw):
-    """
-      Overwrite immediateReindexObject() with a crashing method
-    """
-    def crashingMethod(self):
-      self.ImmediateReindexObjectIsCalled()
-    from Products.ERP5Type.Document.Organisation import Organisation
-    Organisation.immediateReindexObject = crashingMethod
-    Organisation.recursiveImmediateReindexObject = crashingMethod
-
   def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=quiet,
                                                       run=run_all_test):
     """
@@ -241,7 +244,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -263,7 +265,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -287,7 +288,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -358,7 +358,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
@@ -379,7 +378,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
@@ -403,7 +401,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
@@ -455,7 +452,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -479,7 +475,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -543,7 +538,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
@@ -567,7 +561,6 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
-              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
