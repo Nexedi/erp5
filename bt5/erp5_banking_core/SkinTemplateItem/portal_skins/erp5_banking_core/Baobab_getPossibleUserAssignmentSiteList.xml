@@ -75,7 +75,7 @@ if context.getDestination() is None:\n
 \n
 dest_site_title = context.getDestinationValue().getSiteTitle()\n
 \n
-site_list = context.Delivery_getVaultItemList(user_site=0, vault_type=("site", "site/surface/banque_interne/guichet", "site/surface/gros_paiement/guichet", "site/surface/gros_versement/guichet"), strict_membership=1, leaf_node=0, base_site=context.getDestinationValue().getSite())\n
+site_list = context.Delivery_getVaultItemList(user_site=0, vault_type=("site", "site/surface/banque_interne/guichet", "site/surface/gros_paiement/guichet", "site/surface/gros_versement/guichet", "site/surface/operations_diverses/guichet"), strict_membership=1, leaf_node=0, base_site=context.getDestinationValue().getSite())\n
 # now must filter again this list to remove useless categories\n
 site_dict = {}\n
 for site in site_list:\n

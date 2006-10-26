@@ -438,6 +438,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -500,7 +504,16 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>name</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>path</string>
+<string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

@@ -70,21 +70,22 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Type.Document import newTempDomain\n
 domain_list = []\n
 i = 0\n
-vault_list = context.Delivery_getVaultItemList(leaf_node=0)\n
+vault_list = context.Delivery_getVaultItemList(leaf_node=0, vault_type=\'site\')\n
 \n
 # get depth\n
 depth = len(parent.getPath().split(\'/\')[3:])\n
 \n
 for vault in vault_list:\n
   if vault[0] != \'\':\n
-    context.log("vault[0]", vault[0])\n
-    if len(vault[0].split(\'/\')) == depth:      \n
-      if depth > 1 and vault[0].split(\'/\')[-2] != parent.getId():\n
-        # only add those from parent\n
-        continue\n
+    if len(vault[0].split(\'/\')) == depth:\n
+      if depth > 1:\n
+        path_length = len(vault[0].split(\'/\')) - 1\n
+        parent_path = \'/\'.join(parent.getPath().split(\'/\')[-path_length:])\n
+        if \'/\'.join(vault[0].split(\'/\')[:-1]) != parent_path:\n
+          # only add those from parent\n
+          continue\n
       domain = parent.generateTempDomain(id=vault[0].split(\'/\')[-1])\n
       domain.edit(title=vault[0].split(\'/\')[-1], membership_criterion_base_category=(\'source\',), membership_criterion_category=(\'source/%s\' %(vault[1]),), domain_generator_method_id=script.id)\n
       i+=1\n
@@ -99,6 +100,12 @@ return domain_list\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -144,8 +151,6 @@ return domain_list\n
                             <string>depth</string>
                             <string>parent</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempDomain</string>
                             <string>domain_list</string>
                             <string>i</string>
                             <string>_getattr_</string>
@@ -155,6 +160,8 @@ return domain_list\n
                             <string>_getitem_</string>
                             <string>_getiter_</string>
                             <string>vault</string>
+                            <string>path_length</string>
+                            <string>parent_path</string>
                             <string>domain</string>
                             <string>script</string>
                           </tuple>
@@ -179,6 +186,27 @@ return domain_list\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

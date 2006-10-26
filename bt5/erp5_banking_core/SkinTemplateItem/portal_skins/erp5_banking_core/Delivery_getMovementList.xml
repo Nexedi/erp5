@@ -68,15 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# return context.getMovementList(portal_type=portal_type)\n
+            <value> <string># return context.getMovementList(portal_type=portal_type)\n
 # here we suppose we have only two level of portal type\n
 #context.log("Delivery_getMovementList", "portal_type = %s" %(portal_type,))\n
+#context.log("Delivery_getMovementList", "len portal_type = %s" % (len(portal_type),))\n
 \n
 if not same_type(portal_type, []):\n
   return context.getMovementList(portal_type=portal_type)\n
-if len(portal_type) > 2 or len(portal_type) == 0:\n
+if len(portal_type) != 2:\n
   # use catalog\n
   return context.getMovementList(portal_type=portal_type)\n
 \n
@@ -99,9 +98,7 @@ for line in line_list:\n
   cell_list.extend(list(line.objectValues(portal_type=cell_type)))\n
 \n
 return cell_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>

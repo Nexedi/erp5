@@ -180,6 +180,7 @@ elif import_type == \'assign_codification\' :\n
     if len(e_list) == 2 :\n
       try :\n
         print \'trying to assign to %s ...\' % lowerCase(e_list[0]) ,\n
+        context.log(\'lowerCase(e_list[0])\',lowerCase(e_list[0]))\n
         category = context.portal_categories.getCategoryValue(lowerCase(e_list[0]))\n
         category.setCodification(e_list[1])\n
         # Automatically assign code for some subcategories\n
@@ -258,7 +259,9 @@ elif import_type == \'create_subvaults\' :\n
           if counter_name in two_way_counter_list:\n
             subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "entrante"), None])\n
             subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "sortante"), None])\n
-        if subvault == \'Encaisse des Devises\' :\n
+        elif subvault == \'Encaisse des Externes\' :\n
+          subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "transit"), \'TRA\'])\n
+        elif subvault == \'Encaisse des Devises\' :\n
           for c in context.currency_module.objectValues() :\n
             if c.getId() != context.Baobab_getPortalReferenceCurrencyID():\n
               if counter_name in two_way_counter_list:\n
@@ -268,7 +271,7 @@ elif import_type == \'create_subvaults\' :\n
               else:\n
                 #context.log(\'add encaisse des billets et monnaies\',counter_subvault)\n
                 subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, c.getTitle()), None])\n
-        if subvault in (\'Encaisse des Billets Recus pour Ventilation Venant de\',\'Encaisse des Billets en Transit Allant a\',\n
+        elif subvault in (\'Encaisse des Billets Recus pour Ventilation Venant de\',\'Encaisse des Billets en Transit Allant a\',\n
                         \'Encaisse des Billets Neufs Non Emis en Transit Allant a\') :\n
           for c in context.portal_categories.site.agence.principale.objectIds() :\n
             if counter_name in two_way_counter_list:\n
@@ -292,6 +295,8 @@ elif import_type == \'create_subvaults\' :\n
   # parse the for site category tree and add sub categories if required\n
   #for c in context.portal_categories.site.getCategoryChildValueList() :\n
   #for c in context.portal_categories.site.agence.principale.lome.getCategoryChildValueList() :\n
+  #for c in context.portal_categories.site.getCategoryChildValueList() :\n
+  #for c in context.portal_categories.site.agence.principale.cotonou.getCategoryChildValueList() :\n
   for c in context.portal_categories.site.getCategoryChildValueList() :\n
     context.log(\'c.getPath()\',c.getPath())\n
     for vault_type in vault_type_list :\n
@@ -325,6 +330,16 @@ elif import_type == \'create_subvaults\' :\n
               subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             elif \'retire\' in subvault_path.lower():\n
               subcat_vault_type = \'%s/retire\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif subvault_path.lower().endswith(\'externes\'):\n
+              subcat_vault_type = \'%s/encaisse_des_externes\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif subvault_path.lower().endswith(\'transit\'):\n
+              subcat_vault_type = \'%s/encaisse_des_externes/transit\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif \'devises\' in subvault_path.lower():\n
+              subcat_vault_type = \'%s/encaisse_des_devises\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif \'mutiles\' in subvault_path.lower():\n
+              subcat_vault_type = \'%s/billets_mutiles\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif \'macules\' in subvault_path.lower():\n
+              subcat_vault_type = \'%s/billets_macules\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             else:\n
               subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])\n
             new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n
