@@ -74,9 +74,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_preference_state</string>
                         <string>my_title</string>
                         <string>my_description</string>
+                        <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
                 </item>
