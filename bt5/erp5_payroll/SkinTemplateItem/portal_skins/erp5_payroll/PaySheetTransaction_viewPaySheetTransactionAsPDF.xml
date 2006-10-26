@@ -192,6 +192,11 @@
       </tr>\n
     </table>\n
 \n
+    <!-- This table act as a spacer -->\n
+    <table rowheight="0.6cm"><tr><td> </td></tr></table>\n
+\n
+    <h1>Payment</h1>\n
+\n
     <tal:block repeat="group python: details[\'groups\']">\n
       <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="decompte"\n
               tal:condition="python: group[\'id\'] == ADDENDUM_GROUP_ID">\n
@@ -203,6 +208,16 @@
           <td colwidth="2.288cm"> </td>\n
           <td colwidth="2.397cm"> </td>\n
           <td colwidth="1.959cm">Montant</td>\n
+        </tr>\n
+        <tr tal:attributes="stylecmd boldstyle">\n
+          <td>Salaire Net</td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td><tal:block replace="python: details[\'totals\'][\'net_salary\']"\n
+                        condition="python: details[\'totals\'].has_key(\'net_salary\')"/> </td>\n
         </tr>\n
         <tr tal:attributes="stylecmd boldstyle">\n
           <td tal:content="python: group[\'title\']"> </td>\n
@@ -228,7 +243,7 @@
                         condition="python: line[\'employee_share\'] != None"/> </td>\n
         </tr>\n
         <tr tal:attributes="stylecmd boldstyle">\n
-          <td>Total</td>\n
+          <td>Total Addendum</td>\n
           <td> </td>\n
           <td> </td>\n
           <td> </td>\n
@@ -236,6 +251,16 @@
           <td> </td>\n
           <td><tal:block replace="python: details[\'totals\'][\'total_addendum\']"\n
                           condition="python: details[\'totals\'].has_key(\'total_addendum\')"/> </td>\n
+        </tr>\n
+        <tr tal:attributes="stylecmd boldstyle">\n
+          <td>Paiement Final</td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td> </td>\n
+          <td><tal:block replace="python: details[\'totals\'][\'total_employee_payment\']"\n
+                        condition="python: details[\'totals\'].has_key(\'total_employee_payment\')"/> </td>\n
         </tr>\n
       </table>\n
     </tal:block>\n

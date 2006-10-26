@@ -347,12 +347,51 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
 \n
 \n
-details[\'totals\'][\'gross_salary\']         = gross_salary\n
-details[\'totals\'][\'net_salary\']           = net_salary\n
-details[\'totals\'][\'taxable_net_salary\']   = taxable_net_salary\n
-details[\'totals\'][\'total_employer_share\'] = total_employer_share\n
-details[\'totals\'][\'total_employee_share\'] = total_employee_share\n
-details[\'totals\'][\'total_addendum\']       = total_addendum\n
+details[\'totals\'][\'gross_salary\']           = gross_salary\n
+details[\'totals\'][\'net_salary\']             = net_salary\n
+details[\'totals\'][\'taxable_net_salary\']     = taxable_net_salary\n
+details[\'totals\'][\'total_employer_share\']   = total_employer_share\n
+details[\'totals\'][\'total_employee_share\']   = total_employee_share\n
+details[\'totals\'][\'total_addendum\']         = total_addendum\n
+details[\'totals\'][\'total_employee_payment\'] = r_(net_salary + total_addendum)\n
+\n
+\n
+\n
+##############################################################################\n
+# Transform every float value to a string representation according the currency.\n
+##############################################################################\n
+\n
+# There is 2 kind of numbers to format: rates and amounts.\n
+rate_propertie_list   = [\'employer_rate\', \'employee_rate\']\n
+amount_propertie_list = [\'base\', \'employer_share\', \'employee_share\']\n
+\n
+# The "three decimals" format is arbitrary. "3" was choose because there is no rate with\n
+# precision above 3. Feel free to update dynamiccaly this format if required.\n
+RATE_PRECISION = 3\n
+\n
+# Format each "normal" lines\n
+for group_id in getPSLGroupIdList():\n
+  for subline_id in getGroupSubLineIdList(group_id=group_id):\n
+    subline = getSubLine(group_id=group_id, subline_id=subline_id)\n
+    for (property, value) in subline.items():\n
+      if same_type(value, 1.0) or same_type(value, 1):\n
+        new_value = None\n
+        if property in rate_propertie_list:\n
+          new_value = (\'%.\' + str(RATE_PRECISION) + \'f\') % value\n
+        elif property in amount_propertie_list:\n
+          new_value = (\'%.\' + str(precision) + \'f\') % value\n
+        if new_value != None:\n
+          updateSubLine( group_id   = group_id\n
+                       , subline_id = subline_id\n
+                       , property   = property\n
+                       , value      = new_value\n
+                       )\n
+\n
+# Format totals\n
+for (key, value) in details[\'totals\'].items():\n
+  if same_type(value, 1.0) or same_type(value, 1):\n
+    details[\'totals\'][key] = (\'%.\' + str(precision) + \'f\') % value\n
+\n
 \n
 return details\n
 
@@ -457,6 +496,16 @@ return details\n
                             <string>cell_rate</string>
                             <string>cell_base</string>
                             <string>cell_share</string>
+                            <string>rate_propertie_list</string>
+                            <string>amount_propertie_list</string>
+                            <string>RATE_PRECISION</string>
+                            <string>subline</string>
+                            <string>property</string>
+                            <string>value</string>
+                            <string>same_type</string>
+                            <string>new_value</string>
+                            <string>str</string>
+                            <string>key</string>
                           </tuple>
                         </value>
                     </item>
