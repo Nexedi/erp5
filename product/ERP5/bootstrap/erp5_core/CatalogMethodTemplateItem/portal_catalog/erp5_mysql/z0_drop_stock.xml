@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>DROP TABLE stock</string> </value>
+            <value> <string>DROP TABLE IF EXISTS stock</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -125,7 +125,7 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>DROP TABLE stock</string> </value>
+                        <value> <string>DROP TABLE IF EXISTS stock</string> </value>
                     </item>
                   </dictionary>
                 </state>

@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>DROP TABLE item\n
+            <value> <string>DROP TABLE IF EXISTS item\n
 </string> </value>
         </item>
         <item>
@@ -126,7 +126,7 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>DROP TABLE item\n
+                        <value> <string>DROP TABLE IF EXISTS item\n
 </string> </value>
                     </item>
                   </dictionary>
