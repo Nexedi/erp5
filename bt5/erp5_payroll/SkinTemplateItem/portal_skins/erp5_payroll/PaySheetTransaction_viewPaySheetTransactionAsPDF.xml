@@ -61,6 +61,40 @@
   <title>Pay Sheet</title>\n
   <author>Nexedi ERP5</author>\n
   <subject>Pay Sheet</subject>\n
+\n
+\n
+  <tal:block tal:replace="nothing"><!--\n
+    This macro render a line\n
+  --></tal:block>\n
+  <tal:block metal:define-macro="renderLine">\n
+    <tal:block define="line line | nothing" condition="line">\n
+      <tr stylecmd="(\'LEFTPADDING\',8)">\n
+        <td><tal:block content="python: (\' \' * 3) + line[\'service_title\']"/> </td>\n
+        <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
+        <td><tal:block content="python: line[\'base\']"\n
+                      condition="python: line[\'base\'] != None"/> </td>\n
+        <td><tal:block content="python: line[\'employer_rate\']"\n
+                      condition="python: line[\'employer_rate\'] != None"/> </td>\n
+        <td><tal:block content="python: line[\'employer_share\']"\n
+                      condition="python: line[\'employer_share\'] != None"/> </td>\n
+        <td><tal:block content="python: line[\'employee_rate\']"\n
+                      condition="python: line[\'employee_rate\'] != None"/> </td>\n
+        <td><tal:block content="python: line[\'employee_share\']"\n
+                      condition="python: line[\'employee_share\'] != None"/> </td>\n
+      </tr>\n
+      <tr tal:condition="python: line[\'description\'] != None" stylecmd="(\'LEFTPADDING\',8)">\n
+        <td><tal:block content="python: (\' \' * 6) + line[\'description\']"/> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+      </tr>\n
+    </tal:block>\n
+  </tal:block>\n
+\n
+\n
   <content>\n
     <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="decompte">\n
       <tr>\n
@@ -84,20 +118,9 @@
             <td> </td>\n
             <td> </td>\n
           </tr>\n
-          <tr tal:repeat="line python: group[\'sublines\']" stylecmd="(\'LEFTPADDING\',8)">\n
-            <td><tal:block content="python: \'   \' + line[\'service_title\']"/> </td>\n
-            <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
-            <td><tal:block content="python: line[\'base\']"\n
-                          condition="python: line[\'base\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employer_rate\']"\n
-                          condition="python: line[\'employer_rate\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employer_share\']"\n
-                          condition="python: line[\'employer_share\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employee_rate\']"\n
-                          condition="python: line[\'employee_rate\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employee_share\']"\n
-                          condition="python: line[\'employee_share\'] != None"/> </td>\n
-          </tr>\n
+          <tal:block tal:repeat="line python: group[\'sublines\']">\n
+            <tal:block metal:use-macro="here/PaySheetTransaction_viewPaySheetTransactionAsPDF/macros/renderLine"/>\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
 \n
@@ -123,20 +146,9 @@
             <td> </td>\n
             <td> </td>\n
           </tr>\n
-          <tr tal:repeat="line python: group[\'sublines\']" stylecmd="(\'LEFTPADDING\',8)">\n
-            <td><tal:block content="python: \'   \' + line[\'service_title\']"/> </td>\n
-            <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
-            <td><tal:block content="python: line[\'base\']"\n
-                          condition="python: line[\'base\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employer_rate\']"\n
-                          condition="python: line[\'employer_rate\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employer_share\']"\n
-                          condition="python: line[\'employer_share\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employee_rate\']"\n
-                          condition="python: line[\'employee_rate\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employee_share\']"\n
-                          condition="python: line[\'employee_share\'] != None"/> </td>\n
-          </tr>\n
+          <tal:block tal:repeat="line python: group[\'sublines\']">\n
+            <tal:block metal:use-macro="here/PaySheetTransaction_viewPaySheetTransactionAsPDF/macros/renderLine"/>\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
 \n
@@ -165,20 +177,9 @@
       <tal:block repeat="group python: details[\'groups\']">\n
         <tal:block condition="python: group[\'id\'] not in [GROSS_SALARY_GROUP_ID, ADDENDUM_GROUP_ID]"\n
                    repeat="line python: group[\'sublines\']">\n
-          <tr tal:condition="python: line[\'taxable\'] == True" stylecmd="(\'LEFTPADDING\',8)">\n
-            <td><tal:block content="python: \'   \' + line[\'service_title\']"/> </td>\n
-            <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
-            <td><tal:block content="python: line[\'base\']"\n
-                           condition="python: line[\'base\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employer_rate\']"\n
-                           condition="python: line[\'employer_rate\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employer_share\']"\n
-                           condition="python: line[\'employer_share\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employee_rate\']"\n
-                           condition="python: line[\'employee_rate\'] != None"/> </td>\n
-            <td><tal:block content="python: line[\'employee_share\']"\n
-                           condition="python: line[\'employee_share\'] != None"/> </td>\n
-          </tr>\n
+          <tal:block tal:condition="python: line[\'taxable\'] == True">\n
+            <tal:block metal:use-macro="here/PaySheetTransaction_viewPaySheetTransactionAsPDF/macros/renderLine"/>\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
 \n
@@ -197,8 +198,6 @@
     <!-- This table act as a spacer -->\n
     <table rowheight="0.6cm"><tr><td> </td></tr></table>\n
 \n
-    <h1>Payment</h1>\n
-\n
     <tal:block repeat="group python: details[\'groups\']">\n
       <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="decompte"\n
               tal:condition="python: group[\'id\'] == ADDENDUM_GROUP_ID">\n
@@ -211,6 +210,7 @@
           <td colwidth="2.397cm"> </td>\n
           <td colwidth="1.959cm">Montant</td>\n
         </tr>\n
+\n
         <tr tal:attributes="stylecmd boldstyle">\n
           <td>Salaire Net</td>\n
           <td> </td>\n
@@ -221,6 +221,7 @@
           <td><tal:block replace="python: details[\'totals\'][\'net_salary\']"\n
                         condition="python: details[\'totals\'].has_key(\'net_salary\')"/> </td>\n
         </tr>\n
+\n
         <tr tal:attributes="stylecmd boldstyle">\n
           <td tal:content="python: group[\'title\']"> </td>\n
           <td> </td>\n
@@ -230,20 +231,10 @@
           <td> </td>\n
           <td> </td>\n
         </tr>\n
-        <tr tal:repeat="line python: group[\'sublines\']" stylecmd="(\'LEFTPADDING\',8)">\n
-          <td><tal:block content="python: \'   \' + line[\'service_title\']"/> </td>\n
-          <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
-          <td><tal:block content="python: line[\'base\']"\n
-                        condition="python: line[\'base\'] != None"/> </td>\n
-          <td><tal:block content="python: line[\'employer_rate\']"\n
-                        condition="python: line[\'employer_rate\'] != None"/> </td>\n
-          <td><tal:block content="python: line[\'employer_share\']"\n
-                        condition="python: line[\'employer_share\'] != None"/> </td>\n
-          <td><tal:block content="python: line[\'employee_rate\']"\n
-                        condition="python: line[\'employee_rate\'] != None"/> </td>\n
-          <td><tal:block content="python: line[\'employee_share\']"\n
-                        condition="python: line[\'employee_share\'] != None"/> </td>\n
-        </tr>\n
+        <tal:block repeat="line python: group[\'sublines\']">\n
+          <tal:block metal:use-macro="here/PaySheetTransaction_viewPaySheetTransactionAsPDF/macros/renderLine"/>\n
+        </tal:block>\n
+\n
         <tr tal:attributes="stylecmd boldstyle">\n
           <td>Total Addendum</td>\n
           <td> </td>\n

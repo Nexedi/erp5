@@ -5,7 +5,6 @@ Pay Sheet Cell | print_pdf
 Pay Sheet Cell | view
 Pay Sheet Line | history
 Pay Sheet Line | metadata
-Pay Sheet Line | print_pdf
 Pay Sheet Line | quantity
 Pay Sheet Line | view
 Pay Sheet Transaction Line | history

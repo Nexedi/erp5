@@ -218,7 +218,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
                       , \'employee_rate\'     : None # Employee Share Rate, if any (Taux part salariale)\n
                       , \'employee_share\'    : None # Employee Share              (Part salariale)\n
                       , \'taxable\'           : taxable\n
-#                       , \'description\'       : None # Comment\n
+                      , \'description\'       : None\n
 #                       , \'service_id\'        : None # Service ID\n
 #                       , \'salary_range\'      : None # Salary Range\n
 #                       , \'tax_category\'      : None # Tax Category\n
@@ -242,6 +242,7 @@ r_ = lambda x: context.Base_getRoundValue(x, currency_precision)\n
 \n
 # Scan each pay sheet line and save it in the right place in the data structure\n
 for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
+  line_description = psl.getDescription()\n
   # Add each cell to the data structure\n
   for cell in psl.objectValues(portal_type=\'Pay Sheet Cell\'):\n
     # There is no getSalaryRangeList() accessor on cells, so sort categories manually\n
@@ -264,6 +265,17 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
     range_type = \'/\'.join(salary_range_path.split(\'/\')[2:])   # \'fixed\', \'fixed/gross\', \'variable\'...\n
     share_type = tax_category_path.split(\'/\')[-1]             # \'employee_share\' or \'employer_share\'\n
     share_type = share_type.split(\'_\')[0]                     # \'employee\' or \'employer\'\n
+\n
+    # Update description\n
+    if line_description != None:\n
+      # Transform description as one line string\n
+      line_description = line_description.replace(\'\\n\', \' \').strip().capitalize()\n
+      if len(line_description) > 0:\n
+        updateSubLine( group_id   = cell_group_id\n
+                      , subline_id = cell_subline_id\n
+                      , property   = \'description\'\n
+                      , value      = \'(%s)\' % line_description\n
+                      )\n
 \n
     ### Gross salary group handling\n
     if range_type.startswith("fixed/gross"):\n
@@ -497,6 +509,7 @@ return details\n
                             <string>old_group</string>
                             <string>currency_precision</string>
                             <string>r_</string>
+                            <string>line_description</string>
                             <string>cell</string>
                             <string>tax_category_path</string>
                             <string>c</string>
@@ -504,6 +517,7 @@ return details\n
                             <string>cell_subline_id</string>
                             <string>range_type</string>
                             <string>share_type</string>
+                            <string>len</string>
                             <string>cell_value</string>
                             <string>cell_rate</string>
                             <string>cell_base</string>
