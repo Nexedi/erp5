@@ -162,24 +162,26 @@
         <td><tal:block replace="python: details[\'totals\'][\'taxable_net_salary\']"\n
                        condition="python: details[\'totals\'].has_key(\'taxable_net_salary\')"/> </td>\n
       </tr>\n
-\n
-<!--\n
-      <tal:block repeat="category paysheet_categories">\n
-        <tal:block define="paysheet_lines python: paysheet_categories[category][\'lines\']">\n
-          <tal:block repeat="line paysheet_lines">\n
-            <tr tal:condition="python: line.has_key(\'taxable\') and line[\'taxable\']==\'yes\'">\n
-              <td> <tal:block content="python: line[\'title\']"/></td>\n
-              <td> <tal:block content="python: line[\'base_name\']"/></td>\n
-              <td> <tal:block replace="python: \'%.2f\' % line[\'base\']" tal:condition="python: line[\'base\'] not in (\'\', None)"></tal:block></td>\n
-              <td> </td>\n
-              <td> </td>\n
-              <td> <tal:block replace="python: \'%.3f %%\' % line[\'employee_share_rate\']" tal:condition="python: line[\'employee_share_rate\'] not in (\'\', None)"></tal:block></td>\n
-              <td> <tal:block replace="python: \'%.2f\' % abs(float(line[\'employee_share\']))" tal:condition="python: line[\'employee_share\'] not in (\'\', None)"></tal:block></td>\n
-            </tr>\n
-          </tal:block>\n
+      <tal:block repeat="group python: details[\'groups\']">\n
+        <tal:block condition="python: group[\'id\'] not in [GROSS_SALARY_GROUP_ID, ADDENDUM_GROUP_ID]"\n
+                   repeat="line python: group[\'sublines\']">\n
+          <tr tal:condition="python: line[\'taxable\'] == True" stylecmd="(\'LEFTPADDING\',8)">\n
+            <td><tal:block content="python: \'   \' + line[\'service_title\']"/> </td>\n
+            <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
+            <td><tal:block content="python: line[\'base\']"\n
+                           condition="python: line[\'base\'] != None"/> </td>\n
+            <td><tal:block content="python: line[\'employer_rate\']"\n
+                           condition="python: line[\'employer_rate\'] != None"/> </td>\n
+            <td><tal:block content="python: line[\'employer_share\']"\n
+                           condition="python: line[\'employer_share\'] != None"/> </td>\n
+            <td><tal:block content="python: line[\'employee_rate\']"\n
+                           condition="python: line[\'employee_rate\'] != None"/> </td>\n
+            <td><tal:block content="python: line[\'employee_share\']"\n
+                           condition="python: line[\'employee_share\'] != None"/> </td>\n
+          </tr>\n
         </tal:block>\n
       </tal:block>\n
--->\n
+\n
       <tr tal:attributes="stylecmd boldstyle">\n
         <td>Salaire Net</td>\n
         <td> </td>\n

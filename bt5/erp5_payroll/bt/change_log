@@ -1,5 +1,7 @@
 2006-10-26 Kevin
+* Calculate taxable grand total on printing.
 * Fix french employer rate.
+* Fix some UI and fields name.
 * Print total payment on PDF.
 * Format PDF values according currency.
 
