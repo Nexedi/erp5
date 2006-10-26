@@ -819,7 +819,11 @@ be a problem)."""
     # when an object inherits from Folder after it was instanciated, it lacks
     # its BTreeFolder properties.
     if getattr(self, '_tree', None) is None:
-      self._initBTrees()
+      try:
+        self._initBTrees()
+      except AttributeError:
+        from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
+        BTreeFolder2Base.__init__(self, self.getId())
     object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
       if type(portal_type) == type(''):
