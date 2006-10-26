@@ -80,7 +80,8 @@ def sortInvoiceTransactionLine(a, b):\n
   b_id = sort_dict.get(b.getId(), b.getId())\n
   return cmp(a_id, b_id)\n
 \n
-object_list = list(context.contentValues(portal_type=portal_type))\n
+object_list = list(context.contentValues(\n
+                      filter={\'portal_type\': portal_type}))\n
 object_list.sort(sortInvoiceTransactionLine)\n
 return object_list\n
 </string> </value>
