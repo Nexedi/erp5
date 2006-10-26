@@ -121,7 +121,7 @@ def getGroup(group_id):\n
   return None\n
 \n
 \n
-def getGroupSubLineIdList(group_id=None):\n
+def getGroupSublineIdList(group_id=None):\n
   """\n
     This method get the list of subline IDs for a given group.\n
   """\n
@@ -136,10 +136,10 @@ def getGroupSubLineIdList(group_id=None):\n
 \n
 \n
 def sublineExist(group_id, subline_id):\n
-  return (groupExist(group_id) and subline_id not in [\'\', None] and subline_id in getGroupSubLineIdList(group_id)) and True or False\n
+  return (groupExist(group_id) and subline_id not in [\'\', None] and subline_id in getGroupSublineIdList(group_id)) and True or False\n
 \n
 \n
-def getSubLine(group_id, subline_id):\n
+def getSubline(group_id, subline_id):\n
   """\n
     This method get subline content based on its ID\n
   """\n
@@ -155,7 +155,7 @@ def updateSubLine(group_id, subline_id, property, value):\n
   """\n
     This method update a subline property.\n
   """\n
-  subline = getSubLine(group_id, subline_id)\n
+  subline = getSubline(group_id, subline_id)\n
   if subline != None:\n
     subline[property] = value\n
     return\n
@@ -195,7 +195,9 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
       subline_id = "%s/%s" % (service.getId(), salary_range.getId())\n
 \n
       # Here we decide if a Pay Sheet Line is taxable or not, according its payroll service\n
-      # TODO: use a \'taxable\' category to test this in a more generic way\n
+      # TODO: This is a hack, because the code below contain hard-coded IDs. To make this a\n
+      #       little bit more generic, an idea could be to use a \'taxable\' category to test\n
+      #       this in a more generic way.\n
       service_id = service.getId()\n
       taxable = False\n
       if service_id.endswith(\'non_deductible\') or \\\n
@@ -230,13 +232,13 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
 \n
 ##############################################################################\n
-# Fill the \'details\' dict with cell and calculated datas.\n
-# Here there is some specific code that must be modified to generic one.\n
+# Fill the \'details\' dict with cells and calculated datas.\n
+# There is some specific code here that must be transformed to generic one.\n
 ##############################################################################\n
 \n
 # Get Precision and precise rounding methods\n
-precision = context.getResourceValue().getQuantityPrecision()\n
-r_ = lambda x: context.Base_getRoundValue(x, precision)\n
+currency_precision = context.getResourceValue().getQuantityPrecision()\n
+r_ = lambda x: context.Base_getRoundValue(x, currency_precision)\n
 \n
 # Scan each pay sheet line and save it in the right place in the data structure\n
 for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
@@ -301,8 +303,8 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
     ### Default/Standard line group handling\n
     else:\n
-      cell_rate  = cell.getPrice()\n
-      cell_base  = - cell.getQuantity() # Change sign for beauty\n
+      cell_rate = cell.getPrice()\n
+      cell_base = - cell.getQuantity() # Change sign for beauty\n
       # BUG: why cell.getTotalPrice() use the method from Amount instead of the one defined in Movement class ?\n
       cell_share = r_(cell_base * cell_rate)\n
 \n
@@ -321,7 +323,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
         updateSubLine( group_id   = cell_group_id\n
                      , subline_id = cell_subline_id\n
                      , property   = \'%s_rate\' % share_type\n
-                     , value      = \'%.3f %%\' % r_(cell_rate * 100.0) # The "%.3f" format is arbitrary. "3" was choose because there is no rate with precision above 3. Feel Free to update this format if required.\n
+                     , value      = r_(cell_rate * 100.0)\n
                      )\n
         updateSubLine( group_id   = cell_group_id\n
                      , subline_id = cell_subline_id\n
@@ -339,6 +341,11 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
       elif share_type == \'employer\':\n
         total_employer_share = r_(total_employer_share + cell_share)\n
 \n
+      # Create taxable salary\n
+      subline = getSubline(group_id=cell_group_id, subline_id=cell_subline_id)\n
+      if subline != None and subline.has_key(\'taxable\') and subline[\'taxable\'] == True and subline[\'employee_share\'] != None:\n
+        taxable_net_salary = r_(taxable_net_salary + subline[\'employee_share\'])\n
+\n
 \n
 \n
 ##########################################\n
@@ -349,7 +356,7 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
 details[\'totals\'][\'gross_salary\']           = gross_salary\n
 details[\'totals\'][\'net_salary\']             = net_salary\n
-details[\'totals\'][\'taxable_net_salary\']     = taxable_net_salary\n
+details[\'totals\'][\'taxable_net_salary\']     = r_(net_salary + taxable_net_salary)\n
 details[\'totals\'][\'total_employer_share\']   = total_employer_share\n
 details[\'totals\'][\'total_employee_share\']   = total_employee_share\n
 details[\'totals\'][\'total_addendum\']         = total_addendum\n
@@ -361,36 +368,41 @@ details[\'totals\'][\'total_employee_payment\'] = r_(net_salary + total_addendum
 # Transform every float value to a string representation according the currency.\n
 ##############################################################################\n
 \n
-# There is 2 kind of numbers to format: rates and amounts.\n
-rate_propertie_list   = [\'employer_rate\', \'employee_rate\']\n
-amount_propertie_list = [\'base\', \'employer_share\', \'employee_share\']\n
-\n
 # The "three decimals" format is arbitrary. "3" was choose because there is no rate with\n
-# precision above 3. Feel free to update dynamiccaly this format if required.\n
+# currency_precision above 3. Feel free to update dynamiccaly this format if required.\n
 RATE_PRECISION = 3\n
+\n
+# There is 2 kind of numbers to format: rates and amounts.\n
+money_format = {\'precision\': currency_precision}  #IDEA: put currency symbol as suffix ?\n
+rate_format  = {\'precision\': RATE_PRECISION, \'suffix\': "%"}\n
+property_format_dict = { \'base\'          : money_format\n
+                       , \'employer_rate\' : rate_format\n
+                       , \'employer_share\': money_format\n
+                       , \'employee_rate\' : rate_format\n
+                       , \'employee_share\': money_format\n
+                       }\n
 \n
 # Format each "normal" lines\n
 for group_id in getPSLGroupIdList():\n
-  for subline_id in getGroupSubLineIdList(group_id=group_id):\n
-    subline = getSubLine(group_id=group_id, subline_id=subline_id)\n
+  for subline_id in getGroupSublineIdList(group_id=group_id):\n
+    subline = getSubline(group_id=group_id, subline_id=subline_id)\n
     for (property, value) in subline.items():\n
-      if same_type(value, 1.0) or same_type(value, 1):\n
-        new_value = None\n
-        if property in rate_propertie_list:\n
-          new_value = (\'%.\' + str(RATE_PRECISION) + \'f\') % value\n
-        elif property in amount_propertie_list:\n
-          new_value = (\'%.\' + str(precision) + \'f\') % value\n
-        if new_value != None:\n
-          updateSubLine( group_id   = group_id\n
-                       , subline_id = subline_id\n
-                       , property   = property\n
-                       , value      = new_value\n
-                       )\n
+      if property_format_dict.has_key(property) and same_type(value, 1.0) or same_type(value, 1):\n
+        format = property_format_dict[property]\n
+        precision = format[\'precision\']\n
+        new_value = (\'%.\' + str(precision) + \'f\') % value\n
+        if format.has_key(\'prefix\'): new_value = \'%s %s\' % (format[\'prefix\'], new_value)\n
+        if format.has_key(\'suffix\'): new_value = \'%s %s\' % (new_value, format[\'suffix\'])\n
+        updateSubLine( group_id   = group_id\n
+                     , subline_id = subline_id\n
+                     , property   = property\n
+                     , value      = new_value\n
+                     )\n
 \n
 # Format totals\n
 for (key, value) in details[\'totals\'].items():\n
   if same_type(value, 1.0) or same_type(value, 1):\n
-    details[\'totals\'][key] = (\'%.\' + str(precision) + \'f\') % value\n
+    details[\'totals\'][key] = (\'%.\' + str(currency_precision) + \'f\') % value\n
 \n
 \n
 return details\n
@@ -458,9 +470,9 @@ return details\n
                             <string>groupExist</string>
                             <string>getGroup</string>
                             <string>None</string>
-                            <string>getGroupSubLineIdList</string>
+                            <string>getGroupSublineIdList</string>
                             <string>sublineExist</string>
-                            <string>getSubLine</string>
+                            <string>getSubline</string>
                             <string>updateSubLine</string>
                             <string>_getiter_</string>
                             <string>psl</string>
@@ -483,7 +495,7 @@ return details\n
                             <string>new_subline</string>
                             <string>groups</string>
                             <string>old_group</string>
-                            <string>precision</string>
+                            <string>currency_precision</string>
                             <string>r_</string>
                             <string>cell</string>
                             <string>tax_category_path</string>
@@ -496,15 +508,18 @@ return details\n
                             <string>cell_rate</string>
                             <string>cell_base</string>
                             <string>cell_share</string>
-                            <string>rate_propertie_list</string>
-                            <string>amount_propertie_list</string>
-                            <string>RATE_PRECISION</string>
                             <string>subline</string>
+                            <string>RATE_PRECISION</string>
+                            <string>money_format</string>
+                            <string>rate_format</string>
+                            <string>property_format_dict</string>
                             <string>property</string>
                             <string>value</string>
                             <string>same_type</string>
-                            <string>new_value</string>
+                            <string>format</string>
+                            <string>precision</string>
                             <string>str</string>
+                            <string>new_value</string>
                             <string>key</string>
                           </tuple>
                         </value>
