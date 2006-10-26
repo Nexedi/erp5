@@ -68,35 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Note: this script is executed with the proxy role Manager, because this script needs\n
-#       to use checkbook_module.\n
-from Products.ERP5Type.Message import Message\n
+            <value> <string>transaction = state_change.object\n
 \n
-transaction = state_change[\'object\']\n
-bank_account = transaction.getDestinationPaymentValue()\n
-check_number = transaction.getAggregateFreeText()\n
-\n
-\n
-check = transaction.Base_checkOrCreateCheck(reference=check_number)\n
-\n
-line = transaction.get(\'movement\')\n
-if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
-  # This is a single currency operation, so it is not necessary to convert the price.\n
-  line.setSourceDebit(transaction.getSourceTotalAssetPrice())\n
-\n
-transaction.edit(aggregate = check.getRelativeUrl())\n
+# Check getBaobabSource and getBaobabDestination\n
+transaction.Base_checkBaobabSourceAndDestination()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -113,15 +94,7 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -148,16 +121,9 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>bank_account</string>
-                            <string>check_number</string>
-                            <string>check</string>
-                            <string>line</string>
-                            <string>None</string>
+                            <string>transaction</string>
                           </tuple>
                         </value>
                     </item>
@@ -174,33 +140,12 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateBankingOperation</string> </value>
+            <value> <string>validateSourceAndDestination</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

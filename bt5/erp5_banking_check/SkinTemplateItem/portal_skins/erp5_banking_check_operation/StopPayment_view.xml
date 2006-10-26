@@ -112,6 +112,8 @@
                       <list>
                         <string>my_destination_payment_reference</string>
                         <string>my_destination_payment_title</string>
+                        <string>my_reference_range_min</string>
+                        <string>my_reference_range_max</string>
                         <string>my_description</string>
                       </list>
                     </value>

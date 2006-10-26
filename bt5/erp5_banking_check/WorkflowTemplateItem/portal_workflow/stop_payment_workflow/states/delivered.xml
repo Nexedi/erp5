@@ -71,7 +71,8 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -89,7 +90,8 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>

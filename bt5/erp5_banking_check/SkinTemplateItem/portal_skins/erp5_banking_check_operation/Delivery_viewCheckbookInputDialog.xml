@@ -78,24 +78,29 @@ class Dummy:\n
 \n
 dummy = Dummy()\n
 node = kw.get(\'node\',dummy)\n
+vault = kw.get(\'vault\',dummy)\n
 \n
 if item_portal_type_list is None:\n
   item_portal_type_list = ["Checkbook","Check"]\n
 \n
 if listbox is None:\n
 \n
+  if vault is not dummy:\n
+    node = vault\n
   if node is dummy:\n
     node = None\n
-  else:\n
+  if node is None:\n
     node = context.getBaobabSource()\n
 \n
   reference_date = DateTime()\n
   item_list = []\n
   listbox = []\n
   getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-  context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1))\n
+  #context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
+  #return [x.path for x in  getCurrentTrackingList(at_date=reference_date, node=node)]\n
   current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
-                                                at_date=reference_date, node=node)]\n
+                             at_date=reference_date, node=node,\n
+                             where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
   for item in current_tracking_list:\n
     exclude=0\n
     if model_filter_dict is not None:\n
@@ -198,6 +203,7 @@ return context.asContext(context=None\n
                             <string>dummy</string>
                             <string>_getattr_</string>
                             <string>node</string>
+                            <string>vault</string>
                             <string>None</string>
                             <string>context</string>
                             <string>reference_date</string>

@@ -75,11 +75,38 @@
 # 1 - if a end date is not passed yet, we will create the check\n
 # 2 - if the end date is passed, we raise an error\n
 from Products.ERP5Type.Message import Message\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from DateTime import DateTime\n
 \n
 \n
 bank_account = context.getDestinationPaymentValue()\n
-reference_list = [reference]\n
+if reference is not None:\n
+  reference_list = [reference]\n
+\n
+elif reference_range_min is not None or reference_range_max is not None:\n
+  reference_list = []\n
+\n
+  if reference_range_max is None:\n
+    reference_range_max = reference_range_min\n
+\n
+  elif reference_range_min is None:\n
+    reference_range_min = reference_range_max\n
+\n
+  try:\n
+    reference_range_min = int(reference_range_min)\n
+    reference_range_max = int(reference_range_max)\n
+  except ValueError:\n
+    msg = Message(domain=\'ui\', message=\'Sorry, make sure you have entered the right check number.\')\n
+    raise ValidationFailed, (msg,)\n
+\n
+  if reference_range_min>reference_range_max :\n
+    msg = Message(domain=\'ui\', message=\'Sorry, the min number must be less than the max number.\')\n
+    raise ValidationFailed, (msg,)\n
+\n
+  for ref in range(reference_range_min,reference_range_max+1):\n
+    # We will look for each reference and add the right number\n
+    reference_list.append(ref)\n
+\n
 check_list = []\n
 for check_reference in reference_list:\n
   message_tag = \'check_%s\' % (check_reference, )\n
@@ -125,7 +152,7 @@ for check_reference in reference_list:\n
   check_list.append(check)\n
 \n
 if reference is not None:\n
-  return check\n
+  return check_list[0]\n
 return check_list\n
 
 
@@ -188,22 +215,27 @@ return check_list\n
                             <string>reference_range_max</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>bank_account</string>
+                            <string>None</string>
                             <string>reference_list</string>
-                            <string>check_list</string>
+                            <string>int</string>
+                            <string>ValueError</string>
+                            <string>msg</string>
                             <string>_getiter_</string>
+                            <string>range</string>
+                            <string>ref</string>
+                            <string>check_list</string>
                             <string>check_reference</string>
                             <string>message_tag</string>
-                            <string>msg</string>
-                            <string>ValidationFailed</string>
                             <string>result</string>
                             <string>len</string>
                             <string>end_date</string>
                             <string>now</string>
-                            <string>None</string>
                             <string>checkbook</string>
                             <string>_getitem_</string>
                             <string>generic_model</string>

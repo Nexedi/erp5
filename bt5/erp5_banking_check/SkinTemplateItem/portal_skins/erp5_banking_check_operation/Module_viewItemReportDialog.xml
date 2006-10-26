@@ -67,8 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
-                <string>hidden</string>
+                <string>left</string>
               </list>
             </value>
         </item>
@@ -77,17 +76,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>my_vault</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -119,7 +112,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Report</string> </value>
+            <value> <string>Item Report</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

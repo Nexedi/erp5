@@ -515,7 +515,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>Delivery_getMovementList</string> </value>
         </item>
       </dictionary>
     </pickle>

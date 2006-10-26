@@ -350,6 +350,9 @@
    <name>Edit Factories</name>
   </permission>
   <permission type='list'>
+   <name>Edit ParsedXML</name>
+  </permission>
+  <permission type='list'>
    <name>Edit ReStructuredText</name>
   </permission>
   <permission type='list'>
@@ -492,6 +495,9 @@
   </permission>
   <permission type='list'>
    <name>View</name>
+  </permission>
+  <permission type='list'>
+   <name>View DOM hierarchy</name>
   </permission>
   <permission type='list'>
    <name>View History</name>

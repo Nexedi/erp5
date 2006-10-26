@@ -322,20 +322,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>getResourceTitle</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>check_amount_title</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
                           <string>reference_range_min</string>
-                          <string>Start Number</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference_range_max</string>
-                          <string>Stop Number</string>
+                          <string>Number</string>
                         </tuple>
                       </list>
                     </value>
@@ -492,7 +484,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Checkbooks</string> </value>
+                    <value> <string>Checks</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -520,7 +512,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>Delivery_getMovementList</string> </value>
         </item>
       </dictionary>
     </pickle>
