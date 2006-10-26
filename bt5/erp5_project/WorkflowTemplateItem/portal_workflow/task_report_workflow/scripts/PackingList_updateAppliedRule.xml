@@ -75,7 +75,7 @@ packing_list = state_change.object\n
 \n
 \n
 activate_kw = {}\n
-related_order = context.getCausalityValue()\n
+related_order = packing_list.getCausalityValue()\n
 after_path_list = []\n
 if related_order is not None:\n
   after_path_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
