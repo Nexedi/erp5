@@ -121,7 +121,7 @@ def display(x):\n
 def sort(x,y):\n
   return cmp(display(x), display(y))\n
 \n
-def getItemList(category=None, portal_path=None, mirror=0,\n
+def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,\n
                 user_name=None, simulation_state=None):\n
   """Returns a list of Account path items. """\n
   if category is not None:\n
