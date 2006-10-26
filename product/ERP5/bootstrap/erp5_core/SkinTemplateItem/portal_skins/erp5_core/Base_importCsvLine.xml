@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>object = context.portal_catalog.getObject(object_property_dict[\'uid\'])\n
+            <value> <string>if object_property_dict[\'uid\'] is None:\n
+  object = None\n
+else:\n
+  object = context.portal_catalog.getObject(object_property_dict[\'uid\'])\n
 \n
 if object == None:\n
   object = context.newContent()\n
@@ -122,11 +125,11 @@ object.edit(**object_property_dict)\n
                         <value>
                           <tuple>
                             <string>object_property_dict</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>object</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getitem_</string>
-                            <string>object</string>
-                            <string>None</string>
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>_apply_</string>

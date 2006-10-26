@@ -68,24 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-def convertToUpperCase(key):\n
-    """\n
-      This function turns an attribute name into\n
-      a method name according to the ERP5 naming conventions\n
-    """\n
-    import string\n
-    result = \'\'\n
-    if key != \'\':\n
-      parts = string.split(str(key),\'_\')\n
-      for part in parts:\n
-        letter_list = list(part)\n
-        letter_list[0] = string.upper(letter_list[0])\n
-        result = result + string.join(letter_list,\'\')\n
-    return result\n
-\n
-\n
+            <value> <string>def cleanString(str):\n
+  clean_item = str\n
+  if clean_item.find(\'"\') != -1:\n
+    clean_item = clean_item[1:-1].replace(\'""\', \'"\')\n
+  else:\n
+    if clean_item != \'\':\n
+      if clean_item.find(\'.\') != -1:\n
+        clean_item = float(clean_item)\n
+      else:\n
+        clean_item = int(clean_item)\n
+    else:\n
+      clean_item = None\n
+  return clean_item\n
 \n
 def splitCsvLine(str_line):\n
   unclean_list = []\n
@@ -94,76 +89,52 @@ def splitCsvLine(str_line):\n
   p_stack = \'\'\n
   for p in pieces_of_line:\n
     p_stack += p\n
-    if p_stack.count(\'"\')%2 == 0:\n
+    if p_stack.count(\'"\') % 2 == 0:\n
       unclean_list.append(p_stack)\n
       p_stack = \'\'\n
 \n
-  clean_list = []\n
-  for item in unclean_list:\n
-    clean_item = item\n
-    if clean_item.find(\'"\') != -1:\n
-      if len(clean_item) <= 2:\n
-        clean_item = \'\'\n
-      else:\n
-        clean_item = clean_item[1:]\n
-        clean_item = clean_item[:-1]\n
-        clean_item = clean_item.replace(\'""\', \'"\')\n
-    else:\n
-      if len(clean_item) > 0:      \n
-        if clean_item.find(\'.\') != -1:\n
-          clean_item = float(clean_item)\n
-        else:\n
-          clean_item = int(clean_item)\n
-      else:\n
-        clean_item = None\n
-    clean_list.append(clean_item)\n
-\n
-  return clean_list\n
-\n
-\n
+  return [cleanString(x) for x in unclean_list]\n
 \n
 request  = context.REQUEST\n
-csv_file_line_list = import_file.readlines()\n
-csv_line_list = []\n
+# Read first line (attribute\'s ids)\n
+first_line = import_file.readline()\n
+first_line = first_line.replace(\'\\n\', \'\')\n
+csv_property_list = splitCsvLine(first_line)\n
+# Read second line (attribute\'s titles)\n
+second_line = import_file.readline()\n
 \n
-for csv_line in csv_file_line_list:\n
-  csv_line_list.append( string.replace(csv_line, \'\\n\', \'\') )\n
+# Read data lines\n
+method = context.activate\n
 \n
+i = 0\n
+for line in iter(import_file.readline, ""):\n
+  # XXX Currently, if the file is too big, there is too many\n
+  # activities created in only one transaction\n
+  # We need to reduce the number of activities\n
+  # Ex: create 1 activity which manages 100 lines, by created itself 100 \n
+  # others activities\n
+  i += 1\n
+  line = line.replace(\'\\n\', \'\')\n
+  csv_data_list = splitCsvLine(line)\n
 \n
-object_list = []\n
+  attribute_value_dict = dict([(csv_property_list[x], csv_data_list[x]) \\\n
+                               for x in xrange(len(csv_property_list))])\n
 \n
-csv_property_list = splitCsvLine(csv_line_list[0])\n
-csv_title_list = splitCsvLine(csv_line_list[1])\n
-\n
-\n
-for csv_line in csv_line_list[2:]:\n
-  object = {}\n
-  csv_data_list = splitCsvLine(csv_line)\n
-\n
-  data_n = 0\n
-\n
-  for property in csv_property_list:\n
-    object[property] = csv_data_list[data_n]\n
-    data_n += 1\n
-\n
-  object_list.append(object)\n
-\n
-\n
-\n
-for object in object_list: \n
-  context.activate(priority=4).Base_importCsvLine(object)\n
-\n
-\n
+  method(priority=4, activity="SQLQueue", passive_commit=1).Base_importCsvLine(attribute_value_dict)\n
 redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=Importing+CSV+file.\')\n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -202,25 +173,28 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                           <tuple>
                             <string>import_file</string>
                             <string>kw</string>
-                            <string>convertToUpperCase</string>
+                            <string>cleanString</string>
                             <string>splitCsvLine</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>csv_file_line_list</string>
-                            <string>csv_line_list</string>
-                            <string>_getiter_</string>
-                            <string>csv_line</string>
-                            <string>string</string>
-                            <string>object_list</string>
-                            <string>_getitem_</string>
+                            <string>first_line</string>
                             <string>csv_property_list</string>
-                            <string>csv_title_list</string>
-                            <string>object</string>
+                            <string>second_line</string>
+                            <string>method</string>
+                            <string>i</string>
+                            <string>_getiter_</string>
+                            <string>iter</string>
+                            <string>line</string>
                             <string>csv_data_list</string>
-                            <string>data_n</string>
-                            <string>property</string>
-                            <string>_write_</string>
+                            <string>dict</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>xrange</string>
+                            <string>len</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>attribute_value_dict</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>
@@ -244,6 +218,27 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
