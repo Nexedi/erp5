@@ -4,54 +4,14 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.Resource</string>
-          <string>Resource</string>
+          <string>Products.ERP5Type.Document.AccountingTransactionLine</string>
+          <string>AccountingTransactionLine</string>
         </tuple>
         <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Modify_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -80,44 +40,30 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/fixed/addendum</string>
-                <string>tax_category/addendum/employee_share</string>
-                <string>quantity_unit/time/month</string>
-                <string>product_line/addendum/acompte</string>
+                <string>source/account_module/104</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>acompte</string> </value>
+            <value> <string>payable</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Payroll Service</string> </value>
+            <value> <string>Accounting Transaction Line</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Acompte</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>variation_base_category_list</string> </key>
-            <value>
-              <tuple>
-                <string>tax_category</string>
-                <string>salary_range</string>
-              </tuple>
             </value>
         </item>
       </dictionary>

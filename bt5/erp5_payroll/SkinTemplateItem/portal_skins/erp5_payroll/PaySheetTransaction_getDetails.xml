@@ -243,6 +243,7 @@ r_ = lambda x: context.Base_getRoundValue(x, currency_precision)\n
 # Scan each pay sheet line and save it in the right place in the data structure\n
 for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
   line_description = psl.getDescription()\n
+  line_title       = psl.getTitle()\n
   # Add each cell to the data structure\n
   for cell in psl.objectValues(portal_type=\'Pay Sheet Cell\'):\n
     # There is no getSalaryRangeList() accessor on cells, so sort categories manually\n
@@ -265,6 +266,14 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
     range_type = \'/\'.join(salary_range_path.split(\'/\')[2:])   # \'fixed\', \'fixed/gross\', \'variable\'...\n
     share_type = tax_category_path.split(\'/\')[-1]             # \'employee_share\' or \'employer_share\'\n
     share_type = share_type.split(\'_\')[0]                     # \'employee\' or \'employer\'\n
+\n
+    # Update title\n
+    if line_title not in [\'\', None]:\n
+      updateSubLine( group_id   = cell_group_id\n
+                   , subline_id = cell_subline_id\n
+                   , property   = \'service_title\'\n
+                   , value      = line_title\n
+                   )\n
 \n
     # Update description\n
     if line_description != None:\n
@@ -510,6 +519,7 @@ return details\n
                             <string>currency_precision</string>
                             <string>r_</string>
                             <string>line_description</string>
+                            <string>line_title</string>
                             <string>cell</string>
                             <string>tax_category_path</string>
                             <string>c</string>

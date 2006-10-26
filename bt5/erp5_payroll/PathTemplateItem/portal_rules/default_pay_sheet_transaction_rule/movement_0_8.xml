@@ -64,6 +64,12 @@
             </value>
         </item>
         <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple/>
@@ -77,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>movement_1_3</string> </value>
+            <value> <string>movement_0_8</string> </value>
         </item>
         <item>
             <key> <string>isIndexable</string> </key>
@@ -108,17 +114,17 @@
             <key> <string>membership_criterion_category</string> </key>
             <value>
               <tuple>
-                <string>tax_category/addendum/employee_share</string>
-                <string>tax_category/apec/employee_share</string>
-                <string>tax_category/argic/employee_share</string>
-                <string>tax_category/crds/employee_share</string>
-                <string>tax_category/csg/employee_share</string>
-                <string>tax_category/gross/employee_share</string>
-                <string>tax_category/social/employee_share</string>
-                <string>tax_category/supplementary_pension/employee_share</string>
-                <string>tax_category/syntec_insurance/employee_share</string>
-                <string>tax_category/unemployment/employee_share</string>
-                <string>product_line/social_service/mutual_insurance</string>
+                <string>tax_category/ags/employer_share</string>
+                <string>tax_category/apec/employer_share</string>
+                <string>tax_category/argic/employer_share</string>
+                <string>tax_category/gross/employer_share</string>
+                <string>tax_category/life_insurance/employer_share</string>
+                <string>tax_category/social/employer_share</string>
+                <string>tax_category/supplementary_pension/employer_share</string>
+                <string>tax_category/syntec_insurance/employer_share</string>
+                <string>tax_category/taxes/employer_share</string>
+                <string>tax_category/unemployment/employer_share</string>
+                <string>product_line/salary</string>
               </tuple>
             </value>
         </item>
@@ -241,7 +247,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employee Share * Mutuelles</string> </value>
+            <value> <string>Employer Share * Salary</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

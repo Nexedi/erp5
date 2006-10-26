@@ -83,7 +83,7 @@
                 <string>salary_range/france/fixed/addendum</string>
                 <string>tax_category/addendum/employee_share</string>
                 <string>quantity_unit/time/month</string>
-                <string>product_line/salary</string>
+                <string>product_line/addendum/remboursement_loyer</string>
               </tuple>
             </value>
         </item>

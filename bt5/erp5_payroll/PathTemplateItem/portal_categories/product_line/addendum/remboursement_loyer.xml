@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.AccountingTransactionLine</string>
-          <string>AccountingTransactionLine</string>
+          <string>Products.ERP5Type.Document.Category</string>
+          <string>Category</string>
         </tuple>
         <none/>
       </tuple>
@@ -40,26 +40,27 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/account_module/dettes_salaries</string>
-                <string>destination/account_module/creances_salaries</string>
+                <string>product_line/addendum/remboursement_loyer</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>payable</string> </value>
+            <value> <string>remboursement_loyer</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Accounting Transaction Line</string> </value>
-        </item>
-        <item>
-            <key> <string>quantity</string> </key>
-            <value> <float>0.0</float> </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Remboursement Loyer</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

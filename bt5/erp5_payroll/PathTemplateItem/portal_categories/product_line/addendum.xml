@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.AccountingRuleCell</string>
-          <string>AccountingRuleCell</string>
+          <string>Products.ERP5Type.Document.Category</string>
+          <string>Category</string>
         </tuple>
         <none/>
       </tuple>
@@ -25,12 +25,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_identity_criterion</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -43,81 +37,40 @@
             </value>
         </item>
         <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>criterion_property</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>product_line/addendum</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>movement_0_5</string> </value>
+            <value> <string>addendum</string> </value>
         </item>
         <item>
-            <key> <string>mapped_value_property_list</string> </key>
-            <value>
-              <tuple>
-                <string>title</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_base_category</string> </key>
-            <value>
-              <tuple>
-                <string>tax_category</string>
-                <string>product_line</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_category</string> </key>
-            <value>
-              <tuple>
-                <string>tax_category/ags/employer_share</string>
-                <string>tax_category/apec/employer_share</string>
-                <string>tax_category/argic/employer_share</string>
-                <string>tax_category/gross/employer_share</string>
-                <string>tax_category/life_insurance/employer_share</string>
-                <string>tax_category/social/employer_share</string>
-                <string>tax_category/supplementary_pension/employer_share</string>
-                <string>tax_category/syntec_insurance/employer_share</string>
-                <string>tax_category/taxes/employer_share</string>
-                <string>tax_category/unemployment/employer_share</string>
-                <string>product_line/addendum/remboursement_loyer</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>multimembership_criterion_base_category</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>last_id</string> </key>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Accounting Rule Cell</string> </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employer Share * Loyer</string> </value>
+            <value> <string>Addendum</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>movement_0_5</string> </value>
+            <value> <string>movement_0_7</string> </value>
         </item>
         <item>
             <key> <string>mapped_value_property_list</string> </key>
@@ -95,7 +95,7 @@
                 <string>tax_category/syntec_insurance/employer_share</string>
                 <string>tax_category/taxes/employer_share</string>
                 <string>tax_category/unemployment/employer_share</string>
-                <string>product_line/addendum/remboursement_loyer</string>
+                <string>product_line/addendum/acompte</string>
               </tuple>
             </value>
         </item>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employer Share * Loyer</string> </value>
+            <value> <string>Employer Share * Acompte</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

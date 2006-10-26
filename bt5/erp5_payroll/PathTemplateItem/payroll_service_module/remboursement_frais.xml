@@ -83,7 +83,7 @@
                 <string>salary_range/france/fixed/addendum</string>
                 <string>tax_category/addendum/employee_share</string>
                 <string>quantity_unit/time/month</string>
-                <string>product_line/salary</string>
+                <string>product_line/addendum/remboursement_frais</string>
               </tuple>
             </value>
         </item>
@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>frais_deplacement</string> </value>
+            <value> <string>remboursement_frais</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Frais de D\xc3\xa9placement</string> </value>
+            <value> <string>Remboursement de Frais</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

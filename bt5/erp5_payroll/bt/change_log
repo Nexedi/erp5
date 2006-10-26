@@ -1,4 +1,5 @@
 2006-10-26 Kevin
+* Accounting of paysheets addendum.
 * Show pay sheet line comments on PDF.
 * Calculate taxable grand total on printing.
 * Fix french employer rate.
