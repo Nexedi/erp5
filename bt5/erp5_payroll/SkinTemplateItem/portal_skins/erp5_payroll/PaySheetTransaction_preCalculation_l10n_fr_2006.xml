@@ -194,7 +194,7 @@ if executive:\n
   employer_rate = None\n
   employee_rate = 0.85\n
 else:\n
-  employer_rate = 13.10\n
+  employer_rate = 12.80\n
   employee_rate = 0.75\n
 kw[\'sickness_insurance/salaire_brut\'] = \\\n
 { \'employer_share\': employer_rate\n
