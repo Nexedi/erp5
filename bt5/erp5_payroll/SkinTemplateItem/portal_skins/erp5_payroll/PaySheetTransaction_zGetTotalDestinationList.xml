@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>year</string>
+<string>year</string>
                           </list>
                         </value>
                     </item>
@@ -179,7 +179,7 @@ GROUP BY\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>DEPRECATED</string> </value>
         </item>
       </dictionary>
     </pickle>

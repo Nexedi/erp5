@@ -60,7 +60,7 @@
     </head>\n
 \n
     <body tal:define="employee python: here.restrictedTraverse(here.getDestinationSectionRelativeUrl());\n
-                    employer python: here.restrictedTraverse(here.getSourceSectionRelativeUrl())">\n
+                      employer python: here.restrictedTraverse(here.getSourceSectionRelativeUrl())">\n
 \n
     <div class="spacer">&nbsp;</div>\n
 \n
@@ -167,8 +167,20 @@
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>PaySheet_viewAsPDF</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DEPRECATED</string> </value>
         </item>
       </dictionary>
     </pickle>

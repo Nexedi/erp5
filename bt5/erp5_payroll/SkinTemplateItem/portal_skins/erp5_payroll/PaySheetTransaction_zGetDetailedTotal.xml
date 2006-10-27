@@ -72,9 +72,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>start_date</string>
-                            <string>stop_date</string>
-                            <string>tax_category</string>
+<string>start_date</string>
+<string>stop_date</string>
+<string>tax_category</string>
                           </list>
                         </value>
                     </item>
@@ -184,8 +184,8 @@ WHERE\n
   AND PaySheet.uid = CategoryPaySheet.uid\n
   AND CategoryPaySheet.base_category_uid=\'-138283359\' \n
   AND CategoryPaySheet.category_uid=\'-1774242116\' \n
-  AND MovementCell.start_date>=<dtml-sqlvar start_date type="string">\n
-  AND MovementCell.stop_date<=<dtml-sqlvar stop_date type="string">\n
+  AND MovementCell.start_date >= <dtml-sqlvar start_date type="string">\n
+  AND MovementCell.stop_date  <= <dtml-sqlvar stop_date type="string">\n
   GROUP BY CategoryPaySheet.category_uid\n
 
 
@@ -250,8 +250,8 @@ WHERE\n
   AND PaySheet.uid = CategoryPaySheet.uid\n
   AND CategoryPaySheet.base_category_uid=\'-138283359\' \n
   AND CategoryPaySheet.category_uid=\'-1774242116\' \n
-  AND MovementCell.start_date>=<dtml-sqlvar start_date type="string">\n
-  AND MovementCell.stop_date<=<dtml-sqlvar stop_date type="string">\n
+  AND MovementCell.start_date >= <dtml-sqlvar start_date type="string">\n
+  AND MovementCell.stop_date  <= <dtml-sqlvar stop_date type="string">\n
   GROUP BY CategoryPaySheet.category_uid\n
 
 
@@ -264,7 +264,7 @@ WHERE\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>DEPRECATED</string> </value>
         </item>
       </dictionary>
     </pickle>
