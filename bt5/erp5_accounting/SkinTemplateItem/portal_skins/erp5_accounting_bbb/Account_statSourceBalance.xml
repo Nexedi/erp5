@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>params = {}\n
+            <value> <string>context.log(\'erp5_account\', \'%s is deprecated, use %s instead\'\n
+         % (script.getId(), \'Account_statBalance\'))\n
+\n
+params = {}\n
 pref = context.getPortalObject().portal_preferences\n
 precision = context.Base_getPreferredPrecision()\n
 \n
@@ -220,6 +223,12 @@ return context.Base_getRoundValue(row.total_price or 0.0, precision)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection, **kw</string> </value>
         </item>
@@ -257,9 +266,10 @@ return context.Base_getRoundValue(row.total_price or 0.0, precision)\n
                           <tuple>
                             <string>selection</string>
                             <string>kw</string>
-                            <string>params</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>script</string>
+                            <string>params</string>
                             <string>pref</string>
                             <string>precision</string>
                             <string>None</string>

@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return - context.Account_statSourceBalance(omit_output=1, **kw) or 0.0\n
+            <value> <string>context.log(\'erp5_account\', \'%s is deprecated, use %s instead\'\n
+         % (script.getId(), \'Account_statCredit\'))\n
+return - context.Account_statSourceBalance(omit_output=1, **kw) or 0.0\n
 </string> </value>
         </item>
         <item>
@@ -85,6 +87,12 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -126,9 +134,10 @@
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>script</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
