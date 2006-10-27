@@ -1212,11 +1212,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       zope_root = self.getPhysicalRoot()
       site_root = self.aq_parent
 
-    uid = self.getUidForPath(path)
-    methods = self.sql_uncatalog_object
     root_indexable = int(getattr(zope_root, 'isIndexable', 1))
     site_indexable = int(getattr(site_root, 'isIndexable', 1))
-    if not (root_indexable and site_indexable) or uid is None:
+    if not (root_indexable and site_indexable):
+      return None
+
+    uid = self.getUidForPath(path)
+    methods = self.sql_uncatalog_object
+    if uid is None:
       return None
     for method_name in methods:
       # Do not put try/except here, it is required to raise error
