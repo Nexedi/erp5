@@ -888,6 +888,15 @@ be a problem)."""
     for o in self.objectValues():
       if hasattr(aq_base(o), 'makeTemplateInstance'): o.makeTemplateInstance()
   
+  def _delObject(self, id, dp=1):
+    """
+      _delObject is redefined here in order to make sure
+      we do not do silent except while we remove objects
+      from catalog
+    """
+    object = self._getOb(id)
+    object.manage_beforeDelete(object, self)
+    self._delOb(id)
 
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
