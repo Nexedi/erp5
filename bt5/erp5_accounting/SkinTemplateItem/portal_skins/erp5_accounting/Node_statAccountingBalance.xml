@@ -71,8 +71,6 @@
             <value> <string>portal = context.getPortalObject()\n
 params = portal.ERP5Accounting_getParams(selection)\n
 \n
-context.log(\'stat kw %s\'%kw,\'params %s\'%params)\n
-\n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
 if kw.get(\'mirror_section_uid\'):\n

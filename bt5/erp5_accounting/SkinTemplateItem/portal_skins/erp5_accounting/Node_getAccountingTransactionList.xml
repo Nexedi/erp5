@@ -113,8 +113,6 @@ if from_date:\n
                                                   **get_inventory_kw)\n
   previous_total_credit = getInventoryAssetPrice(omit_input =True,\n
                                                   **get_inventory_kw)\n
-  context.log(\'previous credit (%s) %s\' % (get_inventory_kw, previous_total_credit),\n
-          getInventoryAssetPrice(omit_input=True, src__=1, **get_inventory_kw))\n
   if previous_total_credit != 0:\n
     previous_total_credit = - previous_total_credit\n
 \n
@@ -140,8 +138,12 @@ if from_date:\n
         Movement_getExplanationReference=\'\',\n
         Movement_getMirrorSectionTitle=\'\',\n
         Movement_getNodeGapId=\'\',\n
+        Node_statAccountingBalance=\'\',\n
         getTranslatedSimulationStateTitle=\'\',\n
       )\n
+    if context.getPortalType() == \'Account\':\n
+      previous_balance.edit(Movement_getExplanationTitle=\'\')\n
+\n
     new_result = [previous_balance]\n
     if selection.getParams().get(\'hide_grouping\'):\n
       params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
@@ -155,17 +157,6 @@ if from_date:\n
                    sort_on=sort_on,\n
                    **params))\n
     return new_result\n
-\n
-context.log(\'sql\\nparams=%s\\nsort_on=%s\' % (params, sort_on),\n
-              portal.portal_simulation.getMovementHistoryList(\n
-                 from_date=from_date,\n
-                 initial_running_total_price=net_balance,\n
-                 # initial_running_quantity=net_balance, TODO\n
-                 selection_domain=selection.getDomain(),\n
-                 selection_domain_join_column=\'section_uid\',\n
-                 sort_on=sort_on,\n
-                 src__=1,\n
-                 **params))\n
 \n
 if selection.getParams().get(\'hide_grouping\'):\n
   params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
