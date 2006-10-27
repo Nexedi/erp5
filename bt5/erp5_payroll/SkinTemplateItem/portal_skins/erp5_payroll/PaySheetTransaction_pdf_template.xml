@@ -50,10 +50,10 @@
 
 <?xml version="1.0" encoding="iso-8859-1" ?>\n
 \n
-<tal:block tal:define="employee            python: here.getDestinationSectionValue();\n
-                       employer            python: here.getSourceSectionValue();\n
-                       urssaf              python: employer.getDestinationSectionValue();\n
-                       start_date          python: here.getStartDate()">\n
+<tal:block tal:define="employee   python: here.getDestinationSectionValue();\n
+                       employer   python: here.getSourceSectionValue();\n
+                       urssaf     python: employer.getDestinationSectionValue();\n
+                       start_date python: here.getStartDate()">\n
 \n
   <template bottommargin=\'0.665cm\'\n
             showboundary=\'0\'\n
@@ -64,7 +64,7 @@
             allowsplitting=\'1\'\n
             landscape=\'0\'\n
             leftmargin=\'0.635cm\'\n
-            tal:define=\'portal python: here.portal_url.getPortalObject()\'>\n
+            tal:define=\'portal python: here.getPortalObject()\'>\n
 \n
     <stylesheet>\n
       <tablestyle name="decompte">\n
@@ -121,9 +121,9 @@
         <stylecmd expr="(\'LEFTPADDING\', (0,0), (-1,-1), 4)"/>\n
 \n
         <!--Tableau de gauche -->\n
-        <stylecmd expr="(\'GRID\', (0,0), (4,1), 0.1, (0.4,0.4,0.4))"/>\n
-        <stylecmd expr="(\'ALIGNMENT\', (0,0), (4,0), \'CENTER\')"/>\n
-        <stylecmd expr="(\'ALIGNMENT\', (0,1), (4,1), \'RIGHT\')"/>\n
+        <stylecmd expr="(\'GRID\', (0,0), (5,1), 0.1, (0.4,0.4,0.4))"/>\n
+        <stylecmd expr="(\'ALIGNMENT\', (0,0), (5,0), \'CENTER\')"/>\n
+        <stylecmd expr="(\'ALIGNMENT\', (0,1), (5,1), \'RIGHT\')"/>\n
 \n
         <!-- Deuxieme ligne de droite -->\n
         <!-- <stylecmd expr="(\'LINEBELOW\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n

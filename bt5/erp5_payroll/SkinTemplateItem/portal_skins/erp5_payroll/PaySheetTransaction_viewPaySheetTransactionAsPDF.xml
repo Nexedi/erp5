@@ -53,6 +53,7 @@
 <document filename="report01.pdf"\n
   xmlns:tal="http://xml.zope.org/namespaces/tal"\n
   tal:define="details               python: here.PaySheetTransaction_getDetails();\n
+              yearly_sums           python: details[\'totals\'][\'yearly\'];\n
               start_date            python: here.getStartDate();\n
               boldstyle             python: \'(\\\'FONT\\\', \\\'Helvetica-Bold\\\', 7)\';\n
               GROSS_SALARY_GROUP_ID python: \'gross\';\n
@@ -263,33 +264,35 @@
 \n
     <table style="cumul_conges">\n
       <tr>\n
-        <td colwidth="11cm"> <tal:block tal:replace="python: \'Cumuls annuels (%s)\' % start_date.year()" tal:condition="python: start_date not in (\'\', None)"/></td>\n
-        <td colwidth="3cm"> </td>\n
-        <td colwidth="5cm"> <!-- <tal:block tal:replace="python: \'Dur\xc3\xa9e des cong\xc3\xa9s pay\xc3\xa9s : ???\'"/> --> </td>\n
+        <td colwidth="12cm"><tal:block replace="python: \'Cumuls Annuels (%s au %s)\' % (yearly_sums[\'start_date\'], yearly_sums[\'stop_date\'])"/> </td>\n
+        <td colwidth="2cm"> </td>\n
+        <td colwidth="5cm"> </td>\n
       </tr>\n
     </table>\n
-<!--\n
+\n
     <table style="cumul_conges_corps">\n
       <tr>\n
-        <td colwidth="2cm">Salaire brut</td>\n
-        <td colwidth="3cm">Cotisations salariales</td>\n
-        <td colwidth="2cm">Salaire net</td>\n
-        <td colwidth="2cm">Net imposable</td>\n
-        <td colwidth="2cm">Part patronale</td>\n
-        <td colwidth="3cm"> </td>\n
+        <td colwidth="2cm">Salaire Brut</td>\n
+        <td colwidth="2cm">Part Patronale</td>\n
+        <td colwidth="2cm">Part Salariale</td>\n
+        <td colwidth="2cm">Salaire Net</td>\n
+        <td colwidth="2cm">Net Imposable</td>\n
+        <td colwidth="2cm">Addendum</td>\n
+        <td colwidth="2cm"> </td>\n
         <td colwidth="5cm"> <tal:block tal:replace="python: \'Dur\xc3\xa9e des d\xc3\xa9lais de pr\xc3\xa9avis : \' + context.PaySheetTransaction_getResignmentLegalDelay()"/></td>\n
       </tr>\n
       <tr>\n
-        <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'yearly_gross_salary\']" tal:condition="python: paysheet_details[\'yearly_gross_salary\'] not in (\'\', None)"></tal:block></td>\n
-        <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'yearly_employee_share\']" tal:condition="python: paysheet_details[\'yearly_employee_share\'] not in (\'\', None)"></tal:block></td>\n
-        <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'yearly_net_salary\']" tal:condition="python: paysheet_details[\'yearly_net_salary\'] not in (\'\', None)"></tal:block></td>\n
-        <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'yearly_taxable_net_salary\']" tal:condition="python: paysheet_details[\'yearly_taxable_net_salary\'] not in (\'\', None)"></tal:block></td>\n
-        <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'yearly_employer_share\']" tal:condition="python: paysheet_details[\'yearly_employer_share\'] not in (\'\', None)"></tal:block></td>\n
+        <td><tal:block replace="python: yearly_sums[\'gross_salary\']" condition="python: yearly_sums.has_key(\'gross_salary\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'total_employer_share\']" condition="python: yearly_sums.has_key(\'total_employer_share\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'total_employee_share\']" condition="python: yearly_sums.has_key(\'total_employee_share\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'net_salary\']" condition="python: yearly_sums.has_key(\'net_salary\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'taxable_net_salary\']" condition="python: yearly_sums.has_key(\'taxable_net_salary\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'total_addendum\']" condition="python: yearly_sums.has_key(\'total_addendum\')"/> </td>\n
         <td> </td>\n
-        <td> </td>\n
+        <td><!--tal:block replace="python: \'Dur\xc3\xa9e des cong\xc3\xa9s pay\xc3\xa9s : ???\'"/--> </td>\n
       </tr>\n
     </table>\n
--->\n
+\n
   </content>\n
 </document>
 

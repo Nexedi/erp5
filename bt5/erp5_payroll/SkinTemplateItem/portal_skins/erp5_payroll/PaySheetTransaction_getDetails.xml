@@ -219,9 +219,6 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
                       , \'employee_share\'    : None # Employee Share              (Part salariale)\n
                       , \'taxable\'           : taxable\n
                       , \'description\'       : None\n
-#                       , \'service_id\'        : None # Service ID\n
-#                       , \'salary_range\'      : None # Salary Range\n
-#                       , \'tax_category\'      : None # Tax Category\n
                       }\n
         # Update group\'s sublines\n
         groups = details[\'groups\']\n
@@ -281,10 +278,10 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
       line_description = line_description.replace(\'\\n\', \' \').strip().capitalize()\n
       if len(line_description) > 0:\n
         updateSubLine( group_id   = cell_group_id\n
-                      , subline_id = cell_subline_id\n
-                      , property   = \'description\'\n
-                      , value      = \'(%s)\' % line_description\n
-                      )\n
+                     , subline_id = cell_subline_id\n
+                     , property   = \'description\'\n
+                     , value      = \'(%s)\' % line_description\n
+                     )\n
 \n
     ### Gross salary group handling\n
     if range_type.startswith("fixed/gross"):\n
@@ -370,10 +367,8 @@ for psl in context.objectValues(portal_type=\'Pay Sheet Line\'):\n
 \n
 \n
 ##########################################\n
-# TODO: insert code here to get yearly totals\n
+# Calculate current paysheet grand totals\n
 ##########################################\n
-\n
-\n
 \n
 details[\'totals\'][\'gross_salary\']           = gross_salary\n
 details[\'totals\'][\'net_salary\']             = net_salary\n
@@ -382,6 +377,56 @@ details[\'totals\'][\'total_employer_share\']   = total_employer_share\n
 details[\'totals\'][\'total_employee_share\']   = total_employee_share\n
 details[\'totals\'][\'total_addendum\']         = total_addendum\n
 details[\'totals\'][\'total_employee_payment\'] = r_(net_salary + total_addendum)\n
+\n
+\n
+\n
+##########################################\n
+# Calculate yearly sums if needed\n
+##########################################\n
+\n
+if not ignore_yearly_sums:\n
+\n
+  # Calculate the year period\n
+  from DateTime import DateTime\n
+  start_year = context.getStartDate().year()\n
+  year_start_date = DateTime(start_year, 1, 1)\n
+  year_stop_date  = context.getStopDate()\n
+\n
+\n
+  # Initialize the yearly sums data structure with current paysheet totals\n
+  yearly_sums = { \'start_date\': year_start_date\n
+                , \'stop_date\' : context.getStopDate()\n
+                }\n
+  yearly_sums_base_id = details[\'totals\'].keys()\n
+  for base_id in yearly_sums_base_id:\n
+    yearly_sums[base_id] = details[\'totals\'][base_id]\n
+\n
+\n
+  # Get all paysheet transaction to calculate the sum of different value in a year\n
+  search_params = \\\n
+    { \'portal_type\'            : \'Pay Sheet Transaction\'\n
+    , \'simulation_state\'       : [\'planned\', \'confirmed\', \'stopped\', \'delivered\']\n
+    , \'delivery.start_date\'    : {\'range\': "minngt", \'query\': (year_start_date, year_stop_date)}\n
+    , \'destination_section_uid\': context.getDestinationSectionUid()  # Employee\'s UID\n
+    }\n
+  accounting_folder = context.aq_parent\n
+  paysheet_transactions = accounting_folder.searchFolder(**search_params)\n
+\n
+\n
+  # Browse through paysheet transaction\n
+  current_paysheet_uid = context.getUid()\n
+  for paysheet in paysheet_transactions:\n
+    # Ignore the current paysheet to avoid infinite loop\n
+    if paysheet.getUid() != current_paysheet_uid:\n
+      # Get all detailed values of the paysheet\n
+      paysheet_details = paysheet.PaySheetTransaction_getDetails(ignore_yearly_sums = True)\n
+      for base_id in yearly_sums_base_id:\n
+        if paysheet_details[\'totals\'].has_key(base_id):\n
+          yearly_sums[base_id] = r_(yearly_sums[base_id] + r_(float(paysheet_details[\'totals\'][base_id])))\n
+\n
+\n
+  # Save the yearly sums in the current details dict\n
+  details[\'totals\'][\'yearly\'] = yearly_sums\n
 \n
 \n
 \n
@@ -420,10 +465,14 @@ for group_id in getPSLGroupIdList():\n
                      , value      = new_value\n
                      )\n
 \n
-# Format totals\n
+# Format totals and yearly sums\n
 for (key, value) in details[\'totals\'].items():\n
   if same_type(value, 1.0) or same_type(value, 1):\n
     details[\'totals\'][key] = (\'%.\' + str(currency_precision) + \'f\') % value\n
+  elif key == \'yearly\':\n
+    for (key, value) in details[\'totals\'][\'yearly\'].items():\n
+      if same_type(value, 1.0) or same_type(value, 1):\n
+        details[\'totals\'][\'yearly\'][key] = (\'%.\' + str(currency_precision) + \'f\') % value\n
 \n
 \n
 return details\n
@@ -451,7 +500,7 @@ return details\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ignore_yearly_sums=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -471,12 +520,13 @@ return details\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>ignore_yearly_sums</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -533,6 +583,21 @@ return details\n
                             <string>cell_base</string>
                             <string>cell_share</string>
                             <string>subline</string>
+                            <string>DateTime</string>
+                            <string>start_year</string>
+                            <string>year_start_date</string>
+                            <string>year_stop_date</string>
+                            <string>yearly_sums</string>
+                            <string>yearly_sums_base_id</string>
+                            <string>base_id</string>
+                            <string>search_params</string>
+                            <string>accounting_folder</string>
+                            <string>_apply_</string>
+                            <string>paysheet_transactions</string>
+                            <string>current_paysheet_uid</string>
+                            <string>paysheet</string>
+                            <string>paysheet_details</string>
+                            <string>float</string>
                             <string>RATE_PRECISION</string>
                             <string>money_format</string>
                             <string>rate_format</string>
@@ -556,7 +621,9 @@ return details\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
