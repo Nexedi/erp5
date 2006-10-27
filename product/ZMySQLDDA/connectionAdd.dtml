@@ -2,7 +2,7 @@
   <head><title>Add Z MySQL Deferred Database Connection</title></head>
   <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
 
-    <h2>Add Z MySQL Database Deferred Connection</h2>
+    <h2>Add Z MySQL Deferred Database Connection</h2>
 
     <form action="manage_addZMySQLConnection" method="POST">
       <table cellspacing="2">
