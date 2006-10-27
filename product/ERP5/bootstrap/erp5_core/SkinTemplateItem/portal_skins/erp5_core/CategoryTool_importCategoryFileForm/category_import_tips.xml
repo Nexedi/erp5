@@ -201,7 +201,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<ul><li>An empty OpenOffice template is available at <a href="portal_skins/erp5_core/openoffice_category_file_template.sxc">/portal_skins/erp5_core/openoffice_category_file_template.sxc</a></li><li>Do not merge cells in the uploaded spreadsheet: this will confuse the parser and produce unpredictible results.</li><li>Do not use category IDs which are defined in Property Sheets as attribute IDs. Currently ERP5 is not able to make the difference between the a subobject ID and a property ID.</li><li>Even if this tool was designed to import OpenOffice v1.x documents, OASIS OpenDocument files are well parsed.</li></ul>
+<ul><li>An OpenOffice file is available at <a href="portal_skins/erp5_core/erp5_import_category_tree_examples.sxc">/portal_skins/erp5_core/erp5_import_category_tree_examples.sxc</a> . It contain different examples of how to input a tree of categories.</li><li>Do not merge cells in the uploaded spreadsheet: this will confuse the parser and produce unpredictible results.</li><li>Do not use category IDs which are defined in Property Sheets as property. ERP5 is currently not able to make the difference between a subobject ID and a property ID. This bug must be fixed.</li><li>Even if this tool was designed to import OpenOffice v1.x documents, OASIS OpenDocument files seems to work as well.</li></ul>
 
 ]]></string> </value>
                 </item>
