@@ -62,7 +62,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                           'container_getter_id', 'catalog_index',
                           'relation_setter_id', 'columns', 'sort',
                           'parameter_list','list_method',
-                          'first_item', 'items', 'size', 'extra_item']
+                          'first_item', 'items', 'size', 'extra_item',
+                          ]
 
   property_names = Widget.LinesTextAreaWidget.property_names + \
                    Widget.TextWidget.property_names + \
@@ -548,6 +549,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
             portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
             translated_portal_type = Message(domain='erp5_ui',
                                              message=portal_type)
+            # XXX Replace New by Add
             message = Message(
                     domain='erp5_ui', message='New ${portal_type}',
                     mapping={'portal_type': translated_portal_type})
@@ -766,15 +768,13 @@ class MultiRelationStringField(ZMIField):
   widget = MultiRelationStringFieldWidgetInstance
   validator = MultiRelationStringFieldValidatorInstance
 
-  security.declareProtected('Access contents information', 'get_value')
-  def get_value(self, id, **kw):
+  security.declareProtected('Access contents information', 'get_orig_value')
+  def get_orig_value(self, id):
     """
-    Get value for id.
-    Optionally pass keyword arguments that get passed to TALES
-    expression.
+    Get value for id; don't do any override calculation.
     """
     if id in ('is_relation_field', 'is_multi_relation_field'):
       result = 1
     else:
-      result = ZMIField.get_value(self, id, **kw)
+      result = ZMIField.get_orig_value(self, id)
     return result

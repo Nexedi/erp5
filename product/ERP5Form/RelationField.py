@@ -98,7 +98,7 @@ class RelationStringFieldValidator(
       _v_message_name_list.append(message_name)
       _v_dict[message_name] = 1
   message_names = _v_message_name_list
-
+  
   _v_dict = {}
   _v_property_name_list = []
   for property_name in property_names:
@@ -150,17 +150,15 @@ class RelationStringField(ZMIField):
   widget = RelationStringFieldWidgetInstance
   validator = RelationStringFieldValidatorInstance
 
-  security.declareProtected('Access contents information', 'get_value')
-  def get_value(self, id, **kw):
+  security.declareProtected('Access contents information', 'get_orig_value')
+  def get_orig_value(self, id):
     """
-    Get value for id.
-    Optionally pass keyword arguments that get passed to TALES
-    expression.
+    Get value for id; don't do any override calculation.
     """
-    if id == 'is_relation_field':
+    if id == 'is_relation_field': 
       result = 1
     elif id == 'is_multi_relation_field':
       result = 0
     else:
-      result = ZMIField.get_value(self, id, **kw)
+      result = ZMIField.get_orig_value(self, id)
     return result

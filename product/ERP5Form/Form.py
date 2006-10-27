@@ -57,6 +57,7 @@ def get_value(self, id, **kw):
         self.tales = {}
 
     tales_expr = self.tales.get(id, "")
+    # tales_expr = self.get_tales(id)
     if tales_expr:
         REQUEST = get_request()
         form = self.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
@@ -109,6 +110,7 @@ def get_value(self, id, **kw):
             self.overrides = {}
 
         override = self.overrides.get(id, "")
+        # override = self.get_override(id)
         if override:
             # call wrapped method to get answer
             value = override.__of__(self)()
