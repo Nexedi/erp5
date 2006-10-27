@@ -76,7 +76,6 @@
 \n
 # enable preference\n
 pref = portal.portal_preferences.accounting_zuite_preference\n
-\n
 if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   # we have to \'own\' the preference for the test\n
   ptool = portal.portal_preferences\n
@@ -86,8 +85,18 @@ if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   # as the preference changed, it\'s safer to clear the cache\n
   from Products.ERP5Type.Cache import clearCache\n
   clearCache()\n
-\n
 pref.enable()\n
+\n
+# reset selections\n
+stool = context.getPortalObject().portal_selections\n
+for form in context.getPortalObject().portal_skins\\\n
+                    .erp5_accounting.objectValues(spec=(\'ERP5 Form\',)):\n
+  listbox = getattr(form, \'listbox\', None)\n
+  if listbox is not None:\n
+    stool.setSelectionFor(listbox.get_value(\'selection_name\'), None)\n
+# also reset common selections\n
+stool.setSelectionFor(\'person_selection\', None)\n
+stool.setSelectionFor(\'organisation_selection\', None)\n
 \n
 return "Reset Successfully."\n
 </string> </value>
@@ -146,6 +155,11 @@ return "Reset Successfully."\n
                             <string>cb</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>clearCache</string>
+                            <string>stool</string>
+                            <string>form</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>listbox</string>
                           </tuple>
                         </value>
                     </item>
