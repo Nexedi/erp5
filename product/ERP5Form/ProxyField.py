@@ -101,7 +101,7 @@ class ProxyWidget(Widget.Widget):
     Render proxy field
     """
     result = ''
-    proxy_field = field.getTemplateField()
+    proxy_field = field.getRecursiveTemplateField()
     if proxy_field is not None:
       REQUEST = field.updateContext(REQUEST)
       result = proxy_field.widget.render(field, key, value, REQUEST)
@@ -112,7 +112,7 @@ class ProxyWidget(Widget.Widget):
       Display proxy field
     """
     result = ''
-    proxy_field = field.getTemplateField()
+    proxy_field = field.getRecursiveTemplateField()
     if proxy_field is not None:
       result = proxy_field.widget.render_view(field, value)
     return result
