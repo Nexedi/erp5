@@ -517,8 +517,9 @@ class TestBudget(ERP5TypeTestCase):
 #       LOG('Testing accounting transaction 2... ',0,message)
 
 
-
-  def test_04_Transaction_of_budget(self, quiet=0, run=RUN_ALL_TEST):
+  # jerome: disabled this test for now, it was from the first budget
+  # implementation, and this is not covered by the new version.
+  def XXXtest_04_Transaction_of_budget(self, quiet=0, run=RUN_ALL_TEST):
     """
     Try to validate budget trasaction if the transfert is authorized
     """
