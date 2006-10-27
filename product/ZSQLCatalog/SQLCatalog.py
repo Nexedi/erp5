@@ -1205,21 +1205,24 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     XXX Add filter of methods
 
     """
-    #LOG('Uncatalog object:',0,str(path))
+    if withCMF:
+      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
+      site_root = getToolByName(self, 'portal_url').getPortalObject()
+    else:
+      zope_root = self.getPhysicalRoot()
+      site_root = self.aq_parent
 
     uid = self.getUidForPath(path)
     methods = self.sql_uncatalog_object
+    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
+    site_indexable = int(getattr(site_root, 'isIndexable', 1))
+    if not (root_indexable and site_indexable) or uid is None:
+      return None
     for method_name in methods:
+      # Do not put try/except here, it is required to raise error
+      # if uncatalog does not work.
       method = getattr(self, method_name)
-      try:
-        method(uid = uid)
-      except ConflictError:
-        raise
-      except:
-        # This is a real LOG message
-        # which is required in order to be able to import .zexp files
-        LOG('SQLCatalog', WARNING,
-            'could not uncatalog object %s uid %s with method %s' % (path, uid, method_name))
+      method(uid = uid)
 
   def catalogTranslationList(self, object_list):
     """Catalog translations.
@@ -1251,23 +1254,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   def getUidForPath(self, path):
     """ Looks up into catalog table to convert path into uid """
-    try:
-      if path is None:
-        return None
-      # Get the appropriate SQL Method
-      method = getattr(self, self.sql_getitem_by_path)
-      search_result = method(path = path, uid_only=1)
-      # If not empty, return first record
-      if len(search_result) > 0:
-        return long(search_result[0].uid)
-      else:
-        return None
-    except ConflictError:
-      raise
-    except:
-      # This is a real LOG message
-      # which is required in order to be able to import .zexp files
-      LOG('SQLCatalog', WARNING, "could not find uid from path %s" % (path,))
+    #try:
+    if path is None:
+      return None
+    # Get the appropriate SQL Method
+    method = getattr(self, self.sql_getitem_by_path)
+    search_result = method(path = path, uid_only=1)
+    # If not empty, return first record
+    if len(search_result) > 0:
+      return long(search_result[0].uid)
+    else:
       return None
 
   def hasPath(self, path):
