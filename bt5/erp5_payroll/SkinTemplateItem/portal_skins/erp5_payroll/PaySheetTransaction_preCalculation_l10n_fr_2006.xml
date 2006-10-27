@@ -411,16 +411,17 @@ if executive:\n
 #   }\n
 \n
 # APEC forfaitaire\n
-# This contribution is due for March only\n
-comp_date = DateTime(start_date.year(), 3, 31)\n
-while comp_date < comp_date:\n
-  comp_date = DateTime(comp_date.year() + 1, 3, 31)\n
-if executive and start_date <= comp_date <= stop_date:\n
-  kw[\'apec/forfait\'] = \\\n
-  { \'employer_share\': 3.72\n
-  , \'employee_share\': 2.49\n
-  , \'base\'          : 1.0\n
-  }\n
+if executive:\n
+  # This contribution is due for March only\n
+  comp_date = DateTime(start_date.year(), 3, 31)\n
+  while comp_date < comp_date:\n
+    comp_date = DateTime(comp_date.year() + 1, 3, 31)\n
+  if start_date <= comp_date <= stop_date:\n
+    kw[\'apec/forfait\'] = \\\n
+    { \'employer_share\': 3.72\n
+    , \'employee_share\': 2.49\n
+    , \'base\'          : 1.0\n
+    }\n
   if salary_slices.has_key(\'B\'):\n
     kw[\'apec/tranche_b\'] = \\\n
     { \'employer_share\': 0.036\n
