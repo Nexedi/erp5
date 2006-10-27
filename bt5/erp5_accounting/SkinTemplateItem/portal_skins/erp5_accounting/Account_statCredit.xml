@@ -68,22 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this account is node.\n
+            <value> <string>"""Total credit of all accounting transactions having this\n
+account as node\n
 """\n
 kw[\'node_uid\'] = context.getUid()\n
-return context.Node_getAccountingTransactionList(**kw)\n
+kw[\'omit_input\'] = 1\n
+# here, or 0 is to prevent displaying "- 0"\n
+return - context.Node_statAccountingBalance(**kw) or 0\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -141,33 +138,12 @@ return context.Node_getAccountingTransactionList(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account_getAccountingTransactionList</string> </value>
+            <value> <string>Account_statCredit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

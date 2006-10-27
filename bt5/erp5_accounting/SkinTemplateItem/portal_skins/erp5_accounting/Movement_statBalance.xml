@@ -68,10 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this account is node.\n
-"""\n
-kw[\'node_uid\'] = context.getUid()\n
-return context.Node_getAccountingTransactionList(**kw)\n
+            <value> <string># Example code:\n
+\n
+# Import a standard function, and get the HTML request and response objects.\n
+from Products.PythonScripts.standard import html_quote\n
+request = container.REQUEST\n
+RESPONSE =  request.RESPONSE\n
+\n
+# Return a string identifying this script.\n
+print "This is the", script.meta_type, \'"%s"\' % script.getId(),\n
+if script.title:\n
+    print "(%s)" % html_quote(script.title),\n
+print "in", container.absolute_url()\n
+return printed\n
 </string> </value>
         </item>
         <item>
@@ -81,20 +90,10 @@ return context.Node_getAccountingTransactionList(**kw)\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,11 +119,15 @@ return context.Node_getAccountingTransactionList(**kw)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>html_quote</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
+<string>container</string>
+                            <string>request</string>
+                            <string>RESPONSE</string>
+<string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -141,33 +144,12 @@ return context.Node_getAccountingTransactionList(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account_getAccountingTransactionList</string> </value>
+            <value> <string>Movement_statBalance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

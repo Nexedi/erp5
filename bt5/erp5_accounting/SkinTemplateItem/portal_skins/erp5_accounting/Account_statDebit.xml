@@ -68,22 +68,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this account is node.\n
+            <value> <string>"""Total debit of all accounting transactions having this\n
+account as a node\n
 """\n
 kw[\'node_uid\'] = context.getUid()\n
-return context.Node_getAccountingTransactionList(**kw)\n
+kw[\'omit_output\'] = 1\n
+return context.Node_statAccountingBalance(**kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -122,7 +118,7 @@ return context.Node_getAccountingTransactionList(**kw)\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
@@ -141,33 +137,12 @@ return context.Node_getAccountingTransactionList(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account_getAccountingTransactionList</string> </value>
+            <value> <string>Account_statDebit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
