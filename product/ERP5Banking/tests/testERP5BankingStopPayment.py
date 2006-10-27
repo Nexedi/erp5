@@ -143,6 +143,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                      destination_payment_value=self.bank_account_2,
                      resource_value=self.currency_1,
                      start_date=self.date,
+                     reference_range_min=51,
                      source_total_asset_price=20000)
     # check its portal type
     self.assertEqual(self.stop_payment.getPortalType(), 'Stop Payment')
@@ -151,6 +152,18 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                'site/testsite/paris')
     # check destination
     self.assertEqual(self.stop_payment.getBaobabDestination(), None)
+
+  def stepCheckLineCreated(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we have found the check corresponding to the
+    reference and that a new line was created
+    """
+    line_list = self.stop_payment.objectValues(
+                          portal_type='Checkbook Delivery Line')
+    self.assertEqual(len(line_list),1)
+    line = line_list[0]
+    self.assertEqual(line.getAggregateValue(),self.check_1)
+    self.assertEqual(line.getQuantity(),1)
 
   def stepSetStopPaymentDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -163,21 +176,6 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     Set the debit required
     """
     self.stop_payment_module.manage_delObjects(['stop_payment',])
-
-  def stepCreateStopPaymentLineList(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create the checkbook
-    """
-    # This is not required to create checkbook items, they will be
-    # automatically created with the confirm action worfklow transition
-
-    # Add a line for check
-    self.line_1 = self.stop_payment.newContent(quantity=1,
-                                 resource_value=self.check_model_1,
-                                 check_amount_value=None,
-                                 destination_trade_value=self.bank_account_2,
-                                 aggregate_value=self.check_1,
-                                 )
 
   def stepConfirmStopPayment(self, sequence=None, sequence_list=None, **kw):
     """
@@ -332,8 +330,8 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     sequence_string = 'Tic CheckObjects Tic CheckInitialAndFinalCheckbookInventory ' \
                     + 'CreateStopPayment Tic ' \
                     + 'SetStopPaymentDebit Tic ' \
-                    + 'CreateStopPaymentLineList Tic ' \
                     + 'ConfirmStopPayment Tic ' \
+                    + 'CheckLineCreated Tic ' \
                     + 'CheckConfirmedCheckbookInventory ' \
                     + 'StartStopPayment Tic ' \
                     + 'CheckCheckIsStopped Tic ' \
@@ -346,8 +344,8 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     sequence_string = 'DeleteStopPayment ' \
                     + 'Tic CheckObjects Tic CheckInitialAndFinalCheckbookInventory ' \
                     + 'CreateStopPayment Tic ' \
-                    + 'CreateStopPaymentLineList Tic ' \
                     + 'ConfirmStopPayment Tic ' \
+                    + 'CheckLineCreated Tic ' \
                     + 'CheckInitialAndFinalCheckbookInventory ' \
                     + 'StartStopPayment Tic ' \
                     + 'CheckCheckIsStopped Tic ' \
