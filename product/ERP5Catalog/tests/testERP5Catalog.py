@@ -59,7 +59,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   # Different variables used for this test
   run_all_test = 1
-  quiet = 1
+  quiet = 0
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -789,6 +789,27 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertNotEquals([], self.getCatalogTool().searchResults(
                                           portal_type='Person', title=u'A Person'))
+  def test_23_DeleteObjectRaiseErrorWhenQueryFail(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test That Delete Object Raise Error When the Query Fail'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    portal_catalog = self.getCatalogTool()
+    person_module = self.getPersonModule()
+    # Now we will ask to immediatly reindex
+    person = person_module.newContent(id='2',
+                                      portal_type='Person',
+                                      immediate_reindex=1)
+    path_list = [person.getRelativeUrl()]
+    self.checkRelativeUrlInSqlPathList(path_list)
+    # We will delete the connector
+    # in order to make sure it will not work any more
+    portal = self.getPortal()
+    portal.manage_delObjects('erp5_sql_connection')
+    # Then it must be impossible to delete an object
+    self.assertRaises(AttributeError, person_module.manage_delObjects,'2')
+    get_transaction().abort()
 
   def test_SortOn(self, quiet=quiet, run=run_all_test):
     if not run: return
