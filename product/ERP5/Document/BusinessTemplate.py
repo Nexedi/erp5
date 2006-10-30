@@ -1312,7 +1312,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         else:
           self._objects[portal_type] = [workflow,]
       else:
-        LOG('BusinessTemplate build', 100, 'portal type %s not found in workflow chain' %(portal_type))
+        raise NotFound, 'portal type %s not found in workflow chain'\
+                                                    % portal_type
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
