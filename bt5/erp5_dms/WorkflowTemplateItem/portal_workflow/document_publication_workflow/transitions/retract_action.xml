@@ -30,15 +30,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Collaborate</string> </value>
+            <value> <string>Retract</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=hide_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=retract_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>collaborate</string> </value>
+            <value> <string>retract</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -52,7 +52,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>collaborate_action</string> </value>
+            <value> <string>retract_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -86,29 +86,13 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>expr</string> </key>
+            <key> <string>roles</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <tuple>
+                <string>Assignee</string>
+                <string>Owner</string>
+              </tuple>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: here.isMemberOf(\'classification/collaborative\')</string> </value>
         </item>
       </dictionary>
     </pickle>

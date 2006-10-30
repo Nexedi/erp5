@@ -52,11 +52,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>collaborate</string> </value>
+            <value> <string>retract</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>collaborated</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>

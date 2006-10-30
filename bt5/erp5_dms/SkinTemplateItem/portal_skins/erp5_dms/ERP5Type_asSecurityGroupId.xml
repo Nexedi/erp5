@@ -68,26 +68,66 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX For now, this script requires proxy manager\n
+            <value> <string># category_order : list of base_categories we want to use to generate the group id\n
+# kw : keys should be base categories,\n
+#      values should be value of corresponding relative urls (obtained by getBaseCategory())\n
+#\n
+# Example call : context.ERP5TypeSecurity_asGroupId(category_order=(\'site\', \'group\', \'function\'),\n
+#                    site=\'france/lille\', group=\'nexedi\', function=\'accounting/accountant\')\n
+# This will generate a string like \'LIL_NXD_ACT\' where "LIL", "NXD" and "ACT" are the codification\n
+#   of respecively "france/lille", "nexedi" and "accounting/accountant" categories\n
+#\n
+# ERP5Type_asSecurityGroupId can also return a list of users whenever a category points\n
+# to a Person instance. This is useful to implement user based local role assignments\n
 \n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             When using PluggableAuthService with ERP5GroupMAnager, user_name is the id\n
-#             of the person linked to getUser().getId() through getReference() (which is its login).\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
+code_list = []\n
+user_list = []\n
 \n
-# must always return a list of dicts\n
+# sort the category list lexicographically\n
+# this prevents us to choose the exact order we want,\n
+# but also prevents some human mistake to break everything by creating site_function instead of function_site\n
+if category_order not in (None, \'\'):\n
+  category_order = list(category_order)\n
+  category_order.sort()\n
+else:\n
+  category_order = []\n
 \n
-category_list = []\n
+for base_category in category_order:\n
+  # BG - sometimes we fail if something is missing\n
+  category_list   = kw.get(base_category)\n
+  if category_list is None:continue\n
+  if same_type(category_list, \'\'):\n
+    category_list = [category_list]\n
+  for category in category_list:\n
+    category_path   = \'%s/%s\' % (base_category, category)\n
+    if base_category==\'reference\': # we will be looking for Person\n
+      res=context.portal_catalog(portal_type=\'Person\',reference=category)\n
+      if res is not None and len(res)==1:\n
+        category_object=res[0].getObject()\n
+    else:\n
+      category_object = context.portal_categories.getCategoryValue(category_path)\n
+    if category_object in (None, \'\'):\n
+      raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
+    if category_object.getPortalType() == \'Person\':\n
+      # We define a person here\n
+      user_name = category_object.getReference()\n
+      if user_name is not None: user_list.append(user_name)\n
+    else:\n
+      # We define a group item here\n
+      # BG: if this is a Project, it has no codification but a reference instead\n
+      try:\n
+        category_code   = category_object.getCodification() or category_object.getId()\n
+      except AttributeError:\n
+        category_code = category_object.getReference()\n
+      code_list.append(category_code)\n
 \n
-if object is None:\n
-  return []\n
-\n
-for base_category in base_category_list:\n
-  category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
-\n
-return category_list\n
+# Return a list of users or a single group\n
+if user_list:\n
+  context.log(user_list)\n
+  return user_list\n
+r=\'_\'.join(code_list)\n
+context.log(category_order,r)\n
+return r\n
 </string> </value>
         </item>
         <item>
@@ -103,16 +143,14 @@ return category_list\n
             </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <key> <string>_params</string> </key>
+            <value> <string>category_order, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,21 +170,34 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>base_category_list</string>
-                            <string>user_name</string>
-                            <string>object</string>
-                            <string>portal_type</string>
-                            <string>category_list</string>
+                            <string>category_order</string>
+                            <string>kw</string>
+                            <string>code_list</string>
+                            <string>user_list</string>
                             <string>None</string>
+                            <string>list</string>
+                            <string>_getattr_</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
-                            <string>_getattr_</string>
+                            <string>category_list</string>
+                            <string>same_type</string>
+                            <string>category</string>
+                            <string>category_path</string>
+                            <string>context</string>
+                            <string>res</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>category_object</string>
+                            <string>user_name</string>
+                            <string>category_code</string>
+                            <string>AttributeError</string>
+                            <string>r</string>
                           </tuple>
                         </value>
                     </item>
@@ -163,7 +214,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromClassification</string> </value>
+            <value> <string>ERP5Type_asSecurityGroupId</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
