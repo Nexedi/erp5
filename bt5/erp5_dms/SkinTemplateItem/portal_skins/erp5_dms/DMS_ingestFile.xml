@@ -77,7 +77,6 @@ if fname is None:\n
 else:\n
   context.setSourceReference(fname)\n
 if fname is not None:\n
-  context.log(fname)\n
   context.setPropertyListFromFilename(fname)\n
   context.guessMimeType(fname)\n
   if not context.getTitle():\n
@@ -97,6 +96,12 @@ if fname is not None:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
