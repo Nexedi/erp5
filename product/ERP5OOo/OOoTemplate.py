@@ -450,6 +450,12 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       # Produce final result
       ooo = ooo_builder.render(self.title or self.id)
 
+      # Convert if necessary
+      format = extra_context.get("format", None)
+      if format is None:
+        if format == "pdf":
+          return self._asPdf(ooo, request)
+
       # Do not send a RESPONSE if in batch_mode
       if request and not batch_mode:
         request.RESPONSE.setHeader('Content-Type','%s;; charset=utf-8' % self.content_type)
@@ -471,20 +477,10 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
                               'title': 'This template has an error'},)
         return icons
 
-    def asPdf(self, REQUEST=None, *args, **kw):
+    def _asPdf(self, ooo, REQUEST=None):
         """
         Return OOo report as pdf
         """
-        # create argument dict for pt_render
-        extra_context = {}
-        security=getSecurityManager()
-        extra_context['user'] = security.getUser()
-        if not kw.has_key('args'):
-            kw['args'] = args
-        extra_context['options'] = kw
-        extra_context['batch_mode'] = 1
-        # first get ooo data
-        ooo = self.pt_render(extra_context=extra_context)
         # now create a temp OOoDocument to convert data to pdf
         from Products.ERP5Type.Document import newTempOOoDocument
         tmp_ooo = newTempOOoDocument(self, self.title_or_id())
