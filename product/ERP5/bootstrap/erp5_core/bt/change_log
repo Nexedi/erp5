@@ -1,3 +1,6 @@
+2006-10-30 Kevin
+* Fix ID handling in category importing tool. Now the 4 category tree representation (described in the openoffice example file) can be imported.
+
 2006-10-04 Kevin
 * Add Tips on category import fast input screen to help user.
 

@@ -127,7 +127,7 @@ for table_name in spreadsheets.keys():\n
 \n
   # Get the header of the table\n
   columns_header = spreadsheets[table_name][0]\n
-  # Get the mapping to help us to know the property according a cell index\n
+  # Get the mapping to help us know the property according a cell index\n
   property_map = {}\n
   column_index = 0\n
   path_index = 0\n
@@ -192,13 +192,15 @@ for table_name in spreadsheets.keys():\n
       # Returned cell_id can be None or \'\' (empty string). Both have different meaning:\n
       #   None : no data was inputed by the user.\n
       #   \'\'   : data entered by the user, but no good transformation of the string to a safe ID.\n
-      # In case of an empty string, we should use the title as path id if present.\n
 \n
-      # If the cell_id tranformation return anything, and if the cell is a path item,\n
-      # we should try to use the line title (if exist) as basic info to get the safe id.\n
+      # If the cell_id tranformation return an empty string, and if the cell is a path item,\n
+      # we should try to use other line data to get a safe id.\n
       if cell_id == \'\' and property_id.startswith(\'path_\'):\n
-        if line_data.has_key(\'title\'):\n
-          cell_id = getIDFromString(line_data[\'title\'])\n
+        for alt_id_source in [\'id\', \'title\']:\n
+          if line_data.has_key(alt_id_source):\n
+            cell_id = getIDFromString(line_data[alt_id_source])\n
+            if cell_id not in (\'\', None):\n
+              break\n
 \n
       # Ignore empty cells\n
       if cell_id not in (\'\', None):\n
@@ -223,9 +225,11 @@ for table_name in spreadsheets.keys():\n
                 break\n
           category_properties[\'path\'] = \'/\'.join([base_category_id,] + absolut_path_element_list[::-1])\n
 \n
-          # If no title, get it from raw cell value\n
+          # Save the current raw path item value as title if no title column defined\n
           if \'title\' not in category_properties.keys():\n
             clean_title = cell_data.strip()\n
+            # Only set title if it look like a title\n
+            # (i.e. its tranformation to ID is not the same as the original value)\n
             if clean_title != cell_id:\n
               category_properties[\'title\'] = clean_title\n
 \n
@@ -269,7 +273,7 @@ for table_name in spreadsheets.keys():\n
 \n
       # Set the category properties\n
       for key in keys:\n
-        if key != \'path\':\n
+        if key not in [\'path\', \'id\']:\n
           setter_method_id = "set" + convertToUpperCase(key)\n
           getter_method_id = "get" + convertToUpperCase(key)\n
           value = category[key]\n
@@ -384,6 +388,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>category_properties</string>
                             <string>cell_data</string>
                             <string>cell_id</string>
+                            <string>alt_id_source</string>
                             <string>path_element_id</string>
                             <string>absolut_path_element_list</string>
                             <string>int</string>
