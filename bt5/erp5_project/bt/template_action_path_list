@@ -7,8 +7,11 @@ Project Line | constraint
 Project Line | consumed_budget
 Project Line | contents
 Project Line | current_budget
+Project Line | documents
+Project Line | files
 Project Line | history
 Project Line | initial_budget
+Project Line | jump_to_related_sale_order_lines
 Project Line | metadata
 Project Line | print
 Project Line | task_fast_input_dialog
@@ -22,7 +25,10 @@ Project Module | print_pdf
 Project Module | view
 Project | content
 Project | detailed_report
+Project | documents
+Project | files
 Project | history
+Project | jump_to_related_sale_order_lines
 Project | metadata
 Project | milestone
 Project | planning

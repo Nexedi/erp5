@@ -299,7 +299,7 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
@@ -453,6 +453,9 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Change user folder</name>
+  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Manager</role>
@@ -564,9 +567,6 @@
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Manage extensions</name>
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
@@ -710,6 +710,33 @@
   <permission type='tuple'>
    <name>WebDAV access</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Add comments</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Add pages</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Add wikis</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Change page types</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Delete pages</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Edit pages</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Rate pages</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Rename pages</name>
+  </permission>
+  <permission type='list'>
+   <name>Zwiki: Reparent pages</name>
   </permission>
  </permission_list>
  <portal_type>Requirement Module</portal_type>
