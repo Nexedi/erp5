@@ -33,10 +33,10 @@ msgid "Collected VAT"
 msgstr "TVA collectée"
 
 msgid "Bank"
-msgstr "Trésorerie"
+msgstr "Banque"
 
 msgid "Payable"
 msgstr "Dettes"
 
 msgid "Cash"
-msgstr "Caisse"
+msgstr "Trésorerie"
