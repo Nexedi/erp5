@@ -1032,3 +1032,15 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 getattr(self.getCatalogTool().getSQLCatalog(),
                               method).connection_id)
 
+  def test_DeleteObject(self, quiet=quiet, run=run_all_test):
+    """Simple test to exercise object deletion
+    """
+    if not run: return
+    folder = self.getOrganisationModule()
+    ob = folder.newContent()
+    get_transaction().commit()
+    self.tic()
+    folder.manage_delObjects([ob.getId()])
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(0, len(folder.searchFolder()))
