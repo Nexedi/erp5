@@ -86,7 +86,9 @@ return context.FiscalReportCell_getBalance(accounts, debtor_only=True, **kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_debtorAccountsSum</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

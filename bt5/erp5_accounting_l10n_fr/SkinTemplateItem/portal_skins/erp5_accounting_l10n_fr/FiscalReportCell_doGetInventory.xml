@@ -174,7 +174,9 @@ return r_(net_balance)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_doGetInventory</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -226,6 +228,7 @@ return r_(net_balance)\n
                             <string>_getitem_</string>
                             <string>params</string>
                             <string>net_balance</string>
+                            <string>ctool</string>
                             <string>_getiter_</string>
                             <string>gap_id</string>
                             <string>gap_path</string>

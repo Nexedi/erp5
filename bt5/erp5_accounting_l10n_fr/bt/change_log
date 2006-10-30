@@ -1,3 +1,6 @@
+2006-10-30 Kevin
+* Add full 2006 PCG classification.
+
 2006-06-06 Kevin
 * Update FiscalReportCell_doGetInventory to use GAPCategory_getURLFromId script.
 
