@@ -71,26 +71,35 @@
             <value> <string encoding="cdata"><![CDATA[
 
 request = context.REQUEST\n
+stool = context.portal_selections\n
 \n
-# Set selection to currently checked items, taking into consideration changes in uids\n
-selection_uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name, REQUEST=request)\n
-filtered_uid_dict = {}\n
-listbox_uid = map(lambda x:int(x), listbox_uid)\n
-uids = map (lambda x:int(x), uids)\n
-for uid in uids:\n
-   filtered_uid_dict[uid] = 1\n
-for uid in selection_uids:\n
-  if uid in listbox_uid:\n
-    if uid in uids:\n
+if stool.getSelectionInvertModeFor(selection_name):\n
+  # if already in invert mode, toggle invert mode\n
+  stool.setSelectionInvertModeFor(selection_name, invert_mode=0)\n
+else:\n
+  # Set selection to currently checked items, taking into consideration changes\n
+  # in uids\n
+  selection_uids = stool.getSelectionCheckedUidsFor(\n
+                                  selection_name, REQUEST=request)\n
+  filtered_uid_dict = {}\n
+  listbox_uid = map(lambda x:int(x), listbox_uid)\n
+  uids = map (lambda x:int(x), uids)\n
+  for uid in uids:\n
+     filtered_uid_dict[uid] = 1\n
+  for uid in selection_uids:\n
+    if uid in listbox_uid:\n
+      if uid in uids:\n
+        filtered_uid_dict[uid] = 1\n
+    else:\n
       filtered_uid_dict[uid] = 1\n
-  else:\n
-    filtered_uid_dict[uid] = 1\n
 \n
-if len(filtered_uid_dict.keys()) > 0 :\n
-  context.portal_selections.checkAll(selection_name, uids, REQUEST=None)\n
-  context.portal_selections.setSelectionToIds(selection_name, filtered_uid_dict.keys(), REQUEST=request)\n
+  if len(filtered_uid_dict.keys()) > 0 :\n
+    stool.checkAll(selection_name, uids, REQUEST=None)\n
+    stool.setSelectionToIds(selection_name,\n
+                              filtered_uid_dict.keys(), REQUEST=request)\n
 \n
-url = context.portal_selections.getSelectionListUrlFor(selection_name, REQUEST=request)\n
+url = stool.getSelectionListUrlFor(\n
+                        selection_name, REQUEST=request)\n
 request.RESPONSE.redirect(url)\n
 
 
@@ -100,6 +109,12 @@ request.RESPONSE.redirect(url)\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -142,6 +157,7 @@ request.RESPONSE.redirect(url)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>stool</string>
                             <string>selection_uids</string>
                             <string>filtered_uid_dict</string>
                             <string>map</string>
@@ -176,6 +192,27 @@ request.RESPONSE.redirect(url)\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
