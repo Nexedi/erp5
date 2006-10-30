@@ -68,27 +68,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get the current logged user site\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# get the current logged user site\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 if user_id is None:\n
   user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-def getSiteList(user_id=user_id):\n
+def getFunctionList(user_id=user_id):\n
 \n
   valid_assignment_list = context.Baobab_getUserAssignmentList(user_id=user_id)\n
 \n
-  site_list = []\n
+  function_list = []\n
   for a in valid_assignment_list:\n
-    new_site = a.getSite()\n
-    if new_site not in (\'\', None):\n
-      site_list.append(new_site)\n
-  return site_list\n
+    new_function_list = a.getFunctionList()\n
+    if len(new_function_list)>0:\n
+      function_list.extend(new_function_list)\n
+  return function_list\n
 \n
-getSiteList = CachingMethod(getSiteList, id=\'Baobab_getUserAssignedSiteList\', cache_duration=300)\n
-return getSiteList(user_id=user_id)\n
-</string> </value>
+getFunctionList = CachingMethod(getFunctionList, id=\'Baobab_getUserAssignedFunctionList\', cache_duration=300)\n
+return getFunctionList()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -150,7 +154,7 @@ return getSiteList(user_id=user_id)\n
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>getSiteList</string>
+                            <string>getFunctionList</string>
                           </tuple>
                         </value>
                     </item>
@@ -169,7 +173,7 @@ return getSiteList(user_id=user_id)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getUserAssignedSiteList</string> </value>
+            <value> <string>Baobab_getUserAssignedFunctionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
