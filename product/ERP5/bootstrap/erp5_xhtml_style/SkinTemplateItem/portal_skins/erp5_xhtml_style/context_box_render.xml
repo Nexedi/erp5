@@ -133,7 +133,7 @@ XXX: Folder_filter accesses selection directly\n
           <option tal:attributes="value python: \'add %s\' % (content_id, )"\n
                   i18n:translate="" i18n:domain="ui">\n
             Add <tal:block tal:content="content_id"\n
-                           i18n:name="portal_type"/>\n
+                  i18n:name="portal_type" i18n:translate="" i18n:domain="ui"/>\n
           </option>\n
         </tal:block>\n
       </tal:block>\n
