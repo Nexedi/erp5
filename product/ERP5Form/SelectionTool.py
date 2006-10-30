@@ -313,6 +313,24 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return selection.getListUrl()
       else:
         return None
+    
+    security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeFor')
+    def getSelectionInvertModeFor(self, selection_name, REQUEST=None):
+      """Get the 'invert_mode' parameter of a selection.
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        return selection.isInvertMode()
+      return 0
+
+    security.declareProtected(ERP5Permissions.View, 'setSelectionInvertModeFor')
+    def setSelectionInvertModeFor(self, selection_name,
+                                  invert_mode, REQUEST=None):
+      """Change the 'invert_mode' parameter of a selection.
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        selection.edit(invert_mode=invert_mode)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionToIds')
     def setSelectionToIds(self, selection_name, selection_uids, REQUEST=None):
