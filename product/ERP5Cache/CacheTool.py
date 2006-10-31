@@ -140,21 +140,20 @@ class CacheTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheRoot')
   def getRamCacheRoot(self):
     """ Return RAM based cache root """
-    erp5_site_id = self.getPortalObject().getId()
-    return CachingMethod.factories[erp5_site_id]
+    return CachingMethod.factories
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateCache')
   def updateCache(self, REQUEST=None):
     """ Clear and update cache structure """
-    erp5_site_id = self.getPortalObject().getId()
-    for cf in CachingMethod.factories[erp5_site_id]:
-      for cp in  CachingMethod.factories[erp5_site_id][cf].getCachePluginList():
+    #erp5_site_id = self.getPortalObject().getId()
+    for cf in CachingMethod.factories:
+      for cp in  CachingMethod.factories[cf].getCachePluginList():
         del cp
-    CachingMethod.factories[erp5_site_id] = {}
+    CachingMethod.factories = {}
     ## read configuration from ZODB
     for key,item in self.getCacheFactoryList().items():
       if len(item['cache_plugins'])!=0:
-        CachingMethod.factories[erp5_site_id][key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
+        CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
     if REQUEST:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache updated.')
     
