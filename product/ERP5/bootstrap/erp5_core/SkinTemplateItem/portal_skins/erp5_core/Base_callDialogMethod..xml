@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+Generic method called when submitting a form in dialog mode.\n
+Responsible for validating form data and redirecting to the form action.\n
+"""\n
+\n
+from Products.Formulator.Errors import FormValidationError\n
+from ZTUtils import make_query\n
+\n
+request_form = context.REQUEST.form\n
+error_message = \'\'\n
+\n
+# Make this script work alike wether called from another script or by a request\n
+# Reinject parameters in the request\n
+request_form[\'dialog_method\'] = dialog_method\n
+request_form[\'dialog_id\'] = dialog_id\n
+request_form[\'dialog_category\'] = dialog_category\n
+request_form[\'enable_pickle\'] = enable_pickle\n
+# If we get unused parameters, put them in the request\n
+for k, v in kw:\n
+  request_form[k]=v\n
+\n
+# Exceptions for UI\n
+if dialog_method == \'Base_configureUI\':\n
+  return context.Base_configureUI(form_id=request_form[\'form_id\'],\n
+                                  selection_name=request_form[\'selection_name\'],\n
+                                  field_columns=request_form[\'field_columns\'],\n
+                                  stat_columns=request_form[\'stat_columns\'])\n
+# Exceptions for Sort\n
+if dialog_method == \'Base_configureSortOn\':\n
+  return context.Base_configureSortOn(form_id=request_form[\'form_id\'],\n
+                                      selection_name=request_form[\'selection_name\'],\n
+                                      field_sort_on=request_form[\'field_sort_on\'],\n
+                                      field_sort_order=request_form[\'field_sort_order\'])\n
+# Exceptions for Base_edit\n
+# if dialog_method == \'Base_edit\':\n
+#   return context.Base_edit(form_id=request_form[\'form_id\'],\n
+#                            dialog_id=dialog_id,\n
+#                            selection_name=request_form[\'selection_name\'])\n
+# Exceptions for Workflow\n
+if dialog_method == \'Workflow_statusModify\':\n
+  value = context.Workflow_statusModify(form_id=request_form[\'form_id\'],\n
+                                        dialog_id=dialog_id)\n
+  # XXX: This test is related to erp5_web and should not be present in configuration where it is not installed.\n
+  if not(getattr(context.REQUEST, \'ignore_layout\', 0)) and context.getApplicableLayout() :\n
+    context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentPhysicalPath())\n
+  return value\n
+# Exception for edit relation\n
+if dialog_method == \'Base_editRelation\':\n
+  return context.Base_editRelation(form_id=request_form[\'form_id\'],\n
+                                   field_id=request_form[\'field_id\'],\n
+                                   selection_name=request_form[\'selection_name\'],\n
+                                   selection_index=request_form[\'selection_index\'],\n
+                                   uids=request_form.get(\'uids\', ()),\n
+                                   listbox_uid=request_form.get(\'listbox_uid\', None),\n
+                                   form_pickle=request_form[\'form_pickle\'],\n
+                                   form_signature=request_form[\'form_signature\'])\n
+# Exception for create relation\n
+if dialog_method == \'Base_createRelation\':\n
+  return context.Base_createRelation(form_id=request_form[\'form_id\'],\n
+                                     selection_name=request_form[\'selection_name\'],\n
+                                     selection_index=request_form[\'selection_index\'],\n
+                                     base_category=request_form[\'base_category\'],\n
+                                     object_uid=request_form[\'object_uid\'],\n
+                                     catalog_index=request_form[\'catalog_index\'],\n
+                                     default_module=request_form[\'default_module\'],\n
+                                     dialog_id=dialog_id,\n
+                                     portal_type=request_form[\'portal_type\'],\n
+                                     return_url=request_form[\'cancel_url\'])\n
+# Exception for folder delete\n
+if dialog_method == \'Folder_delete\':\n
+  return context.Folder_delete(form_id=request_form[\'form_id\'],\n
+                               selection_name=request_form[\'selection_name\'],\n
+                               uids=request_form[\'listbox_uid\'],\n
+                               md5_object_uid_list=request_form[\'md5_object_uid_list\'])\n
+\n
+# If the request came with a pickled form, use it as context for form object search.\n
+if request_form.has_key(\'pickle_string\'):\n
+  form_context = context.asContext(context=None,\n
+                                   portal_type=context.getPortalType(),\n
+                                   **(context.portal_selections.getObjectFromPickle(request_form[\'pickle_string\']))\n
+                                  )\n
+else:\n
+  form_context = context\n
+form = getattr(form_context, dialog_id)\n
+# Validate the form\n
+try:\n
+  form.validate_all_to_request(context.REQUEST)\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  context.REQUEST.set(\'field_errors\', field_errors)\n
+  return form(context.REQUEST)\n
+\n
+# Use REQUEST.redirect if possible. It will not be possible if at least one of these is true :\n
+#  * we got an import_file,\n
+#  * we got a listbox\n
+#  * a value is None or [] or (), because this is not supported by make_query\n
+can_redirect = 1\n
+MARKER = [] # A recognisable default value. Use with \'is\', not \'==\'.\n
+listbox_id_list = [] # There should not be more than one listbox - but this give us a way to check.\n
+file_id_list = [] # For uploaded files.\n
+for field in form.get_fields():\n
+  k = field.id\n
+  v = context.REQUEST.get(k, MARKER)\n
+  if v is not MARKER:\n
+    if field.meta_type == \'ListBox\':\n
+      listbox_id_list.append(k)\n
+    elif can_redirect and (v in (None, [], ()) or hasattr(v, \'read\')) : # If we cannot redirect, useless to test it again\n
+      can_redirect = 0\n
+    # Cleanup my_ and your_ prefixes\n
+    splitted = k.split(\'_\', 1)\n
+    if len(splitted) == 2 and splitted[0] in (\'my\', \'your\'):\n
+      request_form[splitted[1]] = v\n
+    else:\n
+      request_form[k] = v\n
+\n
+if len(listbox_id_list):\n
+  can_redirect = 0\n
+  # Warn if there are more than one listbox in form ...\n
+  if len(listbox_id_list) > 1:\n
+    log(\'Base_callDialogMethod\', \'There are %s listboxes in form %s.\' % (len(listbox_id_list), form.id))\n
+  # ... but handle them anyway.\n
+  for listbox_id in listbox_id_list:\n
+    listbox_line_list = []\n
+    listbox = request_form[listbox_id]\n
+    listbox_keys = listbox.keys()\n
+    listbox_keys.sort()\n
+    for key in listbox_keys:\n
+      listbox_line = listbox[key]\n
+      listbox_line[\'listbox_key\'] = key\n
+      listbox_line_list.append(listbox_line)\n
+    listbox_line_list = tuple(listbox_line_list)\n
+    request_form[listbox_id] = listbox_line_list\n
+\n
+if enable_pickle or (form.update_action != \'\'):\n
+  request_form[\'pickle_string\'] = context.portal_selections.getPickle(**request_form)\n
+\n
+# Check if the selection changed\n
+if hasattr(request_form, \'previous_md5_object_uid_list\'):\n
+  selection_list = context.portal_selections.callSelectionFor(request_form[\'selection_name\'], context=context)\n
+  if selection_list is not None:\n
+    object_uid_list = map(lambda x:x.getObject().getUid(), selection_list)\n
+    error = context.portal_selections.selectionHasChanged(request_form[\'previous_md5_object_uid_list\'], object_uid_list)\n
+    if error:\n
+      error_message = N_("Sorry+your+selection+has+changed")\n
+\n
+# if dialog_category is object_search, then edit the selection\n
+if dialog_category == "object_search" :\n
+  context.portal_selections.setSelectionParamsFor(request_form[\'selection_name\'], request_form)\n
+\n
+# if we have checked line in listbox, modify the selection\n
+listbox_uid = request_form.get(\'listbox_uid\', None)\n
+if listbox_uid is not None:\n
+  uids = request_form.get(\'uids\')\n
+  selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
+    selection_name,\n
+    listbox_uid, uids)\n
+\n
+# Remove values which doesn\'t work with make_query.\n
+clean_kw = {}\n
+for k, v in request_form.items() :\n
+  if v not in (None, [], ()) :\n
+    clean_kw[k] = request_form[k]\n
+\n
+url_params_string = make_query(clean_kw)\n
+\n
+# XXX: We always redirect in report mode to make sure portal_skin\n
+# parameter is taken into account by SkinTool.\n
+# If url is too long, we do not redirect to avoid crash.\n
+if (not(can_redirect) or len(url_params_string) > 2000) and dialog_category != "object_report": # XXX: 2000 is an arbitrary value resulted from trial and error.\n
+  # If we cannot redirect, then call the form directly.\n
+  dialog_form = getattr(context, dialog_method)\n
+  # XXX: this is a hack that should not be needed anymore with the new listbox.\n
+  # set the URL in request, so that we can immediatly call method\n
+  # that depend on it (eg. Show All). This is really related to\n
+  # current ListBox implementation which edit Selection\'s last_url\n
+  # with the content of REQUEST.URL\n
+  context.REQUEST.set(\'URL\', \'%s/%s\' % (context.absolute_url(), dialog_method))\n
+  return dialog_form(**request_form)\n
+\n
+if error_message != \'\':\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , dialog_method\n
+                              , \'portal_status_message=%s\' % error_message\n
+                              )\n
+elif url_params_string != \'\':\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , dialog_method\n
+                              , url_params_string\n
+                              )\n
+else:\n
+  redirect_url = \'%s/%s\' % ( context.absolute_url()\n
+                            , dialog_method\n
+                            )\n
+\n
+return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+\n
+# vim: syntax=python\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>dialog_method, dialog_id, dialog_category=\'\', enable_pickle=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>dialog_method</string>
+                            <string>dialog_id</string>
+                            <string>dialog_category</string>
+                            <string>enable_pickle</string>
+                            <string>kw</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>FormValidationError</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request_form</string>
+                            <string>error_message</string>
+                            <string>_write_</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_getitem_</string>
+                            <string>value</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>_apply_</string>
+                            <string>form_context</string>
+                            <string>form</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>can_redirect</string>
+                            <string>MARKER</string>
+                            <string>listbox_id_list</string>
+                            <string>file_id_list</string>
+                            <string>field</string>
+                            <string>hasattr</string>
+                            <string>splitted</string>
+                            <string>len</string>
+                            <string>log</string>
+                            <string>listbox_id</string>
+                            <string>listbox_line_list</string>
+                            <string>listbox</string>
+                            <string>listbox_keys</string>
+                            <string>key</string>
+                            <string>listbox_line</string>
+                            <string>tuple</string>
+                            <string>selection_list</string>
+                            <string>map</string>
+                            <string>object_uid_list</string>
+                            <string>error</string>
+                            <string>N_</string>
+                            <string>listbox_uid</string>
+                            <string>uids</string>
+                            <string>selection_name</string>
+                            <string>selected_uids</string>
+                            <string>clean_kw</string>
+                            <string>url_params_string</string>
+                            <string>dialog_form</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_callDialogMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

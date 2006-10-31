@@ -3,11 +3,14 @@ Alarm Tool
 Applied Rule
 Base Category
 Base Domain
+Cache Factory
+Cache Tool
 Category
 Category Divergence Tester
 Category Tool
 Delivery Builder
 Delivery Tool
+Distributed Ram Cache Plugin
 Document
 Domain
 Domain Tool
@@ -22,8 +25,10 @@ Preference
 Preference Tool
 Property Divergence Tester
 Quantity Divergence Tester
+Ram Cache Plugin
 Route Tool
 Rule Tool
+SQL Cache Plugin
 Simulation Movement
 Simulation Tool
 Template Tool
