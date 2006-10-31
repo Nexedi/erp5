@@ -172,7 +172,7 @@ class CachingMethod:
     #erp5_site_id = kwd.get('portal_path', ('','erp5'))[1]
     
     ## cache scope is based on user which is a kwd argument
-    scope = kwd.get('user', 'GLOBAL')
+    scope = kwd.get('scope', 'GLOBAL')
     
     ## generate unique cache id
     cache_id = self.generateCacheId(self.id, *args, **kwd)
