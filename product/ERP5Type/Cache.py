@@ -26,159 +26,208 @@
 #
 ##############################################################################
 
-from Globals import PersistentMapping
-from AccessControl.SecurityInfo import allow_class
+import string
 from time import time
-
+from AccessControl.SecurityInfo import allow_class
+from AccessControl import getSecurityManager
+#from Products import ERP5Cache
 from zLOG import LOG
 
-# XXX need to expire old objects in a way.
-cache_check_time = time()
-CACHE_CHECK_TIMEOUT = 3600
+is_cache_initialized = 0
 
-# Special Exception for this code.
-class CachedMethodError(Exception): pass
+def initializePortalCachingProperties(self):
+  """ Init CachingMethod properties."""
+  ## check if global CachingMethod is initialized in RAM for this ERP5 site. If not init it
+  global is_cache_initialized
+  if not is_cache_initialized:
+    is_cache_initialized = 1
+    erp5_site_id = self.getPortalObject().getId()
+    ## update cache structure from portal_caches
+    self.getPortalObject().portal_caches.updateCache()
+  
+class CacheFactory:
+  """
+  CacheFactory is a RAM based object which contains different cache plugin objects ordered in a list.
+  """
+  
+  cache_plugins = []
+  cache_duration = 180
+  
+  def __init__(self, cache_plugins, cache_params):
+    self.cache_plugins = cache_plugins
+    self.cache_duration = cache_params.get('cache_duration')
+    
+    ## separete local and shared cache plugins
+    self.quick_cache = self.cache_plugins[0]
+    try:
+      self.shared_caches =self.cache_plugins[1:]  
+    except IndexError:
+      self.shared_caches = []
+    
+    ## set 'check_expire_cache_interval' to the minimal value between
+    ## individual 'check_expire_cache_interval' for each cache plugin contained
+    l = []
+    self._last_cache_expire_check_at = time()
+    for cp in self.cache_plugins:
+      l.append(cp.cache_expire_check_interval)
+    l = filter(lambda x: x!=None and x!=0, l)
+    self.cache_expire_check_interval = min(l)
+    
+  def __call__(self, callable_object, cache_id, scope, cache_duration=None, *args, **kwd):
+    """ 
+    When CacheFactory is called it will try to return cached value using appropriate cache plugin.
+    """
+    cache_duration = self.cache_duration
+    
+    ## Expired Cache (if needed)
+    self.expire()
 
-# This is just a storage.
-class CachedObject:
-  pass
+    quick_cached = self.quick_cache.get(cache_id, scope)
+    if quick_cached:
+      #print "HIT RAM", self.quick_cache
+      return quick_cached.getValue()
+    else:
+      ## not in local, check if it's in shared
+      for shared_cache in self.shared_caches:
+        if shared_cache.has_key(cache_id, scope):
+          cache_entry = shared_cache.get(cache_id, scope)
+          value = cache_entry.getValue()
+          ## update local cache
+          self.quick_cache.set(cache_id, scope, value, cache_entry.cache_duration, cache_entry.calculation_time)
+          return value
+            
+    ## not in any available cache plugins calculate and set to local ..
+    start = time()
+    value = callable_object(*args, **kwd)
+    end = time()
+    calculation_time = end - start
+    self.quick_cache.set(cache_id, scope, value, cache_duration, calculation_time)
+    
+    ## .. and update rest of caches in chain except already updated local one
+    for shared_cache in self.shared_caches:
+      shared_cache.set(cache_id, scope, value, cache_duration, calculation_time)
+    return value
 
+  def expire(self):
+    """ Expire (if needed) cache plugins """
+    now = time()
+    if now > (self._last_cache_expire_check_at + self.cache_expire_check_interval):
+      self._last_cache_expire_check_at = now    
+      for cache_plugin in self.getCachePluginList():
+        cache_plugin.expireOldCacheEntries()
+    
+  def getCachePluginList(self, omit_cache_plugin_name=None):
+    """ get list of all cache plugins except specified by name in omit """ 
+    rl = []
+    for cp in self.cache_plugins:
+      if omit_cache_plugin_name != cp.__class__.__name__:
+        rl.append(cp)
+    return rl
+    
+  def getCachePluginByClassName(self, cache_plugin_name):
+    """ get cache plugin by its class name """
+    for cp in self.cache_plugins:
+      if cache_plugin_name == cp.__class__.__name__:
+        return cp  
+    return None
+
+  def clearCache(self):
+    """ clear cache for this cache factory """
+    for cp in self.cache_plugins:
+      cp.clearCache()
+ 
 class CachingMethod:
   """
-    CachingMethod wraps a callable object to cache the result.
-
-    Example:
-
-      def toto(arg=None):
-        # heavy operations...
-
-      method = CachingMethod(toto, id='toto')
-      return method(arg='titi')
-
-    Some caveats:
-
-      - You must make sure that the method call takes all parameters which can make
-        the result vary. Otherwise, you will get inconsistent results.
-
-      - You should make sure that the method call does not take any parameter which
-        never make the result vary. Otherwise, the cache ratio will be worse.
-
-      - Choose the id carefully. If you use the same id in different methods, this may
-        lead to inconsistent results.
-
-      - This system can be sometimes quite slow if there are many entries, because
-        all entries are checked to expire old ones. This should not be significant,
-        since this is done once per 100 calls.
+  CachingMethod is a RAM based global Zope class which contains different CacheFactory objects
+  for every available ERP5 site instance.
   """
-  # Use this global variable to store cached objects.
-  cached_object_dict = {}
-
-  def __init__(self, callable_object, id = None, cache_duration = 180):
+  
+  ## cache factories will be initialized for every ERP5 site
+  factories = {}
+    
+  ## replace string table for some control characters not allowed in cache id
+  _cache_id_translate_table = string.maketrans("""[]()<>'", """,'__________')
+    
+  def __init__(self, callable_object, id, cache_duration = 180, cache_factory = 'erp5_user_interface'):
     """
-      callable_object must be callable.
-      id is used to identify what call should be treated as the same call.
-      cache_duration is specified in seconds, None to last untill zope process
-        is stopped.
+    callable_object must be callable.
+    id is used to identify what call should be treated as the same call.
+    cache_duration is an old argument kept for backwards compatibility. 
+    cache_duration is specified per cache factory. 
+    cache_factory is the id of the cache_factory to use.
     """
     if not callable(callable_object):
       raise CachedMethodError, "callable_object %s is not callable" % str(callable_object)
     if not id:
       raise CachedMethodError, "id must be specified"
-    self.method = callable_object
     self.id = id
-    self.duration = cache_duration
+    self.callable_object = callable_object
+    self.cache_duration = cache_duration
+    self.cache_factory = cache_factory
 
+    
   def __call__(self, *args, **kwd):
-    """
-      Call the method only if the result is not cached.
-
-      This code looks not aware of multi-threading, but there should no bad effect in reality,
-      since the worst case is that multiple threads compute the same call at a time.
-    """
-    global cache_check_time
-
-    # Store the current time in the REQUEST object, and
-    # check the expiration only at the first time.
-    from Products.ERP5Type.Utils import get_request
-    request = get_request()
-    now = request.get('_erp5_cache_time', None)
-    if now is None:
-      now = time()
-      request.set('_erp5_cache_time', now)
-
-      if cache_check_time + CACHE_CHECK_TIMEOUT < now:
-        # If the time reachs the timeout, expire all old entries.
-        # XXX this can be quite slow, if many results are cached.
-        # LOG('CachingMethod', 0, 'checking all entries to expire')
-        cache_check_time = now
-        try:
-          for index in CachingMethod.cached_object_dict.keys():
-            obj = CachingMethod.cached_object_dict[index]
-            if obj.duration is not None and obj.time + obj.duration < now:
-              # LOG('CachingMethod', 0, 'expire %s' % index)
-              del CachingMethod.cached_object_dict[index]
-        except KeyError:
-          # This is necessary for multi-threading, because two threads can
-          # delete the same entry at a time.
-          pass
-
+    """ Call the method or return cached value using appropriate cache plugin """
+    ## CachingMethod is  global Zope class and thus we must make sure
+    #erp5_site_id = kwd.get('portal_path', ('','erp5'))[1]
+    
+    ## cache scope is based on user which is a kwd argument
+    scope = kwd.get('user', 'GLOBAL')
+    
+    ## generate unique cache id
+    cache_id = self.generateCacheId(self.id, *args, **kwd)
+    
+    try:
+      ## try to get value from cache in a try block 
+      ## which is faster than checking for keys
+      value = self.factories[self.cache_factory](self.callable_object, 
+                                                               cache_id,
+                                                               scope, 
+                                                               self.cache_duration, 
+                                                               *args, 
+                                                               **kwd)
+    except KeyError:
+      ## no caching enabled for this site or no such cache factory
+      value = self.callable_object(*args, **kwd)
+    return value
+    
+  def generateCacheId(self, method_id, *args, **kwd):
+    """ Generate proper cache id based on *args and **kwd  """
+    cache_id = [method_id]    
     key_list = kwd.keys()
     key_list.sort()
-    index = [self.id]
     for arg in args:
-      index.append((None, arg))
+      cache_id.append((None, arg))
     for key in key_list:
-      index.append((key, str(kwd[key])))
-    index = str(index)
-
-    obj = CachingMethod.cached_object_dict.get(index)
-    if obj is None or (obj.duration is not None and obj.time + obj.duration < now):
-      #LOG('CachingMethod', 0, 'cache miss: id = %s, duration = %s, method = %s, args = %s, kwd = %s' % (str(self.id), str(self.duration), str(self.method), str(args), str(kwd)))
-      obj = CachedObject()
-      obj.time = now
-      obj.duration = self.duration
-      obj.result = self.method(*args, **kwd)
-
-      CachingMethod.cached_object_dict[index] = obj
-    else:
-      #LOG('CachingMethod', 0, 'cache hit: id = %s, duration = %s, method = %s, args = %s, kwd = %s' % (str(self.id), str(self.duration), str(self.method), str(args), str(kwd)))
-      pass
-
-    return obj.result
-
+      cache_id.append((key, str(kwd[key])))
+    cache_id = str(cache_id)
+    ## because some cache backends don't allow some chars in cached id we make sure to replace them
+    cache_id = cache_id.translate(self._cache_id_translate_table)
+    return cache_id
+                
 allow_class(CachingMethod)
 
-def clearCache(method_id=None):
-  """Clear the cache.
-  If method_id is specified, it clears the cache only for this method,
-  otherwise, it clears the whole cache."""
-  if method_id is None:
-    CachingMethod.cached_object_dict.clear()
-  else:
-    caching_method_keys = CachingMethod.cached_object_dict.keys()
-    for key in caching_method_keys :
-      # CachingMethod dict contains a string representation of a list
-      # of tuples keys.
-      if method_id in key :
-        del CachingMethod.cached_object_dict[key]
+########################################################
+## Old global cache functions                         ##
+## TODO: Check if it make sense to keep them any more ##
+########################################################
 
-# TransactionCache is a cache per transaction. The purpose of this cache is
-# to accelerate some heavy read-only operations. Note that this must not be
-# enabled when a trasaction may modify ZODB objects.
-def getReadOnlyTransactionCache(context):
-  """Get the transaction cache.
+def clearCache(method_id=None):
   """
-  try:
-    return context.REQUEST['_erp5_read_only_transaction_cache']
-  except KeyError:
-    return None
+  Clear the cache.
+  If method_id is specified, it clears the cache only for this method,
+  otherwise, it clears the whole cache.
+  """
+  pass 
+
+def getReadOnlyTransactionCache(context):
+  """ Get the transaction cache.  """
+  pass
 
 def enableReadOnlyTransactionCache(context):
-  """Enable the transaction cache.
-  """
-  context.REQUEST.set('_erp5_read_only_transaction_cache', {})
+  """ Enable the transaction cache. """
+  pass
 
 def disableReadOnlyTransactionCache(context):
-  """Disable the transaction cache.
-  """
-  context.REQUEST.set('_erp5_read_only_transaction_cache', None)
+  """ Disable the transaction cache. """
+  pass 
