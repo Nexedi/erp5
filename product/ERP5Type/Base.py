@@ -159,6 +159,10 @@ def initializeClassDynamicProperties(self, klass):
       Base.aq_method_generated[klass] = 1
 
 def initializePortalTypeDynamicProperties(self, klass, ptype):
+  ## Init CachingMethod which implements caching for ERP5
+  from Products.ERP5Type.Cache import initializePortalCachingProperties
+  initializePortalCachingProperties(self)
+
   id = ''
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
   if not Base.aq_portal_type.has_key(ptype):
