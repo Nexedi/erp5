@@ -11,6 +11,14 @@
  <portal_type id="Base Domain">
   <item>Domain</item>
  </portal_type>
+ <portal_type id="Cache Factory">
+  <item>Distributed Ram Cache Plugin</item>
+  <item>Ram Cache Plugin</item>
+  <item>SQL Cache Plugin</item>
+ </portal_type>
+ <portal_type id="Cache Tool">
+  <item>Cache Factory</item>
+ </portal_type>
  <portal_type id="Category">
   <item>Category</item>
  </portal_type>
@@ -42,9 +50,9 @@
   <item>Preference</item>
  </portal_type>
  <portal_type id="Rule Tool">
-  <item>Delivery Rule</item>
   <item>Invoice Rule</item>
   <item>Invoice Transaction Rule</item>
+  <item>Delivery Rule</item>
  </portal_type>
  <portal_type id="Simulation Movement">
   <item>Applied Rule</item>
