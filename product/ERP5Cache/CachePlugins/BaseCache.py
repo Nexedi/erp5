@@ -30,8 +30,6 @@
 Base Cache plugin.
 """
 
-
-#from Products.ERP5Cache.interfaces import ICache
 import time
 
 class CachedMethodError(Exception): 
@@ -78,7 +76,6 @@ class CacheEntry(object):
 class BaseCache(object):
   """ Base Cache class """
     
-  #__implements__ = (ICache,)
     
   ## Time interval (s) to check for expired objects
   cache_expire_check_interval = 60

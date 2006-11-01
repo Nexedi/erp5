@@ -40,7 +40,7 @@ except ImportError:
 
 MEMCACHED_SERVER_MAX_KEY_LENGTH = memcache.SERVER_MAX_KEY_LENGTH
 ## number of seconds before creating a new connection to memcached server
-KEEP_ALIVE_MEMCACHED_CONNECTION_INTERVAL = 30  
+##KEEP_ALIVE_MEMCACHED_CONNECTION_INTERVAL = 30  
  
 class DistributedRamCache(BaseCache):
   """ Memcached based cache plugin. """

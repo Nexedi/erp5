@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-"Local RAM based cache"
+"Dummy (no cache)"
 
 from BaseCache import *
 import time
