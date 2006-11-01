@@ -14,6 +14,7 @@ Project Line | initial_budget
 Project Line | jump_to_related_sale_order_lines
 Project Line | metadata
 Project Line | print
+Project Line | task
 Project Line | task_fast_input_dialog
 Project Line | view
 Project Milestone | constraint
@@ -36,6 +37,7 @@ Project | print
 Project | project_lines
 Project | report
 Project | task
+Project | task_fast_input_dialog
 Project | view
 Requirement Document | detailed_report
 Requirement Document | fast_input
