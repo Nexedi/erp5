@@ -40,12 +40,17 @@ class Coordinate(Interface):
   def asText():
     """
       returns the coordinate as a text string
+
+    This method usually tries to lookup a skin named ${PortalType}_asText and
+    to use this script to display the coordinate text.
     """
     pass
 
   def fromText(coordinate_text):
     """
-      modifies the coordinate according to the input text
+      modifies the coordinate according to the input text.
+    This method usually tries to lookup a skin named ${PortalType}_fromText and
+    to use this script to modify the properties of this document.
     """
     pass
 

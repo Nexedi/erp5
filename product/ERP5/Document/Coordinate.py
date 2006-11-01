@@ -78,6 +78,9 @@ class Coordinate(Base):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    
+    # Declarative interface
+    __implements__ = (Interface.Coordinate)
 
     # Declarative security (replaces __ac_permissions__)
     security = ClassSecurityInfo()

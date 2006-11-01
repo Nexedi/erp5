@@ -59,7 +59,7 @@ class Telephone(Coordinate, Base):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation) # ???????
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # The standard parser is used to read phone numbers
     # written in a standard syntax
@@ -73,7 +73,12 @@ class Telephone(Coordinate, Base):
 
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-    def fromText(self, coordinate_text,reindex_object=1):
+    def fromText(self, coordinate_text):
+        """ See ICoordinate.fromText """
+        method = self._getTypeBasedMethod('fromText')
+        if method is not None:
+            return method(text=coordinate_text)
+        
         if coordinate_text is None:
             coordinate_text = ''
         if self.standard_parser.match(coordinate_text):
@@ -84,8 +89,7 @@ class Telephone(Coordinate, Base):
             number = coordinate_text
         self.edit(telephone_country = country,
                   telephone_area = area,
-                  telephone_number = number,
-                  reindex_object=reindex_object)
+                  telephone_number = number, )
 
     security.declareProtected(Permissions.ModifyPortalContent, '_setText')
     _setText = fromText
