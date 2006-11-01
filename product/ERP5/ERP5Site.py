@@ -1005,6 +1005,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Order Tool', None)
     if not p.hasObject('portal_tests'):
       addTool('ERP5 Test Tool', None)
+    if not p.hasObject('portal_caches'):
+      addTool('ERP5 Cache Tool', None)
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
