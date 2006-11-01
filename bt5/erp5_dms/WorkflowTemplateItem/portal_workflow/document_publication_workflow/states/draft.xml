@@ -42,8 +42,6 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>share</string>
-                <string>share_action</string>
                 <string>submit</string>
                 <string>submit_action</string>
               </tuple>

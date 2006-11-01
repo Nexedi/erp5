@@ -48,10 +48,6 @@
               <tuple>
                 <string>archive</string>
                 <string>archive_action</string>
-                <string>retract</string>
-                <string>retract_action</string>
-                <string>submit</string>
-                <string>submit_action</string>
               </tuple>
             </value>
         </item>

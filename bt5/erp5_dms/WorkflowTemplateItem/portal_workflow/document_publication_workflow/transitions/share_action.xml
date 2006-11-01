@@ -95,8 +95,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Owner</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -117,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:here.isMemberOf(\'classification/personal\')</string> </value>
+            <value> <string>python:here.Document_policyApplies(\'personal/*\')</string> </value>
         </item>
       </dictionary>
     </pickle>
