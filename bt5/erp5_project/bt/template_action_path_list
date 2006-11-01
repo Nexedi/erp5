@@ -2,6 +2,7 @@ Project Cell | history_view
 Project Cell | metadata
 Project Cell | print
 Project Cell | view
+Project Line | add_task_related
 Project Line | available_budget
 Project Line | constraint
 Project Line | consumed_budget
@@ -14,8 +15,8 @@ Project Line | initial_budget
 Project Line | jump_to_related_sale_order_lines
 Project Line | metadata
 Project Line | print
-Project Line | task
 Project Line | task_fast_input_dialog
+Project Line | task_list
 Project Line | view
 Project Milestone | constraint
 Project Milestone | history
@@ -24,6 +25,7 @@ Project Milestone | print
 Project Milestone | view
 Project Module | print_pdf
 Project Module | view
+Project | add_task_related
 Project | content
 Project | detailed_report
 Project | documents
@@ -36,8 +38,8 @@ Project | planning
 Project | print
 Project | project_lines
 Project | report
-Project | task
 Project | task_fast_input_dialog
+Project | task_list
 Project | view
 Requirement Document | detailed_report
 Requirement Document | fast_input
