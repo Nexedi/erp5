@@ -31,6 +31,7 @@ import os
 import sys
 import re
 import string
+import time
 
 from Globals import package_home
 from Globals import DevelopmentMode
@@ -2766,3 +2767,10 @@ def monkeyPatch(from_class,to_class):
   for id, m in from_class.__dict__.items():
       if type(m) is FunctionType:
           setattr(to_class, id, m)
+
+
+def sleep(t=5):
+  """
+  Wait for a given time
+  """
+  time.sleep(t)
