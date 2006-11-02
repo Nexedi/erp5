@@ -73,9 +73,12 @@
 tags=(\'<div style="font-weight:bold;display:inline;">\',\'</div>\')\n
 trail=5\n
 maxlines=5\n
-\n
 txt=brain.getObject().SearchableText()\n
-sw=context.REQUEST.get(\'SearchableText\',None)\n
+st=selection.params.get(\'SearchableText\')\n
+if st is None:\n
+  return \'\'\n
+args=context.parseSearchString(st)\n
+sw=args.get(\'SearchableText\')\n
 if sw is None:\n
   return \'\'\n
 res=context.cutFound(context,txt,sw,tags,trail,maxlines)\n
@@ -131,8 +134,10 @@ return \' \'.join(map(str,res))\n
                             <string>maxlines</string>
                             <string>_getattr_</string>
                             <string>txt</string>
-                            <string>context</string>
+                            <string>st</string>
                             <string>None</string>
+                            <string>context</string>
+                            <string>args</string>
                             <string>sw</string>
                             <string>res</string>
                             <string>map</string>
