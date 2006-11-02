@@ -182,6 +182,7 @@ class OOoDocument(DMSFile, CachingMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent,'reset')
   def reset(self):
+    '''reset'''
     self.clearCache()
     self.oo_data=None
     m=self.returnMessage('new')
