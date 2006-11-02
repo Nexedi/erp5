@@ -71,11 +71,10 @@
             <value> <string>ob=context\n
 if ob.hasFile() and not ob.hasOOFile(): #doublecheck\n
   try:\n
-    res=ob.convert()\n
-    ob.log(res)\n
-    ob.setExternalProcessingStatusMessage(str(res[1]))\n
+    res=ob.convert(force=1)\n
+    ob.setExternalProcessingStatusMessage(\'converted\')\n
   except Exception,e:\n
-    ob.log(e)\n
+    ob.log(\'Exception\',e)\n
     ob.setExternalProcessingStatusMessage(str(e))\n
     #raise Exception(str(e)) # do we want the activity to keep trying?\n
 </string> </value>
@@ -132,10 +131,9 @@ if ob.hasFile() and not ob.hasOOFile(): #doublecheck\n
                             <string>ob</string>
                             <string>_getattr_</string>
                             <string>res</string>
-                            <string>str</string>
-                            <string>_getitem_</string>
                             <string>Exception</string>
                             <string>e</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
