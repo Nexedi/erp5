@@ -180,7 +180,9 @@ class CachingMethod:
     try:
       ## try to get value from cache in a try block 
       ## which is faster than checking for keys
-      value = self.factories[self.cache_factory](self.callable_object, 
+      # It is very important to take the factories dictionnary
+      # on CachingMethod instead of self, we want a global variable
+      value = CachingMethod.factories[self.cache_factory](self.callable_object, 
                                                                cache_id,
                                                                scope, 
                                                                self.cache_duration, 
