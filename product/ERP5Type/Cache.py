@@ -83,7 +83,7 @@ class CacheFactory:
     self.expire()
 
     quick_cached = self.quick_cache.get(cache_id, scope)
-    if quick_cached:
+    if quick_cached is not None:
       #print "HIT RAM", self.quick_cache
       return quick_cached.getValue()
     else:
