@@ -190,35 +190,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       "hd_size/120Go",
     )
 
-  def rollbackTest(self) :
-    """ delete everything created by the test (for 'live debugin')""" 
-    portal = self.getPortal()
-    from Products.ERP5.Document.AccountingTransaction \
-        import AccountingTransaction
-    self.tic()
-    old_manage_beforeDelete = AccountingTransaction.manage_beforeDelete 
-    AccountingTransaction.manage_beforeDelete = lambda x, y, z: 1
-    self.getAccountModule().deleteContent(
-          list(self.getAccountModule().objectIds()))
-    self.getAccountingModule().deleteContent(
-          list(self.getAccountingModule().objectIds()))
-    self.getOrganisationModule().deleteContent(
-          list(self.getOrganisationModule().objectIds()))
-    self.getCurrencyModule().deleteContent(
-          list(self.getCurrencyModule().objectIds()))
-    self.getProductModule().deleteContent(
-          list(self.getProductModule().objectIds()))
-    self.getSimulationTool().deleteContent(
-          list(self.getSimulationTool().objectIds()))
-    AccountingTransaction.manage_beforeDelete = old_manage_beforeDelete
-    self.tic()
-  
   def stepTic(self, **kw):
     self.tic()
 
-  def stepCommitTransaction(self, **kw):
-    get_transaction().commit()
-    
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """ 
       Create some predicates in the Invoice Transaction Rule
