@@ -103,12 +103,15 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>reference</string>
                         <string>creation_from</string>
                         <string>creation_to</string>
                         <string>modification_from</string>
                         <string>modification_to</string>
                         <string>search_mode</string>
                         <string>mine</string>
+                        <string>newest</string>
+                        <string>language</string>
                       </list>
                     </value>
                 </item>

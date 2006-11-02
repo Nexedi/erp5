@@ -127,16 +127,44 @@ if wheres!=[]:\n
   kw[\'where_expression\']=\' AND \'.join(wheres)\n
 \n
 # now we search\n
+# any language?\n
+if kw.get(\'language\')==\'0\':kw.pop(\'language\')\n
+context.log(\'SEARCH:\',args)\n
 res=context.portal_catalog(**kw)\n
 \n
 # user wants only his documents\n
 if args.get(\'mine\'): \n
+  context.log(\'mine\')\n
   from AccessControl import getSecurityManager\n
   sm=getSecurityManager()\n
   u=sm.getUser()\n
   # now we need to filter by owner\n
   # some day we will do it in catalog\n
   res=[r for r in res if u.allowed(r.getObject(),(\'Owner\',))]\n
+\n
+#...and now we check for only the newest versions\n
+# but we need to preserve order\n
+if args.get(\'newest\'):\n
+  context.log(\'newest\')\n
+  idx={} # for recording what we have where and in which version\n
+  newest=[]\n
+  counter=0\n
+  for r in res:\n
+    ref=r.getReference()\n
+    try:\n
+      ver=int(r.getVersion())\n
+    except ValueError:\n
+      continue\n
+    if idx.has_key(ref):\n
+      if idx[ref][0]>=ver:\n
+        continue\n
+      else:\n
+        del newest[idx[ref][1]]\n
+        counter-=1\n
+    newest.append(r)\n
+    idx[ref]=(ver,counter)\n
+    counter+=1\n
+  res=newest\n
 \n
 \n
 return res\n
@@ -219,6 +247,13 @@ return res\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>r</string>
+                            <string>idx</string>
+                            <string>newest</string>
+                            <string>counter</string>
+                            <string>ref</string>
+                            <string>int</string>
+                            <string>ver</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>

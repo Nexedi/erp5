@@ -346,8 +346,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
                           <string>Base_showFoundText</string>
