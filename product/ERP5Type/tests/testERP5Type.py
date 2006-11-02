@@ -1024,6 +1024,29 @@ class TestPropertySheet:
       self.assertEquals('The organisation title',
                         person.getDefaultOrganisationTitle())
     
+    def test_AsContext(self):
+      """asContext method return a temporary copy of an object.
+      Any modification made to the copy does not change the original object.
+      """
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj.setTitle('obj title')
+      copy = obj.asContext()
+      copy.setTitle('copy title')
+      self.assertEquals('obj title', obj.getTitle())
+      self.assertEquals('copy title', copy.getTitle())
+
+      # asContext method accepts parameters, and edit the copy with those
+      # parameters
+      obj = self.getPersonModule().newContent(portal_type='Person', id='obj')
+      obj.setTitle('obj title')
+      copy = obj.asContext(title='copy title')
+      self.assertEquals('obj title', obj.getTitle())
+      self.assertEquals('copy title', copy.getTitle())
+    
+      # acquisition context is the same
+      self.assertEquals(self.getPersonModule(), obj.aq_parent)
+      self.assertEquals(self.getPersonModule(), copy.aq_parent)
+
 if __name__ == '__main__':
   framework()
 else:
