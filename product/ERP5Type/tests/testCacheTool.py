@@ -70,39 +70,37 @@ class TestCacheTool(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_CreateCacheTool(self, quiet=0, run=run_all_test):
+  def test_01_CheckCacheTool(self, quiet=0, run=run_all_test):
     if not run: 
       return
     if not quiet:
-      message = '\nCreate CacheTool '
+      message = '\nCheck CacheTool '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
       
       portal = self.getPortal()
-      addTool = portal.manage_addProduct['ERP5'].manage_addTool
-      addTool("ERP5 Cache Tool", None)
+      self.assertNotEqual(None,getattr(portal,'portal_caches',None))
       get_transaction().commit()
 
 
-  def test_02_CreatePortalTypes(self, quiet=0, run=run_all_test):
+  def test_02_CheckPortalTypes(self, quiet=0, run=run_all_test):
     if not run: 
       return
     if not quiet:
-      message = '\nCreate Portal Types'
+      message = '\nCheck Portal Types'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
       
       portal = self.getPortal()
       portal_types = portal.portal_types
-      typeinfo_names = ("ERP5Type: Cache Factory (ERP5 Cache Factory)",
-                      "ERP5Type: Ram Cache Plugin (ERP5 Ram Cache Plugin)",
-                      "ERP5Type: Distributed Ram Cache Plugin (ERP5 Distributed Ram Cache Plugin)",
-                      "ERP5Type: SQL Cache Plugin (ERP5 SQL Cache Plugin)",
+      typeinfo_names = ("Cache Factory",
+                      "Ram Cache Plugin",
+                      "Distributed Ram Cache Plugin",
+                      "SQL Cache Plugin",
                       )
       for typeinfo_name in typeinfo_names:
-        portal_types.manage_addTypeInformation(add_meta_type = "ERP5 Type Information", 
-                                               id = "",
-                                               typeinfo_name = typeinfo_name)
+        portal_type = getattr(portal_types,typeinfo_name,None)
+        self.assertNotEqual(None,portal_type)
       get_transaction().commit()
       
   def test_03_CreateCacheFactories(self, quiet=0, run=run_all_test):
@@ -158,15 +156,11 @@ class TestCacheTool(ERP5TypeTestCase):
       portal_caches.updateCache()
       from Products.ERP5Type.Cache import CachingMethod
       
-      ## do we have cache enabled for this site?
-      erp5_site_id = portal.getId()
-      self.assert_(CachingMethod.factories.has_key(erp5_site_id))
-      
       ## do we have the same structure we created above?
-      self.assert_('ram_cache_factory' in CachingMethod.factories[erp5_site_id])
-      self.assert_('distributed_ram_cache_factory' in CachingMethod.factories[erp5_site_id])
-      self.assert_('sql_cache_factory' in CachingMethod.factories[erp5_site_id])
-      self.assert_('erp5_user_factory' in CachingMethod.factories[erp5_site_id])
+      self.assert_('ram_cache_factory' in CachingMethod.factories)
+      self.assert_('distributed_ram_cache_factory' in CachingMethod.factories)
+      self.assert_('sql_cache_factory' in CachingMethod.factories)
+      self.assert_('erp5_user_factory' in CachingMethod.factories)
       
   def test_04_CreateCachedMethod(self, quiet=0, run=run_all_test):
     if not run: 
