@@ -207,6 +207,27 @@ class CachingMethod:
                 
 allow_class(CachingMethod)
 
+# TransactionCache is a cache per transaction. The purpose of this cache is
+# to accelerate some heavy read-only operations. Note that this must not be
+# enabled when a trasaction may modify ZODB objects.
+def getReadOnlyTransactionCache(context):
+  """Get the transaction cache.
+  """
+  try:
+    return context.REQUEST['_erp5_read_only_transaction_cache']
+  except KeyError:
+    return None
+
+def enableReadOnlyTransactionCache(context):
+  """Enable the transaction cache.
+  """
+  context.REQUEST.set('_erp5_read_only_transaction_cache', {})
+
+def disableReadOnlyTransactionCache(context):
+  """Disable the transaction cache.
+  """
+  context.REQUEST.set('_erp5_read_only_transaction_cache', None)
+
 ########################################################
 ## Old global cache functions                         ##
 ## TODO: Check if it make sense to keep them any more ##
@@ -218,16 +239,4 @@ def clearCache(method_id=None):
   If method_id is specified, it clears the cache only for this method,
   otherwise, it clears the whole cache.
   """
-  pass 
-
-def getReadOnlyTransactionCache(context):
-  """ Get the transaction cache.  """
-  pass
-
-def enableReadOnlyTransactionCache(context):
-  """ Enable the transaction cache. """
-  pass
-
-def disableReadOnlyTransactionCache(context):
-  """ Disable the transaction cache. """
   pass 
