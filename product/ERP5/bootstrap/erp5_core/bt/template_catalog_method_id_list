@@ -72,7 +72,7 @@ erp5_mysql/z_related_node_uid_from_stock
 erp5_mysql/z_related_parent_specialise
 erp5_mysql/z_related_payment_uid_from_stock
 erp5_mysql/z_related_predicate
-erp5_mysql/z_related_resource
+erp5_mysql/z_related_resource_from_movement
 erp5_mysql/z_related_resource_uid_from_stock
 erp5_mysql/z_related_section_uid_from_stock
 erp5_mysql/z_related_security
