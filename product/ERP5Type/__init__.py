@@ -53,7 +53,7 @@ def allowClassTool():
   
 def initialize( context ):
   # Import Product Components
-  from Tool import ClassTool
+  from Tool import ClassTool, CacheTool
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
@@ -61,7 +61,8 @@ def initialize( context ):
   object_classes = ()
   content_constructors = ()
   content_classes = (Base.Base, XMLObject.XMLObject,)
-  portal_tools = (ClassTool.ClassTool, )
+  portal_tools = (ClassTool.ClassTool,
+		  CacheTool.CacheTool,)
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
