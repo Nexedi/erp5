@@ -10,6 +10,7 @@ usage: %(program)s [options] [UnitTest1[:TestClass1[:TestClass2]] [UnitTest2]]
 Options:
   -v, --verbose              produce verbose output
   -h, --help                 this help screen
+  -p, --profile              print profiling results at the end
   --portal_id=STRING         force id of the portal. Usefull when using
                              --data_fs_path to run tests on an existing
                              Data.fs
@@ -186,7 +187,7 @@ def usage(stream, msg=None):
 def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
-        "hv", ["help", "verbose", "portal_id=", "data_fs_path=",
+        "hpv", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "erp5_deferred_sql_connection_string=",
@@ -203,6 +204,14 @@ def main():
     elif opt in ("-h", "--help"):
       usage(sys.stdout)
       sys.exit()
+    if opt in ("-p", "--profile"):
+      os.environ['PROFILE_TESTS'] = "1"
+      # profiling of setup and teardown is disabled by default, just set
+      # environment variables yourself if you want to enable them, but keep in
+      # mind that the first time, setup will create a site and install business
+      # templates, and this be profiled as well.
+      #os.environ['PROFILE_SETUP'] = "1"
+      #os.environ['PROFILE_TEARDOWN'] = "1"
     elif opt == '--portal_id':
       os.environ["erp5_tests_portal_id"] = arg
     elif opt == '--data_fs_path':
@@ -225,6 +234,8 @@ def main():
     sys.exit(1)
   
   result = runUnitTestList(test_list=test_list)
+  from Testing.ZopeTestCase import profiler
+  profiler.print_stats()
   sys.exit(len(result.failures) + len(result.errors))
 
 if __name__ == '__main__':
