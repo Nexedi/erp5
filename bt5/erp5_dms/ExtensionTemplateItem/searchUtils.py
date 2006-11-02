@@ -10,7 +10,7 @@ Single arguments:
 
 Multiple arguments:
     - arg:xxx works the same way
-    - arg:(xxx,yyy) ORs both (do not put space after comma)
+    - arg:(xxx,yyy) ORs both
     - arg:all translates into empty tuple, which implies all available values
     - state (simulation_state), type (portal_type)
 
@@ -22,7 +22,7 @@ import re
 
 # parsing defined here
 simulation_states=()
-r=re.compile('(\w+:"[^"]+"|\w+:[\(\),\w/\-.]+)')
+r=re.compile('(\w+:"[^"]+"|\w+:\([^)]+\)|\w+:[\(\),\w/\-.]+)')
 filetyper=lambda s:('source_reference','%%.%s' % s)
 filestripper=lambda s: ('source_reference',s.replace('"',''))
 #addarchived=lambda s: ('simulation_state',simulation_states+('archived',))
@@ -32,10 +32,11 @@ paramsmap=dict(file=filestripper,type=type,reference='reference',filetype=filety
         language='language',version='version')
 
 def parsestates(s):
+    print s
     if s=='all':
         return ()
     if s[0]=='(' and s[-1]==')':
-        return [i for i in s[1:-1].split(',') if i!='']
+        return [i.replace('"','').replace("'","") for i in s[1:-1].split(',') if i!='']
     return s.replace('"','').replace("'","")
 
 def analyze(params):
@@ -66,5 +67,5 @@ def parseSearchString(searchstring):
 
 if __name__=='__main__':
     #searchstring='byle cisnie zego file:"ble ble.doc" filetype:doc type:Text poza tym reference:abc-def'
-    searchstring='byle "cisnie zego" state:draft file:"ble ble.doc" type:"Web Site" poza tym reference:abc-def dupa:kwas/zbita'
+    searchstring='byle "cisnie zego" state:draft file:"ble ble.doc" type:("Site","Text") poza tym reference:abc-def dupa:kwas/zbita'
     print parseSearchString(searchstring)
