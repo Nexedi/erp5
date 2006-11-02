@@ -70,10 +70,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ERP5Type.Utils import sleep\n
 count = 1000\n
 while len(context.portal_activities.getMessageList()) > 0:\n
   context.portal_activities.process_timer(0, 0)\n
   count -= 1\n
+  sleep()\n
   if count < 0:\n
     raise RuntimeError, \'tic is endless\'\n
 \n
@@ -128,6 +130,8 @@ return \'Done.\'\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>sleep</string>
                             <string>count</string>
                             <string>len</string>
                             <string>_getattr_</string>
