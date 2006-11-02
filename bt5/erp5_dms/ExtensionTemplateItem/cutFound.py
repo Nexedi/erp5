@@ -42,7 +42,7 @@ class Part:
 
 def generateParts(context,text,sw,tags,trail,maxlines):
   par=Part(tags,trail)
-  sw=sw.translate(tr).strip().split()
+  sw=sw.translate(tr).strip().lower().split()
   test=lambda w:w.translate(tr).strip().lower() in sw
   i=0
   length=len(text)
