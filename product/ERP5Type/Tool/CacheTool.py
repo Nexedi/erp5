@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5 import _dtmldir
+from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Cache import CachingMethod, CacheFactory
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
