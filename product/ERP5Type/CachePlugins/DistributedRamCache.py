@@ -32,13 +32,14 @@ Memcached based cache plugin.
 
 from BaseCache import *
 from time import time
+from zLOG import LOG
 
 try:
   import memcache
+  MEMCACHED_SERVER_MAX_KEY_LENGTH = memcache.SERVER_MAX_KEY_LENGTH
 except ImportError:
-  raise CachedMethodError, "Memcache module is not available"
+  LOG('DistributedRamCache',0,'unable to import memcache')
 
-MEMCACHED_SERVER_MAX_KEY_LENGTH = memcache.SERVER_MAX_KEY_LENGTH
 ## number of seconds before creating a new connection to memcached server
 ##KEEP_ALIVE_MEMCACHED_CONNECTION_INTERVAL = 30  
  
