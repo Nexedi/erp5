@@ -925,7 +925,6 @@ class ERP5Generator(PortalGenerator):
     p._setProperty('management_page_charset', 'UTF-8', 'string')
     self.setup(p, create_userfolder, create_activities=create_activities,
         reindex=reindex, **kw)
-    p.portal_caches.updateCache()
     return p
 
   def setupLastTools(self, p, **kw):
@@ -1322,6 +1321,9 @@ class ERP5Generator(PortalGenerator):
 
     if not update:
       self.setupERP5Core(p,**kw)
+
+    # Make sure the cache is initialized
+    p.portal_caches.updateCache()
 
     self.setupLastTools(p, **kw)
 
