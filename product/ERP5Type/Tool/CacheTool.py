@@ -72,26 +72,26 @@ class CacheTool(BaseTool):
       rd[cache_scope]['cache_plugins'] = []
       rd[cache_scope]['cache_params'] = {}
       for cp in cf.getCachePluginList():
-	cache_obj = None
+        cache_obj = None
         cp_meta_type = cp.meta_type
         if cp_meta_type == 'ERP5 Ram Cache Plugin':
           cache_obj = RamCache()
         elif cp_meta_type == 'ERP5 Distributed Ram Cache Plugin':
-	  ## even thougn we have such plugin in ZODB that doens't mean
-	  ## we have corresponding memcache module installed
-	  if 'memcache' in globals().keys():
+            ## even thougn we have such plugin in ZODB that doens't mean
+            ## we have corresponding memcache module installed
+          if 'memcache' in globals().keys():
             cache_obj = DistributedRamCache({'server':cp.getServer()})
           else:
-	    ## we don't have memcache python module installed 
-	    ## thus we can't use DistributedRamCache plugin
-	    cache_obj = None
+            ## we don't have memcache python module installed 
+            ## thus we can't use DistributedRamCache plugin
+            cache_obj = None
         elif cp_meta_type == 'ERP5 SQL Cache Plugin':
           ## use connection details from 'erp5_sql_transactionless_connection' ZMySLQDA object
           connection_string = self.erp5_sql_transactionless_connection.connection_string
           kw = self.parseDBConnectionString(connection_string)
           kw['cache_table_name'] = cp.getCacheTableName()
           cache_obj = SQLCache(kw)
-	if cache_obj:
+        if cache_obj:
           ## set cache expire check interval
           cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval() 
           rd[cache_scope]['cache_plugins'].append(cache_obj)
