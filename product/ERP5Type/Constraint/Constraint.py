@@ -29,11 +29,13 @@
 ##############################################################################
 
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.Interface import Constraint as IConstraint
 
 class Constraint:
     """
       Default Constraint implementation
     """
+    __implements__ = (IConstraint, )
 
     def __init__(self, id=None, description=None, type=None,
                  condition=None, **constraint_definition):
