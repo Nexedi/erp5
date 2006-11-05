@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string> An order.</string> </value>
+            <value> <string>An Accounting Transaction</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_title</string> </value>
+            <value> <string>my_destination_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -207,6 +207,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -247,7 +253,7 @@
               <dictionary>
                 <item>
                     <key> <string>allow_creation</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>allow_jump</string> </key>
@@ -259,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
+                    <value> <string>destination_section</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -285,11 +291,11 @@
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
-                    <value> <string>account</string> </value>
+                    <value> <string>organisation_module</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Account in our accounting</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -364,8 +370,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Account</string>
-                          <string>account</string>
+                          <string>Person</string>
+                          <string>Person</string>
+                        </tuple>
+                        <tuple>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
                         </tuple>
                       </list>
                     </value>
@@ -390,7 +400,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Source Account</string> </value>
+                    <value> <string>Destination Section</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -410,6 +420,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [[\'validation_state\', [\'draft\',\'validated\']]]</string> </value>
         </item>
       </dictionary>
     </pickle>
