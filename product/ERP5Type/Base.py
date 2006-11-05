@@ -2706,6 +2706,20 @@ class Base( CopyContainer,
     dochelper.setDynamicPropertyList(dynamic_property_list)
     return dochelper
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
+  def getWebSectionValue(self):
+    """
+      Returns the current web section (ie. self) though parent acquisition
+      This method has been moved temporatily from WebSection to Base
+      until we understand the bug / issue in acquisition
+    """
+    section = self
+    portal = self.getPortalObject()
+    while section.getPortalType() not in ('Web Site', 'Web Section', ) and\
+          section is not portal:
+      section = section.aq_parent
+    return section
+
 InitializeClass(Base)
 
 class TempBase(Base):

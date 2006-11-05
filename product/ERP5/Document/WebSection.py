@@ -62,10 +62,15 @@ class WebSection(Domain):
                       )
 
     # Draft - this is being worked on
-    security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
-    def getWebSectionValue(self):
-      """
-        Returns the current web section (ie. self) though containment acquisition
-      """
-      return self
+    # Due to some issues in acquisition, the implementation  of getWebSectionValue
+    # through acquisition by containment does not work for URLs
+    # such as web_site_module/a/b/c/web_page_module/d
+    # getWebSectionValue will return web_site_module/a/b instead
+    # of web_site_module/a/b/c
+    #security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
+    #def getWebSectionValue(self):
+      #"""
+        #Returns the current web section (ie. self) though containment acquisition
+      #"""
+      #return self
 
