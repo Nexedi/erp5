@@ -479,3 +479,8 @@ class ProxyField(ZMIField):
       if proxy_field is not None:
         result = proxy_field.has_value(id)
     return result
+
+  def _generateSubForm(self, value, REQUEST):
+    proxy_field = self.getTemplateField()
+    return proxy_field._generateSubForm(value, REQUEST)
+  
