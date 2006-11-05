@@ -63,7 +63,7 @@ class TALESConstraint(Constraint):
     econtext = createExpressionContext(obj)
     try:
       if not expression(econtext):
-        errors.append(self._generateError(obj, 'Expression was false')
+        errors.append(self._generateError(obj, 'Expression was false'))
     except (ConflictError, CompilerError):
       raise
     except Exception, e:
