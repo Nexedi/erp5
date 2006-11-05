@@ -219,6 +219,7 @@ class TestConstraint(ERP5TypeTestCase):
     sequence.edit(
         constraint=constraint,
     )
+    return constraint
 
   def stepCallCheckConsistency(self, sequence=None, 
                                sequence_list=None, **kw):
@@ -1074,6 +1075,44 @@ class TestConstraint(ERP5TypeTestCase):
     # should be fixed now
     self.assertEquals([], obj.checkConsistency())
     self.failUnless(obj.getPropertyType(prop_name))
+  
+  def test_TALESConstraint(self):
+    """Tests TALESConstraint
+    """
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='TALESConstraint',
+                   id='tales_constraint',
+                   expression='python: object.getTitle() != "foo"')
+    obj = self._makeOne()
+    self.assertEquals([], constraint.checkConsistency(obj))
+    obj.setTitle('foo')
+    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    
+  def test_TALESConstraintInvalidExpression(self):
+    """Tests TALESConstraint with an invalid expression
+    """
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='TALESConstraint',
+                   id='tales_constraint',
+                   expression='python: None / 3') # ValueError
+    obj = self._makeOne()
+    # an error during expression evaluation simply makes a consistency error
+    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+
+    # an error during expression compilation is reraised to the programmer
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='TALESConstraint',
+                   id='tales_constraint',
+                   expression='python: None (" ')
+    from Products.PageTemplates.TALES import CompilerError
+    self.assertRaises(CompilerError, constraint.checkConsistency, obj)
+
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='TALESConstraint',
+                   id='tales_constraint',
+                   expression='error: " ')
+    self.assertRaises(CompilerError, constraint.checkConsistency, obj)
+
 
 if __name__ == '__main__':
     framework()

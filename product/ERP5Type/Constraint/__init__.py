@@ -7,3 +7,4 @@ from PropertyExistence import PropertyExistence
 from CategoryExistence import CategoryExistence
 from PortalTypeClass import PortalTypeClass
 from CategoryAcquiredMembershipArity import CategoryAcquiredMembershipArity
+from TALESConstraint import TALESConstraint
