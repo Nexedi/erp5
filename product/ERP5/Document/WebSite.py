@@ -203,7 +203,7 @@ class WebSite(Domain):
         user = portal.acl_users.getUserById(self.getWebmaster())
         if user is not None:
           old_manager = getSecurityManager()
-          newSecurityManager(get_request(), user)
+          newSecurityManager(get_request(), user) # Should be cached per request XXX
         document = self.WebSite_getDocumentValue(portal, name)
         request[CACHE_KEY][name] = document
         if user is not None:
