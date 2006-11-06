@@ -72,6 +72,7 @@
 \n
 commission_ratio = context.getDiscountRatio()\n
 commission_price = context.getDiscount()\n
+\n
 if commission_ratio is not None and commission_ratio !=0 and commission_price is not None and commission_price !=0:\n
   price = None\n
 if commission_ratio == 0 or commission_price == 0:\n
@@ -79,7 +80,7 @@ if commission_ratio == 0 or commission_price == 0:\n
 if commission_ratio is None and commission_price is None:\n
   price = round(price,0)\n
 \n
-comission_value = 0\n
+commission_value = 0\n
 if commission_ratio is not None:\n
   commission_value = commission_ratio * price\n
 \n
@@ -155,7 +156,6 @@ return quantity\n
                             <string>commission_price</string>
                             <string>None</string>
                             <string>round</string>
-                            <string>comission_value</string>
                             <string>commission_value</string>
                             <string>quantity</string>
                           </tuple>
