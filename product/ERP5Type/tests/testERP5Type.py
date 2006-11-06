@@ -376,7 +376,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         return cached_var
       
       from Products.ERP5Type.Cache import CachingMethod, clearCache
-      cache1 = CachingMethod(_cache, id='testing_cache')
+      cache = CachingMethod(_cache, id='testing_cache')
       
       self.assertEquals(cache(), cached_var)
       
