@@ -36,10 +36,13 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
 from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 try:
   from transaction import get as get_transaction
@@ -1044,3 +1047,57 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     self.assertEquals(0, len(folder.searchFolder()))
+
+  def test_ProxyRolesInRestrictedPython(self, quiet=quiet, run=run_all_test):
+    """test that proxy roles apply to catalog queries within python scripts
+    """
+    if not run: return
+    login = PortalTestCase.login
+    perm = 'View'
+
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
+    uf._doAddUser('bob', '', ['Member'], [])
+    # create restricted object
+    login(self, 'alice')
+    folder = self.getOrganisationModule()
+    ob = folder.newContent()
+    # make sure permissions are correctly set
+    folder.manage_permission('Access contents information', ['Member'], 1)
+    folder.manage_permission(perm, ['Member'], 1)
+    ob.manage_permission('Access contents information', ['Member'], 1)
+    ob.manage_permission(perm, ['Manager'], 0)
+    get_transaction().commit()
+    self.tic()
+    # check access
+    self.assertEquals(1, getSecurityManager().checkPermission(perm, folder))
+    self.assertEquals(1, getSecurityManager().checkPermission(perm, ob))
+    login(self, 'bob')
+    self.assertEquals(1, getSecurityManager().checkPermission(perm, folder))
+    self.assertEquals(None, getSecurityManager().checkPermission(perm, ob))
+    # add a script that calls a catalog method
+    login(self, 'alice')
+    script = createZODBPythonScript(self.getPortal().portal_skins.custom,
+        'catalog_test_script', '', "return len(context.searchFolder())")
+
+    # test without proxy role
+    self.assertEquals(1, folder.catalog_test_script())
+    login(self, 'bob')
+    self.assertEquals(0, folder.catalog_test_script())
+
+    # test with proxy role and correct role
+    login(self, 'alice')
+    script.manage_proxy(['Manager'])
+    self.assertEquals(1, folder.catalog_test_script())
+    login(self, 'bob')
+    self.assertEquals(1, folder.catalog_test_script())
+
+    # test with proxy role and wrong role
+    login(self, 'alice')
+    script.manage_proxy(['Assignor'])
+    # proxy roles must overwrite the user's roles, even if he is the owner
+    # of the script
+    self.assertEquals(0, folder.catalog_test_script())
+    login(self, 'bob')
+    self.assertEquals(0, folder.catalog_test_script())
+

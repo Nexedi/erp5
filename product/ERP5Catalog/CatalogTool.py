@@ -291,7 +291,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       security_product = getSecurityProduct(self.acl_users)
       if security_product == SECURITY_USING_PAS:
         # We use ERP5Security PAS based authentication
-        result = list( user.getRoles() )
+        try:
+          # check for proxy role in stack
+          eo = getSecurityManager()._context.stack[-1]
+          proxy_roles = getattr(eo,'_proxy_roles',None)
+        except IndexError:
+          proxy_roles = None
+        if proxy_roles:
+          # apply proxy roles
+          user = eo.getOwner()
+          result = list( proxy_roles )
+        else:
+          result = list( user.getRoles() )
         result.append( 'Anonymous' )
         result.append( 'user:%s' % user.getId() )
         # deal with groups
