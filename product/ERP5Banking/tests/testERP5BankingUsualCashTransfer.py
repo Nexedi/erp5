@@ -148,7 +148,8 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
-    self.counter = self.paris.surface.banque_interne.guichet_1
+    self.counter = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
+    self.counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.openCounterDate(site=self.paris)
     self.openCounter(self.counter)
     self.createCashInventory(source=None, destination=self.usual_cash, currency=self.currency_1,
@@ -198,11 +199,11 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Check inventory in destination vault (counter) before confirm
     """
     # check we don't have banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we don't have coins of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
   def stepCreateUsualCashTransfer(self, sequence=None, sequence_list=None, **kwd):
@@ -424,13 +425,13 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Check that compution of inventory at vault counter is right after confirm and before deliver
     """
     # check we have 0 banknote of 10000 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we will have 5 banknotes of 10000 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 0 coin of 200 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     # check we will have 12 coins of 200 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   def stepDeliverUsualCashTransfer(self, sequence=None, sequence_list=None, **kwd):
@@ -469,11 +470,11 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Check inventory at destination (vault counter) after deliver of the cash transfer
     """
     # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coins of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   ##################################
