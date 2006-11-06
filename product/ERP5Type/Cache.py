@@ -30,9 +30,9 @@ import string
 from time import time
 from AccessControl.SecurityInfo import allow_class
 from AccessControl import getSecurityManager
-#from Products import ERP5Cache
 from zLOG import LOG
 
+DEFAULT_CACHE_SCOPE = 'GLOBAL'
 is_cache_initialized = 0
 
 def initializePortalCachingProperties(self):
@@ -84,7 +84,6 @@ class CacheFactory:
 
     quick_cached = self.quick_cache.get(cache_id, scope)
     if quick_cached is not None:
-      #print "HIT RAM", self.quick_cache
       return quick_cached.getValue()
     else:
       ## not in local, check if it's in shared
@@ -164,19 +163,18 @@ class CachingMethod:
     self.callable_object = callable_object
     self.cache_duration = cache_duration
     self.cache_factory = cache_factory
-
     
   def __call__(self, *args, **kwd):
     """ Call the method or return cached value using appropriate cache plugin """
     ## CachingMethod is  global Zope class and thus we must make sure
     #erp5_site_id = kwd.get('portal_path', ('','erp5'))[1]
-    
+   
     ## cache scope is based on user which is a kwd argument
-    scope = kwd.get('scope', 'GLOBAL')
+    scope = kwd.get('scope', DEFAULT_CACHE_SCOPE)
     
     ## generate unique cache id
     cache_id = self.generateCacheId(self.id, *args, **kwd)
-    
+
     try:
       ## try to get value from cache in a try block 
       ## which is faster than checking for keys
@@ -195,17 +193,25 @@ class CachingMethod:
     
   def generateCacheId(self, method_id, *args, **kwd):
     """ Generate proper cache id based on *args and **kwd  """
-    cache_id = [method_id]    
-    key_list = kwd.keys()
-    key_list.sort()
-    for arg in args:
-      cache_id.append((None, arg))
-    for key in key_list:
-      cache_id.append((key, str(kwd[key])))
-    cache_id = str(cache_id)
-    ## because some cache backends don't allow some chars in cached id we make sure to replace them
-    cache_id = cache_id.translate(self._cache_id_translate_table)
-    return cache_id
+    if args==() and kwd == {}:
+      ## we have static method_id without any argument passed
+      ## so we return it as it is.
+      return str(method_id)
+    else:
+      ## generate cache id out of arguments passed.
+      ## depending on arguments we may have different 
+      ## cache_id for same method_id 
+      cache_id = [method_id]    
+      key_list = kwd.keys()
+      key_list.sort()
+      for arg in args:
+        cache_id.append((None, arg))
+      for key in key_list:
+        cache_id.append((key, str(kwd[key])))
+      cache_id = str(cache_id)
+      ## because some cache backends don't allow some chars in cached id we make sure to replace them
+      cache_id = cache_id.translate(self._cache_id_translate_table)
+      return cache_id
                 
 allow_class(CachingMethod)
 
@@ -235,10 +241,20 @@ def disableReadOnlyTransactionCache(context):
 ## TODO: Check if it make sense to keep them any more ##
 ########################################################
 
-def clearCache(method_id=None):
+def clearCache(method_id = None, scope = DEFAULT_CACHE_SCOPE):
   """
   Clear the cache.
   If method_id is specified, it clears the cache only for this method,
-  otherwise, it clears the whole cache.
+  otherwise, it clears the whole cache. Make sure to specify scope otherwise
+  default one will be used.
   """
-  pass 
+  if method_id is not None:
+    ## clear cache factories and plugins for specified method_id
+    for cf_id, cf_obj in CachingMethod.factories.items():
+      for cp in cf_obj.getCachePluginList():
+        cp.delete(method_id, scope)
+  else:
+    ## clear (flush) whole cache
+    for cf_obj in CachingMethod.factories.values():
+      for cp in cf_obj.getCachePluginList():
+        cp.clearCache()
