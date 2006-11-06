@@ -141,5 +141,7 @@ class DistributedRamCache(BaseCache):
     cache_storage.flush_all()
     
   def clearCacheForScope(self, scope):
-    ## memcached doesn't support namespaces (cache scopes) neither getting cached key list 
-    pass       
+    ## memcached doesn't support namespaces (cache scopes) neither getting cached key list.
+    ## Becasue we've explicitly called this function instead of clearing specific cache 
+    ## scope we have no choice but clear whole cache.
+    self.clearCache()       
