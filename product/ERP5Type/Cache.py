@@ -241,20 +241,9 @@ def disableReadOnlyTransactionCache(context):
 ## TODO: Check if it make sense to keep them any more ##
 ########################################################
 
-def clearCache(method_id = None, scope = DEFAULT_CACHE_SCOPE):
-  """
-  Clear the cache.
-  If method_id is specified, it clears the cache only for this method,
-  otherwise, it clears the whole cache. Make sure to specify scope otherwise
-  default one will be used.
-  """
-  if method_id is not None:
-    ## clear cache factories and plugins for specified method_id
-    for cf_id, cf_obj in CachingMethod.factories.items():
-      for cp in cf_obj.getCachePluginList():
-        cp.delete(method_id, scope)
-  else:
-    ## clear (flush) whole cache
-    for cf_obj in CachingMethod.factories.values():
-      for cp in cf_obj.getCachePluginList():
-        cp.clearCache()
+def clearCache():
+  """Clear the whole cache. """
+  for cf_obj in CachingMethod.factories.values():
+    for cp in cf_obj.getCachePluginList():
+      cp.clearCache()
+
