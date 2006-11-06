@@ -45,9 +45,9 @@ class CacheFactory(XMLObject):
   isPortalContent = 1 
   isRADContent = 1
   
-  allowed_types = ('ERP5 Ram Cache Plugin', 
-                   'ERP5 Distributed Ram Cache Plugin', 
-                   'ERP5 SQL Cache Plugin',
+  allowed_types = ('ERP5 Ram Cache', 
+                   'ERP5 Distributed Ram Cache', 
+                   'ERP5 SQL Cache',
                   )
     
   security = ClassSecurityInfo()

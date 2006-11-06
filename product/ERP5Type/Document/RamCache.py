@@ -26,26 +26,23 @@
 #
 ##############################################################################
 
+
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5.PropertySheet.SortIndex import SortIndex
-from Products.ERP5Type.PropertySheet.BaseCachePlugin import BaseCachePlugin
-from Products.ERP5Type.PropertySheet.SQLCachePlugin import SQLCachePlugin
+from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
 
-class SQLCachePlugin(XMLObject):
+class RamCache(XMLObject):
   """
-  SQLCachePlugin is a Zope (persistent) representation of 
-  the RAM based real SQL cache plugin object.
+  RamCache is a Zope (persistent) representation of 
+  the RAM based real cache plugin object.
   """
-  
-  meta_type = 'ERP5 SQL Cache Plugin'
-  portal_type = 'SQL Cache Plugin'
+  meta_type = 'ERP5 Ram Cache'
+  portal_type = 'Ram Cache'
   isPortalContent = 1
   isRADContent = 1
-  
   allowed_types = ()
     
   security = ClassSecurityInfo()
@@ -58,7 +55,6 @@ class SQLCachePlugin(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
-                    , BaseCachePlugin
                     , SortIndex
-                    , SQLCachePlugin 
+                    , BaseCache 
                     )

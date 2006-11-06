@@ -74,9 +74,9 @@ class CacheTool(BaseTool):
       for cp in cf.getCachePluginList():
         cache_obj = None
         cp_meta_type = cp.meta_type
-        if cp_meta_type == 'ERP5 Ram Cache Plugin':
+        if cp_meta_type == 'ERP5 Ram Cache':
           cache_obj = RamCache()
-        elif cp_meta_type == 'ERP5 Distributed Ram Cache Plugin':
+        elif cp_meta_type == 'ERP5 Distributed Ram Cache':
             ## even thougn we have such plugin in ZODB that doens't mean
             ## we have corresponding memcache module installed
           if 'memcache' in globals().keys():
@@ -85,7 +85,7 @@ class CacheTool(BaseTool):
             ## we don't have memcache python module installed 
             ## thus we can't use DistributedRamCache plugin
             cache_obj = None
-        elif cp_meta_type == 'ERP5 SQL Cache Plugin':
+        elif cp_meta_type == 'ERP5 SQL Cache':
           ## use connection details from 'erp5_sql_transactionless_connection' ZMySLQDA object
           connection_string = self.erp5_sql_transactionless_connection.connection_string
           kw = self.parseDBConnectionString(connection_string)

@@ -1,4 +1,4 @@
-class BaseCachePlugin:
+class BaseCache:
   """
   """
 

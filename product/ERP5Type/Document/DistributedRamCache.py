@@ -26,23 +26,25 @@
 #
 ##############################################################################
 
-
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5.PropertySheet.SortIndex import SortIndex
-from Products.ERP5Type.PropertySheet.BaseCachePlugin import BaseCachePlugin
+from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
+from Products.ERP5Type.PropertySheet.DistributedRamCache import DistributedRamCache
 
-class RamCachePlugin(XMLObject):
+class DistributedRamCache(XMLObject):
   """
-  RamCachePlugin is a Zope (persistent) representation of 
-  the RAM based real cache plugin object.
+  DistributedRamCache is a Zope (persistent) representation of 
+  the Distributed RAM Cache real cache plugin object.
   """
-  meta_type = 'ERP5 Ram Cache Plugin'
-  portal_type = 'Ram Cache Plugin'
+  
+  meta_type='ERP5 Distributed Ram Cache'
+  portal_type='Distributed Ram Cache'
   isPortalContent = 1
   isRADContent = 1
+  
   allowed_types = ()
     
   security = ClassSecurityInfo()
@@ -55,6 +57,7 @@ class RamCachePlugin(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
+                    , BaseCache
                     , SortIndex
-                    , BaseCachePlugin 
+                    , DistributedRamCache 
                     )

@@ -1,4 +1,4 @@
-class DistributedRamCachePlugin:
+class DistributedRamCache:
   """
   """
 

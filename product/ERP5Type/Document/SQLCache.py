@@ -28,20 +28,21 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
+from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5.PropertySheet.SortIndex import SortIndex
-from Products.ERP5Type.PropertySheet.BaseCachePlugin import BaseCachePlugin
-from Products.ERP5Type.PropertySheet.DistributedRamCachePlugin import DistributedRamCachePlugin
+from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
+from Products.ERP5Type.PropertySheet.SQLCache import SQLCache
 
-class DistributedRamCachePlugin(XMLObject):
+class SQLCache(XMLObject):
   """
-  DistributedRamCachePlugin is a Zope (persistent) representation of 
-  the Distributed RAM Cache real cache plugin object.
+  SQLCache is a Zope (persistent) representation of 
+  the RAM based real SQL cache plugin object.
   """
   
-  meta_type='ERP5 Distributed Ram Cache Plugin'
-  portal_type='Distributed Ram Cache Plugin'
+  meta_type = 'ERP5 SQL Cache'
+  portal_type = 'SQL Cache'
   isPortalContent = 1
   isRADContent = 1
   
@@ -57,7 +58,7 @@ class DistributedRamCachePlugin(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
-                    , BaseCachePlugin
+                    , BaseCache
                     , SortIndex
-                    , DistributedRamCachePlugin 
+                    , SQLCache 
                     )
