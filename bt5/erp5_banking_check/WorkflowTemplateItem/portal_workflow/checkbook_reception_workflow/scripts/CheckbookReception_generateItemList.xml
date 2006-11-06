@@ -114,7 +114,7 @@ for line in line_list:\n
         reference_range_max = str(int(float(reference_range_min)) + int(check_quantity)-1)\n
         item.setReferenceRangeMax(reference_range_max)\n
         item.setTitle(\'%s - %s\' % (reference_range_min, reference_range_max))\n
-        reference_range_min = reference_range_max\n
+        reference_range_min = str(int(reference_range_max) + 1)\n
         item.setCheckAmount(check_amount)\n
       else:\n
         item.setReference(reference_range_min)\n

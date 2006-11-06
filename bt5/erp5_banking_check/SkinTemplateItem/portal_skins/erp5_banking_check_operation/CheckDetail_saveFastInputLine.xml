@@ -72,6 +72,9 @@
 
 # get the list of movement we need to create\n
 \n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
 # First call the first scripts wich check many things\n
 error_value = context.CheckDelivery_generateCheckDetailInputDialog(\n
                                      listbox=listbox,batch_mode=1,**kw)\n
@@ -144,11 +147,11 @@ for line in listbox:\n
 \n
 \n
 request  = context.REQUEST\n
-message = "No%%20Lines%%20Created"\n
+message = N_("No+Lines+Created.")\n
 if number_of_line_created>0:\n
-  message = "Lines%%20Created"\n
+  message = N_("Lines+Created.")\n
 redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                , \'portal_status_message=%s%%20Created\' % message\n
+                                , \'portal_status_message=%s\' % message\n
                                 )\n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
 
@@ -217,9 +220,11 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                           <tuple>
                             <string>listbox</string>
                             <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>_apply_</string>
                             <string>error_value</string>
                             <string>request</string>
                             <string>None</string>

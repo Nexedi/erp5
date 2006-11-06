@@ -452,7 +452,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>StopPaymentModule_viewStopPaymentDeliveryList</string> </value>
+                    <value> <string>StopPaymentModule_viewStopPaymentList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
