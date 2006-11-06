@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Cache import clearCache
 
 class Priority:
   """ names for priorities """
@@ -63,3 +64,22 @@ class Preference( Folder ):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _clearCache(self):
+    """Clear caches used by methods of this preference
+    # TODO: clear different caches according to the preference priority
+    """
+    clearCache()
+
+  def _edit(self, **kw):
+    """edit and clear all caches"""
+    self._clearCache()
+    Folder._edit(self, **kw)
+
+  def enable(self):
+    """Workflow method"""
+    self._clearCache()
+
+  def disable(self):
+    """Workflow method"""
+    self._clearCache()
+  

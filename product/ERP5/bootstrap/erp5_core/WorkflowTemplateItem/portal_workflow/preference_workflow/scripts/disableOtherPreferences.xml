@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import clearCache\n
-from Products.ERP5Type.Message import Message\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
 \n
 pref = sci.object\n
 portal = sci.getPortal()\n
@@ -91,8 +90,6 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
                                    mapping={\'preference_title\': context.getTitle()}) )\n
   except \'Unauthorized\', a :\n
     LOG("not authorized to deactivate %s"%p)\n
-\n
-clearCache(method_id="PreferenceTool.CachingMethod.")\n
 </string> </value>
         </item>
         <item>
