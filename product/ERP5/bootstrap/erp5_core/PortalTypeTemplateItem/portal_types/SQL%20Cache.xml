@@ -54,17 +54,18 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Distributed Cache Plugin</string> </value>
+            <value> <string>ERP5 SQL Cache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string>\n
-  DistributedRamCachePlugin is a Zope representation of the Distributed RAM Cache real cache plugin object\n
-</string> </value>
+  SQLCache is a Zope (persistent) representation of \n
+  the RAM based real SQL cache plugin object.\n
+  </string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDistributedRamCachePlugin</string> </value>
+            <value> <string>addSQLCache</string> </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -74,7 +75,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Distributed Ram Cache Plugin</string> </value>
+            <value> <string>SQL Cache</string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

@@ -12,9 +12,9 @@
   <item>Domain</item>
  </portal_type>
  <portal_type id="Cache Factory">
-  <item>Distributed Ram Cache Plugin</item>
-  <item>Ram Cache Plugin</item>
-  <item>SQL Cache Plugin</item>
+  <item>Ram Cache</item>
+  <item>SQL Cache</item>
+  <item>Distributed Ram Cache</item>
  </portal_type>
  <portal_type id="Cache Tool">
   <item>Cache Factory</item>
