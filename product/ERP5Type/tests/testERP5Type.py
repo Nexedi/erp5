@@ -18,6 +18,7 @@ from Products.ERP5Type.Cache import CachingMethod, clearCache
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
 from Products.ERP5Type.Utils import removeLocalPropertySheet
+from AccessControl.SecurityManagement import newSecurityManager
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -115,6 +116,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       self.getCategoryTool().region ]:
         module.manage_delObjects(list(module.objectIds()))
       get_transaction().commit()
+
+    def loginWithNoRole(self, quiet=0, run=run_all_test):
+      uf = self.getPortal().acl_users
+      uf._doAddUser('ac', '', [], [])
+      user = uf.getUserById('ac').__of__(uf)
+      newSecurityManager(None, user)
 
     def getRandomString(self):
       return str(randint(-10000000,100000000))
@@ -240,7 +247,16 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       b = o.newContent(id=2, portal_type="Telephone")
       self.assertEquals(b.isTempObject(), 1)
       self.assertEquals(b.getId(), str(2))
-      
+
+      # check we can create temp object without specific roles/permissions
+      self.logout()
+      self.loginWithNoRole()
+      o = newTempOrganisation(portal,'b')
+      self.assertEquals(o.isTempObject(), 1)
+      a = o.newContent(portal_type = 'Telephone')
+      self.assertEquals(a.isTempObject(), 1)
+      self.logout()
+      self.login()
 
     def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
       """

@@ -200,9 +200,13 @@ class ERP5TypeInformation( FactoryTypeInformation,
         Call the init_script for the portal_type.
         Returns the object.
         """
-        # This is part is copied from CMFCore/TypesTool
-        ob = FactoryTypeInformation.constructInstance(
-                                             self, container, id, *args, **kw)
+        # This is part is copied from CMFCore/TypesTool/constructInstance
+        # In case of temp object, we don't want to check security
+        if not (hasattr(container, 'isTempObject') and container.isTempObject())\
+               and not self.isConstructionAllowed(container):
+            raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
+        ob = self._constructInstance(container, id, *args, **kw)
+        ob = self._finishConstruction(ob)
 
         # Only try to assign roles to security groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
