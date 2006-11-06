@@ -166,7 +166,15 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     self.check_1 = self.createCheck(id='check_1',
                                     reference='50',
                                     checkbook=self.checkbook_1)
-
+    self.check_2 = self.createCheck(id='check_2',
+                                    reference='51',
+                                    checkbook=self.checkbook_1)
+    self.check_3 = self.createCheck(id='check_3',
+                                    reference='52',
+                                    checkbook=self.checkbook_1)
+    self.check_4 = self.createCheck(id='check_4',
+                                    reference='53',
+                                    checkbook=self.checkbook_1)
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -232,6 +240,45 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     self.check_payment.setSourceReference(self.check_payment.Baobab_getUniqueReference())
     self.assertNotEqual(self.check_payment.getSourceReference(), None)
     self.assertNotEqual(self.check_payment.getSourceReference(), '')
+
+  def stepValidateAnotherCheckPaymentWorks(self, sequence=None, sequence_list=None, **kwd):
+    """ Make sure we can validate another check payment """
+    self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="51")
+
+  def stepValidateAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
+    """ Make sure that we can not validate another check payment """
+    self.createAnotherCheckPayment(sequence=sequence,will_fail=1,number="52")
+
+  def stepValidateAnotherCheckPaymentFailsAgain(self, sequence=None, sequence_list=None, **kwd):
+    """ Make sure that we can not validate another check payment """
+    self.createAnotherCheckPayment(sequence=sequence,will_fail=1,number="53")
+
+  def createAnotherCheckPayment(self, will_fail=0, sequence=None, number=None,**kwd):
+    new_payment = self.check_payment_module.newContent(portal_type = 'Check Payment',
+                                         destination_payment_value = self.bank_account_1,
+                                         # aggregate_value = self.check_1,
+                                         resource_value = self.currency_1,
+                                         aggregate_free_text = number,
+                                         # source_value = self.bi_counter,
+                                         start_date = DateTime().Date(),
+                                         source_total_asset_price = 90000.0)
+    new_payment._setSource(self.bi_counter.getRelativeUrl())
+    self.workflow_tool.doActionFor(new_payment, 'plan_action', 
+                                   wf_id='check_payment_workflow')
+    self.assertEqual(new_payment.getSimulationState(), 'planned')
+    if will_fail:
+      self.assertRaises(ValidationFailed,self.workflow_tool.doActionFor, 
+                        new_payment, 'confirm_action', 
+                        wf_id='check_payment_workflow')
+      self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
+                                     wf_id='check_payment_workflow')
+    else:
+      self.workflow_tool.doActionFor( 
+                        new_payment, 'confirm_action', 
+                        wf_id='check_payment_workflow')
+      self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
+                                     wf_id='check_payment_workflow')
+
 
   def stepCheckConsistency(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -332,8 +379,11 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                       'CreateCheckPayment Tic ' \
                       'CheckConsistency Tic ' \
-                      'SendToCounter Tic ' \
+                      'stepValidateAnotherCheckPaymentWorks Tic ' \
+                      'SendToCounter ' \
+                      'stepValidateAnotherCheckPaymentFails Tic ' \
                       'CheckConfirmedInventory ' \
+                      'stepValidateAnotherCheckPaymentFailsAgain Tic ' \
                       'InputCashDetails Tic ' \
                       'Pay Tic ' \
                       'CheckFinalInventory '
