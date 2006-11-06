@@ -63,7 +63,7 @@ class DistributedRamCache(BaseCache):
     except ImportError:
       request = None
       
-    if request:
+    if request is not None:
       ## Zope/ERP5 environment
       memcache_conn = request.get('_erp5_memcache_connection', None)
       if not memcache_conn:

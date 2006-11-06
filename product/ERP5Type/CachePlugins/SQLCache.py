@@ -124,7 +124,7 @@ class SQLCache(BaseCache):
     except ImportError:
       request = None
       
-    if request:
+    if request is not None:
       ## Zope/ERP5 environment
       dbConn = request.get('_erp5_dbcache_connection', None)
       if not dbConn:

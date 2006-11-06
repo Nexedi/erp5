@@ -110,7 +110,7 @@ class CacheTool(BaseTool):
     except:
       pass
     self.erp5_sql_transactionless_connection.manage_test(my_query)
-    if REQUEST:
+    if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache table successfully created.')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'parseDBConnectionString')
@@ -169,7 +169,7 @@ class CacheTool(BaseTool):
     for key,item in self.getCacheFactoryList().items():
       if len(item['cache_plugins'])!=0:
         CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
-    if REQUEST:
+    if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache updated.')
     
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
@@ -179,7 +179,7 @@ class CacheTool(BaseTool):
     for cf in ram_cache_root:
       for cp in ram_cache_root[cf].getCachePluginList():
         cp.clearCache()
-    if REQUEST:
+    if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache cleared.')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactory')
@@ -188,7 +188,7 @@ class CacheTool(BaseTool):
     ram_cache_root = self.getRamCacheRoot()
     if ram_cache_root.has_key(cache_factory_id):
       ram_cache_root[cache_factory_id].clearCache()
-    if REQUEST:
+    if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache factory %s cleared.' %cache_factory_id)
     
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactoryScope')
@@ -197,6 +197,6 @@ class CacheTool(BaseTool):
     ram_cache_root = self.getRamCacheRoot()
     if ram_cache_root.has_key(cache_factory_id):
       ram_cache_root[cache_factory_id].clearCacheForScope(scope)
-    if REQUEST:
+    if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache factory scope %s cleared.' %cache_factory_id)  
   
