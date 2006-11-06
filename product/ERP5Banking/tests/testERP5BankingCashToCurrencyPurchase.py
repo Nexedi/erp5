@@ -223,7 +223,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     Create a cash sorting document and check it
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
-    self.cash_to_currency_purchase = self.cash_to_currency_purchase_module.newContent(id='cash_to_currency_purchase_1', portal_type='Cash To Currency Purchase', source_value=self.guichet, destination_value=None, resource_value = self.currency_2, source_total_asset_price=100.0, discount = 1000.0, quantity = 62000)
+    self.cash_to_currency_purchase = self.cash_to_currency_purchase_module.newContent(id='cash_to_currency_purchase_1', portal_type='Cash To Currency Purchase', source_value=self.guichet, destination_value=None, resource_value = self.currency_2, source_total_asset_price=100.0)
     # execute tic
     self.stepTic()
     # check we have only one cash sorting
@@ -237,6 +237,14 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     # check that its destination is guichet_1
     self.assertEqual(self.cash_to_currency_purchase.getDestination(), None)
     self.setDocumentSourceReference(self.cash_to_currency_purchase)
+    # Check carrefully the script CurrencyPurchase_getQuantity
+    script = self.cash_to_currency_purchase.CurrencyPurchase_getQuantity
+    self.assertEqual(script(),65000)
+    self.cash_to_currency_purchase.setDiscountRatio(0.01)
+    self.assertEqual(script(),64350)
+    self.cash_to_currency_purchase.setDiscountRatio(None)
+    self.cash_to_currency_purchase.setDiscount(3000)
+    self.assertEqual(script(),62000)
 
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
