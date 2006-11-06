@@ -483,4 +483,3 @@ class ProxyField(ZMIField):
   def _generateSubForm(self, value, REQUEST):
     proxy_field = self.getTemplateField()
     return proxy_field._generateSubForm(value, REQUEST)
-  
