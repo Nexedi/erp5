@@ -43,7 +43,9 @@ Project | task_list
 Project | view
 Requirement Document | detailed_report
 Requirement Document | fast_input
+Requirement Document | history
 Requirement Document | list_ui
+Requirement Document | metadata
 Requirement Document | orphaned
 Requirement Document | print_pdf
 Requirement Document | project_mapping
@@ -55,6 +57,8 @@ Requirement Module | print_pdf
 Requirement Module | sort_on
 Requirement Module | view
 Requirement | fast_input
+Requirement | history
+Requirement | metadata
 Requirement | print_pdf
 Requirement | view
 Sale Order Line | line_profile
