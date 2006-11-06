@@ -37,6 +37,9 @@ from Globals import get_request
 
 from zLOG import LOG
 
+from Products.ERP5.Document.WebSite import reserved_name_dict, reserved_name_dict_init, CACHE_KEY, WEBSITE_USER
+WEBSECTION_KEY = 'web_section_value'
+
 class WebSection(Domain):
     """
       A Web Section is a Domain with an extended API intended to
@@ -74,3 +77,69 @@ class WebSection(Domain):
       #"""
       #return self
 
+    def _aq_dynamic(self, name):
+      """
+        Try to find a suitable document based on the
+        web site local naming policies as defined by
+        the WebSite_getDocumentValue script
+      """
+      global reserved_name_dict_init
+      global reserved_name_dict
+      request = self.REQUEST
+      # Register current web site physical path for later URL generation
+      if not request.has_key(WEBSECTION_KEY):
+        request[WEBSECTION_KEY] = self.getPhysicalPath()
+        # Normalize web parameter in the request
+        # Fix common user mistake and transform '1' string to boolean
+        for web_param in ['ignore_layout', 'editable_mode']:
+          if hasattr(request, web_param):
+            if getattr(request, web_param, None) in ('1', 1, True):
+              request.set(web_param, True)
+            else:
+              request.set(web_param, False)
+      # First let us call the super method
+      dynamic = Domain._aq_dynamic(self, name)
+      if dynamic is not None:
+        return dynamic
+      # Do some optimisation here for names which can not be names of documents
+      if  reserved_name_dict.has_key(name) \
+          or name.startswith('_') or name.startswith('portal_')\
+          or name.startswith('aq_') or name.startswith('selection_') \
+          or name.startswith('sort-') or name.startswith('WebSite_') \
+          or name.startswith('WebSection_') or name.startswith('Base_'):
+        return None
+      if not reserved_name_dict_init:
+        # Feed reserved_name_dict_init with skin names
+        portal = self.getPortalObject()
+        for skin_folder in portal.portal_skins.objectValues():
+          for id in skin_folder.objectIds():
+            reserved_name_dict[id] = 1
+        for id in portal.objectIds():
+          reserved_name_dict[id] = 1
+        reserved_name_dict_init = 1
+      #LOG('aq_dynamic name',0, name)
+      if not request.has_key(CACHE_KEY):
+        request[CACHE_KEY] = {}
+      elif request[CACHE_KEY].has_key(name):
+        return request[CACHE_KEY][name]
+      try:
+        portal = self.getPortalObject()
+        # Use the webmaster identity to find documents
+        if request[CACHE_KEY].has_key(WEBSITE_USER):
+          user = request[CACHE_KEY][WEBSITE_USER] # Retrieve user from request cache
+        else:
+          user = portal.acl_users.getUserById(self.getWebmaster())
+          request[CACHE_KEY][WEBSITE_USER] = user # Cache user per request
+        if user is not None:
+          old_manager = getSecurityManager()
+          newSecurityManager(get_request(), user)
+        document = self.WebSite_getDocumentValue(portal, name)
+        request[CACHE_KEY][name] = document
+        if user is not None:
+          setSecurityManager(old_manager)
+      except:
+        # Cleanup non recursion dict in case of exception
+        if request[CACHE_KEY].has_key(name):
+          del request[CACHE_KEY][name]
+        raise
+      return document

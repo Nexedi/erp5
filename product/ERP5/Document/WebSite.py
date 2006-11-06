@@ -46,9 +46,9 @@ from ZPublisher import BeforeTraverse
 
 from zLOG import LOG
 
-
-
 WEBSITE_KEY = 'web_site_value'
+WEBSECTION_KEY = 'web_section_value'
+WEBSITE_USER = 'web_site_user'
 
 class WebSiteTraversalHook(Persistent):
   """
@@ -67,7 +67,7 @@ class WebSiteTraversalHook(Persistent):
     if type(path) is type(''):
       path = path.split( '/')
 
-    website_path = self._v_request.get(WEBSITE_KEY, None)
+    website_path = self._v_request.get(WEBSECTION_KEY, self._v_request.get(WEBSITE_KEY, None))
     if website_path:
       website_path = tuple(website_path)    # Make sure all path are tuples
       path = tuple(path)                    # Make sure all path are tuples
@@ -110,6 +110,19 @@ Domain_getattr = Domain.inheritedAttribute('__getattr__')
 
 # Use a request key to store access attributes and prevent infinite recursion
 CACHE_KEY = 'web_site_aq_cache'
+reserved_name_dict = { 'getApplicableLayout' : 1,
+                       'getLayout' : 1,
+                       'Localizer' : 1,
+                       'field_render' : 1,
+                       'getListItemUrl' : 1,
+                       'getLocalPropertyManager' : 1,
+                       'getOrderedGlobalActionList' : 1,
+                       'allow_discussion' : 1,
+                       'im_func' : 1,
+                       'id' : 1,
+                       'method_id' : 1,
+                       'role_map' : 1,  }
+reserved_name_dict_init = 0
 
 class WebSite(Domain):
     """
@@ -171,28 +184,41 @@ class WebSite(Domain):
         web site local naming policies as defined by
         the WebSite_getDocumentValue script
       """
+      global reserved_name_dict_init
+      global reserved_name_dict
       request = self.REQUEST
-      # Normalize web parameter in the request
-      # Fix common user mistake and transform '1' string to boolean
-      for web_param in ['ignore_layout', 'editable_mode']:
-        if hasattr(request, web_param):
-          if getattr(request, web_param, None) in ('1', 1, True):
-            request.set(web_param, True)
-          else:
-            request.set(web_param, False)
       # Register current web site physical path for later URL generation
       if not request.has_key(WEBSITE_KEY):
         request[WEBSITE_KEY] = self.getPhysicalPath()
+        # Normalize web parameter in the request
+        # Fix common user mistake and transform '1' string to boolean
+        for web_param in ['ignore_layout', 'editable_mode']:
+          if hasattr(request, web_param):
+            if getattr(request, web_param, None) in ('1', 1, True):
+              request.set(web_param, True)
+            else:
+              request.set(web_param, False)
       # First let us call the super method
       dynamic = Domain._aq_dynamic(self, name)
       if dynamic is not None:
         return dynamic
       # Do some optimisation here for names which can not be names of documents
-      if name.startswith('_') or name.startswith('portal_')\
+      if  reserved_name_dict.has_key(name) \
+          or name.startswith('_') or name.startswith('portal_')\
           or name.startswith('aq_') or name.startswith('selection_') \
-          or name.startswith('sort-') or name == 'getLayout' \
-          or name == 'getListItemUrl' or name.startswith('WebSite_'):
+          or name.startswith('sort-') or name.startswith('WebSite_') \
+          or name.startswith('WebSection_') or name.startswith('Base_'):
         return None
+      if not reserved_name_dict_init:
+        # Feed reserved_name_dict_init with skin names
+        portal = self.getPortalObject()
+        for skin_folder in portal.portal_skins.objectValues():
+          for id in skin_folder.objectIds():
+            reserved_name_dict[id] = 1
+        for id in portal.objectIds():
+          reserved_name_dict[id] = 1
+        reserved_name_dict_init = 1
+      #LOG('aq_dynamic name',0, name)
       if not request.has_key(CACHE_KEY):
         request[CACHE_KEY] = {}
       elif request[CACHE_KEY].has_key(name):
@@ -200,10 +226,14 @@ class WebSite(Domain):
       try:
         portal = self.getPortalObject()
         # Use the webmaster identity to find documents
-        user = portal.acl_users.getUserById(self.getWebmaster())
+        if request[CACHE_KEY].has_key(WEBSITE_USER):
+          user = request[CACHE_KEY][WEBSITE_USER] # Retrieve user from request cache
+        else:
+          user = portal.acl_users.getUserById(self.getWebmaster())
+          request[CACHE_KEY][WEBSITE_USER] = user # Cache user per request
         if user is not None:
           old_manager = getSecurityManager()
-          newSecurityManager(get_request(), user) # Should be cached per request XXX
+          newSecurityManager(get_request(), user)
         document = self.WebSite_getDocumentValue(portal, name)
         request[CACHE_KEY][name] = document
         if user is not None:
