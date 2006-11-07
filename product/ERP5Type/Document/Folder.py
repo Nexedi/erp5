@@ -312,34 +312,6 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
                     , PropertySheet.Folder
                     )
 
-  # CMF Factory Type Information
-  factory_type_information = \
-         { 'id'           : portal_type
-         , 'meta_type'    : meta_type
-         , 'description'  : """\
-Folders allow to store a large number of documents (1,000,000 should not
-be a problem)."""
-         , 'icon'     : 'folder_icon.gif'
-         , 'product'  : 'ERP5Type'
-         , 'factory'  : 'addFolder'
-         , 'filter_content_types' : 0
-         , 'immediate_view' : 'Folder_viewContentList'
-         , 'actions'  :
-        ( { 'id'    : 'view'
-          , 'name'    : 'View'
-          , 'action'  : 'Folder_viewContentList'
-          , 'permissions'   : (Permissions.View,)
-          , 'category'  : 'object_view'
-          }
-        , { 'id'    : 'list'
-          , 'name'    : 'List'
-          , 'action'  : 'Folder_viewContentList'
-          , 'permissions'   : (Permissions.View,)
-          , 'category'  : 'object_view'
-          }
-        )
-        }
-
   # Class inheritance fixes
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   edit = Base.edit
