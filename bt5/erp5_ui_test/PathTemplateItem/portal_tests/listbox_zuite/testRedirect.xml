@@ -72,6 +72,7 @@
 <tr><td rowspan="1" colspan="3">Test ListBox Redirections</td></tr>\n
 </thead><tbody>\n
 \n
+\n
 <!--\n
   === PART 0 ===\n
   Initialize the test.\n
@@ -101,7 +102,7 @@
 \n
 <!--\n
   === PART 1 ===\n
-  Test that cover bug #372 (Wrong redirect after listbox sort).\n
+  Test which cover bug #372 (Wrong redirect after listbox sort).\n
     1. Go to a listbox in an alternate view (= not the default view).\n
     2. Sort listbox lines by title.\n
     3. Test that we are redirected to the right view, not the default.\n
@@ -140,13 +141,240 @@
 \n
 <!--\n
   === PART 2 ===\n
-  Test that cover bug #206 (Redirection when changing the listbox display mode are broken in view mode).\n
+  Test which cover bug #497 (Page Flicker in Listbox is not tested against redirection).\n
+    0. Create 10 sublines.\n
+    1. Go to a listbox in an alternate view (= not the default view).\n
+    2. Go to next page.\n
+    3. Test that we are redirected to the right view, not the default.\n
+    4. Go to last page.\n
+    5. Test that we are redirected to the right view, not the default.\n
+    6. Go to previous page.\n
+    7. Test that we are redirected to the right view, not the default.\n
+    8. Go to first page.\n
+    9. Test that we are redirected to the right view, not the default.\n
+-->\n
+<!-- Create sublines -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_createObjects</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Go to next and verify -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>1 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyLocation</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Go to last and verify -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>2 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>3</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>5</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>4 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyLocation</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Go to previous and verify -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>4 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>9</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyLocation</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Go to first and verify -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>3 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>6</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>7</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>8</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>1 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyLocation</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifySelected</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>1 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>2</td>\n
+</tr>\n
+\n
+\n
+<!--\n
+  === PART 3 ===\n
+  Test which cover bug #206 (Redirection when changing the listbox display mode are broken in view mode).\n
     1. Enable multiple display mode on listbox of an alternate view (= not the default view).\n
     2. Go to the alternative view.\n
     3. Change listbox display mode.\n
     4. Test that we are redirected to the right view, not the default.\n
 -->\n
-<!-- START of code strongly inspired (to not said copied) by listbox_zuite/testDomainTree test-->\n
+<!-- START of code strongly inspired by (to not said "copied from") listbox_zuite/testDomainTree test.\n
+           Don\'t forget to update the code below if listbox_zuite/testDomainTree change. -->\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/0/Foo_viewRelationField/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_category%7CFoo%20Category</td>\n
@@ -219,6 +447,7 @@
   <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
   <td></td>\n
 </tr>\n
+\n
 \n
 \n
 </tbody>\n

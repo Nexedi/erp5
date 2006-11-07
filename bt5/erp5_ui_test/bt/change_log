@@ -1,3 +1,6 @@
+2006-11-07 Kevin
+* New listbox redirection tests.
+
 2006-11-02 aurel
 * Call sleep while waiting for activities thus we  reduce cpu and mysql usage to let activities run
 
