@@ -90,12 +90,12 @@ class OOoBuilder:
     except RuntimeError:
       zf = ZipFile(self._document, mode='a')
     try:
-	    # remove the file first if it exists
-	    fi = zf.getinfo(filename)
-	    zf.filelist.remove( fi )
+      # remove the file first if it exists
+      fi = zf.getinfo(filename)
+      zf.filelist.remove( fi )
     except KeyError:
-	    # This is a new file
-	    pass
+      # This is a new file
+      pass
     zf.writestr(filename, stream)
     zf.close()
   
@@ -146,9 +146,6 @@ class OOoBuilder:
           xmlns:metal='http://xml.zope.org/namespaces/metal'
           tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
          office:version='1.0'""")
-
-    """
-    """
 
   security.declarePublic('addFileEntry')
   def addFileEntry(self, full_path, media_type, content=None):
@@ -238,10 +235,10 @@ class OOoParser:
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
     except:
-      raise CorruptedOOoFile
+      raise CorruptedOOoFile()
     # Test the integrity of the file
     if oo_unzipped.testzip() != None:
-      raise CorruptedOOoFile
+      raise CorruptedOOoFile()
 
     # Get the filename
     self.filename = file_descriptor.filename
