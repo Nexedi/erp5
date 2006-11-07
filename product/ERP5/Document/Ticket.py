@@ -54,8 +54,6 @@ class Ticket(Movement):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      # Useless, replace by Arrow
-                      , PropertySheet.SaleOpportunity  
                       , PropertySheet.Arrow
                       , PropertySheet.Price
                       , PropertySheet.Movement
