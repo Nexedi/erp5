@@ -39,6 +39,7 @@ class DublinCore:
             'type'        : 'string',
             'translatable'  : 1,
             'translation_domain' : 'erp5_content',
+            'default'     : '',
             'mode'        : 'w' },
         {   'id'          : 'subject',
             'description' : '',
