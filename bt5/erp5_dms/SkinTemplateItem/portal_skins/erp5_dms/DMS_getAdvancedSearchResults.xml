@@ -83,7 +83,7 @@ args=context.parseSearchString(sstr)\n
 \n
 # if no portal type specified, take all\n
 if not args.has_key(\'portal_type\') or args[\'portal_type\']==():\n
-  args[\'portal_type\']=context.getPortalDocumentTypeList()+(\'Conference\',\'Project\')\n
+  args[\'portal_type\']=context.Base_getSearchableTypeList()\n
 \n
 # process searching by category\n
 cats=[]\n
@@ -108,7 +108,6 @@ if kw.has_key(\'SearchableText\'):\n
   kw[\'full_text.SearchableText\']=kw[\'SearchableText\']\n
   kw.pop(\'SearchableText\')\n
 \n
-# this will go out, most likely\n
 cf=kw.get(\'creation_from\')\n
 ct=kw.get(\'creation_to\')\n
 mf=kw.get(\'modification_from\')\n

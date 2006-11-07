@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>modification_to</string> </value>
+            <value> <string>publication_from</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -315,7 +315,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Modified before</string> </value>
+                    <value> <string>Published after</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -68,11 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>req=context.REQUEST\n
-sstr=context.Base_assembleSearchString()\n
-context.log(sstr)\n
-req.set(\'SearchableText\',sstr)\n
-return context.Base_advancedSearchResults()\n
+            <value> <string>return context.getPortalDocumentTypeList()+(\'Conference\',\'Project\')\n
 </string> </value>
         </item>
         <item>
@@ -95,7 +91,7 @@ return context.Base_advancedSearchResults()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a,**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,12 +117,8 @@ return context.Base_advancedSearchResults()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
-                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>req</string>
-                            <string>sstr</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +135,7 @@ return context.Base_advancedSearchResults()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_processAdvancedSearch</string> </value>
+            <value> <string>Base_getSearchableTypeList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

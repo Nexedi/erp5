@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>hash_script_id</string> </key>
-                    <value> <string>DMSBaseCategoryHash</string> </value>
+                    <value> <string>Base_hashDocumentCategoryItemList</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_preferences.default_site_preference.getPreferredDmsBaseCategoryList() or []</string> </value>
+            <value> <string>here/Base_getDocumentCategoryItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
