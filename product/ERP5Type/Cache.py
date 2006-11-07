@@ -41,7 +41,6 @@ def initializePortalCachingProperties(self):
   global is_cache_initialized
   if not is_cache_initialized:
     is_cache_initialized = 1
-    erp5_site_id = self.getPortalObject().getId()
     ## update cache structure from portal_caches
     self.getPortalObject().portal_caches.updateCache()
   
