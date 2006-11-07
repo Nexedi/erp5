@@ -30,10 +30,10 @@ import random
 import unittest
 import time
 import base64, md5
-from ERP5Cache.CachePlugins.RamCache import RamCache
-from ERP5Cache.CachePlugins.DistributedRamCache import DistributedRamCache
-from ERP5Cache.CachePlugins.SQLCache import SQLCache
-from ERP5Cache.CachePlugins.BaseCache import CacheEntry
+from ERP5Type.CachePlugins.RamCache import RamCache
+from ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
+from ERP5Type.CachePlugins.SQLCache import SQLCache
+from ERP5Type.CachePlugins.BaseCache import CacheEntry
 
 
 class Foo:
