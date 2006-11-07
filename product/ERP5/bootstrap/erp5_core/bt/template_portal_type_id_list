@@ -10,7 +10,7 @@ Category Divergence Tester
 Category Tool
 Delivery Builder
 Delivery Tool
-Distributed Ram Cache Plugin
+Distributed Ram Cache
 Document
 Domain
 Domain Tool
@@ -25,10 +25,10 @@ Preference
 Preference Tool
 Property Divergence Tester
 Quantity Divergence Tester
-Ram Cache Plugin
+Ram Cache
 Route Tool
 Rule Tool
-SQL Cache Plugin
+SQL Cache
 Simulation Movement
 Simulation Tool
 Template Tool

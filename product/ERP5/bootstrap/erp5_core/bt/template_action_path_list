@@ -55,9 +55,9 @@ Delivery Tool | list_ui
 Delivery Tool | print
 Delivery Tool | sort_on
 Delivery Tool | view
-Distributed Ram Cache Plugin | history
-Distributed Ram Cache Plugin | metadata
-Distributed Ram Cache Plugin | view
+Distributed Ram Cache | history
+Distributed Ram Cache | metadata
+Distributed Ram Cache | view
 Document | history
 Document | metadata
 Document | print
@@ -109,9 +109,9 @@ Preference | print
 Preference | view
 Property Divergence Tester | view
 Quantity Divergence Tester | view
-Ram Cache Plugin | history
-Ram Cache Plugin | metadata
-Ram Cache Plugin | view
+Ram Cache | history
+Ram Cache | metadata
+Ram Cache | view
 Route Tool | list
 Route Tool | localroles
 Route Tool | metadata
@@ -122,9 +122,9 @@ Rule Tool | localroles
 Rule Tool | metadata
 Rule Tool | syndication
 Rule Tool | view
-SQL Cache Plugin | history
-SQL Cache Plugin | metadata
-SQL Cache Plugin | view
+SQL Cache | history
+SQL Cache | metadata
+SQL Cache | view
 Simulation Movement | metadata
 Simulation Movement | print
 Simulation Movement | view
