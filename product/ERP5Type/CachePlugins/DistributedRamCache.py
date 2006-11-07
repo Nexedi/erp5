@@ -33,15 +33,16 @@ Memcached based cache plugin.
 from BaseCache import *
 from time import time
 from zLOG import LOG
+from thread import get_ident 
 
 try:
   import memcache
   MEMCACHED_SERVER_MAX_KEY_LENGTH = memcache.SERVER_MAX_KEY_LENGTH
 except ImportError:
-  LOG('DistributedRamCache',0,'unable to import memcache')
+  LOG('DistributedRamCache', 0, 'unable to import memcache')
 
-## number of seconds before creating a new connection to memcached server
-##KEEP_ALIVE_MEMCACHED_CONNECTION_INTERVAL = 30  
+## global ditionary containing connection objects
+connection_pool = {}
  
 class DistributedRamCache(BaseCache):
   """ Memcached based cache plugin. """
@@ -53,30 +54,23 @@ class DistributedRamCache(BaseCache):
     BaseCache.__init__(self)
         
   def getCacheStorage(self):
-    ## if we use one connection object this causes  "MemCached: while expecting 'STORED', got unexpected response 'END'"
-    ## messages in log files and thus sometimes can block the thread. For the moment we create
-    ## a new conn object for every memcache access which in turns means another socket. 
-    ## See  addiionaly expireOldCacheEntries() comments for one or many connections.
-    try:
-      from Products.ERP5Type.Utils import get_request
-      request = get_request()
-    except ImportError:
-      request = None
-      
-    if request is not None:
-      ## Zope/ERP5 environment
-      memcache_conn = request.get('_erp5_memcache_connection', None)
-      if not memcache_conn:
-        ## we have not memcache_conn for this request
-        memcache_conn = memcache.Client(self._servers.split('\n'), debug=self._debugLevel)
-        request.set('_erp5_memcache_connection', memcache_conn)
-        return memcache_conn      
-      else:
-        ## we have memcache_conn for this request
-        return memcache_conn
+    ## if we use one connection object this causes 
+    ## "MemCached: while expecting 'STORED', got unexpected response 'END'"
+    ## messages in log files and can sometimes can block the thread. 
+    ## For the moment we create a new conn object for every thread.
+    global connection_pool
+    thread_id = get_ident()
+    
+    memcache_conn = connection_pool.get(thread_id, None)
+    if memcache_conn is None:
+      ## we don't have memcache_conn for this thread
+      memcache_conn = memcache.Client(self._servers.split('\n'), debug=self._debugLevel)
+      connection_pool[thread_id] =  memcache_conn
+      return memcache_conn      
     else:
-      ## run from unit tests
-      return  memcache.Client(self._servers.split('\n'), debug=self._debugLevel)
+      ## we have memcache_conn for this thread
+      return memcache_conn
+
        
   def checkAndFixCacheId(self, cache_id, scope):
     ## memcached doesn't support namespaces (cache scopes) so to "emmulate"

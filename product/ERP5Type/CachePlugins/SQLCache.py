@@ -32,6 +32,8 @@ SQL (MySQL) based cache plugin.
 
 from BaseCache import *
 import time, base64
+from zLOG import LOG
+from thread import get_ident 
 
 try:
   import cPickle as pickle
@@ -41,8 +43,12 @@ except ImportError:
 try:
   import MySQLdb
 except ImportError:
-  raise CachedMethodError, "MySQLdb module is not available"
+  LOG('SQLCache', 0, 'unable to import MySQLdb')
 
+  
+## global ditionary containing connection objects
+connection_pool = {}
+  
 class SQLCache(BaseCache):
   """ SQL based cache plugin. """
     
@@ -114,37 +120,26 @@ class SQLCache(BaseCache):
     
   def getCacheStorage(self):
     """ 
-    Return current DB connection or create a new one for his thread.
+    Return current DB connection or create a new one for this thread.
     See http://sourceforge.net/docman/display_doc.php?docid=32071&group_id=22307
-    especially threadsafety part why we create every time a new MySQL db connection object.
+    especially threadsafety part why we create for every thread a new MySQL db connection object.
     """
-    try:
-      from Products.ERP5Type.Utils import get_request
-      request = get_request()
-    except ImportError:
-      request = None
-      
-    if request is not None:
-      ## Zope/ERP5 environment
-      dbConn = request.get('_erp5_dbcache_connection', None)
-      if not dbConn:
-        ## we have not dbConn for this request
-        dbConn = MySQLdb.connect(host=self._db_server, \
-                                 user=self._db_user,\
-                                 passwd=self._db_passwd, \
-                                 db=self._db_name)
-        request.set('_erp5_dbcache_connection', dbConn)
-        return dbConn      
-      else:
-        ## we have already dbConn for this request
-        return dbConn
-    else:
-      ## run from unit tests
+    global connection_pool
+    thread_id = get_ident()
+    
+    dbConn = connection_pool.get(thread_id, None)
+    if dbConn is None:
+      ## we don't have dbConn for this thread
       dbConn = MySQLdb.connect(host=self._db_server, \
-                             user=self._db_user,\
-                             passwd=self._db_passwd, \
-                             db=self._db_name)
+                               user=self._db_user,\
+                               passwd=self._db_passwd, \
+                               db=self._db_name)
+      connection_pool[thread_id] = dbConn
+      return dbConn      
+    else:
+      ## we have already dbConn for this thread 
       return dbConn
+
     
   def get(self, cache_id, scope, default=None):
     sql_query = self.get_key_sql %(self._db_cache_table_name, cache_id, scope)
