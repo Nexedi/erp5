@@ -87,28 +87,39 @@ class SelectionTool( UniqueObject, SimpleItem ):
                              , 'manage_view_selections' )
     manage_view_selections = DTMLFile( 'SelectionTool_manageViewSelections', _dtmldir )
 
-    _query_string_reset_regexp = re.compile('\\breset(:int|)?=')
-    _query_string_report_depth_regexp = re.compile('\\breport_depth(:int|)?=')
-    def _redirectToOriginalForm(self, REQUEST=None, form_id=None, query_string=None,
+    def _redirectToOriginalForm(self, REQUEST=None, form_id=None, dialog_id=None,
+                                query_string=None,
                                 no_reset=False, no_report_depth=False):
-      """Redirect to the original form, using the information given as parameters.
+      """Redirect to the original form or dialog, using the information given
+         as parameters.
+
+         DEPRECATED parameters :
+         query_string is used to transmit parameters from caller to callee.
          If no_reset is True, replace reset parameters with noreset.
-         If no_report_depth is True, replace report_depth parameters with noreport_depth.
+         If no_report_depth is True, replace report_depth parameters with
+         noreport_depth.
       """
       if REQUEST is None:
         return
 
-      context = self.aq_parent
-      form_id = form_id or REQUEST.get('form_id', 'view')
-      url = context.absolute_url() + '/' + form_id
+      parameter_list = REQUEST.form.copy()
+      if no_reset and parameter_list.has_key('reset'):
+        parameter_list['noreset'] = parameter_list['reset'] # Kept for compatibility - might no be used anymore
+        del parameter_list['reset']
+      if no_report_depth and parameter_list.has_key('report_depth'):
+        parameter_list['noreport_depth'] = parameter_list['report_depth'] # Kept for compatibility - might no be used anymore
+        del parameter_list['report_depth']
+
+      rendered_parameter_list = make_query(dict([(k, v) for k, v in REQUEST.form.iteritems() if v is not None]))
+
       if query_string is not None:
-        if no_reset:
-          query_string = self._query_string_reset_regexp.sub('noreset\\1=',
-                                                             query_string)
-        if no_report_depth:
-          query_string = self._query_string_report_depth_regexp.sub('noreport_depth\\1=',
-                                                                    query_string)
-        url = url + '?' + query_string
+        LOG('SelectionTool', 0, 'DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.')
+
+      context = self.aq_parent
+      form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
+      url = context.absolute_url() + '/' + form_id      
+      if len(rendered_parameter_list) > 0:
+        url = '%s?%s' % (url, rendered_parameter_list)
       return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
@@ -524,101 +535,77 @@ class SelectionTool( UniqueObject, SimpleItem ):
     # ListBox related methods
 
     security.declareProtected(ERP5Permissions.View, 'firstPage')
-    def firstPage(self, listbox_uid, uids=None, REQUEST=None):
+    def firstPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the first page of a list
       """
       if uids is None: uids = []
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
-      selection = self.getSelectionFor(selection_name, REQUEST)
-      params = selection.getParams()
-      params['list_start'] = 0
-      selection.edit(params=params)
-      self.uncheckAll(selection_name, listbox_uid)
-      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+      selection = self.getSelectionFor(list_selection_name, REQUEST)
+      REQUEST.form['list_start'] = 0
+      self.uncheckAll(list_selection_name, listbox_uid)
+      return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'lastPage')
-    def lastPage(self, listbox_uid, uids=None, REQUEST=None):
+    def lastPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the last page of a list
       """
       if uids is None: uids = []
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
-      selection = self.getSelectionFor(selection_name, REQUEST)
+      selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
       # XXX This will not work if the number of lines shown in the listbox is greater
       #       than the BIG_INT constan. Such a case has low probability but is not
       #       impossible. If you are in this case, send me a mail ! -- Kev
       BIG_INT = 10000000
       last_page_start = BIG_INT
-      total_lines = request.form.get('total_size', BIG_INT)
+      total_lines = REQUEST.form.get('total_size', BIG_INT)
       if total_lines != BIG_INT:
         lines_per_page  = params.get('list_lines', 1)
         last_page_start = int(total_lines) - (int(total_lines) % int(lines_per_page))
-      params['list_start'] = last_page_start
-      selection.edit(params=params)
-      self.uncheckAll(selection_name, listbox_uid)
-      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+      REQUEST.form['list_start'] = last_page_start
+      self.uncheckAll(list_selection_name, listbox_uid)
+      return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'nextPage')
-    def nextPage(self, listbox_uid, uids=None, REQUEST=None):
+    def nextPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the next page of a list
       """
       if uids is None: uids = []
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
-      selection = self.getSelectionFor(selection_name, REQUEST)
+      selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
-      lines = params.get('list_lines',0)
+      lines = params.get('list_lines', 0)
       start = params.get('list_start', 0)
-      params['list_start'] = int(start) + int(lines)
-      selection.edit(params=params)
-      self.uncheckAll(selection_name, listbox_uid)
-      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+      REQUEST.form['list_start'] = int(start) + int(lines)
+      self.uncheckAll(list_selection_name, listbox_uid)
+      return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'previousPage')
-    def previousPage(self, listbox_uid, uids=None, REQUEST=None):
+    def previousPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the previous page of a list
       """
       if uids is None: uids = []
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
-      selection = self.getSelectionFor(selection_name, REQUEST)
+      selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
-      lines = params.get('list_lines',0)
+      lines = params.get('list_lines', 0)
       start = params.get('list_start', 0)
-      params['list_start'] = max(int(start) - int(lines), 0)
-      selection.edit(params=selection.params)
-      self.uncheckAll(selection_name, listbox_uid)
-      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+      REQUEST.form['list_start'] = max(int(start) - int(lines), 0)
+      self.uncheckAll(list_selection_name, listbox_uid)
+      return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'setPage')
-    def setPage(self, listbox_uid, query_string=None, uids=None, REQUEST=None):
+    def setPage(self, list_selection_name, listbox_uid, query_string=None, uids=None, REQUEST=None):
       """
         Access the previous page of a list
       """
       if uids is None: uids = []
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
-      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
-      if selection is not None:
-        params = selection.getParams()
-        lines = params.get('list_lines',0)
-        start = request.form.get('list_start',0)
-        params['list_start'] = start
-        selection.edit(params= selection.params)
-      self.uncheckAll(selection_name, listbox_uid)
-      return self.checkAll(selection_name, uids, REQUEST=REQUEST, query_string=query_string)
-
+      selection = self.getSelectionFor(list_selection_name, REQUEST)
+      params = selection.getParams()
+      params['list_start'] = REQUEST.form.get('list_start', 0)
+      selection.edit(params=params)
+      self.uncheckAll(list_selection_name, listbox_uid)
+      return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
     # PlanningBox related methods
 
