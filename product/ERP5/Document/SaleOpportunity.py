@@ -48,6 +48,7 @@ class SaleOpportunity(Ticket):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -58,9 +59,9 @@ class SaleOpportunity(Ticket):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      # Useless, replace by Arrow
-                      , PropertySheet.SaleOpportunity  
+                      , PropertySheet.Amount
                       , PropertySheet.Arrow
                       , PropertySheet.Price
                       , PropertySheet.Movement
+                      , PropertySheet.Price
                       )
