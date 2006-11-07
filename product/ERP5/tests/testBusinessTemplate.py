@@ -3471,14 +3471,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreatePortalType \
                        CreateFirstAction \
                        CreateSecondAction \
+                       CreateWorkflow \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
                        AddSecondActionToBusinessTemplate \
                        FillPortalTypesFields \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemovePortalType \
+                       RemoveWorkflow \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        ImportBusinessTemplate \
