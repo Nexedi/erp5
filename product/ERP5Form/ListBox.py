@@ -839,6 +839,7 @@ class ListBoxRenderer:
     # Create a selection, if not present, with the default sort order.
     if selection is None:
       selection = Selection(params = self.getDefaultParamList(), default_sort_on = self.getDefaultSortColumnList())
+      selection = selection.__of__(selection_tool)
     # Or make sure all sort arguments are valid.
     else:
       # Reset the selection, if specified.
@@ -1070,19 +1071,15 @@ class ListBoxRenderer:
         if category_tool is not None:
           root = category_tool.restrictedTraverse(domain, None)
           if root is not None :
-            root_dict[base_domain] = root
+            root_dict[base_domain] = ('portal_categories', domain)
           elif domain_tool is not None:
             root = domain_tool.getDomainByPath(domain)
             if root is not None:
-              # FIXME: this is a bad hack. DomainSelection should use
-              # portal_type to determine the type of the object instead
-              # of whether it is a string or not.
-              root_dict[base_domain] = domain
+              root_dict[base_domain] = ('portal_domains', domain)
         if root is None:
-          try:
-            root_dict[None] = portal_object.restrictedTraverse(domain)
-          except KeyError:
-            pass
+          root = portal_object.restrictedTraverse(domain, None)
+          if root is not None:
+            root_dict[None] = (None, domain)
 
       return DomainSelection(domain_dict = root_dict).__of__(self.getContext())
 
@@ -1142,31 +1139,31 @@ class ListBoxRenderer:
         root = None
         if category_tool is not None:
           try:
-            obj = category_tool[category]
             if category == 'parent':
               # parent has a special treatment
-              root = root_dict[category] = root_dict[None] = self.getContext()
-              report_path = report_path[1:]
+              root = self.getContext()
+              root_dict[category] = root_dict[None] = (root, (None, root.getRelativeUrl()))
             else:
-              root = root_dict[category] = root_dict[None] = obj
-              report_path = report_path[1:]
+              root = category_tool[category]
+              root_dict[category] = root_dict[None] = (root, ('portal_categories', root.getRelativeUrl()))
+            report_path = report_path[1:]
           except KeyError:
             pass
         if root is None and domain_tool is not None:
           try:
-            obj = domain_tool[category]
-            root = root_dict[category] = root_dict[None] = obj
+            root = domain_tool[category]
+            root_dict[category] = root_dict[None] = (root, ('portal_domains', root.getRelativeUrl()))
             report_path = report_path[1:]
           except KeyError:
             pass
         if root is None:
-          try:
-            root = root_dict[None] = portal_object.unrestrictedTraverse(report_path)
-          except KeyError:
-            pass
+          root = portal_object.unrestrictedTraverse(report_path, None)
+          if root is not None:
+            root_dict[None] = (root, (None, root.getRelativeUrl()))
           report_path = ()
       else:
-        root = root_dict[None] = root_dict[category]
+        root_dict[None] = root_dict[category]
+        root = root_dict[None][0]
         report_path = report_path[1:]
       is_empty_level = (root is None or root.objectCount() == 0) and (len(report_path) != 0)
       if is_empty_level:
@@ -1188,8 +1185,11 @@ class ListBoxRenderer:
 
     for obj in obj_list:
       new_root_dict = root_dict.copy()
-      new_root_dict[None] = new_root_dict[base_category] = obj
-      domain_selection = DomainSelection(domain_dict = new_root_dict)
+      new_root_dict[None] = new_root_dict[base_category] = (obj, (new_root_dict[base_category][1][0], obj.getRelativeUrl()))
+      domain_dict = {}
+      for k, v in new_root_dict.iteritems():
+        domain_dict[k] = v[1]
+      domain_selection = DomainSelection(domain_dict = domain_dict)
 
       if base_category == 'parent':
         exception_uid_list = []

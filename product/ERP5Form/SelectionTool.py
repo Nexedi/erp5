@@ -135,7 +135,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         Returns the selection instance for a given selection_name
       """
-      if not REQUEST:
+      if REQUEST is None:
         REQUEST = get_request()
 
       if not hasattr(self, 'selection_data'):
@@ -144,11 +144,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if user_id is not None:
         if not self.selection_data.has_key(user_id):
           self.selection_data[user_id] = PersistentMapping()
-        if type(selection_name) is type(()) or type(selection_name) is type([]) :
+        if isinstance(selection_name, (tuple, list)):
           selection_name = selection_name[0]
-        return self.selection_data[user_id].get(selection_name, None)
-      else:
-        return None
+        selection = self.selection_data[user_id].get(selection_name, None)
+        if selection is not None:
+          return selection.__of__(self)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionFor')
     def setSelectionFor(self, selection_name, selection_object, REQUEST=None):

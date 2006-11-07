@@ -382,7 +382,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     #LOG('DomainSelection', 0, '__init__ is called with %r' % (domain_dict,))
     if domain_dict is not None:
       self.domain_dict = domain_dict
-      for k,v in domain_dict.items():
+      for k, v in domain_dict.iteritems():
         if k is not None:
           setattr(self, k, v)
 
@@ -393,16 +393,39 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   def getCategoryList(self):
     return
 
+  def _getDomainObject(self, portal, domain):
+    """Return a domain or category object.
+    """
+    if isinstance(domain, tuple):
+      # This is the new form. The first item describes the name of a tool or
+      # None if a domain is under a module. The second item is the relative
+      # URL of a domain.
+      tool = domain[0]
+      if tool is None:
+        obj = portal.restrictedTraverse(domain[1])
+      elif tool == 'portal_domains':
+        # Special case, as Domain Tool may generate a domain dynamically.
+        obj = portal.portal_domains.getDomainByPath(domain[1])
+      else:
+        obj = portal[tool].restrictedTraverse(domain[1])
+    elif isinstance(domain, str):
+      # XXX backward compatibility: a domain was represented by a string previously.
+      obj = portal.portal_domains.getDomainByPath(domain)
+    else:
+      # XXX backward compatibility: a category was represented by an object itself.
+      obj = aq_base(domain).__of__(portal)
+
+    return obj
+
   security.declarePublic('asSqlExpression')
   def asSqlExpression(self, table_map=None, domain_id=None, 
                       exclude_domain_id=None, strict_membership=0,
                       join_table="catalog", join_column="uid", base_category=None):
     select_expression = []
-    for k, d in self.domain_dict.items():
-      if isinstance(d, str):
-        # get the domain object
-        site = self.getPortalObject()
-        d = site['portal_domains'].getDomainByPath(d)
+    portal = self.getPortalObject()
+    for k, d in self.domain_dict.iteritems():
+      d = self._getDomainObject(portal, d)
+
       if k == 'parent':
         # Special treatment for parent
         select_expression.append(d.getParentSqlExpression(table='catalog', 
@@ -431,11 +454,10 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   def asSqlJoinExpression(self, domain_id=None, exclude_domain_id=None):
     join_expression = []
     #LOG('DomainSelection', 0, 'domain_id = %r, exclude_domain_id = %r, self.domain_dict = %r' % (domain_id, exclude_domain_id, self.domain_dict))
-    for k, d in self.domain_dict.items():
-      if isinstance(d, str):
-        # we must the domain
-        site = self.getPortalObject()
-        d = site['portal_domains'].getDomainByPath(d)
+    portal = self.getPortalObject()
+    for k, d in self.domain_dict.iteritems():
+      d = self._getDomainObject(portal, d)
+
       if k == 'parent':
         pass
       elif k is not None:
