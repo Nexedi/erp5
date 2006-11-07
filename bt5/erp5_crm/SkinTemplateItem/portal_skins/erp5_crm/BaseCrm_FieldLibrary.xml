@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
@@ -107,6 +113,8 @@
                         <string>my_destination_section_title</string>
                         <string>date</string>
                         <string>my_start_date</string>
+                        <string>my_price_range_min</string>
+                        <string>my_price_range_max</string>
                       </list>
                     </value>
                 </item>

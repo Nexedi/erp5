@@ -397,9 +397,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -508,7 +506,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination</string> </value>
+                    <value> <string>Destination Section</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
