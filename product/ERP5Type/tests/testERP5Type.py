@@ -797,7 +797,7 @@ class TestPropertySheet:
       self.assertEquals(person.getProperty(property_name, 'foo'), 'foo')
       self.assertEquals(person.getProperty(property_name, d='foo'), 'foo')
 
-    def test_15b_DefaultValueDefinedOnPropertySheet(self):
+    def test_15b_DefaultValueDefinedOnPropertySheet(self,quiet=quiet, run=run_all_test):
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet.
       """
@@ -827,7 +827,7 @@ class TestPropertySheet:
       self.assertEquals(value, person.getProperty('dummy_ps_prop'))
       self.assertEquals(value, person.getProperty('dummy_ps_prop', d='default'))
 
-    def test_16_SimpleStringAccessor(self):
+    def test_16_SimpleStringAccessor(self,quiet=quiet, run=run_all_test):
       """Tests a simple string accessor.
       This is also a way to test _addProperty method """
       self._addProperty('Person', '''{'id': 'dummy_ps_prop',
@@ -841,7 +841,7 @@ class TestPropertySheet:
       self.failUnless(person.hasProperty('dummy_ps_prop'))
       self.assertEquals('a value', person.getDummyPsProp())
 
-    def test_17_WorkflowStateAccessor(self):
+    def test_17_WorkflowStateAccessor(self,quiet=quiet, run=run_all_test):
       """Tests for workflow state. assumes that validation state is chained to
       the Person portal type and that this workflow has 'validation_state' as
       state_variable.
@@ -906,7 +906,7 @@ class TestPropertySheet:
                         'acquired_property_id': ('title', ),
                         'mode':       'w', }'''
 
-    def test_18_SimpleContentAccessor(self):
+    def test_18_SimpleContentAccessor(self,quiet=quiet, run=run_all_test):
       """Tests a simple content accessor.
       """
       # For testing purposes, we add a default_organisation inside a person, 
@@ -966,7 +966,7 @@ class TestPropertySheet:
             'acquisition_depends'      : None,
             'mode':       'w', }'''
     
-    def test_19_AcquiredContentAccessor(self):
+    def test_19_AcquiredContentAccessor(self,quiet=quiet, run=run_all_test):
       """Tests an acquired content accessor.
       """
       # For testing purposes, we add a default_organisation inside a person, 
@@ -1000,7 +1000,7 @@ class TestPropertySheet:
       self.assertEquals(other_pers_title,
                         other_pers.getDefaultOrganisationTitle())
       
-    def test_19b_AcquiredContentAccessorWithIdClash(self):
+    def test_19b_AcquiredContentAccessorWithIdClash(self,quiet=quiet, run=run_all_test):
       """Tests a content setters do not set the property on acquired object
       that may have the same id, using same scenario as test_19
       Note that we only test Setter for now.
@@ -1030,7 +1030,7 @@ class TestPropertySheet:
       self.assertEquals('The organisation title',
                         person.getDefaultOrganisationTitle())
     
-    def test_AsContext(self):
+    def test_20_AsContext(self,quiet=quiet, run=run_all_test):
       """asContext method return a temporary copy of an object.
       Any modification made to the copy does not change the original object.
       """
@@ -1052,6 +1052,42 @@ class TestPropertySheet:
       # acquisition context is the same
       self.assertEquals(self.getPersonModule(), obj.aq_parent)
       self.assertEquals(self.getPersonModule(), copy.aq_parent)
+
+    def test_21_ActionCondition(self,quiet=quiet, run=1):
+      """asContext method return a temporary copy of an object.
+      Any modification made to the copy does not change the original object.
+      """
+      type_tool = self.getTypeTool()
+      portal_type_object = type_tool['Organisation']
+      def addCustomAction(name,condition):
+        portal_type_object.addAction(
+          id = name
+          , name = 'Become Geek'
+          , action = 'become_geek_action'
+          , condition = condition
+          , permission = ('View', )
+          , category = 'object_action'
+          , visible = 1
+          , priority = 2.0 )
+      addCustomAction('action1','python: object.getDescription()=="foo"')
+      obj = self.getOrganisationModule().newContent(portal_type='Organisation')
+      action_tool = self.getPortal().portal_actions
+      actions = action_tool.listFilteredActionsFor(obj)
+      action_id_list = [x['id'] for x in actions.get('object_action',[])]
+      self.failUnless('action1' not in action_id_list)
+      obj.setDescription('foo')
+      actions = action_tool.listFilteredActionsFor(obj)
+      action_id_list = [x['id'] for x in actions.get('object_action',[])]
+      self.failUnless('action1' in action_id_list)
+      addCustomAction('action2',"python: portal_url not in (None,'')")
+      actions = action_tool.listFilteredActionsFor(obj)
+      action_id_list = [x['id'] for x in actions.get('object_action',[])]
+      self.failUnless('action2' in action_id_list)
+      addCustomAction('action3',"python: object_url not in (None,'')")
+      actions = action_tool.listFilteredActionsFor(obj)
+      action_id_list = [x['id'] for x in actions.get('object_action',[])]
+      self.failUnless('action3' in action_id_list)
+
 
 if __name__ == '__main__':
   framework()
