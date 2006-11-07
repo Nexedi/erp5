@@ -63,5 +63,4 @@ class SaleOpportunity(Ticket):
                       , PropertySheet.Arrow
                       , PropertySheet.Price
                       , PropertySheet.Movement
-                      , PropertySheet.Price
                       )
