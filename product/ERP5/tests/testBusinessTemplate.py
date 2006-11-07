@@ -319,6 +319,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_portal_type_id_list=ptype_ids)
     self.stepFillPortalTypesFields(sequence=sequence, sequence_list=sequence_list, **kw)
 
+  def stepAddDuplicatedPortalTypeToBusinessTemplate(self, sequence=None, 
+                                                    sequence_list=None, **kw):
+    """
+    Add duplicated portal type to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    ptype_ids = []
+    ptype_ids.append(sequence.get('object_ptype_id', ''))
+    self.assertEqual(len(ptype_ids), 1)
+    bt.edit(template_portal_type_id_list=ptype_ids)
+
   def stepRemovePortalType(self, sequence=None, sequence_list=None, **kw):
     """
     Remove PortalType
@@ -357,6 +369,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_ptype_id')
     module_type = pt._getOb(module_id, None)
     self.failUnless(module_type is None)
+    object_type = pt._getOb(object_id, None)
+    self.failUnless(object_type is None)
+
+  def stepCheckDuplicatedPortalTypeRemoved(self, sequence=None, 
+                                           sequence_list=None, **kw):
+    """
+    Check non presence of portal type
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    module_id = sequence.get('module_ptype_id')
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
@@ -1630,6 +1653,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
 
+  def stepInstallDuplicatedBusinessTemplate(self, sequence=None, 
+                                            sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    import_bt = sequence.get('import_bt')
+    pt_id = sequence.get('object_ptype_id')
+    object_to_update = {
+      'portal_types/%s' % pt_id: 'install'}
+    import_bt.install(object_to_update=object_to_update)
+
   def stepPartialCatalogMethodInstall(self, sequence=None, sequence_list=None, **kw):
     """
     Install importzed business template
@@ -1651,13 +1685,23 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(export_bt=template)
 
-  def stepBuildBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateDuplicatedBusinessTemplate(self, sequence=None, 
+                                           sequence_list=None, **kw):
     """
-    Build Business Template
+    Create a new Business Template which will duplicate
+    the configuration.
     """
-    template = sequence.get('current_bt')
-    template.build()
-  
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    template.edit(title='duplicated geek template',
+                  version='1.0',
+                  description='bt for unit_test')
+    sequence.edit(
+        export_bt=template,
+        previous_bt=sequence.get('current_bt'))
+
   def stepBuildBusinessTemplateFail(self, sequence=None, sequence_list=None, **kw):
     """
     Build Business Template
@@ -1745,6 +1789,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Uninstall current Business Template
     """
     bt = sequence.get('current_bt')
+    bt.uninstall()
+
+  def stepUninstallPreviousBusinessTemplate(self, sequence=None, 
+                                            sequence_list=None, **kw):
+    """
+    Uninstall current Business Template
+    """
+    bt = sequence.get('previous_bt')
     bt.uninstall()
 
   def stepClearBusinessTemplateField(self, sequence=None, sequence_list=None, **kw):
@@ -3403,6 +3455,53 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        PartialCatalogMethodInstall \
                        CheckCatalogMethodChangeKept \
                        Tic \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self, quiet=quiet, 
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Duplicated Portal Types'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateFirstAction \
+                       CreateSecondAction \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       AddSecondActionToBusinessTemplate \
+                       FillPortalTypesFields \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemovePortalType \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CreateDuplicatedBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDuplicatedPortalTypeToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallDuplicatedBusinessTemplate \
+                       Tic \
+                       \
+                       CheckPortalTypeExists \
+                       CheckSecondActionExists \
+                       \
+                       UninstallBusinessTemplate \
+                       CheckDuplicatedPortalTypeRemoved \
+                       UninstallPreviousBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
