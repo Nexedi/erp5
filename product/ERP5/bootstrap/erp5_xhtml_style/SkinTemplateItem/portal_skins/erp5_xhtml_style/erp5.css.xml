@@ -594,6 +594,10 @@ fieldset.center {\n
   padding-right: 5px;\n
 }\n
 \n
+fieldset.center {\n
+  padding-bottom: 5px;\n
+}\n
+\n
 fieldset.left {\n
   width: 50%;\n
   float: left;\n
@@ -634,7 +638,7 @@ fieldset.bottom .field label {\n
 }\n
 \n
 .content .field {\n
-  padding-bottom: 5px;\n
+  padding-bottom: 3px;\n
 }\n
 \n
 .content .field label {\n
