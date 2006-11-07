@@ -177,9 +177,9 @@ def _getConnectionStringDict():
 class ERP5TypeTestCase(PortalTestCase):
 
     def getTitle(self):
+      """Returns the title of the test, for test reports.
       """
-      """
-      return "Default Title of Test"
+      return str(self.__class__)
 
     def getPortalName(self):
       """
