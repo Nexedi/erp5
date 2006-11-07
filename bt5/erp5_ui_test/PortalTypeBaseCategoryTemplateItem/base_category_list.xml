@@ -1,5 +1,6 @@
 <base_category_list>
  <portal_type id="Foo">
+  <item>foo_big_category</item>
   <item>bar_category</item>
   <item>foo_category</item>
  </portal_type>
