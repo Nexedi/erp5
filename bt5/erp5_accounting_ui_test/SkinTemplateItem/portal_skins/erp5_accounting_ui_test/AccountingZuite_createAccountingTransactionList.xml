@@ -181,9 +181,13 @@ for month in range(1, month_count + 1):\n
                 immediate_reindex=immediate_reindex,\n
                 source=getAccountByTitle(\'Stocks\'),\n
                 quantity=-5000)\n
-  tr.stop()\n
-  assert tr.getSimulationState() == \'stopped\'\n
-\n
+  if transaction_state == \'validated\':\n
+    tr.stop()\n
+    assert tr.getSimulationState() == \'stopped\'\n
+  else:\n
+    # other cases not supported for now\n
+    assert transaction_state == \'draft\'\n
+  \n
   vat_rate = .1\n
 \n
   for client_title, amount  in ((\'Client 1\', 2000), (\'Client 2\', 3000)):\n
@@ -219,9 +223,12 @@ for month in range(1, month_count + 1):\n
                   resource_value=product,\n
                   quantity=random.randint(300, 400),\n
                   price=random.randint(300, 400), )\n
-    tr.stop()\n
-    assert tr.getSimulationState() == \'stopped\'\n
-\n
+    if transaction_state == \'validated\':\n
+      tr.stop()\n
+      assert tr.getSimulationState() == \'stopped\'\n
+    else:\n
+      # other cases not supported for now\n
+      assert transaction_state == \'draft\'\n
   amount=7000\n
   default_date += 1\n
   tr = accounting_module.newContent(\n
@@ -247,8 +254,12 @@ for month in range(1, month_count + 1):\n
                 immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Goods Purchase\'),\n
                 quantity=amount)\n
-  tr.stop()\n
-  assert tr.getSimulationState() == \'stopped\'\n
+  if transaction_state == \'validated\':\n
+    tr.stop()\n
+    assert tr.getSimulationState() == \'stopped\'\n
+  else:\n
+    # other cases not supported for now\n
+    assert transaction_state == \'draft\'\n
   \n
 if add_draft_transactions:\n
   # finally, add random accounting transcactions in draft state, which have no\n
@@ -306,7 +317,7 @@ return "Accounting Transactions Created."\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, add_draft_transactions=1</string> </value>
+            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -326,7 +337,7 @@ return "Accounting Transactions Created."\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -334,6 +345,7 @@ return "Accounting Transactions Created."\n
                           <tuple>
                             <string>month_count</string>
                             <string>add_draft_transactions</string>
+                            <string>transaction_state</string>
                             <string>DateTime</string>
                             <string>section_title</string>
                             <string>_getattr_</string>
@@ -384,6 +396,7 @@ return "Accounting Transactions Created."\n
               <tuple>
                 <int>1</int>
                 <int>1</int>
+                <string>validated</string>
               </tuple>
             </value>
         </item>
