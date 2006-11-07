@@ -12,6 +12,7 @@ Delivery Builder | Predicate
 Delivery Tool | Delivery Builder
 Domain Tool | Base Domain
 Domain | Domain
+Domain | Domain Generator
 Order Builder | Predicate
 Order Tool | Order Builder
 Predicate | Value Predicate

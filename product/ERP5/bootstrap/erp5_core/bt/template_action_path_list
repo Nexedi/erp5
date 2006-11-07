@@ -62,6 +62,11 @@ Document | history
 Document | metadata
 Document | print
 Document | view
+Domain Generator | history
+Domain Generator | list
+Domain Generator | metadata
+Domain Generator | print_pdf
+Domain Generator | view
 Domain Tool | list
 Domain Tool | localroles
 Domain Tool | metadata
