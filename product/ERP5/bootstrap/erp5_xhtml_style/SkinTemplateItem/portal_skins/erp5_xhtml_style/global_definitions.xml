@@ -86,7 +86,6 @@
 \n
 <tal:block metal:define-macro="http_definitions">\n
   <tal:block tal:repeat="parameter http_parameter_list/items">\n
-    <!-- Generic way of specifying http parameters -->\n
     <tal:block tal:condition="python: same_type(parameter[1], [])">\n
       <tal:block tal:repeat="list_item python: parameter[1]">\n
         <input type="hidden"\n
