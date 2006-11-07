@@ -3072,7 +3072,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'ful_text_key_list'] = key_list
+      self._objects[self.__class__.__name__+os.sep+'full_text_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
