@@ -250,6 +250,16 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEquals(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
     self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
 
+  def test_08(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Make sure Base_viewDict is working for categories with sub categories')
+    portal_categories = self.getCategoryTool()
+    base_category = portal_categories.activity
+    self.assertTrue(len(base_category.Base_viewDict())>0)
+    base_category.newContent(id='toto',title='Toto')
+    self.assertTrue(len(base_category.Base_viewDict())>0)
+
 if __name__ == '__main__':
     framework()
 else:
