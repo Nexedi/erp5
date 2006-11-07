@@ -193,25 +193,20 @@ class CachingMethod:
     
   def generateCacheId(self, method_id, *args, **kwd):
     """ Generate proper cache id based on *args and **kwd  """
-    if args==() and kwd == {}:
-      ## we have static method_id without any argument passed
-      ## so we return it as it is.
-      return str(method_id)
-    else:
-      ## generate cache id out of arguments passed.
-      ## depending on arguments we may have different 
-      ## cache_id for same method_id 
-      cache_id = [method_id]    
-      key_list = kwd.keys()
-      key_list.sort()
-      for arg in args:
-        cache_id.append((None, arg))
-      for key in key_list:
-        cache_id.append((key, str(kwd[key])))
-      cache_id = str(cache_id)
-      ## because some cache backends don't allow some chars in cached id we make sure to replace them
-      cache_id = cache_id.translate(self._cache_id_translate_table)
-      return cache_id
+    ## generate cache id out of arguments passed.
+    ## depending on arguments we may have different 
+    ## cache_id for same method_id 
+    cache_id = [method_id]    
+    key_list = kwd.keys()
+    key_list.sort()
+    for arg in args:
+      cache_id.append((None, arg))
+    for key in key_list:
+      cache_id.append((key, str(kwd[key])))
+    cache_id = str(cache_id)
+    ## because some cache backends don't allow some chars in cached id we make sure to replace them
+    cache_id = cache_id.translate(self._cache_id_translate_table)
+    return cache_id
                 
 allow_class(CachingMethod)
 
