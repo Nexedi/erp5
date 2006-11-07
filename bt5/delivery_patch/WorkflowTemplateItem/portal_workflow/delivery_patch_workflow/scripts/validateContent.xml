@@ -88,7 +88,9 @@ if len(result_list)>0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/delivery_patch_workflow/scripts/validateContent</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
