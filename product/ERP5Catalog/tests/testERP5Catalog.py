@@ -62,7 +62,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   # Different variables used for this test
   run_all_test = 1
-  quiet = 0
+  quiet = 1
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -1101,3 +1101,29 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     login(self, 'bob')
     self.assertEquals(0, folder.catalog_test_script())
 
+  def test_SearchableText(self, quiet=quiet, run=run_all_test):
+    """Tests SearchableText is working in ERP5Catalog
+    """
+    if not run: return
+    folder = self.getOrganisationModule()
+    ob = folder.newContent()
+    ob.setTitle('The title of this object')
+    self.failUnless('this' in ob.SearchableText(), ob.SearchableText())
+    # add some other objects, we
+    for i in range(10):
+      otherob = folder.newContent()
+      otherob.setTitle('Something different')
+      self.failIf('this' in otherob.SearchableText(), otherob.SearchableText())
+    # catalog those objects
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals([ob],
+        [x.getObject() for x in self.getCatalogTool()(
+                portal_type='Organisation', SearchableText='title')])
+    
+    # 'different' is not revelant, because it's found in more than 50% of
+    # records
+    self.assertEquals([],
+        [x.getObject for x in self.getCatalogTool()(
+                portal_type='Organisation', SearchableText='different')])
+    
