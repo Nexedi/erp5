@@ -1,3 +1,0 @@
-"""
-Cache Documents' property sheets.
-"""

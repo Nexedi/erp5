@@ -1,3 +1,0 @@
-"""
-Cache plugin classes.
-"""
