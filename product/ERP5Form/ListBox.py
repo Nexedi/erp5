@@ -1482,7 +1482,7 @@ class ListBoxRenderer:
           object_list_len = len(object_list)
           #LOG('ListBox', 0, 'report_tree.__dict__ = %r, object_list = %r, object_list_len = %r' % (report_tree.__dict__, object_list, object_list_len))
           if not report_tree.is_pure_summary:
-            if not self.showStat():
+            if self.showStat():
               report_section_list.append(ReportSection(is_summary = False, object_list = object_list,
                                                        object_list_len = object_list_len,
                                                        is_open = report_tree.is_open,
