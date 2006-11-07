@@ -72,54 +72,60 @@
 
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 request=context.REQUEST\n
+getObject = context.getPortalObject().portal_catalog.getObject\n
+getActionsFor = context.getPortalObject().portal_workflow.getActionsFor\n
 \n
-try:\n
-  # Validate the form\n
-  form = getattr(context, dialog_id)\n
-  kw = {}\n
-  for f in form.get_fields():\n
-    k = f.id\n
-    fid = \'field_\' + k\n
-    v = getattr(request, fid, None)\n
-    if v is not None:\n
-      k = k[3:]\n
-      kw[k] = v\n
 \n
-  selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-  if len(selection_uid_list) == 0 :\n
-    selection_list = context.portal_selections.callSelectionFor(selection_name, context=context)\n
-  else :\n
-    selection_list = []\n
-    for uid in selection_uid_list :\n
-      selection_list.append(context.portal_catalog.getObject(uid))\n
+form = getattr(context, dialog_id)\n
+kw = {}\n
+for f in form.get_fields():\n
+  k = f.getId()\n
+  if k.startswith(\'my_\'):\n
+    k = k[3:]\n
+  elif k.startswith(\'your_\'):\n
+    k = k[5:]\n
+  v = getattr(request, k, None)\n
+  if v is not None:\n
+    kw[k] = v\n
 \n
+# If there are checked uids, pass the workflow for all checked uids.\n
+selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(\n
+                                                       selection_name)\n
+if not selection_uid_list:\n
+  # else call the selection to apply to all object with\n
+  # current search parameters\n
+  selection_list = context.portal_selections.callSelectionFor(\n
+                                     selection_name, context=context)\n
+else :\n
+  selection_list = [getObject(uid) for uid in selection_uid_list]\n
+\n
+len_selection_list = len(selection_list)\n
+if len_selection_list == context.countFolder():\n
+  value_error = N_("Refusing to process the entire module")\n
+else:\n
+  processed_object_count = 0    \n
   for o in selection_list:\n
     o = o.getObject()\n
-    o.activate().Base_workflowStatusModify(batch = 1, **kw)\n
+    if workflow_action in [ai[\'id\'] for ai in getActionsFor(o)\n
+                                          if ai.has_key(\'id\')]:\n
+      o.activate().Base_workflowStatusModify(batch = 1, **kw)\n
+      processed_object_count += 1\n
+    \n
+  value_error = N_("Workflow modification in progress for "\n
+        "${processed_object_count} out of ${selected_object_count}",\n
+         mapping=dict(processed_object_count=processed_object_count,\n
+                      selected_object_count=len_selection_list))\n
+                              \n
+redirect_url = \'%s/%s?portal_status_message=%s&form_id=%s\' % (\n
+                                 context.absolute_url(), form_id\n
+                                , value_error, form_id,\n
+                                )\n
 \n
-  value_error = "Done"\n
-  redirect_url = \'%s/%s?portal_status_message=%s&form_id=%s\' % (\n
-                                   context.absolute_url(), form_id\n
-                                  , value_error, form_id,\n
-                                  )\n
-\n
-  return context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
-\n
-except FormValidationError, validation_errors:\n
-  # Pack errors into the request\n
-  field_errors = form.ErrorFields(validation_errors)\n
-  request.set(\'field_errors\', field_errors)\n
-  return form(request)\n
-\n
-except ValueError, value_error:\n
-  # Pack errors into the request\n
-  redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(), form_id\n
-                                  , \'portal_status_message=\',value_error\n
-                                  )\n
-\n
-  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+return request.RESPONSE.redirect( redirect_url )\n
 
 
 ]]></string> </value>
@@ -128,6 +134,12 @@ except ValueError, value_error:\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -144,7 +156,7 @@ except ValueError, value_error:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, dialog_id, selection_name</string> </value>
+            <value> <string>form_id, dialog_id, selection_name, workflow_action</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,7 +176,7 @@ except ValueError, value_error:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -173,36 +185,44 @@ except ValueError, value_error:\n
                             <string>form_id</string>
                             <string>dialog_id</string>
                             <string>selection_name</string>
+                            <string>workflow_action</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>getObject</string>
+                            <string>getActionsFor</string>
                             <string>getattr</string>
                             <string>form</string>
                             <string>kw</string>
                             <string>_getiter_</string>
                             <string>f</string>
                             <string>k</string>
-                            <string>fid</string>
+                            <string>_getitem_</string>
                             <string>None</string>
                             <string>v</string>
-                            <string>_getitem_</string>
                             <string>_write_</string>
                             <string>selection_uid_list</string>
-                            <string>len</string>
                             <string>selection_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>uid</string>
-                            <string>o</string>
-                            <string>_apply_</string>
+                            <string>len</string>
+                            <string>len_selection_list</string>
                             <string>value_error</string>
+                            <string>processed_object_count</string>
+                            <string>o</string>
+                            <string>ai</string>
+                            <string>_apply_</string>
+                            <string>dict</string>
                             <string>redirect_url</string>
-                            <string>validation_errors</string>
-                            <string>field_errors</string>
-                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
@@ -225,6 +245,27 @@ except ValueError, value_error:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
