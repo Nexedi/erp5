@@ -72,59 +72,6 @@ class PaySheetLine(InvoiceLine):
                       , PropertySheet.CopyrightTax
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-"""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addPaySheetLine'
-         , 'immediate_view' : 'PaySheetLine_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Pay Sheet Cell',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'PaySheetLine_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'quantity'
-          , 'name'          : 'Quantity'
-          , 'category'      : 'object_view'
-          , 'action'        : 'PaySheetLine_quantityView'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
