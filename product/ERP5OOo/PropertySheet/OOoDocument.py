@@ -27,11 +27,13 @@
 
 class OOoDocument:
   """
- 
+    XXX
+    I think that most of these properties are useless because
+    they already existor should be implemented in a different way
   """
 
   _properties = (
-    { 'id'    : 'mime_type',
+    { 'id'    : 'mime_type',                  # Please check if this property is already defined in Zope File class - I think it is called content_type
     'description' : 'mime type of OOo version',
     'type'    : 'string',
     'mode'    : ''},
