@@ -37,7 +37,10 @@ this_module = sys.modules[ __name__ ]
 product_path = package_home( globals() )
 this_module._dtmldir = os.path.join( product_path, 'dtml' )
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions, is_erp5_type = 1)
+document_classes = updateGlobals( this_module,
+                                  globals(),
+                                  permissions_module=Permissions,
+                                  is_erp5_type=1 )
 
 import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, CMFCorePatch
 
@@ -60,9 +63,9 @@ def initialize( context ):
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
-  content_classes = (Base.Base, XMLObject.XMLObject,)
-  portal_tools = (ClassTool.ClassTool,
-		  CacheTool.CacheTool,)
+  content_classes = ( Base.Base, XMLObject.XMLObject, )
+  portal_tools = ( ClassTool.ClassTool,
+                   CacheTool.CacheTool, )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
@@ -70,7 +73,7 @@ def initialize( context ):
                          object_classes = object_classes,
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
-                         content_classes = content_classes)  
+                         content_classes = content_classes)
   # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
   initializeProductDocumentRegistry()
