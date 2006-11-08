@@ -52,6 +52,11 @@ class DistributedRamCache(BaseCache):
     self._debugLevel = params.get('debugLevel', 7)
     self._last_cache_conn_creation_time = time()
     BaseCache.__init__(self)
+    
+  def initCacheStorage(self):
+    """ Init cache storage """
+    ## cache storage is a memcached server and no need to init it
+    pass
         
   def getCacheStorage(self):
     ## if we use one connection object this causes 

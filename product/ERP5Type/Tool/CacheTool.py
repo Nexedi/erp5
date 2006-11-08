@@ -160,14 +160,16 @@ class CacheTool(BaseTool):
   security.declareProtected(Permissions.ModifyPortalContent, 'updateCache')
   def updateCache(self, REQUEST=None):
     """ Clear and update cache structure """
-    #erp5_site_id = self.getPortalObject().getId()
     for cf in CachingMethod.factories:
-      for cp in  CachingMethod.factories[cf].getCachePluginList():
+      for cp in CachingMethod.factories[cf].getCachePluginList():
         del cp
     CachingMethod.factories = {}
     ## read configuration from ZODB
     for key,item in self.getCacheFactoryList().items():
       if len(item['cache_plugins'])!=0:
+        ## init cache backend storages
+        for cp in item["cache_plugins"]:
+          cp.initCacheStorage()
         CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache updated.')

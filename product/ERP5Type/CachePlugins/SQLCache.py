@@ -105,7 +105,9 @@ class SQLCache(BaseCache):
                                 FROM %s 
                                 WHERE scope="%s"
                             '''
-
+                            
+  find_table_by_name_sql = """SHOW TABLES LIKE '%s' """
+  
   def __init__(self, params):
     BaseCache.__init__(self)
     self._dbConn = None
@@ -117,7 +119,19 @@ class SQLCache(BaseCache):
     
     ## since SQL cache is persistent check for expired objects
     #self.expireOldCacheEntries(forceCheck=True)
-    
+  
+  def initCacheStorage(self):
+    """ Init cache backedn storage by creating needed cache table in RDBMS """
+    sql_query = self.find_table_by_name_sql %self._db_cache_table_name
+    cursor =  self.execSQLQuery(sql_query)
+    result = cursor.fetchall()
+    if 0 < len(result):
+      ## we have such table
+      pass
+    else:
+      ## no such table create it
+      self.execSQLQuery(self.create_table_sql %self._db_cache_table_name) 
+  
   def getCacheStorage(self):
     """ 
     Return current DB connection or create a new one for this thread.
@@ -139,7 +153,6 @@ class SQLCache(BaseCache):
     else:
       ## we have already dbConn for this thread 
       return dbConn
-
     
   def get(self, cache_id, scope, default=None):
     sql_query = self.get_key_sql %(self._db_cache_table_name, cache_id, scope)

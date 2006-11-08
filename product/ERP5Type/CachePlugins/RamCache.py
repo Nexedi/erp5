@@ -42,7 +42,12 @@ class RamCache(BaseCache):
     
   def __init__(self, params={}):
     BaseCache.__init__(self)
-            
+ 
+  def initCacheStorage(self):
+    """ Init cache storage """
+    ## cache storage is a RAM based dictionary
+    pass
+    
   def getCacheStorage(self):
     return self._cache_dict
     
