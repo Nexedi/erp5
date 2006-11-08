@@ -30,23 +30,23 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?opportunity_state=enquired&local_roles=%(local_roles)s&reset=1
+sale_opportunity_module?simulation_state=enquired&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sales enquiries</string> </value>
+            <value> <string>Sales Enquiries</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>enquiries</string> </value>
+            <value> <string>1_enquiries</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -57,37 +57,13 @@ Base_viewSearchResultList?opportunity_state=enquired&local_roles=%(local_roles)s
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Assignee</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -104,7 +80,15 @@ Base_viewSearchResultList?opportunity_state=enquired&local_roles=%(local_roles)s
             <value>
               <dictionary>
                 <item>
-                    <key> <string>opportunity_state</string> </key>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Sale Opportunity</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
                         <string>enquired</string>

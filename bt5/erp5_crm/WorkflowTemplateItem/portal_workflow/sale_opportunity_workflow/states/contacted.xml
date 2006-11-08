@@ -34,12 +34,16 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>email_offer</string>
                 <string>email_offer_action</string>
                 <string>enquire</string>
                 <string>enquire_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
+                <string>follow</string>
+                <string>follow_action</string>
                 <string>offer</string>
                 <string>offer_action</string>
                 <string>sell</string>

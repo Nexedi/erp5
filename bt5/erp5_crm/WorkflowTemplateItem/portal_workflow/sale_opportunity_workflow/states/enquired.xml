@@ -38,6 +38,8 @@
                 <string>email_offer_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
+                <string>follow</string>
+                <string>follow_action</string>
                 <string>offer</string>
                 <string>offer_action</string>
               </tuple>

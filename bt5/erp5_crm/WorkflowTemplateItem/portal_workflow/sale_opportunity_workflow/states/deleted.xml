@@ -19,38 +19,33 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rejected</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Rejected</string> </value>
+            <value> <string>Deleted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>follow</string>
-                <string>follow_action</string>
-                <string>reset</string>
-                <string>reset_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>type_list</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
       </dictionary>

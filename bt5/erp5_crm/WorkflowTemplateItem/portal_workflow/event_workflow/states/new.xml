@@ -46,6 +46,8 @@
                 <string>create_sale_opportunity_action</string>
                 <string>create_support_request</string>
                 <string>create_support_request_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
                 <string>mark_responded</string>
@@ -57,6 +59,12 @@
                 <string>user_assign</string>
                 <string>user_assign_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>

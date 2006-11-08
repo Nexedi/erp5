@@ -38,6 +38,8 @@
                 <string>enquire_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
+                <string>follow</string>
+                <string>follow_action</string>
                 <string>reject</string>
                 <string>reject_action</string>
                 <string>sell</string>

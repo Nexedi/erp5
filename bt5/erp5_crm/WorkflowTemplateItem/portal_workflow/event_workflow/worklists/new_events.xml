@@ -24,19 +24,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>New Event  (%(count)s)</string> </value>
+            <value> <string>New Events (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?event_state=new&reset=1
+event_module?simulation_state=new&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>New Event</string> </value>
+            <value> <string>New Events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +46,7 @@ Base_viewSearchResultList?event_state=new&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new</string> </value>
+            <value> <string>new_events</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -80,7 +80,18 @@ Base_viewSearchResultList?event_state=new&reset=1
             <value>
               <dictionary>
                 <item>
-                    <key> <string>event_state</string> </key>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Mail Message</string>
+                        <string>Phone Call</string>
+                        <string>Incoming Fax</string>
+                        <string>Incoming Letter</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
                         <string>new</string>

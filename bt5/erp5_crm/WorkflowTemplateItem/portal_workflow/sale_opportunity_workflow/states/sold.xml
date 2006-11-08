@@ -34,6 +34,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>follow</string>
+                <string>follow_action</string>
                 <string>reset</string>
                 <string>reset_action</string>
               </tuple>
