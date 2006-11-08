@@ -57,7 +57,14 @@ class Simulation:
 
 
         {   'id'          : 'delivery_ratio',
-            'description' : 'ratio to apply on the quantity property of the corresponding delivery to obtain the current quantity',
+            'description' : 'ratio to apply on the quantity property of the' \
+                            'corresponding delivery to obtain the current quantity',
+            'default'     : 1.,
+            'type'        : 'float',
+            'mode'        : 'w' },
+        {   'id'          : 'order_ratio',
+            'description' : 'ratio to apply on the quantity property of the' \
+                            'corresponding order to obtain the current quantity',
             'default'     : 1.,
             'type'        : 'float',
             'mode'        : 'w' },
