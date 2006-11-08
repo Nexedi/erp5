@@ -87,7 +87,7 @@ portal.portal_selections.setSelectionParamsFor(\n
                       payment_mode_for_related_payment=payment_mode,\n
                       payment_for_related_payment=payment))\n
 \n
-related_payement = portal.accounting_module.newContent(\n
+related_payment = portal.accounting_module.newContent(\n
   portal_type="Payment Transaction",\n
   title = str(N_("Payment of ${invoice_title}",\n
           mapping=dict(invoice_title=unicode((context.getReference() or\n
@@ -103,14 +103,14 @@ related_payement = portal.accounting_module.newContent(\n
   payment_mode=payment_mode,\n
 )\n
 if is_source:\n
-  related_payement.edit(destination_payment=context.getDestinationPayment(),\n
+  related_payment.edit(destination_payment=context.getDestinationPayment(),\n
                         source_payment=payment)\n
 else:\n
-  related_payement.edit(destination_payment=payment,\n
+  related_payment.edit(destination_payment=payment,\n
               source_payment=context.getSourcePayment())\n
 \n
 \n
-bank = related_payement.newContent(\n
+bank = related_payment.newContent(\n
    portal_type=line_portal_type,\n
    id=\'bank\',\n
 )\n
@@ -123,9 +123,12 @@ for line in context.objectValues(\n
   else:\n
     account = line.getDestinationValue(portal_type=\'Account\')\n
   \n
-  if account is not None and account.getAccountTypeId() in (\n
-                                            \'payable\', \'receivable\'):\n
-     related_payement.newContent(\n
+  if account is not None and \\\n
+      account.getAccountTypeId() in (\'payable\', \'receivable\') and \\\n
+      line.getSourceSection() == context.getSourceSection() and \\\n
+      line.getDestinationSection() == context.getDestinationSection() and \\\n
+      not line.getGroupingReference() :\n
+     related_payment.newContent(\n
        portal_type=line_portal_type,\n
        source=line.getSource(),\n
        destination=line.getDestination(),\n
@@ -139,13 +142,10 @@ else:\n
   bank.edit( destination=node,\n
              quantity=bank_quantity )\n
 \n
-# maybe stop is a bit too much ?\n
-related_payement.stop()\n
-\n
 if not batch_mode:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
-        related_payement.absolute_url(), N_(\'Related Payment Created\')))\n
+        related_payment.absolute_url(), N_(\'Related Payment Created\')))\n
 else:\n
   return related_payment\n
 </string> </value>
@@ -210,14 +210,13 @@ else:\n
                             <string>dict</string>
                             <string>str</string>
                             <string>unicode</string>
-                            <string>related_payement</string>
+                            <string>related_payment</string>
                             <string>bank</string>
                             <string>bank_quantity</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>account</string>
                             <string>None</string>
-                            <string>related_payment</string>
                           </tuple>
                         </value>
                     </item>
