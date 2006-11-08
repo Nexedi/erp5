@@ -163,7 +163,7 @@ class ERP5UserManager(BasePlugin):
     def getUserByLogin(self, login):
         """
         Search the Catalog for login and return a list of person objects
-        login can be a string list or a list of strings
+        login can be a string or a list of strings
         """
         if not login:
           return []
