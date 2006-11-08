@@ -365,9 +365,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>

@@ -105,6 +105,7 @@
                       <list>
                         <string>my_source_reference</string>
                         <string>my_incident_type</string>
+                        <string>my_source_transport</string>
                         <string>my_source_total_asset_price</string>
                       </list>
                     </value>

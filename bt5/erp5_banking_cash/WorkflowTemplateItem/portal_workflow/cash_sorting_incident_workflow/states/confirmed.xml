@@ -41,6 +41,7 @@
             <value>
               <tuple>
                 <string>archive</string>
+                <string>post_dialog_action</string>
               </tuple>
             </value>
         </item>

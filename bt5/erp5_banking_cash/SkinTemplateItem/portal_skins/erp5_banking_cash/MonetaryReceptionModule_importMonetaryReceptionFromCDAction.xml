@@ -169,7 +169,9 @@ def split_head(CD_file_line_list):\n
   head_resource_string  = CD_file_line_list[11][32:56]\n
   head_emission_letter = CD_file_line_list[14][25:26]\n
   context.log(\'head_resource_string\',head_resource_string)\n
-\n
+  context.log(\'head_start_date_string\',head_start_date_string)\n
+  context.log(\'head_movement_id\',head_movement_id)\n
+  \n
   # find letter in the emission_letter category\n
   default_emissionLetter_list = [x[1] for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]]\n
   head_emission_letter = string.lower(head_emission_letter)\n
@@ -284,7 +286,7 @@ def split_lines(CD_file_line_list):\n
     line_container_id = new_CD_line[:7]\n
     line_range_start  = new_CD_line[34:46]\n
     line_range_stop   = new_CD_line[49:61]\n
-    line_quantity_string     = new_CD_line[64:70]\n
+    line_quantity_string = new_CD_line[64:70]\n
 \n
     line_container_id = (line_container_id or \'\').strip()\n
     if line_container_id  == \'\':\n
@@ -325,10 +327,14 @@ def url_redirection(error_message,delivery_id=None):\n
 \n
 \n
 request  = context.REQUEST\n
-CD_file_line_list = import_file.readlines()\n
+if file_data is not None:\n
+  CD_file_line_list = file_data\n
+else:\n
+  CD_file_line_list = import_file.readlines()\n
+\n
+context.log("new_line_list", CD_file_line_list)\n
 \n
 # analyse the container head and split it into dictionnary\n
-\n
 split_head_result_dict = split_head(CD_file_line_list[:20])\n
 if split_head_result_dict[\'error\']:\n
    return url_redirection(split_head_result_dict[\'message\'])\n
@@ -382,7 +388,7 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, **kw</string> </value>
+            <value> <string>import_file=None, file_data=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -410,13 +416,14 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>import_file</string>
+                            <string>file_data</string>
                             <string>kw</string>
                             <string>message_dict</string>
                             <string>isSameSet</string>
@@ -443,7 +450,10 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

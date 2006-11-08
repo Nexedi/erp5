@@ -78,6 +78,7 @@ if listbox is None:\n
   reference_date = DateTime()\n
   container_list = []\n
   listbox = []\n
+  #context.log("tracking list", context.portal_simulation.getCurrentTrackingList(at_date= reference_date, node = node))\n
   for o in context.portal_simulation.getCurrentTrackingList(at_date= reference_date, node = node):\n
     if o.getObject().getParentValue().getPortalType()  in container_portal_type_list:\n
       cash_container = o.getObject()\n

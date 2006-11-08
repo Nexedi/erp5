@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getSource(),vault_type=(\'site/surface/banque_interne\', \'site/surface/gros_paiement\', \'site/surface/gros_versement\', \'site/surface/operations_diverses\'), leaf_node=1, all=1)</string> </value>
+            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getSource(),vault_type=(\'site\'), leaf_node=0, all=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

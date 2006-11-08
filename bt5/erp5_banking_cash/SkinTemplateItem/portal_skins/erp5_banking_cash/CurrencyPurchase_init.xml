@@ -79,7 +79,6 @@ transaction = context\n
 \n
 movement = transaction.newContent(portal_type=\'Banking Operation Line\',\n
                        id=\'movement\',\n
-                       immediate_reindex=1,\n
                        source=\'account_module/bank_account\', # Set default source\n
                        destination=\'account_module/bank_account\', # Set default destination\n
                        )\n

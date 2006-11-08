@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination</string> </value>
+            <value> <string>my_source_transport</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -251,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination Vault</string> </value>
+                    <value> <string>Remote Site</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getDestination(), vault_type=(\'site/caveau/auxiliaire/encaisse_des_devises\'), leaf_node=1,user_site=1)</string> </value>
+            <value> <string>python: here.Delivery_getVaultItemList(user_site=0,vault_type=(\'site\',),strict_membership=1,leaf_node=0,with_base=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

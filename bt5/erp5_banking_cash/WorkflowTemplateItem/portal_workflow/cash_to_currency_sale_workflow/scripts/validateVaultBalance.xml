@@ -118,7 +118,8 @@ elif billetage_entre != quantity :\n
   msg = Message(domain="ui", message="Return amount is different from output cash")\n
   raise ValidationFailed, (msg,) \n
 elif resource_one != 0 :\n
-  raise ValidationFailed, \'Insufficient balance\'\n
+  msg = Message(domain="ui", message="Insufficient balance")\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>

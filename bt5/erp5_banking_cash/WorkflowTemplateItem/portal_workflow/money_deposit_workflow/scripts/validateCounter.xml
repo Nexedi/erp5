@@ -76,6 +76,16 @@ date = transaction.getStartDate()\n
 destination= transaction.getDestination(None)\n
 transaction.log(\'destination:\',destination)\n
 \n
+amount = transaction.getSourceTotalAssetPrice()\n
+if amount is None:\n
+  msg = Message(domain="ui", message="Sorry, you have to define a quantity.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+destination_payment = transaction.getDestinationPayment()\n
+if destination_payment is None:\n
+  msg = Message(domain="ui", message="Sorry, you have to define an account.")\n
+  raise ValidationFailed, (msg,)\n
+\n
 var_state = transaction.getSimulationState()\n
 if var_state == \'confirmed\': \n
   # Get price and total_price.\n
@@ -177,10 +187,11 @@ if len(counter_list) == 0:\n
                             <string>date</string>
                             <string>None</string>
                             <string>destination</string>
-                            <string>var_state</string>
                             <string>amount</string>
-                            <string>total_price</string>
                             <string>msg</string>
+                            <string>destination_payment</string>
+                            <string>var_state</string>
+                            <string>total_price</string>
                             <string>site</string>
                             <string>append</string>
                             <string>$append0</string>

@@ -104,9 +104,7 @@ if base_price is None or base_price <= 0:\n
 fix_montant = transaction.getDiscount()\n
 pourcentage = transaction.getDiscountRatio()\n
 \n
-if (fix_montant is None or fix_montant < 0) and (pourcentage is None or fix_montant < 0):\n
-  msg = Message(domain="ui", message="You have to specify discount or discount ratio.")\n
-  raise ValidationFailed, (msg,)\n
+\n
 \n
 \n
 resource_two = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Purchase Line\')\n
@@ -128,7 +126,8 @@ elif billetage_sorti != quantity :\n
   msg = Message(domain="ui", message="Return amount is different from output cash")\n
   raise ValidationFailed, (msg,) \n
 elif resource_two!= 0 :\n
-  raise ValidationFailed, \'Insufficient balance\'\n
+  msg = Message(domain="ui", message="Insufficient balance")\n
+  raise ValidationFailed, (msg,)\n
 
 
 ]]></string> </value>

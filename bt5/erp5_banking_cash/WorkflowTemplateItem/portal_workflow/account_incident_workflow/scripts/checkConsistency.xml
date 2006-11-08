@@ -68,14 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># check that we don\'t have both incoming and outgoing line on the document\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that we don\'t have both incoming and outgoing line on the document\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 txn = state_change[\'object\']\n
 in_list = txn.objectValues(portal_type=\'Incoming Account Incident Line\')\n
 out_list = txn.objectValues(portal_type=\'Outgoing Account Incident Line\')\n
-\n
+vault = "%s/surface/salle_tri/encaisse_des_differences" %(txn.getSource(),)\n
 price = txn.getSourceTotalAssetPrice()\n
 in_price = txn.getTotalPrice(portal_type=[\'Incoming Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 out_price = txn.getTotalPrice(portal_type=[\'Outgoing Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
@@ -86,10 +88,17 @@ if len(in_list) != 0 and len(out_list) != 0:\n
 elif len(in_list) == 0 and len(out_list) == 0:\n
   msg = Message(domain = "ui", message="No resource.")\n
   raise ValidationFailed, (msg,)\n
+elif len(out_list) !=0:\n
+  resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Account Incident Line\')\n
+  if resource <> 0 :\n
+    msg = Message(domain="ui", message="Insufficient Balance.")\n
+    raise ValidationFailed, (msg,)\n
 elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != price):\n
   msg = Message(domain = "ui", message="Price differs between document and resource.")\n
   raise ValidationFailed, (msg,)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -147,11 +156,14 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>_getattr_</string>
                             <string>in_list</string>
                             <string>out_list</string>
+                            <string>vault</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>len</string>
                             <string>msg</string>
+                            <string>transaction</string>
+                            <string>resource</string>
                           </tuple>
                         </value>
                     </item>
