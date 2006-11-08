@@ -69,8 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>filter_dict = {}\n
-filter_dict[\'account_number_enabled\']=0\n
-filter_dict[\'quantity_required\']=0\n
+filter_dict[\'fixed_price\']=1\n
 return context.Delivery_viewCheckbookInputDialog(item_portal_type_list=(\'Check\',),model_filter_dict=filter_dict,**kw)\n
 </string> </value>
         </item>

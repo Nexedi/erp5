@@ -102,6 +102,9 @@ for movement in movement_list:\n
   aggregate_value_list = movement.getAggregateValueList()\n
   for item in aggregate_value_list:\n
     if item.getPortalType()==\'Check\':\n
+      if item.getSimulationState()!=\'confirmed\':\n
+        msg = Message(domain = "ui", message="Sorry, one traveler check was not sale yet")\n
+        raise ValidationFailed, (msg,)\n
       if item.getPrice() is not None:\n
         # then we must calculate the exchange value at the\n
         # time where the item was first delivered\n

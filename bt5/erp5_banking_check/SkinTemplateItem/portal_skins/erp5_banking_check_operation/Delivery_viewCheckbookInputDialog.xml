@@ -95,41 +95,47 @@ if listbox is None:\n
   reference_date = DateTime()\n
   item_list = []\n
   listbox = []\n
-  getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-  #context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
-  #return [x.path for x in  getCurrentTrackingList(at_date=reference_date, node=node)]\n
-  current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
-                             at_date=reference_date, node=node,\n
-                             where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
-  for item in current_tracking_list:\n
-    exclude=0\n
-    if model_filter_dict is not None:\n
-      resource = item.getResourceValue()\n
-      for property,value in model_filter_dict.items():\n
-        if resource.getProperty(property)!=value:\n
+  if node is not None or disable_node:\n
+    getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
+    #context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
+    #return [x.path for x in  getCurrentTrackingList(at_date=reference_date, node=node)]\n
+    if disable_node:\n
+      node=None\n
+    current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
+                               at_date=reference_date, node=node,\n
+                               where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
+    for item in current_tracking_list:\n
+      exclude=0\n
+      if model_filter_dict is not None:\n
+        resource = item.getResourceValue()\n
+        for property,value in model_filter_dict.items():\n
+          if resource.getProperty(property)!=value:\n
+            exclude=1\n
+      if destination_payment is not None:\n
+        if destination_payment!=item.getDestinationPayment():\n
           exclude=1\n
-    if destination_payment is not None:\n
-      if destination_payment!=item.getDestinationPayment():\n
-        exclude=1\n
-    if not exclude:\n
-      item_portal_type = item.getPortalType()\n
-      if item_portal_type  in item_portal_type_list:\n
-        if item_portal_type==\'Check\' and item.getSimulationState() not in (\'draft\',\'confirmed\'):\n
-          continue\n
-        item_dict = {}\n
-        if item_portal_type==\'Check\':\n
-          item_dict[\'reference_range_max\'] = item.getReference()\n
-          item_dict[\'reference_range_min\'] = item.getReference()\n
-        else:\n
-          item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
-          item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
-        item_dict[\'resource_title\'] = item.getResourceTitle()\n
-        item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
-        item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
-        item_dict[\'selection\'] = 0\n
-        item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
+      if not exclude:\n
+        item_portal_type = item.getPortalType()\n
+        if item_portal_type  in item_portal_type_list:\n
+          if item_portal_type==\'Check\' and item.getSimulationState() not in (\'draft\',\'confirmed\'):\n
+            continue\n
+          if simulation_state is not None:\n
+            if item.getSimulationState()!=simulation_state:\n
+              continue\n
+          item_dict = {}\n
+          if item_portal_type==\'Check\':\n
+            item_dict[\'reference_range_max\'] = item.getReference()\n
+            item_dict[\'reference_range_min\'] = item.getReference()\n
+          else:\n
+            item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
+            item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
+          item_dict[\'resource_title\'] = item.getResourceTitle()\n
+          item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
+          item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
+          item_dict[\'selection\'] = 0\n
+          item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
 \n
-        listbox.append(item_dict)\n
+          listbox.append(item_dict)\n
 \n
 if batch_mode:\n
   return listbox\n
@@ -166,7 +172,7 @@ return context.asContext(context=None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -186,7 +192,7 @@ return context.asContext(context=None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -197,6 +203,8 @@ return context.asContext(context=None\n
                             <string>destination_payment</string>
                             <string>model_filter_dict</string>
                             <string>batch_mode</string>
+                            <string>simulation_state</string>
+                            <string>disable_node</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>Dummy</string>
@@ -238,6 +246,8 @@ return context.asContext(context=None\n
                 <none/>
                 <none/>
                 <none/>
+                <none/>
+                <int>0</int>
                 <none/>
                 <int>0</int>
               </tuple>

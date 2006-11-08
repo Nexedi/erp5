@@ -127,9 +127,10 @@ for line in line_list:\n
       item.setDestinationPayment(line.getDestinationPayment())\n
       item.setDestinationTrade(line.getDestinationTrade())\n
       item.setResourceValue(resource)\n
-      if item.getPortalType()==\'Check\':\n
-        portal.portal_workflow.doActionFor(item,\'confirm_action\',\n
-                                           wf_id=\'check_workflow\')\n
+      # I (seb) think this is a big mistake\n
+      #if item.getPortalType()==\'Check\':\n
+      #  portal.portal_workflow.doActionFor(item,\'confirm_action\',\n
+      #                                     wf_id=\'check_workflow\')\n
       aggregate_list.append(item)\n
 \n
     # Finally set the aggregate list on the line\n

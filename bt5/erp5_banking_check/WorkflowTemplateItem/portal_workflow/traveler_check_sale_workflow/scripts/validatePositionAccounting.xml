@@ -119,6 +119,11 @@ if total_debit>0:\n
 \n
   line = transaction.movement\n
   bank_account = transaction.getDestinationPaymentValue()\n
+\n
+  if bank_account is None:\n
+    msg = Message(domain=\'ui\', message="Sorry, no account defined.")\n
+    raise ValidationFailed, (msg,)\n
+\n
   price = total_debit\n
 \n
   # this prevents multiple transactions from being committed at the same time for this bank account.\n
