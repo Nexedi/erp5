@@ -27,6 +27,12 @@
             <value> <string>ERP5.Transaction</string> </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_abortTransaction</string> </value>
         </item>

@@ -316,7 +316,32 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Portal Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipient</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -342,16 +367,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Source</string>
+                          <string>Sender</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>Destination</string>
+                          <string>Recipient</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -443,6 +468,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -492,12 +521,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
                           <string>source_title</string>
-                          <string>Source</string>
+                          <string>Sender</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>Destination</string>
+                          <string>Recipient</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -519,8 +552,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -528,7 +561,32 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Portal Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipient</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -590,7 +648,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

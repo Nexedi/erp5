@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -81,7 +87,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -90,6 +98,7 @@
                       <list>
                         <string>my_title</string>
                         <string>portal_type</string>
+                        <string>my_start_date</string>
                       </list>
                     </value>
                 </item>
@@ -98,7 +107,7 @@
                     <value>
                       <list>
                         <string>my_source_title</string>
-                        <string>my_destination_title</string>
+                        <string>my_destination_title_list</string>
                         <string>my_default_follow_up_title</string>
                         <string>simulation_state</string>
                       </list>

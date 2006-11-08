@@ -13,8 +13,22 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>editable</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_title</string> </value>
+            <value> <string>my_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -70,6 +84,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -77,7 +95,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_destination_title</string> </value>
+                    <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
