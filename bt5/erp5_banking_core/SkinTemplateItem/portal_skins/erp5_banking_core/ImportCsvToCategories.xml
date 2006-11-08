@@ -223,7 +223,7 @@ elif import_type == \'create_subvaults\' :\n
       subvault = upperCase(e_list[1]) # ex : Encaisse des Devises\n
       subvault_code=None\n
       if len(e_list)==3:\n
-        subvault_code = upperCase(e_list[2]) # ex : D\n
+        subvault_code = e_list[2] # ex : D\n
       counter_string_list = [] # the list of counters, like [\'guichet_1,entrant\',...]\n
       #one_way_counter_list = (\'gros_paiement\',\'gros_versement\')\n
       one_way_counter_list = ()\n
@@ -297,6 +297,9 @@ elif import_type == \'create_subvaults\' :\n
   #for c in context.portal_categories.site.agence.principale.lome.getCategoryChildValueList() :\n
   #for c in context.portal_categories.site.getCategoryChildValueList() :\n
   #for c in context.portal_categories.site.agence.principale.cotonou.getCategoryChildValueList() :\n
+  #for c in context.portal_categories.site.getCategoryChildValueList() :\n
+  #for c in context.portal_categories.site.agence.principale.abidjan.getCategoryChildValueList() :\n
+  #for c in context.portal_categories.site.agence.principale.bissau.getCategoryChildValueList() :\n
   for c in context.portal_categories.site.getCategoryChildValueList() :\n
     context.log(\'c.getPath()\',c.getPath())\n
     for vault_type in vault_type_list :\n
@@ -336,6 +339,8 @@ elif import_type == \'create_subvaults\' :\n
               subcat_vault_type = \'%s/encaisse_des_externes/transit\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             elif \'devises\' in subvault_path.lower():\n
               subcat_vault_type = \'%s/encaisse_des_devises\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            elif \'differences\' in subvault_path.lower():\n
+              subcat_vault_type = \'%s/encaisse_des_differences\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             elif \'mutiles\' in subvault_path.lower():\n
               subcat_vault_type = \'%s/billets_mutiles\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
             elif \'macules\' in subvault_path.lower():\n

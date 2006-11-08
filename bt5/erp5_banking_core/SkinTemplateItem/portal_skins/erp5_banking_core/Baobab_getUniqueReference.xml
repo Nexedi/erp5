@@ -76,11 +76,14 @@ except AttributeError:\n
 \n
 application_id = \'BA\'\n
 \n
+N_ = context.Base_translateString\n
+\n
 # if it\'s not defined, try to generate it\n
 if reference in (None, \'\') or not str(reference).startswith(application_id):\n
   date = context.getStopDate()\n
   if date in (None, \'\'):\n
-    return \'No date defined\'\n
+    message = N_("No date defined")\n
+    return message\n
   year = date.strftime(\'%Y\')\n
 \n
   # codification\n
@@ -171,9 +174,11 @@ return reference\n
                             <string>reference</string>
                             <string>AttributeError</string>
                             <string>application_id</string>
+                            <string>N_</string>
                             <string>None</string>
                             <string>str</string>
                             <string>date</string>
+                            <string>message</string>
                             <string>year</string>
                             <string>source</string>
                             <string>codification</string>

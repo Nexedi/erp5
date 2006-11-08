@@ -108,6 +108,7 @@
                         <string>my_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_payment_title</string>
+                        <string>my_price_string</string>
                       </list>
                     </value>
                 </item>
@@ -116,7 +117,6 @@
                     <value>
                       <list>
                         <string>my_price</string>
-                        <string>my_price_string</string>
                       </list>
                     </value>
                 </item>

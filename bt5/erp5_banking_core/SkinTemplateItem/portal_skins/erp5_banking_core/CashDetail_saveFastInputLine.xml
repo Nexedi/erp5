@@ -260,13 +260,13 @@ for resource_id in per_resource_dict.keys():\n
         cell.setQuantity(variation_item["quantity"])\n
 \n
 if variation_not_defined:\n
-  old_line = [x.getObject() for x in context.Delivery_getMovementList(portal_type=[line_portal_type,])]\n
+  old_line = [x.getObject() for x in context.objectValues(portal_type=[line_portal_type,])]\n
   if len(old_line)>0:\n
     for object_list in old_line:\n
       context.deleteContent(object_list.getId())\n
   request  = context.REQUEST\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                , "portal_status_message=%s doesn\\\'t  exist for %s" %(resource_object.getTitle(), variation)\n
+                                , "portal_status_message=%s doesn\\\'t  exist for %s" %(resource_object.getTitle(), variation.lstrip(\'variation/\'))\n
                                 )\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
 else:\n
@@ -277,7 +277,7 @@ else:\n
   #return main_form(portal_status_message=\'Lines Created\')\n
   request  = context.REQUEST\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                  , \'portal_status_message=Lines%20Created\'\n
+                                  , \'portal_status_message=Lines Created\'\n
                                   )\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
 
