@@ -146,6 +146,8 @@ if not batch_mode:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
         related_payement.absolute_url(), N_(\'Related Payment Created\')))\n
+else:\n
+  return related_payment\n
 </string> </value>
         </item>
         <item>
@@ -215,6 +217,7 @@ if not batch_mode:\n
                             <string>line</string>
                             <string>account</string>
                             <string>None</string>
+                            <string>related_payment</string>
                           </tuple>
                         </value>
                     </item>
