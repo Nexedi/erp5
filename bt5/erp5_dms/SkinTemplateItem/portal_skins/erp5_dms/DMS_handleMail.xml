@@ -85,6 +85,7 @@ if senderemail is None:\n
   return printed\n
 \n
 # find sender\n
+context.log(senderemail)\n
 r=context.portal_catalog(portal_type=\'Email\',url_string=senderemail)\n
 if len(r)==0:\n
   print noSenderMsg\n
@@ -99,6 +100,7 @@ context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUr
 try:\n
   for fname,data in theMail[\'attachments\'].items():\n
     obj=context.DMS_createObjectFromFile(fname,data)\n
+    obj.setGroup(person.getSubordinationValue().getGroup())\n
     obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
     context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
 except Exception,e:\n

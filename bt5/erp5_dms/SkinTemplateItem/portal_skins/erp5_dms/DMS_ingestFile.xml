@@ -72,10 +72,20 @@
 # it can be run any time\n
 # is meant to extract metadata from file name and contents\n
 \n
+if data is None:\n
+  if hasattr(context,\'oo_data\'):\n
+    data=context.oo_data\n
+  else:\n
+    if hasattr(context,\'data\'):\n
+      data=data\n
+if data is not None:\n
+  context.setPropertyListFromContent(data)\n
+\n
 if fname is None:\n
   fname=context.getSourceReference()\n
 else:\n
   context.setSourceReference(fname)\n
+\n
 if fname is not None:\n
   context.setPropertyListFromFilename(fname)\n
   context.guessMimeType(fname)\n
@@ -137,9 +147,9 @@ if fname is not None:\n
                             <string>fname</string>
                             <string>data</string>
                             <string>None</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>hasattr</string>
+                            <string>context</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
