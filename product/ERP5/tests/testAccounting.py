@@ -93,10 +93,23 @@ class TestAccounting(ERP5TypeTestCase):
   
   def afterSetUp(self):
     """Prepare the test."""
+    self.portal = self.getPortal()
+    self.workflow_tool = self.portal.portal_workflow
+    self.organisation_module = self.portal.organisation_module
+    self.account_module = self.portal.account_module
+    self.accounting_module = self.portal.accounting_module
     self.createCategories()
     self.createCurrencies()
     self.createEntities()
     self.createAccounts()
+
+    # setup preference for the vendor group
+    self.pref = self.portal.portal_preferences.newContent(
+         portal_type='Preference', preferred_section_category='group/vendor',
+         preferred_accounting_transaction_section_category='group/vendor',
+         priority=3 )
+    self.workflow_tool.doActionFor(self.pref, 'enable_action')
+
     self.login()
 
   def login(self) :
@@ -131,11 +144,11 @@ class TestAccounting(ERP5TypeTestCase):
   def getNeededCategoryList(self):
     """Returns a list of categories that should be created."""
     return ('group/client', 'group/vendor/sub1', 'group/vendor/sub2',
-            'region/%s'%self.default_region, )
+            'payment_mode/check', 'region/%s' % self.default_region, )
   
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',)
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', )
 
   def stepTic(self, **kw):
     """Flush activity queue. """
@@ -145,15 +158,15 @@ class TestAccounting(ERP5TypeTestCase):
     """Create entities. """
     self.client = self.getOrganisationModule().newContent(
         portal_type = self.organisation_portal_type,
-        group = "group/client",
+        group = "client",
         price_currency = "currency_module/USD")
     self.vendor = self.getOrganisationModule().newContent(
         portal_type = self.organisation_portal_type,
-        group = "group/vendor/sub1",
+        group = "vendor/sub1",
         price_currency = "currency_module/EUR")
     self.other_vendor = self.getOrganisationModule().newContent(
         portal_type = self.organisation_portal_type,
-        group = "group/vendor/sub2",
+        group = "vendor/sub2",
         price_currency = "currency_module/EUR")
     # validate entities
     for entity in (self.client, self.vendor, self.other_vendor):
@@ -727,7 +740,7 @@ class TestAccounting(ERP5TypeTestCase):
     income = transaction.newContent(
                   id='income',
                   portal_type=line_portal_type,
-                  quantity=quantity,
+                  quantity=-quantity,
                   source_value=kw.get('income_account', self.income_account),
                   destination_value=kw.get('expense_account',
                                               self.expense_account), )
@@ -737,7 +750,7 @@ class TestAccounting(ERP5TypeTestCase):
     receivable = transaction.newContent(
                   id='receivable',
                   portal_type=line_portal_type,
-                  quantity=-quantity,
+                  quantity=quantity,
                   source_value=kw.get('receivable_account',
                                           self.receivable_account),
                   destination_value=kw.get('payable_account',
@@ -751,6 +764,20 @@ class TestAccounting(ERP5TypeTestCase):
       self.failUnless(len(transaction.checkConsistency()) == 0,
          "Check consistency failed : %s" % transaction.checkConsistency())
     return transaction
+
+  def test_createAccountingTransaction(self):
+    """Make sure acounting transactions created by createAccountingTransaction
+    method are valid.
+    """
+    transaction = self.createAccountingTransaction()
+    self.assertEquals(self.vendor, transaction.getSourceSectionValue())
+    self.assertEquals(self.client, transaction.getDestinationSectionValue())
+    self.assertEquals(self.EUR, transaction.getResourceValue())
+    self.failUnless(transaction.AccountingTransaction_isSourceView())
+    
+    self.workflow_tool.doActionFor(transaction, 'stop_action')
+    self.assertEquals('stopped', transaction.getSimulationState())
+    self.assertEquals([] , transaction.checkConsistency())
 
   def stepCreateValidAccountingTransaction(self, sequence,
                                           sequence_list=None, **kw) :
@@ -1334,7 +1361,84 @@ class TestAccounting(ERP5TypeTestCase):
     self.failIf(account.isCreditAccount())
     account.edit(is_credit_account=True)
     self.failUnless(account.getProperty('is_credit_account'))
+
+
+  # tests for Invoice_createRelatedPaymentTransaction
+  def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
+    """Check payment of a Sale Invoice.
+    """
+    eq = self.assertEquals
+    eq('Payment Transaction', payment.getPortalTypeName())
+    eq([invoice], payment.getCausalityValueList())
+    eq(invoice.getSourceSection(), payment.getSourceSection())
+    eq(invoice.getDestinationSection(), payment.getDestinationSection())
+    eq(payment_node, payment.getSourcePaymentValue())
+    eq(self.getCategoryTool().payment_mode.check,
+       payment.getPaymentModeValue())
+    # test lines
+    eq(2, len(payment.getMovementList()))
+    for line in payment.getMovementList():
+      if line.getId() == 'bank':
+        eq(quantity, line.getSourceCredit())
+        eq(self.bank_account, line.getSourceValue())
+      else:
+        eq(quantity, line.getSourceDebit())
+        eq(self.receivable_account, line.getSourceValue())
+    # this transaction can be validated
+    eq([], payment.checkConsistency())
+    self.workflow_tool.doActionFor(payment, 'stop_action')
+    self.assertEquals('stopped', payment.getSimulationState())
+
+  def test_Invoice_createRelatedPaymentTransactionSimple(self):
+    """Simple case of creating a related payment transaction.
+    """
+    payment_node = self.vendor.newContent(portal_type='Bank Account')
+    invoice = self.createAccountingTransaction()
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.bank_account.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
+
+  def test_Invoice_createRelatedPaymentTransactionGroupedLines(self):
+    """Simple creating a related payment transaction when grouping reference of
+    some lines is already set.
+    """
+    payment_node = self.vendor.newContent(portal_type='Bank Account')
+    invoice = self.createAccountingTransaction()
+    invoice.receivable.setSourceCredit(60)
+    invoice.newContent(id='receivable_groupped',
+                       source_credit=40,
+                       source_value=self.receivable_account)
+    invoice.receivable_groupped.setGroupingReference('A')
     
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.bank_account.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
+  
+  def test_Invoice_createRelatedPaymentTransactionDifferentSection(self):
+    """Simple creating a related payment transaction when we have two line for
+    2 different destination sections.
+    """
+    payment_node = self.vendor.newContent(portal_type='Bank Account')
+    invoice = self.createAccountingTransaction()
+    invoice.receivable.setSourceCredit(60)
+    invoice.newContent(id='receivable_other_third_party',
+                       destination_section_value=self.other_vendor,
+                       source_credit=40,
+                       source_value=self.receivable_account)
+    
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.bank_account.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
+
 if __name__ == '__main__':
   framework()
 else:
