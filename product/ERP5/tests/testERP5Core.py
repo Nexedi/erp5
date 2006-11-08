@@ -137,6 +137,23 @@ class TestERP5Core(ERP5TypeTestCase):
     #self.assertEqual(self.portal.portal_types[module_portal_type].title, module_title)
     self.assertNotEqual(getattr(self.portal.portal_types, object_portal_type, None), None)
     #self.assertEqual(self.portal.portal_types[object_portal_type].title, object_title)
+  
+  def test_01_Bug_446(self, quiet=quiet, run=run_all_test):
+    """
+      Test that Manage members is not an entry in the My Favourites menu.
+    """
+    if not run: return
+    portal_action = getattr(self.getPortal(), 'portal_actions', None)
+    global_action_list = portal_action.listFilteredActionsFor()['global']
+    action_name_list = []
+    for action in global_action_list:
+      action_name_list.append(action['title'])
+
+    self.assertTrue('Create Module' in action_name_list)
+
+    for action_name in action_name_list:
+      self.assertNotEqual(action_name, "Manage Members")
+      self.assertNotEqual(action_name, "Manage members")
 
 if __name__ == '__main__':
     framework()
