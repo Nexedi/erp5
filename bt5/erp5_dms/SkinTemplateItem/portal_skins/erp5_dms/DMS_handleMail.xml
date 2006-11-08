@@ -96,10 +96,18 @@ senderm=r[0]\n
 person=senderm.getParent()\n
 context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUrl())\n
 \n
+mailprops=context.Document_getPropertiesFromMail(theMail[\'body\'])\n
+context.log(mailprops)\n
 # create objects from attachments\n
 try:\n
   for fname,data in theMail[\'attachments\'].items():\n
-    obj=context.DMS_createObjectFromFile(fname,data)\n
+    obj=context.DMS_createObjectFromFile(fname,data,mailprops.get(\'document_type\'))\n
+    # if some properties were in the mail, overwrite the content attrs\n
+    for k in mailprops:\n
+      atr=k\n
+      if k==\'programme\':atr=\'source_project\'\n
+      if k!=\'document_type\':\n
+        obj.setProperty(atr,mailprops[k])\n
     obj.setGroup(person.getSubordinationValue().getGroup())\n
     obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
     context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
@@ -173,10 +181,13 @@ return\n
                             <string>senderm</string>
                             <string>person</string>
                             <string>script</string>
+                            <string>mailprops</string>
                             <string>_getiter_</string>
                             <string>fname</string>
                             <string>data</string>
                             <string>obj</string>
+                            <string>k</string>
+                            <string>atr</string>
                             <string>Exception</string>
                             <string>e</string>
                             <string>str</string>
