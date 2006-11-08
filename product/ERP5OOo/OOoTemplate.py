@@ -364,14 +364,16 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
             #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
             replacement = """<draw:image draw:style-name="%s" draw:name="ERP5Image%d"
             text:anchor-type="paragraph" svg:x="%s" svg:y="%s"
-            svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="Pictures/%s"
+            svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="#Pictures/%s"
             xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
             """%(options_dict['style'], actual_idx,
                         options_dict['x'], options_dict['y'],
                         w, h,
                         pic_name.split('/')[-1] )
             if not ( self.content_type.endswith('draw') or
-                     self.content_type.endswith('presentation') ):
+                     self.content_type.endswith('presentation') or
+                     self.content_type.endswith('writer') or
+                     self.content_type.endswith('text') ):
                 replacement = '<text:p text:style-name="Standard">'+replacement+'</text:p>'
             return replacement
 
