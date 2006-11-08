@@ -144,6 +144,10 @@ if total_debit>0:\n
     msg = Message(domain=\'ui\', message="Unknown error code.")\n
     raise ValidationFailed, (msg,)\n
 \n
+if total_debit==0:\n
+  msg = Message(domain=\'ui\', message=\'Please select at least one traveler check.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
 date = transaction.getStartDate()\n
 source = transaction.getSource(None)\n
 if source is None:\n
