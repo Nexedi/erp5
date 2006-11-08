@@ -121,7 +121,7 @@ def getFormGroupTitleAndId():\n
   return res\n
 \n
 getFormGroupTitleAndId = CachingMethod(getFormGroupTitleAndId,\n
-                                       ("ERP5Site_getFormGroupTitleAndId", form.id),\n
+                                       ("ERP5Site_getFormGroupTitleAndId", form.id, form.get_groups(include_empty=0)),\n
                                        cache_duration=None)\n
 return getFormGroupTitleAndId()\n
 </string> </value>
