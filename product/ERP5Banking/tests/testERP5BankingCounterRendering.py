@@ -222,7 +222,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     # check its portal type
     self.assertEqual(self.counter_rendering.getPortalType(), 'Counter Rendering')
     # check that its source is usual_cash
-    self.assertEqual(self.counter_rendering.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.counter_rendering.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/sortante')
     # check that its destination is counter
     #self.assertEqual(self.counter_rendering.getDestination(), 'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
 
