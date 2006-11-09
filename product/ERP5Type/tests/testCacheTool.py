@@ -207,7 +207,6 @@ return result
       for cf_name in ('ram_cache_factory', 'distributed_ram_cache_factory', 'sql_cache_factory'):
         my_cache = CachingMethod(py_script_obj, 'py_script_obj', cache_factory=cf_name)
         self._cacheFactoryInstanceTest(my_cache, cf_name)
-        print "OK."
         
   def test_06_CacheFactoryMultiPlugins(self, quiet=0, run=run_all_test):
     """ Test a cache factory containing multiple cache plugins. """
@@ -224,7 +223,6 @@ return result
       cf_name = 'erp5_user_factory'
       my_cache = CachingMethod(py_script_obj, 'py_script_obj', cache_factory=cf_name)
       self._cacheFactoryInstanceTest(my_cache, cf_name)
-      print "OK."
   
   def _cacheFactoryInstanceTest(self, my_cache, cf_name):
       portal = self.getPortal()
