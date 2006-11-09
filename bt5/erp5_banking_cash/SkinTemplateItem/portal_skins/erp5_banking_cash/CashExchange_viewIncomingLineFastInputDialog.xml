@@ -77,7 +77,7 @@ cash_detail_dict = { \'line_portal_type\'            : \'Incoming Cash Exchange 
                      , \'emission_letter_list\'      : [\'not_defined\',]                # List of possible emissionLetter or None if all\n
                      , \'variation_list\'            : context.Baobab_getResourceVintageList(banknote=1, coin=1)      # List of possible variation or None if all      #[\'2003\']                       # List of possible variation or None if all\n
                      , \'currency_cash_portal_type\' : None                           # \'Coin\' or \'Banknote\' or None if both\n
-                     , \'read_only\'                 : True                           # If true, the fastinput will not allow change\n
+                     , \'read_only\'                 : False                           # If true, the fastinput will not allow change\n
                      , \'column_base_category\'      : \'variation\'                    # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
 }\n
 \n
@@ -146,7 +146,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>a</string>
                             <string>cash_status</string>
                             <string>None</string>
-                            <string>True</string>
+                            <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>
                         </value>
