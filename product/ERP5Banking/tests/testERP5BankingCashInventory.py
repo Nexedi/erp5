@@ -455,5 +455,5 @@ else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5BankingCashInventory))
+    suite.addTest(unittest.makeSuite(TestERP5BankingInventory))
     return suite
