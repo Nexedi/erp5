@@ -60,6 +60,7 @@ Requirement | fast_input
 Requirement | history
 Requirement | metadata
 Requirement | print_pdf
+Requirement | project_list
 Requirement | view
 Sale Order Line | line_profile
 Sale Order Line | project
