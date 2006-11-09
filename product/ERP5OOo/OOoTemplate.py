@@ -453,8 +453,9 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       ooo = ooo_builder.render(self.title or self.id)
 
       # Convert if necessary
-      format = extra_context.get("format", None)
-      if format is None:
+      opts = extra_context.get("options", None)
+      if opts is not None:
+        format=opts.get("format",None)
         if format == "pdf":
           return self._asPdf(ooo, request)
 
