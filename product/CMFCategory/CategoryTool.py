@@ -1381,12 +1381,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
           raise CategoryError('getCategoryMemberValueList must know the base category')
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
 
+      domain_dict = {base_category: ('portal_categories', context.getRelativeUrl())}
+      selection_domain = DomainSelection(domain_dict = domain_dict).__of__(context)
       if strict_membership:
         catalog_search = self.portal_catalog(portal_type = portal_type,
-		           selection_report = DomainSelection(domain_dict = {base_category:context}))
+		           selection_report = selection_domain)
       else:
         catalog_search = self.portal_catalog(portal_type = portal_type,
-                           selection_domain = DomainSelection(domain_dict = {base_category:context}))
+                           selection_domain = selection_domain)
       
       return catalog_search
 
