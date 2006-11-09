@@ -1,6 +1,8 @@
 Project Line | predecessor
 Project Milestone | predecessor
 Project | predecessor
+Requirement Document | source_decision
+Requirement | source_decision
 Sale Invoice Transaction | source_project
 Sale Order Line | predecessor
 Sale Order Milestone | predecessor

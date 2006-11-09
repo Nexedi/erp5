@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>my_version</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -211,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -239,11 +239,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>Version</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

@@ -103,6 +103,10 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_short_title</string>
+                        <string>my_source_decision_title</string>
+                        <string>my_version</string>
                       </list>
                     </value>
                 </item>
