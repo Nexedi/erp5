@@ -138,7 +138,7 @@ class TestERP5Core(ERP5TypeTestCase):
     self.assertNotEqual(getattr(self.portal.portal_types, object_portal_type, None), None)
     #self.assertEqual(self.portal.portal_types[object_portal_type].title, object_title)
   
-  def test_01_Bug_446(self, quiet=quiet, run=run_all_test):
+  def test_02_FavouritesMenu(self, quiet=quiet, run=run_all_test):
     """
       Test that Manage members is not an entry in the My Favourites menu.
     """
