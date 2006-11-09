@@ -350,7 +350,7 @@ class ActivityTool (Folder, UniqueObject):
         return False
 
     security.declareProtected(Permissions.manage_properties, 'subscribe')
-    def subscribe(self):
+    def subscribe(self, REQUEST=None, RESPONSE=None):
         """ subscribe to the global Timer Service """
         service = getTimerService(self)
         url = '%s/manageLoadBalancing?manage_tabs_message=' %self.absolute_url()
@@ -360,7 +360,8 @@ class ActivityTool (Folder, UniqueObject):
         else:
             service.subscribe(self)
             url += urllib.quote("Subscribed to Timer Service")
-        return self.REQUEST.RESPONSE.redirect(url)
+        if RESPONSE is not None:
+            RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'unsubscribe')
     def unsubscribe(self, REQUEST=None, RESPONSE=None):
