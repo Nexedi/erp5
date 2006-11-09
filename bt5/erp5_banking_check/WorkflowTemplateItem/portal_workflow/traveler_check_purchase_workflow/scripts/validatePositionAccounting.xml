@@ -123,7 +123,7 @@ for movement in movement_list:\n
         raise ValidationFailed, (msg,)\n
 \n
 if total_credit>0:\n
-  total_credit = round(total_credit+0.5)\n
+  total_credit = round(total_credit,0)\n
   # Source and destination will be updated automaticaly based on the category of bank account\n
   # The default account chosen should act as some kind of *temp* account or *parent* account\n
   movement = transaction.get(\'movement\',None)\n
