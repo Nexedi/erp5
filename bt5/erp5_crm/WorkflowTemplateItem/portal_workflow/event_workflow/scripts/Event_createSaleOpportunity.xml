@@ -82,7 +82,9 @@ object.Event_createSaleOpportunity()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/event_workflow/scripts/Event_createSaleOpportunity</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

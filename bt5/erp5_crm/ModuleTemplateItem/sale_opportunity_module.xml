@@ -20,9 +20,6 @@
    <name>Access session data</name>
   </permission>
   <permission type='list'>
-   <name>AccessContentsInformation</name>
-  </permission>
-  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
   <permission type='list'>
@@ -179,9 +176,6 @@
    <name>Add Plugin Registrys</name>
   </permission>
   <permission type='list'>
-   <name>Add Portal ZSyncer Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -234,9 +228,6 @@
   </permission>
   <permission type='list'>
    <name>Add ZODB Mount Points</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ZSyncers</name>
   </permission>
   <permission type='list'>
    <name>Add Zope Tutorials</name>
@@ -338,6 +329,9 @@
    <name>Change proxy roles</name>
   </permission>
   <permission type='list'>
+   <name>Change user folder</name>
+  </permission>
+  <permission type='list'>
    <name>Copy or Move</name>
   </permission>
   <permission type='list'>
@@ -360,6 +354,9 @@
   </permission>
   <permission type='list'>
    <name>Edit ReStructuredText</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='list'>
    <name>FTP access</name>
@@ -510,15 +507,6 @@
   </permission>
   <permission type='list'>
    <name>WebDAV access</name>
-  </permission>
-  <permission type='list'>
-   <name>ZSyncer: Use ZSyncer</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Sale Opportunity Module</portal_type>

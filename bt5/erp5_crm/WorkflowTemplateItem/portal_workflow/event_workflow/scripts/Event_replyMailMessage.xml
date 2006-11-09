@@ -88,7 +88,9 @@ state_change.object.MailHost.send(message, mto=state_change.object.getSender(), 
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/event_workflow/scripts/Event_replyMailMessage</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
