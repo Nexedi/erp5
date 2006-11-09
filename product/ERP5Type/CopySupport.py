@@ -30,9 +30,9 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from zLOG import LOG
 
 class CopyContainer:
-  """
-    This class redefines the copy/paste methods
-    which are required in ERP5 in relation with the ZSQLCatalog
+  """This class redefines the copy/paste methods  which are required in ERP5 in
+  relation with the ZSQLCatalog and CMFCategory. Class using class should also
+  inherit from ERP5Type.Base 
 
     It is used as a mix-in to patch the default Zope behaviour
 
