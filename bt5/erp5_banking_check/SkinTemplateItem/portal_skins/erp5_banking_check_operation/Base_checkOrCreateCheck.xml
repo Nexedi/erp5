@@ -78,8 +78,17 @@ from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from DateTime import DateTime\n
 \n
+if destination:\n
+  bank_account = context.getDestinationPaymentValue()\n
+elif source:\n
+  bank_account = context.getSourcePaymentValue()\n
+else:\n
+  bank_account = None\n
+  \n
+if bank_account is None:\n
+  msg = Message(domain=\'ui\',message=\'Sorry, you must select an account\')\n
+  raise ValidationFailed, (msg,)\n
 \n
-bank_account = context.getDestinationPaymentValue()\n
 if reference is not None:\n
   reference_list = [reference]\n
 \n
@@ -184,7 +193,7 @@ return check_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None, reference_range_min=None, reference_range_max=None</string> </value>
+            <value> <string>reference=None, reference_range_min=None, reference_range_max=None, source=0, destination=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -204,7 +213,7 @@ return check_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -213,6 +222,8 @@ return check_list\n
                             <string>reference</string>
                             <string>reference_range_min</string>
                             <string>reference_range_max</string>
+                            <string>source</string>
+                            <string>destination</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
@@ -222,10 +233,10 @@ return check_list\n
                             <string>context</string>
                             <string>bank_account</string>
                             <string>None</string>
+                            <string>msg</string>
                             <string>reference_list</string>
                             <string>int</string>
                             <string>ValueError</string>
-                            <string>msg</string>
                             <string>_getiter_</string>
                             <string>range</string>
                             <string>ref</string>
@@ -257,6 +268,8 @@ return check_list\n
                 <none/>
                 <none/>
                 <none/>
+                <int>0</int>
+                <int>1</int>
               </tuple>
             </value>
         </item>
