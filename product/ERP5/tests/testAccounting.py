@@ -868,8 +868,7 @@ class TestAccounting(ERP5TypeTestCase):
       # destination section only. We could theoritically support it.
 
       # get a new valid transaction
-      self.stepCreateValidAccountingTransaction(sequence)
-      transaction = sequence.get('transaction')
+      transaction = self.createAccountingTransaction()
       expense_account = sequence.get('expense_account')
       for line in transaction.getMovementList() :
         line.edit( source_value = expense_account,
@@ -934,9 +933,9 @@ class TestAccounting(ERP5TypeTestCase):
         'stop_action')
     
     # only one line without account and with a quantity is also refused
-    self.stepCreateValidAccountingTransaction(sequence)
-    transaction = sequence.get('transaction')
+    transaction = self.createAccountingTransaction()
     transaction.getMovementList()[0].setSource(None)
+    transaction.getMovementList()[0].setDestination(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
         transaction,
@@ -944,8 +943,7 @@ class TestAccounting(ERP5TypeTestCase):
     
     # but if we have a line with 0 quantity on both sides, we can
     # validate the transaction and delete this line.
-    self.stepCreateValidAccountingTransaction(sequence)
-    transaction = sequence.get('transaction')
+    transaction = self.createAccountingTransaction()
     line_count = len(transaction.getMovementList())
     transaction.newContent(
         portal_type = self.accounting_transaction_line_portal_type)
@@ -955,8 +953,7 @@ class TestAccounting(ERP5TypeTestCase):
     
     # 0 quantity, but a destination asset price => do not delete the
     # line
-    self.stepCreateValidAccountingTransaction(sequence)
-    transaction = sequence.get('transaction')
+    transaction = self.createAccountingTransaction()
     new_line = transaction.newContent(
         portal_type = self.accounting_transaction_line_portal_type)
     self.assertEquals(len(transaction.getMovementList()), 3)
@@ -988,8 +985,7 @@ class TestAccounting(ERP5TypeTestCase):
     
     # asset price have priority (ie. if asset price is not balanced,
     # refuses validation even if quantity is balanced)
-    self.stepCreateValidAccountingTransaction(sequence)
-    transaction = sequence.get('transaction')
+    transaction = self.createAccountingTransaction()
     line_list = transaction.getMovementList()
     line_list[0].setDestinationTotalAssetPrice(10)
     line_list[1].setDestinationTotalAssetPrice(100)
@@ -998,8 +994,7 @@ class TestAccounting(ERP5TypeTestCase):
         transaction,
         'stop_action')
     
-    self.stepCreateValidAccountingTransaction(sequence)
-    transaction = sequence.get('transaction')
+    transaction = self.createAccountingTransaction()
     line_list = transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(10)
     line_list[1].setSourceTotalAssetPrice(100)
@@ -1009,8 +1004,7 @@ class TestAccounting(ERP5TypeTestCase):
         'stop_action')
     
     # only asset price needs to be balanced
-    self.stepCreateValidAccountingTransaction(sequence)
-    transaction = sequence.get('transaction')
+    transaction = self.createAccountingTransaction()
     line_list = transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(100)
     line_list[0].setDestinationTotalAssetPrice(100)
