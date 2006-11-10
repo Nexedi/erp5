@@ -102,6 +102,7 @@
                         <string>listbox_total_price</string>
                         <string>listbox_mirror_section_title</string>
                         <string>listbox_int_index</string>
+                        <string>listbox_payment_condition_payment_date</string>
                       </list>
                     </value>
                 </item>
@@ -113,7 +114,6 @@
                         <string>my_description</string>
                         <string>total_amount</string>
                         <string>my_source_administration_title</string>
-                        <string>listbox_payment_condition_payment_date</string>
                       </list>
                     </value>
                 </item>
