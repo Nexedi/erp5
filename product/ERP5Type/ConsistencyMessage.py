@@ -27,13 +27,16 @@
 ##############################################################################
 
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.ObjectMessage import ObjectMessage
 
-class ConsistencyMessage: 
+class ConsistencyMessage(ObjectMessage): 
   """
-   Object Message is used for notifications to user.
+  Consistency Message is used for notifications to user after checkConsistency.
   """
   def __init__(self, constraint, object_relative_url='', message='', mapping = {}, **kw):
-    
+    """
+    init specific variable to constraint
+    """
     self.object_relative_url = object_relative_url
     self.message = message
     self.mapping = mapping
@@ -63,15 +66,5 @@ class ConsistencyMessage:
     XXX to  be implemented
     """
     pass
-
-  def getTranslatedMessage(self):
-    """
-    Return the message translated
-    """
-    from Products.ERP5Type.Message import Message
-    return Message(domain='erp5_ui', message=self.message, mapping=self.mapping)
-
-  getMessage = getTranslatedMessage
-                    
 
 allow_class(ConsistencyMessage)   

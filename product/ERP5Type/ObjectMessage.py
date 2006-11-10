@@ -26,19 +26,18 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Message import Message
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
-from Globals import get_request
 
 class ObjectMessage: 
   """
    Object Message is used for notifications to user.
   """
-  def __init__(self, object_relative_url='', message='', **kw):
+  def __init__(self, object_relative_url='', message='', mapping={}, **kw):
     
     self.object_relative_url = object_relative_url
     self.message = message
+    self.mapping = mapping
     
     self.__dict__.update(kw)
 
@@ -46,13 +45,10 @@ class ObjectMessage:
     """
     Return the message translated
     """
-    return Message(domain='erp5_ui', message=self.message)
+    from Products.ERP5Type.Message import Message
+    return Message(domain='erp5_ui', message=self.message, mapping=self.mapping)
 
-  def getMessage(self):
-    """
-    Return the message without translation
-    """
-    return self.message
+  getMessage = getTranslatedMessage
                     
   def edit(self, **kw):
     """
@@ -70,6 +66,7 @@ class ObjectMessage:
      """
      Get the Object 
      """
+     from Globals import get_request
      request = get_request()['PARENTS']
      if request is not None:
        for item in request:
