@@ -223,7 +223,8 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # check that its source is usual_cash
     self.assertEqual(self.usual_cash_transfer.getSource(), 'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
     # check that its destination is counter
-    self.assertEqual(self.usual_cash_transfer.getDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1')
+    self.assertEqual(self.usual_cash_transfer.getDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.usual_cash_transfer.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies/sortante')
 
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
