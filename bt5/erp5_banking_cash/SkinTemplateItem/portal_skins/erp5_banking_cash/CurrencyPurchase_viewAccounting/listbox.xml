@@ -454,6 +454,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -490,7 +494,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>banking_operation_line_selection</string> </value>
+                    <value> <string>currency_purchase_banking_operation_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -558,7 +562,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>
