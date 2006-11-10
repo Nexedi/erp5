@@ -131,7 +131,13 @@ def getBankAccountByTitle(title):\n
       \'%d Bank Account with title "%s"\' % (len(document_list), title)\n
   return document_list[0]\n
 \n
-product = portal.product_module.newContent(portal_type=\'Product\',\n
+product_list = [o.getObject() for o in portal.portal_catalog(\n
+                                  portal_type=\'Product\',\n
+                                  title=\'Dummy Product for testing\')]\n
+if product_list:\n
+  product = product_list[0]\n
+else:\n
+  product = portal.product_module.newContent(portal_type=\'Product\',\n
                               immediate_reindex=immediate_reindex,\n
                               title=\'Dummy Product for testing\')\n
                                \n
@@ -371,6 +377,8 @@ return "Accounting Transactions Created."\n
                             <string>getCurrencyByReference</string>
                             <string>euro_resource</string>
                             <string>getBankAccountByTitle</string>
+                            <string>o</string>
+                            <string>product_list</string>
                             <string>product</string>
                             <string>range</string>
                             <string>random</string>
