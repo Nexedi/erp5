@@ -47,6 +47,7 @@ except ImportError:
     from StringIO import StringIO
 import re
 import itertools
+import xmlrpclib
 
 from zLOG import LOG
 
@@ -456,8 +457,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       opts = extra_context.get("options", None)
       if opts is not None:
         format=opts.get("format",None)
-        if format == "pdf":
-          return self._asPdf(ooo, request)
+        if format is not None:
+          return self._asFormat(ooo, format, request)
 
       # Do not send a RESPONSE if in batch_mode
       if request and not batch_mode:
@@ -484,6 +485,9 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         """
         Return OOo report as pdf
         """
+        return self._asFormat(ooo,'pdf',REQUEST)
+    
+    def _asFormat(self,ooo,format,REQUEST=None):
         # now create a temp OOoDocument to convert data to pdf
         from Products.ERP5Type.Document import newTempOOoDocument
         tmp_ooo = newTempOOoDocument(self, self.title_or_id())
@@ -492,17 +496,32 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
                      source_reference = self.title_or_id(),
                      content_type = self.content_type,)
         tmp_ooo.oo_data = ooo
-        # now convert it to pdf
-        tgts=[x[1] for x in tmp_ooo.getTargetFormatItemList() if x[1].endswith('pdf')]
-        if len(tgts)>1:
-            return tmp_ooo.returnMessage('multiple pdf formats found - this shouldnt happen')
-        if len(tgts)==0:
-            return tmp_ooo.returnMessage('no pdf format found')
-        fmt=tgts[0]
-        mime, data = tmp_ooo._makeFile(fmt)
+        if format == 'pdf':
+          # slightly different implementation
+          # now convert it to pdf
+          tgts=[x[1] for x in tmp_ooo.getTargetFormatItemList() if x[1].endswith('pdf')]
+          if len(tgts)>1:
+              return tmp_ooo.returnMessage('multiple pdf formats found - this shouldnt happen')
+          if len(tgts)==0:
+              return tmp_ooo.returnMessage('no pdf format found')
+          fmt=tgts[0]
+          mime, data = tmp_ooo._makeFile(fmt)
+          if REQUEST is not None:
+              REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
+              REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.pdf"' % self.title_or_id())
+          return data
+        # now for other formats
+        if not tmp_ooo.isAllowed(format):
+          errstr='%s format is not supported' % format
+          return tmp_ooo.returnMessage(errstr)
+        try:
+          mime,data=tmp_ooo._makeFile(format)
+        except xmlrpclib.Fault,e:
+          return tmp_ooo.returnMessage('Problem: %s' % str(e))
         if REQUEST is not None:
-            REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
-            REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.pdf"' % self.title_or_id())
+            REQUEST.RESPONSE.setHeader('Content-type', mime)
+            REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.%s"' % (self.title_or_id(),format))
+            # FIXME the above lines should return zip format when html was requested
         return data
 
 InitializeClass(OOoTemplate)
@@ -520,3 +539,5 @@ InitializeClass(FSOOoTemplate)
 registerFileExtension('ooot', FSOOoTemplate)
 registerMetaType(OOoTemplate.meta_type, FSOOoTemplate)
 
+
+# vim: syntax=python shiftwidth=2 
