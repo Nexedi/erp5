@@ -30,6 +30,7 @@
 
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Interface import Constraint as IConstraint
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 class Constraint:
     """
@@ -60,16 +61,13 @@ class Constraint:
       if type is not None: self.type = type
       self.constraint_definition.update(constraint_definition)
 
-    def _generateError(self, obj, error_message):
+    def _generateError(self, obj, error_message, mapping={}):
       """
         Generic method used to generate error in checkConsistency.
       """
-      error = None
-      if error_message:
-        error = (obj.getRelativeUrl(),
-                 '%s inconsistency' % self.__class__.__name__,
-                 104, error_message, self.description)
-      return error
+      if error_message is not None:
+        msg = ConsistencyMessage(self, obj.getRelativeUrl(), error_message, mapping)
+        return msg
 
     def _checkConstraintCondition(self, obj):
       """
