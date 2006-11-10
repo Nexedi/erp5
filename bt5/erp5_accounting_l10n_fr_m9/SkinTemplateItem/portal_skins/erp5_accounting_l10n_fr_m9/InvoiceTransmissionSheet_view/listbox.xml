@@ -354,12 +354,16 @@
                           <string>Invoice Transmission Reference</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
                           <string>total_price</string>
                           <string>Total Amount</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_condition_payment_date</string>
+                          <string>Payment Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -415,6 +419,10 @@
                         <tuple>
                           <string>int_index</string>
                           <string>Invoice Transmission Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_condition_payment_date</string>
+                          <string>Payment Date</string>
                         </tuple>
                       </list>
                     </value>
