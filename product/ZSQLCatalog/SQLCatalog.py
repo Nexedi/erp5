@@ -1801,36 +1801,23 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
     # The used argument is deprecated and is ignored
-    try:
-      # Get the search method
-      method = getattr(self, self.sql_search_results)
-      # Return the result
-      kw['used'] = used
-      kw['REQUEST'] = REQUEST
-      return self.queryResults(method, **kw)
-    except ConflictError:
-      raise
-    except:
-      LOG('SQLCatalog', WARNING, "could not search catalog", error=sys.exc_info())
-      return []
+    method = getattr(self, self.sql_search_results)
+    # Return the result
+    kw['used'] = used
+    kw['REQUEST'] = REQUEST
+    return self.queryResults(method, **kw)
 
   __call__ = searchResults
 
   def countResults(self, REQUEST=None, used=None, **kw):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns the number of items which satisfy the where_expression """
-    try:
-      # Get the search method
-      method = getattr(self, self.sql_count_results)
-      # Return the result
-      kw['used'] = used
-      kw['REQUEST'] = REQUEST
-      return self.queryResults(method, **kw)
-    except ConflictError:
-      raise
-    except:
-      LOG('SQLCatalog', WARNING, "could not count catalog", error=sys.exc_info())
-      return [[0]]
+    # Get the search method
+    method = getattr(self, self.sql_count_results)
+    # Return the result
+    kw['used'] = used
+    kw['REQUEST'] = REQUEST
+    return self.queryResults(method, **kw)
 
   def recordObjectList(self, path_list, catalog=1):
     """
