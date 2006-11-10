@@ -68,18 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=context\n
-context.log(kw)\n
-if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #doublecheck\n
-  context.log(\'we go ahead\')\n
-  try:\n
-    res=ob.convert(force=1)\n
-    ob.setPropertyListFromContent()\n
-    ob.setExternalProcessingStatusMessage(\'converted\')\n
-  except Exception,e:\n
-    ob.log(\'Exception\',e)\n
-    ob.setExternalProcessingStatusMessage(str(e))\n
-    #raise Exception(str(e)) # do we want the activity to keep trying?\n
+            <value> <string>return {}\n
+\n
+# write your own method (probably External Method, since it is most likely\n
+# to use re) that would analyze text content of the doc\n
+# and return a dictionary of properties\n
 </string> </value>
         </item>
         <item>
@@ -102,7 +95,7 @@ if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #dou
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a,**kw</string> </value>
+            <value> <string>ob,content,ptype</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,21 +115,15 @@ if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #dou
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
-                            <string>kw</string>
-                            <string>context</string>
                             <string>ob</string>
-                            <string>_getattr_</string>
-                            <string>res</string>
-                            <string>Exception</string>
-                            <string>e</string>
-                            <string>str</string>
+                            <string>content</string>
+                            <string>ptype</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,7 +140,7 @@ if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #dou
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_convertAfter</string> </value>
+            <value> <string>Document_getPropertyListFromContent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

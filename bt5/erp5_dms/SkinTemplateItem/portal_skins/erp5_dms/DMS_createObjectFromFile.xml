@@ -70,8 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string># determine content type if not given\n
 # first try from content\n
-if not doctype:\n
-  doctype=context.Document_getDoctypeFromContent(data)\n
+#if not doctype:\n
+#  doctype=context.Document_getDoctypeFromContent(data)\n
 # then from filename\n
 if not doctype:\n
   doctype=context.content_type_registry.findTypeName(fname,None,None)\n

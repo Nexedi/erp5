@@ -18,8 +18,34 @@ def extractContent(data):
   z.close()
   return s
 
-def getAttrFromContent(data):
-  return dict(rx_atr.findall(extractContent(data)))
+rx_fileno=re.compile('File No.: *(?P<reference>(?P<group>[A-Za-z-]+)-(?P<project>\d+)-(?P<number>\d+)\.(?P<year>\d{2}))')
+rx_classif=re.compile('([A-Z]{1}[a-z]+/[A-Z]{1}[a-z]+)')
+
+def getAttrFromContent(self,data,ptype):
+  if ptype!='Memo':return {}
+  atrs={}
+  fileno=rx_fileno.search(data)
+  if fileno:
+    dic=fileno.groupdict()
+    atrs['source_project']='project_module/'+dic['project']
+    atrs['reference']=dic['reference']
+  classif=rx_classif.search(data)
+  log=[]
+  if classif:
+    classif=classif.groups()[0].split('/')
+    classif.reverse()
+    res=self.portal_catalog(portal_type='Category',title=classif[0])
+    for r in res:
+      c=r.getObject()
+      for x,t in enumerate(classif):
+        c=c.aq_parent
+        if c.getId()=='classification':
+          atrs['classification']='/'.join(r.getRelativeUrl().split('/')[1:])
+          break
+        if c.getTitle()!=classif[x+1]:
+          break
+  self.log(atrs)
+  return atrs
 
 def getDoctypeFromContent(data):
   atrs=getAttrFromContent(data)

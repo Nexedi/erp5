@@ -76,8 +76,11 @@ if pref is not None and len(pref)==0:\n
   if pref==\'never\':return\n
 \n
 ob=kw[\'object\']\n
-res=ob.checkConsistency()\n
-res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
+if ob.getPortalType()==\'Memo\': # we don\'t check constistency for Memo XXX use type groups, or what?\n
+  res=\'\'\n
+else:\n
+  res=ob.checkConsistency()\n
+  res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
 \n
 # shall we send?\n
 send=(pref==\'always\' or len(res)>0)\n
