@@ -73,12 +73,15 @@
 from DateTime import DateTime\n
 import math\n
 \n
+\n
 ##########\n
-# This method returns a list of accounts virtually expanded, ie. payable and receivable accounts\n
-#   are split by \'destination_section\' categories and bank accounts are split by \'source_payment\'.\n
+# This method returns a list of accounts virtually expanded, ie. payable and\n
+# receivable accounts are split by \'destination_section\' categories and bank\n
+# accounts are split by \'source_payment\'.\n
 ##########\n
 \n
-LOG = lambda msg: context.getPortalObject().log("AccountModule_getAccountListForTrialBalance", msg)\n
+LOG = lambda msg: context.getPortalObject().log(\n
+                      "AccountModule_getAccountListForTrialBalance", msg)\n
 \n
 from_date        = kw.get(\'from_date\', None)\n
 at_date          = kw[\'at_date\']\n
@@ -233,7 +236,8 @@ def expandBankAccountsForAccount(account, **kw):\n
   tmp_accounts   = []\n
   orga_and_banks = []\n
   for orga in organisation_list:\n
-    orga_and_banks += [(orga, o.getObject()) for o in orga.searchFolder(portal_type=context.getPortalPaymentNodeTypeList())]\n
+    orga_and_banks += [(orga, o.getObject()) for o in orga.contentValues(\n
+                          portal_type=context.getPortalPaymentNodeTypeList())]\n
 \n
   for orga, bank in orga_and_banks:\n
     this_tmp_account = {\n
@@ -256,7 +260,10 @@ def expandBankAccountsForAccount(account, **kw):\n
         this_tmp_account[\'credit_movement\'] != 0 or\n
         this_tmp_account[\'debit_movement\']  != 0 or\n
         this_tmp_account[\'closing_balance\'] != 0 ):\n
-      tmp_accounts.append( account.asContext(**formatValues(this_tmp_account) ) )\n
+      if show_balanced_accounts or (this_tmp_account[\'closing_balance\'] != 0):\n
+        tmp_accounts.append(account.asContext(\n
+                            **formatValues(this_tmp_account)))\n
+      \n
   return tmp_accounts\n
 \n
 \n
@@ -283,7 +290,9 @@ def expandThirdPartiesForAccount(account, **kw):\n
     if (this_tmp_account[\'opening_balance\'] != 0 or\n
         this_tmp_account[\'credit_movement\'] != 0 or\n
         this_tmp_account[\'debit_movement\']  != 0 ):\n
-      tmp_accounts.append(account.asContext(**formatValues(this_tmp_account)))\n
+      if show_balanced_accounts or (this_tmp_account[\'closing_balance\'] != 0):\n
+        tmp_accounts.append(\n
+                account.asContext(**formatValues(this_tmp_account) ) )\n
   return tmp_accounts\n
 \n
 \n
@@ -466,7 +475,8 @@ for account_dict in account_list:\n
   if (item[\'opening_balance\'] != 0 or\n
       item[\'credit_movement\'] != 0 or\n
       item[\'debit_movement\']  != 0 ):\n
-    report_items.append(account.asContext(**formatValues(item)))\n
+    if show_balanced_accounts or (item[\'closing_balance\'] != 0):\n
+      report_items.append(account.asContext(**formatValues(item)))\n
 \n
 # MUST BE FIXED:\n
 #     virtual_account_list = []\n
@@ -507,7 +517,7 @@ return report_items\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>src__=0, **kw</string> </value>
+            <value> <string>src__=0, show_balanced_accounts=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -527,13 +537,14 @@ return report_items\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>src__</string>
+                            <string>show_balanced_accounts</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>math</string>
@@ -612,6 +623,7 @@ return report_items\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>

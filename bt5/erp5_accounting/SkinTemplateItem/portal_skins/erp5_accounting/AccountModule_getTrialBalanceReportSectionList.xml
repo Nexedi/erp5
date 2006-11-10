@@ -83,6 +83,7 @@ gap_list             = request.get(\'gap_list\'            , [])\n
 from_date            = request.get(\'from_date\'           , None)\n
 expand_accounts      = request.get(\'expand_accounts\'     , False)\n
 show_parent_accounts = request.get(\'show_parent_accounts\', False)\n
+show_balanced_accounts = request[\'show_balanced_accounts\']\n
 \n
 request.other[\'is_accounting_report\'] = True\n
 \n
@@ -105,6 +106,7 @@ params = {\n
   , \'gap_list\'                            : gap_list\n
   , \'show_parent_accounts\'                : show_parent_accounts\n
   , \'expand_accounts\'                     : expand_accounts\n
+  , \'show_balanced_accounts\'              : show_balanced_accounts\n
 }\n
 \n
 balance_columns = (\n
@@ -210,6 +212,7 @@ return result\n
                             <string>False</string>
                             <string>expand_accounts</string>
                             <string>show_parent_accounts</string>
+                            <string>show_balanced_accounts</string>
                             <string>True</string>
                             <string>_write_</string>
                             <string>result</string>
