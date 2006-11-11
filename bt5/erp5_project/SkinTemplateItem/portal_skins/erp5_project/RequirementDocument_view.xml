@@ -114,6 +114,7 @@
                     <value>
                       <list>
                         <string>my_source_decision_title</string>
+                        <string>my_destination_decision_title</string>
                       </list>
                     </value>
                 </item>
