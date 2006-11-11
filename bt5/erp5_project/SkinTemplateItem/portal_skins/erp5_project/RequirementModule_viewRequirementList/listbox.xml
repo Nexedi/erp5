@@ -433,7 +433,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>list</string> </value>
+                    <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_cookie</string> </key>
@@ -461,6 +461,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -561,7 +565,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>countFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -580,7 +584,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
