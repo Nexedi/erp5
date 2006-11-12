@@ -157,29 +157,38 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('%s/login_form' % self.portal.absolute_url(),
                       response.getHeader('Location'))
 
-  def test_view_module(self):
-    """Test we can view a module."""
-    for module in ('person_module', 'organisation_module', 'currency_module'):
-      response = self.publish('%s/%s/view' % (self.portal_id, module), self.auth)
-      self.assertEquals(HTTP_OK, response.getStatus())
+  def test_view_tools(self):
+    """Test we can view tools."""
+    for tool in ('portal_categories',
+                 'portal_templates',
+                 'portal_orders',
+                 'portal_deliveries',
+                 'portal_rules',
+                 'portal_alarms',):
+      response = self.publish('%s/%s/view' % (self.portal_id, tool), self.auth)
+      self.assertEquals(HTTP_OK, response.getStatus(),
+                        "%s: %s" % (tool, response.getStatus()))
  
   def test_allowed_content_types_translated(self):
     """Tests allowed content types from the action menu are translated"""
     translation_service = DummyTranslationService()
     setGlobalTranslationService(translation_service)
-    # assumes that we can add Person in person_module
-    response = self.publish('%s/person_module/view' % self.portal_id, self.auth)
+    # assumes that we can add Business Template in template tool
+    response = self.publish('%s/portal_templates/view' %
+                                self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
-    self.failUnless(('Person', {}) in translation_service._translated['ui'])
-    self.failUnless(('Add ${portal_type}', {'portal_type': 'Person'}) in
-                      translation_service._translated['ui'])
+    self.failUnless(('Business Template', {})
+                    in translation_service._translated['ui'])
+    self.failUnless(
+      ('Add ${portal_type}', {'portal_type': 'Business Template'}) in
+      translation_service._translated['ui'])
 
   def test_jump_action_translated(self):
     """Tests jump actions are translated"""
     translation_service = DummyTranslationService()
     setGlobalTranslationService(translation_service)
-    # adds a new jump action to Person Module portal type
-    self.getTypesTool().getTypeInfo('Person Module').addAction(
+    # adds a new jump action to Template Tool portal type
+    self.getTypesTool().getTypeInfo('Template Tool').addAction(
                       id='dummy_jump_action',
                       name='Dummy Jump Action',
                       action='',
@@ -187,7 +196,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                       permission='View',
                       category='object_jump',
                       visible=1)
-    response = self.publish('%s/person_module/view' % self.portal_id, self.auth)
+    response = self.publish('%s/portal_templates/view' %
+                            self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
     self.failUnless(('Dummy Jump Action', {}) in
                       translation_service._translated['ui'])
