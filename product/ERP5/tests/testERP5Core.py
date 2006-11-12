@@ -27,15 +27,8 @@
 #
 ##############################################################################
 
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
 import os
 import sys
-import unittest
-import time
 
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -44,61 +37,48 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
+from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
+from Products.PageTemplates.GlobalTranslationService import \
+                                      setGlobalTranslationService
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
-from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from zExceptions import BadRequest
-from Products.ERP5Type import product_path
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
-class TestERP5Core(ERP5TypeTestCase):
+HTTP_OK = 200
+HTTP_UNAUTHORIZED = 401
+HTTP_REDIRECT = 302
 
+class DummyTranslationService:
+  """A dummy translation service where you can access translated msgids and
+  mappings in _translated.
+  """
+  _translated = {}
+  def translate(self, domain, msgid, mapping=None, *args, **kw):
+    self._translated.setdefault(domain, []).append((msgid, mapping))
+    return msgid
+
+class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
+  """Test for erp5_core business template.
+  """
   run_all_test = 1
   quiet = 1
+  manager_username = 'rc'
+  manager_password = ''
 
   def getTitle(self):
     return "ERP5Core"
 
-  def getBusinessTemplateList(self):
-    """
-    """
-    return tuple()
-
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager'], [])
-    user = uf.getUserById('rc').__of__(uf)
+    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
+    user = uf.getUserById(self.manager_username).__of__(uf)
     newSecurityManager(None, user)
 
-#  def enableLightInstall(self):
-#    """
-#    You can override this. 
-#    Return if we should do a light install (1) or not (0)
-#    """
-#    return 1
-#
-#  def enableActivityTool(self):
-#    """
-#    You can override this.
-#    Return if we should create (1) or not (0) an activity tool.
-#    """
-#    return 1
-
-  def afterSetUp(self, quiet=1, run=run_all_test):
+  def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()
-#    portal = self.getPortal()
-#    self.category_tool = self.getCategoryTool()
-#    portal_catalog = self.getCatalogTool()
-    #portal_catalog.manage_catalogClear()
-#    self.createCategories()
+    self.portal_id = self.portal.getId()
+    self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
     """
@@ -121,22 +101,30 @@ class TestERP5Core(ERP5TypeTestCase):
     module_id='unittest_module'
     module_title='UnitTests'
     
-    self.assertEqual(getattr(self.portal.hasObject, module_id, None), None)
-    self.assertEqual(getattr(self.portal.portal_skins, portal_skins_folder, None), None)
-    self.assertEqual(getattr(self.portal.portal_types, module_portal_type, None), None)
-    self.assertEqual(getattr(self.portal.portal_types, object_portal_type, None), None)
+    self.failIf(self.portal._getOb(module_id, None) is not None)
+    self.assertEqual(self.portal.portal_skins._getOb(portal_skins_folder, None),
+                     None)
+    self.assertEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
+                     None)
+    self.assertEqual(self.portal.portal_types.getTypeInfo(object_portal_type),
+                     None)
     self.portal.ERP5Site_createModule(module_portal_type=module_portal_type,
                                       portal_skins_folder=portal_skins_folder,
                                       object_portal_type=object_portal_type,
                                       object_title=object_title,
                                       module_id=module_id,
                                       module_title=module_title)
-    self.assertNotEqual(getattr(self.portal, module_id, None), None)
-    self.assertNotEqual(getattr(self.portal.portal_skins, portal_skins_folder, None), None)
-    self.assertNotEqual(getattr(self.portal.portal_types, module_portal_type, None), None)
-    #self.assertEqual(self.portal.portal_types[module_portal_type].title, module_title)
-    self.assertNotEqual(getattr(self.portal.portal_types, object_portal_type, None), None)
-    #self.assertEqual(self.portal.portal_types[object_portal_type].title, object_title)
+    self.failUnless(self.portal._getOb(module_id, None) is not None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb(portal_skins_folder, None), None)
+    self.assertEquals(module_title,
+                      self.portal._getOb(module_id).getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo(object_portal_type),
+                        None)
+    #self.assertEqual(self.portal.portal_types[object_portal_type].title,
+    #                  object_title)
   
   def test_02_FavouritesMenu(self, quiet=quiet, run=run_all_test):
     """
@@ -154,6 +142,55 @@ class TestERP5Core(ERP5TypeTestCase):
     for action_name in action_name_list:
       self.assertNotEqual(action_name, "Manage Members")
       self.assertNotEqual(action_name, "Manage members")
+
+  def test_frontpage(self):
+    """Test we can view the front page.
+    """
+    response = self.publish('%s/view' % self.portal_id, self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    
+  def test_login_form(self):
+    """Test anonymous user are redirected to login_form
+    """
+    response = self.publish('%s/view' % self.portal_id)
+    self.assertEquals(HTTP_REDIRECT, response.getStatus())
+    self.assertEquals('%s/login_form' % self.portal.absolute_url(),
+                      response.getHeader('Location'))
+
+  def test_view_module(self):
+    """Test we can view a module."""
+    for module in ('person_module', 'organisation_module', 'currency_module'):
+      response = self.publish('%s/%s/view' % (self.portal_id, module), self.auth)
+      self.assertEquals(HTTP_OK, response.getStatus())
+ 
+  def test_allowed_content_types_translated(self):
+    """Tests allowed content types from the action menu are translated"""
+    translation_service = DummyTranslationService()
+    setGlobalTranslationService(translation_service)
+    # assumes that we can add Person in person_module
+    response = self.publish('%s/person_module/view' % self.portal_id, self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    self.failUnless(('Person', {}) in translation_service._translated['ui'])
+    self.failUnless(('Add ${portal_type}', {'portal_type': 'Person'}) in
+                      translation_service._translated['ui'])
+
+  def test_jump_action_translated(self):
+    """Tests jump actions are translated"""
+    translation_service = DummyTranslationService()
+    setGlobalTranslationService(translation_service)
+    # adds a new jump action to Person Module portal type
+    self.getTypesTool().getTypeInfo('Person Module').addAction(
+                      id='dummy_jump_action',
+                      name='Dummy Jump Action',
+                      action='',
+                      condition='',
+                      permission='View',
+                      category='object_jump',
+                      visible=1)
+    response = self.publish('%s/person_module/view' % self.portal_id, self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    self.failUnless(('Dummy Jump Action', {}) in
+                      translation_service._translated['ui'])
 
 if __name__ == '__main__':
     framework()
