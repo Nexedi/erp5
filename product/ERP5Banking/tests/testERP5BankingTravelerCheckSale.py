@@ -50,6 +50,14 @@ if __name__ == '__main__':
 
 class TestERP5BankingTravelerCheckSaleMixin:
 
+  def getTravelerCheckSaleModule(self):
+    """
+    Return the Traveler Check Sale Module
+    """
+    return getattr(self.getPortal(), 'traveler_check_sale_module', None)
+
+
+
   def createCheckbookUsualCashTransferWithTravelerCheck(self, sequence=None, 
                                  sequence_list=None, **kwd):
     """
@@ -73,53 +81,24 @@ class TestERP5BankingTravelerCheckSaleMixin:
                                    wf_id='checkbook_usual_cash_transfer_workflow')
 
 
-class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransferMixin,
-                                       TestERP5BankingTravelerCheckSaleMixin,
-                                       TestERP5BankingMixin, ERP5TypeTestCase):
-  """
-    This class is a unit test to check the module of Cash Transfer
-
-    Here are the following step that will be done in the test :
-
-    XXX to be completed
-
-  """
-
-  login = PortalTestCase.login
-
-  # pseudo constants
-  RUN_ALL_TEST = 1 # we want to run all test
-  QUIET = 0 # we don't want the test to be quiet
-
-
-  def getTitle(self):
+  def stepCreateTravelerCheckSale(self, sequence=None, sequence_list=None, **kwd):
     """
-      Return the title of the test
+    Create a traveler check sale
     """
-    return "ERP5BankingTravelerCheckSale"
-
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_base',
-            'erp5_trade',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_inventory',
-            'erp5_banking_check',
-            )
-
-  def getTravelerCheckSaleModule(self):
-    """
-    Return the Traveler Check Sale Module
-    """
-    return getattr(self.getPortal(), 'traveler_check_sale_module', None)
-
+    # We will do the transfer ot two items.
+    self.traveler_check_sale = self.traveler_check_sale_module.newContent(
+                     id='traveler_check_sale', portal_type='Traveler Check Sale',
+                     source_value=self.traveler_check_source, destination_value=None,
+                     destination_payment_value=self.bank_account_1,
+                     resource_value=self.currency_1,
+                     start_date=self.date)
+    # check its portal type
+    self.assertEqual(self.traveler_check_sale.getPortalType(), 'Traveler Check Sale')
+    # check source
+    self.assertEqual(self.traveler_check_sale.getBaobabSource(), 
+               'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
+    # check destination
+    self.assertEqual(self.traveler_check_sale.getBaobabDestination(), None)
 
   def afterSetUp(self):
     """
@@ -181,61 +160,6 @@ class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransfer
     self.openCounter(site=self.destination_site)
     self.createCheckbookUsualCashTransferWithTravelerCheck()
 
-
-  def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check that all the objects we created in afterSetUp or
-    that were added by the business template and that we rely
-    on are really here.
-    """
-    self.checkResourceCreated()
-    # check that TravelerCheckSale Module was created
-    self.assertEqual(self.traveler_check_sale_module.getPortalType(), 'Traveler Check Sale Module')
-    # check module is empty
-    self.assertEqual(len(self.traveler_check_sale_module.objectValues()), 0)
-
-
-  def stepCheckInitialCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check initial cash checkbook on source
-    """
-    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(
-                     node=self.traveler_check_source.getRelativeUrl(),
-                     at_date=self.date)), 1)
-    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
-                     node=self.traveler_check_source.getRelativeUrl(),
-                     at_date=self.date)), 1)
-    checkbook_list = self.simulation_tool.getCurrentTrackingList(
-                             node=self.traveler_check_source.getRelativeUrl(),
-                             at_date=self.date)
-    self.assertEqual(len(checkbook_list), 1)
-    # check we have cash checkbook 1
-    checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.traveler_check])
-    # check the inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-
-  def stepCreateTravelerCheckSale(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create a traveler check sale
-    """
-    # We will do the transfer ot two items.
-    self.traveler_check_sale = self.traveler_check_sale_module.newContent(
-                     id='traveler_check_sale', portal_type='Traveler Check Sale',
-                     source_value=self.traveler_check_source, destination_value=None,
-                     destination_payment_value=self.bank_account_1,
-                     resource_value=self.currency_1,
-                     start_date=self.date)
-    # check its portal type
-    self.assertEqual(self.traveler_check_sale.getPortalType(), 'Traveler Check Sale')
-    # check source
-    self.assertEqual(self.traveler_check_sale.getBaobabSource(), 
-               'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
-    # check destination
-    self.assertEqual(self.traveler_check_sale.getBaobabDestination(), None)
-
-
   def stepCreateTravelerCheckLineList(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the checkbook
@@ -272,6 +196,84 @@ class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransfer
     workflow_history = self.workflow_tool.getInfoFor(ob=self.traveler_check_sale, 
                             name='history', wf_id='traveler_check_sale_workflow')
     self.assertEqual(len(workflow_history), 3)
+
+class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransferMixin,
+                                       TestERP5BankingTravelerCheckSaleMixin,
+                                       TestERP5BankingMixin, ERP5TypeTestCase):
+  """
+    This class is a unit test to check the module of Cash Transfer
+
+    Here are the following step that will be done in the test :
+
+    XXX to be completed
+
+  """
+
+  login = PortalTestCase.login
+
+  # pseudo constants
+  RUN_ALL_TEST = 1 # we want to run all test
+  QUIET = 0 # we don't want the test to be quiet
+
+
+  def getTitle(self):
+    """
+      Return the title of the test
+    """
+    return "ERP5BankingTravelerCheckSale"
+
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates we need to run the test.
+      This method is called during the initialization of the unit test by
+      the unit test framework in order to know which business templates
+      need to be installed to run the test on.
+    """
+    return ('erp5_base',
+            'erp5_trade',
+            'erp5_accounting',
+            'erp5_banking_core',
+            'erp5_banking_inventory',
+            'erp5_banking_check',
+            )
+
+
+
+  def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check that all the objects we created in afterSetUp or
+    that were added by the business template and that we rely
+    on are really here.
+    """
+    self.checkResourceCreated()
+    # check that TravelerCheckSale Module was created
+    self.assertEqual(self.traveler_check_sale_module.getPortalType(), 'Traveler Check Sale Module')
+    # check module is empty
+    self.assertEqual(len(self.traveler_check_sale_module.objectValues()), 0)
+
+
+  def stepCheckInitialCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check initial cash checkbook on source
+    """
+    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(
+                     node=self.traveler_check_source.getRelativeUrl(),
+                     at_date=self.date)), 1)
+    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
+                     node=self.traveler_check_source.getRelativeUrl(),
+                     at_date=self.date)), 1)
+    checkbook_list = self.simulation_tool.getCurrentTrackingList(
+                             node=self.traveler_check_source.getRelativeUrl(),
+                             at_date=self.date)
+    self.assertEqual(len(checkbook_list), 1)
+    # check we have cash checkbook 1
+    checkbook_object_list = [x.getObject() for x in checkbook_list]
+    self.failIfDifferentSet(checkbook_object_list,[self.traveler_check])
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
