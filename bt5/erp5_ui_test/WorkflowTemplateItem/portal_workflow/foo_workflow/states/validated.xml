@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>validated</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -33,14 +33,7 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>dummy_action</string>
-                <string>dummy_failing_action</string>
-                <string>validate</string>
-                <string>validate_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
