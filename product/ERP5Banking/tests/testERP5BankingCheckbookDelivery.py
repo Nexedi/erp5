@@ -103,8 +103,6 @@ class TestERP5BankingCheckbookDeliveryMixin:
       }
     # call method to create this user
     self.createERP5Users(user_dict)
-    self.logout()
-    self.login('super_user')
 
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
@@ -122,13 +120,15 @@ class TestERP5BankingCheckbookDeliveryMixin:
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
                                                  amount=100000)
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
+    self.logout()
+    self.login('super_user')
     # this is required in order to have some items
     # in the source
     self.createCheckbookReception()
     self.checkItemsCreated()
     self.createCheckbookVaultTransfer()
-    # open counter date and counter
-    self.openCounterDate(site=self.paris)
 
 
 class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
