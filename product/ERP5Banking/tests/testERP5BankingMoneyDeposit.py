@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
 
 
-class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingMoneyDepositMixin:
   
 
   login = PortalTestCase.login
@@ -131,10 +131,10 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
     
-    self.bi_counter = self.paris.surface.banque_interne
-    self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
+    self.money_deposit_counter = self.paris.surface.banque_interne
+    self.money_deposit_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
     
-    self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
+    self.createCashInventory(source=None, destination=self.money_deposit_counter_vault, currency=self.currency_1,
                              line_list=line_list)
 
 
@@ -149,7 +149,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
     # open counter date and counter
     self.openCounterDate(site=self.paris)
-    self.openCounter(site=self.bi_counter_vault)
+    self.openCounter(site=self.money_deposit_counter_vault)
 
 
     # now we need to create a user as Manager to do the test
@@ -188,14 +188,16 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(
+                     node=self.money_deposit_counter_vault.getRelativeUrl(), 
+                     resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
@@ -219,7 +221,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertNotEqual(self.money_deposit.getSourceReference(), '')
     self.assertNotEqual(self.money_deposit.getSourceReference(), None)
     
-    self.money_deposit._setDestination(self.bi_counter.getRelativeUrl())
+    self.money_deposit._setDestination(self.money_deposit_counter.getRelativeUrl())
     self.assertNotEqual(self.money_deposit, None)
     
     # check we have only one cash sorting
@@ -231,7 +233,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.money_deposit.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
     # check that its destination is guichet_1
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
-    self.assertEqual(self.money_deposit.getDestination(), self.bi_counter.getRelativeUrl())
+    self.assertEqual(self.money_deposit.getDestination(), self.money_deposit_counter.getRelativeUrl())
 
     # the initial state must be draft
     self.assertEqual(self.money_deposit.getSimulationState(), 'draft')
@@ -243,7 +245,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
 
 
-  def stepSendToCounter(self, sequence=None, sequence_list=None, **kwd):
+  def stepMoneyDepositSendToCounter(self, sequence=None, sequence_list=None, **kwd):
     """
     Send the check payment to the counter
 
@@ -256,7 +258,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
 
 
-  def stepInputCashDetails(self, sequence=None, sequence_list=None, **kwd):
+  def stepMoneyDepositInputCashDetails(self, sequence=None, sequence_list=None, **kwd):
     """
     Input cash details
     """
@@ -280,14 +282,14 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check the inventory of the bank account, must be planned to be decrease by 20000
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 120000)
@@ -312,14 +314,14 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 6.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 6.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 6.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 6.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 26.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 26.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 26.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 26.0)
     # check the final inventory of the bank account
     #self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 120000)
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 120000)
@@ -338,6 +340,13 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
   ##  Tests
   ##################################
 
+class TestERP5BankingMoneyDeposit(TestERP5BankingMoneyDepositMixin,
+                                  TestERP5BankingMixin, ERP5TypeTestCase):
+
+  # pseudo constants
+  RUN_ALL_TEST = 1 # we want to run all test
+  QUIET = 0 # we don't want the test to be quiet
+
   def test_01_ERP5BankingMoneyDeposit(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Define the sequence of step that will be play
@@ -347,8 +356,8 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateMoneyDeposit ' \
-                    + 'SendToCounter Tic ' \
-                    + 'InputCashDetails ' \
+                    + 'MoneyDepositSendToCounter Tic ' \
+                    + 'MoneyDepositInputCashDetails ' \
                     + 'CheckConfirmedInventory Tic ' \
                     + 'DeliverMoneyDeposit Tic ' \
                     + 'CheckFinalInventory'
