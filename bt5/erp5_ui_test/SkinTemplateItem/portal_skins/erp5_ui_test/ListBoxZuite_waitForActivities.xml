@@ -75,7 +75,7 @@ count = 1000\n
 while len(context.portal_activities.getMessageList()) > 0:\n
   context.portal_activities.process_timer(0, 0)\n
   count -= 1\n
-  sleep()\n
+  sleep(t=1)\n
   if count < 0:\n
     raise RuntimeError, \'tic is endless\'\n
 \n
