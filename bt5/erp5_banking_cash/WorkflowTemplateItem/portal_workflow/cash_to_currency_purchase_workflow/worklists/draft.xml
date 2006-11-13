@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?cash_to_currency_purchase_state=draft&portal_type=Cash To Currency Purchase&reset=1
+Base_viewWorklist?simulation_state=draft&portal_type=Cash To Currency Purchase&reset=1
 
 ]]></string> </value>
         </item>

@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?cash_sorting_state=draft&portal_type=Usual Cash Incident&reset=1
+Base_viewWorklist?simulation_state=draft&portal_type=Usual Cash Incident&reset=1
 
 ]]></string> </value>
         </item>
