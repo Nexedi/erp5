@@ -2024,6 +2024,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
+                       CreatePortalType \
                        CreateWorkflow \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
