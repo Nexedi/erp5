@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Foo_doNothing</string> </value>
+            <value> <string>Foo_updateAction</string> </value>
         </item>
       </dictionary>
     </pickle>
