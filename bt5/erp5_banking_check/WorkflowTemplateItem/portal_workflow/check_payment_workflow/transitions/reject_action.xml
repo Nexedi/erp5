@@ -117,7 +117,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:len(here.searchFolder(portal_type=\'Check Payment Line\'))==0</string> </value>
+            <value> <string>python:len(here.objectValues(portal_type=\'Check Payment Line\'))==0</string> </value>
         </item>
       </dictionary>
     </pickle>

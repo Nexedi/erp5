@@ -481,7 +481,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>checkbook_reception_selection</string> </value>
+                    <value> <string>checkbook_reception_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -535,7 +535,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>

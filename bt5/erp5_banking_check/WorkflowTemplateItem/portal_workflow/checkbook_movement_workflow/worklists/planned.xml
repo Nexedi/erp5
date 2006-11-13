@@ -24,19 +24,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Vault Transfers To Validate By Vault Controler (%(count)s)</string> </value>
+            <value> <string>Checkbook Movements To Validate By Vault Controler (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
+Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Checkbook Movement
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Vault Transfers To Validate By Vault Controler</string> </value>
+            <value> <string>Checkbook Movements To Validate By Vault Controler</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

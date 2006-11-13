@@ -24,19 +24,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Checkbooks Vault Transfers  To Validate (%(count)s)</string> </value>
+            <value> <string>Checkbook Usual Cash Transfer  To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Vault Transfer
+Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Checkbook Usual Cash Transfer
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Checkbooks Vault Transfers To Deliver</string> </value>
+            <value> <string>Checkbook Usual Cash Transfers To Deliver</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
