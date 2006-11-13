@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -115,7 +121,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               </label>\n
               <div class="input" tal:attributes="id string:sort_${row_index}">\n
                 <select name="field_sort_on">\n
-                  <option selected="selected" value="None">None</option>\n
+                  <option selected="selected" value="None"></option>\n
                   <option tal:repeat="option columns"\n
                           tal:content="python:option[1]"\n
                           tal:attributes="value python:option[0]"\n
