@@ -179,7 +179,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
 
   def stepConfirmStopPayment(self, sequence=None, sequence_list=None, **kw):
     """
-    Deliver the stop payment
+    Confirm the stop payment
     """
     state = self.stop_payment.getSimulationState()
     # check that state is draft
@@ -198,7 +198,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
 
   def stepStartStopPayment(self, sequence=None, sequence_list=None, **kw):
     """
-    Deliver the stop payment
+    Start the stop payment
     """
     state = self.stop_payment.getSimulationState()
     # check that state is draft
@@ -217,7 +217,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
 
   def stepStopStopPayment(self, sequence=None, sequence_list=None, **kw):
     """
-    Deliver the stop payment
+    Stop the stop payment
     """
     state = self.stop_payment.getSimulationState()
     # check that state is draft
