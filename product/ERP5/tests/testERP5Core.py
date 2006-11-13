@@ -131,11 +131,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       Test that Manage members is not an entry in the My Favourites menu.
     """
     if not run: return
-    portal_action = getattr(self.getPortal(), 'portal_actions', None)
-    global_action_list = portal_action.listFilteredActionsFor()['global']
+    portal_actions = getattr(self.getPortal(), 'portal_actions', None)
+    global_action_list = portal_actions.listFilteredActionsFor()['global']
     action_name_list = []
     for action in global_action_list:
-      action_name_list.append(action['title'])
+      if(action['visible']):
+        action_name_list.append(action['title'])
 
     self.assertTrue('Create Module' in action_name_list)
 
