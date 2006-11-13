@@ -92,10 +92,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         columns python:base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\');\n
                         global row_index python:0;\n
                         global row_keys python:[\'None\'];\n
-                        all_columns python: [(\'None\',\'None\')] + columns;">\n
+                        all_columns python: [(\'None\',\'\')] + columns;">\n
           <div tal:repeat="item items"\n
               class="field">\n
-            <label>\n
+            <label tal:define="global row_index python:row_index+1">\n
               <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
               <tal:block tal:replace="row_index" />\n
             </label>\n
