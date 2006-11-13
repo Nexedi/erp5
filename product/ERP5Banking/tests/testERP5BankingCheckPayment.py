@@ -48,12 +48,10 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 
-class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingCheckPaymentMixin:
   """
   Unit test class for the check payment module
   """
-
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test
@@ -122,6 +120,7 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
                              'quantity': self.quantity_5000}
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
+    self.line_list = line_list
     self.bi_counter = self.paris.surface.banque_interne
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
@@ -174,6 +173,9 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
                                     checkbook=self.checkbook_1)
     self.check_4 = self.createCheck(id='check_4',
                                     reference='53',
+                                    checkbook=self.checkbook_1)
+    self.check_5 = self.createCheck(id='check_5',
+                                    reference='54',
                                     checkbook=self.checkbook_1)
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
@@ -244,6 +246,10 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
   def stepValidateAnotherCheckPaymentWorks(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
     self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="51")
+
+  def stepValidateAnotherCheckPaymentWorksAgain(self, sequence=None, sequence_list=None, **kwd):
+    """ Make sure we can validate another check payment """
+    self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="54")
 
   def stepValidateAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure that we can not validate another check payment """
@@ -368,6 +374,13 @@ class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
 
+
+class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
+                                  TestERP5BankingMixin, ERP5TypeTestCase):
+
+  # pseudo constants
+  RUN_ALL_TEST = 1 # we want to run all test
+  QUIET = 0 # we don't want the test to be quiet
 
   def test_01_ERP5BankingCheckPayment(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
