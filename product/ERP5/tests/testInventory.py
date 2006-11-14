@@ -995,48 +995,48 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     transit_simulation_state = ['started']
     
     transition_list = [
-       {'id':0, 'action':'confirm_action'},
-       {'id':0, 'action':'set_ready_action'},
-              {'id':1, 'action':'confirm_action'},
-       {'id':0, 'action':'start_action'},
-                     {'id':2, 'action':'confirm_action'},
-       {'id':0, 'action':'stop_action'},
-                     {'id':2, 'action':'set_ready_action'},
-                     {'id':2, 'action':'start_action'},
-                            {'id':3, 'action':'confirm_action'},
-                            {'id':3, 'action':'set_ready_action'},
-                            {'id':3, 'action':'start_action'},
-                            {'id':3, 'action':'stop_action'},
+       {'id':0, 'action':'confirm_action'}, # a
+       {'id':0, 'action':'set_ready_action'}, # b
+              {'id':1, 'action':'confirm_action'}, # c
+       {'id':0, 'action':'start_action'}, # d
+                     {'id':2, 'action':'confirm_action'}, # e
+       {'id':0, 'action':'stop_action'}, # f
+                     {'id':2, 'action':'set_ready_action'}, # g
+                     {'id':2, 'action':'start_action'}, # h
+                            {'id':3, 'action':'confirm_action'}, # i
+                            {'id':3, 'action':'set_ready_action'}, # j
+                            {'id':3, 'action':'start_action'}, # k
+                            {'id':3, 'action':'stop_action'}, # l
     ]
     
     expected_values_list = [
      #( without omit_transit, with omit_transit)
-      ({'Current':  0.  , 'Available':  0.  , 'Future':  0.  },
-       {'Current':  0.  , 'Available':  0.  , 'Future':  0.  }),
-      ({'Current':  0.  , 'Available':280.5 , 'Future':280.5 },
-       {'Current':  0.  , 'Available':280.5 , 'Future':280.5 }),
-      ({'Current':  0.  , 'Available':280.5 , 'Future':280.5 },
-       {'Current':  0.  , 'Available':280.5 , 'Future':280.5 }),
-      ({'Current':  0.  , 'Available':426.5 , 'Future':426.5 },
-       {'Current':  0.  , 'Available':426.5 , 'Future':426.5 }),
-      ({'Current':280.5 , 'Available':426.5 , 'Future':426.5 },
-       {'Current':  0.  , 'Available':146.  , 'Future':146.  }),
-      ({'Current':280.5 , 'Available':308.  , 'Future':308.  },
-       {'Current':  0.  , 'Available': 27.5 , 'Future': 27.5 }),
-      ({'Current':280.5 , 'Available':308.  , 'Future':308.  },
-       {'Current':280.5 , 'Available':308.  , 'Future':308.  }),
-      ({'Current':280.5 , 'Available':308.  , 'Future':308.  },
-       {'Current':280.5 , 'Available':308.  , 'Future':308.  }),
-      ({'Current':162.  , 'Available':308.  , 'Future':308.  },
-       {'Current':162.  , 'Available':308.  , 'Future':308.  }),
-      ({'Current':162.  , 'Available':274.5 , 'Future':274.5 },
-       {'Current':162.  , 'Available':274.5 , 'Future':274.5 }),
-      ({'Current':162.  , 'Available':274.5 , 'Future':274.5 },
-       {'Current':162.  , 'Available':274.5 , 'Future':274.5 }),
-      ({'Current':128.5 , 'Available':274.5 , 'Future':274.5 },
-       {'Current':128.5 , 'Available':274.5 , 'Future':274.5 }),
-      ({'Current':128.5 , 'Available':274.5 , 'Future':274.5 },
-       {'Current':128.5 , 'Available':274.5 , 'Future':274.5 }),
+      ({'Current':  0.  , 'Available': 0.  , 'Future':  0.  },
+       {'Current':  0.  , 'Available': 0.  , 'Future':  0.  }),
+      ({'Current':  0.  , 'Available': 0.  , 'Future':280.5 }, # a
+       {'Current':  0.  , 'Available': 0.  , 'Future':280.5 }),
+      ({'Current':  0.  , 'Available': 0.  , 'Future':280.5 }, # b
+       {'Current':  0.  , 'Available': 0.  , 'Future':280.5 }),
+      ({'Current':  0.  , 'Available': 0.  , 'Future':426.5 }, # c
+       {'Current':  0.  , 'Available': 0.  , 'Future':426.5 }),
+      ({'Current':280.5 , 'Available': 280.5  , 'Future':426.5 }, # d
+       {'Current':  0.  , 'Available': 0.  , 'Future':146.  }),
+      ({'Current':280.5 , 'Available': 162.  , 'Future':308.  }, # e
+       {'Current':  0.  , 'Available': -118.5  , 'Future': 27.5 }),
+      ({'Current':280.5 , 'Available': 162.  , 'Future':308.  }, # f
+       {'Current':280.5 , 'Available': 162.  , 'Future':308.  }),
+      ({'Current':280.5 , 'Available': 162.  , 'Future':308.  }, # g
+       {'Current':280.5 , 'Available': 162.  , 'Future':308.  }),
+      ({'Current':162.  , 'Available': 162.  , 'Future':308.  }, # h
+       {'Current':162.  , 'Available': 162.  , 'Future':308.  }),
+      ({'Current':162.  , 'Available': 128.5  , 'Future':274.5 }, # i
+       {'Current':162.  , 'Available': 128.5  , 'Future':274.5 }),
+      ({'Current':162.  , 'Available': 128.5   , 'Future':274.5 }, # j
+       {'Current':162.  , 'Available': 128.5  , 'Future':274.5 }),
+      ({'Current':128.5 , 'Available': 128.5  , 'Future':274.5 }, # k
+       {'Current':128.5 , 'Available': 128.5  , 'Future':274.5 }),
+      ({'Current':128.5 , 'Available': 128.5  , 'Future':274.5 }, # l
+       {'Current':128.5 , 'Available': 128.5  , 'Future':274.5 }),
     ]
  
     organisation_list = sequence.get('organisation_list')
