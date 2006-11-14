@@ -145,8 +145,6 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>_getattr_</string>
