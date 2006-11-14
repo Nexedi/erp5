@@ -617,14 +617,12 @@ class SimulationTool (BaseTool):
     def getAvailableInventory(self, **kw):
       """
       Returns available inventory
-      (current inventory - reserved)
+      (current inventory - reserved_inventory)
       """
-    #XXX This code is wrong, look at
-    # zope/Products/ERP5/Extensions/InventoryBrain.py for a more complete one
-      kw['simulation_state'] = tuple(
-                    list(self.getPortalReservedInventoryStateList()) + \
-                    list(self.getPortalCurrentInventoryStateList()))
-      return self.getInventory(**kw)
+      current_inventory = self.getCurrentInventory(**kw)
+      kw['simulation_state'] = self.getPortalReservedInventoryStateList()
+      reserved_inventory = self.getInventory(omit_input=1,**kw)
+      return current_inventory+reserved_inventory
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventory')
