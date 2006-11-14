@@ -75,6 +75,7 @@
 noSenderInHeaderMsg="no sender in headers"\n
 noSenderMsg="you are not in user database"\n
 manySendersMsg="very serious error: your address has multiple entries"\n
+noSubordinationMsg="you do not have properly set subordination (I could not find a group you are working in)"\n
 \n
 # get sender from headers\n
 fromraw=theMail[\'headers\'][\'from\']\n
@@ -92,6 +93,7 @@ if len(r)==0:\n
   return printed\n
 if len(r)>1:\n
   print manySendersMsg\n
+  return printed\n
 senderm=r[0]\n
 person=senderm.getParent()\n
 context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUrl())\n
@@ -108,7 +110,11 @@ try:\n
       if k==\'programme\':atr=\'source_project\'\n
       if k!=\'document_type\':\n
         obj.setProperty(atr,mailprops[k])\n
-    obj.setGroup(person.getSubordinationValue().getGroup())\n
+    try:\n
+      obj.setGroup(person.getSubordinationValue().getGroup())\n
+    except AttributeError:\n
+      print noSubordinationMsg\n
+      return printed\n
     obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
     context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
 except Exception,e:\n
@@ -170,6 +176,7 @@ return\n
                             <string>noSenderInHeaderMsg</string>
                             <string>noSenderMsg</string>
                             <string>manySendersMsg</string>
+                            <string>noSubordinationMsg</string>
                             <string>_getitem_</string>
                             <string>fromraw</string>
                             <string>_getattr_</string>
@@ -188,6 +195,7 @@ return\n
                             <string>obj</string>
                             <string>k</string>
                             <string>atr</string>
+                            <string>AttributeError</string>
                             <string>Exception</string>
                             <string>e</string>
                             <string>str</string>
