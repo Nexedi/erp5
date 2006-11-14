@@ -89,9 +89,8 @@ class DeliveryRule(Rule):
       delivery_movement_list = delivery.getMovementList()
       # Check existing movements
       for movement in applied_rule.contentValues(portal_type=movement_type):
-        if movement.getLastExpandSimulationState() not in \
-            delivery.getPortalCurrentInventoryStateList():
-
+        if movement.getLastExpandSimulationState() in \
+            delivery.getPortalDraftOrderStateList():
           movement_delivery = movement.getDeliveryValue()
           if not self._isTreeDelivered([movement], ignore_first=1) and \
               movement_delivery not in delivery_movement_list:
@@ -184,7 +183,7 @@ class DeliveryRule(Rule):
 
   # Solvers
   security.declareProtected(Permissions.AccessContentsInformation, 'isStable')
-  def isStable(self, movement):
+  def isStable(self, applied_rule):
     """
     Checks that the applied_rule is stable
     """

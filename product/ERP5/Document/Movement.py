@@ -38,7 +38,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Amount import Amount
 
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, DEBUG
 
 class Movement(XMLObject, Amount):
   """
@@ -423,6 +423,16 @@ class Movement(XMLObject, Amount):
         return 1
     return 0
 
+  def getDivergenceList(self):
+    """
+    Return a list of messages that contains the divergences 
+    """
+    divergence_list = [] 
+    for simulation_movement in self.getDeliveryRelatedValueList():
+      divergence_list.extend(simulation_movement.getDivergenceList())
+
+    return divergence_list
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isFrozen')
   def isFrozen(self):
@@ -435,7 +445,7 @@ class Movement(XMLObject, Amount):
     # XXX Hardcoded
     # Maybe, we should use getPortalCurrentInventoryStateList
     # and another portal method for cancelled (and deleted)
-    #LOG("Movement, isFrozen", WARNING, "Hardcoded state list")
+#     LOG("Movement, isFrozen", DEBUG, "Hardcoded state list")
     if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
       return 1
     if self._baseIsFrozen() == 0:

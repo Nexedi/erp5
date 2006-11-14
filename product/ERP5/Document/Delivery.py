@@ -284,7 +284,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       return 1
     
     security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self,fast=0,**kw):
+    def isDivergent(self, fast=0, **kw):
       """
         Returns 1 if the target is not met according to the current information
         After and edit, the isOutOfTarget will be checked. If it is 1,
@@ -303,6 +303,16 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         if movement.isDivergent():
           return 1
       return 0
+
+    security.declareProtected(Permissions.View, 'getDivergenceList')
+    def getDivergenceList(self):
+      """
+      Return a list of messages that contains the divergences
+      """
+      divergence_list = []
+      for movement in self.getMovementList():
+         divergence_list.extend(movement.getDivergenceList())
+      return divergence_list
 
     def updateCausalityState(self,**kw):
       """
@@ -554,8 +564,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     # Applied Rule stuff
     def updateAppliedRule(self, rule_id,force=0,**kw):
       """
-        Create a new Applied Rule is none is related, or call expand
-        on the existing one.
+      Create a new Applied Rule is none is related, or call expand
+      on the existing one.
       """
       if (rule_id is not None) and\
          (self.getSimulationState() not in \

@@ -175,53 +175,36 @@ class Rule(XMLObject, Predicate):
   # Solvers
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isDivergent')
-  def isDivergent(self, movement, ignore_list=[]):
+  def isDivergent(self, sim_mvt, ignore_list=[]):
     """
     Returns true if the Simulation Movement is divergent comparing to
     the delivery value
     """
-    delivery = movement.getDeliveryValue()
+    delivery = sim_mvt.getDeliveryValue()
     if delivery is None:
       return 0
-    
-    default_match_list = (
-      'source_section', 'destination_section', 'source',
-      'destination', 'resource', 'variation_category_list', 
-      'aggregate_list', 'start_date', 'stop_date')
-    match_list = [x for x in default_match_list if x not in ignore_list]
-    for prop in match_list:
-      if movement.getProperty(prop) != delivery.getProperty(prop):
-        return 1
-    
-    d_quantity = delivery.getQuantity()
-    quantity = movement.getCorrectedQuantity()
-    d_error = movement.getDeliveryError()
-    if quantity is None:
-      if d_quantity is None:
-        return 0
+      
+    if self.getDivergenceList(sim_mvt) == []:
+      return 0
+    else:
       return 1
-    if d_quantity is None:
-      d_quantity = 0
-    if d_error is None:
-      d_error = 0
-    delivery_ratio = movement.getDeliveryRatio()
-    # if the delivery_ratio is None, make sure that we are
-    # divergent even if the delivery quantity is 0
-    if delivery_ratio is not None:
-      d_quantity *= delivery_ratio
-      if delivery_ratio == 0 and quantity > 0:
-        return 1
-    if d_quantity != quantity + d_error:
-      return 1
-    return 0
+    
+  security.declareProtected(Permissions.View, 'getDivergenceList')
+  def getDivergenceList(self, sim_mvt):
+    """
+    Return a list of messages that contains the divergences.
+    """
+    result_list = []
+    for divergence_tester in self.contentValues(
+               portal_type=self.getPortalDivergenceTesterTypeList()):
+      result = divergence_tester.explain(sim_mvt)
+      result_list.extend(result)
+    return result_list
 
-#    security.declareProtected(Permissions.View, 'getDivergenceList')
-#    def getDivergenceList(self, applied_rule):
-#      """
-#        Returns a list Divergence descriptors
-#      """
-#
+  # XXX getSolverList is not part of the API and should be removed.
+  # Use getDivergenceList instead.
 #    security.declareProtected(Permissions.View, 'getSolverList')
+
 #    def getSolverList(self, applied_rule):
 #      """
 #        Returns a list Divergence solvers
@@ -330,8 +313,8 @@ class Rule(XMLObject, Predicate):
           p_matched_list.append(movement)
 
       # XXX hardcoded ...
-      LOG("Rule, _getCompensatedMovementList", WARNING, 
-          "Hardcoded properties check")
+#       LOG("Rule, _getCompensatedMovementList", WARNING, 
+#           "Hardcoded properties check")
       # Movements exist, we'll try to make them match the prevision
       if p_matched_list != []:
         # Check the quantity

@@ -185,7 +185,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
-
   
   # Matrix related
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -221,24 +220,24 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
       and blocks expansion process
     """
 
-  # Solvers
-  security.declareProtected(Permissions.View, 'isDivergent')
-  def isDivergent(self, applied_rule):
-    """
-      Returns 1 if divergent rule
-    """
-
-  security.declareProtected(Permissions.View, 'getDivergenceList')
-  def getDivergenceList(self, applied_rule):
-    """
-      Returns a list Divergence descriptors
-    """
-
-  security.declareProtected(Permissions.View, 'getSolverList')
-  def getSolverList(self, applied_rule):
-    """
-      Returns a list Divergence solvers
-    """
+#   # Solvers
+#   security.declareProtected(Permissions.View, 'isDivergent')
+#   def isDivergent(self, applied_rule):
+#     """
+#       Returns 1 if divergent rule
+#     """
+# 
+#   security.declareProtected(Permissions.View, 'getDivergenceList')
+#   def getDivergenceList(self, applied_rule):
+#     """
+#       Returns a list Divergence descriptors
+#     """
+# 
+#   security.declareProtected(Permissions.View, 'getSolverList')
+#   def getSolverList(self, applied_rule):
+#     """
+#       Returns a list Divergence solvers
+#     """
 
   # Deliverability / orderability
   def isOrderable(self, m):

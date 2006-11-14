@@ -69,6 +69,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
                       , PropertySheet.Price
                       , PropertySheet.VariationRange
                       , PropertySheet.ItemAggregation
+                      , PropertySheet.SortIndex
                       )
 
     # Multiple inheritance definition
@@ -217,13 +218,25 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
 
         emit targetUnreachable !
       """
-      if self.hasCellContent():
-        for cell in self.contentValues(filter={'portal_type': self.getPortalDeliveryMovementTypeList()}):
-          if cell.isDivergent():
-            return 1
+      if self.getDivergenceList() == []:
+        return 0
       else:
-         return Movement.isDivergent(self)
-
+        return 1
+  
+    security.declareProtected(Permissions.View, 'getDivergentList')
+    def getDivergenceList(self):
+      """
+      Return a list of messages that contains the divergences
+      """
+      divergence_list = []
+      if self.hasCellContent():
+        for cell in self.contentValues(filter={
+                'portal_type': self.getPortalDeliveryMovementTypeList()}):
+          divergence_list.extend(cell.getDivergenceList())
+        return divergence_list
+      else:
+        return Movement.getDivergenceList(self)
+     
     def applyToDeliveryLineRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       # Find related in simulation
       for my_simulation_movement in self.getDeliveryRelatedValueList(
