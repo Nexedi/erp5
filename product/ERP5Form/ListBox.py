@@ -1797,6 +1797,7 @@ class ListBoxRendererLine:
       else:
         # This is an usual line.
         obj = self.getObject()
+        brain = self.getBrain()
 
         # Use a widget, if any.
         editable_field_id = '%s_%s' % (self.renderer.getId(), alias)
@@ -1806,12 +1807,12 @@ class ListBoxRendererLine:
           editable_field = form.get_field(editable_field_id)
           tales = editable_field.tales.get('default', '')
           if tales:
-            original_value = editable_field.__of__(obj).get_value('default', cell = obj)
+            original_value = editable_field.__of__(obj).get_value('default',
+                                                        cell=brain)
             processed_value = original_value
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          brain = self.getBrain()
           if hasattr(aq_self(brain), alias):
             original_value = getattr(brain, alias)
             processed_value = original_value
