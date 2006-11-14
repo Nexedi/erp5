@@ -75,7 +75,7 @@ print_action_list = context.portal_actions.listFilteredActionsFor(context)[\'obj
 if len(print_action_list) == 0:\n
   return\n
 if len(print_action_list) == 1:\n
-  return context.ERP5Site_redirect(print_action_list[0][\'url\'], **kw)\n
+  return context.ERP5Site_redirect(print_action_list[0][\'url\'], keep_items={\'form_id\': form_id}, **kw)\n
 else:\n
   return context.ERP5Site_redirect(\'%s/Base_print\' % (context.absolute_url(), ), keep_items={\'dialog_category\': \'object_print\', \'form_id\': form_id, \'cancel_url\': cancel_url}, **kw)\n
 </string> </value>
@@ -88,6 +88,12 @@ else:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
