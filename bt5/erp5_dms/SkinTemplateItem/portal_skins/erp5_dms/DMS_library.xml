@@ -74,6 +74,7 @@
                     <value>
                       <list>
                         <string>my_dms_category_list</string>
+                        <string>my_source_project_title</string>
                       </list>
                     </value>
                 </item>

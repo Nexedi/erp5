@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.MultiRelationField</string>
-          <string>MultiRelationStringField</string>
+          <string>Products.ERP5Form.RelationField</string>
+          <string>RelationStringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_predecessor_title_list</string> </value>
+            <value> <string>my_source_project_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,15 +90,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -129,10 +135,6 @@
                 </item>
                 <item>
                     <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -192,6 +194,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -200,15 +206,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -257,10 +255,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -294,10 +288,6 @@
                 </item>
                 <item>
                     <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -334,9 +324,7 @@
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
@@ -359,6 +347,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -367,15 +359,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -387,7 +371,7 @@
               <dictionary>
                 <item>
                     <key> <string>allow_creation</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>allow_jump</string> </key>
@@ -399,7 +383,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>predecessor</string> </value>
+                    <value> <string>source_project</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -408,28 +392,7 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>version</string>
-                          <string>version</string>
-                        </tuple>
-                        <tuple>
-                          <string>language</string>
-                          <string>language</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -442,17 +405,11 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>web_page_module</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Documents which serve as reference to the current document.</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -485,10 +442,6 @@
                 <item>
                     <key> <string>first_item</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -531,20 +484,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Text</string>
-                          <string>Text</string>
+                          <string>Project</string>
+                          <string>Project</string>
                         </tuple>
                         <tuple>
-                          <string>Spreadsheet</string>
-                          <string>Spreadsheet</string>
-                        </tuple>
-                        <tuple>
-                          <string>Presentation</string>
-                          <string>Presentation</string>
-                        </tuple>
-                        <tuple>
-                          <string>Graphic</string>
-                          <string>Graphic</string>
+                          <string>Conference</string>
+                          <string>Conference</string>
                         </tuple>
                       </list>
                     </value>
@@ -569,7 +514,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reference Documents</string> </value>
+                    <value> <string>Project</string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -580,20 +529,8 @@
                     <value> <string>Base_validateRelation</string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -615,26 +552,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getRelatedObjectTitleList(\'predecessor\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(x,x) for x in here.getPortalDocumentTypeList()]</string> </value>
+            <value> <string>python:here.Base_getRelatedObjectTitle(\'source_project\')</string> </value>
         </item>
       </dictionary>
     </pickle>
