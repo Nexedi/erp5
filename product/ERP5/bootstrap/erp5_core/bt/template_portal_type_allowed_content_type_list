@@ -5,7 +5,7 @@ Base Domain | Domain
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Factory | SQL Cache
-Cache Tool | Factory
+Cache Tool | Cache Factory
 Category Tool | Base Category
 Category | Category
 Delivery Builder | Predicate

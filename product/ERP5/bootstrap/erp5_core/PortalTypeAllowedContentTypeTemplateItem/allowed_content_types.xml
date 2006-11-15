@@ -32,6 +32,7 @@
   <item>Delivery Builder</item>
  </portal_type>
  <portal_type id="Domain">
+  <item>Domain Generator</item>
   <item>Domain</item>
  </portal_type>
  <portal_type id="Domain Tool">

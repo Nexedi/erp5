@@ -61,7 +61,7 @@
             <value> <string>\n
   DistributedRamCache is a Zope (persistent) representation of \n
   the Distributed RAM Cache real cache plugin object.\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

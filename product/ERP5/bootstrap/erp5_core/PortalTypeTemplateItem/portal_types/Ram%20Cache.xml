@@ -61,7 +61,7 @@
             <value> <string>\n
   RamCache is a Zope (persistent) representation of \n
   the RAM based real cache plugin object.\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
