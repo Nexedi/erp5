@@ -74,12 +74,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -243,27 +237,6 @@ ORDER BY <dtml-var order_by_expression>\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>
