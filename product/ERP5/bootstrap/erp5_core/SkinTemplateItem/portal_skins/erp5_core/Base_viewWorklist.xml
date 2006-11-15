@@ -123,7 +123,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>simulation_state</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>module</string>
                             <string>redirect_url</string>
                             <string>_getitem_</string>

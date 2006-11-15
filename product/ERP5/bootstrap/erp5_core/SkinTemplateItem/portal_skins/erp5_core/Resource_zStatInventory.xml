@@ -158,34 +158,28 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>query</string>
-<string>resource_uid</string>
-<string>from_date</string>
-<string>at_date</string>
-<string>to_date</string>
-<string>omit_simulation</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>simulation_state</string>
-<string>section_category</string>
-<string>selection_domain</string>
-<string>selection_report</string>
-<string>closed_summary</string>
-<string>where_expression</string>
-<string>from_table_list</string>
-<string>selection_uids</string>
+                            <string>query</string>
+                            <string>resource_uid</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>to_date</string>
+                            <string>omit_simulation</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>simulation_state</string>
+                            <string>section_category</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>closed_summary</string>
+                            <string>where_expression</string>
+                            <string>from_table_list</string>
+                            <string>selection_uids</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -511,27 +505,6 @@ WHERE\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>
