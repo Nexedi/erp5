@@ -645,11 +645,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     object_list[:] = failed_object_list[:]
           
 
-  def uncatalog_object(self, uid, sql_catalog_id=None):
+  def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      catalog.uncatalogObject(uid)
+      catalog.uncatalogObject(uid=uid,path=path)
 
       if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
