@@ -136,13 +136,17 @@ if is_domain_tree_mode or is_report_tree_mode : \n
 min_column_width = 1\n
 \n
 max_line_len = {}\n
+number = (int, float, long)\n
 for listboxline in listboxline_list:\n
   line_width = 0\n
   col_count = 0\n
   for column_id, column_property in listboxline.getColumnItemList():\n
-    string_property = str(column_property or \'\')\n
+    if isinstance(column_property, number):\n
+      string_property = "%s+++" % (column_property)\n
+    else:\n
+      string_property = str(column_property or \'\')\n
     if listboxline.isStatLine():\n
-      string_property = "%s longer" % string_property\n
+      string_property = "%s+++++" % string_property\n
     elif listboxline.isTitleLine():\n
       string_property = str(N_(string_property))\n
     line_width += len(string_property)\n
@@ -231,9 +235,13 @@ return result\n
                             <string>total_col_width</string>
                             <string>_getitem_</string>
                             <string>max_line_len</string>
+                            <string>int</string>
+                            <string>float</string>
+                            <string>long</string>
+                            <string>number</string>
+                            <string>isinstance</string>
                             <string>new_column_max_len</string>
                             <string>update_dict</string>
-                            <string>float</string>
                             <string>sum</string>
                             <string>total_max_len</string>
                             <string>max_len</string>
