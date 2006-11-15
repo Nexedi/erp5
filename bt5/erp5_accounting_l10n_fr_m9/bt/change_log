@@ -1,3 +1,6 @@
+2006-11-15 jerome
+* Added a print action for selected accounting transaction, showing summary by type and transmission sheet
+
 2006-07-03 Kevin
 * Commit Jérome's changelog date fix.
 
