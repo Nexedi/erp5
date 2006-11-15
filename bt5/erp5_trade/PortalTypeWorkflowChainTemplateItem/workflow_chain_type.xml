@@ -16,6 +16,10 @@
   <workflow>packing_list_interaction_workflow, delivery_edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Delivery Rule</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Discount</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -38,6 +42,10 @@
  <chain>
   <type>Inventory Line</type>
   <workflow>trade_matrix_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Order Rule</type>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Payment Condition</type>

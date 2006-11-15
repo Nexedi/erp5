@@ -1,12 +1,18 @@
 Container Line | Container Cell
 Container | Container
 Container | Container Line
+Delivery Rule | Category Divergence Tester
+Delivery Rule | Property Divergence Tester
+Delivery Rule | Quantity Divergence Tester
 Internal Packing List Line | Internal Packing List Cell
 Internal Packing List Module | Internal Packing List
 Internal Packing List | Internal Packing List Line
 Inventory Line | Inventory Cell
 Inventory Module | Inventory
 Inventory | Inventory Line
+Order Rule | Category Divergence Tester
+Order Rule | Property Divergence Tester
+Order Rule | Quantity Divergence Tester
 Purchase Order Line | Purchase Order Cell
 Purchase Order Module | Purchase Order
 Purchase Order | Discount

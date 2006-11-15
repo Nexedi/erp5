@@ -14,6 +14,7 @@ Delivery Cell | history_view
 Delivery Cell | metadata
 Delivery Cell | print
 Delivery Cell | view
+Delivery Rule | history
 Delivery Rule | metadata
 Delivery Rule | print
 Delivery Rule | view
@@ -58,6 +59,7 @@ Inventory | history
 Inventory | metadata
 Inventory | print
 Inventory | view
+Order Rule | history
 Order Rule | metadata
 Order Rule | print
 Order Rule | view
