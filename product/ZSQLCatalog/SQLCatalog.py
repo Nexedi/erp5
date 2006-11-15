@@ -1192,7 +1192,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   if psyco is not None: psyco.bind(catalogObjectList)
 
-  def uncatalogObject(self, path):
+  def uncatalogObject(self, path=None,uid=None):
     """
     Uncatalog and object from the Catalog.
 
@@ -1217,7 +1217,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if not (root_indexable and site_indexable):
       return None
 
-    uid = self.getUidForPath(path)
+    if uid is None and path is not None:
+      uid = self.getUidForPath(path)
     methods = self.sql_uncatalog_object
     if uid is None:
       return None
