@@ -73,7 +73,8 @@
 \n
     <tal:block tal:condition="python: len(listboxline_list) > 1" >\n
 \n
-      <tal:block tal:condition="python: is_domain_tree_mode == 1" tal:define="domain_list python: selection.getDomainList()">\n
+      <tal:block tal:condition="python: is_domain_tree_mode"\n
+                 tal:define="domain_list python: selection.getDomainList()">\n
         <tal:block tal:condition="python: len(domain_list) > 0" >\n
         <table style="StandardTableWithGrid">\n
           <tr>\n
@@ -128,13 +129,13 @@
                                        column_id python: column_item[0]">\n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para  style="TableStandard" tal:content="python: str(column_property)"\n
-                             tal:attributes="style python:column_id in (\'gap_id\', \'id\', \'title\', \'translated_portal_type\', \'third_party\', \'translated_simulation_state_title\') and \'TableStandardLeftAligned\' or \'TableStandardRightAligned\'" />\n
+                      <para  style="TableStandard" tal:content="string:${column_property}"\n
+                             tal:attributes="style python:isinstance(column_property, (int, long, float)) and \'TableStandardRightAligned\' or \'TableStandardLeftAligned\'" />\n
                     </td>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: column_property is None">\n
                     <td>\n
-                      <para  style="TableStandard" tal:content="python: \'\' " />\n
+                      <para  style="TableStandard" tal:content="string:" />\n
                     </td>\n
                   </tal:block>\n
                 </tal:block>\n
@@ -173,7 +174,8 @@
 \n
 \n
    </body>\n
-</html>
+</html>\n
+
 
 ]]></string> </value>
         </item>
