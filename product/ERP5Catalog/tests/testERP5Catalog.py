@@ -62,10 +62,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   # Different variables used for this test
   run_all_test = 1
-  quiet = 1
+  quiet = 0
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
+    # make sure there is no message any more
+    self.tic()
 
   def beforeTearDown(self):
     for module in [ self.getPersonModule(),
@@ -143,6 +145,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.manage_delObjects('1')
+    get_transaction().commit()
+    self.tic()
     self.checkRelativeUrlNotInSqlPathList(path_list)
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
@@ -153,6 +157,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.manage_delObjects('2')
+    get_transaction().commit()
+    self.tic()
     self.checkRelativeUrlNotInSqlPathList(path_list)
     # Now we will try with the method deleteContent
     person = person_module.newContent(id='3',portal_type='Person')
@@ -161,6 +167,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.deleteContent('3')
+    # Now delete things is made with activities
+    self.checkRelativeUrlInSqlPathList(path_list)
+    get_transaction().commit()
+    self.tic()
     self.checkRelativeUrlNotInSqlPathList(path_list)
 
   def test_04_SearchFolderWithDeletedObjects(self, quiet=quiet, run=run_all_test):
@@ -178,6 +188,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(['4'],folder_object_list)
     person.immediateReindexObject()
     person_module.manage_delObjects('4')
+    get_transaction().commit()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
@@ -200,6 +212,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(['4'],folder_object_list)
     
     person_module.manage_delObjects('4')
+    get_transaction().commit()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
@@ -223,6 +237,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(['4'],folder_object_list)
     
     person_module.manage_delObjects('4')
+    get_transaction().commit()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
@@ -811,29 +827,48 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     portal.manage_delObjects('erp5_sql_connection')
     # Then it must be impossible to delete an object
-    self.assertRaises(AttributeError, person_module.manage_delObjects,'2')
+    uid = person.getUid()
+    unindex = portal_catalog.unindexObject
+    self.assertRaises(AttributeError,unindex,person,uid=person.getUid())
     get_transaction().abort()
 
   def test_SortOn(self, quiet=quiet, run=run_all_test):
     if not run: return
+    if not quiet:
+      message = 'Test Sort On'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     self.assertEquals('catalog.title',
             self.getCatalogTool().buildSQLQuery(
             sort_on=(('catalog.title', 'ascending'),))['order_by_expression'])
 
   def test_SortOnDescending(self, quiet=quiet, run=run_all_test):
     if not run: return
+    if not quiet:
+      message = 'Test Sort On Descending'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     self.assertEquals('catalog.title DESC',
             self.getCatalogTool().buildSQLQuery(
             sort_on=(('catalog.title', 'descending'),))['order_by_expression'])
     
   def test_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
+    if not run: return
+    if not quiet:
+      message = 'Test Sort On Unknow Keys'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     self.assertEquals('',
           self.getCatalogTool().buildSQLQuery(
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
   def test_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
+    if not quiet:
+      message = 'Test Sort On Ambigous Keys'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     # if the sort key is found on the catalog table, it will use that catalog
     # table.
     self.assertEquals('catalog.title',
@@ -862,6 +897,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
   def test_SortOnMultipleKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
+    if not quiet:
+      message = 'Test Sort On Multiple Keys'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     self.assertEquals('catalog.title,catalog.id',
               self.getCatalogTool().buildSQLQuery(
               sort_on=(('catalog.title', 'ascending'),
@@ -872,6 +911,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """Sort-on parameter and related key. (Assumes that region_title is a \
     valid related key)"""
     if not run: return
+    if not quiet:
+      message = 'Test Sort On Related Keys'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     self.assertNotEquals('',
               self.getCatalogTool().buildSQLQuery(region_title='',
               sort_on=(('region_title', 'ascending'),))['order_by_expression'])
@@ -901,6 +944,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter.
     """
     if not run: return
+    if not quiet:
+      message = 'Test Simple Query Dict'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     organisation_title = 'Nexedi Organisation'
     organisation = self._makeOrganisation(title=organisation_title)
     self.assertEquals([organisation.getPath()],
@@ -911,6 +958,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, but using a related key
     """
     if not run: return
+    if not quiet:
+      message = 'Test Related Key Simple Query Dict'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     organisation = self._makeOrganisation()
     self.assertEquals([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
@@ -924,6 +975,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with OR operator.
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With Or Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     organisation_title = 'Nexedi Organisation'
     organisation = self._makeOrganisation(title=organisation_title)
   
@@ -937,6 +992,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with AND operator.
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With And Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     organisation_title = 'Nexedi Organisation'
     organisation = self._makeOrganisation(title=organisation_title)
   
@@ -951,6 +1010,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with max range parameter ( < )
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With Max Range Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     org_a = self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
@@ -965,6 +1028,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with min range parameter ( >= )
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With Min Range Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     org_a = self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
@@ -980,6 +1047,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with ngt range parameter ( <= )
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With Ngt Range Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     org_a = self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
@@ -994,6 +1065,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with minmax range parameter ( >=  < )
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With Min Max Range Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     org_a = self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
@@ -1008,6 +1083,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with minngt range parameter ( >= <= )
     """
     if not run: return
+    if not quiet:
+      message = 'Test Query Dict With Min Ngt Range Operator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     org_a = self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
@@ -1021,6 +1100,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """ERP5Catalog uses a deferred connection for full text indexing.
     """
     if not run: return
+    if not quiet:
+      message = 'Test Deferred Connection'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     erp5_sql_deferred_connection = getattr(self.getPortal(),
                                     'erp5_sql_deferred_connection',
                                     None)
@@ -1039,6 +1122,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """Simple test to exercise object deletion
     """
     if not run: return
+    if not quiet:
+      message = 'Test Delete Object'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     folder = self.getOrganisationModule()
     ob = folder.newContent()
     get_transaction().commit()
@@ -1052,6 +1139,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """test that proxy roles apply to catalog queries within python scripts
     """
     if not run: return
+    if not quiet:
+      message = 'Proxy Roles In Restricted Python'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     login = PortalTestCase.login
     perm = 'View'
 
@@ -1105,6 +1196,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """Tests SearchableText is working in ERP5Catalog
     """
     if not run: return
+    if not quiet:
+      message = 'Searchable Text'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
     folder = self.getOrganisationModule()
     ob = folder.newContent()
     ob.setTitle('The title of this object')
