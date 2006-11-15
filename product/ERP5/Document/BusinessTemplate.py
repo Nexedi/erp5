@@ -385,6 +385,8 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     Remove unneeded properties for export
     """
+    if hasattr(aq_base(obj), '_dav_writelocks'):
+      del aq_base(obj)._dav_writelocks
     if hasattr(obj, '__ac_local_roles__'):
       # remove local roles
       obj.__ac_local_roles__ = None
