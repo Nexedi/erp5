@@ -94,6 +94,10 @@
     <paragraphstyle name="TableStandardRightAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />\n
     <paragraphstyle name="TableHeader" parent="Normal" fontname="Helvetica-Oblique" fontsize="7" alignment="left" />\n
     <paragraphstyle name="TableLastLine" parent="Normal" fontname="Helvetica-Oblique" fontsize="7" alignment="right" />\n
+    <paragraphstyle name="TableLastLineLeftAligned" parent="Normal"\n
+                    fontname="Helvetica-Oblique" fontsize="7" alignment="left" />\n
+    <paragraphstyle name="TableLastLineRightAligned" parent="Normal"\n
+                    fontname="Helvetica-Oblique" fontsize="7" alignment="right" />\n
 \n
     <paragraphstyle name="Section1" parent="Normal" fontname="Helvetica-Bold" fontsize="10"/>\n
     <paragraphstyle name="Section2" leftindent="0.4cm" parent="Normal" fontname="Helvetica-Bold" fontsize="7"/>\n
@@ -182,7 +186,8 @@
 \n
   </pagetemplate>\n
 \n
-</template>
+</template>\n
+
 
 ]]></string> </value>
         </item>

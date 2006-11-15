@@ -148,7 +148,8 @@
                                        column_id python: column_item[0]">\n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para  style="TableLastLine" tal:content="python: str(column_property)" />\n
+                      <para  style="TableLastLine" tal:content="string:${column_property}"\n
+                             tal:attributes="style python:isinstance(column_property, (int, long, float)) and \'TableLastLineRightAligned\' or \'TableLastLineLeftAligned\'" />\n
                     </td>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: column_property is None">\n
