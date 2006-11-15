@@ -324,11 +324,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Portal Type</string>
                         </tuple>
                         <tuple>
@@ -452,7 +452,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>rule_selection</string> </value>
+                    <value> <string>divergence_tester_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
