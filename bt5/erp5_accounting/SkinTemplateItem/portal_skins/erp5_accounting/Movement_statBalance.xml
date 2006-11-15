@@ -124,10 +124,10 @@ return printed\n
                             <string>Products.PythonScripts.standard</string>
                             <string>html_quote</string>
                             <string>_getattr_</string>
-<string>container</string>
+                            <string>container</string>
                             <string>request</string>
                             <string>RESPONSE</string>
-<string>script</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>

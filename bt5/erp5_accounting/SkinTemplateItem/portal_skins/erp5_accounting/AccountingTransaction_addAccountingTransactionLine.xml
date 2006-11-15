@@ -121,7 +121,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                           <tuple>
                             <string>portal_type</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>N_</string>
                           </tuple>
                         </value>

@@ -159,23 +159,23 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>selection</string>
-<string>selection_domain</string>
-<string>selection_report</string>
-<string>node_uid</string>
-<string>where_expression</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>resource_uid</string>
-<string>from_date</string>
-<string>to_date</string>
-<string>at_date</string>
-<string>simulation_state</string>
-<string>section_category</string>
-<string>payment_uid</string>
-<string>no_payment_uid</string>
-<string>mirror_section_uid</string>
-<string>no_mirror_section_uid</string>
+                            <string>selection</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>node_uid</string>
+                            <string>where_expression</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>resource_uid</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>at_date</string>
+                            <string>simulation_state</string>
+                            <string>section_category</string>
+                            <string>payment_uid</string>
+                            <string>no_payment_uid</string>
+                            <string>mirror_section_uid</string>
+                            <string>no_mirror_section_uid</string>
                           </list>
                         </value>
                     </item>
@@ -188,12 +188,6 @@
             <key> <string>_col</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -528,27 +522,6 @@ ORDER BY\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>
