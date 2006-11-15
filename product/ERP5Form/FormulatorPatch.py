@@ -415,10 +415,9 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
 
 StringBaseValidator.validate = StringBaseValidator_validate
 
-def render_hidden(self, field, key, value, REQUEST):
+def Widget_render_hidden(self, field, key, value, REQUEST):
     """Renders this widget as a hidden field.
     """
-    #LOG('render_hidden',0,str(value))
     try:
         extra = field.get_value('extra')
     except KeyError:
@@ -442,7 +441,9 @@ def render_hidden(self, field, key, value, REQUEST):
                           extra=extra)
     return result
 
-Widget.render_hidden = render_hidden
+Widget.render_hidden = Widget_render_hidden
+# default render_pdf for a Widget
+Widget.render_pdf = Widget.render_view
 
 from Products.Formulator.Validator import LinesValidator
 
@@ -800,8 +801,8 @@ class PatchedDateTimeWidget(DateTimeWidget):
             return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
         else:
             return date_result
-
-    def render_view(self, field, value):
+    
+    def format_value(self, field, value, mode='html'):
         if value is None:
             return ''
 
@@ -831,14 +832,25 @@ class PatchedDateTimeWidget(DateTimeWidget):
         else:
             output = [year, month, day]
         date_result = string.join(output, field.get_value('date_separator'))
+        
+        if mode in ('html', ):
+            space = '&nbsp;'
+        else:
+            space = ' '
 
         if not field.get_value('date_only'):
             time_result = hour + field.get_value('time_separator') + minute
             if use_ampm:
-                time_result += '&nbsp;' + ampm
-            return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
+                time_result += space + ampm
+            return date_result + (space * 3) + time_result
         else:
             return date_result
+    
+    def render_view(self, field, value):
+        return self.format_value(field, value, mode='html')
+    
+    def render_pdf(self, field, value):
+        return self.format_value(field, value, mode='pdf')
 
 DateTimeField.widget = PatchedDateTimeWidget()
 
@@ -1045,6 +1057,9 @@ class FloatWidget(TextWidget):
 
         return TextWidgetInstance.render_view(field, value)
 
+    def render_pdf(self, field, value):
+        """Render the field as PDF."""
+        return self.format_value(field, value)
 
 FloatWidgetInstance = FloatWidget()
 from Products.Formulator.StandardFields import FloatField
@@ -1113,8 +1128,14 @@ Field.render_htmlgrid = Field_render_htmlgrid
 #    # Grid is only valid if stucture of grid has some meaning and is
 #    # implemeted by listbox (ex. spreadsheet = grid)
 #
-#   def render_pdf(self, field, key, value, REQUEST):
-#     return 'whatever for reportlab'
+
+def Field_render_pdf(self, value=None, REQUEST=None, key=None, **kw):
+  """
+  render_pdf renders the field for reportlab
+  """
+  return self.widget.render_pdf(self, value)
+Field.render_pdf = Field_render_pdf
+
 
 from Products.Formulator.TALESField import TALESWidget
 def TALESWidget_render_view(self, field, value):
@@ -1131,4 +1152,3 @@ def TALESWidget_render_view(self, field, value):
   return text
 
 TALESWidget.render_view = TALESWidget_render_view
-
