@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.TypesTool</string>
-          <string>FactoryTypeInformation</string>
+          <string>Products.ERP5Type.ERP5Type</string>
+          <string>ERP5TypeInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -46,7 +46,19 @@
             </value>
         </item>
         <item>
+            <key> <string>_roles</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
             <value>
               <tuple/>
             </value>
@@ -71,6 +83,12 @@
             <value> <string>addProductionOrderRule</string> </value>
         </item>
         <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Production Order Rule</string> </value>
         </item>
@@ -81,6 +99,12 @@
         <item>
             <key> <string>product</string> </key>
             <value> <string>ERP5Type</string> </value>
+        </item>
+        <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
