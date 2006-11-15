@@ -68,18 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string># get related object title in a security-aware way (without throwing exception\n
+# if I don\'t have permissions to access the object)\n
 cat_value=context.getProperty(category)\n
-res=context.portal_catalog(relative_url=cat_value)\n
-count=len(res)\n
-if count==0:return \'\'\n
-if count>1:\n
-  context.log(\'detected %d objects for %s relation\' % (count,category),context)\n
-return res[0].getTitle()\n
-
-
-]]></string> </value>
+ob=context.restrictedTraverse(cat_value,None)\n
+return ob is not None and ob.getTitle() or \'\'\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -131,10 +125,8 @@ return res[0].getTitle()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>cat_value</string>
-                            <string>res</string>
-                            <string>len</string>
-                            <string>count</string>
-                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>ob</string>
                           </tuple>
                         </value>
                     </item>
