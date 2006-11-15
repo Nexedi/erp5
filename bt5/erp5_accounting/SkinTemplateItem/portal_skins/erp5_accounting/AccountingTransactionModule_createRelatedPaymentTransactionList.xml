@@ -73,13 +73,17 @@
 from Products.ERP5Type.Message import Message\n
 portal = context.getPortalObject()\n
 stool = portal.portal_selections\n
+getObject = portal.portal_catalog.getObject\n
 invoice_type_list = portal.getPortalInvoiceTypeList()\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-selected_uids = stool.updateSelectionCheckedUidList(\n
-                       selection_name, listbox_uid, uids)\n
-\n
-object_list = stool.callSelectionFor(selection_name)\n
+stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
+selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(\n
+                                                       selection_name)\n
+if selection_uid_list:\n
+  object_list = [getObject(uid) for uid in selection_uid_list]\n
+else:\n
+  object_list = stool.callSelectionFor(selection_name)\n
 \n
 # update selection params, because it\'ll be used in the selection dialog.\n
 stool.setSelectionParamsFor(\'accounting_create_related_payment_selection\',\n
@@ -176,14 +180,18 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>context</string>
                             <string>portal</string>
                             <string>stool</string>
+                            <string>getObject</string>
                             <string>invoice_type_list</string>
                             <string>N_</string>
-                            <string>selected_uids</string>
+                            <string>selection_uid_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
                             <string>object_list</string>
                             <string>dict</string>
                             <string>len</string>
                             <string>activated</string>
-                            <string>_getiter_</string>
                             <string>obj</string>
                           </tuple>
                         </value>
