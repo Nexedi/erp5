@@ -35,6 +35,9 @@ Cache Factory | metadata
 Cache Factory | view
 Cache Tool | metadata
 Cache Tool | view
+Category Divergence Tester | history
+Category Divergence Tester | metadata
+Category Divergence Tester | print
 Category Divergence Tester | view
 Category Tool | fast_input
 Category Tool | list
@@ -112,7 +115,13 @@ Preference | html_style_preferences
 Preference | metadata
 Preference | print
 Preference | view
+Property Divergence Tester | history
+Property Divergence Tester | metadata
+Property Divergence Tester | print
 Property Divergence Tester | view
+Quantity Divergence Tester | history
+Quantity Divergence Tester | metadata
+Quantity Divergence Tester | print
 Quantity Divergence Tester | view
 Ram Cache | history
 Ram Cache | metadata

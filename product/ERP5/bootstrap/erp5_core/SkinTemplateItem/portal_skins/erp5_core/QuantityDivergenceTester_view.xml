@@ -61,7 +61,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -70,12 +73,31 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_property_tester</string>
                         <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list>
                         <string>my_solver_list</string>
                       </list>
                     </value>
