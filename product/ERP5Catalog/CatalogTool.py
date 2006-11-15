@@ -528,15 +528,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
 
     security.declarePrivate('unindexObject')
-    def unindexObject(self, object, path=None, sql_catalog_id=None):
+    def unindexObject(self, object, path=None, uid=None,sql_catalog_id=None):
         """
           Remove from catalog.
         """
-        if path is None:
-          url = self.__url(object)
-        else:
-          url = path
-        self.uncatalog_object(url, sql_catalog_id=sql_catalog_id)
+        if path is None and uid is None:
+          path = self.__url(object)
+        self.uncatalog_object(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
+
+    security.declarePrivate('getUrl')
+    def getUrl(self, object):
+      return self.__url(object)
 
     security.declarePrivate('moveObject')
     def moveObject(self, object, idxs=None):
