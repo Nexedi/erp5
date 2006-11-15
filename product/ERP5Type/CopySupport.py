@@ -26,6 +26,7 @@ from Products.CMFCore.utils import getToolByName
 from Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
 from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 
 from zLOG import LOG
 
@@ -298,9 +299,10 @@ class CopyContainer:
         catalog = getToolByName(self, 'portal_catalog', None)
         if catalog is not None:
             self.flushActivity(invoke=0)
-            #LOG("after flush",0, str(self.id))
-            catalog.unindexObject(self, path=path)
-            #LOG("unindexObject",0, str(self.id))
+            uid = getattr(self,'uid',None)
+            if uid is None and path is None:
+              path = catalog.getUrl(self)
+            catalog.activate(activity='SQLQueue').unindexObject(None, path=path,uid=uid)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
   def moveObject(self, idxs=None):
