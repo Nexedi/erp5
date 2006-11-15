@@ -90,7 +90,8 @@ class DeliveryRule(Rule):
       # Check existing movements
       for movement in applied_rule.contentValues(portal_type=movement_type):
         if movement.getLastExpandSimulationState() in \
-            delivery.getPortalDraftOrderStateList():
+            (delivery.getPortalDraftOrderStateList() + \
+            delivery.getPortalPlannedOrderStateList()):
           movement_delivery = movement.getDeliveryValue()
           if not self._isTreeDelivered([movement], ignore_first=1) and \
               movement_delivery not in delivery_movement_list:
@@ -102,52 +103,52 @@ class DeliveryRule(Rule):
           immutable_movement_list.append(movement)
 
       # Create or modify movements
-      for movement in delivery.getMovementList():
-        related_delivery = movement.getDeliveryRelatedValue()
-        if related_delivery is None:
-          # create a new movement
-          if movement.getParentUid() == movement.getExplanationUid():
+      for deliv_mvt in delivery.getMovementList():
+        sim_mvt = deliv_mvt.getDeliveryRelatedValue()
+        if sim_mvt is None:
+          # create a new deliv_mvt
+          if deliv_mvt.getParentUid() == deliv_mvt.getExplanationUid():
             # We are on a line
-            new_id = movement.getId()
+            new_id = deliv_mvt.getId()
           else:
             # Weare on a cell
-            new_id = "%s_%s" % (movement.getParentId(), movement.getId())
-          # Generate the simulation movement
+            new_id = "%s_%s" % (deliv_mvt.getParentId(), deliv_mvt.getId())
+          # Generate the simulation deliv_mvt
           new_sim_mvt = applied_rule.newContent(
               portal_type=movement_type,
               id=new_id,
-              order_value=movement,
+              order_value=deliv_mvt,
               order_ratio=1,
-              delivery_value=movement,
+              delivery_value=deliv_mvt,
               delivery_ratio=1,
               deliverable=1,
-              source=movement.getSource(),
-              source_section=movement.getSourceSection(),
-              destination=movement.getDestination(),
-              destination_section=movement.getDestinationSection(),
-              quantity=movement.getQuantity(),
-              resource=movement.getResource(),
-              variation_category_list=movement.getVariationCategoryList(),
-              variation_property_dict=movement.getVariationPropertyDict(),
-              start_date=movement.getStartDate(),
-              stop_date=movement.getStopDate())
-        elif related_delivery in existing_movement_list:
-          if related_delivery not in immutable_movement_list:
+              source=deliv_mvt.getSource(),
+              source_section=deliv_mvt.getSourceSection(),
+              destination=deliv_mvt.getDestination(),
+              destination_section=deliv_mvt.getDestinationSection(),
+              quantity=deliv_mvt.getQuantity(),
+              resource=deliv_mvt.getResource(),
+              variation_category_list=deliv_mvt.getVariationCategoryList(),
+              variation_property_dict=deliv_mvt.getVariationPropertyDict(),
+              start_date=deliv_mvt.getStartDate(),
+              stop_date=deliv_mvt.getStopDate())
+        elif sim_mvt in existing_movement_list:
+          if sim_mvt not in immutable_movement_list:
             # modification allowed
-            related_delivery.edit(
-                delivery_value=movement,
+            sim_mvt.edit(
+                delivery_value=deliv_mvt,
                 delivery_ratio=1,
                 deliverable=1,
-                source=movement.getSource(),
-                source_section=movement.getSourceSection(),
-                destination=movement.getDestination(),
-                destination_section=movement.getDestinationSection(),
-                quantity=movement.getQuantity(),
-                resource=movement.getResource(),
-                variation_category_list=movement.getVariationCategoryList(),
-                variation_property_dict=movement.getVariationPropertyDict(),
-                start_date=movement.getStartDate(),
-                stop_date=movement.getStopDate(),
+                source=deliv_mvt.getSource(),
+                source_section=deliv_mvt.getSourceSection(),
+                destination=deliv_mvt.getDestination(),
+                destination_section=deliv_mvt.getDestinationSection(),
+                quantity=deliv_mvt.getQuantity(),
+                resource=deliv_mvt.getResource(),
+                variation_category_list=deliv_mvt.getVariationCategoryList(),
+                variation_property_dict=deliv_mvt.getVariationPropertyDict(),
+                start_date=deliv_mvt.getStartDate(),
+                stop_date=deliv_mvt.getStopDate(),
                 force_update=1)
           else:
             # modification disallowed, must compensate
