@@ -1,3 +1,6 @@
+2006-11-15
+Added RSS support to document_folder
+
 2006-11-08
 Reading doc properties from content and from email text upon ingestion
 
