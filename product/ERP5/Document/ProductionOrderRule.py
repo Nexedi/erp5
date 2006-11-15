@@ -57,6 +57,7 @@ class ProductionOrderRule(OrderRule):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Task
                       )
 
     # Simulation workflow

@@ -59,6 +59,7 @@ class InvoiceRule(DeliveryRule):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Task
                       )
     
     security.declareProtected(Permissions.AccessContentsInformation,

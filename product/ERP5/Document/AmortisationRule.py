@@ -65,6 +65,7 @@ class AmortisationRule(Rule):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Task
                       )
 
     movement_name_dict = { 'immobilisation':   { 'immo':  'start_immo',

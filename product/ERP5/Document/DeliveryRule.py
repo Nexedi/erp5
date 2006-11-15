@@ -56,6 +56,7 @@ class DeliveryRule(Rule):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Task
                     )
 
   def _test(self, movement):

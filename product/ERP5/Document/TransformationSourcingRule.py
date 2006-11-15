@@ -141,6 +141,7 @@ class TransformationSourcingRule(Rule):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Task
                       )
     # Class variable 
     simulation_movement_portal_type = "Simulation Movement"

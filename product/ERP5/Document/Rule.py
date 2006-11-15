@@ -80,6 +80,7 @@ class Rule(XMLObject, Predicate):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Task
                     )
   
   # Portal Type of created children

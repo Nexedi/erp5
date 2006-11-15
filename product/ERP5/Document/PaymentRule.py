@@ -62,6 +62,7 @@ class PaymentRule(Rule):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Task
                       )
 
     def _test(self, movement):

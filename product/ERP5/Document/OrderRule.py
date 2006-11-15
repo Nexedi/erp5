@@ -56,6 +56,7 @@ class OrderRule(DeliveryRule):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Task
                     )
 
   # Simulation workflow
