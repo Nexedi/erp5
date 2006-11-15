@@ -102,20 +102,27 @@ Invoice Line | price
 Invoice Line | print
 Invoice Line | quantity
 Invoice Line | view
+Invoice Rule | history
 Invoice Rule | metadata
-Invoice Rule | print
 Invoice Rule | print_pdf
 Invoice Rule | view
+Invoice Transaction Rule | divergence
+Invoice Transaction Rule | history
 Invoice Transaction Rule | metadata
 Invoice Transaction Rule | print_pdf
 Invoice Transaction Rule | update_matrix
 Invoice Transaction Rule | view
+Invoicing Rule | history
 Invoicing Rule | metadata
 Invoicing Rule | print
 Invoicing Rule | view
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions
+Payment Rule | history
+Payment Rule | metadata
+Payment Rule | print
+Payment Rule | view
 Payment Transaction | add_accounting_transaction_line
 Payment Transaction | create_reversal
 Payment Transaction | destination_asset

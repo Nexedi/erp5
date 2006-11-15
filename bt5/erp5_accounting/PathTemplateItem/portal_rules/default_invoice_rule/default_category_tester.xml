@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.PaymentRule</string>
-          <string>PaymentRule</string>
+          <string>Products.ERP5Type.Document.CategoryDivergenceTester</string>
+          <string>CategoryDivergenceTester</string>
         </tuple>
         <none/>
       </tuple>
@@ -43,16 +43,43 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>default_payment_rule</string> </value>
+            <value> <string>default_category_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Payment Rule</string> </value>
+            <value> <string>Category Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>solver</string> </key>
+            <value>
+              <tuple>
+                <string>CopyToTarget</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value>
+              <tuple>
+                <string>source_section | Source Section</string>
+                <string>resource | Resource</string>
+                <string>destination_section | Destination Section</string>
+                <string>source | Source</string>
+                <string>destination | Destination</string>
+                <string>aggregate | Aggregate</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payment Rule</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

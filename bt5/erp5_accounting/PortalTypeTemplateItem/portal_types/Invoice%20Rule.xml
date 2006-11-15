@@ -43,6 +43,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -64,8 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>\n
-      Invoice Rule object make sure an Invoice in the similation\n
+            <value> <string>      Invoice Rule object make sure an Invoice in the similation\n
       is consistent with the real invoice\n
 \n
       WARNING: what to do with movement split ?\n
@@ -74,6 +77,16 @@
         <item>
             <key> <string>factory</string> </key>
             <value> <string>addInvoiceRule</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -86,10 +99,18 @@
             <value> <string>Invoice Rule</string> </value>
         </item>
         <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

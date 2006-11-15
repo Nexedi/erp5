@@ -18,7 +18,11 @@ Invoice Cell | edit_workflow
 Invoice Line | delivery_edit_workflow
 Invoice Line | edit_workflow
 Invoice Line | trade_matrix_workflow
+Invoice Rule | edit_workflow
+Invoice Transaction Rule | edit_workflow
 Invoice Transaction Rule | rule_interaction_workflow
+Invoicing Rule | edit_workflow
+Payment Rule | edit_workflow
 Payment Transaction | accounting_workflow
 Payment Transaction | edit_workflow
 Purchase Invoice Transaction Line | delivery_edit_workflow

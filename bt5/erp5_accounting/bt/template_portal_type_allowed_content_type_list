@@ -11,9 +11,21 @@ Cash Register | Agent
 Closing Transaction | Closing Transaction Line
 Invoice Line | Discount
 Invoice Line | Invoice Cell
+Invoice Rule | Category Divergence Tester
+Invoice Rule | Property Divergence Tester
+Invoice Rule | Quantity Divergence Tester
 Invoice Transaction Rule | Accounting Rule Cell
+Invoice Transaction Rule | Category Divergence Tester
 Invoice Transaction Rule | Predicate
+Invoice Transaction Rule | Property Divergence Tester
+Invoice Transaction Rule | Quantity Divergence Tester
+Invoicing Rule | Category Divergence Tester
+Invoicing Rule | Property Divergence Tester
+Invoicing Rule | Quantity Divergence Tester
 Organisation | Accounting Period
+Payment Rule | Category Divergence Tester
+Payment Rule | Property Divergence Tester
+Payment Rule | Quantity Divergence Tester
 Payment Transaction | Accounting Transaction Line
 Preference | Accounting Transaction
 Preference | Payment Transaction

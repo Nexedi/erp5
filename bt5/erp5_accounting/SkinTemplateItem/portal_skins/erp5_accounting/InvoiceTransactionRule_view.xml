@@ -99,13 +99,19 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_id</string>
+                        <string>my_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
