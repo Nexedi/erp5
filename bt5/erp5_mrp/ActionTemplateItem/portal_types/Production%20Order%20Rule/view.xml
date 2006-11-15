@@ -37,6 +37,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>view</string> </value>
         </item>
@@ -50,7 +54,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
