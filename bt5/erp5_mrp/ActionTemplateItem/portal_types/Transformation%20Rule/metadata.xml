@@ -48,13 +48,13 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>4.0</float> </value>
+            <value> <float>6.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/metadata_edit</string> </value>
+            <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
         </item>
       </dictionary>
     </pickle>

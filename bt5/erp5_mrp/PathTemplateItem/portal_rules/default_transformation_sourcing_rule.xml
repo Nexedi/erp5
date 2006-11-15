@@ -51,6 +51,10 @@
             <value> <string>Transformation Sourcing Rule</string> </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Transformation Sourcing Rule</string> </value>
+        </item>
+        <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>

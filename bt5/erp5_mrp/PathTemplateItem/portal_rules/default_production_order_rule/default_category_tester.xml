@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.ProductionOrderRule</string>
-          <string>ProductionOrderRule</string>
+          <string>Products.ERP5Type.Document.CategoryDivergenceTester</string>
+          <string>CategoryDivergenceTester</string>
         </tuple>
         <none/>
       </tuple>
@@ -22,6 +22,23 @@
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>solver_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
@@ -43,16 +60,57 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>default_production_order_rule</string> </value>
+            <value> <string>default_category_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Production Order Rule</string> </value>
+            <value> <string>Category Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>solver</string> </key>
+            <value>
+              <tuple>
+                <string>CopyToTarget</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>solver_list</string> </key>
+            <value>
+              <tuple>
+                <string>Teste 1 | teste 2</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>solver_script</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value>
+              <tuple>
+                <string>source_section | Source Section</string>
+                <string>resource | Resource</string>
+                <string>destination_section | Destination Section</string>
+                <string>source | Source</string>
+                <string>destination | Destination</string>
+                <string>aggregate | Aggregate</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Production Order Rule</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

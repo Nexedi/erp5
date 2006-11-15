@@ -15,6 +15,7 @@ Production Order Module | print
 Production Order Module | search
 Production Order Module | sort_on
 Production Order Module | view
+Production Order Rule | history
 Production Order Rule | metadata
 Production Order Rule | print
 Production Order Rule | view
@@ -90,7 +91,7 @@ Supply Node | history_view
 Supply Node | metadata
 Supply Node | print
 Supply Node | view
-Transformation Rule | list
+Transformation Rule | history
 Transformation Rule | metadata
 Transformation Rule | print
 Transformation Rule | view

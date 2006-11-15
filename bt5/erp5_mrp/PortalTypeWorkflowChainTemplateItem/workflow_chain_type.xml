@@ -12,6 +12,10 @@
   <workflow>production_matrix_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Production Order Rule</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Production Packing List</type>
   <workflow>production_packing_list_workflow, production_packing_list_causality_workflow, edit_workflow, production_packing_list_interaction_workflow</workflow>
  </chain>
@@ -37,6 +41,14 @@
  </chain>
  <chain>
   <type>Supply Node</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Rule</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Sourcing Rule</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

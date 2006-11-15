@@ -27,16 +27,7 @@
         <item>
             <key> <string>_aliases</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>(Default)</string> </key>
-                    <value> <string>ProductionOrderRule_view</string> </value>
-                </item>
-                <item>
-                    <key> <string>view</string> </key>
-                    <value> <string>ProductionOrderRule_view</string> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
         <item>
@@ -50,6 +41,10 @@
             <value>
               <list/>
             </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -73,14 +68,23 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>\n
-      Prouction Order Rule object use a Supply Chain to expand a Production\n
+            <value> <string>      Prouction Order Rule object use a Supply Chain to expand a Production\n
       Order.\n
 </string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
             <value> <string>addProductionOrderRule</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -97,6 +101,10 @@
             <value> <string>ProductionOrderRule_view</string> </value>
         </item>
         <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>product</string> </key>
             <value> <string>ERP5Type</string> </value>
         </item>
@@ -105,6 +113,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

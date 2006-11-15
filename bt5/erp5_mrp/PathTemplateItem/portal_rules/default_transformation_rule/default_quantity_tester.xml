@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.ProductionOrderRule</string>
-          <string>ProductionOrderRule</string>
+          <string>Products.ERP5Type.Document.QuantityDivergenceTester</string>
+          <string>QuantityDivergenceTester</string>
         </tuple>
         <none/>
       </tuple>
@@ -43,16 +43,55 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>default_production_order_rule</string> </value>
+            <value> <string>default_quantity_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Production Order Rule</string> </value>
+            <value> <string>Quantity Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>property_tester</string> </key>
+            <value> <string>quantity</string> </value>
+        </item>
+        <item>
+            <key> <string>solver</string> </key>
+            <value>
+              <tuple>
+                <string>SplitAndDefer</string>
+                <string>CopyToTarget</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>solver_list</string> </key>
+            <value>
+              <tuple>
+                <string>Solver</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>solver_script</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Production Order Rule</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
