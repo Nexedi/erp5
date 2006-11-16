@@ -75,14 +75,15 @@ portal = context.getPortalObject()\n
 total_debit = 0\n
 total_credit = 0\n
 \n
-account_cache = cache_storage[\'m9_report_per_origin_and_sheet_summary\']\n
-account_list = account_cache.keys()\n
-account_list.sort()\n
+origin_cache = cache_storage[\'m9_report_per_origin_and_sheet_summary\']\n
+origin_list = origin_cache.keys()\n
+origin_list.sort()\n
 \n
-for account_url in account_list:\n
-  values = account_cache[account_url]\n
-  account_title = portal.restrictedTraverse(account_url).Account_getFormattedTitle()\n
-  for (origin, sheet), total_price in values.items():\n
+for origin in origin_list:\n
+  values = origin_cache[origin]\n
+  for (account_url, sheet), total_price in values.items():\n
+    account_title = portal.restrictedTraverse(account_url\n
+                                  ).Account_getFormattedTitle()\n
     debit = max(total_price, 0)\n
     total_debit += debit\n
     credit = -min(total_price, 0)\n
@@ -156,15 +157,15 @@ return line_list\n
                             <string>total_debit</string>
                             <string>total_credit</string>
                             <string>_getitem_</string>
-                            <string>account_cache</string>
-                            <string>account_list</string>
+                            <string>origin_cache</string>
+                            <string>origin_list</string>
                             <string>_getiter_</string>
-                            <string>account_url</string>
-                            <string>values</string>
-                            <string>account_title</string>
                             <string>origin</string>
+                            <string>values</string>
+                            <string>account_url</string>
                             <string>sheet</string>
                             <string>total_price</string>
+                            <string>account_title</string>
                             <string>max</string>
                             <string>debit</string>
                             <string>min</string>

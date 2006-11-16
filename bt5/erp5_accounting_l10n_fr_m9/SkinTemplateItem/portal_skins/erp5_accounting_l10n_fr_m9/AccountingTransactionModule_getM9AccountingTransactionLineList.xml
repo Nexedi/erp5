@@ -103,10 +103,9 @@ for transaction in stool.callSelectionFor(selection_name):\n
       total = account.setdefault(origin, 0)\n
       account[origin] = total + (line.total_price or 0)\n
       # per origin and sheet    \n
-      account = per_origin_and_sheet_cache.setdefault(\n
-                                        line.node_relative_url, {})\n
-      total = account.setdefault((origin, sheet), 0)\n
-      account[(origin, sheet)] = total + (line.total_price or 0)\n
+      origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
+      total = origin_cache.setdefault((line.node_relative_url, sheet), 0)\n
+      origin_cache[(line.node_relative_url, sheet)] = total + (line.total_price or 0)\n
 \n
 return line_list\n
 </string> </value>
@@ -177,6 +176,7 @@ return line_list\n
                             <string>account</string>
                             <string>total</string>
                             <string>_write_</string>
+                            <string>origin_cache</string>
                           </tuple>
                         </value>
                     </item>
