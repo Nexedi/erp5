@@ -702,6 +702,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                   new_groups_dict['not_assigned'].append(widget_id)
                 else:
                   new_groups_dict['not_assigned'] = [widget_id,]
+                  obj.group_list = list(obj.group_list) + ['not_assigned']
           # second check all widget_id in order are in form
           for group_id in new_groups_dict.keys():
             for widget_id in new_groups_dict[group_id]:
@@ -710,7 +711,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 # remove it fro the group
                 new_groups_dict[group_id].remove(widget_id)
           # now set new group object
-          obj.groups = new_groups_dict            
+          obj.groups = new_groups_dict
     else:
       # for old business template format
       BaseTemplateItem.install(self, context, trashbin, **kw)
