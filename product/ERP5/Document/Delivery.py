@@ -305,7 +305,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       return 0
 
     security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self):
+    def getDivergenceList(self, **kw):
       """
       Return a list of messages that contains the divergences
       """
