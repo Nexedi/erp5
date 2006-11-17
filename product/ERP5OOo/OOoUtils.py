@@ -42,7 +42,7 @@ from zLOG import LOG
 import imghdr
 import random
 
-
+from OFS.Image import Pdata
 
 class CorruptedOOoFile(Exception): pass
 
@@ -70,7 +70,17 @@ class OOoBuilder:
   def __init__(self, document):
     if hasattr(document, 'data') :
       self._document = StringIO()
-      self._document.write(document.data)
+
+      if isinstance(document.data, Pdata):
+        # Handle image included in the style
+        dat = document.data
+        while dat is not None:
+          self._document.write(dat.data)
+          dat = dat.next
+      else:
+        # Default behaviour
+        self._document.write(document.data)
+          
     elif hasattr(document, 'read') :
       self._document = document
     else :
