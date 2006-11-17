@@ -168,7 +168,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.deleteContent('3')
     # Now delete things is made with activities
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSqlPathList(path_list)
     get_transaction().commit()
     self.tic()
     self.checkRelativeUrlNotInSqlPathList(path_list)
