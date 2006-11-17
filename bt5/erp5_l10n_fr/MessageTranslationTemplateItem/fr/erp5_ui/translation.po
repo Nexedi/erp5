@@ -1270,16 +1270,16 @@ msgid "Delete"
 msgstr "Effacer"
 
 msgid "Delete The Objects"
-msgstr ""
+msgstr "Supprimer les objets"
 
 msgid "Delete the objects"
 msgstr "Supprimer les objets"
 
 msgid "Deleted objects: ${object_ids}"
-msgstr ""
+msgstr "Objets suprimés: ${object_ids}"
 
 msgid "Deleted."
-msgstr "Elément(s) supprimé(s)"
+msgstr "Eléments supprimés"
 
 msgid "Deliver"
 msgstr "Valider"
@@ -1773,17 +1773,23 @@ msgstr "Facturé à "
 msgid "Invoicing Rule"
 msgstr "Régle de Facturation"
 
-msgid "Item(s) Copied."
-msgstr "Elément(s) copié(s)"
-
-msgid "Item(s) Cut."
-msgstr "Elément(s) coupé(s)"
-
-msgid "Item(s) Pasted."
-msgstr "Elément(s) collé(s)"
-
 msgid "Item(s)+Copied."
-msgstr ""
+msgstr "Eléments+copiés"
+
+msgid "Item(s)+Cut."
+msgstr "Eléments+coupés"
+
+msgid "Item(s)+Pasted."
+msgstr "Eléments+collés"
+
+msgid "Items+Copied."
+msgstr "Eléments+copiés"
+
+msgid "Items+Cut."
+msgstr "Eléments+coupés"
+
+msgid "Items+Pasted."
+msgstr "Eléments+collés"
 
 msgid "Journal Type"
 msgstr "Type d'écriture"
@@ -1848,39 +1854,6 @@ msgstr ""
 msgid "List Report"
 msgstr "Edition"
 
-msgid "Liste de membres"
-msgstr ""
-
-msgid "Liste des Membres"
-msgstr ""
-
-msgid "Liste des membres avec carte"
-msgstr ""
-
-msgid "Liste des membres avec carte par CSP"
-msgstr ""
-
-msgid "Liste des membres avec carte par sexe"
-msgstr ""
-
-msgid "Liste des membres par CSP"
-msgstr ""
-
-msgid "Liste des membres par sexe"
-msgstr ""
-
-msgid "Liste des membres sans carte"
-msgstr ""
-
-msgid "Liste des membres sans carte par CSP"
-msgstr ""
-
-msgid "Liste des membres sans carte par sexe"
-msgstr ""
-
-msgid "Local ID of the object in its enclosing container"
-msgstr ""
-
 msgid "Local Roles"
 msgstr ""
 
@@ -1893,9 +1866,6 @@ msgstr "Déconnexion"
 msgid "Logged In as"
 msgstr "Utilisateur"
 
-msgid "Logged In as :"
-msgstr ""
-
 msgid "Login"
 msgstr "Connexion"
 
@@ -1906,9 +1876,6 @@ msgid "Login success"
 msgstr "Connexion réussie"
 
 msgid "Login+and/or+password+is+incorrect."
-msgstr ""
-
-msgid "MATAM"
 msgstr ""
 
 msgid "Main Apparel Fabric"
@@ -1927,9 +1894,6 @@ msgid "Male"
 msgstr ""
 
 msgid "Manage Business Templates"
-msgstr ""
-
-msgid "Manage members"
 msgstr ""
 
 msgid "Marital Status"
@@ -2080,7 +2044,7 @@ msgid "Object Created."
 msgstr "Création effectuée"
 
 msgid "Object+Created."
-msgstr ""
+msgstr "Création+effectuée"
 
 msgid "Omit \"Grouped References\""
 msgstr "Sans les écritures lettrées"
@@ -3390,9 +3354,6 @@ msgstr ""
 msgid "history"
 msgstr "Historique"
 
-msgid "index_html"
-msgstr "ERP5"
-
 msgid "installed"
 msgstr ""
 
@@ -3459,23 +3420,8 @@ msgstr "Etat"
 msgid "stopped"
 msgstr "Brouillard"
 
-msgid "sum"
-msgstr ""
-
 msgid "time"
 msgstr "Date"
-
-msgid "valid"
-msgstr ""
-
-msgid "validated"
-msgstr ""
-
-msgid "validating_closing"
-msgstr ""
-
-msgid "validating_modification"
-msgstr ""
 
 msgid "validation_state"
 msgstr "État de Validation"
