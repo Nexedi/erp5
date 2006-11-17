@@ -33,7 +33,7 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>category_uid</string> </key>
+                                <key> <string>uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>category_uid</string>
+<string>uid</string>
                           </list>
                         </value>
                     </item>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>category_uid</string> </value>
+            <value> <string>uid</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -70,11 +70,11 @@
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string>zsqlbrain.py</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string>ZSQLBrain</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -88,28 +88,25 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_zSearchRelatedObjectsByCategory</string> </value>
+            <value> <string>z_delete_uid</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>10000</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-SELECT DISTINCT\n
-  catalog.uid, catalog.path\n
-FROM\n
-  catalog, category\n
-WHERE\n
-  catalog.path != \'deleted\'\n
-AND  catalog.uid = category.uid\n
-AND  category.category_uid = <dtml-sqlvar category_uid type="int">
+REPLACE INTO\n
+  catalog (uid, path,relative_url,security_uid,portal_type,parent_uid)\n
+VALUES\n
+  (<dtml-sqlvar uid type="int">, \'deleted\',\'\',NULL,\'\',NULL)\n
+
 
 ]]></string> </value>
         </item>
@@ -147,14 +144,11 @@ AND  category.category_uid = <dtml-sqlvar category_uid type="int">
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-SELECT DISTINCT\n
-  catalog.uid, catalog.path\n
-FROM\n
-  catalog, category\n
-WHERE\n
-  catalog.path != \'deleted\'\n
-AND  catalog.uid = category.uid\n
-AND  category.category_uid = <dtml-sqlvar category_uid type="int">
+REPLACE INTO\n
+  catalog (uid, path,relative_url,security_uid,portal_type,parent_uid)\n
+VALUES\n
+  (<dtml-sqlvar uid type="int">, \'deleted\',\'\',NULL,\'\',NULL)\n
+
 
 ]]></string> </value>
                     </item>
@@ -165,7 +159,7 @@ AND  category.category_uid = <dtml-sqlvar category_uid type="int">
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Search Category</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -56,6 +56,7 @@ erp5_mysql/z_create_subject
 erp5_mysql/z_create_translation
 erp5_mysql/z_delete_recorded_object_list
 erp5_mysql/z_delete_translation_list
+erp5_mysql/z_delete_uid
 erp5_mysql/z_getitem_by_path
 erp5_mysql/z_getitem_by_uid
 erp5_mysql/z_portal_ids_commit
