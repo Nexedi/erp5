@@ -92,6 +92,7 @@ class CopyContainer:
         new_id : "z"
         result : "a/b/z/d/e"
       """
+      #      if getattr(self,'_v_is_renamed',0):
       for object in local_self.objectValues():
           self._updateInternalRelatedContent(local_self=object, path=path, new_id=new_id)
       changed=0
@@ -105,6 +106,19 @@ class CopyContainer:
       if changed:
           local_self.setCategoryList(categories)
 
+  def _recursiveSetActivityAfterTag(self,object):
+      """
+      Make sure to set an after tag on each object
+      so that it is possible to unindex before doing
+      indexing, this prevent uid changes
+      """
+      uid = getattr(aq_base(object),'uid',None)
+      if uid is not None:
+        activate_kw = {'after_tag': '%s' % uid}
+        object._v_activate_kw = activate_kw
+      for sub_object in object.objectValues():
+          self._recursiveSetActivityAfterTag(sub_object)
+
   security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
       """manage renaming an object while keeping coherency for contained
@@ -112,8 +126,15 @@ class CopyContainer:
 
       """
       ob=self.restrictedTraverse(id)
+      # Make sure there is no activities pending on that object
+      portal_activities = getToolByName(self, 'portal_activities')
+      if portal_activities.countMessage(path=ob.getPath())>0:
+        raise ValueError, 'Sorry, some message are pending'
+
       # Search for categories that have to be updated in sub objects.
+      self._recursiveSetActivityAfterTag(ob)
       self._updateInternalRelatedContent(local_self=ob, path=ob.getRelativeUrl().split("/"), new_id=new_id)
+      #ob._v_is_renamed = 1
       # Rename the object
       return OriginalCopyContainer.manage_renameObject(self, id=id, new_id=new_id, REQUEST=REQUEST)
 
@@ -298,11 +319,20 @@ class CopyContainer:
       if self.isIndexable:
         catalog = getToolByName(self, 'portal_catalog', None)
         if catalog is not None:
-            self.flushActivity(invoke=0)
-            uid = getattr(self,'uid',None)
-            if uid is None and path is None:
-              path = catalog.getUrl(self)
-            catalog.activate(activity='SQLQueue').unindexObject(None, path=path,uid=uid)
+          # Make sure there is not activity for this object
+          self.flushActivity(invoke=0)
+          uid = getattr(self,'uid',None)
+          if uid is None and path is None:
+            path = catalog.getUrl(self)
+          # Set the path as deleted, sql wich generate no locks
+          # Set also many columns in order to make sure lines
+          # marked as deleted will not be selected
+          catalog.beforeUnindexObject(None,path=path,uid=uid)
+          # Then start activty in order to remove lines in catalog,
+          # sql wich generate locks
+          catalog.activate(activity='SQLQueue',
+                           tag='%s' % uid).unindexObject(None, 
+                                           path=path,uid=uid)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
   def moveObject(self, idxs=None):
@@ -333,6 +363,7 @@ class CopyContainer:
       """
       if op == 1: # move
           self._v_category_url_before_move = self.getRelativeUrl()
+          self._recursiveSetActivityAfterTag(self)
 
   def _postCopy(self, container, op=0):
       # Called after the copy is finished to accomodate special cases.
@@ -341,7 +372,7 @@ class CopyContainer:
       if op == 1:
           old_url = getattr(self, '_v_category_url_before_move', None)
           if old_url is not None:
-              self.activate().updateRelatedContent(
+              self.activate(after_method_id='unindexObject').updateRelatedContent(
                                     old_url,
                                     self.getRelativeUrl())
 
