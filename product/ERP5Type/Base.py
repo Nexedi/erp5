@@ -1077,13 +1077,9 @@ class Base( CopyContainer,
     """
         changes id of an object by calling the Zope machine
     """
-    # Do not rename until everything flushed
-    self.recursiveFlushActivity(invoke=1)
     tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
         self.aq_inner.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
-    if reindex:
-      # Required if we wish that news ids appear instantly
-      self.flushActivity(invoke=1)
+    # Do not flush any more, because it generates locks
 
   security.declareProtected( Permissions.ModifyPortalContent,
                              'updateRelatedContent' )
@@ -1995,8 +1991,9 @@ class Base( CopyContainer,
   def _reindexObject(self, *args, **kw):
     # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
     # immediateReindexObject.
-    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-    if self.isIndexable and root_indexable:
+    # Do not check if root is indexable, it is done into catalogObjectList,
+    # so we will save time
+    if self.isIndexable:
       self.activate(group_method_id='portal_catalog/catalogObjectList', alternate_method_id='alternateReindexObject', **kw).immediateReindexObject(*args, **kw)
 
   security.declarePublic('recursiveReindexObject')
