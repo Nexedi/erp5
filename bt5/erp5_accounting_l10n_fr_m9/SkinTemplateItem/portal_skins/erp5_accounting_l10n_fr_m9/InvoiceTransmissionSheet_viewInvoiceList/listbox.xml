@@ -598,7 +598,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:"accounting_module/view?reset:int=1&aggregate_title=%s" % here.getTitle()
+python:"accounting_module/view?reset:int=1&aggregate_relative_url=%s" % here.getRelativeUrl()
 
 ]]></string> </value>
         </item>
