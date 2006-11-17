@@ -534,8 +534,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-    if self.isIndexable and root_indexable:
+    if self.isIndexable:
       self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', alternate_method_id='alternateReindexObject', **kw).recursiveImmediateReindexObject(*args, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
