@@ -68,14 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>folder = context.foo_module\n
+            <value> <string>from DateTime import DateTime\n
+folder = context.foo_module\n
 category_list = (\'a\', \'b\', \'a/a1\', \'a/a2\')\n
 \n
 for i in range(start, start + num):\n
   category = category_list[i % len(category_list)]\n
-  folder.newContent(id = str(i), title = \'Title %d\' % i, quantity = 10.0 - float(i),\n
+  foo = folder.newContent(id = str(i), title = \'Title %d\' % i, quantity = 10.0 - float(i),\n
                     foo_category = category)\n
-\n
+  if set_dates:\n
+    foo.setStartDate(DateTime(i, i, i))\n
 return \'Created Successfully.\'\n
 </string> </value>
         </item>
@@ -99,7 +101,7 @@ return \'Created Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start=0, num=10</string> </value>
+            <value> <string>start=0, num=10, set_dates=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,7 +121,7 @@ return \'Created Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -127,6 +129,8 @@ return \'Created Successfully.\'\n
                           <tuple>
                             <string>start</string>
                             <string>num</string>
+                            <string>set_dates</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>folder</string>
@@ -139,6 +143,7 @@ return \'Created Successfully.\'\n
                             <string>category</string>
                             <string>str</string>
                             <string>float</string>
+                            <string>foo</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,6 +158,7 @@ return \'Created Successfully.\'\n
               <tuple>
                 <int>0</int>
                 <int>10</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>

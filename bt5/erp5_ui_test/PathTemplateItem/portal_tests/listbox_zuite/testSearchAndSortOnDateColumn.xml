@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Search and Sort on a Date Column</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Search and Sort on a Date Column</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/FooModule_createObjects?set_dates:int=1&amp;start:int=1&amp;num:int=3</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Created Successfully.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Done.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_search_columns=delivery.start_date%0Aid&amp;field_columns=delivery.start_date%0Aid&amp;field_sort_columns=delivery.start_date%0Aid</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Set Successfully.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/view</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyEditable</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+\t<td></td>\n
+</tr>\n
+<!-- Search -->\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+\t<td>2001/01/01</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>Base_doSelect:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+\t<td>2001/01/01</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>id=listbox_record_number</td>\n
+\t<td>1 record(s)</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+\t<td>2001/01/01</td>\n
+</tr>\n
+\n
+<!-- Sort -->\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>Folder_show:method</td>\n
+\t<td></td>\n
+</tr>\n
+<!-- ASC -->\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+\t<td>2001/01/01</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+\t<td>2002/02/02</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+\t<td>2003/03/03</td>\n
+</tr>\n
+<!-- DESC -->\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+\t<td>2003/03/03</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+\t<td>2002/02/02</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+\t<td>2001/01/01</td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testSearchAndSortOnDateColumn</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
