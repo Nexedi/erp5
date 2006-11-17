@@ -72,6 +72,8 @@
 section_category = context.portal_preferences\\\n
          .getPreferredAccountingTransactionSectionCategory()\n
 if source is not None and section_category:\n
+  if source.getPortalType() == \'Person\':\n
+    return 0\n
   if source.isMemberOf(section_category):\n
     return 1\n
 \n
