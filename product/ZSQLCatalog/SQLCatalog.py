@@ -288,6 +288,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_delete_uid',
+      'description' : 'A method to delete a uid value',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_object_list',
       'description' : 'Methods to be called to catalog the list of objects',
       'type'    : 'multiple selection',
@@ -410,6 +415,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   )
 
   sql_catalog_produce_reserved = ''
+  sql_catalog_delete_uid = ''
   sql_catalog_clear_reserved = ''
   sql_catalog_reserve_uid = ''
   sql_catalog_object_list = ()
@@ -835,6 +841,40 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       self._v_uid_buffer.extend(uid_list)
 
+  def isIndexable(self):
+    """
+    This is required to check in many methods that
+    the site root and zope root are indexable
+    """
+    zope_root = self.getZopeRoot()
+    site_root = self.getSiteRoot()
+
+    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
+    site_indexable = int(getattr(site_root, 'isIndexable', 1))
+    if not (root_indexable and site_indexable):
+      return False
+    return True
+ 
+  def getSiteRoot(self):
+    """
+    Returns the root of the site
+    """
+    if withCMF:
+      site_root = getToolByName(self, 'portal_url').getPortalObject()
+    else:
+      site_root = self.aq_parent
+    return site_root
+
+  def getZopeRoot(self):
+    """
+    Returns the root of the zope
+    """
+    if withCMF:
+      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
+    else:
+      zope_root = self.getPhysicalRoot()
+    return zope_root
+
   def newUid(self):
     """
       This is where uid generation takes place. We should consider a multi-threaded environment
@@ -854,16 +894,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
     """
-    if withCMF:
-      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
-      site_root = getToolByName(self, 'portal_url').getPortalObject()
-    else:
-      zope_root = self.getPhysicalRoot()
-      site_root = self.aq_parent
-
-    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
-    site_indexable = int(getattr(site_root, 'isIndexable', 1))
-    if not (root_indexable and site_indexable):
+    if not self.isIndexable():
       return None
 
     klass = self.__class__
@@ -1020,17 +1051,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_list))
     #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
 
-    if withCMF:
-      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
-      site_root = getToolByName(self, 'portal_url').getPortalObject()
-    else:
-      zope_root = self.getPhysicalRoot()
-      site_root = self.aq_parent
+    if not self.isIndexable():
+      return None
 
-    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
-    site_indexable = int(getattr(site_root, 'isIndexable', 1))
-    if not (root_indexable and site_indexable):
-      return
+    site_root = self.getSiteRoot()
 
     for object in object_list:
       path = object.getPath()
@@ -1192,6 +1216,21 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   if psyco is not None: psyco.bind(catalogObjectList)
 
+  def beforeUncatalogObject(self, path=None,uid=None):
+    """
+    Set the path as deleted
+    """
+    if not self.isIndexable():
+      return None
+
+    if uid is None and path is not None:
+      uid = self.getUidForPath(path)
+    method_name = self.sql_catalog_delete_uid
+    if uid is None:
+      return None
+    method = getattr(self, method_name)
+    method(uid = uid)
+
   def uncatalogObject(self, path=None,uid=None):
     """
     Uncatalog and object from the Catalog.
@@ -1205,16 +1244,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     XXX Add filter of methods
 
     """
-    if withCMF:
-      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
-      site_root = getToolByName(self, 'portal_url').getPortalObject()
-    else:
-      zope_root = self.getPhysicalRoot()
-      site_root = self.aq_parent
-
-    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
-    site_indexable = int(getattr(site_root, 'isIndexable', 1))
-    if not (root_indexable and site_indexable):
+    if not self.isIndexable():
       return None
 
     if uid is None and path is not None:
