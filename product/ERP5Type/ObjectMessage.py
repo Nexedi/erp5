@@ -31,7 +31,7 @@ from Products.PythonScripts.Utility import allow_class
 
 class ObjectMessage: 
   """
-   Object Message is used for notifications to user.
+  Object Message is used for notifications to user.
   """
   def __init__(self, object_relative_url='', message='', mapping={}, **kw):
     
@@ -46,13 +46,14 @@ class ObjectMessage:
     Return the message translated
     """
     from Products.ERP5Type.Message import Message
-    return Message(domain='erp5_ui', message=self.message, mapping=self.mapping)
+    return Message(domain='erp5_ui', message=self.message, 
+                   mapping=self.mapping)
 
   getMessage = getTranslatedMessage
                     
   def edit(self, **kw):
     """
-    set all parameters
+    Set all parameters
     """ 
     self.__dict__.update(kw)
 
@@ -62,6 +63,19 @@ class ObjectMessage:
     """
     return getattr(self, value, None)
 
+  def __getattr__(self, name):
+    """
+    Wrap the message with the object
+    """
+    if name.startswith('__') :
+      raise AttributeError, name
+    else:
+      obj = self.getObject()
+      if obj is not None:
+        return getattr(obj, name)
+      else:
+        raise AttributeError, name
+
   def getObject(self):
      """
      Get the Object 
@@ -70,7 +84,7 @@ class ObjectMessage:
      request = get_request()['PARENTS']
      if request is not None:
        for item in request:
-         if item.meta_type ==  'ERP5 Site':
+         if item.meta_type == 'ERP5 Site':
            return item.restrictedTraverse(self.object_relative_url)
 
      return None
