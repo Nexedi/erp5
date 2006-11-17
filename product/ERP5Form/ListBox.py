@@ -1300,7 +1300,7 @@ class ListBoxRenderer:
     for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
       if sql in search_column_id_set:
         # Get the current value and encode it in unicode.
-        param = param_dict.get(alias, u'')
+        param = param_dict.get(alias, param_dict.get(sql, u''))
         if isinstance(param, str):
           param = unicode(param, self.getEncoding())
 
@@ -1310,7 +1310,7 @@ class ListBoxRenderer:
         else:
           search_field = None
 
-        value_list.append((alias, param, search_field))
+        value_list.append((sql, param, search_field))
       else:
         value_list.append((None, None, None))
 
