@@ -659,6 +659,12 @@ class ZCatalog(Folder, Persistent, Implicit):
           else:
             destination_catalog.uncatalogObject(uid)
 
+  def beforeUncatalogObject(self, uid=None,path=None, sql_catalog_id=None):
+    """ wrapper around catalog """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.beforeUncatalogObject(uid=uid,path=path)
+
   def catalogTranslationList(self, object_list, sql_catalog_id=None):
     """Catalog translations.
     """
