@@ -397,7 +397,7 @@ def setupERP5Workflow(wf):
   for s in ('draft',):
     wf.states.addState(s)
   for v in ('action', 'actor', 'comment', 'history', 'time',
-            'error_message'):
+            'error_message', 'portal_type'):
     wf.variables.addVariable(v)
   for perm in (Permissions.AccessContentsInformation,
                Permissions.View,
@@ -439,6 +439,10 @@ def setupERP5Workflow(wf):
   vdef = wf.variables['error_message']
   vdef.setProperties(description='Error message if validation failed',
                      for_status=1, update_always=1)
+  
+  vdef = wf.variables['portal_type']
+  vdef.setProperties(description='portal type (use as filter for worklists)',
+                     for_catalog=1)
 
 def createERP5Workflow(id):
   """Creates an ERP5 Workflow """
