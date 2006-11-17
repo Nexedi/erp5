@@ -367,7 +367,12 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>is_self_excluded</string>
+                          <string>1</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
