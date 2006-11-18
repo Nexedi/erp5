@@ -107,4 +107,8 @@ class PropertyTypeValidity(Constraint):
               obj.setProperty(property_id, value)
               error_message += " (Fixed)"
         errors.append(self._generateError(obj, error_message))
+      elif fixit:
+        oldvalue = getattr(obj, property_id, value)
+        if oldvalue != value:
+          obj.setProperty(property_id, oldvalue)
     return errors

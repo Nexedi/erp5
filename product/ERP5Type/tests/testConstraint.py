@@ -33,12 +33,12 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              noSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 
-class TestConstraint(ERP5TypeTestCase):
+class TestConstraint(PropertySheetTestCase):
 
   run_all_test = 1
   quiet = 1
@@ -1112,6 +1112,67 @@ class TestConstraint(ERP5TypeTestCase):
                    id='tales_constraint',
                    expression='error: " ')
     self.assertRaises(CompilerError, constraint.checkConsistency, obj)
+  
+  def test_PropertyTypeValidityFixLocalProperties(self):
+    """Tests PropertyTypeValidity can repairs local property when this property
+    is added on the class later.
+    """
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='PropertyTypeValidity',
+                   id='type_validity_constraint', )
+    obj = self._makeOne()
+    obj.edit(local_property='1')
+    self.assertEquals([], constraint.checkConsistency(obj))
+    # now add a 'local_property' property defined on a property sheet
+    self._addProperty(obj.getPortalType(),
+                  '''{'id': 'local_property', 'type': 'int'}''')
+    constraint.fixConsistency(obj)
+    self.assertEquals(1, obj.getLocalProperty())
+    obj.edit(local_property=3)
+    self.assertEquals(3, obj.getLocalProperty())
+  
+  def test_PropertyTypeValidityFixLocalPropertiesContent(self):
+    """Tests PropertyTypeValidity can repairs local property of type content
+    when this property is added on the class later.
+    """
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='PropertyTypeValidity',
+                   id='type_validity_constraint', )
+    obj = self._makeOne()
+    obj.edit(default_organisation_title='foo')
+    self.assertEquals([], constraint.checkConsistency(obj))
+    # now add a 'local_property' property defined on a property sheet
+    self._addProperty(obj.getPortalType(),
+                 ''' { 'id':         'organisation',
+                        'storage_id': 'default_organisation',
+                        'type':       'content',
+                        'portal_type': ('Organisation', ),
+                        'acquired_property_id': ('title', ),
+                        'mode':       'w', }''')
+    constraint.fixConsistency(obj)
+    self.assertEquals('foo', obj.getDefaultOrganisationTitle())
+    self.assertEquals('foo', obj.default_organisation.getTitle())
+  
+  def test_PropertyTypeValidityFixLocalPropertiesForCategories(self):
+    """Tests PropertyTypeValidity can repairs categories when this property
+    is added on the class later.
+    """
+    bc = self.getPortal().portal_categories.newContent(
+                              portal_type='Base Category',
+                              id='testing_category')
+    constraint = self._createGenericConstraint(Sequence(),
+                   klass_name='PropertyTypeValidity',
+                   id='type_validity_constraint', )
+    obj = self._makeOne()
+    obj.edit(testing_category=obj.getRelativeUrl())
+    self.assertEquals([], constraint.checkConsistency(obj))
+    # now add a 'local_property' property defined on a property sheet
+    self._addPropertySheet(obj.getPortalType(),
+      '''class TestPropertySheet: _categories=('testing_category',)''')
+    # fix consistency
+    constraint.fixConsistency(obj)
+    # now we can use testing_category as any category accessor
+    self.assertEquals(obj, obj.getTestingCategoryValue())
 
 
 if __name__ == '__main__':
