@@ -2,7 +2,7 @@
 <dtml-var manage_tabs>
 
 <div class="std-text"><p><strong>Local Constraint Classes</strong></p></div>
-
+<dtml-if message><dtml-var message></dtml-if>
 <form method="POST" action="newConstraint">
 <table width="100%">
   <tr class="list-header">

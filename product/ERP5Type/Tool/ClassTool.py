@@ -545,7 +545,11 @@ class Test(ERP5TypeTestCase):
       def newConstraint(self, class_id, REQUEST=None):
         """
           Updates a Constraint with a new text
-        """
+        """        
+        if class_id == '':
+          if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('%s/manage_viewConstraintList?message=You+must+specify+a+class+name' % (self.absolute_url(),))
+            return
         text = """
 ##############################################################################
 #
@@ -607,6 +611,22 @@ class ConstraintTemplate(Constraint):
         writeLocalConstraint(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Saved' % (self.absolute_url(), class_id))
+
+      security.declareProtected( Permissions.ManageExtensions, 'importConstraint' )
+      def importConstraint(self, class_id, REQUEST=None):
+        """
+          Imports a Constraint class
+        """
+        from Products.ERP5Type.Utils import importLocalConstraint
+        local_product = self.Control_Panel.Products.ERP5Type
+        app = local_product._p_jar.root()['Application']
+        importLocalConstraint(class_id)
+        # Reset _aq_dynamic after reload
+        # There is no need to reset the cache in this case because
+        # XXX it is not sure however that class defined propertysheets will be updated
+        _aq_reset() 
+        if REQUEST is not None:
+          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'generateProduct' )
       def generateProduct(self, product_id,

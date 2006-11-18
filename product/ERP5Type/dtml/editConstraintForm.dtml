@@ -10,6 +10,7 @@
 <br>
 <input type="hidden" name="class_id:string" value="<dtml-var class_id>">
 <input type="submit" value="Save" name="editConstraint:method">
+<input type="submit" value="Reload" name="importConstraint:method">  
 </form>
 
 <dtml-var manage_page_footer>
