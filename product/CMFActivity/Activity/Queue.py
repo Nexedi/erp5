@@ -158,6 +158,7 @@ class Queue:
           'Validation of Object %s raised exception' % '/'.join(message.object_path),
           error=sys.exc_info())
       # Do not try to call methods on objects which cause errors
+      import pdb;pdb.set_trace()
       return EXCEPTION
     return VALID
 
@@ -189,6 +190,12 @@ class Queue:
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []  
 
+  def countMessage(self, activity_tool,**kw):
+    return 0
+
+  def countMessageWithTag(self, activity_tool,value):
+    return 0
+  
   # Transaction Management
   def prepareQueueMessage(self, activity_tool, m):
     # Called to prepare transaction commit for queued messages

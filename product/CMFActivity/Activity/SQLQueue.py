@@ -33,6 +33,7 @@ from DateTime import DateTime
 from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ZODB.POSException import ConflictError
+from types import StringType
 
 try:
   from transaction import get as get_transaction
@@ -236,6 +237,32 @@ class SQLQueue(RAMQueue):
         m.priority = line.priority
         message_list.append(m)
     return message_list
+
+  def countMessage(self, activity_tool, tag=None,path=None,
+                   method_id=None,message_uid=None,**kw):
+    """
+      Return the number of message which match the given parameter.
+    """
+    if isinstance(tag, StringType):
+      tag = [tag]
+    if isinstance(path, StringType):
+      path = [path]
+    if isinstance(message_uid, (int,long)):
+      message_uid = [message_uid]
+    if isinstance(method_id, StringType):
+      method_id = [method_id]
+    result = activity_tool.SQLQueue_validateMessageList(method_id=method_id, 
+                                                       path=path,
+                                                       message_uid=message_uid, 
+                                                       tag=tag)
+    return result[0].uid_count
+
+  def countMessageWithTag(self, activity_tool, value):
+    """
+      Return the number of message which match the given tag.
+    """
+    return self.countMessage(activity_tool,tag=value)
+
 
   def dumpMessageList(self, activity_tool):
     # Dump all messages in the table.

@@ -564,14 +564,30 @@ class SQLDict(RAMDict):
       return INVALID_ORDER
     return VALID
 
+  def countMessage(self, activity_tool, tag=None,path=None,
+                   method_id=None,message_uid=None,**kw):
+    """
+      Return the number of message which match the given parameter.
+    """
+    if isinstance(tag, StringType):
+      tag = [tag]
+    if isinstance(path, StringType):
+      path = [path]
+    if isinstance(message_uid, (int,long)):
+      message_uid = [message_uid]
+    if isinstance(method_id, StringType):
+      method_id = [method_id]
+    result = activity_tool.SQLDict_validateMessageList(method_id=method_id, 
+                                                       path=path,
+                                                       message_uid=message_uid, 
+                                                       tag=tag)
+    return result[0].uid_count
+
   def countMessageWithTag(self, activity_tool, value):
     """
       Return the number of message which match the given tag.
     """
-    if isinstance(value, StringType):
-      value = [value]
-    result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, tag=value)
-    return result[0].uid_count
+    return self.countMessage(activity_tool,tag=value)
 
   def _validate_after_tag_and_method_id(self, activity_tool, message, value):
     # Count number of occurances of tag and method_id

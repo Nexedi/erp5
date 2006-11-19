@@ -883,10 +883,24 @@ class ActivityTool (Folder, UniqueObject):
       """
       message_count = 0
       for activity in activity_list:
-        try:
-          message_count += activity.countMessageWithTag(self, value)
-        except AttributeError:
-          LOG('getMessageList, could not get count message from Activity:', 0, activity)
+        message_count += activity.countMessageWithTag(self, value)
+      return message_count
+
+    security.declarePublic('countMessage')
+    def countMessage(self, **kw):
+      """
+        Return the number of messages which match the given parameter.
+
+        Parameters allowed:
+
+        method_id : the id of the method
+        path : for activities on an particular object
+        tag : activities with a particular tag
+        message_uid : activities with a particular uid
+      """
+      message_count = 0
+      for activity in activity_list:
+        message_count += activity.countMessage(self, **kw)
       return message_count
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
