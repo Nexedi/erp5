@@ -116,7 +116,7 @@ for workflow_item in workflow_item_list:\n
         value = \'%s\' %value\n
       elif key == \'error_message\' and same_type(value, \'\'):\n
         value = context.Localizer.erp5_ui.gettext(value)\n
-      if same_type(value, \'\') and key != \'error_message\':\n
+      elif same_type(value, \'\') and key in ( \'action\', \'state\' ): \n
         value = context.Localizer.erp5_ui.gettext(value)\n
     o.setProperty(key, value)\n
  \n
@@ -144,7 +144,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>workflow_id,display=1, **kw</string> </value>
+            <value> <string>workflow_id, display=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
