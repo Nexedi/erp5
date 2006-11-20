@@ -40,14 +40,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_objects</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Folder_generateWorkflowReport</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,7 +55,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
+                <string>Default</string>
               </list>
             </value>
         </item>
@@ -70,11 +64,9 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -82,7 +74,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_viewWorkflowReport</string> </value>
+            <value> <string>Folder_generateWorkflowReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -90,11 +82,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewWorkflowReport</string> </value>
+            <value> <string>Folder_generateWorkflowReportDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -106,7 +98,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Workflow Report</string> </value>
+            <value> <string>Workflow Report Dialog</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
