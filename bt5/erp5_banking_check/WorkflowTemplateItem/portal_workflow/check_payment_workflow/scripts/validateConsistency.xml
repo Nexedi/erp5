@@ -84,15 +84,14 @@ else:\n
   site = None\n
   # try to guess site from document if source is defined\n
   # XXX useful for unit test\n
-  if hasattr(transaction, \'source\'):\n
-    site = transaction.getSourceValue()\n
-    while True:\n
-      if not hasattr(site, \'getVaultTypeList\'):\n
-        msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
-        raise ValidationFailed, (msg,)\n
-      if \'site\' in site.getVaultTypeList():\n
-        break\n
-      site = site.getParentValue()\n
+  site = transaction.getSourceValue()\n
+  while True:\n
+    if not hasattr(site, \'getVaultTypeList\'):\n
+      msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
+      raise ValidationFailed, (msg,)\n
+    if \'site\' in site.getVaultTypeList():\n
+      break\n
+    site = site.getParentValue()\n
 \n
 if site is None:\n
   msg = Message(domain = \'ui\', message = \'Impossible to determine site for the transaction.\')\n
@@ -235,8 +234,8 @@ else:\n
                             <string>site</string>
                             <string>len</string>
                             <string>None</string>
-                            <string>hasattr</string>
                             <string>True</string>
+                            <string>hasattr</string>
                             <string>msg</string>
                             <string>date</string>
                             <string>current_date</string>
