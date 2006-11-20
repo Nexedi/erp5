@@ -4535,8 +4535,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       items_list = []
       for item_name in self._item_name_list:
-        item = getattr(self, item_name)
-        items_list.extend(item.getKeys())
+        item = getattr(self, item_name, None)
+        if item is not None:
+          items_list.extend(item.getKeys())
       return items_list
     
     #By christophe Dumez <christophe@nexedi.com>
