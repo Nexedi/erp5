@@ -158,7 +158,6 @@ class Queue:
           'Validation of Object %s raised exception' % '/'.join(message.object_path),
           error=sys.exc_info())
       # Do not try to call methods on objects which cause errors
-      import pdb;pdb.set_trace()
       return EXCEPTION
     return VALID
 
