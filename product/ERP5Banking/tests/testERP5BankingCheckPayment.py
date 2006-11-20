@@ -57,6 +57,7 @@ class TestERP5BankingCheckPaymentMixin:
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
+  login = PortalTestCase.login
 
   def getTitle(self):
     """
