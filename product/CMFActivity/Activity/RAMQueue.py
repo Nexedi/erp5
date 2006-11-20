@@ -80,6 +80,20 @@ class RAMQueue(Queue):
         get_transaction().commit()
     return 1 # Go to sleep
 
+  def countMessage(self, activity_tool,path=None,method_id=None,**kw):
+    tool_path = activity_tool.getPhysicalPath()
+    count = 0
+    for m in self.getQueue(tool_path):
+      add = 1
+      if path is not None:
+        object_path = '/'.join(m.object_path)
+        if object_path != path:
+          add = 0
+      if method_id is not None:
+        if m.method_id != method_id:
+          add = 0
+      count += add
+    return count
 
   def hasActivity(self, activity_tool, object, **kw):
     if object is not None:

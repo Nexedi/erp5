@@ -379,8 +379,8 @@ class TestCMFActivity(ERP5TypeTestCase):
 
   def DeferedSetTitleWithRenamedObject(self, activity):
     """
-    make sure that an activity is flushed before we rename
-    the object
+    make sure that it is impossible to rename an object
+    if some activities are still waiting for this object
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
@@ -390,15 +390,9 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     self.assertEquals(self.title1,organisation.getTitle())
-    organisation.edit(id=self.company_id2)
-    get_transaction().commit()
+    self.assertRaises(ValueError,organisation.edit,id=self.company_id2)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
-    self.assertEquals(self.title2,organisation.getTitle())
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    organisation.edit(id=self.company_id)
-    get_transaction().commit()
 
   def TryActiveProcess(self, activity):
     """

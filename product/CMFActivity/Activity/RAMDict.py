@@ -93,6 +93,21 @@ class RAMDict(Queue):
           get_transaction().commit()
     return 1
 
+  def countMessage(self, activity_tool,path=None,method_id=None,**kw):
+    tool_path = activity_tool.getPhysicalPath()
+    count = 0
+    for (key,m) in self.getDict(tool_path).items():
+      add = 1
+      if path is not None:
+        object_path = '/'.join(m.object_path)
+        if object_path != path:
+          add = 0
+      if method_id is not None:
+        if m.method_id != method_id:
+          add = 0
+      count += add
+    return count
+
   def hasActivity(self, activity_tool, object, **kw):
     if object is not None:
       object_path = object.getPhysicalPath()
