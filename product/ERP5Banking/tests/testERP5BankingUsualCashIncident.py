@@ -131,6 +131,8 @@ class TestERP5BankingUsualCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createBanknotesAndCoins()
 
     self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
