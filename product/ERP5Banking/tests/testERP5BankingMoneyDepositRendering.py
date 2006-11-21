@@ -148,11 +148,27 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.gros_versement = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies.entrante
+    self.counter_vault = self.paris.surface.gros_versement.guichet_1
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
-    self.openCounterDate(site=self.paris)
-    self.openCounter(self.gros_versement)
     self.createCashInventory(source=None, destination=self.gros_versement, currency=self.currency_1,
                              line_list=line_list)
+    # now we need to create a user as Manager to do the test
+    # in order to have an assigment defined which is used to do transition
+    # Create an Organisation that will be used for users assignment
+    self.checkUserFolderType()
+    self.organisation = self.organisation_module.newContent(id='paris', portal_type='Organisation',
+                          function='banking', group='baobab',  site='testsite/paris')
+    # define the user
+    user_dict = {
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
+      }
+    # call method to create this user
+    self.createERP5Users(user_dict)
+    self.logout()
+    self.login('super_user')
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
+    self.openCounter(site=self.counter_vault)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
