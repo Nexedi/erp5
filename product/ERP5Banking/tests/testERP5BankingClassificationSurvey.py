@@ -115,7 +115,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.encaisse_a_detruire = self.paris.caveau.auxiliaire.encaisse_des_billets_a_ventiler_et_a_detruire
     self.encaisse_detruit = self.paris.caveau.auxiliaire.encaisse_des_billets_ventiles_et_detruits
-    self.encaisse_externe = self.paris.caveau.externes.encaisse_des_externes
+    self.encaisse_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
 
     self.createCashInventory(source=None, destination=self.encaisse_a_detruire, currency=self.currency_1,
                              line_list=line_list)
