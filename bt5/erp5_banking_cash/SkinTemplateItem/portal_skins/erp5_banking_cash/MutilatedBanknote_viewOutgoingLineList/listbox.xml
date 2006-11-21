@@ -454,8 +454,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Outgoing Cash Sorting Line</string>
-                          <string>Outgoing Cash Sorting Line</string>
+                          <string>Outgoing Mutilated Banknote Line</string>
+                          <string>Outgoing Mutilated Banknote Line</string>
                         </tuple>
                         <tuple>
                           <string>Cash Delivery Cell</string>
@@ -490,7 +490,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>cash_sorting_outgoing_line_selection</string> </value>
+                    <value> <string>mutilated_banknote_cash_sorting_outgoing_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

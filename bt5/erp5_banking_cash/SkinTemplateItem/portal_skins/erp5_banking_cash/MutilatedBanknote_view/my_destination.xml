@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Delivery_getVaultItemList(user_site=1,vault_type=(\'site/surface/caisse_courante/billets_macules\',\'site/surface/caisse_courante/billets_mutiles\'),strict_membership=1,leaf_node=1,with_base=0)</string> </value>
+            <value> <string>python: here.Delivery_getVaultItemList(user_site=1,vault_type=(\'site/surface/caisse_courante/billets_macules\',\'site/surface/caisse_courante/billets_mutiles\'),strict_membership=1,leaf_node=1,with_base=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

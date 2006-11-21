@@ -104,7 +104,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: len(here.objectIds()) == 0</string> </value>
+            <value> <string>python: object.getSimulationState()==\'draft\'</string> </value>
         </item>
       </dictionary>
     </pickle>

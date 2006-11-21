@@ -73,6 +73,12 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 object = state_change.object\n
 \n
+# utilisation de la contrainte\n
+vliste = object.checkConsistency()\n
+object.log(\'vliste\', vliste)\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
 if not \'encaisse_des_devises\' in object.getDestination():\n
   msg = Message(domain="ui", message="Wrong Destination Selected.")\n
   raise validationFailed, (msg,)\n
@@ -138,6 +144,9 @@ if object_price != line_price:\n
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>object</string>
+                            <string>vliste</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>msg</string>
                             <string>validationFailed</string>
                             <string>object_price</string>

@@ -68,14 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-ob = state_change[\'object\']\n
-# check presence of banknote\n
-if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
-  msg = Message(domain = "ui", message="Transition forbidden with exchanged banknote line defined.")\n
-  raise ValidationFailed, (msg,)\n
+            <value> <string>reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
+context.setPriceCurrency(\'currency_module/%s\' %(reference_currency,))\n
+context.setCurrencyExchangeType(\'transfer\')\n
 </string> </value>
         </item>
         <item>
@@ -85,20 +80,20 @@ if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>*args,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,22 +113,17 @@ if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>ob</string>
-                            <string>len</string>
+                            <string>args</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>msg</string>
+                            <string>context</string>
+                            <string>reference_currency</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,33 +140,12 @@ if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckTransitionOrder</string> </value>
+            <value> <string>ForeignCashReception_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
