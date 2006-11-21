@@ -106,8 +106,6 @@ class OOoDocument(DMSFile, CachingMixin):
                     , PropertySheet.OOoDocument
                     )
 
-  # regexp for finding attrs in content
-  rx_atr=re.compile('([\w]+)###([\w/]+)')
   # regexps for stripping xml from docs
   rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
   rx_compr=re.compile('\s+')
@@ -246,24 +244,14 @@ class OOoDocument(DMSFile, CachingMixin):
     return s
 
   security.declareProtected(Permissions.ModifyPortalContent,'setPropertyListFromContent')
-  def setPropertyListFromContent(self,data):
-    cs=cStringIO.StringIO()
-    cs.write(self._unpackData(data))
-    try:
-      z=zipfile.ZipFile(cs)
-    except zipfile.BadZipfile:
-      cs.close()
-      return
-    s=z.read('content.xml')
-    cs.close()
-    z.close()
-    atrs=dict(self.rx_atr.findall(s))
+  def setPropertyListFromContent(self):
+    '''docstring'''
+    atrs=self.Document_getPropertyListFromContent(self,self.getTextContent(),self.getPortalType())
     doctype=atrs.get('doctype','None')
-    if doctype!=self.getPortalType():
+    if doctype!='None' and doctype!=self.getPortalType():
       raise Exception('portal type mismatch - content gave %s, I have %s' % (doctype,self.getPortalType()))
     for a in atrs:
-      if a not in ('author','doctype'):
-        self.setProperty(a,atrs[a])
+      self.setProperty(a,atrs[a])
 
   security.declarePrivate('_setMetaData')
   def _setMetaData(self,meta):
@@ -465,7 +453,6 @@ class OOoDocument(DMSFile, CachingMixin):
 
   # BG copied from File in case
   index_html = CMFFile.index_html
-  PUT = CMFFile.PUT
   security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
   manage_FTPget = CMFFile.manage_FTPget
   manage_FTPlist = CMFFile.manage_FTPlist
