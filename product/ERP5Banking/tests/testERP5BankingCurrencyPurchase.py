@@ -100,21 +100,14 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
 
-    # Define static values (only use prime numbers to prevent confusions like 2 * 6 == 3 * 4)
     # variation list is the list of years for banknotes and coins
     self.variation_list = ('variation/1992', 'variation/2003')
 
     self.createFunctionGroupSiteCategory()
     self.createBanknotesAndCoins()
 
-
-
-
-
-
-
-
     self.bi_counter = self.paris.surface.banque_interne
+    self.counter_site = self.paris.surface.banque_interne.guichet_1
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.entrante
     self.stepTic()
     # create a person and a bank account
@@ -126,11 +119,6 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
                                                  currency=self.currency_1,
                                                  amount=100000)
 
-
-
-    # open counter date and counter
-    self.openCounterDate(site=self.paris)
-    self.openCounter(site=self.bi_counter_vault)
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/paris')
@@ -142,6 +130,9 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
+    self.openCounter(site=self.counter_site)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
