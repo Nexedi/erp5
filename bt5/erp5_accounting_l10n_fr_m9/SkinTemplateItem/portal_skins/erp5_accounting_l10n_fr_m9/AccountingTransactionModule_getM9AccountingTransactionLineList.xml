@@ -94,7 +94,7 @@ for transaction in stool.callSelectionFor(selection_name):\n
       line = line.asSourceBrain()\n
     else:\n
       line = line.asDestinationBrain()\n
-      line_list.append(line)\n
+    line_list.append(line)\n
 \n
     if line.node_relative_url:\n
       # per account and origin\n
