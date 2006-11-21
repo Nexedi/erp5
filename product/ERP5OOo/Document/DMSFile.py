@@ -177,8 +177,10 @@ class DMSFile(XMLObject,File):
     '''
     try:
       return len(self.data)
-    except AttributeError:
+    except (AttributeError, TypeError):
       return 0
+
+  getcontentlength=get_size
 
   security.declareProtected(Permissions.View,'hasFile')
   def hasFile(self):
@@ -274,9 +276,14 @@ class DMSFile(XMLObject,File):
     ref=self.getReference()
     return [o for o in di.keys() if o.getReference()!=ref] # every object has its own reference in SearchableText
 
+  security.declareProtected(Permissions.ModifyPortalContent,'PUT')
+  def PUT(self,REQUEST,RESPONSE):
+    CMFFile.PUT(self,REQUEST,RESPONSE)
+    self.DMS_ingestFile(fname=self.getId())
+
   # BG copied from File in case
   index_html = CMFFile.index_html
-  PUT = CMFFile.PUT
+  #PUT = CMFFile.PUT
   security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
   manage_FTPget = CMFFile.manage_FTPget
   manage_FTPlist = CMFFile.manage_FTPlist
