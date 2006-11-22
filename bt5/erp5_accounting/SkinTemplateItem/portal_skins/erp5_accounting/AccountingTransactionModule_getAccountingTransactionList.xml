@@ -91,11 +91,23 @@ if params.get(\'count\', 0):\n
 params[\'omit_input\'] = 0\n
 params[\'omit_output\'] = 0\n
 \n
+# XXX this workaround is probably no longer needed\n
 if params.get(\'delivery_start_date\'):\n
   params[\'delivery.start_date\'] = params[\'delivery_start_date\']\n
 \n
-#context.log(\'LOG (%s)\' % params,  context.AccountingTransactionModule_zGetAccountingTransactionList(src__ =1, selection_params=params, **params))\n
-return context.AccountingTransactionModule_zGetAccountingTransactionList(selection_params=params, **params)\n
+# this method can be used to build another complex query, for example\n
+# as a catalog.parent_uid filter with SimulationTool.getMovementList.\n
+# In this example, you can use side independant inventory API with \n
+# accounting module selection. see erp5_accounting_l10n_fr_m9 for an example.\n
+src__ = context.REQUEST.other.get(\'src__\', 0)\n
+no_limit = context.REQUEST.other.get(\'no_limit\', 0)\n
+search_result_keys = context.REQUEST.other.get(\'search_result_keys\', None)\n
+\n
+return context.AccountingTransactionModule_zGetAccountingTransactionList( \n
+                            selection_params=params,\n
+                            src__=src__,\n
+                            search_result_keys=search_result_keys,\n
+                            no_limit=no_limit, **params)\n
 
 
 ]]></string> </value>
@@ -144,8 +156,12 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList(selecti
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
-                            <string>_apply_</string>
                             <string>context</string>
+                            <string>src__</string>
+                            <string>no_limit</string>
+                            <string>None</string>
+                            <string>search_result_keys</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

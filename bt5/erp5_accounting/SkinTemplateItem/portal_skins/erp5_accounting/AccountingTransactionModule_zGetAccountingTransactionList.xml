@@ -140,6 +140,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>no_limit</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>node</string> </key>
                                 <value>
                                   <dictionary>
@@ -179,6 +185,17 @@
                                     <item>
                                         <key> <string>default</string> </key>
                                         <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>search_result_keys</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string encoding="base64">Jyc=</string> </value>
                                     </item>
                                   </dictionary>
                                 </value>
@@ -281,30 +298,32 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>selection_params</string>
-                            <string>selection_sort_on</string>
-                            <string>select_expression</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>node</string>
-                            <string>resource</string>
-                            <string>entity</string>
-                            <string>stat</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>amount</string>
-                            <string>amount_range_min</string>
-                            <string>amount_range_max</string>
-                            <string>creation_date_range_min</string>
-                            <string>creation_date_range_max</string>
-                            <string>section_category</string>
-                            <string>count</string>
-                            <string>transaction_uid</string>
-                            <string>specific_reference</string>
+<string>selection</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>selection_params</string>
+<string>selection_sort_on</string>
+<string>select_expression</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>node</string>
+<string>resource</string>
+<string>entity</string>
+<string>stat</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>amount</string>
+<string>amount_range_min</string>
+<string>amount_range_max</string>
+<string>creation_date_range_min</string>
+<string>creation_date_range_max</string>
+<string>section_category</string>
+<string>count</string>
+<string>transaction_uid</string>
+<string>specific_reference</string>
+<string>no_limit</string>
+<string>search_result_keys</string>
                           </list>
                         </value>
                     </item>
@@ -344,7 +363,9 @@ creation_date_range_max=""\r\n
 section_category=""\r\n
 count=""\r\n
 transaction_uid=""\r\n
-specific_reference</string> </value>
+specific_reference\r\n
+no_limit\r\n
+search_result_keys=\'\'</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -386,9 +407,8 @@ specific_reference</string> </value>
 
 <dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**selection_params)">\n
 <dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
-<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or\n
-portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **selection_params)">\n
-\n
+<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **selection_params)">\n
+<dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
 SELECT\n
@@ -398,7 +418,7 @@ SELECT\n
     COUNT(DISTINCT catalog.uid) AS count\n
   <dtml-else>\n
     DISTINCT\n
-    <dtml-in "portal_catalog.getCatalogSearchResultKeys()">\n
+    <dtml-in "search_result_keys">\n
       <dtml-unless sequence-start>,</dtml-unless>\n
       <dtml-var sequence-item>\n
     </dtml-in>\n
@@ -528,10 +548,10 @@ WHERE\n
   <dtml-if "query[\'limit_expression\']">\n
     LIMIT <dtml-var "query[\'limit_expression\']">\n
   <dtml-else>\n
-    LIMIT 1000\n
+    <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
   </dtml-if>\n
 </dtml-unless>\n
-</dtml-let></dtml-let></dtml-let>\n
+</dtml-let></dtml-let></dtml-let></dtml-let>\n
 <dtml-comment> vim: syntax=dtml\n
 </dtml-comment>\n
 
@@ -574,9 +594,8 @@ WHERE\n
 
 <dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**selection_params)">\n
 <dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
-<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or\n
-portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **selection_params)">\n
-\n
+<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **selection_params)">\n
+<dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
 SELECT\n
@@ -586,7 +605,7 @@ SELECT\n
     COUNT(DISTINCT catalog.uid) AS count\n
   <dtml-else>\n
     DISTINCT\n
-    <dtml-in "portal_catalog.getCatalogSearchResultKeys()">\n
+    <dtml-in "search_result_keys">\n
       <dtml-unless sequence-start>,</dtml-unless>\n
       <dtml-var sequence-item>\n
     </dtml-in>\n
@@ -716,10 +735,10 @@ WHERE\n
   <dtml-if "query[\'limit_expression\']">\n
     LIMIT <dtml-var "query[\'limit_expression\']">\n
   <dtml-else>\n
-    LIMIT 1000\n
+    <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
   </dtml-if>\n
 </dtml-unless>\n
-</dtml-let></dtml-let></dtml-let>\n
+</dtml-let></dtml-let></dtml-let></dtml-let>\n
 <dtml-comment> vim: syntax=dtml\n
 </dtml-comment>\n
 
