@@ -141,7 +141,7 @@ def initialize( context ):
     FieldRegistry.registerField(MultiLinkField.MultiLinkField,
                                 'www/LinkField.gif')
     FieldRegistry.registerField(InputButtonField.InputButtonField,
-                                'www/StringField.gif') 
+                                'www/StringField.gif')
  
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
@@ -149,7 +149,8 @@ def initialize( context ):
     FieldRegistry.registerField(HelperFields.TALESField)
 
     import HyperLinkField
-    FieldRegistry.registerField(HyperLinkField.HyperLinkField)
+    FieldRegistry.registerField(HyperLinkField.HyperLinkField,
+                                'www/LinkField.gif')
 
     # register help for the product
     context.registerHelp()
