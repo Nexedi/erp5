@@ -71,6 +71,7 @@
             <value> <string># get related object title in a security-aware way (without throwing exception\n
 # if I don\'t have permissions to access the object)\n
 cat_value=context.getProperty(category)\n
+if cat_value is None:return \'\'\n
 ob=context.restrictedTraverse(cat_value,None)\n
 return ob is not None and ob.getTitle() or \'\'\n
 </string> </value>

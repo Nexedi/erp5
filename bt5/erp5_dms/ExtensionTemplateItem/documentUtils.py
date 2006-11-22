@@ -24,6 +24,7 @@ rx_classif=re.compile('([A-Z]{1}[a-z]+/[A-Z]{1}[a-z]+)')
 def getAttrFromContent(self,data,ptype):
   if ptype!='Memo':return {}
   atrs={}
+  if data is None:return {}
   fileno=rx_fileno.search(data)
   if fileno:
     dic=fileno.groupdict()
