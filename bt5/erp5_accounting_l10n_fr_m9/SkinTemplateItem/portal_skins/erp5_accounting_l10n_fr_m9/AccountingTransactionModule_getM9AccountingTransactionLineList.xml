@@ -68,44 +68,65 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>line_list = []\n
+            <value> <string>from Products.PythonScripts.standard import Object\n
+line_list = []\n
 cache_storage = context.REQUEST.other\n
 selection_name = \'accounting_selection\'\n
 accounting_movement_type_list = context.getPortalAccountingMovementTypeList()\n
 \n
 stool = context.getPortalObject().portal_selections\n
+selection = stool.getSelectionFor(selection_name)\n
 per_account_and_origin_cache = cache_storage.setdefault(\n
                           \'m9_report_per_account_and_origin_summary\', {})\n
 per_origin_and_sheet_cache = cache_storage.setdefault(\n
                           \'m9_report_per_origin_and_sheet_summary\', {})\n
 \n
-for transaction in stool.callSelectionFor(selection_name):\n
-  transaction = transaction.getObject()\n
-  is_source = transaction.AccountingTransaction_isSourceView()\n
-  origin = transaction.getOriginId()\n
-  try:\n
-    sheet = transaction.getAggregateTitle(\n
-                              portal_type=\'Invoice Transmission Sheet\')\n
-  except AttributeError:\n
-    sheet = \'\'\n
-  for line in transaction.getMovementList(\n
-                            portal_type=accounting_movement_type_list):\n
-    if is_source:\n
-      line = line.asSourceBrain()\n
-    else:\n
-      line = line.asDestinationBrain()\n
-    line_list.append(line)\n
+simtool = context.portal_simulation\n
+# FIXME: how to pass pass parameter in the selection without\n
+# making them persistent ?\n
+context.REQUEST.other[\'src__\'] = 1\n
+context.REQUEST.other[\'no_limit\'] = 1\n
+context.REQUEST.other[\'search_result_keys\'] = [\'catalog.uid\']\n
 \n
-    if line.node_relative_url:\n
-      # per account and origin\n
-      account = per_account_and_origin_cache.setdefault(\n
-                                        line.node_relative_url, {})\n
-      total = account.setdefault(origin, 0)\n
-      account[origin] = total + (line.total_price or 0)\n
-      # per origin and sheet    \n
-      origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
-      total = origin_cache.setdefault((line.node_relative_url, sheet), 0)\n
-      origin_cache[(line.node_relative_url, sheet)] = total + (line.total_price or 0)\n
+# call getMovementHistory by building a subquery with accounting module\n
+# selection\'s query, using the src__=1 trick from above\n
+for brain in simtool.getMovementHistoryList(\n
+        where_expression="catalog.parent_uid IN (%s)" %\n
+                                 stool.callSelectionFor(selection_name),\n
+        section_category=selection.getParams().get(\'section_category\')):\n
+\n
+  movement = brain.getObject()\n
+  transaction = movement.getParentValue()\n
+  origin = transaction.getProperty(\'origin_id\')\n
+  sheet = transaction.getProperty(\'aggregate_title\')\n
+  obj = Object(\n
+               parent_portal_type=transaction.getTranslatedPortalType(),\n
+               parent_int_index="%05d" % transaction.getIntIndex(0),\n
+               parent_aggregate_title=sheet,\n
+               parent_origin_id=origin,\n
+               \n
+               mirror_section_uid=brain.mirror_section_uid,\n
+               section_uid=brain.section_uid,\n
+               node_relative_url=brain.node_relative_url,\n
+               getObject=brain.getObject,\n
+               asContext=movement.asContext,\n
+#               Movement_getExplanationUrl=movement.Movement_getExplanationUrl,\n
+\n
+               date=brain.date,\n
+               debit=max(brain.total_price, 0),\n
+               credit=max(-brain.total_price, 0), )\n
+  line_list.append(obj)\n
+  \n
+  if brain.node_relative_url:\n
+    # per account and origin\n
+    account = per_account_and_origin_cache.setdefault(\n
+                                      brain.node_relative_url, {})\n
+    total = account.setdefault(origin, 0)\n
+    account[origin] = total + (brain.total_price or 0)\n
+    # per origin and sheet\n
+    origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
+    total = origin_cache.setdefault((brain.node_relative_url, sheet), 0)\n
+    origin_cache[(brain.node_relative_url, sheet)] = total + (brain.total_price or 0)\n
 \n
 return line_list\n
 </string> </value>
@@ -118,12 +139,6 @@ return line_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -157,6 +172,8 @@ return line_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
                             <string>line_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -164,18 +181,21 @@ return line_list\n
                             <string>selection_name</string>
                             <string>accounting_movement_type_list</string>
                             <string>stool</string>
+                            <string>selection</string>
                             <string>per_account_and_origin_cache</string>
                             <string>per_origin_and_sheet_cache</string>
+                            <string>simtool</string>
+                            <string>_write_</string>
                             <string>_getiter_</string>
+                            <string>brain</string>
+                            <string>movement</string>
                             <string>transaction</string>
-                            <string>is_source</string>
                             <string>origin</string>
                             <string>sheet</string>
-                            <string>AttributeError</string>
-                            <string>line</string>
+                            <string>max</string>
+                            <string>obj</string>
                             <string>account</string>
                             <string>total</string>
-                            <string>_write_</string>
                             <string>origin_cache</string>
                           </tuple>
                         </value>
