@@ -136,10 +136,6 @@ class TestERP5BankingCheckPaymentMixin:
                                                  currency=self.currency_1,
                                                  amount=100000)
 
-    # open counter date and counter
-    self.openCounterDate(site=self.paris)
-    self.openCounter(site=self.bi_counter_vault)
-
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
@@ -154,6 +150,10 @@ class TestERP5BankingCheckPaymentMixin:
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
+    self.openCounter(site=self.bi_counter_vault)
 
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
