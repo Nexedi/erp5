@@ -78,8 +78,9 @@ if data is None:\n
   else:\n
     if hasattr(context,\'data\'):\n
       data=data\n
+\n
 #if data is not None:\n
-#  context.setPropertyListFromContent(data)\n
+  #context.setPropertyListFromContent()\n
 \n
 if fname is None:\n
   fname=context.getSourceReference()\n

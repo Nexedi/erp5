@@ -106,7 +106,7 @@ for base_category in base_category_list:\n
   else:\n
     raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
   category_list.append(category_dict)\n
-context.log(category_list)\n
+#context.log(category_list)\n
 return category_list\n
 
 

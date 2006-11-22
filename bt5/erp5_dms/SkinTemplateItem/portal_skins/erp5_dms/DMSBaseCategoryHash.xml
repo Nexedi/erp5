@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
+context.log(value_list)\n
 def cached_DMSGetItemList(base_category):\n
     basecatobject=context.portal_categories.resolveCategory(base_category)\n
     #return [(context.Base_trimPathName(x,100),y) for x,y in basecatobject.getCategoryChildLogicalPathItemList()]\n
@@ -156,6 +156,8 @@ return sub_field_dict.values()\n
                             <string>is_right_display</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>cached_DMSGetItemList</string>
                             <string>None</string>
                             <string>sub_field_dict</string>
@@ -163,8 +165,6 @@ return sub_field_dict.values()\n
                             <string>_write_</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>basecatobject</string>
                             <string>sub_field_property_dict</string>
                           </tuple>

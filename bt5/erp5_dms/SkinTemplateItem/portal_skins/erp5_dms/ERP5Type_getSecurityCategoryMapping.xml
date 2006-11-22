@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(\'---\')\n
+            <value> <string>#context.log(\'---\')\n
 return (\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'source_project\'] ),\n
@@ -122,10 +122,7 @@ return (\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
