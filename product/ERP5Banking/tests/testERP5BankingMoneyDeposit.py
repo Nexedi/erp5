@@ -209,10 +209,13 @@ class TestERP5BankingMoneyDepositMixin:
     Create a cash sorting document and check it
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
-    self.money_deposit = self.money_deposit_module.newContent(id='money_deposit', portal_type='Money Deposit',
-									destination_payment_value = self.bank_account_1,
-                                                                        resource_value = self.currency_1,
-                                                                        source_total_asset_price=20000.0)
+    self.money_deposit = self.money_deposit_module.newContent(
+                            id='money_deposit', 
+                            portal_type='Money Deposit',
+									          destination_payment_value = self.bank_account_1,
+                            resource_value = self.currency_1,
+                            description='test',
+                            source_total_asset_price=20000.0)
     # execute tic
     self.stepTic()
     # set source reference

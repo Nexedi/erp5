@@ -220,6 +220,7 @@ class TestERP5BankingCheckPaymentMixin:
                                          # aggregate_value = self.check_1,
                                          resource_value = self.currency_1,
                                          aggregate_free_text = "50",
+                                         description = "test",
                                          # source_value = self.bi_counter,
                                          start_date = DateTime().Date(),
                                          source_total_asset_price = 20000.0)

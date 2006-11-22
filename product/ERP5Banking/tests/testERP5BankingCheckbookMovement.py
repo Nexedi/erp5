@@ -182,9 +182,13 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     """
     # We will do the transfer ot two items.
     self.checkbook_movement = self.checkbook_movement_module.newContent(
-                     id='checkbook_movement', portal_type='Checkbook Movement',
-                     source_value=self.source_site, destination_value=self.destination_site,
-                     resource_value=self.currency_1,start_date=self.date)
+                                    id='checkbook_movement', 
+                                    portal_type='Checkbook Movement',
+                                    source_value=self.source_site, 
+                                    destination_value=self.destination_site,
+                                    resource_value=self.currency_1,
+                                    description='test',
+                                    start_date=self.date)
     # check its portal type
     self.assertEqual(self.checkbook_movement.getPortalType(), 'Checkbook Movement')
     # check source

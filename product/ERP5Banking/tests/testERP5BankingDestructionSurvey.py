@@ -168,7 +168,13 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash transfer document and check it
     """
     # Cash transfer has cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.destruction_survey = self.destruction_survey_module.newContent(id='destruction_survey_1', portal_type='Destruction Survey', source_value=self.cash, destination_value=self.counter, source_total_asset_price=52400.0)
+    self.destruction_survey = self.destruction_survey_module.newContent(
+                                    id='destruction_survey_1', 
+                                    portal_type='Destruction Survey', 
+                                    source_value=self.cash, 
+                                    description='test',
+                                    destination_value=self.counter, 
+                                    source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one cash transfer

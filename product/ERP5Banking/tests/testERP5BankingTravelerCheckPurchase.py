@@ -174,6 +174,7 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
                      source_value=self.traveler_check_source, destination_value=None,
                      destination_payment_value=self.bank_account_1,
                      resource_value=self.currency_1,
+                     description='test',
                      start_date=self.date)
     # check its portal type
     self.assertEqual(self.traveler_check_purchase.getPortalType(), 'Traveler Check Purchase')

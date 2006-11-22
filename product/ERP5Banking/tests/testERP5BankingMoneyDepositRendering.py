@@ -234,10 +234,12 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     """
     # Money deposit rendering has auxiliaire for source, gros_versement for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
 
-    self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(id='money_deposit_rendering_1',
-                                                                                  portal_type='Money Deposit Rendering',
-                                                                                  source_value=self.gros_versement,
-                                                                                  source_total_asset_price=52400.0)
+    self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(
+                                         id='money_deposit_rendering_1',
+                                         portal_type='Money Deposit Rendering',
+                                         source_value=self.gros_versement,
+                                         description='test',
+                                         source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one money deposit rendering

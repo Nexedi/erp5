@@ -261,6 +261,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.vault_transfer = self.vault_transfer_module.newContent(id='vault_transfer_1',
         portal_type='Vault Transfer', source=self.usual_cash.getRelativeUrl(),
+        description='test',
         destination=self.caisse_courante.getRelativeUrl(), source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()

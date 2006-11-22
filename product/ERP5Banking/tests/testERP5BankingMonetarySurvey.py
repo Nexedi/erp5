@@ -193,7 +193,13 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash transfer document and check it
     """
     # Cash transfer has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.monetary_survey = self.monetary_survey_module.newContent(id='monetary_survey_1', portal_type='Monetary Survey', source_value=self.source, destination_value=self.destination, source_total_asset_price=52400.0)
+    self.monetary_survey = self.monetary_survey_module.newContent(
+                                 id='monetary_survey_1', 
+                                 portal_type='Monetary Survey', 
+                                 source_value=self.source, 
+                                 destination_value=self.destination, 
+                                 description='test',
+                                 source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # set source reference

@@ -228,9 +228,13 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # Cash Movement has vault_source (Gros versment) for source, vault_destination for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
 
 
-    self.cash_movement = self.cash_movement_module.newContent(id='cash_movement_1',
-        portal_type='Cash Movement', source=self.vault_source.getRelativeUrl(),
-        destination=self.vault_destination.getRelativeUrl(), source_total_asset_price=52400.0)
+    self.cash_movement = self.cash_movement_module.newContent(
+                                id='cash_movement_1',
+                                portal_type='Cash Movement', 
+                                source=self.vault_source.getRelativeUrl(),
+                                destination=self.vault_destination.getRelativeUrl(), 
+                                description='test',
+                                source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one vault transfer

@@ -93,6 +93,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                      id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
                      source_value=self.vault_transfer_source_site, 
                      destination_value=self.vault_transfer_destination_site,
+                     description='test',
                      start_date=(self.date-3))
     # Add a line for traveler check
     self.line_2 = self.checkbook_vault_transfer.newContent(quantity=1,

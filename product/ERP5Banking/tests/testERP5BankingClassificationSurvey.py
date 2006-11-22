@@ -197,7 +197,13 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     Create a classification surveyg document and check it
     """
     # classification surveyg has encaisse_paris for source, encaisse_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.classification_survey = self.classification_survey_module.newContent(id='classification_survey_1', portal_type='Classification Survey', source_value=self.encaisse_a_detruire, destination_value=None, source_total_asset_price=52400.0)
+    self.classification_survey = self.classification_survey_module.newContent(
+                                      id='classification_survey_1', 
+                                      portal_type='Classification Survey', 
+                                      source_value=self.encaisse_a_detruire, 
+                                      destination_value=None, 
+                                      description='test',
+                                      source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # set source reference

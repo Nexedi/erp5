@@ -142,6 +142,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                      id='stop_payment', portal_type='Stop Payment',
                      destination_payment_value=self.bank_account_2,
                      resource_value=self.currency_1,
+                     description='test',
                      start_date=self.date,
                      reference_range_min=51,
                      source_total_asset_price=20000)

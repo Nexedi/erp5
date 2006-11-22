@@ -212,6 +212,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                                   portal_type='Cash To Currency Sale', 
                                   source_value=self.guichet, 
                                   destination_value=None, 
+                                  description='test',
                                   resource_value = self.currency_2, 
                                   source_total_asset_price=100.0, 
                                   discount = 3000.0, quantity = 70000.0)

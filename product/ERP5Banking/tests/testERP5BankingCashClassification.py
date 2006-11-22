@@ -220,7 +220,13 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash sorting document and check it
     """
     # Cash sorting has encaisse_paris for source, encaisse_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_sorting = self.cash_sorting_module.newContent(id='cash_sorting_1', portal_type='Cash Sorting', source_value=self.encaisse_tri, destination_value=None, source_total_asset_price=52400.0)
+    self.cash_sorting = self.cash_sorting_module.newContent(
+                               id='cash_sorting_1', 
+                               portal_type='Cash Sorting', 
+                               source_value=self.encaisse_tri, 
+                               description='test',
+                               destination_value=None, 
+                               source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # set source reference

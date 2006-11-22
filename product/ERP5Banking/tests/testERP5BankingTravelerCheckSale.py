@@ -67,6 +67,7 @@ class TestERP5BankingTravelerCheckSaleMixin:
     self.checkbook_vault_transfer = self.getCheckbookUsualCashTransferModule().newContent(
                      id='checkbook_usual_cash_transfer', portal_type='Checkbook Usual Cash Transfer',
                      source_value=self.source_vault, 
+                     description='test',
                      destination_value=self.destination_vault,
                      start_date=(self.date-1))
     # Add a line for traveler check

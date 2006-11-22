@@ -178,12 +178,14 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Create a check deposit document and check it
     """
-    self.check_deposit = self.check_deposit_module.newContent(id = 'check_deposit',
-                                                              portal_type = 'Check Deposit',
-                                                              destination_payment_value = self.bank_account_1,
-                                                              start_date = DateTime().Date(),
-                                                              source_total_asset_price = 500.0,
-                                                              resource_value=self.currency_1)
+    self.check_deposit = self.check_deposit_module.newContent(
+                                id = 'check_deposit',
+                                portal_type = 'Check Deposit',
+                                destination_payment_value = self.bank_account_1,
+                                start_date = DateTime().Date(),
+                                source_total_asset_price = 500.0,
+                                description='test',
+                                resource_value=self.currency_1)
     
     self.assertNotEqual(self.check_deposit, None)
     self.assertEqual(self.check_deposit.getTotalPrice(), 0.0)

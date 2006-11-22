@@ -154,9 +154,13 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash inventory document and check it
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.monetary_reception = self.monetary_reception_module.newContent(id='monetary_reception', portal_type='Monetary Reception',
-                                                                        source_value=None, destination_value=self.reception,
-                                                                        resource_value=self.currency_1)
+    self.monetary_reception = self.monetary_reception_module.newContent(
+                                    id='monetary_reception', 
+                                    portal_type='Monetary Reception',
+                                    source_value=None, 
+                                    destination_value=self.reception,
+                                    description='test',
+                                    resource_value=self.currency_1)
     #     self.setDestinationValue(self.reception)
     #     self.setResourceValue(self.currency_1)
     # execute tic

@@ -272,7 +272,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
 
 
   def stepCreateCashBalanceRegulation(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(id='cash_balance_regulation_1', portal_type='Cash Balance Regulation', source_value=self.guichet_1, destination_value=None, source_total_asset_price=52400.0)
+    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(
+                                          id='cash_balance_regulation_1', 
+                                          portal_type='Cash Balance Regulation', 
+                                          source_value=self.guichet_1, 
+                                          destination_value=None, 
+                                          description='test',
+                                          source_total_asset_price=52400.0)
     self.stepTic()
     self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
     self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')

@@ -159,11 +159,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Create a mutilated banknote document and check it
     """
-    self.mutilated_banknote = self.mutilated_banknote_module.newContent(id='mutilated_banknote',
-                                                                        portal_type='Mutilated Banknote',
-                                                                        source_total_asset_price=0.0,
-                                                                        destination_total_asset_price=0.0,
-                                                                        destination_value=self.mutilated_banknote_vault
+    self.mutilated_banknote = self.mutilated_banknote_module.newContent(
+                                    id='mutilated_banknote',
+                                    portal_type='Mutilated Banknote',
+                                    source_total_asset_price=0.0,
+                                    destination_total_asset_price=0.0,
+                                    description='test',
+                                    destination_value=self.mutilated_banknote_vault
                                                                         )
     self.stepTic()
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 1)

@@ -155,6 +155,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
 		    id='foreign_cash_reception', portal_type='Foreign Cash Reception',
                     source_value=None, destination_value=self.reception,
                     resource_value=self.currency_1,
+                    description='test',
 		    source_total_asset_price=250)
     # execute tic
     self.stepTic()

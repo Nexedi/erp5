@@ -235,6 +235,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
                                  reference_range_min=1,
+                                 description='test',
                                  reference_range_max=50,
                                  aggregate_value=self.checkbook_1
                                  )

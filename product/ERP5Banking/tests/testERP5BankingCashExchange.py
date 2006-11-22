@@ -229,7 +229,14 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash sorting document and check it
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
-    self.cash_exchange = self.cash_exchange_module.newContent(id='cash_exchange_1', portal_type='Cash Exchange', source_value=self.guichet, destination_value=None, resource_value = self.currency_1, source_total_asset_price=52400.0)
+    self.cash_exchange = self.cash_exchange_module.newContent(
+                                  id='cash_exchange_1', 
+                                  portal_type='Cash Exchange', 
+                                  source_value=self.guichet, 
+                                  destination_value=None, 
+                                  description='test',
+                                  resource_value = self.currency_1, 
+                                  source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one cash sorting

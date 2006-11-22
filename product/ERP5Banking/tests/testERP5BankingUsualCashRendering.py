@@ -226,6 +226,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.usual_cash_rendering = self.usual_cash_rendering_module.newContent(id='usual_cash_rendering_1',
         portal_type='Usual Cash Rendering', source=self.caisse_courante.getRelativeUrl(),
+        description='test',
         destination=self.auxiliaire.getRelativeUrl(), source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()

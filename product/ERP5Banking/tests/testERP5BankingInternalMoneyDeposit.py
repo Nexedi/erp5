@@ -190,15 +190,15 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     Create a cash sorting document and check it
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
-    self.internal_money_deposit = self.internal_money_deposit_module.newContent(id='internal_money_deposit', portal_type='Internal Money Deposit', 
-                                                                                #source_value=None, destination_value=self.bi_counter_vault,
-                                                                                destination_value=self.bi_counter_vault,
-                                                                                source_value=None,
-                                                                                #destination_payment_value = self.bank_account_1,
-                                                                                resource_value = self.currency_1,
-                                                                                source_total_asset_price=20000.0,
-                                                                                grouping_reference="lettering",
-                                                                                )
+    self.internal_money_deposit = self.internal_money_deposit_module.newContent(
+                                    id='internal_money_deposit', 
+                                    portal_type='Internal Money Deposit', 
+                                    destination_value=self.bi_counter_vault,
+                                    resource_value = self.currency_1,
+                                    source_total_asset_price=20000.0,
+                                    grouping_reference="lettering",
+                                    description='test',
+                                    )
     # execute tic
     self.stepTic()
     # set source reference

@@ -54,6 +54,7 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     self.checkbook_reception = self.checkbook_reception_module.newContent(
                      id='checkbook_reception', portal_type='Checkbook Reception',
                      source_value=None, destination_value=self.reception_destination_site,
+                     description='test',
                      start_date=(self.date-4))
     # get the checkbook reception document
     self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
@@ -86,6 +87,7 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     self.checkbook_reception = self.checkbook_reception_module.newContent(
                      id='checkbook_reception', portal_type='Checkbook Reception',
                      source_value=None, destination_value=self.reception_destination_site,
+                     description='test',
                      start_date=(self.date-4))
     # get the checkbook reception document
     self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
@@ -264,6 +266,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.checkbook_vault_transfer = self.checkbook_vault_transfer_module.newContent(
                      id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
                      source_value=self.source_site, destination_value=self.destination_site,
+                     description='test',
                      resource_value=self.currency_1)
     # check its portal type
     self.assertEqual(self.checkbook_vault_transfer.getPortalType(), 'Checkbook Vault Transfer')

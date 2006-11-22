@@ -169,10 +169,8 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
     self.currency_purchase = self.currency_purchase_module.newContent(id = 'currency_purchase', portal_type = 'Currency Purchase',
                                          price_currency='currency_module/EUR',currency_exchange_type='purchase',
                                          destination_payment_value = self.bank_account_1,
-                                         # aggregate_value = self.check_1,
                                          resource_value = self.currency_2,
-
-                                         # source_value = self.bi_counter,
+                                         description='test',
                                          start_date = DateTime().Date(),
                                          source_total_asset_price = 100.0,
                                          discount = 1000.0)

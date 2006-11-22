@@ -227,7 +227,12 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # Counter rendering has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
 
-    self.counter_rendering = self.counter_rendering_module.newContent(id='counter_rendering_1', portal_type='Counter Rendering', source_value=self.counter_vault, source_total_asset_price=52400.0)
+    self.counter_rendering = self.counter_rendering_module.newContent(
+                                    id='counter_rendering_1', 
+                                    portal_type='Counter Rendering', 
+                                    source_value=self.counter_vault, 
+                                    description='test',
+                                    source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one counter rendering

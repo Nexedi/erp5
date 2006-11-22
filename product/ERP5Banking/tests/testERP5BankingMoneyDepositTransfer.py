@@ -207,7 +207,13 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
     Create a money deposit transfer document and check it
     """
     # Money Deposit transfer has usual_cash (Gros versment) for source, tri for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.money_deposit_transfer = self.money_deposit_transfer_module.newContent(id='money_deposit_transfer_1', portal_type='Money Deposit Transfer', source_value=self.counter, destination_value=self.tri, source_total_asset_price=52400.0)
+    self.money_deposit_transfer = self.money_deposit_transfer_module.newContent(
+                                       id='money_deposit_transfer_1', 
+                                       portal_type='Money Deposit Transfer', 
+                                       source_value=self.counter, 
+                                       destination_value=self.tri, 
+                                       description='test',
+                                       source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one money deposit transfer

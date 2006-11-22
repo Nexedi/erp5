@@ -228,8 +228,12 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a monetary recall document and check it
     """
     # Cash transfer has cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    #self.monetary_recall = self.monetary_recall_module.newContent(id='monetary_recall_1', portal_type='Monetary Recall', source_value=self.cash, #destination_value=self.counter, source_total_asset_price=52400.0)
-    self.monetary_recall = self.monetary_recall_module.newContent(id='monetary_recall_1', portal_type='Monetary Recall', source_value=self.cash, source_total_asset_price=52400.0)
+    self.monetary_recall = self.monetary_recall_module.newContent(
+                                 id='monetary_recall_1', 
+                                 portal_type='Monetary Recall', 
+                                 source_value=self.cash, 
+                                 description='test',
+                                 source_total_asset_price=52400.0)
     
     # execute tic
     self.stepTic()
