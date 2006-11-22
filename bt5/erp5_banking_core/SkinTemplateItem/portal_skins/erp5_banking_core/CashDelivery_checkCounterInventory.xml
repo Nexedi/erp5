@@ -74,7 +74,8 @@
 # than the amount of movement of type `portal_type` in this movement\n
 \n
 # returns 2 : no resource, 1 : insufficient balance, 0 : ok\n
-\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 # XXX this should be handled by a portal method.\n
 currency_cash_portal_type_list = [\'Banknote\', \'Coin\']\n
 \n
@@ -101,6 +102,10 @@ if len(line_list) == 0 :\n
   # no resource\n
   return 2\n
 \n
+# in some case, we don\'t want to check balance\n
+if no_balance_check:\n
+  return 0\n
+\n
 for line in line_list :\n
   line_resource = line.getResource()\n
   # The source can be different for every line (due to getBaobabSource approach)\n
@@ -114,13 +119,20 @@ for line in line_list :\n
       #context.log(\'cell quantity\', cell.getQuantity())\n
       #context.log(\'inventory value\', inventory_value)\n
       if inventory_value - cell.getQuantity() < 0:\n
-        return 1\n
-\n
+        msg = Message(domain=\'ui\', message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\', mapping={\'resource\':cell.getResourceTranslatedTitle(),\n
+                                                                                                                        \'letter\': cell.getEmissionLetterTitle(),\n
+                                                                                                                        \'status\': cell.getCashStatusTranslatedTitle(),\n
+                                                                                                                        \'variation\':cell.getVariationTitle()})\n
+        raise ValidationFailed, (msg,)\n
   else :\n
     inventory_value = context.portal_simulation.getFutureInventory(section=source_counter, resource=line_resource)\n
     if inventory_value - line.getQuantity() < 0 :\n
-      return 1\n
-\n
+      msg = Message(domain=\'ui\', message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\', mapping={\'resource\':line.getResourceTranslatedTitle(),\n
+                                                                                                                      \'letter\': line.getEmissionLetterTitle(),\n
+                                                                                                                      \'status\': line.getCashStatusTranslatedTitle(),\n
+                                                                                                                      \'variation\':line.getVariationTitle()})\n
+      raise ValidationFailed, (msg,)\n
+  \n
 return 0\n
 
 
@@ -152,7 +164,7 @@ return 0\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source=None,  portal_type=None, same_source=0, debug=0</string> </value>
+            <value> <string>source=None,  portal_type=None, same_source=0, no_balance_check=0, debug=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -172,7 +184,7 @@ return 0\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -181,7 +193,12 @@ return 0\n
                             <string>source</string>
                             <string>portal_type</string>
                             <string>same_source</string>
+                            <string>no_balance_check</string>
                             <string>debug</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>currency_cash_portal_type_list</string>
                             <string>inventory_dict</string>
                             <string>requested_dict</string>
@@ -200,6 +217,7 @@ return 0\n
                             <string>cell</string>
                             <string>variation_text</string>
                             <string>inventory_value</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
@@ -214,6 +232,7 @@ return 0\n
               <tuple>
                 <none/>
                 <none/>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
               </tuple>
