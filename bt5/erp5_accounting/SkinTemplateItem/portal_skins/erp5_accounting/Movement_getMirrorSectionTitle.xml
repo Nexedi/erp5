@@ -71,8 +71,10 @@
             <value> <string>"""Retrieve the title of the mirror section\n
 """\n
 if brain.mirror_section_uid:\n
-  return context.getPortalObject().portal_catalog.getObject(\n
-         uid=brain.mirror_section_uid).getTitle()\n
+  movement = brain.getObject()\n
+  if brain.mirror_section_uid == movement.getDestinationSectionUid():\n
+    return movement.getDestinationSectionTitle()\n
+  return movement.getSourceSectionTitle()\n
 </string> </value>
         </item>
         <item>
@@ -125,7 +127,7 @@ if brain.mirror_section_uid:\n
                             <string>selection</string>
                             <string>kwd</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
