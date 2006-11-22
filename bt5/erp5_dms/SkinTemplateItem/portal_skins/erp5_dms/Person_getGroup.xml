@@ -68,72 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-#from Products.ERP5Type.Message import Message\n
+            <value> <string># customizeable way of getting group for a person\n
+# instead of default implementation\n
+# here we store group directly in Career\n
 \n
-noSenderInHeaderMsg="no sender in headers"\n
-noSenderMsg="you are not in user database"\n
-manySendersMsg="very serious error: your address has multiple entries"\n
-noSubordinationMsg="you do not have properly set subordination (I could not find a group you are working in)"\n
-\n
-# get sender from headers\n
-fromraw=theMail[\'headers\'][\'from\']\n
-\n
-senderemail=context.findAddress(fromraw)\n
-if senderemail is None:\n
-  print noSenderInHeaderMsg\n
-  return printed\n
-\n
-# find sender\n
-context.log(senderemail)\n
-r=context.portal_catalog(portal_type=\'Email\',url_string=senderemail)\n
-if len(r)==0:\n
-  print noSenderMsg\n
-  return printed\n
-if len(r)>1:\n
-  print manySendersMsg\n
-  return printed\n
-senderm=r[0]\n
-person=senderm.getParent()\n
-context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUrl())\n
-\n
-mailprops=context.Document_getPropertiesFromMail(theMail[\'body\'])\n
-context.log(mailprops)\n
-# create objects from attachments\n
 try:\n
-  for fname,data in theMail[\'attachments\'].items():\n
-    obj=context.DMS_createObjectFromFile(fname,data,mailprops.get(\'document_type\'))\n
-    # if some properties were in the mail, overwrite the content attrs\n
-    for k in mailprops:\n
-      atr=k\n
-      if k==\'programme\':atr=\'source_project\'\n
-      if k!=\'document_type\':\n
-        obj.setProperty(atr,mailprops[k])\n
-    gr=person.Person_getGroup()\n
-    if gr is None:\n
-      print noSubordinationMsg\n
-      return printed\n
-    obj.setGroup(person.getSubordinationValue().getGroup())\n
-    obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
-    context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
-except Exception,e:\n
-  return str(e)\n
-return\n
-
-
-]]></string> </value>
+  return person.getSubordinationValue().getGroup()\n
+except AttributeError:\n
+  return None\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -143,8 +91,14 @@ return\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>theMail</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,41 +118,16 @@ return\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>theMail</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>noSenderInHeaderMsg</string>
-                            <string>noSenderMsg</string>
-                            <string>manySendersMsg</string>
-                            <string>noSubordinationMsg</string>
-                            <string>_getitem_</string>
-                            <string>fromraw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>senderemail</string>
-                            <string>None</string>
-                            <string>r</string>
-                            <string>len</string>
-                            <string>senderm</string>
                             <string>person</string>
-                            <string>script</string>
-                            <string>mailprops</string>
-                            <string>_getiter_</string>
-                            <string>fname</string>
-                            <string>data</string>
-                            <string>obj</string>
-                            <string>k</string>
-                            <string>atr</string>
-                            <string>gr</string>
-                            <string>Exception</string>
-                            <string>e</string>
-                            <string>str</string>
+                            <string>AttributeError</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -215,33 +144,12 @@ return\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_handleMail</string> </value>
+            <value> <string>Person_getGroup</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
