@@ -127,9 +127,14 @@ class CopyContainer:
       """
       ob=self.restrictedTraverse(id)
       # Make sure there is no activities pending on that object
-      portal_activities = getToolByName(self, 'portal_activities')
-      if portal_activities.countMessage(path=ob.getPath())>0:
-        raise ValueError, 'Sorry, some message are pending'
+      try:
+        portal_activities = getToolByName(self, 'portal_activities')
+      except AttributeError:
+        # There is no activity tool
+        portal_activities = None
+      if portal_activities is not None:
+        if portal_activities.countMessage(path=ob.getPath())>0:
+          raise ValueError, 'Sorry, some message are pending'
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)
