@@ -1232,7 +1232,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # This should exist only if the site is not up to date.
       LOG('ZSQLCatalog.beforeUncatalogObject',0,'The sql_catalog_delete_uid'\
                                                 + ' method is not defined')
-      self.uncatalogObject(path=path,uid=uid)
+      return self.uncatalogObject(path=path,uid=uid)
     method = getattr(self, method_name)
     method(uid = uid)
 
