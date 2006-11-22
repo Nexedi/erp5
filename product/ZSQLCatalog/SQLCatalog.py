@@ -1228,6 +1228,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     method_name = self.sql_catalog_delete_uid
     if uid is None:
       return None
+    if method_name in (None,''):
+      # This should exist only if the site is not up to date.
+      LOG('ZSQLCatalog.beforeUncatalogObject',0,'The sql_catalog_delete_uid'\
+                                                + ' method is not defined')
+      self.uncatalogObject(path=path,uid=uid)
     method = getattr(self, method_name)
     method(uid = uid)
 
