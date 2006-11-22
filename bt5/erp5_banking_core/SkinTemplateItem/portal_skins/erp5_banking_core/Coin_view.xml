@@ -81,8 +81,8 @@
                     <value>
                       <list>
                         <string>my_translated_title</string>
-                        <string>my_variation_list</string>
                         <string>my_base_price</string>
+                        <string>my_variation_list</string>
                       </list>
                     </value>
                 </item>
@@ -91,6 +91,7 @@
                     <value>
                       <list>
                         <string>my_price_currency</string>
+                        <string>my_emission_letter_list</string>
                       </list>
                     </value>
                 </item>

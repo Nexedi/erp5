@@ -68,18 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+            <value> <string>def getResourceVariationCategory():\n
+  pass\n
 \n
-site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
-counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", site_uid = site.getUid())]\n
-\n
-return counter_list\n
+if variation != \'variation/not_defined\' and variation.lstrip(\'variation/\') not in resource_object.getVariationList():\n
+  variation_not_defined = 1\n
+  break\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -96,12 +102,14 @@ return counter_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>resource_object, variation, emission_letter</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>\'break\' outside loop (/baobab/portal_skins/erp5_banking_core/CashDetail_checkResourceCategoryList, 6)</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -121,19 +129,7 @@ return counter_list\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>site</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_list</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -144,17 +140,38 @@ return counter_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CounterDate_getSiteCounterList</string> </value>
+            <value> <string>CashDetail_checkResourceCategoryList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

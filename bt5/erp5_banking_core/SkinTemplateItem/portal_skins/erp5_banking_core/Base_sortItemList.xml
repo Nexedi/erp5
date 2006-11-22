@@ -68,12 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+            <value> <string>def sort_title(a,b):\n
+  return cmp(a[0],b[0])\n
 \n
-site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
-counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", site_uid = site.getUid())]\n
-\n
-return counter_list\n
+begin = []\n
+if keep_first:\n
+  begin.append(my_list[0])\n
+  my_list = my_list[1:]\n
+my_list.sort(sort_title)\n
+return begin + my_list\n
 </string> </value>
         </item>
         <item>
@@ -96,7 +99,7 @@ return counter_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>my_list,keep_first=0,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,23 +119,19 @@ return counter_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>my_list</string>
+                            <string>keep_first</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>sort_title</string>
+                            <string>begin</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>site</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_list</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,12 +143,14 @@ return counter_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CounterDate_getSiteCounterList</string> </value>
+            <value> <string>Base_sortItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

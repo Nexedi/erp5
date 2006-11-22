@@ -114,6 +114,8 @@ if kw.has_key("explanation_portal_type"):\n
   inventory_kw[\'explanation_portal_type\'] = kw[\'explanation_portal_type\']\n
 \n
 if at_date is not None:\n
+  # XXX this make sure we look at the end of the day\n
+  at_date = at_date + 0.99\n
   inventory_kw[\'at_date\'] = at_date\n
 \n
 \n
@@ -219,8 +221,9 @@ for resource in resource_dict.keys():\n
     except KeyError:\n
       resource_in_vault = {\'quantity\' : 0,\'total_price\' : 0}\n
     tmp_dict.update({\'total_quantity\' : resource_in_vault[\'quantity\'],\n
-        \'total_price\' : resource_in_vault[\'total_price\'],\n
-        \'date\':resource_in_vault[\'date\']})\n
+        \'total_price\' : resource_in_vault[\'total_price\'],})\n
+    if vault_report_type==\'history\':\n
+      tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
   context.log(\'total_quantity\',tmp_dict[\'total_quantity\'])\n
   context.log(\'total_price\',tmp_dict[\'total_price\'])\n

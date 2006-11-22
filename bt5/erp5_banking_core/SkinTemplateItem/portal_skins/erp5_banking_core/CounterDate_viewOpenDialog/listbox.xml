@@ -338,12 +338,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>name</string>
+                          <string>title</string>
                           <string>Name</string>
                         </tuple>
                         <tuple>
-                          <string>path</string>
-                          <string>Path</string>
+                          <string>site</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>choice</string>
@@ -506,11 +506,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>name</string>
+                          <string>title</string>
 <string></string>
                         </tuple>
                         <tuple>
-                          <string>path</string>
+                          <string>site</string>
 <string></string>
                         </tuple>
                       </list>

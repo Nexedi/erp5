@@ -68,7 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>listbox = state_change.kwargs.get(\'listbox\')\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+listbox = state_change.kwargs.get(\'listbox\')\n
+\n
+# First make sure we can open a counter date only\n
+# if the date defined on the document is the current date\n
+counter_date = state_change[\'object\']\n
+start_date = counter_date.getStartDate()\n
+from DateTime import DateTime\n
+now = DateTime()\n
+\n
+if now.Date() != start_date.Date():\n
+  msg = Message(domain=\'ui\',message="Sorry, the date is not today")\n
+  raise ValidationFailed (msg,)\n
 \n
 for line in listbox:\n
   if line["choice"] == "open":\n
@@ -125,11 +139,20 @@ for line in listbox:\n
                             <string>state_change</string>
                             <string>args</string>
                             <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getattr_</string>
                             <string>listbox</string>
+                            <string>_getitem_</string>
+                            <string>counter_date</string>
+                            <string>start_date</string>
+                            <string>DateTime</string>
+                            <string>now</string>
+                            <string>msg</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>_getitem_</string>
                             <string>context</string>
                             <string>counter</string>
                           </tuple>

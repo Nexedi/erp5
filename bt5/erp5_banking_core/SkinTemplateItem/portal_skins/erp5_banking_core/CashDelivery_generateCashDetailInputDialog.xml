@@ -307,6 +307,7 @@ if listbox is None:\n
 \n
 \n
 else :\n
+\n
   # we want to update the listbox\n
   cash_status_list          = kw[\'cash_status_list\']\n
   emission_letter_list      = kw[\'emission_letter_list\']\n

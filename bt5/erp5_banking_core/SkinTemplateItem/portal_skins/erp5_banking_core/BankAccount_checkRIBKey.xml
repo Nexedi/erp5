@@ -68,18 +68,43 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+            <value> <string>d = {}\n
+d[\'A\'] = d[\'J\'] = \'1\'\n
+d[\'B\'] = d[\'K\'] = d[\'S\'] = \'2\'\n
+d[\'C\'] = d[\'L\'] = d[\'T\'] = \'3\'\n
+d[\'D\'] = d[\'M\'] = d[\'U\'] = \'4\'\n
+d[\'E\'] = d[\'N\'] = d[\'V\'] = \'5\'\n
+d[\'F\'] = d[\'O\'] = d[\'W\'] = \'6\'\n
+d[\'G\'] = d[\'P\'] = d[\'X\'] = \'7\'\n
+d[\'H\'] = d[\'Q\'] = d[\'Y\'] = \'8\'\n
+d[\'I\'] = d[\'R\'] = d[\'Z\'] = \'9\'\n
 \n
-site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
-counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", site_uid = site.getUid())]\n
+old_rib = account_nb[-2:]\n
 \n
-return counter_list\n
+new_account_nb = ""\n
+for nb in list(account_nb)[:-2]:\n
+  if d.has_key(nb):\n
+    new_account_nb += d[nb]\n
+  else:\n
+    new_account_nb += nb\n
+\n
+new_account_nb += "00"\n
+new_account_nb = long(new_account_nb)\n
+rib = 97 - new_account_nb % 97\n
+\n
+return (str(rib) == str(old_rib))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -96,7 +121,7 @@ return counter_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>account_nb</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,23 +141,25 @@ return counter_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>site</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>account_nb</string>
+                            <string>d</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>old_rib</string>
+                            <string>new_account_nb</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_list</string>
+                            <string>list</string>
+                            <string>nb</string>
+                            <string>_getattr_</string>
+                            <string>long</string>
+                            <string>rib</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,12 +176,33 @@ return counter_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CounterDate_getSiteCounterList</string> </value>
+            <value> <string>BankAccount_checkRIBKey</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -80,6 +80,7 @@ if len(portal_type) != 2:\n
   return context.getMovementList(portal_type=portal_type)\n
 \n
 line_list = context.objectValues(portal_type=portal_type[0])\n
+#context.log(\'line_list\', line_list)\n
 invert = 0\n
 if len(line_list) == 0:\n
   # try with the second portal type\n

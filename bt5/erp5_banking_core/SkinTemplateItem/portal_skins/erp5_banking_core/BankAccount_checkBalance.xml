@@ -90,7 +90,7 @@ if resource is None :\n
 \n
 # Next, check the balance of the account\n
 # We must specify the resource !\n
-account_balance = resource.getFutureInventory(payment=payment, resource=resource.getRelativeUrl(),src__=src__)\n
+account_balance = resource.getAvailableInventory(payment=payment, resource=resource.getRelativeUrl(),src__=src__)\n
 if src__ :\n
   return account_balance \n
 \n

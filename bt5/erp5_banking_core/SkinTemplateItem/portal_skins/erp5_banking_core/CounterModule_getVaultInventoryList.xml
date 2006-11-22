@@ -89,7 +89,7 @@
     if result != 0:\n
       return result\n
 \n
-    result = cmp(a.date,b.date)\n
+    result = cmp(getattr(a,\'date\',None),getattr(b,\'date\',None))\n
     return result\n
 \n
   currency_cash_list.sort(sortLines)\n

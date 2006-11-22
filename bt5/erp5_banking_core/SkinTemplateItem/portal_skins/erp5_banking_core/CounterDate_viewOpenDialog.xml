@@ -99,6 +99,7 @@
                     <value>
                       <list>
                         <string>listbox_choice</string>
+                        <string>listbox_site</string>
                       </list>
                     </value>
                 </item>
