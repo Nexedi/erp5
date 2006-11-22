@@ -74,7 +74,7 @@ from Products.ERP5Type.Message import Message\n
 transaction = state_change[\'object\']\n
 \n
 source = transaction.getSource()\n
-resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\')\n
+resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\', no_balance_check=1)\n
 #transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
 \n
 # Get price and total_price.\n
