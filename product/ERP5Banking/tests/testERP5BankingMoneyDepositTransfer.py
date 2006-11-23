@@ -146,11 +146,27 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.counter = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
     self.tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
-    self.openCounterDate(site=self.paris)
-    self.openCounter(self.counter)
     self.createCashInventory(source=None, destination=self.counter, currency=self.currency_1,
                              line_list=line_list)
 
+    # now we need to create a user as Manager to do the test
+    # in order to have an assigment defined which is used to do transition
+    # Create an Organisation that will be used for users assignment
+    self.checkUserFolderType()
+    self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
+                          function='banking', group='baobab',  site='testsite/paris')
+    # define the user
+    user_dict = {
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
+      }
+    # call method to create this user
+    self.createERP5Users(user_dict)
+    self.logout()
+    self.login('super_user')
+
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
+    self.openCounter(self.counter)
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -366,7 +382,7 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
-    self.assertEqual('Insufficient Balance.', "%s" %(msg,))
+    self.assertTrue('Insufficient balance' in "%s" %(msg,))
 
 
   def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):

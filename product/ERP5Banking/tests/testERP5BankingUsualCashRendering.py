@@ -386,7 +386,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
-    self.assertEqual('Insufficient Balance.', "%s" %(msg,))
+    self.assertTrue('Insufficient balance' in "%s" %(msg,))
 
 
   def stepTryPlanUsualCashRenderingWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -410,7 +410,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
-    self.assertEqual('Insufficient Balance.', "%s" %(msg,))
+    self.assertTrue('Insufficient balance' in "%s" %(msg,))
 
   def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):
     """

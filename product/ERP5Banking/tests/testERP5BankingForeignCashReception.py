@@ -157,6 +157,8 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
                     resource_value=self.currency_1,
                     description='test',
 		    source_total_asset_price=250)
+    # set source reference
+    self.setDocumentSourceReference(self.foreign_cash_reception)
     # execute tic
     self.stepTic()
     # get the cash inventory document

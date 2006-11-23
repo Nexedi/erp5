@@ -394,7 +394,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
     #import pdb;pdb.set_trace()
-    self.assertEqual('Insufficient Balance.', "%s" %(msg,))
+    self.assertTrue('Insufficient balance' in "%s" %(msg,))
 
 
   def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):
