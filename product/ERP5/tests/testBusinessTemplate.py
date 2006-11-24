@@ -82,6 +82,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.login()
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
+    # create the fake catalog table
+    sql_connection = self.getSqlConnection()
+    sql = 'create table if not exists `fake_catalog` (`toto` BIGINT)'
+    sql_connection.manage_test(sql)
     self._catch_log_errors()
 
   def beforeTearDown(self):
@@ -1137,8 +1141,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Create some keys and tables
     """
+    # define variables
     related_key = 'fake_id | category/catalog/z_fake_method'
-    result_key = 'fake_catalog.uid'
+    result_key = 'catalog.title'
     result_table = 'fake_catalog'
     keyword_key = 'fake_keyword'
     full_text_key = 'fake_full_text'
@@ -1147,6 +1152,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     topic_key = 'fake_topic'
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
+    # result table
+    sql_search_tables = list(catalog.sql_search_tables)
+    sql_search_tables.append(result_table)
+    sql_search_tables.sort()
+    catalog.sql_search_tables = tuple(sql_search_tables)
+    self.failUnless(result_table in catalog.sql_search_tables)
     # result key
     sql_search_result_keys = list(catalog.sql_search_result_keys)
     sql_search_result_keys.append(result_key)
@@ -1159,12 +1170,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_search_related_keys.sort()
     catalog.sql_catalog_related_keys = tuple(sql_search_related_keys)
     self.failUnless(related_key in catalog.sql_catalog_related_keys)
-    # result table
-    sql_search_tables = list(catalog.sql_search_tables)
-    sql_search_tables.append(result_table)
-    sql_search_tables.sort()
-    catalog.sql_search_tables = tuple(sql_search_tables)
-    self.failUnless(result_table in catalog.sql_search_tables)
     # keyword keys
     sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
     sql_catalog_keyword_keys.append(keyword_key)
@@ -2407,7 +2412,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
+  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=1): #run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Catalog Method, Related Key, Result Key And Table'
