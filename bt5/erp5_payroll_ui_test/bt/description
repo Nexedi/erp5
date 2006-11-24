@@ -1,0 +1,5 @@
+Functional test suites for erp5_payroll.
+
+Contributions welcomed !
+
+Note: this demo was build for the current payroll BT5, which is quite french accounting-centric currently. This explain why so many specific datas (categories, persons, organisations, accounts,...) are required: to make payroll calculation process work.
