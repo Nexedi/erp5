@@ -39,9 +39,9 @@ from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCac
 from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
 
 ## try to import needed modules for cache plugins
-try:     
+try:
   import memcache
-except ImportError:  
+except ImportError:
   pass
 
 class CacheTool(BaseTool):
@@ -111,7 +111,7 @@ class CacheTool(BaseTool):
       pass
     self.erp5_sql_transactionless_connection.manage_test(my_query)
     if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache table successfully created.')
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache table successfully created.')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'parseDBConnectionString')
   def parseDBConnectionString(self, connection_string):
@@ -172,7 +172,7 @@ class CacheTool(BaseTool):
           cp.initCacheStorage()
         CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
     if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache updated.')
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache updated.')
     
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
   def clearCache(self, REQUEST=None):
@@ -182,7 +182,7 @@ class CacheTool(BaseTool):
       for cp in ram_cache_root[cf].getCachePluginList():
         cp.clearCache()
     if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache cleared.')
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache cleared.')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactory')
   def clearCacheFactory(self, cache_factory_id, REQUEST=None):
@@ -191,7 +191,7 @@ class CacheTool(BaseTool):
     if ram_cache_root.has_key(cache_factory_id):
       ram_cache_root[cache_factory_id].clearCache()
     if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache factory %s cleared.' %cache_factory_id)
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory %s cleared.' %cache_factory_id)
     
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactoryScope')
   def clearCacheFactoryScope(self, cache_factory_id, scope, REQUEST=None):
@@ -200,5 +200,5 @@ class CacheTool(BaseTool):
     if ram_cache_root.has_key(cache_factory_id):
       ram_cache_root[cache_factory_id].clearCacheForScope(scope)
     if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?portal_status_message=Cache factory scope %s cleared.' %cache_factory_id)  
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory scope %s cleared.' %cache_factory_id)
   
