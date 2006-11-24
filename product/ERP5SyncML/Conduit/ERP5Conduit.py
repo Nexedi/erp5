@@ -41,7 +41,7 @@ from email import Encoders
 from AccessControl import ClassSecurityInfo
 from AccessControl.PermissionMapping import setPermissionMapping
 from Products.ERP5Type import Permissions
-from Globals import InitializeClass, DTMLFile, PersistentMapping
+from Globals import PersistentMapping
 import pickle
 import string
 from xml.dom.ext import PrettyPrint
