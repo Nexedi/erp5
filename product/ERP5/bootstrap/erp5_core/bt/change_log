@@ -1,3 +1,6 @@
+2006-11-24 Aurel
+* add reset parameter when calling Base_viewWorklist
+
 2006-10-31 Seb
 * Added everything necessary to use portal_caches
 

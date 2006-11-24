@@ -68,16 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>module = context.getPortalObject().getDefaultModule(portal_type)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+module = context.getPortalObject().getDefaultModule(portal_type)\n
 \n
-redirect_url = \'%s/%s?simulation_state=%s\' % ( module.absolute_url()\n
+redirect_url = \'%s/%s?simulation_state=%s&reset=1\' % ( module.absolute_url()\n
                               , \'view\'\n
                               , simulation_state\n
                               )\n
 \n
 \n
 context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
