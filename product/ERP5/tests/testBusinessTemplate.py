@@ -2412,7 +2412,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=1): #run_all_test):
+  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Catalog Method, Related Key, Result Key And Table'
