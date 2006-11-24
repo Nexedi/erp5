@@ -24,15 +24,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Send To Validation</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=plan_action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>plan</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,23 +46,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>plan_action</string> </value>
+            <value> <string>confirm</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>confirmed</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>checkConsistency</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Send To Validation Action</string> </value>
+            <value> <string>Confirm</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -83,8 +83,9 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Manager</string>
                 <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

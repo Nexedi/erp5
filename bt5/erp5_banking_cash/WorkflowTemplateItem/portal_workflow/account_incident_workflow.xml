@@ -37,6 +37,10 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>groups</string> </key>
             <value>
               <tuple/>
@@ -58,9 +62,9 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
                 <string>Access contents information</string>
                 <string>Modify portal content</string>
+                <string>View</string>
                 <string>Add portal content</string>
               </tuple>
             </value>

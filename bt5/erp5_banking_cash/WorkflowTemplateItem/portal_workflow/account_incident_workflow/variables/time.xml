@@ -71,7 +71,9 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>state_change/getDateTime</string> </value>
+            <value> <string>state_change/getDateTime\r\n
+ \r\n
+</string> </value>
         </item>
       </dictionary>
     </pickle>

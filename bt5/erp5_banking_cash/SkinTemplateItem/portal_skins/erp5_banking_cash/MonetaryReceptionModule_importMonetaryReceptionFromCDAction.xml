@@ -114,12 +114,12 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                                   , reindex_object     = 1\n
                                                   , reference                 = CD_line[\'reference\']\n
                                                   , cash_number_range_start   = CD_line[\'range_start\']\n
-                                                  , cash_number_range_stop    = CD_line[\'range_stop\']\n
+                                                 , cash_number_range_stop    = CD_line[\'range_stop\']\n
                                                   )\n
     # create a cash container line\n
     container_line = movement_container.newContent(portal_type      = \'Container Line\'\n
                                                    , reindex_object = 1\n
-                                                   , resource_value = CD_head_dict[\'resource\']\n
+                                                   , resource_value =CD_head_dict[\'resource\']\n
                                                    , quantity       = CD_line[\'quantity\']\n
                                                    )\n
 \n
@@ -309,6 +309,13 @@ def split_lines(CD_file_line_list):\n
                         ,\'range_stop\'  : line_range_stop\n
                         ,\'quantity\'    : line_quantity}\n
                        )\n
+    # check reference doesn\'t already exist for this resource\n
+    movement_container_list = context.portal_catalog(portal_type = "Cash Container Item", reference = line_container_id)\n
+    if len(movement_container_list) > 0:\n
+      pass\n
+      #return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
+\n
+\n
 \n
   if line_number > 0:\n
      return  {\'error\':False, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'00\'],\'lines_dict\' : CD_line_list}\n

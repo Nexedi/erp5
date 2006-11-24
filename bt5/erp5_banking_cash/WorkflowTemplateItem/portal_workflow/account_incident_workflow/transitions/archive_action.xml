@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Deliver</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -83,8 +83,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Manager</string>
                 <string>Assignee</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>

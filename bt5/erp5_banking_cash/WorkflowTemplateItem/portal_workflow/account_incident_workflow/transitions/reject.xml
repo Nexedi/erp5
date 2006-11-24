@@ -46,23 +46,29 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>archive</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateSourceAndDestination</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>var_exprs</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -86,6 +92,27 @@
                 <string>Assignee</string>
                 <string>Manager</string>
               </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
