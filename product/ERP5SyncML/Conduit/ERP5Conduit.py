@@ -41,6 +41,7 @@ from email import Encoders
 from AccessControl import ClassSecurityInfo
 from AccessControl.PermissionMapping import setPermissionMapping
 from Products.ERP5Type import Permissions
+from Globals import InitializeClass, DTMLFile, PersistentMapping
 import pickle
 import string
 from xml.dom.ext import PrettyPrint
@@ -696,7 +697,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     user_role_list = map(lambda x:x[0],object.get_local_roles())
     object.manage_delLocalRoles(user_role_list)
     if hasattr(object,'workflow_history'):
-      object.workflow_history = {}
+      object.workflow_history = PersistentMapping() 
     if xml.nodeName.find('xupdate')>= 0:
       xml = self.getElementNodeList(xml)[0]
     for subnode in self.getElementNodeList(xml):
