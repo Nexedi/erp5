@@ -346,6 +346,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -450,6 +454,10 @@
                         <tuple>
                           <string>Sale Invoice Transaction</string>
                           <string>Sale Invoice Transaction</string>
+                        </tuple>
+                        <tuple>
+                          <string>Accounting Transaction</string>
+                          <string>Accounting Transaction</string>
                         </tuple>
                       </list>
                     </value>
