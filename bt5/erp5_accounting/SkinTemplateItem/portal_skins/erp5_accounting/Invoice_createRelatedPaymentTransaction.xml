@@ -69,12 +69,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""Create a related payment transaction, using the account `node`, the payment\n
-`payment`, and setting the payment mode `payment_mode`.\n
+`payment`, and setting the payment mode `payment_mode`. An optional `date` can\n
+be provided, but by default the transaction is created at the system date.\n
 """\n
+from DateTime import DateTime\n
 # translate with Base_translateString which is a bit more robust during activities\n
 # because it doesn\'t rely on REQUEST[\'PARENTS\']\n
 N_ = context.Base_translateString\n
 \n
+date = DateTime()\n
 portal = context.getPortalObject()\n
 payment_dict = {}\n
 is_source = context.AccountingTransaction_isSourceView()\n
@@ -95,8 +98,8 @@ related_payment = portal.accounting_module.newContent(\n
                                               \'utf8\', \'repr\')))),\n
   source_section=context.getSourceSection(),\n
   destination_section=context.getDestinationSection(),\n
-  stop_date=context.getStopDate(),\n
-  start_date=context.getStartDate(),\n
+  stop_date=date,\n
+  start_date=date,\n
   resource=context.getResource(),\n
   causality_value=context,\n
   created_by_builder=1, # XXX this prevent init script from creating lines.\n
@@ -164,7 +167,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>node, payment_mode, payment, batch_mode=0</string> </value>
+            <value> <string>node, payment_mode, payment, date=None, batch_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -184,7 +187,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -193,7 +196,9 @@ else:\n
                             <string>node</string>
                             <string>payment_mode</string>
                             <string>payment</string>
+                            <string>date</string>
                             <string>batch_mode</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>N_</string>
@@ -223,6 +228,7 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <int>0</int>
               </tuple>
             </value>
