@@ -33,6 +33,7 @@ from AccessControl import getSecurityManager
 from zLOG import LOG
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
+DEFAULT_CACHE_FACTORY = 'erp5_user_interface'
 is_cache_initialized = 0
 
 def initializePortalCachingProperties(self):
@@ -45,8 +46,8 @@ def initializePortalCachingProperties(self):
     self.getPortalObject().portal_caches.updateCache()
   
 class CacheFactory:
-  """
-  CacheFactory is a RAM based object which contains different cache plugin objects ordered in a list.
+  """ CacheFactory is a RAM based object which contains different cache plugin
+  objects ordered in a list.
   """
   
   cache_plugins = []
@@ -59,7 +60,7 @@ class CacheFactory:
     ## separete local and shared cache plugins
     self.quick_cache = self.cache_plugins[0]
     try:
-      self.shared_caches =self.cache_plugins[1:]  
+      self.shared_caches =self.cache_plugins[1:]
     except IndexError:
       self.shared_caches = []
     
@@ -73,8 +74,8 @@ class CacheFactory:
     self.cache_expire_check_interval = min(l)
     
   def __call__(self, callable_object, cache_id, scope, cache_duration=None, *args, **kwd):
-    """ 
-    When CacheFactory is called it will try to return cached value using appropriate cache plugin.
+    """ When CacheFactory is called it will try to return cached value using
+    appropriate cache plugin.
     """
     cache_duration = self.cache_duration
     
@@ -91,7 +92,9 @@ class CacheFactory:
           cache_entry = shared_cache.get(cache_id, scope)
           value = cache_entry.getValue()
           ## update local cache
-          self.quick_cache.set(cache_id, scope, value, cache_entry.cache_duration, cache_entry.calculation_time)
+          self.quick_cache.set(cache_id, scope, value,
+                              cache_entry.cache_duration,
+                              cache_entry.calculation_time)
           return value
             
     ## not in any available cache plugins calculate and set to local ..
@@ -110,7 +113,7 @@ class CacheFactory:
     """ Expire (if needed) cache plugins """
     now = time()
     if now > (self._last_cache_expire_check_at + self.cache_expire_check_interval):
-      self._last_cache_expire_check_at = now    
+      self._last_cache_expire_check_at = now
       for cache_plugin in self.getCachePluginList():
         cache_plugin.expireOldCacheEntries()
     
@@ -126,7 +129,7 @@ class CacheFactory:
     """ get cache plugin by its class name """
     for cp in self.cache_plugins:
       if cache_plugin_name == cp.__class__.__name__:
-        return cp  
+        return cp
     return None
 
   def clearCache(self):
@@ -135,9 +138,8 @@ class CacheFactory:
       cp.clearCache()
  
 class CachingMethod:
-  """
-  CachingMethod is a RAM based global Zope class which contains different CacheFactory objects
-  for every available ERP5 site instance.
+  """CachingMethod is a RAM based global Zope class which contains different
+  CacheFactory objects for every available ERP5 site instance.
   """
   
   ## cache factories will be initialized for every ERP5 site
@@ -146,8 +148,10 @@ class CachingMethod:
   ## replace string table for some control characters not allowed in cache id
   _cache_id_translate_table = string.maketrans("""[]()<>'", """,'__________')
     
-  def __init__(self, callable_object, id, cache_duration = 180, cache_factory = 'erp5_user_interface'):
-    """
+  def __init__(self, callable_object, id, cache_duration=180,
+               cache_factory=DEFAULT_CACHE_FACTORY):
+    """Wrap a callable object in a caching method.
+    
     callable_object must be callable.
     id is used to identify what call should be treated as the same call.
     cache_duration is an old argument kept for backwards compatibility. 
@@ -155,7 +159,8 @@ class CachingMethod:
     cache_factory is the id of the cache_factory to use.
     """
     if not callable(callable_object):
-      raise CachedMethodError, "callable_object %s is not callable" % str(callable_object)
+      raise CachedMethodError, "callable_object %s is not callable" % str(
+                                                                callable_object)
     if not id:
       raise CachedMethodError, "id must be specified"
     self.id = id
@@ -164,9 +169,7 @@ class CachingMethod:
     self.cache_factory = cache_factory
     
   def __call__(self, *args, **kwd):
-    """ Call the method or return cached value using appropriate cache plugin """
-    ## CachingMethod is  global Zope class and thus we must make sure
-    #erp5_site_id = kwd.get('portal_path', ('','erp5'))[1]
+    """Call the method or return cached value using appropriate cache plugin """
    
     ## cache scope is based on user which is a kwd argument
     scope = kwd.get('scope', DEFAULT_CACHE_SCOPE)
@@ -179,12 +182,9 @@ class CachingMethod:
       ## which is faster than checking for keys
       # It is very important to take the factories dictionnary
       # on CachingMethod instead of self, we want a global variable
-      value = CachingMethod.factories[self.cache_factory](self.callable_object, 
-                                                               cache_id,
-                                                               scope, 
-                                                               self.cache_duration, 
-                                                               *args, 
-                                                               **kwd)
+      value = CachingMethod.factories[self.cache_factory](
+              self.callable_object, cache_id, scope, self.cache_duration,
+              *args, **kwd)
     except KeyError:
       ## no caching enabled for this site or no such cache factory
       value = self.callable_object(*args, **kwd)
@@ -195,7 +195,7 @@ class CachingMethod:
     ## generate cache id out of arguments passed.
     ## depending on arguments we may have different 
     ## cache_id for same method_id 
-    cache_id = [method_id]    
+    cache_id = [method_id]
     key_list = kwd.keys()
     key_list.sort()
     for arg in args:
@@ -203,7 +203,8 @@ class CachingMethod:
     for key in key_list:
       cache_id.append((key, str(kwd[key])))
     cache_id = str(cache_id)
-    ## because some cache backends don't allow some chars in cached id we make sure to replace them
+    # because some cache backends don't allow some chars in cached id we make
+    # sure to replace them
     cache_id = cache_id.translate(self._cache_id_translate_table)
     return cache_id
                 
