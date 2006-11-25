@@ -37,7 +37,8 @@ class DummyCache(BaseCache):
   def __init__(self, params):
     BaseCache.__init__(self)
  
-  def __call__(self, callable_object, cache_id, cache_duration=None, *args, **kwd):
+  def __call__(self, callable_object, cache_id, scope, cache_duration=None,
+              *args, **kwd):
     ## Just calculate and return result - no caching 
     return callable_object(*args, **kwd)
         
@@ -47,10 +48,11 @@ class DummyCache(BaseCache):
   def get(self, cache_id, scope, default=None):
     pass
        
-  def set(self, cache_id, scope, value, cache_duration= None, calculation_time=0):
+  def set(self, cache_id, scope, value,
+          cache_duration=None, calculation_time=0):
     pass
 
-  def expireOldCacheEntries(self, forceCheck = False):
+  def expireOldCacheEntries(self, forceCheck=False):
     pass
         
   def delete(self, cache_id, scope):
