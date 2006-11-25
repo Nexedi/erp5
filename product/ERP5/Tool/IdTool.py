@@ -47,7 +47,6 @@ class IdTool(UniqueObject, Folder):
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'
-  allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',)
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -83,7 +82,7 @@ class IdTool(UniqueObject, Folder):
       last_id = self.dict_ids.get(id_group, default)
     return last_id
         
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'setLastGeneratedId')
   def setLastGeneratedId(self,new_id,id_group=None):
     """
@@ -149,10 +148,12 @@ class IdTool(UniqueObject, Folder):
       It's a 64bits number, so it can look ugly and/or huge to users.
     """
     tid = get_transaction()._id;
-    return (tid < 0) and (2**63 - tid) or tid; # It's a 64 bits number, but sometimes it returns as a negative int... so make it positive again and add 2**63.
+    # It's a 64 bits number, but sometimes it returns as a negative int... so
+    # make it positive again and add 2**63.
+    return (tid < 0) and (2**63 - tid) or tid;
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'copyDictLengthIds')
+                            'getDictLengthIdsItems')
   def getDictLengthIdsItems(self):
     """
       Return a copy of dict_length_ids.
@@ -195,5 +196,6 @@ class IdTool(UniqueObject, Folder):
         self.dict_length_ids[id_group]=Length(new_id)
       self.dict_length_ids[id_group].set(new_id)
     return new_id
+  
 
 InitializeClass(IdTool)
