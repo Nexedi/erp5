@@ -75,10 +75,10 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
-request=context.REQUEST\n
-getObject = context.getPortalObject().portal_catalog.getObject\n
-getActionsFor = context.getPortalObject().portal_workflow.getActionsFor\n
-\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+getObject = portal.portal_catalog.getObject\n
+getActionsFor = portal.portal_workflow.getActionsFor\n
 \n
 form = getattr(context, dialog_id)\n
 kw = {}\n
@@ -107,14 +107,21 @@ len_selection_list = len(selection_list)\n
 if len_selection_list == context.countFolder():\n
   value_error = N_("Refusing to process the entire module")\n
 else:\n
+  # generate a random tag\n
+  tag = \'folder_workflow_action_%s\' % portal.portal_ids.generateNewLongId()\n
+\n
   processed_object_count = 0    \n
   for o in selection_list:\n
     o = o.getObject()\n
     if workflow_action in [ai[\'id\'] for ai in getActionsFor(o)\n
                                           if ai.has_key(\'id\')]:\n
-      o.activate().Base_workflowStatusModify(batch = 1, **kw)\n
+      o.activate(tag=tag).Base_workflowStatusModify(batch=1, **kw)\n
       processed_object_count += 1\n
-    \n
+  # activate something on the folder, this way the folder will be marked to\n
+  # have activity and the user will be informed when this batch processing is\n
+  # finished\n
+  context.activate(after_tag=tag).getTitle()\n
+\n
   value_error = N_("Workflow modification in progress for "\n
         "${processed_object_count} out of ${selected_object_count}",\n
          mapping=dict(processed_object_count=processed_object_count,\n
@@ -191,6 +198,7 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal</string>
                             <string>getObject</string>
                             <string>getActionsFor</string>
                             <string>getattr</string>
@@ -211,6 +219,7 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>len</string>
                             <string>len_selection_list</string>
                             <string>value_error</string>
+                            <string>tag</string>
                             <string>processed_object_count</string>
                             <string>o</string>
                             <string>ai</string>
