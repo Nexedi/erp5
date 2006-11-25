@@ -19,6 +19,22 @@
 <td><textarea name="description" rows="5" cols="80">&dtml-description;</textarea></td>
 </tr>
 
+<dtml-if "context.portal_caches">
+<tr>
+<th align="left">Worklists Cache</th>
+<td>
+  <select name="cache_factory_id" >
+  <option value=""/>
+  <dtml-in "context.portal_caches.objectItems()">
+    <option value="&dtml-sequence-key;" 
+       <dtml-if "_['sequence-key']==getattr(context, 'cache_factory_id', '')">SELECTED</dtml-if>
+    >&dtml-title_or_id;</option>
+  </dtml-in>
+  </select>
+</td>
+</tr>
+</dtml-if>
+
 <tr>
 <th align="left">'Manager' role bypasses guards</th>
 <td>
