@@ -1053,9 +1053,8 @@ class TestPropertySheet:
       self.assertEquals(self.getPersonModule(), obj.aq_parent)
       self.assertEquals(self.getPersonModule(), copy.aq_parent)
 
-    def test_21_ActionCondition(self,quiet=quiet, run=1):
-      """asContext method return a temporary copy of an object.
-      Any modification made to the copy does not change the original object.
+    def test_21_ActionCondition(self, quiet=quiet, run=run_all_test):
+      """Tests action conditions
       """
       type_tool = self.getTypeTool()
       portal_type_object = type_tool['Organisation']
@@ -1087,7 +1086,6 @@ class TestPropertySheet:
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
       self.failUnless('action3' in action_id_list)
-
 
 if __name__ == '__main__':
   framework()
