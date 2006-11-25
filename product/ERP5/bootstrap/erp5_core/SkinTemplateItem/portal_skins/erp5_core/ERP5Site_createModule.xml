@@ -75,14 +75,12 @@ from Products.Formulator.Errors import ValidationError, FormValidationError\n
 request=context.REQUEST\n
 \n
 # TODO\n
-#   - Allow in the module only the new document, we must activate the filter\n
 #   - handle an optionnal "description" parameter\n
 #   - set the form action to "Base_edit"\n
 #   - print : pdf\n
 #   - export : xml\n
 #   - report : last modified\n
 #   - security : 5A\n
-\n
 \n
 portal = context.getPortalObject()\n
 portal_types = portal.portal_types\n
@@ -94,21 +92,21 @@ context.portal_types.manage_addTypeInformation( \'ERP5 Type Information\'\n
                                               , id            = module_portal_type\n
                                               )\n
 module_portal_type_value = context.portal_types[module_portal_type]\n
-# Set allowed content types\n
-# Following is not permitted in a python script\n
-# context.portal_types[module_portal_type_value].allowed_content_types = (object_portal_type_id, )\n
-# module_portal_type_value.edit( filter_content_types  = 1\n
-#                              , allowed_content_types = (object_portal_type_id, )\n
-#                              )\n
+# Set icon and allowed content types\n
+module_portal_type_value.manage_changeProperties(\n
+               content_icon=\'folder_icon.gif\',\n
+               filter_content_types=1,\n
+               allowed_content_types = (object_portal_type_id, ))\n
+\n
 action_list = module_portal_type_value.listActions()\n
 module_portal_type_value.deleteActions(selections=range(0,len(action_list)))\n
-# Parameters to addAction : id, name, action, condition, permission, category, visible=1, REQUEST=None\n
 module_portal_type_value.addAction( "view"\n
                                   , "View"\n
                                   , "string:${object_url}/Folder_viewContentList"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_view"\n
+                                  , priority=1.0\n
                                   )\n
 module_portal_type_value.addAction( "sort_on"\n
                                   , "Sort"\n
@@ -116,6 +114,7 @@ module_portal_type_value.addAction( "sort_on"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_sort"\n
+                                  , priority=2.0\n
                                   )\n
 module_portal_type_value.addAction( "list_ui"\n
                                   , "Modify UI"\n
@@ -123,6 +122,7 @@ module_portal_type_value.addAction( "list_ui"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_ui"\n
+                                  , priority=3.0\n
                                   )\n
 module_portal_type_value.addAction( "print_pdf"\n
                                   , "Print"\n
@@ -130,6 +130,7 @@ module_portal_type_value.addAction( "print_pdf"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_print"\n
+                                  , priority=4.0\n
                                   )\n
 # Create the skin directory if does not exist yet\n
 portal_skins_folder_name = portal_skins_folder\n
@@ -160,16 +161,25 @@ default_groups = [\'right\', \'center\', \'bottom\', \'hidden\']\n
 for group in default_groups:\n
   form_view_object.add_group(group)\n
 \n
+form_view_object.manage_addProduct[\'Formulator\'].manage_addField(\n
+        id=\'my_title\',\n
+        fieldname=\'StringField\',\n
+        title=\'Title\')\n
+\n
 # Then add the portal_type corresponding to the new object\n
 portal_types.manage_addTypeInformation(\'ERP5 Type Information\'\n
                                       , typeinfo_name = \'ERP5Type: ERP5 Document\'\n
                                       , id            = object_portal_type_id\n
                                       )\n
 object_portal_type_value = portal_types[object_portal_type_id]\n
+\n
+# Chain to edit_workflow\n
+portal.portal_workflow.setChainForPortalTypes([object_portal_type_id],\n
+                                              \'edit_workflow\')\n
+\n
 # Set default actions\n
 action_list = object_portal_type_value.listActions()\n
 object_portal_type_value.deleteActions(selections=range(0,len(action_list)))\n
-# parameters to addAction : id, name, action, condition, permission, category, visible=1, REQUEST=None\n
 object_portal_type_value.addAction( "view"\n
                                   , "View"\n
                                   , "string:${object_url}/%s" % form_view_id\n
