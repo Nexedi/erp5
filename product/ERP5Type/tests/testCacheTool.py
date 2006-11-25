@@ -26,10 +26,6 @@
 #
 ##############################################################################
 
-
-from random import randint
-from pprint import pprint
-
 import os, sys
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -40,13 +36,9 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
-                                              VALIDATE_ERROR_STATE
-from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
-from Products.ERP5Type.Document.Organisation import Organisation
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
+from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
+from Products.ERP5Type.Cache import CachingMethod
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 import time
 
@@ -54,6 +46,17 @@ try:
   from transaction import get as get_transaction
 except ImportError:
   pass
+
+class TestingCache(DummyCache):
+  """A dummy cache that mark cache miss, so that you can later count access
+  using getCacheMisses() """
+  def __init__(self, params):
+    DummyCache.__init__(self, params)
+  
+  def __call__(self, callable_object, cache_id, scope, cache_duration=None,
+                *args, **kwd):
+    self.markCacheMiss(1)
+    return callable_object(*args, **kwd)
 
 class TestCacheTool(ERP5TypeTestCase):
 
@@ -71,7 +74,7 @@ class TestCacheTool(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def test_01_CheckCacheTool(self, quiet=0, run=run_all_test):
-    if not run: 
+    if not run:
       return
     if not quiet:
       message = '\nCheck CacheTool '
@@ -84,7 +87,7 @@ class TestCacheTool(ERP5TypeTestCase):
 
 
   def test_02_CheckPortalTypes(self, quiet=0, run=run_all_test):
-    if not run: 
+    if not run:
       return
     if not quiet:
       message = '\nCheck Portal Types'
@@ -104,7 +107,7 @@ class TestCacheTool(ERP5TypeTestCase):
       get_transaction().commit()
       
   def test_03_CreateCacheFactories(self, quiet=0, run=run_all_test):
-    if not run: 
+    if not run:
       return
     if not quiet:
       message = '\nCreate Cache Tool Factories'
@@ -113,28 +116,30 @@ class TestCacheTool(ERP5TypeTestCase):
       portal = self.getPortal()
       portal_caches = portal.portal_caches
         
-      ## Cache plugins are organised into 'Cache factories' so we create factories first
-      
-      ## ram_cache_factory (to test Ram Cache Plugin) 
+      # Cache plugins are organised into 'Cache factories' so we create
+      # factories first ram_cache_factory (to test Ram Cache Plugin) 
       ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
                                                   id = 'ram_cache_factory',
                                                   container=portal_caches)
-      ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache", container=ram_cache_factory)
+      ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache",
+                                                    container=ram_cache_factory)
       ram_cache_plugin.setIntIndex(0)
 
       
       ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
       dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                    id = 'distributed_ram_cache_factory',
-                                                    container=portal_caches)
-      dram_cache_plugin = dram_cache_factory.newContent(portal_type="Distributed Ram Cache", container=dram_cache_factory)
-      dram_cache_plugin.setIntIndex(0)                                             
+                                          id = 'distributed_ram_cache_factory',
+                                          container=portal_caches)
+      dram_cache_plugin = dram_cache_factory.newContent(
+              portal_type="Distributed Ram Cache", container=dram_cache_factory)
+      dram_cache_plugin.setIntIndex(0)
       
       ## sql_cache_factory (to test SQL Cache Plugin) 
       sql_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
                                                    id = 'sql_cache_factory',
                                                    container=portal_caches)
-      sql_cache_plugin = sql_cache_factory.newContent(portal_type="SQL Cache", container=sql_cache_factory)
+      sql_cache_plugin = sql_cache_factory.newContent(
+                      portal_type="SQL Cache", container=sql_cache_factory)
       sql_cache_plugin.setIntIndex(0)
       
       ## erp5_user_factory (to test a combination of all cache plugins)
@@ -142,11 +147,14 @@ class TestCacheTool(ERP5TypeTestCase):
                                                    id = "erp5_user_factory",
                                                    container=portal_caches)
       
-      ram_cache_plugin = erp5_user_factory.newContent(portal_type="Ram Cache", container=erp5_user_factory)
+      ram_cache_plugin = erp5_user_factory.newContent(
+              portal_type="Ram Cache", container=erp5_user_factory)
       ram_cache_plugin.setIntIndex(0)
-      dram_cache_plugin = erp5_user_factory.newContent(portal_type="Distributed Ram Cache", container=erp5_user_factory)
-      dram_cache_plugin.setIntIndex(1)                                             
-      sql_cache_plugin = erp5_user_factory.newContent(portal_type="SQL Cache", container=erp5_user_factory)
+      dram_cache_plugin = erp5_user_factory.newContent(
+              portal_type="Distributed Ram Cache", container=erp5_user_factory)
+      dram_cache_plugin.setIntIndex(1)
+      sql_cache_plugin = erp5_user_factory.newContent(
+              portal_type="SQL Cache", container=erp5_user_factory)
       sql_cache_plugin.setIntIndex(2)
       
       ##
@@ -163,7 +171,7 @@ class TestCacheTool(ERP5TypeTestCase):
       self.assert_('erp5_user_factory' in CachingMethod.factories)
       
   def test_04_CreateCachedMethod(self, quiet=0, run=run_all_test):
-    if not run: 
+    if not run:
       return
     if not quiet:
       message = '\nCreate Cache Method (Python Script)'
@@ -187,14 +195,15 @@ def veryExpensiveMethod(value):
 result = veryExpensiveMethod(value)
 return result
 """
-      portal.manage_addProduct['PythonScripts'].manage_addPythonScript(id=py_script_id)
+      portal.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                  id=py_script_id)
       py_script_obj = getattr(portal, py_script_id)
       py_script_obj.ZPythonScript_edit(py_script_params, py_script_body)
       get_transaction().commit()
 
   def test_05_CacheFactoryOnePlugin(self, quiet=0, run=run_all_test):
     """ Test cache factory containing only one cache plugin. """
-    if not run: 
+    if not run:
       return
     if not quiet:
       message = '\nTest each type of cache plugin individually.'
@@ -204,16 +213,21 @@ return result
       from Products.ERP5Type.Cache import CachingMethod
       py_script_id = "testCachedMethod"
       py_script_obj = getattr(portal, py_script_id)
-      for cf_name in ('ram_cache_factory', 'distributed_ram_cache_factory', 'sql_cache_factory'):
-        my_cache = CachingMethod(py_script_obj, 'py_script_obj', cache_factory=cf_name)
+      for cf_name in ('ram_cache_factory',
+                      'distributed_ram_cache_factory',
+                      'sql_cache_factory'):
+        my_cache = CachingMethod(py_script_obj,
+                                 'py_script_obj',
+                                 cache_factory=cf_name)
         self._cacheFactoryInstanceTest(my_cache, cf_name)
         
   def test_06_CacheFactoryMultiPlugins(self, quiet=0, run=run_all_test):
     """ Test a cache factory containing multiple cache plugins. """
-    if not run: 
+    if not run:
       return
     if not quiet:
-      message = '\nTest combination of available cache plugins under a cache factory'
+      message = '\nTest combination of available cache plugins under a cache'\
+                ' factory'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
       portal = self.getPortal()
@@ -221,7 +235,9 @@ return result
       py_script_id = "testCachedMethod"
       py_script_obj = getattr(portal, py_script_id)
       cf_name = 'erp5_user_factory'
-      my_cache = CachingMethod(py_script_obj, 'py_script_obj', cache_factory=cf_name)
+      my_cache = CachingMethod(py_script_obj,
+                               'py_script_obj',
+                               cache_factory=cf_name)
       self._cacheFactoryInstanceTest(my_cache, cf_name)
   
   def _cacheFactoryInstanceTest(self, my_cache, cf_name):
@@ -244,9 +260,10 @@ return result
       calculation_time = end-start
       print "\n\tCalculation time (2nd call)", calculation_time
 
-      ## check if cache works by getting calculation_time for last cache operation
-      ## even remote cache must have access time less than a second :-)
-      ## if it's greater than method wasn't previously cached and was calculated instead
+      # check if cache works by getting calculation_time for last cache
+      # operation even remote cache must have access time less than a second.
+      # if it's greater than method wasn't previously cached and was calculated
+      # instead
       self.assert_(1.0 > calculation_time)
       
       ## check if equal.
@@ -264,7 +281,7 @@ return result
       
       ## Cache  cleared shouldn't be previously cached
       self.assert_(1.0 < calculation_time)
-      
+
 if __name__ == '__main__':
     framework()
 else:
