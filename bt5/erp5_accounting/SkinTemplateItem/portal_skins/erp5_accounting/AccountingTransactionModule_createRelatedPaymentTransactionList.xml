@@ -98,10 +98,12 @@ if len(object_list) > 100:\n
         context.absolute_url(), N_(\n
          \'Refusing to process more than 100 objects, check your selection\')))\n
 \n
+tag = \'payment_creation_%s\' % portal.portal_ids.generateNewLongId()\n
 activated = 0\n
 for obj in object_list:\n
   if obj.portal_type in invoice_type_list:\n
-    obj.getObject().activate().Invoice_createRelatedPaymentTransaction(node=node,\n
+    obj.getObject().activate(tag=tag).Invoice_createRelatedPaymentTransaction(\n
+                                                  node=node,\n
                                                   payment_mode=payment_mode,\n
                                                   payment=payment,\n
                                                   batch_mode=1)\n
@@ -111,12 +113,17 @@ if not activated:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
         context.absolute_url(), N_(\'No Invoice in your selection\')))\n
-  \n
+\n
+# activate something on the folder\n
+context.activate(after_tag=tag).getTitle()\n
+\n
 return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
         context.absolute_url(), N_(\n
-          \'Payments Creation for ${activated_invoice_count} on ${total_selection_count} Invoices in Progress\',\n
-           mapping=dict(activated_invoice_count=activated, total_selection_count=len(object_list)))))\n
+          \'Payments Creation for ${activated_invoice_count} on\'\n
+          \' ${total_selection_count} Invoices in Progress\',\n
+          mapping=dict(activated_invoice_count=activated,\n
+                       total_selection_count=len(object_list)))))\n
 
 
 ]]></string> </value>
@@ -185,6 +192,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>object_list</string>
                             <string>dict</string>
                             <string>len</string>
+                            <string>tag</string>
                             <string>activated</string>
                             <string>obj</string>
                           </tuple>
