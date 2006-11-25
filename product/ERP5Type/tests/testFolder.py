@@ -10,10 +10,8 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-#from random import randint
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG, INFO
+from zLOG import LOG
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -46,7 +44,8 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       """
         Executed after each test_*.
       """
-      self.getPortal().manage_delObjects(ids=[self.folder.getId()])
+      self.getPortal().manage_delObjects(ids=[self.folder.getId(),
+                                          self.other_folder.getId()])
       clearCache()
 
     def newContent(self):
@@ -57,13 +56,15 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
     
     def test_01_folderType(self, quiet=0, run=1):
       """
-        Test if the present Folder class is the ERP5 version of Folder, not CMF's.
+        Test if the present Folder class is the ERP5 version of Folder, not
+        CMF's.
       """
       if not run : return
       if not quiet:
         message = 'Test folderType value'
         LOG('Testing... ', 0, message)
-      self.assertTrue(isinstance(self.getTypesTool()['Folder'], ERP5TypeInformation))
+      self.assertTrue(isinstance(self.getTypesTool()['Folder'],
+                      ERP5TypeInformation))
 
     def test_02_defaultGenerateNewId(self, quiet=0, run=1):
       """
@@ -74,13 +75,13 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       if not quiet:
         message = 'Test default generateNewId'
         LOG('Testing... ', 0, message)
-      self.assertEquals(self.folder.getIdGenerator(), '') # No id generator defined
-      #assertEqual(self.folder.getIdGroup(), None) # Folder belongs to no group (this would trigger use of portalIds).
+      # No id generator defined
+      self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
-      object = self.newContent()
-      self.assertEquals(object.getId(), '1')
-      object = self.newContent()
-      self.assertEquals(object.getId(), '2')
+      obj = self.newContent()
+      self.assertEquals(obj.getId(), '1')
+      obj = self.newContent()
+      self.assertEquals(obj.getId(), '2')
     
     def test_03_customGenerateNewId(self, quiet=0, run=1):
       """
@@ -93,13 +94,14 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       id_generator_script_name = 'testIdGenerator'
       id_generator_id_list = ['first_id', 'second_id']
       createZODBPythonScript(self.getPortal().portal_skins.erp5_core,
-                             id_generator_script_name, '', 'return %s[len(context)]' % (repr(id_generator_id_list), ))
+               id_generator_script_name, '',
+               'return %s[len(context)]' % (repr(id_generator_id_list), ))
       self.folder.setIdGenerator(id_generator_script_name)
       self.assertEquals(self.folder.getIdGenerator(), id_generator_script_name)
       for expected_length in xrange(len(id_generator_id_list)):
         self.assertEquals(len(self.folder), expected_length)
-        object = self.newContent()
-        self.assertEquals(object.getId(), id_generator_id_list[expected_length])
+        obj = self.newContent()
+        self.assertEquals(obj.getId(), id_generator_id_list[expected_length])
  
     def _setAllowedContentTypesForFolderType(self, allowed_content_types):
       """Set allowed content types for Folder portal type."""
