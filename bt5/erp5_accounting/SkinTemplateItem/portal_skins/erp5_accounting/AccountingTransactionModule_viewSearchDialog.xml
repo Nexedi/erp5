@@ -78,6 +78,7 @@
                         <string>your_title</string>
                         <string>your_simulation_state</string>
                         <string>your_node</string>
+                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>
@@ -92,8 +93,8 @@
                         <string>your_amount</string>
                         <string>your_amount_range_min</string>
                         <string>your_amount_range_max</string>
-                        <string>your_creation_date_range_max</string>
                         <string>your_creation_date_range_min</string>
+                        <string>your_creation_date_range_max</string>
                         <string>your_payment_mode_relative_url</string>
                       </list>
                     </value>
