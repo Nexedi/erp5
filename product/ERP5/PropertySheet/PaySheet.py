@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                         Kevin Deldycke <kevin_AT_nexedi_DOT_com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,24 +28,23 @@
 ##############################################################################
 
 class PaySheet:
-    """
-        Properties for PaySheet Transaction objects
-    """
+  """
+    Properties for PaySheet Transaction objects
+  """
 
-    _properties = (
-        {   'id'          : 'gross_salary', #XXX data duplication
-            'description' : '',
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'work_duration',
-            'description' : 'Duration of work.',
-            'type'        : 'date',
-            'mode'        : 'w' },
-        {   'id'          : 'advantage', #XXX data duplication
-            'description' : '',
-            'type'        : 'float',
-            'mode'        : 'w' },
-    )
+  _properties = (
+    { 'id'          : 'gross_salary' #XXX data duplication
+    , 'description' : ''
+    , 'type'        : 'float'
+    , 'mode'        : 'w'
+    },
+    { 'id'          : 'work_duration'
+    , 'description' : 'Duration of work, per month, in hours' #XXX too specific, should be more generic
+    , 'type'        : 'float'
+    , 'mode'        : 'w'
+    },
+  )
 
-    _categories = ( 'source', 'destination',
-                    'source_section', 'destination_section')
+  _categories = ( 'source', 'destination'
+                , 'source_section', 'destination_section'
+                )
