@@ -72,16 +72,11 @@
       <tr stylecmd="(\'LEFTPADDING\',8)">\n
         <td><tal:block content="python: (\' \' * 3) + line[\'service_title\']"/> </td>\n
         <td><tal:block content="python: line[\'salary_range_title\']"/> </td>\n
-        <td><tal:block content="python: line[\'base\']"\n
-                      condition="python: line[\'base\'] != None"/> </td>\n
-        <td><tal:block content="python: line[\'employer_rate\']"\n
-                      condition="python: line[\'employer_rate\'] != None"/> </td>\n
-        <td><tal:block content="python: line[\'employer_share\']"\n
-                      condition="python: line[\'employer_share\'] != None"/> </td>\n
-        <td><tal:block content="python: line[\'employee_rate\']"\n
-                      condition="python: line[\'employee_rate\'] != None"/> </td>\n
-        <td><tal:block content="python: line[\'employee_share\']"\n
-                      condition="python: line[\'employee_share\'] != None"/> </td>\n
+        <td><tal:block content="python: line[\'base\']"           condition="python: line[\'base\']           != None"/> </td>\n
+        <td><tal:block content="python: line[\'employer_rate\']"  condition="python: line[\'employer_rate\']  != None"/> </td>\n
+        <td><tal:block content="python: line[\'employer_share\']" condition="python: line[\'employer_share\'] != None"/> </td>\n
+        <td><tal:block content="python: line[\'employee_rate\']"  condition="python: line[\'employee_rate\']  != None"/> </td>\n
+        <td><tal:block content="python: line[\'employee_share\']" condition="python: line[\'employee_share\'] != None"/> </td>\n
       </tr>\n
       <tr tal:condition="python: line[\'description\'] != None" stylecmd="(\'LEFTPADDING\',8)">\n
         <td><tal:block content="python: (\' \' * 6) + line[\'description\']"/> </td>\n

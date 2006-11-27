@@ -1,5 +1,6 @@
 2006-11-27 Kevin
 * Make "prevoyance" payroll service accountable.
+* Add working duration property on pay sheets.
 
 2006-11-24 Kevin
 * Add "prevoyance" payroll service and related organisation.

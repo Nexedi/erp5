@@ -137,11 +137,11 @@
 \n
     <pagetemplate startframe=\'content\' id=\'FirstPage\'>\n
       <static>\n
-        <!-- ATTENTION : L\'image ne doit pas etre en format png -->\n
+        <!-- WARNING: the logo should be a PNG file -->\n
         <fixedimage filename=\'zodb:logo.jpg\' y=\'27.275cm\' x=\'1.016cm\'/>\n
         <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'center\' y=\'27.5160804cm\' x=\'14.208cm\' font=\'Helvetica\' size=\'20\'>FEUILLE DE SALAIRE</infostring>\n
 \n
-        <!-- Cadre employeur -->\n
+        <!-- Employer Box -->\n
         <tal:block tal:condition="python: employer not in (None, \'\') and employer.getPortalType() == \'Organisation\'">\n
           <tal:block tal:define="employer_group python: employer.getGroup()">\n
             <rectangle z=\'\' height=\'5.239cm\' width=\'7.038cm\' stroke=\'(0.4,0.4,0.4)\' y=\'21.074cm\' x=\'1.016cm\' linewidth=\'1\'/>\n
@@ -186,12 +186,11 @@
           </tal:block>\n
         </tal:block>\n
 \n
-\n
-        <!-- Cadre employ\xc3\xa9 -->\n
+        <!-- Employee Box -->\n
         <tal:block tal:condition="python: employee not in (None, \'\') and employee.getPortalType() == \'Person\'">\n
           <rectangle z=\'\' height=\'5.239cm\' width=\'7.038cm\' stroke=\'(0.4,0.4,0.4)\' y=\'21.074cm\' x=\'12.065cm\' linewidth=\'1\'/>\n
           <line y2=\'23.994cm\' linewidth=\'1\' z=\'\' x2=\'19.099cm\' stroke=\'(0.6,0.6,0.6)\' y1=\'23.994cm\' x1=\'12.073cm\'/>\n
-          <line y2=\'22.165cm\' linewidth=\'1\' z=\'\' x2=\'19.099cm\' stroke=\'(0.6,0.6,0.6)\' y1=\'22.165cm\' x1=\'12.073cm\'/>\n
+          <line y2=\'22.446cm\' linewidth=\'1\' z=\'\' x2=\'19.099cm\' stroke=\'(0.6,0.6,0.6)\' y1=\'22.446cm\' x1=\'12.073cm\'/>\n
           <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'25.91383216cm\' x=\'12.327cm\' font=\'Helvetica-Bold\' size=\'8\'\n
             tal:content="python: employee.getTitle()"\n
             tal:on-error="string:"/>\n
@@ -216,12 +215,19 @@
           <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'22.74232864cm\' x=\'12.327cm\' font=\'Helvetica\' size=\'8\'\n
             tal:content="python: \'Coefficient : %s\' % employee.getDefaultCareerSalaryCoefficient()"\n
             tal:on-error="string:"/>\n
+          <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'22.03799999cm\' x=\'12.327cm\' font=\'Helvetica\' size=\'8\'\n
+            tal:content="python: \'P\xc3\xa9riode de travail : du %s au %s\' % (start_date, here.getStopDate())"\n
+            tal:on-error="string:"/>\n
           <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'21.75683216cm\' x=\'12.327cm\' font=\'Helvetica\' size=\'8\'\n
-            tal:content="python: \'P\xc3\xa9riode : du %s au %s\' % (start_date, here.getStopDate())"\n
+            tal:content="python: \'Temps de travail : %s %s\' % (here.getWorkDuration(), here.getQuantityUnitTitle())"\n
             tal:on-error="string:"/>\n
           <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'21.47566432cm\' x=\'12.327cm\' font=\'Helvetica\' size=\'8\'\n
             tal:content="python: \'Date de paiement : %s\' % here.getPaymentConditionPaymentDate()"\n
             tal:on-error="string:"/>\n
+          <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'21.19449648cm\' x=\'12.327cm\' font=\'Helvetica\' size=\'8\'\n
+            tal:content="python: \'\'"\n
+            tal:on-error="string:"/>\n
+\n
         </tal:block>\n
         <line y2=\'1.506cm\' linewidth=\'1\' z=\'\' x2=\'19.075cm\' stroke=\'(0.6,0.6,0.6)\' y1=\'1.506cm\' x1=\'1.905cm\'/>\n
         <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'center\' y=\'1.00183216cm\' x=\'10.4855cm\' font=\'Helvetica\' size=\'8\'>Dans votre int\xc3\xa9r\xc3\xaat et pour vous aider \xc3\xa0 faire valoir vos droits, conservez ce bulletin de paie sans limitation de dur\xc3\xa9e.</infostring>\n
