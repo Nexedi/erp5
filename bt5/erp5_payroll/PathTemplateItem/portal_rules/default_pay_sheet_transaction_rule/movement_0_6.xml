@@ -65,6 +65,10 @@
             <value> <string>movement_0_6</string> </value>
         </item>
         <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>mapped_value_property_list</string> </key>
             <value>
               <tuple>
@@ -95,7 +99,7 @@
                 <string>tax_category/syntec_insurance/employer_share</string>
                 <string>tax_category/taxes/employer_share</string>
                 <string>tax_category/unemployment/employer_share</string>
-                <string>product_line/addendum/remboursement_frais</string>
+                <string>product_line/addendum/acompte</string>
               </tuple>
             </value>
         </item>
@@ -117,7 +121,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employer Share * Frais</string> </value>
+            <value> <string>Employer Share * Acompte</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

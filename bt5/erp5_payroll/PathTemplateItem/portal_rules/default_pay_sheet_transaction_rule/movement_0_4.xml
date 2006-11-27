@@ -55,24 +55,9 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>resource/currency_module/EUR</string>
-                <string>source_section/organisation_module/nexedi</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -82,10 +67,6 @@
         <item>
             <key> <string>isIndexable</string> </key>
             <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>mapped_value_property_list</string> </key>
@@ -118,7 +99,7 @@
                 <string>tax_category/syntec_insurance/employer_share</string>
                 <string>tax_category/taxes/employer_share</string>
                 <string>tax_category/unemployment/employer_share</string>
-                <string>product_line/social_service/state_insurance</string>
+                <string>product_line/addendum/remboursement_frais</string>
               </tuple>
             </value>
         </item>
@@ -133,107 +114,6 @@
             <value> <string>Accounting Rule Cell</string> </value>
         </item>
         <item>
-            <key> <string>start_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Wed</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Apr</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>38444.9166667</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Wednesday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>April</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>1144188000000</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Wed.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>am</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Apr.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>1144188000.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+2</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>2006</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.916666666664</float> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple/>
@@ -241,7 +121,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employer Share * URSSAF</string> </value>
+            <value> <string>Employer Share * Frais</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

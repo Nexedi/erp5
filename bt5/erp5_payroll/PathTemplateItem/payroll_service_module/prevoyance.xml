@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Document.Organisation</string>
-          <string>Organisation</string>
+          <string>Products.ERP5Type.Document.Resource</string>
+          <string>Resource</string>
         </tuple>
         <none/>
       </tuple>
@@ -71,12 +71,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -86,34 +80,45 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>role/client</string>
+                <string>salary_range/france/variable/tranche_a</string>
+                <string>tax_category/syntec_insurance/employee_share</string>
+                <string>product_line/social_service/mutual_insurance</string>
+                <string>quantity_unit/time/month</string>
+                <string>source/organisation_module/generali</string>
+                <string>salary_range/france/variable/tranche_b</string>
+                <string>tax_category/syntec_insurance/employer_share</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>corporate_name</string> </key>
-            <value> <string>s.r.l</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>Vu comme un prestataire de service social dans le cadre du module de feuilles de paie</string> </value>
+            <value> <string>"Service Social" rendu par Generali \xc3\xa0 un employeur. La facture de ce service est vu comme une cotisation sociale dans une feuille de paie.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>henner</string> </value>
+            <value> <string>prevoyance</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Organisation</string> </value>
+            <value> <string>Payroll Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Henner</string> </value>
+            <value> <string>Prevoyance</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>tax_category</string>
+                <string>salary_range</string>
+              </tuple>
             </value>
         </item>
       </dictionary>

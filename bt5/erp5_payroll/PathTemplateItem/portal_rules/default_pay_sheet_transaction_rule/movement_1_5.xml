@@ -86,6 +86,10 @@
             <value> <string>movement_1_5</string> </value>
         </item>
         <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>last_id</string> </key>
             <value> <string>1</string> </value>
         </item>

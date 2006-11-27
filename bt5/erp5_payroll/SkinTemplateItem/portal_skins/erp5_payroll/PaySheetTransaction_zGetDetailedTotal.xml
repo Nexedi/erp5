@@ -72,9 +72,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>start_date</string>
-<string>stop_date</string>
-<string>tax_category</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>tax_category</string>
                           </list>
                         </value>
                     </item>

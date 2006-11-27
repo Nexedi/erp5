@@ -309,7 +309,7 @@
               <dictionary>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/4</string> </key>
-                    <value> <int>4</int> </value>
+                    <value> <int>7</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/5</string> </key>
@@ -317,7 +317,7 @@
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/6</string> </key>
-                    <value> <int>7</int> </value>
+                    <value> <int>6</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/7</string> </key>
@@ -325,7 +325,7 @@
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/8</string> </key>
-                    <value> <int>6</int> </value>
+                    <value> <int>4</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy2_of_4</string> </key>

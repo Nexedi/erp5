@@ -40,8 +40,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/account_module/securite_sociale</string>
-                <string>destination/account_module/creances_sociales</string>
+                <string>source/account_module/dette_fournisseur</string>
+                <string>destination/account_module/creance_client</string>
               </tuple>
             </value>
         </item>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>quantity</string> </key>
-            <value> <float>-1.0</float> </value>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

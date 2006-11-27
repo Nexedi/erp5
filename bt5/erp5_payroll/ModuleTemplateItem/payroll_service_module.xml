@@ -300,9 +300,8 @@
    <name>Add Z MySQL Database Connections</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Z MySQL Deferred Database Connections</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
@@ -547,9 +546,8 @@
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Manage Translation Services</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Manage Vocabulary</name>

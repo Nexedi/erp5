@@ -40,8 +40,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/account_module/dette_fournisseur</string>
-                <string>destination/account_module/creance_client</string>
+                <string>source/account_module/104</string>
               </tuple>
             </value>
         </item>
