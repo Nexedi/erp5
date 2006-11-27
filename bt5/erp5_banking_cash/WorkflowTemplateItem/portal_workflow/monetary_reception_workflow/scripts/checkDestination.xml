@@ -84,7 +84,7 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\
 \n
 # check between letter and destination site codification\n
 line_letter = object.objectValues(portal_type=\'Cash Delivery Line\')[0].objectValues()[0].getEmissionLetter()\n
-if line_letter != dest.getCodification()[0]:\n
+if line_letter.lower() != dest.getCodification()[0].lower():\n
   msg = Message(domain="ui", message="Letter defined on line do not correspond to destination site.")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
