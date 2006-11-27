@@ -1,11 +1,18 @@
+account_module/104
+account_module/61
 account_module/assedic
+account_module/autres_taxes
 account_module/caisse_retraite
 account_module/cotisation_caisses_retraites
 account_module/cotisations_assedic
 account_module/cotisations_urssaf
 account_module/creances_salaries
 account_module/creances_sociales
+account_module/dette_fournisseur
 account_module/dettes_salaries
+account_module/dettes_sociales
+account_module/mutuelle
+account_module/payable_tax
 account_module/prestation_service
 account_module/remuneration_personnel
 account_module/securite_sociale
@@ -27,6 +34,7 @@ organisation_module/henner
 organisation_module/henner/**
 organisation_module/urssaf
 organisation_module/urssaf/**
+portal_categories/financial_section/**
 portal_categories/grade/**
 portal_categories/marital_status/**
 portal_categories/region/**
