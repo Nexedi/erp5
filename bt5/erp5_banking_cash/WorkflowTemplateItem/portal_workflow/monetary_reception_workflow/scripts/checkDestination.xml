@@ -72,9 +72,20 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 object = state_change.object\n
-\n
-if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination():\n
+# first check if we have line defined\n
+if len(object.objectValues(portal_type=\'Cash Delivery Line\') == 0:\n
+  msg = Message(domain="ui", message="No line defined on document.")\n
+  raise ValidationFailed, (msg,)\n
+       \n
+dest = object.getDestinationValue()\n
+if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\n
   msg = Message(domain="ui", message="Wrong Destination Selected.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# check between letter and destination site codification\n
+line_letter = object.objectValues(portal_type=\'Cash Delivery Line\')[0].objectValues()[0].getEmissionLetter()\n
+if line_letter != dest.getCodification()[0]:\n
+  msg = Message(domain="ui", message="Letter defined on line do not correspond to destination site.")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -103,7 +114,9 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination()
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>invalid syntax (checkDestination, line 6)</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -118,21 +131,12 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination()
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>_getattr_</string>
-                            <string>object</string>
-                            <string>msg</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -143,7 +147,7 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in object.getDestination()
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple/>
             </value>
         </item>
         <item>
