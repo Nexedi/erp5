@@ -14,6 +14,7 @@ account_module/dettes_sociales
 account_module/mutuelle
 account_module/payable_tax
 account_module/prestation_service
+account_module/prevoyance
 account_module/remuneration_personnel
 account_module/securite_sociale
 organisation_module/483
