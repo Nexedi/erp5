@@ -40,7 +40,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/account_module/prevoyance</string>
+                <string>source/account_module/remuneration_personnel</string>
+                <string>destination/account_module/prestation_service</string>
               </tuple>
             </value>
         </item>

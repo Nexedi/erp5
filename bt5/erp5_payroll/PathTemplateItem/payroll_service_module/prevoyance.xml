@@ -82,9 +82,9 @@
               <tuple>
                 <string>salary_range/france/variable/tranche_a</string>
                 <string>tax_category/syntec_insurance/employee_share</string>
-                <string>product_line/social_service/mutual_insurance</string>
                 <string>quantity_unit/time/month</string>
                 <string>source/organisation_module/generali</string>
+                <string>product_line/social_service/prevoyance</string>
                 <string>salary_range/france/variable/tranche_b</string>
                 <string>tax_category/syntec_insurance/employer_share</string>
               </tuple>

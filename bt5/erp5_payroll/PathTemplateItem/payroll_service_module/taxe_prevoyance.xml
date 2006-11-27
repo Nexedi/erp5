@@ -80,11 +80,11 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>salary_range/france/variable</string>
                 <string>tax_category/social/employer_share</string>
-                <string>product_line/social_service</string>
                 <string>quantity_unit/time/month</string>
                 <string>source/organisation_module/urssaf</string>
-                <string>salary_range/france/variable</string>
+                <string>product_line/social_service/state_insurance</string>
               </tuple>
             </value>
         </item>
