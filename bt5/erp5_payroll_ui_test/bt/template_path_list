@@ -21,6 +21,8 @@ organisation_module/assedic
 organisation_module/assedic/**
 organisation_module/etat
 organisation_module/etat/**
+organisation_module/generali
+organisation_module/generali/**
 organisation_module/henner
 organisation_module/henner/**
 organisation_module/urssaf
