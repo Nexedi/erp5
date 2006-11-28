@@ -166,20 +166,18 @@ if selection_params.has_key(\'updated_listbox\'):\n
 \n
 \n
 # Scan the listbox and look for complementary lines to add to the gross salary\n
-new_gross_salary = 0.0\n
+new_gross_salary = r_(context.getGrossSalary())\n
 for line in updated_listbox:\n
   salary_range = line[\'salary_range\']\n
   if salary_range not in [None, \'\'] and salary_range.startswith(\'salary_range/france/fixed/gross\'):\n
     # Get the employee or employer share as part of the multiline gross salary\n
     # The payroll service "setup convention" require that the fixed value should be defined on \'employer_share\'\n
     share_value = line[\'employer_share\']\n
-    if share_value not in [None, \'\']:\n
+    if share_value not in [None, \'\']: \n
       new_gross_salary = r_(new_gross_salary + r_(share_value))\n
 \n
-if new_gross_salary > 0.0:\n
-  # Don\'t forget to add the base salary\n
-  new_gross_salary = r_(new_gross_salary + r_(context.getGrossSalary()))\n
-else:\n
+# Reset new salary if calculation goes bad\n
+if new_gross_salary <= 0.0:\n
   new_gross_salary = None\n
 \n
 \n
