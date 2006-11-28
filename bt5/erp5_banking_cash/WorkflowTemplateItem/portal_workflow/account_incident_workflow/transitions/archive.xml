@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateSourceAndDestination</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -83,8 +83,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Manager</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>

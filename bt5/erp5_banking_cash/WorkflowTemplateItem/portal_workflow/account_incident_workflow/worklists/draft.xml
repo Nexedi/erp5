@@ -24,19 +24,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Drafts to Validate (%(count)s)</string> </value>
+            <value> <string>Draft To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draft&portal_type=Usual Cash Transfer&reset=1
+Base_viewWorklist?simulation_state=draft&portal_type=Account Incident&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Drafts to Validate</string> </value>
+            <value> <string>Draft to validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -101,7 +101,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Usual Cash Transfer&reset=1
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Usual Cash Transfer</string>
+                        <string>Account Incident</string>
                       </tuple>
                     </value>
                 </item>
