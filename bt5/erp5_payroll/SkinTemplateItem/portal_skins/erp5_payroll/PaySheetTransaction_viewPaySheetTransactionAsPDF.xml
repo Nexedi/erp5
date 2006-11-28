@@ -78,7 +78,7 @@
         <td><tal:block content="python: line[\'employee_rate\']"  condition="python: line[\'employee_rate\']  != None"/> </td>\n
         <td><tal:block content="python: line[\'employee_share\']" condition="python: line[\'employee_share\'] != None"/> </td>\n
       </tr>\n
-      <tr tal:condition="python: line[\'description\'] != None" stylecmd="(\'LEFTPADDING\',8)">\n
+      <tr tal:condition="python: line[\'description\'] != None" stylecmd="(\'LEFTPADDING\',16)">\n
         <td><tal:block content="python: (\' \' * 6) + line[\'description\']"/> </td>\n
         <td> </td>\n
         <td> </td>\n
@@ -191,41 +191,17 @@
       </tr>\n
     </table>\n
 \n
-    <!-- This table act as a spacer -->\n
-    <table rowheight="0.6cm"><tr><td> </td></tr></table>\n
-\n
     <tal:block repeat="group python: details[\'groups\']">\n
-      <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="decompte"\n
+      <table splitbyrow="1" rowheight=\'0.4cm\' repeatrows="1" repeatcols="0" style="addendum"\n
               tal:condition="python: group[\'id\'] == ADDENDUM_GROUP_ID">\n
-        <tr>\n
-          <td colwidth="4.318cm">Nature</td>\n
-          <td colwidth="3.81cm">Base</td>\n
+        <tr tal:attributes="stylecmd boldstyle">\n
+          <td colwidth="4.318cm" tal:content="python: group[\'title\']"> </td>\n
+          <td colwidth="3.81cm">  </td>\n
           <td colwidth="1.524cm"> </td>\n
-          <td colwidth="2.77cm"> </td>\n
+          <td colwidth="2.77cm">  </td>\n
           <td colwidth="2.288cm"> </td>\n
           <td colwidth="2.397cm"> </td>\n
-          <td colwidth="1.959cm">Montant</td>\n
-        </tr>\n
-\n
-        <tr tal:attributes="stylecmd boldstyle">\n
-          <td>Salaire Net</td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td><tal:block replace="python: details[\'totals\'][\'net_salary\']"\n
-                        condition="python: details[\'totals\'].has_key(\'net_salary\')"/> </td>\n
-        </tr>\n
-\n
-        <tr tal:attributes="stylecmd boldstyle">\n
-          <td tal:content="python: group[\'title\']"> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
-          <td> </td>\n
+          <td colwidth="1.959cm"> </td>\n
         </tr>\n
         <tal:block repeat="line python: group[\'sublines\']">\n
           <tal:block metal:use-macro="here/PaySheetTransaction_viewPaySheetTransactionAsPDF/macros/renderLine"/>\n
@@ -239,7 +215,7 @@
           <td> </td>\n
           <td> </td>\n
           <td><tal:block replace="python: details[\'totals\'][\'total_addendum\']"\n
-                          condition="python: details[\'totals\'].has_key(\'total_addendum\')"/> </td>\n
+                         condition="python: details[\'totals\'].has_key(\'total_addendum\')"/> </td>\n
         </tr>\n
         <tr tal:attributes="stylecmd boldstyle">\n
           <td>Paiement Final</td>\n
@@ -249,19 +225,29 @@
           <td> </td>\n
           <td> </td>\n
           <td><tal:block replace="python: details[\'totals\'][\'total_employee_payment\']"\n
-                        condition="python: details[\'totals\'].has_key(\'total_employee_payment\')"/> </td>\n
+                         condition="python: details[\'totals\'].has_key(\'total_employee_payment\')"/> </td>\n
+        </tr>\n
+      </table>\n
+    </tal:block>\n
+\n
+    <tal:block tal:condition="python: here.getDescription() not in [\'\', None]">\n
+      <!-- This table act as a spacer -->\n
+      <table rowheight="0.2cm"><tr><td> </td></tr></table>\n
+      <table style="notes">\n
+        <tr>\n
+          <td colwidth="19cm"><tal:block replace="python: \'Notes -- %s\' % here.getDescription()"/> </td>\n
         </tr>\n
       </table>\n
     </tal:block>\n
 \n
     <!-- This table act as a spacer -->\n
-    <table rowheight="0.6cm"><tr><td> </td></tr></table>\n
+    <table rowheight="0.2cm"><tr><td> </td></tr></table>\n
 \n
     <table style="cumul_conges">\n
       <tr>\n
         <td colwidth="12cm"><tal:block replace="python: \'Cumuls Annuels (%s au %s)\' % (yearly_sums[\'start_date\'], yearly_sums[\'stop_date\'])"/> </td>\n
-        <td colwidth="2cm"> </td>\n
-        <td colwidth="5cm"> </td>\n
+        <td colwidth="1cm"> </td>\n
+        <td colwidth="6cm"> </td>\n
       </tr>\n
     </table>\n
 \n
@@ -273,16 +259,16 @@
         <td colwidth="2cm">Salaire Net</td>\n
         <td colwidth="2cm">Net Imposable</td>\n
         <td colwidth="2cm">Addendum</td>\n
-        <td colwidth="2cm"> </td>\n
-        <td colwidth="5cm"> <tal:block tal:replace="python: \'Dur\xc3\xa9e des d\xc3\xa9lais de pr\xc3\xa9avis : \' + context.PaySheetTransaction_getResignmentLegalDelay()"/></td>\n
+        <td colwidth="1cm"> </td>\n
+        <td colwidth="6cm"> <tal:block tal:replace="python: \'Dur\xc3\xa9e des d\xc3\xa9lais de pr\xc3\xa9avis : \' + context.PaySheetTransaction_getResignmentLegalDelay()"/></td>\n
       </tr>\n
       <tr>\n
-        <td><tal:block replace="python: yearly_sums[\'gross_salary\']" condition="python: yearly_sums.has_key(\'gross_salary\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'gross_salary\']"         condition="python: yearly_sums.has_key(\'gross_salary\')"/> </td>\n
         <td><tal:block replace="python: yearly_sums[\'total_employer_share\']" condition="python: yearly_sums.has_key(\'total_employer_share\')"/> </td>\n
         <td><tal:block replace="python: yearly_sums[\'total_employee_share\']" condition="python: yearly_sums.has_key(\'total_employee_share\')"/> </td>\n
-        <td><tal:block replace="python: yearly_sums[\'net_salary\']" condition="python: yearly_sums.has_key(\'net_salary\')"/> </td>\n
-        <td><tal:block replace="python: yearly_sums[\'taxable_net_salary\']" condition="python: yearly_sums.has_key(\'taxable_net_salary\')"/> </td>\n
-        <td><tal:block replace="python: yearly_sums[\'total_addendum\']" condition="python: yearly_sums.has_key(\'total_addendum\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'net_salary\']"           condition="python: yearly_sums.has_key(\'net_salary\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'taxable_net_salary\']"   condition="python: yearly_sums.has_key(\'taxable_net_salary\')"/> </td>\n
+        <td><tal:block replace="python: yearly_sums[\'total_addendum\']"       condition="python: yearly_sums.has_key(\'total_addendum\')"/> </td>\n
         <td> </td>\n
         <td><!--tal:block replace="python: \'Dur\xc3\xa9e des cong\xc3\xa9s pay\xc3\xa9s : ???\'"/--> </td>\n
       </tr>\n

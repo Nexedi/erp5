@@ -466,8 +466,8 @@ csg_base_salary = gross_salary\n
 #         calculation which depend of the employment contract between the employee and the\n
 #         employer.\n
 col_agr = employee.getCareerCollectiveAgreementTitle()\n
+insurrances_base = 0.0\n
 if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
-  insurrances_base = 0.0\n
   # Add "mutuelle" and "prevoyance" employer share to csg_base_salary when required\n
   # Set the syntec rate according to the employee marital status\n
   syntec_rate = 0.96\n
@@ -479,32 +479,36 @@ if col_agr not in (None, \'\') and \'syntec\' in col_agr.lower():\n
   , \'base\'          : ceiling_salary\n
   }\n
   insurrances_base += r_(ceiling_salary * (syntec_rate / 100.0))\n
-  # Prevoyance insurance (part of SYNTEC requirements)\n
-  if salary_slices.has_key(\'A\'):\n
-    RATE = 0.70\n
-    BASE = salary_slices[\'A\']\n
-    kw[\'prevoyance/tranche_a\'] = \\\n
-    { \'employer_share\': RATE\n
-    , \'employee_share\': None\n
-    , \'base\'          : BASE\n
-    }\n
-    insurrances_base += r_(BASE * (RATE / 100.0))\n
-  if salary_slices.has_key(\'B\'):\n
-    RATE = 0.54\n
-    BASE = salary_slices[\'B\']\n
-    kw[\'prevoyance/tranche_b\'] = \\\n
-    { \'employer_share\': RATE\n
-    , \'employee_share\': RATE\n
-    , \'base\'          : BASE\n
-    }\n
-    insurrances_base += r_(BASE * (RATE / 100.0))\n
-  # Final tax on the contribution (!)\n
+\n
+# Prevoyance insurance\n
+if salary_slices.has_key(\'A\'):\n
+  RATE = 0.70\n
+  BASE = salary_slices[\'A\']\n
+  kw[\'prevoyance/tranche_a\'] = \\\n
+  { \'employer_share\': RATE\n
+  , \'employee_share\': None\n
+  , \'base\'          : BASE\n
+  }\n
+  insurrances_base += r_(BASE * (RATE / 100.0))\n
+if salary_slices.has_key(\'B\'):\n
+  RATE = 0.54\n
+  BASE = salary_slices[\'B\']\n
+  kw[\'prevoyance/tranche_b\'] = \\\n
+  { \'employer_share\': RATE\n
+  , \'employee_share\': RATE\n
+  , \'base\'          : BASE\n
+  }\n
+  insurrances_base += r_(BASE * (RATE / 100.0))\n
+\n
+# Final tax on "Prevoyance"\n
+if insurrances_base > 0.0:\n
   kw[\'taxe_prevoyance/variable\'] = \\\n
   { \'employer_share\': 8.0\n
   , \'employee_share\': None\n
   , \'base\'          : insurrances_base\n
   }\n
   csg_base_salary += insurrances_base\n
+\n
 \n
 # CSG\n
 kw[\'csg_deductible/salaire_brut_csg\'] = \\\n

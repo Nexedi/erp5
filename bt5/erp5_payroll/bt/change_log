@@ -1,3 +1,6 @@
+2006-11-28 Kevin
+* Fix "prevoyance" calculation.
+
 2006-11-27 Kevin
 * Make "prevoyance" payroll service accountable.
 * Add working duration property on pay sheets.

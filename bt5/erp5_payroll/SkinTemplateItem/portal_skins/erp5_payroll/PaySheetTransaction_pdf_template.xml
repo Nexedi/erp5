@@ -88,6 +88,7 @@
         <stylecmd expr="(\'BACKGROUND\', (0,1), (-1,-1), (0.95, 0.95, 0.95))"/>\n
         <stylecmd expr="(\'TEXTCOLOR\', (0,1), (-1,-1), colors.black)"/>\n
         <stylecmd expr="(\'ALIGNMENT\', (-5,1), (-1,-1), \'RIGHT\')"/>\n
+        <stylecmd expr="(\'FONT\', (0,1), (-1,-1), \'Helvetica\', 7)"/>\n
 \n
         <!-- Pied de tableau -->\n
         <stylecmd expr="(\'BACKGROUND\', (-1,1), (-1,-2), (0.85,0.85,0.85))"/>\n
@@ -96,8 +97,39 @@
         <stylecmd expr="(\'LINEABOVE\', (0,-1), (-1,-1), 0.1, (0.4,0.4,0.4))"/>\n
       </tablestyle>\n
 \n
+      <tablestyle name="addendum">\n
+        <!-- Corps -->\n
+        <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 7)"/>\n
+        <stylecmd expr="(\'OUTLINE\', (0,0), (-1,-1), 0.7, (0.4,0.4,0.4))"/>\n
+        <stylecmd expr="(\'LINEAFTER\', (0,0), (-1,-1), 0.1, (0.4,0.4,0.4))"/>\n
+        <stylecmd expr="(\'LEFTPADDING\', (0,0), (-1,-1), 4)"/>\n
+        <stylecmd expr="(\'TOPPADDING\', (0,0), (-1,-1), 2)"/>\n
+        <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (-1,-1), 2)"/>\n
+        <stylecmd expr="(\'BACKGROUND\', (0,0), (-1,-1), (0.95, 0.95, 0.95))"/>\n
+        <stylecmd expr="(\'TEXTCOLOR\', (0,0), (-1,-1), colors.black)"/>\n
+        <stylecmd expr="(\'ALIGNMENT\', (-5,0), (-1,-1), \'RIGHT\')"/>\n
+\n
+        <!-- Pied de tableau -->\n
+        <stylecmd expr="(\'BACKGROUND\', (-1,0), (-1,-2), (0.85,0.85,0.85))"/>\n
+        <stylecmd expr="(\'BACKGROUND\', (0,-1), (-2,-1), (0.85,0.85,0.85))"/>\n
+        <stylecmd expr="(\'BACKGROUND\', (-1,-1), (-1,-1), (0.75,0.75,0.75))"/>\n
+        <stylecmd expr="(\'LINEABOVE\', (0,-1), (-1,-1), 0.1, (0.4,0.4,0.4))"/>\n
+      </tablestyle>\n
+\n
+      <tablestyle name="notes">\n
+        <!-- Corps -->\n
+        <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 7)"/>\n
+        <stylecmd expr="(\'OUTLINE\', (0,0), (-1,-1), 0.7, (0.4,0.4,0.4))"/>\n
+        <stylecmd expr="(\'LINEAFTER\', (0,0), (-1,-1), 0.1, (0.4,0.4,0.4))"/>\n
+        <stylecmd expr="(\'LEFTPADDING\', (0,0), (-1,-1), 4)"/>\n
+        <stylecmd expr="(\'TOPPADDING\', (0,0), (-1,-1), 2)"/>\n
+        <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (-1,-1), 2)"/>\n
+        <stylecmd expr="(\'BACKGROUND\', (0,0), (-1,-1), (0.95, 0.95, 0.95))"/>\n
+        <stylecmd expr="(\'TEXTCOLOR\', (0,0), (-1,-1), colors.black)"/>\n
+      </tablestyle>\n
+\n
       <tablestyle name="cumul_conges">\n
-        <stylecmd expr="(\'FONTSIZE\', (0,0), (-1,-1), 7)"/>\n
+        <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 7)"/>\n
         <stylecmd expr="(\'LEFTPADDING\', (0,0), (-1,-1), 4)"/>\n
 \n
         <!-- Entete gauche -->\n
@@ -108,16 +140,10 @@
         <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (0,0), 0)"/>\n
         <stylecmd expr="(\'ALIGNMENT\', (0,0), (0,0), \'CENTER\')"/>\n
         <stylecmd expr="(\'VALIGN\', (0,0), (0,0), \'MIDDLE\')"/>\n
-\n
-        <!-- Premiere ligne de droite\n
-             <stylecmd expr="(\'LINEABOVE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
-             <stylecmd expr="(\'LINEBEFORE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
-             <stylecmd expr="(\'LINEAFTER\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
-        -->\n
       </tablestyle>\n
 \n
       <tablestyle name="cumul_conges_corps">\n
-        <stylecmd expr="(\'FONTSIZE\', (0,0), (-1,-1), 7)"/>\n
+        <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 7)"/>\n
         <stylecmd expr="(\'LEFTPADDING\', (0,0), (-1,-1), 4)"/>\n
 \n
         <!--Tableau de gauche -->\n
@@ -125,11 +151,6 @@
         <stylecmd expr="(\'ALIGNMENT\', (0,0), (5,0), \'CENTER\')"/>\n
         <stylecmd expr="(\'ALIGNMENT\', (0,1), (5,1), \'RIGHT\')"/>\n
 \n
-        <!-- Deuxieme ligne de droite -->\n
-        <!-- <stylecmd expr="(\'LINEBELOW\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
-             <stylecmd expr="(\'LINEBEFORE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
-             <stylecmd expr="(\'LINEAFTER\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
-        -->\n
         <stylecmd expr="(\'OUTLINE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
       </tablestyle>\n
 \n
