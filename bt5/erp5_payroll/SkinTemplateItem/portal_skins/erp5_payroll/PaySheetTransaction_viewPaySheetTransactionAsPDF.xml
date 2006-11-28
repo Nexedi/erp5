@@ -233,9 +233,10 @@
     <tal:block tal:condition="python: here.getDescription() not in [\'\', None]">\n
       <!-- This table act as a spacer -->\n
       <table rowheight="0.2cm"><tr><td> </td></tr></table>\n
-      <table style="notes">\n
-        <tr>\n
-          <td colwidth="19cm"><tal:block replace="python: \'Notes -- %s\' % here.getDescription()"/> </td>\n
+      <table style="notes" tal:define="line_list python: here.PaySheetTransaction_textSplitter(here.getDescription(), 160)">\n
+        <tr><td colwidth="19cm">Notes:</td></tr>\n
+        <tr tal:repeat="line python: line_list">\n
+          <td><tal:block replace="line"/> </td>\n
         </tr>\n
       </table>\n
     </tal:block>\n
@@ -260,7 +261,7 @@
         <td colwidth="2cm">Net Imposable</td>\n
         <td colwidth="2cm">Addendum</td>\n
         <td colwidth="1cm"> </td>\n
-        <td colwidth="6cm"> <tal:block tal:replace="python: \'Dur\xc3\xa9e des d\xc3\xa9lais de pr\xc3\xa9avis : \' + context.PaySheetTransaction_getResignmentLegalDelay()"/></td>\n
+        <td colwidth="6cm"><!--tal:block tal:replace="python: \'Dur\xc3\xa9e des d\xc3\xa9lais de pr\xc3\xa9avis : \' + context.PaySheetTransaction_getResignmentLegalDelay()"/--> </td>\n
       </tr>\n
       <tr>\n
         <td><tal:block replace="python: yearly_sums[\'gross_salary\']"         condition="python: yearly_sums.has_key(\'gross_salary\')"/> </td>\n

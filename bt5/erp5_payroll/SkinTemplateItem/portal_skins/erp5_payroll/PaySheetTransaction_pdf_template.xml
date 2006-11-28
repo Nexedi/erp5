@@ -151,7 +151,7 @@
         <stylecmd expr="(\'ALIGNMENT\', (0,0), (5,0), \'CENTER\')"/>\n
         <stylecmd expr="(\'ALIGNMENT\', (0,1), (5,1), \'RIGHT\')"/>\n
 \n
-        <stylecmd expr="(\'OUTLINE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/>\n
+        <!--stylecmd expr="(\'OUTLINE\', (-1,0), (-1,0), 0.1, (0.4,0.4,0.4))"/-->\n
       </tablestyle>\n
 \n
     </stylesheet>\n
@@ -202,7 +202,7 @@
               tal:content="python:urssaf.getDefaultAddress().getZipCode() + \' \' + urssaf.getDefaultAddress().getCity()"\n
               tal:on-error="string:"/>\n
             <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'21.33283216cm\' x=\'1.27cm\' font=\'Helvetica\' size=\'8\'\n
-              tal:content="python: \'Convention collective de branche : %s\' % employee.getDefaultCareerCollectiveAgreementTitle()"\n
+              tal:content="python: \'Convention collective de branche : Syntec\' # % employee.getDefaultCareerCollectiveAgreementTitle()"\n
               tal:on-error="string:"/>\n
           </tal:block>\n
         </tal:block>\n

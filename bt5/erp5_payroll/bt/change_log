@@ -1,5 +1,6 @@
 2006-11-28 Kevin
 * Fix "prevoyance" calculation.
+* Add free text zone (based on description property) to add more detailled info on PaySheets.
 
 2006-11-27 Kevin
 * Make "prevoyance" payroll service accountable.
