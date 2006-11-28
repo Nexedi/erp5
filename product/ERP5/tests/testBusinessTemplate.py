@@ -1153,52 +1153,60 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
     # result table
-    sql_search_tables = list(catalog.sql_search_tables)
-    sql_search_tables.append(result_table)
-    sql_search_tables.sort()
-    catalog.sql_search_tables = tuple(sql_search_tables)
+    if result_table not in catalog.sql_search_tables:
+      sql_search_tables = list(catalog.sql_search_tables)
+      sql_search_tables.append(result_table)
+      sql_search_tables.sort()
+      catalog.sql_search_tables = tuple(sql_search_tables)
     self.failUnless(result_table in catalog.sql_search_tables)
     # result key
-    sql_search_result_keys = list(catalog.sql_search_result_keys)
-    sql_search_result_keys.append(result_key)
-    sql_search_result_keys.sort()
-    catalog.sql_search_result_keys = tuple(sql_search_result_keys)
+    if result_key not in catalog.sql_search_result_keys:
+      sql_search_result_keys = list(catalog.sql_search_result_keys)
+      sql_search_result_keys.append(result_key)
+      sql_search_result_keys.sort()
+      catalog.sql_search_result_keys = tuple(sql_search_result_keys)
     self.failUnless(result_key in catalog.sql_search_result_keys)
     # related key
-    sql_search_related_keys = list(catalog.sql_catalog_related_keys)
-    sql_search_related_keys.append(related_key)
-    sql_search_related_keys.sort()
-    catalog.sql_catalog_related_keys = tuple(sql_search_related_keys)
+    if related_key not in catalog.sql_catalog_related_keys:
+      sql_search_related_keys = list(catalog.sql_catalog_related_keys)
+      sql_search_related_keys.append(related_key)
+      sql_search_related_keys.sort()
+      catalog.sql_catalog_related_keys = tuple(sql_search_related_keys)
     self.failUnless(related_key in catalog.sql_catalog_related_keys)
     # keyword keys
-    sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
-    sql_catalog_keyword_keys.append(keyword_key)
-    sql_catalog_keyword_keys.sort()
-    catalog.sql_catalog_keyword_search_keys = tuple(sql_catalog_keyword_keys)
+    if keyword_key not in catalog.sql_catalog_keyword_search_keys:
+      sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
+      sql_catalog_keyword_keys.append(keyword_key)
+      sql_catalog_keyword_keys.sort()
+      catalog.sql_catalog_keyword_search_keys = tuple(sql_catalog_keyword_keys)
     self.failUnless(keyword_key in catalog.sql_catalog_keyword_search_keys)
     # full_text keys
-    sql_catalog_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
-    sql_catalog_full_text_keys.append(full_text_key)
-    sql_catalog_full_text_keys.sort()
-    catalog.sql_catalog_full_text_search_keys = tuple(sql_catalog_full_text_keys)
+    if full_text_key not in catalog.sql_catalog_full_text_search_keys:
+      sql_catalog_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
+      sql_catalog_full_text_keys.append(full_text_key)
+      sql_catalog_full_text_keys.sort()
+      catalog.sql_catalog_full_text_search_keys = tuple(sql_catalog_full_text_keys)
     self.failUnless(full_text_key in catalog.sql_catalog_full_text_search_keys)
     # request
-    sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
-    sql_catalog_request_keys.append(request_key)
-    sql_catalog_request_keys.sort()
-    catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
+    if request_key not in catalog.sql_catalog_request_keys:
+      sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
+      sql_catalog_request_keys.append(request_key)
+      sql_catalog_request_keys.sort()
+      catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
     self.failUnless(request_key in catalog.sql_catalog_request_keys)
     # multivalue
-    sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
-    sql_catalog_multivalue_keys.append(multivalue_key)
-    sql_catalog_multivalue_keys.sort()
-    catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
+    if multivalue_key not in catalog.sql_catalog_multivalue_keys:
+      sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
+      sql_catalog_multivalue_keys.append(multivalue_key)
+      sql_catalog_multivalue_keys.sort()
+      catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
     self.failUnless(multivalue_key in catalog.sql_catalog_multivalue_keys)
     # topic keys
-    sql_catalog_topic_keys = list(catalog.sql_catalog_topic_search_keys)
-    sql_catalog_topic_keys.append(topic_key)
-    sql_catalog_topic_keys.sort()
-    catalog.sql_catalog_topic_search_keys = tuple(sql_catalog_topic_keys)
+    if topic_key not in catalog.sql_catalog_topic_search_keys:
+      sql_catalog_topic_keys = list(catalog.sql_catalog_topic_search_keys)
+      sql_catalog_topic_keys.append(topic_key)
+      sql_catalog_topic_keys.sort()
+      catalog.sql_catalog_topic_search_keys = tuple(sql_catalog_topic_keys)
     self.failUnless(topic_key in catalog.sql_catalog_topic_search_keys)
 
     sequence.edit(related_key=related_key, result_key=result_key, result_table=result_table, \
@@ -1215,7 +1223,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_search_tables = tuple( list(catalog.sql_search_tables) +
                                      ['translation'] )
     # modify column related configuration
-    catalog.sql_catalog_full_text_search_keys = ('catalog.portal_type',)
+    catalog.sql_search_result_keys = tuple( list(catalog.sql_search_result_keys) +
+                                     ['catalog.reference'] )
+    sequence.edit(result_key='catalog.reference', search_table="translation")
 
   def stepCheckCatalogConfigurationKept(self, sequence, **kw):
     """Check modification made in stepModifyCatalogConfiguration are still
@@ -1227,8 +1237,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # table related configuration
     self.failUnless('translation' in catalog.sql_search_tables)
     # column related configuration
-    self.failUnless('catalog.portal_type' 
-                    in catalog.sql_catalog_full_text_search_keys)
+    self.failUnless('catalog.reference' 
+                    in catalog.sql_search_result_keys)
+
+  def stepRemoveCatalogLocalConfiguration(self, sequence, **kw):
+    """
+    Remove modification made in stepModifyCatalogConfiguration
+    """
+    result_key = sequence.get('result_key', None)
+    self.failUnless(result_key is not None)
+    result_table = sequence.get('search_table', None)
+    self.failUnless(result_table is not None)
+    catalog = self.getCatalogTool().getSQLCatalog()
+    self.failUnless(catalog is not None)
+    # result key
+    sql_search_result_keys = list(catalog.sql_search_result_keys)
+    sql_search_result_keys.remove(result_key)
+    sql_search_result_keys.sort()
+    catalog.sql_search_result_keys = tuple(sql_search_result_keys)
+    self.failUnless(result_key not in catalog.sql_search_result_keys)
+    # search table
+    sql_search_tables = list(catalog.sql_search_tables)
+    sql_search_tables.remove(result_table)
+    sql_search_tables.sort()
+    catalog.sql_search_tables = tuple(sql_search_tables)
+    self.failUnless(result_table not in catalog.sql_search_tables)
 
   def stepAddKeysAndTableToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -3360,7 +3393,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddPathToBusinessTemplate \
                        BuildBusinessTemplateFail \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -3373,7 +3406,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateSkinFolder \
                        CheckSkinFolderExists \
                        CreateNewBusinessTemplate \
@@ -3382,7 +3415,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallBusinessTemplate \
@@ -3418,6 +3451,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogConfigurationKept \
                        UninstallBusinessTemplate \
                        CheckCatalogConfigurationKept \
+                       RemoveCatalogLocalConfiguration \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -3460,7 +3494,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        PartialCatalogMethodInstall \
                        CheckCatalogMethodChangeKept \
-                       Tic \
+                       RemoveKeysAndTable \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
