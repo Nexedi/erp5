@@ -265,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>html_representation</string> </value>
+                    <value> <string>Content preview</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
