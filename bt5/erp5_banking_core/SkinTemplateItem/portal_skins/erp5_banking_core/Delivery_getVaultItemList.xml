@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># vault_type = None : D\xc3\xa9finit les vaut_types \xc3\xa0 afficher,\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# vault_type = None : D\xc3\xa9finit les vaut_types \xc3\xa0 afficher,\n
 #                     si valeur est None on r\xc3\xa9cup\xc3\xa8re vault_type\n
 #                     depuis les sites auxquels est assign\xc3\xa9 l\'user\n
 # exclude_vault_type = None : D\xc3\xa9finit les vaut_types \xc3\xa0 exclure,\n
@@ -80,6 +82,7 @@
 #                 au lieu des encaisses de tous le sites\n
 # owner_site = 1 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels le propri\xc3\xa9taire du document est affect\xc3\xa9,\n
 #                 au lieu des encaisses de tous le sites\n
+# main_agency = 0 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites qui appartiennent \xe0 une agence principale,\n
 # leaf_node = 1 : S\xc3\xa9lectionne uniquement les noeuds qui sont des feuilles de l\'arbre (qui n\'ont pas de sous-cat\xc3\xa9gories)\n
 # strict_membership = 0 : Appartenance stricte. Si vault_type=\'site\', on s\xc3\xa9lectionnera \'site/agence/principale/paris\',\n
 #                         mais pas \'site/agence/principale/paris/caveau\', \'site/agence/principale/paris/surface\' et\n
@@ -94,7 +97,7 @@ from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, \n
-    site_list=None, with_base=1, all=0, first_level=0):\n
+    site_list=None, with_base=1, all=0, first_level=0,main_agency=0):\n
 \n
   if vault_type is None:\n
     organisation_list = []\n
@@ -153,6 +156,9 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     for site_member in site_member_list:\n
       site_member_object = site_member.getObject()\n
       site_member_relative_url = site_member_object.getRelativeUrl()\n
+      if main_agency:\n
+        if site_member_relative_url.find(\'principale\')<0:\n
+          continue\n
       for exclude_vault_type_item in exclude_vault_type:\n
         if is_member_of(site_member_object, exclude_vault_type_item, strict=0) :\n
           break\n
@@ -229,7 +235,7 @@ else:\n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
   assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all,\n
-  first_level=first_level)\n
+  first_level=first_level,main_agency=main_agency)\n
 \n
 if current_url != None :\n
   if \'site\' not in current_url:\n
@@ -244,7 +250,9 @@ if current_url != None :\n
   else :\n
     return [(\'\', \'\'), (context.Localizer.erp5_ui.gettext(\'Unknown Vault\')+\' : %s\' % current_url, current_url)] + list(vault_list)\n
 return [(\'\', \'\')] + list(vault_list)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -272,7 +280,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -300,7 +308,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
+                        <value> <int>12</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -317,6 +325,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>base_site</string>
                             <string>owner_site</string>
                             <string>first_level</string>
+                            <string>main_agency</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -359,6 +368,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>1</int>
                 <int>0</int>
                 <none/>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
               </tuple>

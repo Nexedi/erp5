@@ -70,39 +70,6 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-def sortCurrencyCashList(currency_cash_list):\n
-  """Sort a list of currency cash objects\n
-  """\n
-  def sortLines(a_source, b_source):\n
-    """This method helps sorting supported by Python\'s standard function.\n
-    """\n
-    # Get the currency cash objects. They can be defined as resources.\n
-    if a_source.getPortalType() in (\'Coin\', \'Banknote\'):\n
-      a = a_source\n
-      b = b_source\n
-    else :\n
-      a = a.getResourceValue()\n
-      b = b.getResourceValue()\n
-\n
-    # First, compare the portal types.\n
-    result = cmp(a.getPortalType(), b.getPortalType())\n
-    if result != 0:\n
-      return result\n
-\n
-    # Second, compare the base prices (such as 1000 and 2000 Francs CFA).\n
-    result = cmp(a.getBasePrice(), b.getBasePrice())\n
-    if result != 0:\n
-      return result\n
-\n
-    # Last, compare the variations (such as the years 1994 and 2003).\n
-    result = cmp(a.getVariation(), b.getVariation())\n
-    return result\n
-\n
-  currency_cash_list.sort(sortLines)\n
-  return currency_cash_list\n
-\n
-\n
-\n
 # listbox is not passed at the first time when this script is called.\n
 # when the user clicks on the Update button, listbox is passed, and\n
 # the contents must be preserved in the form.\n
@@ -156,7 +123,7 @@ if listbox is None:\n
         new_currency_cash_list.append(currency_cash)\n
     currency_cash_list = new_currency_cash_list\n
 \n
-  currency_cash_list = sortCurrencyCashList(currency_cash_list)\n
+  currency_cash_list = context.Base_sortCurrencyCashList(currency_cash_list)\n
 \n
   # Get the axis information based on the specified column base category.\n
   # axis_list_dict contains the lists of objects, while axis_dict contains\n
@@ -451,7 +418,6 @@ else :\n
                             <string>listbox</string>
                             <string>cash_detail_dict</string>
                             <string>kw</string>
-                            <string>sortCurrencyCashList</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>cash_status_list</string>

@@ -68,51 +68,44 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return context.getMovementList(portal_type=portal_type)\n
-# here we suppose we have only two level of portal type\n
-#context.log("Delivery_getMovementList", "portal_type = %s" %(portal_type,))\n
-#context.log("Delivery_getMovementList", "len portal_type = %s" % (len(portal_type),))\n
+            <value> <string>def sortCurrencyCashList(currency_cash_list):\n
+  """Sort a list of currency cash objects\n
+  """\n
+  def sortLines(a_source, b_source):\n
+    """This method helps sorting supported by Python\'s standard function.\n
+    """\n
+    # Get the currency cash objects. They can be defined as resources.\n
+    if a_source.getPortalType() in (\'Coin\', \'Banknote\'):\n
+      a = a_source\n
+      b = b_source\n
+    else :\n
+      a = a_source.getResourceValue()\n
+      b = b_source.getResourceValue()\n
 \n
-if not same_type(portal_type, []):\n
-  return context.getMovementList(portal_type=portal_type)\n
-if len(portal_type) != 2:\n
-  # use catalog\n
-  return context.getMovementList(portal_type=portal_type)\n
+    # First, compare the base prices (such as 1000 and 2000 Francs CFA).\n
+    result = - cmp(a.getBasePrice(), b.getBasePrice())\n
+    if result != 0:\n
+      return result\n
 \n
-line_list = context.objectValues(portal_type=portal_type[0])\n
-#context.log(\'line_list\', line_list)\n
-invert = 0\n
-if len(line_list) == 0:\n
-  # try with the second portal type\n
-  line_list = context.objectValues(portal_type=portal_type[1])\n
-  invert = 1\n
-if len(line_list) == 0:\n
-  return []\n
-if len(portal_type) == 1:\n
-  return line_list\n
-cell_list = []\n
-for line in line_list:\n
-  if invert:\n
-    cell_type = portal_type[0]\n
-  else:\n
-    cell_type = portal_type[1]\n
-  cell_list.extend(list(line.objectValues(portal_type=cell_type)))\n
+    # Second, compare the portal types.\n
+    result = cmp(a.getPortalType(), b.getPortalType())\n
+    if result != 0:\n
+      return result\n
 \n
-cell_list = context.Base_sortCurrencyCashList(cell_list)\n
+    # Last, compare the variations (such as the years 1994 and 2003).\n
+    result = cmp(a.getVariation(), b.getVariation())\n
+    return result\n
 \n
-return cell_list\n
+  currency_cash_list.sort(sortLines)\n
+  return currency_cash_list\n
+\n
+return sortCurrencyCashList(currency_cash_list)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -129,7 +122,7 @@ return cell_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=[], *argv, **kw</string> </value>
+            <value> <string>currency_cash_list</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,21 +148,8 @@ return cell_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>portal_type</string>
-                            <string>argv</string>
-                            <string>kw</string>
-                            <string>same_type</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>line_list</string>
-                            <string>invert</string>
-                            <string>cell_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>cell_type</string>
-                            <string>list</string>
+                            <string>currency_cash_list</string>
+                            <string>sortCurrencyCashList</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,40 +161,17 @@ return cell_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <list/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_getMovementList</string> </value>
+            <value> <string>Base_sortCurrencyCashList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

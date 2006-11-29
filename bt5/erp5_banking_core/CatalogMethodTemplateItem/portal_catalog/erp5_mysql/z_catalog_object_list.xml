@@ -171,6 +171,18 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getValidationState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getValidationStateTitle</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>hasCellContent</string> </key>
                                 <value>
                                   <dictionary/>
@@ -218,18 +230,6 @@
                                   <dictionary/>
                                 </value>
                             </item>
-                            <item>
-                                <key> <string>validation_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>validation_state_title</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -254,8 +254,8 @@
 <string>getSimulationStateTitle</string>
 <string>causality_state</string>
 <string>invoice_state</string>
-<string>validation_state</string>
-<string>validation_state_title</string>
+<string>getValidationState</string>
+<string>getValidationStateTitle</string>
 <string>payment_state</string>
 <string>event_state</string>
 <string>getReference</string>
@@ -303,8 +303,8 @@ getSimulationState\r\n
 getSimulationStateTitle\r\n
 causality_state\r\n
 invoice_state\r\n
-validation_state\r\n
-validation_state_title\r\n
+getValidationState\r\n
+getValidationStateTitle\r\n
 payment_state\r\n
 event_state\r\n
 getReference\r\n
@@ -376,8 +376,8 @@ VALUES\n
   <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="validation_state_title[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getValidationStateTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationStateTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
@@ -455,8 +455,8 @@ VALUES\n
   <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="validation_state_title[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getValidationStateTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationStateTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n

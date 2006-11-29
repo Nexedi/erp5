@@ -94,6 +94,7 @@ vault_inventory_dict = {}\n
 \n
 vault_url = vault\n
 vault_dict[vault_url] = 1\n
+total_inventory_list = []\n
 \n
 vault_inventory_dict[vault_url] = {}\n
 inventory_kw = {}\n
@@ -112,6 +113,10 @@ if kw.has_key("omit_output"):\n
   inventory_kw[\'omit_output\'] = kw[\'omit_output\']\n
 if kw.has_key("explanation_portal_type"):\n
   inventory_kw[\'explanation_portal_type\'] = kw[\'explanation_portal_type\']\n
+if kw.has_key("explanation_uid"):\n
+  inventory_kw[\'explanation_uid\'] = kw[\'explanation_uid\']\n
+  if len(kw[\'explanation_uid\'])==0:\n
+    return total_inventory_list\n
 \n
 if at_date is not None:\n
   # XXX this make sure we look at the end of the day\n
@@ -140,10 +145,10 @@ vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=v
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
-#context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault\n
-#                                                                , ignore_variation=0,src__=1\n
-#                                                               ,**inventory_kw\n
-#                                                              ))\n
+context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault\n
+                                                                , ignore_variation=0,src__=1\n
+                                                               ,**inventory_kw\n
+                                                              ))\n
 \n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n
@@ -171,7 +176,6 @@ for vault_inventory in vault_inventory_list:\n
   resource_dict[resource] = 1\n
 \n
 \n
-total_inventory_list = []\n
 \n
 #context.log(\'resource_dict\',resource_dict)\n
 #context.log(\'vault_inventory_dict\',vault_inventory_dict)\n
@@ -312,10 +316,12 @@ return repr([x for x in total_inventory_list])\n
                             <string>vault_inventory_dict</string>
                             <string>vault_url</string>
                             <string>_write_</string>
+                            <string>total_inventory_list</string>
                             <string>inventory_kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>len</string>
                             <string>column_list</string>
                             <string>_getiter_</string>
                             <string>_apply_</string>
@@ -326,13 +332,11 @@ return repr([x for x in total_inventory_list])\n
                             <string>total_quantity</string>
                             <string>total_price</string>
                             <string>abs</string>
-                            <string>total_inventory_list</string>
                             <string>i</string>
                             <string>variation_text</string>
                             <string>tmp_dict</string>
                             <string>variation</string>
                             <string>resource_value</string>
-                            <string>len</string>
                             <string>movement</string>
                             <string>explanation_value</string>
                             <string>getattr</string>

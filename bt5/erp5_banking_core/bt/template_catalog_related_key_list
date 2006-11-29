@@ -4,5 +4,4 @@ translated_simulation_state_title | translation/translated_message/z_related_tra
 site_id | category,catalog/id/z_related_default_site
 destination_payment_title | category,catalog/title/z_related_destination_payment
 destination_payment_id | category,catalog/id/z_related_destination_payment
-source_uid | category,catalog/uid/z_related_default_source
 destination_uid | category,catalog/uid/z_related_default_destination
