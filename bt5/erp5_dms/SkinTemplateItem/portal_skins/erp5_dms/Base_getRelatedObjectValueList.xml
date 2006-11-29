@@ -68,13 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get related object title list in a security-aware way (without throwing exception\n
+            <value> <string># get related object value list in a security-aware way (without throwing exception\n
 # if I don\'t have permissions to access the object)\n
 \n
-ob_list=context.Base_getRelatedObjectValueList(category)\n
-title_list=[o.getTitle() for o in ob_list]\n
+cat_value_list=context.getPropertyList(category)\n
+if cat_value_list is None:return []\n
 \n
-return filter(lambda t:t!=\'\',title_list)\n
+def getValueIfAvailable(cat_value):\n
+  ob=context.restrictedTraverse(cat_value,None)\n
+  return ob \n
+\n
+ob_list=[getValueIfAvailable(c) for c in cat_value_list]\n
+return ob_list\n
+return [o for o in ob_list if o is not None]\n
 </string> </value>
         </item>
         <item>
@@ -126,13 +132,15 @@ return filter(lambda t:t!=\'\',title_list)\n
                             <string>category</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>ob_list</string>
+                            <string>cat_value_list</string>
+                            <string>None</string>
+                            <string>getValueIfAvailable</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>c</string>
+                            <string>ob_list</string>
                             <string>o</string>
-                            <string>title_list</string>
-                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,7 +157,7 @@ return filter(lambda t:t!=\'\',title_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getRelatedObjectTitleList</string> </value>
+            <value> <string>Base_getRelatedObjectValueList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
