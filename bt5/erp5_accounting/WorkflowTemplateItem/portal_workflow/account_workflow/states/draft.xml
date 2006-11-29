@@ -86,18 +86,9 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Add portal content</string> </key>
-                    <value>
-                      <list>
-                        <string>Reviewer</string>
-                      </list>
                     </value>
                 </item>
                 <item>
@@ -106,18 +97,9 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Review portal content</string> </key>
-                    <value>
-                      <list>
-                        <string>Reviewer</string>
-                      </list>
                     </value>
                 </item>
                 <item>
@@ -128,7 +110,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
