@@ -74,7 +74,7 @@ reference=kw.get(\'reference\')\n
 if reference is None:\n
   return []\n
 \n
-searchargs=dict(reference=reference,portal_type=context.getPortalDocumentTypeList(),sort_on=\'version\')\n
+searchargs=dict(reference=reference,portal_type=context.getPortalDocumentTypeList(),sort_on=\'version\',sort_order=\'descending\')\n
 language=kw.get(\'language\')\n
 if language is not None:\n
   searchargs[\'language\']=language\n
@@ -82,7 +82,6 @@ version=kw.get(\'version\')\n
 if version is not None:\n
   searchargs[\'version\']=version\n
 res=list(context.portal_catalog(**searchargs))\n
-res.reverse() # can catalog do reverse sorting?\n
 return res\n
 </string> </value>
         </item>
