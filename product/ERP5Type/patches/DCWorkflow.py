@@ -26,7 +26,6 @@ from Products.CMFCore.utils import  _getAuthenticatedUser
 from DocumentTemplate.DT_Util import TemplateDict
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Cache import DEFAULT_CACHE_FACTORY
 from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
 from zLOG import LOG
@@ -37,16 +36,14 @@ from zLOG import LOG
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
 from Products.DCWorkflow.Guard import Guard
 
-# patched to add a description on worklist for ERP5 Web, and to add the cache
-# control for worklists
-def WorkflowUIMixin_setProperties( self, title, description='',
-            cache_factory_id='', manager_bypass=0, props=None, REQUEST=None):
+def WorkflowUIMixin_setProperties( self, title
+                                 , description='' # the only addition to WorkflowUIMixin.setProperties
+                                 , manager_bypass=0, props=None, REQUEST=None):
   """Sets basic properties.
   """
   self.title = str(title)
   self.description = str(description)
   self.manager_bypass = manager_bypass and 1 or 0
-  self.cache_factory_id = cache_factory_id
   g = Guard()
   if g.changeFromProperties(props or REQUEST):
       self.creation_guard = g
@@ -60,7 +57,6 @@ WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
 
 
-DCWorkflowDefinition_listGlobalActions_original = DCWorkflowDefinition.listGlobalActions
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -69,12 +65,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     Called on every request.
     Returns the actions to be displayed to the user.
     '''
-    if not self.worklists:
-      return None  # Optimization
-
-    portal = self._getPortalRoot()
     def _listGlobalActions(user=None, id=None, portal_path=None):
+      if not self.worklists:
+          return None  # Optimization
       sm = getSecurityManager()
+      portal = self._getPortalRoot()
       res = []
       fmt_data = None
       # We want to display some actions depending on the current date
@@ -101,6 +96,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   if not (guard is None or guard.check(sm, self, portal)):
                       dict['local_roles'] = guard.roles
                   # Patch to use ZSQLCatalog and get high speed
+                  # LOG("PatchedDCWorkflowDefinition", 0, dict)
                   searchres_len = int(apply(catalog.countResults, (), dict)[0][0])
                   if searchres_len == 0:
                       continue
@@ -125,17 +121,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       res.sort()
       return map((lambda (id, val): val), res)
 
-    cache_tool = getToolByName(self, 'portal_caches', None)
-    if cache_tool is not None:
-      # If we have a cache factory controlling this workflow's worklist cache
-      cache_factory = getattr(self, 'cache_factory_id', DEFAULT_CACHE_FACTORY)
-      _listGlobalActions = CachingMethod(_listGlobalActions,
-                                         id='%s_listGlobalActions' % self.id,
-                                         cache_factory=cache_factory)
-      user = str(_getAuthenticatedUser(self))
-      return _listGlobalActions(user=user, portal_path=portal.getPhysicalPath())
-    else:
-      return DCWorkflowDefinition_listGlobalActions_original(self, info)
+    # Return Cache
+    _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_duration = 300)
+    user = str(_getAuthenticatedUser(self))
+    return _listGlobalActions(user=user, id=self.id, portal_path=self._getPortalRoot().getPhysicalPath())
+
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 

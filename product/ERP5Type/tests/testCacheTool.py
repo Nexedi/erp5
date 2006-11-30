@@ -282,44 +282,6 @@ return result
       ## Cache  cleared shouldn't be previously cached
       self.assert_(1.0 < calculation_time)
 
-  def test_DCWorkflowIntegration(self, quiet=0, run=run_all_test):
-    """ Test Wokflow caching DCWorkflow global actions"""
-    portal = self.getPortal()
-    # set up caching environnement
-    ctool = portal.portal_caches
-    first_factory = ctool.newContent(portal_type='Cache Factory',
-                                     id='first_factory')
-    first_factory_cache = TestingCache({})
-    second_factory = ctool.newContent(portal_type='Cache Factory',
-                                     id='second_factory')
-    second_factory_cache = TestingCache({})
-    # emulate CachingMethod.factories initialization
-    CachingMethod.factories['first_factory'] = first_factory_cache
-    CachingMethod.factories['second_factory'] = second_factory_cache
-
-    # setup two workflows with different cache factories
-    wftool = portal.portal_workflow
-    wftool.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
-                              'first_workflow')
-    first_workflow = wftool._getOb('first_workflow')
-    first_workflow.cache_factory_id = 'first_factory'
-    first_workflow.worklists.addWorklist('dummy_worklist')
-
-    wftool.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
-                              'second_workflow')
-    second_workflow = wftool._getOb('second_workflow')
-    second_workflow.cache_factory_id = 'second_factory'
-    second_workflow.worklists.addWorklist('dummy_worklist')
-
-    # listing actions will use the corresponding cache
-    info = wftool._getOAI(ctool)
-    first_workflow.listGlobalActions(info)
-    self.assertEquals(1, first_factory_cache.getCacheMisses())
-    self.assertEquals(0, second_factory_cache.getCacheMisses())
-    second_workflow.listGlobalActions(info)
-    self.assertEquals(1, first_factory_cache.getCacheMisses())
-    self.assertEquals(1, second_factory_cache.getCacheMisses())
-
 if __name__ == '__main__':
     framework()
 else:
