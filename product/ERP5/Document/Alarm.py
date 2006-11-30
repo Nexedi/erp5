@@ -94,10 +94,7 @@ class Alarm(Periodicity, XMLObject):
       # Set the new date
       LOG('activeSense, self.getPath()',0,self.getPath())
 
-      #self.setStartDate(DateTime())
-      #self.setStopDate(DateTime())
       self.setNextAlarmDate()
-      self.reindexObject()
       method_id = self.getActiveSenseMethodId()
       if method_id is not None:
         method = getattr(self.activate(),method_id)

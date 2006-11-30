@@ -109,19 +109,10 @@ class AlarmTool(BaseTool):
     user = self.portal_catalog.getOwner()
     newSecurityManager(self.REQUEST, user)
     if to_active:
-      now = str(DateTime())
-      date_expression = '<= %s' % now
-      catalog_search = self.portal_catalog(portal_type = \
-        self.getPortalAlarmTypeList(), alarm_date = date_expression)
-    else:
-      catalog_search = self.portal_catalog(portal_type = \
-        self.getPortalAlarmTypeList())
-    alarm_list = map(lambda x:x.getObject(),catalog_search)
-    if to_active:
       now = DateTime()
-      date_expression = '<= %s' % str(now)
       catalog_search = self.portal_catalog(
-        portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression
+        portal_type = self.getPortalAlarmTypeList(), 
+        alarm_date={'query':now,'range':'ngt'}
       )
       # check again the alarm date in case the alarm was not yet reindexed
       alarm_list = [x.getObject() for x in catalog_search \
@@ -130,7 +121,7 @@ class AlarmTool(BaseTool):
       catalog_search = self.portal_catalog(
         portal_type = self.getPortalAlarmTypeList()
       )
-      alarm_list = map(lambda x:x.getObject(),catalog_search)
+      alarm_list = [x.getObject() for x in catalog_search]
     return alarm_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'tic')

@@ -90,8 +90,14 @@ class Periodicity(Base):
         # This is usefull to set the current date as parameter for
         # unit testing, by default it should be now
         current_date = DateTime()
+      if next_start_date is None:
+        next_start_date = current_date
       if next_start_date > current_date:
         return
+      else:
+        # Make sure the old date is not too far away
+        nb_days = int(current_date-next_start_date)
+        next_start_date = next_start_date + nb_days
 
       def validateMinute(self,date, previous_date):
         periodicity_minute_frequency = self.getPeriodicityMinuteFrequency()
@@ -156,14 +162,26 @@ class Periodicity(Base):
 
       previous_date = next_start_date
       next_start_date = addToDate(next_start_date,minute=1)
-      while not(next_start_date >= current_date \
-                and validateMinute(self,next_start_date, previous_date) \
-                and validateHour(self,next_start_date) \
-                and validateDay(self,next_start_date) \
-                and validateWeek(self,next_start_date) \
-                and validateMonth(self,next_start_date)):
-        next_start_date = addToDate(next_start_date,minute=1)
-      self.setAlarmDate(next_start_date)
+      while 1:
+        validate_minute = validateMinute(self,next_start_date, previous_date)
+        validate_hour = validateHour(self,next_start_date)
+        validate_day = validateDay(self,next_start_date)
+        validate_week = validateWeek(self,next_start_date)
+        validate_month = validateMonth(self,next_start_date)
+        if (next_start_date >= current_date \
+            and validate_minute and validate_hour and validate_day \
+            and validate_week and validate_month):
+          break
+        else:
+          if not(validate_minute):
+            next_start_date = addToDate(next_start_date,minute=1)
+          else:
+            if not(validate_hour):
+              next_start_date = addToDate(next_start_date,hour=1)
+            else:
+              if not(validate_day and validate_week and validate_month):
+                next_start_date = addToDate(next_start_date,day=1)
+      self.Alarm_zUpdateAlarmDate(uid=self.getUid(),alarm_date=next_start_date)
 
 
     security.declareProtected(Permissions.View, 'getAlarmDate')
@@ -171,9 +189,16 @@ class Periodicity(Base):
       """
       returns something like ['Sunday','Monday',...]
       """
-      alarm_date = self._baseGetAlarmDate()
-      if alarm_date is None:
-        alarm_date = self.getPeriodicityStartDate()
+      #alarm_date = self._baseGetAlarmDate()
+      #if alarm_date is None:
+      #  alarm_date = self.getPeriodicityStartDate()
+      alarm_date=None
+      result_list = self.Alarm_zGetAlarmDate(uid=self.getUid())
+      if len(result_list)==1:
+        alarm_date = result_list[0].alarm_date
+        periodicity_start_date = self.getPeriodicityStartDate()
+        if alarm_date < periodicity_start_date:
+          alarm_date = periodicity_start_date
       return alarm_date
 
 
