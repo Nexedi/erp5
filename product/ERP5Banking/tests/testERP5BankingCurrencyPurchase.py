@@ -87,7 +87,6 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
             'erp5_banking_inventory',
             'erp5_banking_cash')
 
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
@@ -103,7 +102,7 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
     # variation list is the list of years for banknotes and coins
     self.variation_list = ('variation/1992', 'variation/2003')
 
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=['paris',])
     self.createBanknotesAndCoins()
 
     self.bi_counter = self.paris.surface.banque_interne

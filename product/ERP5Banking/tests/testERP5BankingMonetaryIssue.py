@@ -172,7 +172,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin, TestER
     self.monetary_reception_module = self.getMonetaryReceptionModule()
     self.current_date = DateTime()
     self.createManagerAndLogin()
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=['paris',])
     self.createBanknotesAndCoins()
     self.issue = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.reception = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis

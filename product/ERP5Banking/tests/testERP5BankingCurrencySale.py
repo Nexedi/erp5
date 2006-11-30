@@ -103,7 +103,7 @@ class TestERP5BankingCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     # variation list is the list of years for banknotes and coins
     self.variation_list = ('variation/1992', 'variation/2003')
 
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=['paris',])
     self.createBanknotesAndCoins()
 
     # Before the test, we need to input the inventory

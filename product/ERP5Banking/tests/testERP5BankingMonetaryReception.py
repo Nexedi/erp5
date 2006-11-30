@@ -102,7 +102,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.monetary_reception_module = self.getMonetaryReceptionModule()
 
     self.createManagerAndLogin()
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=['paris',])
     self.createBanknotesAndCoins()
     self.reception = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis
     self.checkUserFolderType()
