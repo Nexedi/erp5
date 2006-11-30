@@ -231,6 +231,12 @@ msgstr "Ligne de Transaction Comptable"
 msgid "Accounting Transaction Lines"
 msgstr "Lignes de Transaction Comptable"
 
+msgid "Accounting Transaction Line added."
+msgstr "Ligne comptable ajoutée"
+
+msgid "Accounting Transaction Title"
+msgstr "Libellé"
+
 msgid "Accounting Transactions"
 msgstr "Transactions Comptables"
 
@@ -2049,6 +2055,12 @@ msgstr "Création+effectuée"
 msgid "Omit \"Grouped References\""
 msgstr "Sans les écritures lettrées"
 
+msgid "Action impossible : transaction is not balanced for source section"
+msgstr "Action impossible : l'écriture n'est pas équilibrée"
+
+msgid "Action impossible : transaction is not balanced for destination section"
+msgstr "Action impossible : l'écriture n'est pas équilibrée"
+
 msgid "Omit Balanced Account"
 msgstr "Sans compte soldés"
 
@@ -2766,6 +2778,18 @@ msgstr "Forme de la Sté"
 msgid "Sorry your selection has changed"
 msgstr "Désolé, votre séléction a changé"
 
+msgid "Sorry+You+Can+Not+Delete+${count}+Item."
+msgstr "Vous+ne+pouvez+pas+supprimer+${count}+document."
+
+msgid "Sorry+You+Can+Not+Delete+${count}+Items."
+msgstr "Vous+ne+pouvez+pas+supprimer+${count}+documents."
+
+msgid "Sorry,+${count}+Items+Are+In+Use."
+msgstr "Suppression+impossible.+D'autres+objets+dépendent+de+celui-ci."
+
+msgid "Sorry,+1+Item+Is+In+Use."
+msgstr "Suppression+impossible.+Un+autre+objet+dépend+de+celui-ci."
+
 msgid "Sort"
 msgstr "Trier"
 
@@ -2828,6 +2852,14 @@ msgstr ""
 
 msgid "Spreadsheet Name"
 msgstr ""
+
+msgid ""
+"The values above are the parameters of the transaction list displayed below."
+"<br/>Those parameters have a portal wide scope and can be edited in the <a "
+"href='${url}'>preference screen</a>."
+msgstr ""
+"Les <a href='${url}'>préférences comptables</a> permettent de modifier les "
+"paramètres de filtrage de la liste de transactions ci-dessous. "
 
 msgid "Start Date"
 msgstr "Date de début"
