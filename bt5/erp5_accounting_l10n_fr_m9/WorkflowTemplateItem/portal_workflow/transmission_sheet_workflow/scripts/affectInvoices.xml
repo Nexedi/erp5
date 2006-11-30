@@ -70,11 +70,14 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Affect this transmission sheet and all related invoices\n
 """\n
+from DateTime import DateTime\n
+\n
 transmission_sheet = sci[\'object\']\n
-agent = sci[\'kwargs\'][\'agent\']\n
 portal = transmission_sheet.getPortalObject()\n
+agent = portal.portal_workflow.getInfoFor(transmission_sheet, \'assignee\')\n
 \n
 transmission_sheet.setSourceAdministration(agent)\n
+transmission_sheet.setVisaDate(DateTime())\n
 transmission_sheet.updateLocalRolesOnSecurityGroups()\n
 \n
 for invoice in transmission_sheet.getAggregateRelatedValueList(\n
@@ -148,11 +151,12 @@ for invoice in transmission_sheet.getAggregateRelatedValueList(\n
                         <value>
                           <tuple>
                             <string>sci</string>
+                            <string>DateTime</string>
                             <string>_getitem_</string>
                             <string>transmission_sheet</string>
-                            <string>agent</string>
                             <string>_getattr_</string>
                             <string>portal</string>
+                            <string>agent</string>
                             <string>_getiter_</string>
                             <string>invoice</string>
                           </tuple>
