@@ -1,3 +1,4 @@
+erp5_mysql/z0_drop_alarm
 erp5_mysql/z0_drop_catalog
 erp5_mysql/z0_drop_category
 erp5_mysql/z0_drop_compatibility
@@ -22,6 +23,7 @@ erp5_mysql/z0_uncatalog_predicate
 erp5_mysql/z0_uncatalog_predicate_category
 erp5_mysql/z0_uncatalog_stock
 erp5_mysql/z0_uncatalog_subject
+erp5_mysql/z_catalog_alarm_list
 erp5_mysql/z_catalog_compatibility_list
 erp5_mysql/z_catalog_delivery_list
 erp5_mysql/z_catalog_fulltext_list
@@ -39,6 +41,7 @@ erp5_mysql/z_catalog_subject_list
 erp5_mysql/z_catalog_translation_list
 erp5_mysql/z_clear_reserved
 erp5_mysql/z_count_results
+erp5_mysql/z_create_alarm
 erp5_mysql/z_create_catalog
 erp5_mysql/z_create_category
 erp5_mysql/z_create_compatibility
