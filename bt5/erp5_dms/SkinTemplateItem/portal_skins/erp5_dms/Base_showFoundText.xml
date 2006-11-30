@@ -76,11 +76,13 @@ maxlines=5\n
 txt=brain.getObject().SearchableText()\n
 st=selection.params.get(\'SearchableText\')\n
 if st is None:\n
-  return \'\'\n
+  # we should return something\n
+  return txt[min(len(txt)-300,200):500] # a somewhat arbitrary choice to trim searchable attrs\n
 args=context.parseSearchString(st)\n
 sw=args.get(\'SearchableText\')\n
-if sw is None:\n
-  return \'\'\n
+if sw is None or sw==\'\':\n
+  # we should return something\n
+  return txt[min(len(txt)-300,200):500] # a somewhat arbitrary choice to trim searchable attrs\n
 res=context.cutFound(context,txt,sw,tags,trail,maxlines)\n
 return \' \'.join(map(str,res))\n
 
@@ -136,6 +138,9 @@ return \' \'.join(map(str,res))\n
                             <string>txt</string>
                             <string>st</string>
                             <string>None</string>
+                            <string>_getitem_</string>
+                            <string>min</string>
+                            <string>len</string>
                             <string>context</string>
                             <string>args</string>
                             <string>sw</string>
