@@ -60,6 +60,7 @@ class Item(XMLObject, Amount, ImmobilisableItem):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isMovement = 0
 
     # Declarative security
     security = ClassSecurityInfo()
