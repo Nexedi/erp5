@@ -75,6 +75,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>isAccountable</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>isMovement</string> </key>
                                 <value>
                                   <dictionary/>
@@ -94,6 +100,7 @@
                         <value>
                           <list>
 <string>isMovement</string>
+<string>isAccountable</string>
 <string>uid</string>
 <string>getStopDate</string>
 <string>getBaobabDestinationUid</string>
@@ -119,6 +126,7 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>isMovement\r\n
+isAccountable\r\n
 uid\r\n
 getStopDate\r\n
 getBaobabDestinationUid\r\n
@@ -178,7 +186,7 @@ WHERE\n
 \n
 <dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item] and isAccountable[loop_item] ">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getAggregateUidList[loop_item]">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
@@ -255,7 +263,7 @@ WHERE\n
 \n
 <dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item] and isAccountable[loop_item] ">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getAggregateUidList[loop_item]">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
