@@ -71,13 +71,17 @@
             <value> <string>"""Returns a list of payment transactions related to invoice "contained" by\n
 this transmission sheet.\n
 """\n
-\n
+cached_result = context.REQUEST.other.get(script.getId())\n
+if cached_result:\n
+  return cached_result\n
+  \n
 related_payment_transaction_list = []\n
 for invoice in context.getAggregateRelatedValueList(\n
           portal_type=context.getPortalInvoiceTypeList()):\n
   related_payment_transaction_list.extend(\n
     invoice.getCausalityRelatedValueList(portal_type=\'Payment Transaction\'))\n
 \n
+context.REQUEST.other[script.getId()] = related_payment_transaction_list\n
 return related_payment_transaction_list\n
 </string> </value>
         </item>
@@ -122,11 +126,14 @@ return related_payment_transaction_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>related_payment_transaction_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>script</string>
+                            <string>cached_result</string>
+                            <string>related_payment_transaction_list</string>
+                            <string>_getiter_</string>
                             <string>invoice</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
