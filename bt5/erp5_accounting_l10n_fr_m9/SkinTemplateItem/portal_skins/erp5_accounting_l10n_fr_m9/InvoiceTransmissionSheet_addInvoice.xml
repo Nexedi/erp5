@@ -93,12 +93,6 @@ return context.REQUEST.RESPONSE.redirect(\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>uids=[], **kw</string> </value>
         </item>
