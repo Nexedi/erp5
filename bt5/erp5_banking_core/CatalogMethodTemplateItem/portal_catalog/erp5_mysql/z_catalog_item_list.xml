@@ -178,7 +178,7 @@ WHERE\n
 \n
 <dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item] and isAccountable[loop_item] ">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
@@ -255,7 +255,7 @@ WHERE\n
 \n
 <dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item] and isAccountable[loop_item] ">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
