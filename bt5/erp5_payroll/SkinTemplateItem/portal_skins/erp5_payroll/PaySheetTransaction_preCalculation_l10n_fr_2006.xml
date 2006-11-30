@@ -108,6 +108,7 @@ ceiling_salary_list = { 2003: 2432.0\n
                       , 2004: 2476.0\n
                       , 2005: 2516.0\n
                       , 2006: 2589.0\n
+                      , 2007: 2682.0\n
                       }\n
 # The default ceiling salary is the last one\n
 paysheet_year = start_date.year()\n
