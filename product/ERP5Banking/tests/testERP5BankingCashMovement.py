@@ -160,7 +160,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                              'quantity': self.quantity_200}
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
-    self.vault_source = self.paris.caveau.externes.encaisse_des_externes
+    self.vault_source = self.paris.caveau.auxiliaire.encaisse_des_externes
     self.vault_destination = self.madrid.caveau.reserve.encaisse_des_billets_et_monnaies
 
     self.createCashInventory(source=None, destination=self.vault_source, currency=self.currency_1,
@@ -244,7 +244,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # check its portal type
     self.assertEqual(self.cash_movement.getPortalType(), 'Cash Movement')
     # check that its source is vault_source
-    self.assertEqual(self.cash_movement.getSource(), 'site/testsite/paris/caveau/externes/encaisse_des_externes')
+    self.assertEqual(self.cash_movement.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_externes')
     # check that its destination is vault_destination
     self.assertEqual(self.cash_movement.getDestination(), 'site/testsite/madrid/caveau/reserve/encaisse_des_billets_et_monnaies')
     self.setDocumentSourceReference(self.cash_movement)
