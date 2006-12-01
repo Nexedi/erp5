@@ -1732,8 +1732,9 @@ class Base( CopyContainer,
     """
       Returns the title or the id if the id is empty
     """
-    if self.getTitle()is not None:
-      title = str(self.getTitle())
+    title = self.getTitle()
+    if title is not None:
+      title = str(title)
       if title == '' or title is None:
         return self.getId()
       else:
@@ -1749,6 +1750,21 @@ class Base( CopyContainer,
     """Returns the title and the id in parenthesis
     """
     return self.title_and_id()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTranslatedTitleOrId')
+  def getTranslatedTitleOrId(self):
+    """
+    Returns the translated title or the id if the id is empty
+    """
+    title = self.getTranslatedTitle()
+    if title is not None:
+      title = str(title)
+      if title == '' or title is None:
+        return self.getId()
+      else:
+        return title
+    return self.getId()
 
   # This method allows to sort objects in list is a more reasonable way
   security.declareProtected(Permissions.View, 'getIntId')
