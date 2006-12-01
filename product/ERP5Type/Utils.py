@@ -1307,9 +1307,9 @@ def setDefaultProperties(property_holder, object=None):
           # setattr(property_holder, prop['id'], None) # This makes sure no acquisition will happen
           # but is wrong when we use storage_id .....
         storage_id = prop.get('storage_id', prop['id'])
-        if not hasattr(BaseClass, storage_id):
+        #if not hasattr(BaseClass, storage_id):
           # setattr(property_holder, storage_id, None) # This breaks things with aq_dynamic
-          setattr(BaseClass, storage_id, None) # This blocks acquisition
+          #setattr(BaseClass, storage_id, None) # This blocks acquisition
         #else:
           #LOG('existing property',0,str(storage_id))
           #if prop.get('default') is not None:
