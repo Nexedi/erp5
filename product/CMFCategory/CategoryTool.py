@@ -743,7 +743,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if type(spec) is type('a'):
         spec = [spec]
       # Filter categories
-      if hasattr(context, 'categories'):
+      if hasattr(aq_base(context), 'categories'):
         for category_url in self._getCategoryList(context):
           try:
             index = category_url.index('/')
@@ -869,7 +869,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw ) # Not acquired because this is the first try
                                                              # to get a local defined category
-                            
+      
       base_category_value = self.getCategoryValue(base_category)
       #LOG("base_category_value",0,str(base_category_value))
       #LOG("result",0,str(result))
@@ -1139,7 +1139,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryList' )
     def _getCategoryList(self, context):
-      if hasattr(context, 'categories'):
+      if hasattr(aq_base(context), 'categories'):
         if type(context.categories) == type((1,)):
           result = list(context.categories)
         elif type(context.categories) == type([]):
