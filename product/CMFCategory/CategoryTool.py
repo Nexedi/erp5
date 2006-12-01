@@ -871,7 +871,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                              # to get a local defined category
       
       base_category_value = self.getCategoryValue(base_category)
-      #LOG("base_category_value",0,str(base_category_value))
       #LOG("result",0,str(result))
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
@@ -898,7 +897,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #if base_category_value.acquisition_mask_value:
             #  # If acquisition masks, then we must return now
             #  return new_result
-            if base_category_value.acquisition_append_value:
+            if getattr(base_category_value, 'acquisition_append_value', False):
               # If acquisition appends, then we must append to the result
               result.extend(new_result)
             elif len(new_result) > 0:
@@ -969,13 +968,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
                   else:
                     #LOG("No recursive call ",0,str((spec, my_acquisition_object.portal_type)))
                     new_result = []
-                  if base_category_value.acquisition_append_value:
+                  if getattr(base_category_value, 'acquisition_append_value', False):
                     # If acquisition appends, then we must append to the result
                     result.extend(new_result)
                   elif len(new_result) > 0:
                     #LOG("new_result ",0,str(new_result))
-                    if (base_category_value.acquisition_copy_value and len(original_result) == 0) \
-                                                    or base_category_value.acquisition_sync_value:
+                    if (getattr(base_category_value, 'acquisition_copy_value', False) and len(original_result) == 0) \
+                                                    or getattr(base_category_value, 'acquisition_sync_value', False):
                       # If copy is set and result was empty, then copy it once
                       # If sync is set, then copy it again
                       self.setCategoryMembership( context, base_category, new_result,
@@ -984,8 +983,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     return new_result
 
 
-          if (base_category_value.acquisition_copy_value or base_category_value.acquisition_sync_value)\
-                                                         and len(result) > 0:
+          if (getattr(base_category_value, 'acquisition_copy_value', False) or \
+              getattr(base_category_value, 'acquisition_sync_value', False))\
+              and len(result) > 0:
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
             self.setCategoryMembership( context, base_category, result,
