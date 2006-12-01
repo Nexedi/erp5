@@ -253,6 +253,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       module.manage_delObjects([x for x in module.objectIds()])
     # commit this
     get_transaction().commit()
+    self.tic()
     clearCache()
 
   def loginAsUser(self, username):
