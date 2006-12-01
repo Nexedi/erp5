@@ -60,10 +60,10 @@
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">
                     <a href="method"
                       tal:condition="report_tree/is_open"
-                      tal:attributes="href string:portal_selections/foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTitleOrId" i18n:translate="" i18n:domain="ui">Domain</b></a>
+                      tal:attributes="href string:portal_selections/foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>
                     <a href="method"
                       tal:condition="not: report_tree/is_open"
-                      tal:attributes="href string:portal_selections/unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTitleOrId" i18n:translate="" i18n:domain="ui">Domain</tal:block></a>
+                      tal:attributes="href string:portal_selections/unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>
                   </td>
                 </tr>
               </table>

@@ -2144,7 +2144,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     # FIXME: This part should be replaced with Page Templates.
     html_list = []
     ui_domain = 'erp5_ui'
-    context_domain = 'erp5_context'
+    context_domain = 'erp5_content'
     param_dict = self.getParamDict()
 
     # Prepare format parameters.
@@ -2232,10 +2232,10 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
           if report_tree.is_open:
             method_id = 'foldDomain'
-            content = u'-&nbsp;<b>%s</b>' % unicode(Message(domain = ui_domain, message = report_tree.obj.getTitleOrId()))
+            content = u'-&nbsp;<b>%s</b>' % unicode(report_tree.obj.getTranslatedTitleOrId())
           else:
             method_id = 'unfoldDomain'
-            content = u'+&nbsp;%s' % unicode(Message(domain = ui_domain, message = report_tree.obj.getTitleOrId()))
+            content = u'+&nbsp;%s' % unicode(report_tree.obj.getTranslatedTitleOrId())
 
           html_list.append("""\
       <td nowrap valign="top" align="left" colspan="%d">
