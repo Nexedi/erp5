@@ -31,6 +31,7 @@ from Base import func_code, type_definition, list_types,\
 from TypeDefinition import asList, identity
 import Base
 from Products.ERP5Type.PsycoWrapper import psyco
+from Acquisition import aq_base
 
 from zLOG import LOG
 
@@ -261,7 +262,7 @@ class ListGetter(Method):
         default = args[0]
       else:
         default = self._default
-      list_value = getattr(instance, self._storage_id, None)
+      list_value = getattr(aq_base(instance), self._storage_id, None)
       # We should not use here self._null but None instead XXX
       if list_value not in self._null:
         if self._is_tales_type:
