@@ -522,7 +522,7 @@ class TestERP5BankingMixin:
                 ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         # caveau
         caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
-        for s in ['auxiliaire', 'reserve', 'externes', 'serre','devises']:
+        for s in ['auxiliaire', 'reserve', 'serre']:
           s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
           if s.getId() == 'serre':
             for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
@@ -639,6 +639,11 @@ class TestERP5BankingMixin:
     bank_account = person.newContent(id = account_id,
                                      portal_type = 'Bank Account',
                                      price_currency_value = currency,
+                                     bank_country_code='k',
+                                     bank_code='1234',
+                                     branch='12345',
+                                     bank_account_number='123456789012',
+                                     bank_account_key='12',
                                      **kw)
     # validate this bank account for payment
     bank_account.validate()
