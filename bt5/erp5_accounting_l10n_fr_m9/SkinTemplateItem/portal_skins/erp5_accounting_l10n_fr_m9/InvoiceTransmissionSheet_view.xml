@@ -105,6 +105,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_string_index</string>
                         <string>my_description</string>
                         <string>total_amount</string>
                         <string>my_source_administration_title</string>

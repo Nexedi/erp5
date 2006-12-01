@@ -334,6 +334,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>string_index</string>
+                          <string>Fiscal Year</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Transmission Sheet Reference</string>
                         </tuple>
@@ -496,6 +500,10 @@
                           <string>Transmission Sheet Reference</string>
                         </tuple>
                         <tuple>
+                          <string>string_index</string>
+                          <string>Fiscal Year</string>
+                        </tuple>
+                        <tuple>
                           <string>origin_title</string>
                           <string>Transmission Sheet Origin</string>
                         </tuple>
@@ -552,6 +560,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Transmission Sheet Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>string_index</string>
+                          <string>Fiscal Year</string>
                         </tuple>
                         <tuple>
                           <string>origin_title</string>
