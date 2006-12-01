@@ -550,7 +550,7 @@ class TestERP5BankingMixin:
                 s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
 
-  def openCounterDate(self, date=None, site=None):
+  def openCounterDate(self, date=None, site=None,id='counter_date_1'):
     """
     open a couter date fort the given date
     by default use the current date
@@ -562,7 +562,7 @@ class TestERP5BankingMixin:
     # create a counter date
     counter_date_module = self.getCounterDateModule()
 
-    counter_date = counter_date_module.newContent(id='counter_date_1', portal_type="Counter Date",
+    counter_date = counter_date_module.newContent(id=id, portal_type="Counter Date",
                                                             site_value = site,
                                                             start_date = date)
     # open the counter date
@@ -636,14 +636,19 @@ class TestERP5BankingMixin:
     """
     Create and initialize a bank account for a person
     """
+    if not kw.has_key('bank_country_code'):
+      kw['bank_country_code'] = 'k'
+    if not kw.has_key('bank_code'):
+      kw['bank_code'] = '1234'
+    if not kw.has_key('branch'):
+      kw['branch'] = '12345'
+    if not kw.has_key('bank_account_number'):
+      kw['bank_account_number'] = '123456789012'
+    if not kw.has_key('bank_account_key'):
+      kw['bank_account_key'] = '12'
     bank_account = person.newContent(id = account_id,
                                      portal_type = 'Bank Account',
                                      price_currency_value = currency,
-                                     bank_country_code='k',
-                                     bank_code='1234',
-                                     branch='12345',
-                                     bank_account_number='123456789012',
-                                     bank_account_key='12',
                                      **kw)
     # validate this bank account for payment
     bank_account.validate()
