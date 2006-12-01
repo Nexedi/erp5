@@ -80,8 +80,8 @@ if workflow_action in action_id_list:\n
   try : \n
     context.portal_workflow.doActionFor( o,\n
      workflow_action,\n
-     comment = comment\n
-     )\n
+     comment=comment,\n
+     **kw)\n
   except ValidationFailed, message: \n
     if not batch :\n
       context.REQUEST.RESPONSE.redirect(\n
@@ -109,7 +109,7 @@ if workflow_action in action_id_list:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>workflow_action=None, comment=\'\', batch=1</string> </value>
+            <value> <string>workflow_action=None, comment=\'\', batch=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -138,6 +138,7 @@ if workflow_action in action_id_list:\n
                             <string>workflow_action</string>
                             <string>comment</string>
                             <string>batch</string>
+                            <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
@@ -147,6 +148,7 @@ if workflow_action in action_id_list:\n
                             <string>filter</string>
                             <string>map</string>
                             <string>action_id_list</string>
+                            <string>_apply_</string>
                             <string>message</string>
                           </tuple>
                         </value>
