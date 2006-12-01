@@ -68,35 +68,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-counter_date = state_change[\'object\']\n
+            <value> <string># Make sure there is not any operation wich is not finished yet\n
+# This is usefull when we close a counter date\n
 \n
-# First, make sure there is not any counter date open for this site\n
-site_uid = context.getSiteUid()\n
-counter_date_list = [x.getObject() for x in context.portal_catalog(portal_type=\'Counter Date\',site_uid=site_uid,simulation_state=\'open\')]\n
-for other_counter in counter_date_list:\n
-  if other_counter.getUid()!=counter_date.getUid():\n
-    msg = Message(domain=\'ui\',message="Sorry, there is already a counter date opened")\n
-    raise ValidationFailed (msg,)\n
-    \n
-listbox = state_change.kwargs.get(\'listbox\',None)\n
-\n
-# First make sure we can open a counter date only\n
-# if the date defined on the document is the current date\n
-start_date = counter_date.getStartDate()\n
-from DateTime import DateTime\n
-now = DateTime()\n
-\n
-if now.Date() != start_date.Date():\n
-  msg = Message(domain=\'ui\',message="Sorry, the date is not today")\n
-  raise ValidationFailed (msg,)\n
-\n
-if listbox is not None:\n
-  for line in listbox:\n
-    if line["choice"] == "open":\n
-      counter = context.restrictedTraverse("%s" %(line[\'listbox_key\'],))\n
-      counter.open()\n
+not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\')\n
+if site is None:\n
+  root_site_url = context.Baobab_getUserAssignedRootSiteList()[0]\n
+  site = context.portal_categories.restrictedTraverse(root_site_url)\n
+root_site_uid = site.getUid()\n
+document_list = [x.getObject() for x in context.portal_catalog(\n
+                                                  simulation_state=not_closed_state_list,\n
+                                                  source_uid=root_site_uid)]\n
+document_list.extend([x.getObject() for x in context.portal_catalog(\n
+                                                  simulation_state=not_closed_state_list,\n
+                                                  destination_uid=root_site_uid)])\n
+for document in document_list:\n
+  # Cash movement in ordered stated are allowed\n
+  if document.getPortalType() in (\'Cash Movement\',):\n
+    if document.getSimulationState()==\'planned\':\n
+      continue\n
+  from Products.ERP5Type.Message import Message\n
+  from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+  portal_type = document.getTranslatedPortalType()\n
+  reference = document.getReference()\n
+  if reference is None:\n
+    reference = Message(domain=\'ui\',message=\'Not defined\')\n
+  message = Message(domain="ui", \n
+                message="Sorry, the $portal_type (reference:$reference) is not finished",\n
+                mapping={\'portal_type\':portal_type,\'reference\':reference})\n
+  raise ValidationFailed,message\n
 </string> </value>
         </item>
         <item>
@@ -118,8 +118,14 @@ if listbox is not None:\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, *args, **kw</string> </value>
+            <value> <string>site=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -145,32 +151,27 @@ if listbox is not None:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>site</string>
+                            <string>not_closed_state_list</string>
+                            <string>None</string>
                             <string>_getitem_</string>
-                            <string>counter_date</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>site_uid</string>
+                            <string>root_site_url</string>
+                            <string>root_site_uid</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>counter_date_list</string>
-                            <string>other_counter</string>
-                            <string>msg</string>
-                            <string>None</string>
-                            <string>listbox</string>
-                            <string>start_date</string>
-                            <string>DateTime</string>
-                            <string>now</string>
-                            <string>line</string>
-                            <string>counter</string>
+                            <string>document_list</string>
+                            <string>document</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>portal_type</string>
+                            <string>reference</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -182,12 +183,14 @@ if listbox is not None:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>openAllCounter</string> </value>
+            <value> <string>Baobab_checkRemainingOperation</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

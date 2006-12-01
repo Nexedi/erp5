@@ -145,10 +145,10 @@ vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=v
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
-context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault\n
-                                                                , ignore_variation=0,src__=1\n
-                                                               ,**inventory_kw\n
-                                                              ))\n
+#context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault\n
+#                                                                , ignore_variation=0,src__=1\n
+#                                                               ,**inventory_kw\n
+#                                                              ))\n
 \n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n
