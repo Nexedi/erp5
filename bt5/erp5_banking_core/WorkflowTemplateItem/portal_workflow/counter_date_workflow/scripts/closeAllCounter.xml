@@ -83,11 +83,11 @@ while True:\n
     break\n
   site = site.getParentValue()\n
 \n
-# First make sure there is nothing any more on counters\n
-transaction.Baobab_checkStockBeforeClosingDate(site=site)\n
-\n
-# Then make sure there is not any pending operation\n
+# First make sure there is not any pending operation\n
 transaction.Baobab_checkRemainingOperation(site=site)\n
+\n
+# Then make sure there is nothing any more on counters\n
+transaction.Baobab_checkStockBeforeClosingDate(site=site)\n
 \n
 current_date = transaction.getStartDate()\n
 counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", simulation_state = [\'open\', \'closing\'], site_uid = site.getUid())]\n
