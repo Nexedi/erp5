@@ -69,8 +69,26 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>req=context.REQUEST\n
+# with any of\n
 st=req.get(\'SearchableText\',\'\')\n
 context.log(st)\n
+# exact phrase\n
+s_phrase=req.get(\'SearchableText_phrase\',\'\')\n
+if s_phrase!="":\n
+  st+=\' "\'+s_phrase+\'"\'\n
+# with all words\n
+s_all=req.get(\'SearchableText_all\',\'\')\n
+if s_all!="":\n
+  st+=\' \'+\' \'.join(\'+\'+w for w in s_all.split(\' \'))\n
+# without words\n
+s_without=req.get(\'SearchableText_without\',\'\')\n
+if s_without!="":\n
+  st+=\' \'+\' \'.join(\'-\'+w for w in s_without.split(\' \'))\n
+# by creation date\n
+daterange=req.get(\'created_within\',\'\')\n
+if daterange!=\'\':\n
+  st+=\' created:\'+daterange\n
+# portal type\n
 doctype=req.get(\'search_portal_type\')\n
 context.log(doctype)\n
 if doctype==\'all\':doctype=None\n
@@ -93,16 +111,19 @@ for c in (\'group\',\'function\',\'site\'):\n
   cval=req.get(\'search_\'+c)\n
   if cval:\n
     st+=\' %s:%s\' % (c,cval)\n
+#only my docs\n
+mine=req.get(\'mine\')\n
+if mine:\n
+  st+=\' mine:yes\'\n
+# only newest versions\n
+newest=req.get(\'newest\')\n
+if newest:\n
+  st+=\' newest:yes\'\n
+# search mode\n
 sm=req.get(\'search_mode\')\n
 smmap={\'in_boolean_mode\':\'boolean\',\'with_query_expansion\':\'expanded\'}\n
 if sm and smmap.has_key(sm):\n
   st+=\' mode:%s\' % smmap[sm]\n
-mine=req.get(\'mine\')\n
-if mine:\n
-  st+=\' mine:yes\'\n
-newest=req.get(\'newest\')\n
-if newest:\n
-  st+=\' newest:yes\'\n
 context.log(st)\n
 return st\n
 </string> </value>
@@ -159,6 +180,10 @@ return st\n
                             <string>context</string>
                             <string>req</string>
                             <string>st</string>
+                            <string>s_phrase</string>
+                            <string>s_all</string>
+                            <string>s_without</string>
+                            <string>daterange</string>
                             <string>doctype</string>
                             <string>None</string>
                             <string>isinstance</string>
@@ -171,10 +196,10 @@ return st\n
                             <string>_getiter_</string>
                             <string>c</string>
                             <string>cval</string>
-                            <string>sm</string>
-                            <string>smmap</string>
                             <string>mine</string>
                             <string>newest</string>
+                            <string>sm</string>
+                            <string>smmap</string>
                           </tuple>
                         </value>
                     </item>
