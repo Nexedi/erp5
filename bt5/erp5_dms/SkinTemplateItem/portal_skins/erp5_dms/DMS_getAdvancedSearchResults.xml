@@ -123,13 +123,13 @@ mt=kw.get(\'modification_to\')\n
 \n
 wheres=[]\n
 if cf:\n
-  wheres.append(\'creation_date>"\'+str(cf)+\'"\')\n
+  wheres.append(\'creation_date>"\'+cf.strftime(\'%Y-%m-%d\')+\'"\')\n
 if ct:\n
-  wheres.append(\'creation_date<"\'+str(ct)+\'"\')\n
+  wheres.append(\'creation_date<"\'+cf.strftime(\'%Y-%m-%d\')+\'"\')\n
 if mf:\n
-  wheres.append(\'modification_date>"\'+str(mf)+\'"\')\n
+  wheres.append(\'modification_date>"\'+cf.strftime(\'%Y-%m-%d\')+\'"\')\n
 if mt:\n
-  wheres.append(\'modification_date<"\'+str(mt)+\'"\')\n
+  wheres.append(\'modification_date<"\'+cf.strftime(\'%Y-%m-%d\')+\'"\')\n
 if wheres!=[]:\n
   kw[\'where_expression\']=\' AND \'.join(wheres)\n
 \n
