@@ -19,6 +19,20 @@ Everything else is treated as SearchableText
 
 
 import re
+import sys
+sys.path.append('/usr/lib/zope/lib/python/')
+from DateTime import DateTime
+
+def dateRangeProc(s):
+    m=re.match('(\d)([my]).*',s)
+    try:
+        dif=0
+        gr=m.groups()
+        if gr[1]=='m':dif=int(gr[0])*30
+        if gr[1]=='y':dif=int(gr[0])*365
+        return ('creation_from',DateTime()-dif)
+    except AttributeError, IndexError:
+        return ()
 
 # parsing defined here
 simulation_states=()
@@ -29,7 +43,7 @@ filestripper=lambda s: ('source_reference',s.replace('"',''))
 state=lambda s:('simulation_state',parsestates(s))
 type=lambda s:('portal_type',parsestates(s))
 paramsmap=dict(file=filestripper,type=type,reference='reference',filetype=filetyper,state=state,\
-        language='language',version='version')
+        language='language',version='version',created=dateRangeProc)
 
 def parsestates(s):
     print s
@@ -55,6 +69,8 @@ def analyze(params):
                     params[paramsmap.get(ss[0])]=ss[1]
                 else:
                     params[ss[0]]=ss[1]
+            except IndexError:
+                return
     return cutter
 
 def parseSearchString(searchstring):
@@ -67,5 +83,6 @@ def parseSearchString(searchstring):
 
 if __name__=='__main__':
     #searchstring='byle cisnie zego file:"ble ble.doc" filetype:doc type:Text poza tym reference:abc-def'
-    searchstring='byle "cisnie zego" state:draft file:"ble ble.doc" type:("Site","Text") poza tym reference:abc-def dupa:kwas/zbita'
+    #searchstring='byle "cisnie zego" state:draft file:"ble ble.doc" type:("Site","Text") poza tym reference:abc-def dupa:kwas/zbita'
+    searchstring='byleco created:3mth'
     print parseSearchString(searchstring)
