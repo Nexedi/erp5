@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Book Information</string> </value>
+            <value> <string>Book</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

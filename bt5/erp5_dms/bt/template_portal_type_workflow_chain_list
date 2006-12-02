@@ -2,25 +2,25 @@ DMS File | dms_file_interaction_workflow
 DMS File | document_publication_workflow
 DMS File | edit_workflow
 DMS File | local_permission_interaction_workflow
+Drawing | dms_file_interaction_workflow
+Drawing | document_publication_workflow
+Drawing | edit_workflow
+Drawing | local_permission_interaction_workflow
+Drawing | ooo_interaction_workflow
 External Library File | edit_workflow
 External Library File | external_document_interaction_workflow
 External Library File | external_document_publication_workflow
 External Web Page | edit_workflow
 External Web Page | external_document_interaction_workflow
 External Web Page | external_document_publication_workflow
-Graphic | dms_file_interaction_workflow
-Graphic | document_publication_workflow
-Graphic | edit_workflow
-Graphic | local_permission_interaction_workflow
-Graphic | ooo_interaction_workflow
 ImageDocument | dms_file_interaction_workflow
 ImageDocument | document_publication_workflow
 ImageDocument | edit_workflow
 ImageDocument | local_permission_interaction_workflow
-PdfDocument | dms_file_interaction_workflow
-PdfDocument | document_publication_workflow
-PdfDocument | edit_workflow
-PdfDocument | local_permission_interaction_workflow
+PDF | dms_file_interaction_workflow
+PDF | document_publication_workflow
+PDF | edit_workflow
+PDF | local_permission_interaction_workflow
 Presentation | dms_file_interaction_workflow
 Presentation | document_publication_workflow
 Presentation | edit_workflow

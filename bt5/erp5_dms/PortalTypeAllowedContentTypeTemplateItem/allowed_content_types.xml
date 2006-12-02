@@ -5,17 +5,20 @@
  <portal_type id="Document Module">
   <item>Text</item>
   <item>External Library File</item>
+  <item>External Web Page</item>
   <item>Spreadsheet</item>
   <item>Presentation</item>
   <item>DMS File</item>
-  <item>Graphic</item>
-  <item>External Web Page</item>
-  <item>PdfDocument</item>
+  <item>PDF</item>
+  <item>Drawing</item>
  </portal_type>
- <portal_type id="File">
+ <portal_type id="Drawing">
   <item>Role Definition</item>
  </portal_type>
- <portal_type id="Graphic">
+ <portal_type id="External Library File">
+  <item>Book</item>
+ </portal_type>
+ <portal_type id="File">
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Image Module">
@@ -24,7 +27,7 @@
  <portal_type id="ImageDocument">
   <item>Role Definition</item>
  </portal_type>
- <portal_type id="PdfDocument">
+ <portal_type id="PDF">
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Presentation">

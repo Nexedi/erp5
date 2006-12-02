@@ -31,12 +31,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -60,19 +54,20 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>file_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5OOo Document</string> </value>
+            <value> <string>ERP5 Pdf Document</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Graphic file (OOo, DXF)</string> </value>
+            <value> <string>  PdfDocument - same as DMS File, but has its own getSearchableText method\n
+  (converts via pdftotext)</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addOOoDocument</string> </value>
+            <value> <string>addPdfDocument</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -94,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Graphic</string> </value>
+            <value> <string>PDF</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -108,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Graphic</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

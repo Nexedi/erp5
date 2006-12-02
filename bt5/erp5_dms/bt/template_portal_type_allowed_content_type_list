@@ -1,17 +1,18 @@
 DMS File | Role Definition
 Document Module | DMS File
+Document Module | Drawing
 Document Module | External Library File
 Document Module | External Web Page
-Document Module | Graphic
-Document Module | PdfDocument
+Document Module | PDF
 Document Module | Presentation
 Document Module | Spreadsheet
 Document Module | Text
+Drawing | Role Definition
+External Library File | Book
 File | Role Definition
-Graphic | Role Definition
 Image Module | Image
 ImageDocument | Role Definition
-PdfDocument | Role Definition
+PDF | Role Definition
 Presentation | Role Definition
 Spreadsheet | Role Definition
 Text | Role Definition

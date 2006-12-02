@@ -108,6 +108,7 @@ else:\n
 subject=subjecttpl % {\'name\':ob.getSourceReference()}\n
 \n
 msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getSourceReference(), \'errmsg\':errmsg}\n
+\n
 mto=kw[\'address\']\n
 mfro=\'dms@dms.nexedi.com\' # this should be in preferences\n
 \n

@@ -1,4 +1,4 @@
-Book Information | view
+Book | view
 DMS File | download
 DMS File | file_upload
 DMS File | history
@@ -17,6 +17,26 @@ Document Module | list_ui
 Document Module | sort_on
 Document Module | view
 Document Module | webdav
+Drawing | convert
+Drawing | create_snapshot
+Drawing | download
+Drawing | download_ooo
+Drawing | download_snapshot
+Drawing | export
+Drawing | file_upload
+Drawing | history
+Drawing | jump_to_all_related
+Drawing | jump_to_predecessor
+Drawing | jump_to_similar
+Drawing | jump_to_similarity_cloud
+Drawing | jump_to_successor
+Drawing | jump_to_wiki_predecessor
+Drawing | jump_to_wiki_successor
+Drawing | local_permission
+Drawing | metadata
+Drawing | print
+Drawing | related_document
+Drawing | view
 External Library File | books
 External Library File | history
 External Library File | metadata
@@ -28,26 +48,6 @@ External Web Page | history
 External Web Page | metadata
 External Web Page | spider
 External Web Page | view
-Graphic | convert
-Graphic | create_snapshot
-Graphic | download
-Graphic | download_ooo
-Graphic | download_snapshot
-Graphic | export
-Graphic | file_upload
-Graphic | history
-Graphic | jump_to_all_related
-Graphic | jump_to_predecessor
-Graphic | jump_to_similar
-Graphic | jump_to_similarity_cloud
-Graphic | jump_to_successor
-Graphic | jump_to_wiki_predecessor
-Graphic | jump_to_wiki_successor
-Graphic | local_permission
-Graphic | metadata
-Graphic | print
-Graphic | related_document
-Graphic | view
 Image Module | list_ui
 Image Module | sort_on
 Image Module | view
@@ -66,21 +66,21 @@ ImageDocument | metadata
 ImageDocument | print
 ImageDocument | related_document
 ImageDocument | view
-PdfDocument | download
-PdfDocument | file_upload
-PdfDocument | history
-PdfDocument | html_view
-PdfDocument | jump_to_all_related
-PdfDocument | jump_to_predecessor
-PdfDocument | jump_to_similar
-PdfDocument | jump_to_similarity_cloud
-PdfDocument | jump_to_successor
-PdfDocument | jump_to_wiki_predecessor
-PdfDocument | jump_to_wiki_successor
-PdfDocument | local_permission
-PdfDocument | metadata
-PdfDocument | related_document
-PdfDocument | view
+PDF | download
+PDF | file_upload
+PDF | history
+PDF | html_view
+PDF | jump_to_all_related
+PDF | jump_to_predecessor
+PDF | jump_to_similar
+PDF | jump_to_similarity_cloud
+PDF | jump_to_successor
+PDF | jump_to_wiki_predecessor
+PDF | jump_to_wiki_successor
+PDF | local_permission
+PDF | metadata
+PDF | related_document
+PDF | view
 Preference | dms_preferences
 Presentation | convert
 Presentation | create_snapshot
