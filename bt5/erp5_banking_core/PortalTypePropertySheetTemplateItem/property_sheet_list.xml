@@ -39,4 +39,7 @@
  <portal_type id="Counter Date">
   <item>Task</item>
  </portal_type>
+ <portal_type id="Preference">
+  <item>RenderingPreference</item>
+ </portal_type>
 </property_sheet_list>
