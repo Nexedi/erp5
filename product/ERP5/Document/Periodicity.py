@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -181,6 +181,10 @@ class Periodicity(Base):
             else:
               if not(validate_day and validate_week and validate_month):
                 next_start_date = addToDate(next_start_date,day=1)
+              else:
+                # Everything is right, but the date is still not bigger
+                # than the current date, so we must continue
+                next_start_date = addToDate(next_start_date,minute=1)
       self.Alarm_zUpdateAlarmDate(uid=self.getUid(),alarm_date=next_start_date)
 
 
