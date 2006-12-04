@@ -649,8 +649,14 @@ class Base( CopyContainer,
 
     if storage_id is None: storage_id=key
     #LOG("Get Acquired Property storage_id",0,str(storage_id))
+    # Test presence of attribute without acquisition
+    # if present, get it in its context, thus we keep acquisition if
+    # returned value is an object
+    if hasattr(aq_base(self), storage_id):
+      value = getattr(self, storage_id, None)
+    else:
+      value = None
     # If we hold an attribute and mask_value is set, return the attribute
-    value = getattr(aq_base(self), storage_id, None)
     if mask_value and value is not None:
       # Pop context
       del TRANSACTION._erp5_acquisition_stack[acquisition_key]
