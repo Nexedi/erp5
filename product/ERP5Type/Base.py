@@ -652,7 +652,8 @@ class Base( CopyContainer,
     # Test presence of attribute without acquisition
     # if present, get it in its context, thus we keep acquisition if
     # returned value is an object
-    if hasattr(aq_base(self), storage_id):
+    d = getattr(aq_base(self), storage_id, _MARKER)
+    if d is not _MARKER:
       value = getattr(self, storage_id, None)
     else:
       value = None
