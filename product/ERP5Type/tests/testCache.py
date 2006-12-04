@@ -45,6 +45,9 @@ class Foo:
 class TestRamCache(unittest.TestCase):
   quiet = 1
 
+  def getTitle(self):
+    return "Cache"
+
   def setUp(self):
     # for SQLCache, get the connection string from runUnitTest.py parameters,
     # and use parseDBConnectionString to make it usable by SQLCache

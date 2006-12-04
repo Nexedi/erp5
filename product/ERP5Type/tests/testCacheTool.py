@@ -62,6 +62,8 @@ class TestCacheTool(ERP5TypeTestCase):
 
   run_all_test = 1
  
+  def getTitle(self):
+    return "Cache Tool"
   
   def afterSetUp(self):
     self.login()
