@@ -86,6 +86,12 @@ return context.Base_callDialogMethod(**kw) #XXX: is enable_pickle=1 required ?\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>update_method, **kw</string> </value>
         </item>

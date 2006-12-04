@@ -134,6 +134,12 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>select_action, form_id, cancel_url, **kw</string> </value>
         </item>

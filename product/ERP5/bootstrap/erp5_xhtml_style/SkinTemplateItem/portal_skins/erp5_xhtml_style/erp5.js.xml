@@ -23,6 +23,12 @@
             <value> <string>erp5.js</string> </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_vars</string> </key>
             <value>
               <dictionary/>

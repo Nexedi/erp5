@@ -88,6 +88,12 @@ if None not in (selection_name, uids, listbox_uid):\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name=None, uids=None, listbox_uid=None, **kw</string> </value>
         </item>
@@ -121,7 +127,7 @@ if None not in (selection_name, uids, listbox_uid):\n
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

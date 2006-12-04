@@ -86,6 +86,12 @@ return context.ERP5Site_redirect(select_favorite, **kw)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>select_favorite, **kw</string> </value>
         </item>
