@@ -148,7 +148,7 @@ class OOoDocument(DMSFile, CachingMixin):
     try:
       self._convert()
     except xmlrpclib.Fault,e:
-      return self.returnMessage('Problem: %s' % str(e),2)
+      return self.returnMessage('Problem: %s' % (str(e) or 'undefined'),2)
     return self.returnMessage('converted')
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
