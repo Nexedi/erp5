@@ -114,11 +114,11 @@ class ExternalLibraryFile(ExternalDocument):
 
   def _processData(self,s,inf):
     # remove current subobjects
-    self.manage_delObjects([i.getId() for i in self.searchFolder(portal_type='Book Information')])
+    self.manage_delObjects([i.getId() for i in self.searchFolder(portal_type='Book')])
     # parse xml file and iterate over results
     lista=parseLibraryFile(s)
     for i,o in enumerate(lista):
-      n=self.newContent(portal_type='Book Information')
+      n=self.newContent(portal_type='Book')
       self.log(n.getRelativeUrl())
       n.setTitle(o.title)
       n.setDescription(o.description)
