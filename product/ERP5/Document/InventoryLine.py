@@ -113,7 +113,7 @@ class InventoryLine(DeliveryLine):
         # Make sure inventory is defined somewhere (here or parent)
         _marker = []
         inventory = getattr(aq_base(self), 'inventory', _marker)
-        if inventory is not _marker:
+        if inventory is not _marker and inventory is not None:
           return inventory
         return quantity
       else:
