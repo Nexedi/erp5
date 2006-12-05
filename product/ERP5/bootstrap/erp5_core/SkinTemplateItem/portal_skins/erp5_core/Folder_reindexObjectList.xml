@@ -70,32 +70,9 @@
             <key> <string>_body</string> </key>
             <value> <string>folder = context\n
 \n
-# Reindex folder\n
-folder_kw = {\n
-  \'tag\': folder_tag,\n
-  \'after_tag\': folder_after_tag,\n
-  \'sql_catalog_id\': sql_catalog_id,\n
-  \'passive_commit\': passive_commit\n
-}\n
-for key, value in folder_kw.items():\n
-  if value is None:\n
-    folder_kw.pop(key)\n
-\n
-folder.reindexObject(**folder_kw)\n
-\n
-# Reindex folder content\n
-group_tag = None\n
-group_after_tag = object_after_tag\n
-if object_tag is not None:\n
-  group_tag = "group_%s" % object_tag\n
-  if object_after_tag is not None:\n
-    group_after_tag = object_after_tag + (object_tag,)\n
-  else:\n
-    group_after_tag = (object_tag, )\n
-\n
 object_kw = {\n
-  \'tag\': folder_tag,\n
-  \'after_tag\': folder_after_tag,\n
+  \'tag\': object_tag,\n
+  \'after_tag\': object_after_tag,\n
   \'sql_catalog_id\': sql_catalog_id,\n
   \'passive_commit\': passive_commit\n
 }\n
@@ -103,34 +80,10 @@ for key, value in object_kw.items():\n
   if value is None:\n
     object_kw.pop(key)\n
 \n
-\n
-id_list = []\n
-len = 0\n
-for obj in folder.objectValues():\n
-  id_list.append(obj.getId())\n
-  len += 1\n
-  if len==100:\n
-\n
-    folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Folder_reindexObjectList(\n
-       id_list,\n
-       object_priority=object_priority,\n
-       object_tag=object_tag,\n
-       object_after_tag=object_after_tag,\n
-       sql_catalog_id=sql_catalog_id,\n
-       passive_commit=passive_commit,\n
-    )\n
-    id_list = []\n
-    len = 0\n
-\n
-\n
-folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Folder_reindexObjectList(\n
-       id_list,\n
-       object_priority=object_priority,\n
-       object_tag=object_tag,\n
-       object_after_tag=object_after_tag,\n
-       sql_catalog_id=sql_catalog_id,\n
-       passive_commit=passive_commit,\n
-    )\n
+for id in id_list:\n
+  obj = folder.restrictedTraverse(id)\n
+  obj.recursiveReindexObject(priority=object_priority,\n
+                           **object_kw)\n
 </string> </value>
         </item>
         <item>
@@ -153,7 +106,7 @@ folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Fo
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1</string> </value>
+            <value> <string>id_list, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -173,34 +126,29 @@ folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Fo
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>folder_tag</string>
-                            <string>folder_after_tag</string>
+                            <string>id_list</string>
                             <string>object_tag</string>
                             <string>object_after_tag</string>
                             <string>object_priority</string>
                             <string>sql_catalog_id</string>
                             <string>passive_commit</string>
-                            <string>context</string>
+<string>context</string>
                             <string>folder</string>
-                            <string>folder_kw</string>
+                            <string>object_kw</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>key</string>
                             <string>value</string>
                             <string>None</string>
-                            <string>_apply_</string>
-                            <string>group_tag</string>
-                            <string>group_after_tag</string>
-                            <string>object_kw</string>
-                            <string>id_list</string>
-                            <string>len</string>
+                            <string>id</string>
                             <string>obj</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -215,8 +163,6 @@ folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Fo
               <tuple>
                 <none/>
                 <none/>
-                <none/>
-                <none/>
                 <int>1</int>
                 <none/>
                 <int>1</int>
@@ -224,8 +170,8 @@ folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Fo
             </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>Folder_reindexAll</string> </value>
+            <key>                             <string>id</string> </key>
+            <value> <string>Folder_reindexObjectList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
