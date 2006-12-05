@@ -13,7 +13,11 @@
       Actions
     </th>
   <dtml-in getLocalExtensionList>
-  <tr>
+  <dtml-if sequence-odd>
+  <tr class="row-normal">
+  <dtml-else>
+  <tr class="row-hilite">
+  </dtml-if>
     <td>
       <div class="list-item"><dtml-var sequence-item></div>
     </td>   

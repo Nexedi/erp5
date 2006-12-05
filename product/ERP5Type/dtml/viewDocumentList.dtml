@@ -13,7 +13,11 @@
       Action
     </th>
   <dtml-in getLocalDocumentList>
-  <tr>
+  <dtml-if sequence-odd>
+  <tr class="row-normal">
+  <dtml-else>
+  <tr class="row-hilite">
+  </dtml-if>
     <td>
       <div class="list-item"><dtml-var sequence-item></div>
     </td>   
@@ -45,7 +49,11 @@
       Action
     </th>
   <dtml-in getProductDocumentPathList>
-  <tr>
+  <dtml-if sequence-odd>
+  <tr class="row-normal">
+  <dtml-else>
+  <tr class="row-hilite">
+  </dtml-if>
     <td>
       <div class="list-item"><dtml-var sequence-key></div>
     </td>   
