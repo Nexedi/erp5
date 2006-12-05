@@ -1107,9 +1107,20 @@ def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
   render_htmlgrid returns a list of tuple (title, html render)
   """
   # What about CSS ? What about description ? What about error ?
-  return ((self.get_value('title'),
-          self.render_html(value=value, REQUEST=REQUEST, key=key)),)
+  widget_key = self.generate_field_key(key=key)
+  value = self._get_default(key, value, REQUEST)
+  __traceback_info__ = ('key=%s value=%r' % (key, value))
+  return self.widget.render_htmlgrid(self, widget_key, value, REQUEST)
 Field.render_htmlgrid = Field_render_htmlgrid
+
+def Widget_render_htmlgrid(self, field, key, value, REQUEST):
+  """
+  render_htmlgrid returns a list of tuple (title, html render)
+  """
+  # XXX Calling _render_helper on the field is not optimized
+  return ((field.get_value('title'), 
+           field._render_helper(key, value, REQUEST)),)
+Widget.render_htmlgrid = Widget_render_htmlgrid
 
 # Generic possible renderers
 #   def render_ext(self, field, key, value, REQUEST):

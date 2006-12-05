@@ -94,7 +94,7 @@ class ParallelListWidget(Widget.MultiListWidget,
       }
 
     def render(self, field, key, value, REQUEST):
-      hash_list = field._generateSubForm(value, REQUEST)
+      hash_list = generateSubForm(field, value, REQUEST)
       # Call render on each sub field
       sub_field_render_list = []
       for sub_field_property_dict in hash_list:
@@ -108,7 +108,7 @@ class ParallelListWidget(Widget.MultiListWidget,
       return html_string
 
     def render_htmlgrid(self, field, key, value, REQUEST):
-      hash_list = field._generateSubForm(value, REQUEST)
+      hash_list = generateSubForm(field, value, REQUEST)
       # Call render on each sub field
       sub_field_render_list = []
       for sub_field_property_dict in hash_list:
@@ -160,7 +160,7 @@ class ParallelListValidator(Validator.MultiSelectionValidator):
   def validate(self, field, key, REQUEST):    
 
     result_list = []
-    hash_list = field._generateSubForm(None, REQUEST)
+    hash_list = generateSubForm(field, value, REQUEST)
     is_sub_field_required = 0
     for sub_field_property_dict in hash_list:
       try:
@@ -220,50 +220,6 @@ class ParallelListField(ZMIField):
     html = self.widget.render_htmlgrid(self, key, value, REQUEST)
     return html
 
-  def _generateSubForm(self, value, REQUEST):
-    item_list = [x for x in self.get_value('items') \
-                 if x not in (('',''), ['',''])]
-
-    value_list = value
-    if not isinstance(value_list, (list, tuple)):
-      value_list = [value_list]
-
-    empty_sub_field_property_dict = {
-      'key': 'default',
-      'title': self.get_value('title'),
-      'required': 0,
-      'field_type': 'MultiListField',
-      'item_list': [],
-      'value': [],
-      'is_right_display': 0,
-      'size': 5,
-      'editable' : self.get_value('editable')
-    }
-
-    hash_list = []
-    hash_script_id = self.get_value('hash_script_id')
-    if hash_script_id not in [None, '']:
-      script = getattr(self, hash_script_id)
-      script_hash_list = script(
-              item_list,
-              value_list,
-              default_sub_field_property_dict=empty_sub_field_property_dict,
-              is_right_display=0)
-      hash_list.extend(script_hash_list)
-    else:
-      # No hash_script founded, generate a little hash_script 
-      # to display only a MultiListField
-      default_sub_field_property_dict = empty_sub_field_property_dict.copy()
-      default_sub_field_property_dict.update({
-          'item_list': item_list,
-          'value': value_list,
-      })
-      hash_list.append(default_sub_field_property_dict)
-    # XXX Clean up old ParallelListField
-    if hasattr(self, 'sub_form'):
-       delattr(self, 'sub_form')
-    return hash_list
-
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
     """
@@ -279,3 +235,47 @@ class ParallelListField(ZMIField):
     else:
       result = ZMIField.get_value(self, id, **kw)
     return result
+
+def generateSubForm(self, value, REQUEST):
+  item_list = [x for x in self.get_value('items') \
+               if x not in (('',''), ['',''])]
+
+  value_list = value
+  if not isinstance(value_list, (list, tuple)):
+    value_list = [value_list]
+
+  empty_sub_field_property_dict = {
+    'key': 'default',
+    'title': self.get_value('title'),
+    'required': 0,
+    'field_type': 'MultiListField',
+    'item_list': [],
+    'value': [],
+    'is_right_display': 0,
+    'size': 5,
+    'editable' : self.get_value('editable')
+  }
+
+  hash_list = []
+  hash_script_id = self.get_value('hash_script_id')
+  if hash_script_id not in [None, '']:
+    script = getattr(self, hash_script_id)
+    script_hash_list = script(
+            item_list,
+            value_list,
+            default_sub_field_property_dict=empty_sub_field_property_dict,
+            is_right_display=0)
+    hash_list.extend(script_hash_list)
+  else:
+    # No hash_script founded, generate a little hash_script 
+    # to display only a MultiListField
+    default_sub_field_property_dict = empty_sub_field_property_dict.copy()
+    default_sub_field_property_dict.update({
+        'item_list': item_list,
+        'value': value_list,
+    })
+    hash_list.append(default_sub_field_property_dict)
+  # XXX Clean up old ParallelListField
+  if hasattr(self, 'sub_form'):
+     delattr(self, 'sub_form')
+  return hash_list
