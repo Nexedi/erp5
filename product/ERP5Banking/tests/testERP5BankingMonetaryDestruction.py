@@ -162,7 +162,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     line_list = [inventory_dict_line_1, inventory_dict_line_2]    
     line_list_for_externe = [inventory_dict_line_for_externe_1, inventory_dict_line_for_externe_2]    
     self.source = self.paris.caveau.serre.encaisse_des_billets_retires_de_la_circulation
-    self.source_for_externe = self.paris.caveau.externes.encaisse_des_externes
+    self.source_for_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
     ###self.destinat = self.paris.caveau.serre.encaisse_des_billets_detruits
     self.createCashInventory(source=None, destination=self.source, currency=self.currency_1,
                              line_list=line_list)
@@ -317,7 +317,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check its portal type
     self.assertEqual(self.monetary_destruction.getPortalType(), 'Monetary Destruction')
     # check that its source is source
-    self.assertEqual(self.monetary_destruction.getSource(), 'site/testsite/paris/caveau/externes/encaisse_des_externes')
+    self.assertEqual(self.monetary_destruction.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_externes')
     # check that its destination is destinat
     ##self.assertEqual(self.monetary_destruction.getDestination(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_detruits')    
 
