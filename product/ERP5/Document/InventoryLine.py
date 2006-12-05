@@ -108,12 +108,14 @@ class InventoryLine(DeliveryLine):
       if not self.hasCellContent():
         # First check if quantity already exists
         quantity = self._baseGetQuantity()
-        if quantity not in (0.0, 0, None):
+        if quantity not in (0.0,0,None):
           return quantity
         # Make sure inventory is defined somewhere (here or parent)
-        if getattr(aq_base(self), 'inventory', None) is None:
-          return 0.0 # No inventory defined, so no quantity
-        return self.getInventory()
+        _marker = []
+        inventory = getattr(aq_base(self), 'inventory', _marker)
+        if inventory is not _marker:
+          return inventory
+        return quantity
       else:
         return None
 
