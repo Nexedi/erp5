@@ -67,7 +67,7 @@ class CategoryAcquiredMembershipArity(Constraint):
                                                  portal_type=portal_type))
     if (arity < min_arity) or (arity > max_arity):
       # Generate error message
-      error_message = "Arrity error for relation '%s'" % \
+      error_message = "Arity error for relation '%s'" % \
                       base_category
       if portal_type is not ():
         error_message += " and portal_type: '%s'" % str(portal_type)
