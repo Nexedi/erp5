@@ -48,9 +48,9 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>AccessContentsInformation</string>
                 <string>Modify portal content</string>
                 <string>View</string>
+                <string>Access contents information</string>
               </tuple>
             </value>
         </item>

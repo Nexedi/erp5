@@ -65,6 +65,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>AccessContentsInformation</string> </key>
                     <value>
                       <tuple>
