@@ -64,11 +64,11 @@ file_content = file(
 
 mime_text = MIMEText(test_msg)
 mime_text.add_header('Content-Disposition', 'attachment',
-                     filename='test_output')
+                     filename='test_output.txt')
 msg.attach(mime_text)
 mime_text = MIMEText(file_content)
 mime_text.add_header('Content-Disposition', 'attachment',
-                     filename='test_full_output')
+                     filename='test_full_output.txt')
 msg.attach(mime_text)
 
 # Send the email via our own SMTP server.
