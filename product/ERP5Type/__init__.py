@@ -50,13 +50,17 @@ import Products.Localizer # So that we make sure Globals.get_request is availabl
 # read permissions for zope - this prevents security holes in 
 # production environment  
 class_tool_security_path = '%s%s%s' % (product_path, os.sep, 'ALLOW_CLASS_TOOL')
+memcached_tool_enable_path = '%s%s%s' % (product_path, os.sep, 'USE_MEMCACHED_TOOL')
 
 def allowClassTool():
   return os.access(class_tool_security_path, os.F_OK)
-  
+
+def allowMemcachedTool():
+  return os.access(memcached_tool_enable_path, os.F_OK)
+
 def initialize( context ):
   # Import Product Components
-  from Tool import ClassTool, CacheTool
+  from Tool import ClassTool, CacheTool, MemcachedTool
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
@@ -65,7 +69,8 @@ def initialize( context ):
   content_constructors = ()
   content_classes = ( Base.Base, XMLObject.XMLObject, )
   portal_tools = ( ClassTool.ClassTool,
-                   CacheTool.CacheTool, )
+                   CacheTool.CacheTool,
+                   MemcachedTool.MemcachedTool, )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
