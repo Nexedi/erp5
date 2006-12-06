@@ -196,7 +196,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         if user_id is not None:
           if not self.selection_data.has_key(user_id):
             self.selection_data[user_id] = PersistentMapping()
-          self.selection_data[user_id][selection_name] = selection_object
+          self.selection_data[user_id][selection_name] = aq_base(selection_object)
         return
 
       #try: CAUSES PROBLEMS WHY ??
