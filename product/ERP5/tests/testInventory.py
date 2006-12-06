@@ -40,6 +40,8 @@
 
 
 from random import randint
+from Products.ERP5Type.Utils import cartesianProduct
+from copy import copy
 
 import os, sys
 if __name__ == '__main__':
@@ -170,21 +172,28 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list = inventory_list)
-                        
-  def stepCreateSingleInventory(self, sequence=None, sequence_list=None, **kw):
+
+  def createInventory(self, sequence=None):
     """
-      Create a single Inventory object for Inventory Module testing
     """
     portal = self.getPortal()
-    inventory_list = sequence.get('inventory_list')
-    if inventory_list is None:
-      inventory_list = []
+    inventory_list = sequence.get('inventory_list',[])
     inventory_module = portal.getDefaultModule(portal_type = self.inventory_portal_type)
     inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
     inventory.edit(destination_value = sequence.get('node'),
                    destination_section_value = sequence.get('section'),
                    start_date = DateTime() + 1
                   )
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+    return inventory
+                        
+  def stepCreateSingleInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a single Inventory object for Inventory Module testing
+    """
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
     inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
     inventory_line.edit(resource_value = sequence.get('resource'),
                         inventory = 24.
@@ -192,6 +201,39 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
+                        
+  def stepCreateSingleVariatedInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a single Inventory object for Inventory Module testing
+    """
+    inventory = self.createInventory(sequence=sequence)
+    inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
+    category_list = sequence.get('variation_1')
+    inventory_line.edit(resource_value = sequence.get('resource'),
+                        variation_category_list=category_list
+                       )
+    cell = inventory_line.newCell(base_id='movement',*category_list)
+    quantity=5
+    cell.edit(
+        quantity = quantity,
+        predicate_category_list = category_list,
+        variation_category_list = category_list,
+        mapped_value_property_list = ['quantity'],
+        )
+    category_list = sequence.get('variation_2')
+    inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
+    inventory_line.edit(resource_value = sequence.get('resource'),
+                        variation_category_list=category_list
+                       )
+    cell = inventory_line.newCell(base_id='movement',*category_list)
+    quantity=0
+    cell.edit(
+        quantity = quantity,
+        predicate_category_list = category_list,
+        variation_category_list = category_list,
+        mapped_value_property_list = ['quantity'],
+        )
+    inventory.deliver()
                         
   def stepCreatePackingListForModule(self, sequence=None,
                                       sequence_list=None, **kw):
@@ -219,25 +261,76 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.assertNotEquals( packing_list.getSourceValue(), None)
     self.assertNotEquals( packing_list.getSourceSectionValue(),
                           packing_list.getDestinationSectionValue() )
+    sequence.edit(packing_list=packing_list)
 
+  def stepCreatePackingListLine(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """
+    Create a line not variated
+    """
+    packing_list = sequence.get('packing_list')
+    resource = sequence.get('resource')
     packing_list_line = packing_list.newContent(
                   portal_type=self.packing_list_line_portal_type)
     packing_list_line.edit(resource_value = resource,
                            quantity = 100.
                           )
+
+  def stepCreateVariatedPackingListLine(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """
+    Create a line not variated
+    """
+    packing_list = sequence.get('packing_list')
+    delivery_line_list = sequence.get('delivery_line_list',[])
+    # Create Packing List Line
+    packing_list_line = packing_list.newContent(portal_type=self.packing_list_line_portal_type)
+    delivery_line_list.append(packing_list_line)
+    resource = sequence.get('resource')
+    variation_category_list = ['size/Child/32',
+                               'size/Child/34',
+                               'colour/%s/1' % resource.getRelativeUrl(),
+                               'morphology/%s/4' % resource.getRelativeUrl()]
+    packing_list_line.edit(
+        resource_value = resource,
+        variation_category_list=variation_category_list)
+    # Set cell range
+
+    cell_range = packing_list_line.getCellRange(base_id='movement')
+    cartesian_product = cartesianProduct(cell_range)
+    for cell_key in cartesian_product:
+      cell = packing_list_line.newCell(base_id='movement', *cell_key)
+      if 'size/Child/32' in cell_key:
+        quantity = 1
+        sequence.edit(variation_1=cell_key)
+      elif 'size/Child/34' in cell_key:
+        sequence.edit(variation_2=cell_key)
+        quantity = 3
+      cell.edit(
+          quantity = quantity,
+          predicate_category_list = cell_key,
+          variation_category_list = cell_key,
+          mapped_value_property_list = ['quantity'],
+          )
+    sequence.edit(delivery_line_list=delivery_line_list)
+
+  def stepDeliverPackingList(self, sequence=None,
+                                      sequence_list=None, **kw):
     # Switch to "started" state
-    sequence.edit(packing_list = packing_list)
+    packing_list = sequence.get('packing_list')
     workflow_tool = self.getPortal().portal_workflow
-    workflow_tool.doActionFor(sequence.get('packing_list'),
+    workflow_tool.doActionFor(packing_list,
                       "confirm_action", "packing_list_workflow")
+    get_transaction().commit()
     # Apply tic so that the packing list is not in building state
     self.tic() # acceptable here because this is not the job
                # of the test to check if can do all transition
                # without processing messages
-    packing_list = sequence.get('packing_list')
-    workflow_tool.doActionFor(sequence.get('packing_list'),
+    workflow_tool.doActionFor(packing_list,
                       "set_ready_action", "packing_list_workflow")
-    workflow_tool.doActionFor(sequence.get('packing_list'),
+    get_transaction().commit()
+    self.tic()
+    workflow_tool.doActionFor(packing_list,
                       "start_action", "packing_list_workflow")
                         
   def stepCreateOrganisationList(self, sequence=None, sequence_list=None, **kw):
@@ -454,7 +547,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         )
         
         # Set cell range
-        packing_list_line.updateCellRange(base_id='quantity')
         base_category_dict = {}
         for i in range(len(base_category_list)):
           base_category_dict[base_category_list[i]] = i
@@ -1553,7 +1645,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         )
         
         # Set cell range
-        packing_list_line.updateCellRange(base_id='quantity')
         base_category_dict = {}
         for i in range(len(base_category_list)):
           base_category_dict[base_category_list[i]] = i
@@ -1608,7 +1699,52 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                     node=organisation_list[node].getRelativeUrl(),
                     variation_category=variation_categories, src__=1))
     self.assertEquals(next_date, expected_negative_date)
+
+
+  def checkVariatedInventory(self, sequence=None, sequence_list=None, 
+                             variation_category_list=None,
+                             quantity=None,**kw):
+    """
+    """
+    simulation = self.getPortal().portal_simulation
+    variation_category_list = copy(variation_category_list)
+    variation_category_list.sort()
+    variation_text = '\n'.join(variation_category_list)
+    inventory = simulation.getCurrentInventory(
+                    section=sequence.get('section').getRelativeUrl(),
+                    node=sequence.get('node').getRelativeUrl(),
+                    variation_text=variation_text
+                )
+    self.assertEquals(inventory, quantity)
       
+  def stepTestInitialVariatedInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test Inventory Module behavior
+    """
+    resource = sequence.get('resource')
+    variation_category_list = sequence.get('variation_1')
+    quantity = 1
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+    variation_category_list = sequence.get('variation_2')
+    quantity = 3
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+
+  def stepTestVariatedInventoryAfterInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test Inventory Module behavior
+    """
+    resource = sequence.get('resource')
+    variation_category_list = sequence.get('variation_1')
+    quantity = 5
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+    variation_category_list = sequence.get('variation_2')
+    quantity = 0
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+
   def stepTestInventoryModule(self, sequence=None, sequence_list=None, **kw):
     """
       Test Inventory Module behavior
@@ -1699,6 +1835,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        stepCreateItemList \
                        stepCreatePackingListForModule \
                        stepTic \
+                       stepCreatePackingListLine \
+                       stepTic \
+                       stepDeliverPackingList \
+                       stepTic \
                        stepCreateAggregatingInventory \
                        stepTic \
                        stepTestInventoryModule \
@@ -1708,6 +1848,31 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        stepModifyFirstInventory \
                        stepTic \
                        stepTestInventoryModule \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_02_InventoryModuleWithVariation(self, quiet=0, run=run_all_test):
+    """
+      Test the InventoryModule behavior
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateOrganisationsForModule \
+                       stepCreateVariatedResource \
+                       stepTic \
+                       stepCreatePackingListForModule \
+                       stepTic \
+                       stepCreateVariatedPackingListLine \
+                       stepTic \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepTestInitialVariatedInventory \
+                       stepCreateSingleVariatedInventory \
+                       stepTic \
+                       stepTestVariatedInventoryAfterInventory \
                        '
     sequence_list.addSequenceString(sequence_string)
 
