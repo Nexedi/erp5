@@ -32,8 +32,6 @@ from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
 from Globals import DTMLFile
 
-MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
-
 if allowMemcachedTool():
   import memcache
   from Shared.DC.ZRDB.TM import TM
@@ -88,10 +86,6 @@ if allowMemcachedTool():
         Invalidate all local cache to make sure changes donc by other zopes
         would not be ignored.
       """
-      for key, value in self.local_cache.iteritems():
-        if getattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, None):
-          delattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID)
-          self.scheduled_action_dict[key] = UPDATE_ACTION
       for key, action in self.scheduled_action_dict.iteritems():
         if action is UPDATE_ACTION:
           self.memcached_connection.set(key, self.local_cache[key], 0)
@@ -132,13 +126,14 @@ if allowMemcachedTool():
   
     def __delitem__(self, key):
       """
-        Delete an item from local cache and schedule deletion in memcached.
+        Schedule key for deletion in memcached.
+        Set the value to None in local cache to avoid gathering the value
+        from memcached.
         Never raises KeyError because action is delayed.
       """
       self._register()
       self.scheduled_action_dict[key] = DELETE_ACTION
-      if key in self.local_cache:
-        del self.local_cache[key]
+      self.local_cache[key] = None
   
     def set(self, key, val, time=0):
       """
