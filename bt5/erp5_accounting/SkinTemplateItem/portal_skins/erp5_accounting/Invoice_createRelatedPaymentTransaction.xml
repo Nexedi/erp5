@@ -73,8 +73,8 @@
 be provided, but by default the transaction is created at the system date.\n
 """\n
 from DateTime import DateTime\n
-# translate with Base_translateString which is a bit more robust during activities\n
-# because it doesn\'t rely on REQUEST[\'PARENTS\']\n
+# translate with Base_translateString which is a bit more robust during\n
+# activities, because it doesn\'t rely on REQUEST[\'PARENTS\']\n
 N_ = context.Base_translateString\n
 \n
 date = DateTime()\n
@@ -118,25 +118,82 @@ bank = related_payment.newContent(\n
    id=\'bank\',\n
 )\n
 \n
+# Calculate the payable/receivable quantity, for this we sum all lines\n
+# using a payable or receivable type account in this invoice ( unless this\n
+# line have a "grouping reference") minus the sum of payable/receivable line on\n
+# all causality related accounting transactions\n
 bank_quantity = 0\n
-for line in context.objectValues(\n
+receivable_or_payable_quantity_per_account = {}\n
+for line in context.getMovementList(\n
             portal_type=portal.getPortalAccountingMovementTypeList()):\n
   if is_source:\n
     account = line.getSourceValue(portal_type=\'Account\')\n
+    mirror_account = line.getDestinationValue(portal_type=\'Account\')\n
   else:\n
     account = line.getDestinationValue(portal_type=\'Account\')\n
+    mirror_account = line.getSourceValue(portal_type=\'Account\')\n
   \n
+  key = (account, mirror_account)\n
   if account is not None and \\\n
       account.getAccountTypeId() in (\'payable\', \'receivable\') and \\\n
       line.getSourceSection() == context.getSourceSection() and \\\n
       line.getDestinationSection() == context.getDestinationSection() and \\\n
-      not line.getGroupingReference() :\n
-     related_payment.newContent(\n
-       portal_type=line_portal_type,\n
-       source=line.getSource(),\n
-       destination=line.getDestination(),\n
-       quantity= - line.getQuantity())\n
-     bank_quantity += line.getQuantity()\n
+      not line.getGroupingReference():\n
+    receivable_or_payable_quantity_per_account[key] = \\\n
+            receivable_or_payable_quantity_per_account.get(key, 0) \\\n
+                            - line.getQuantity()\n
+    bank_quantity += line.getQuantity()\n
+\n
+for related_transaction in context.getCausalityRelatedValueList(\n
+      portal_type=context.getPortalAccountingTransactionTypeList()):\n
+  if related_transaction.getSimulationState() in (\n
+              \'draft\', \'cancelled\', \'deleted\'):\n
+    continue\n
+  related_transaction_is_source = related_transaction.\\\n
+                                        AccountingTransaction_isSourceView()\n
+  for line in related_transaction.getMovementList(\n
+            portal_type=portal.getPortalAccountingMovementTypeList()):\n
+    if related_transaction_is_source:\n
+      account = line.getSourceValue(portal_type=\'Account\')\n
+      mirror_account = line.getDestinationValue(portal_type=\'Account\')\n
+    else:\n
+      account = line.getDestinationValue(portal_type=\'Account\')\n
+      mirror_account = line.getSourceValue(portal_type=\'Account\')\n
+  \n
+    key = (account, mirror_account)\n
+    if account is not None and \\\n
+        account.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+      if line.getSourceSection() == context.getSourceSection() and \\\n
+         line.getDestinationSection() == context.getDestinationSection() and \\\n
+         not line.getGroupingReference():\n
+        receivable_or_payable_quantity_per_account[key] = \\\n
+            receivable_or_payable_quantity_per_account.get(key, 0) \\\n
+                       - line.getQuantity()\n
+        bank_quantity += line.getQuantity()\n
+      elif line.getSourceSection() == context.getDestinationSection() and \\\n
+           line.getDestinationSection() == context.getSourceSection() and \\\n
+           not line.getGroupingReference():\n
+        receivable_or_payable_quantity_per_account[key] = \\\n
+            receivable_or_payable_quantity_per_account.get(key, 0) \\\n
+                       + line.getQuantity()\n
+        bank_quantity -= line.getQuantity()\n
+\n
+# now create lines using the dictionnary\n
+for (account, mirror_account), quantity in\\\n
+        receivable_or_payable_quantity_per_account.items():\n
+  if is_source:\n
+    related_payment.newContent(\n
+      portal_type=line_portal_type,\n
+      source_value=account,\n
+      destination_value=mirror_account,\n
+      quantity=quantity)\n
+  else:\n
+    related_payment.newContent(\n
+      portal_type=line_portal_type,\n
+      source_value=mirror_account,\n
+      destination_value=account,\n
+      quantity=-quantity)\n
+\n
 \n
 if is_source:\n
   bank.edit( source=node,\n
@@ -212,10 +269,17 @@ else:\n
                             <string>related_payment</string>
                             <string>bank</string>
                             <string>bank_quantity</string>
+                            <string>receivable_or_payable_quantity_per_account</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>account</string>
+                            <string>mirror_account</string>
+                            <string>key</string>
                             <string>None</string>
+                            <string>_write_</string>
+                            <string>related_transaction</string>
+                            <string>related_transaction_is_source</string>
+                            <string>quantity</string>
                           </tuple>
                         </value>
                     </item>
