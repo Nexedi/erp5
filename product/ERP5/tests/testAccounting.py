@@ -1432,7 +1432,83 @@ class TestAccounting(ERP5TypeTestCase):
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
+ 
+  def test_Invoice_createRelatedPaymentTransactionRelatedInvoice(self):
+    """Simple creating a related payment transaction when we have related
+    transactions.
+    """
+    payment_node = self.vendor.newContent(portal_type='Bank Account')
+    invoice = self.createAccountingTransaction()
+    accounting_transaction = self.createAccountingTransaction()
+    accounting_transaction.receivable.setSourceDebit(20)
+    accounting_transaction.income.setSourceCredit(20)
+    accounting_transaction.setCausalityValue(invoice)
+    self.portal.portal_workflow.doActionFor(accounting_transaction,
+                                           'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+    
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.bank_account.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
+    
+  def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDifferentSide(self):
+    """Simple creating a related payment transaction when we have related
+    transactions with different side
+    """
+    payment_node = self.vendor.newContent(portal_type='Bank Account')
+    invoice = self.createAccountingTransaction()
+    accounting_transaction = self.createAccountingTransaction()
+    accounting_transaction.edit(
+            source_section=accounting_transaction.getDestinationSection(),
+            destination_section=accounting_transaction.getSourceSection())
+    accounting_transaction.receivable.edit(
+          source=accounting_transaction.receivable.getDestination(),
+          destination=accounting_transaction.receivable.getSource(),
+          destination_debit=20)
+    accounting_transaction.income.edit(
+          source=accounting_transaction.income.getDestination(),
+          destination=accounting_transaction.income.getSource(),
+          destination_credit=20)
+    accounting_transaction.setCausalityValue(invoice)
+    self.portal.portal_workflow.doActionFor(accounting_transaction,
+                                            'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    get_transaction().commit()
+    self.tic()
 
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.bank_account.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
+ 
+  def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDraft(self):
+    """Simple creating a related payment transaction when we have related
+    transactions in draft/cancelled state (they are ignored)
+    """
+    payment_node = self.vendor.newContent(portal_type='Bank Account')
+    invoice = self.createAccountingTransaction()
+    accounting_transaction = self.createAccountingTransaction()
+    accounting_transaction.setCausalityValue(invoice)
+    other_accounting_transaction = self.createAccountingTransaction()
+    other_accounting_transaction.setCausalityValue(invoice)
+    other_accounting_transaction.cancel()
+    get_transaction().commit()
+    self.tic()
+
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.bank_account.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
+    
 if __name__ == '__main__':
   framework()
 else:
