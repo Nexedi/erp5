@@ -103,16 +103,19 @@ else:\n
 \n
 result = []\n
 \n
-account_columns = ( (\'date\', \'Date\')\n
-                  , (\'specific_reference\', \'Reference\')\n
-                  , (\'title\', \'Label\')\n
-                  , (\'translated_portal_type\', \'Type\')\n
-                  , (\'third_party\', \'Third Party\')\n
-                  , (\'translated_simulation_state_title\', \'State\')\n
-                  , (\'debit\', \'Debit\')\n
-                  , (\'credit\', \'Credit\')\n
-                  , (\'net_balance\', \'Balance\')\n
-                  )\n
+\n
+account_columns = (\n
+      (\'Movement_getSpecificReference\', \'Reference\'),\n
+      (\'Movement_getExplanationTitle\', \'Title\'),\n
+      (\'date\', \'Date\'),\n
+      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
+      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
+      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
+      (\'getTranslatedSimulationStateTitle\', \'State\'),\n
+      (\'Movement_getDebitPrice\', \'Debit\'),\n
+      (\'Movement_getCreditPrice\', \'Credit\'),\n
+      (\'total_price\', \'Balance\'),\n
+      (\'running_total_price\', \'Net\'), )\n
 \n
 if gap:\n
   gap_value_list = [cat_tool.gap.restrictedTraverse(gap)] + \\\n
@@ -133,6 +136,7 @@ if account_inventory_list_cache_params.has_key(\'from_date\'):\n
   del account_inventory_list_cache_params[\'from_date\']\n
 \n
 for c in gap_value_list:\n
+  # FIXME: this part is not working !\n
   account_list = c.getGapRelatedValueList(portal_type="Account")\n
   strict_account_list = c.getGapRelatedValueList(portal_type="Account",\n
                                                  strict_membership=1)\n
@@ -167,8 +171,8 @@ for c in gap_value_list:\n
                                       at_date=at_date,\n
                                       simulation_state=simulation_state):\n
           third_party_params = params.copy()\n
-          third_party_params[\'mirror_section_uid\'] = third_party_brain.uid\n
           third_party_uid = third_party_brain.uid or " = NULL"\n
+          third_party_params[\'mirror_section_uid\'] = third_party_uid\n
           title = "%s: %s (%s)" % ( c.getId()\n
                                   , account.getTitle()\n
                                   , third_party_brain.title\n
@@ -186,7 +190,7 @@ for c in gap_value_list:\n
                       selection_params=third_party_params.copy(),\n
                       selection_columns=account_columns,\n
                       listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'delivery.stop_date\',\n
+                      selection_sort_order=[(\'stock.date\',\n
                                              \'ascending\')]))\n
 \n
       elif account.isMemberOf(\'account_type/asset/cash/bank\'):\n
@@ -196,8 +200,8 @@ for c in gap_value_list:\n
                                       simulation_state=simulation_state):\n
           bank_params = params.copy()\n
           if bank_account_brain.path is not None:\n
-            bank_params[\'payment_uid\'] = bank_account_brain.uid\n
             bank_account_uid = bank_account_brain.uid or " = NULL"\n
+            bank_params[\'payment_uid\'] = bank_account_uid\n
             title = "%s: %s (%s)" % ( c.getId()\n
                                     , account.getTitle()\n
                                     , bank_account_brain.title\n
@@ -218,7 +222,7 @@ for c in gap_value_list:\n
                       selection_params=bank_params.copy(),\n
                       selection_columns=account_columns,\n
                       listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'delivery.stop_date\',\n
+                      selection_sort_order=[(\'stock.date\',\n
                                              \'ascending\')]))\n
       elif len(sim_tool.getMovementHistoryList(\n
                                 node_uid=account.getUid(),\n
@@ -232,7 +236,7 @@ for c in gap_value_list:\n
                         selection_params=params,\n
                         selection_columns=account_columns,\n
                         listbox_display_mode=\'FlatListMode\',\n
-                        selection_sort_order=[(\'delivery.stop_date\',\n
+                        selection_sort_order=[(\'stock.date\',\n
                                                \'ascending\')]))\n
 \n
 return result\n

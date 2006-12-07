@@ -73,6 +73,8 @@ account as a node\n
 """\n
 kw[\'node_uid\'] = context.getUid()\n
 kw[\'omit_output\'] = 1\n
+kw.update(kw[\'selection\'].getParams())\n
+\n
 return context.Node_statAccountingBalance(**kw)\n
 </string> </value>
         </item>
@@ -120,6 +122,7 @@ return context.Node_statAccountingBalance(**kw)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

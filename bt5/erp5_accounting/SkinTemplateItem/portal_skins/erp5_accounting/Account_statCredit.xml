@@ -73,6 +73,8 @@ account as node\n
 """\n
 kw[\'node_uid\'] = context.getUid()\n
 kw[\'omit_input\'] = 1\n
+kw.update(kw[\'selection\'].getParams())\n
+\n
 # here, or 0 is to prevent displaying "- 0"\n
 return - context.Node_statAccountingBalance(**kw) or 0\n
 </string> </value>
@@ -121,6 +123,7 @@ return - context.Node_statAccountingBalance(**kw) or 0\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
