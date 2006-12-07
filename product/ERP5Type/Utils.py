@@ -138,14 +138,19 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
 # Useful methods
 #####################################################
 
+_cached_convertToUpperCase = {}
 def convertToUpperCase(key):
   """
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  if not isinstance(key, basestring):
-    raise TypeError, '%s is not a string' % (key,)
-  return ''.join([part.capitalize() for part in str(key).split('_')])
+  try:
+    return _cached_convertToUpperCase[key]
+  except KeyError:
+    if not isinstance(key, basestring):
+      raise TypeError, '%s is not a string' % (key,)
+    _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
+    return _cached_convertToUpperCase[key]
 
 UpperCase = convertToUpperCase
 
