@@ -487,6 +487,19 @@ class TestERP5BankingMixin:
       self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P1',  vault_type='site')
       self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S1',  vault_type='site')
       self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+
+    self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
+    site_vault_type = self.vault_type_base_category.newContent(id='site')
+    surface_vault_type = site_vault_type.newContent('surface')
+    bi_vault_type = surface_vault_type.newContent('banque_interne')
+    guichet_bi_vault_type = bi_vault_type.newContent('guichet')
+    gp_vault_type = surface_vault_type.newContent('gros_paiement')
+    guichet_gp_vault_type = gp_vault_type.newContent('guichet')
+    gv_vault_type = surface_vault_type.newContent('gros_versement')
+    guichet_gv_vault_type = gv_vault_type.newContent('guichet')
+    op_vault_type = surface_vault_type.newContent('operations_diverses')
+    guichet_op_vault_type = op_vault_type.newContent('guichet')
+    caveau_vault_type = site_vault_type.newContent('caveau')
       
     if not no_site:
       for c in self.testsite.getCategoryChildValueList():
@@ -550,7 +563,7 @@ class TestERP5BankingMixin:
                 s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
 
-  def openCounterDate(self, date=None, site=None,id='counter_date_1'):
+  def openCounterDate(self, date=None, site=None,id='counter_date_1',open=1):
     """
     open a couter date fort the given date
     by default use the current date
@@ -566,7 +579,9 @@ class TestERP5BankingMixin:
                                                             site_value = site,
                                                             start_date = date)
     # open the counter date
-    counter_date.open()
+    if open:
+      counter_date.open()
+    setattr(self,id,counter_date)
 
 
   def openCounter(self, site=None, id='counter_1'):
@@ -811,13 +826,13 @@ class TestERP5BankingMixin:
                   price = movement_line.getResourceValue().getBasePrice())
 
 
-  def createCashInventory(self, source, destination, currency, line_list=[]):
+  def createCashInventory(self, source, destination, currency, line_list=[],extra_id=''):
     """
     Create a cash inventory group
     """
     # we need to have a unique inventory group id by destination
-    inventory_group_id = 'inventory_group_%s_%s' % \
-                         (destination.getParentValue().getUid(),destination.getId())
+    inventory_group_id = 'inventory_group_%s_%s%s' % \
+                         (destination.getParentValue().getUid(),destination.getId(),extra_id)
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
