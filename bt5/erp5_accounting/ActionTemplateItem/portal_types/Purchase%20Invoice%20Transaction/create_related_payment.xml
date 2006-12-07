@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: not object.getCausalityRelatedValueList(portal_type=\'Payment Transaction\')</string> </value>
+            <value> <string>python: object.getProperty(\'payment_state\') != \'cleared\'</string> </value>
         </item>
       </dictionary>
     </pickle>
