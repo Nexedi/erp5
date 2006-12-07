@@ -176,6 +176,8 @@ for line in listbox:\n
 # create the movement\n
 variation_not_defined = 0\n
 for resource_id in per_resource_dict.keys():\n
+  if variation_not_defined == 1:\n
+    break\n
   variation_list_dict = per_resource_dict[resource_id].values()\n
   # get the resource\n
   #resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'), id = resource_id)\n

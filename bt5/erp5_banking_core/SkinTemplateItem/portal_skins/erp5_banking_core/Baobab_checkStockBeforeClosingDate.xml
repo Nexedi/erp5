@@ -96,6 +96,8 @@ for counter_vault in counter_vault_list:\n
   inventory_list = context.portal_simulation.getCurrentInventoryList(\n
                                                      node=counter_vault_url,\n
                                                      resource_uid=resource_uid_list,\n
+                                                     group_by_resource=1,\n
+                                                     group_by_variation=1,\n
                                                      ignore_variation=0)\n
   if len(inventory_list)>0:\n
     message = Message(domain=\'ui\',\n
