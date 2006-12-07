@@ -3539,8 +3539,9 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       f.close()
 
   def _importFile(self, file_name, file):
-    text = file.read()
-    self._objects[file_name[:-3]]=text
+    if os.path.split(file_name)[1] == 'translation.po':
+      text = file.read()
+      self._objects[file_name[:-3]] = text
 
 class LocalRolesTemplateItem(BaseTemplateItem):
 
