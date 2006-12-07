@@ -106,7 +106,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
     self.createBanknotesAndCoins()
-    self.reception = self.paris.caveau.devises.encaisse_des_devises.usd
+    self.reception = self.paris.caveau.auxiliaire.encaisse_des_devises.usd
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/paris')
@@ -168,7 +168,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     # check that its source is caisse_1
     self.assertEqual(self.foreign_cash_reception.getSource(), None)
     # check that its destination is caisse_2
-    self.assertEqual(self.foreign_cash_reception.getBaobabDestination(), 'site/testsite/paris/caveau/devises/encaisse_des_devises/usd')
+    self.assertEqual(self.foreign_cash_reception.getBaobabDestination(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_devises/usd')
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
     """
