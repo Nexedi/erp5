@@ -563,7 +563,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           for bc in packing_list_line.getVariationBaseCategoryList():
             new_variation.append(variation[base_category_dict[bc]])
           variation = new_variation
-          packing_list_cell = packing_list_line.newCell(base_id='quantity', *variation)
+          packing_list_cell = packing_list_line.newCell(base_id='movement', *variation)
           packing_list_cell.edit(
               quantity = cell['quantity'],
               predicate_category_list = variation,
@@ -790,7 +790,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     simulation = self.getPortal().portal_simulation
     delivery = sequence.get('packing_list_list')[0]
     expected_values_list = [
-      {'text':delivery['1']['quantity_0_0_0'],
+      {'text':delivery['1']['movement_0_0_0'],
               'values':[{'inventory':17.},]
       },
     ]
@@ -1660,7 +1660,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           for bc in packing_list_line.getVariationBaseCategoryList():
             new_variation.append(variation[base_category_dict[bc]])
           variation = new_variation
-          packing_list_cell = packing_list_line.newCell(base_id='quantity', *variation)
+          packing_list_cell = packing_list_line.newCell(base_id='movement', *variation)
           packing_list_cell.edit(
               quantity = cell['quantity'],
               predicate_category_list = variation,
