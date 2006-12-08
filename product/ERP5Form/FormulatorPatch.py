@@ -1108,7 +1108,7 @@ def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
   """
   # What about CSS ? What about description ? What about error ?
   widget_key = self.generate_field_key(key=key)
-  value = self._get_default(key, value, REQUEST)
+  value = self._get_default(widget_key, value, REQUEST)
   __traceback_info__ = ('key=%s value=%r' % (key, value))
   return self.widget.render_htmlgrid(self, widget_key, value, REQUEST)
 Field.render_htmlgrid = Field_render_htmlgrid

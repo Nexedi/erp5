@@ -249,22 +249,14 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
           ####################################
           # Render listfield
           ####################################
-          tales_expr = field.tales.get('items', None)
-          defined_tales = 0
-          if not tales_expr:
-            defined_tales = 1
-            from Products.Formulator.TALESField import TALESMethod
-            # XXX XXX Do not write in the ZODB
-            field.tales['items'] = TALESMethod('REQUEST/relation_item_list')
 
           REQUEST['relation_item_list'] = relation_item_list
           sub_html_string += '&nbsp;%s&nbsp;' % \
                                 Widget.ListWidgetInstance.render(
                                 field, relation_field_id, None, REQUEST)
           REQUEST['relation_item_list'] = None
-          if defined_tales:
-            # Delete default tales on the fly
-            field.tales['items'] = None
+
+
         else:
           ####################################
           # Render wheel
@@ -777,4 +769,18 @@ class MultiRelationStringField(ZMIField):
       result = 1
     else:
       result = ZMIField.get_orig_value(self, id)
+    return result
+
+  security.declareProtected('Access contents information', 'get_value')
+  def get_value(self, id, REQUEST=None, **kw):
+    """Get value for id.
+
+    Optionally pass keyword arguments that get passed to TALES
+    expression.
+    """
+    if (id == 'items') and (REQUEST is not None):
+      # relation_item_list is not editable for the RelationField
+      result = REQUEST.get('relation_item_list', None)
+    else:
+      result = ZMIField.get_value(self, id, **kw)
     return result
