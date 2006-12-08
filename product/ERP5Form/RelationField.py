@@ -143,6 +143,7 @@ class RelationStringFieldValidator(
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
 RelationStringFieldValidatorInstance = RelationStringFieldValidator()
 
+# Should RelationStringField be a subclass of MultiRelationStringField ?
 class RelationStringField(ZMIField):
   meta_type = "RelationStringField"
   security = ClassSecurityInfo()
@@ -161,4 +162,19 @@ class RelationStringField(ZMIField):
       result = 0
     else:
       result = ZMIField.get_orig_value(self, id)
+    return result
+
+  security.declareProtected('Access contents information', 'get_value')
+  def get_value(self, id, REQUEST=None, **kw):
+    """Get value for id.
+
+    Optionally pass keyword arguments that get passed to TALES
+    expression.
+    """
+    # XXX FIXME Same code as MultiRelationStringField
+    if (id == 'items') and (REQUEST is not None):
+      # relation_item_list is not editable for the RelationField
+      result = REQUEST.get('relation_item_list', None)
+    else:
+      result = ZMIField.get_value(self, id, **kw)
     return result
