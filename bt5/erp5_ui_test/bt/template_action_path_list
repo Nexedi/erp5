@@ -17,4 +17,5 @@ Foo | history
 Foo | list
 Foo | metadata
 Foo | view
+Foo | view_proxy_field
 Foo | view_relation_field
