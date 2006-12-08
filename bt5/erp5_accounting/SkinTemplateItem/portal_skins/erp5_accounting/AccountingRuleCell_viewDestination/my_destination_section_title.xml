@@ -308,9 +308,7 @@
                 </item>
                 <item>
                     <key> <string>parameter_list</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -334,6 +332,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -377,7 +379,9 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>container_getter_id</string> </key>
@@ -437,7 +441,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>jump_method</string> </key>
@@ -461,7 +467,14 @@
                 </item>
                 <item>
                     <key> <string>parameter_list</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>validation_state</string>
+                          <string>!=invalidated</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -492,7 +505,9 @@
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -516,25 +531,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [[\'validation_state\', [\'draft\',\'validated\']]]</string> </value>
         </item>
       </dictionary>
     </pickle>
