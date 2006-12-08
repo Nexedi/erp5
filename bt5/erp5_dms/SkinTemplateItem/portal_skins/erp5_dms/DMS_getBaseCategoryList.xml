@@ -71,9 +71,9 @@
             <value> <string># we return only those base categories to which all DMS-related portal_types belong\n
 # you need to define the list of DMS types here\n
 # and to add a base category add it in DMSFile property sheets\n
-# or manuall for all these portal_types\n
+# or manually for all these portal_types\n
 \n
-types=(\'Spreadsheet\',\'Text\',\'Presentation\',\'Graphic\',\'DMS File\',\'PDF\')\n
+types=context.getPortalDocumentTypeList()\n
 nrtypes=len(types)\n
 basecatdict={}\n
 for t in types:\n
@@ -125,15 +125,15 @@ return basecatlist\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>types</string>
                             <string>len</string>
                             <string>nrtypes</string>
                             <string>basecatdict</string>
                             <string>_getiter_</string>
                             <string>t</string>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
-                            <string>context</string>
                             <string>bases</string>
                             <string>b</string>
                             <string>_write_</string>

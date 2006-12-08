@@ -78,8 +78,8 @@ fname=f.filename\n
 # we check for appropriate file type (by extension, using content_type_registry)\n
 # we accept or suggest appropriate portal type\n
 ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-if ctype is None and typ!=\'DMS File\':\n
-  raise Exception(\'This file should be uploaded into DMS File\')\n
+if ctype is None and typ!=\'File\':\n
+  raise Exception(\'This file should be uploaded into File\')\n
 if ctype is not None and ctype!=typ:\n
   raise Exception(\'This file should be uploaded into \'+ctype)\n
 \n

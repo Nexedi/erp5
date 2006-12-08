@@ -1,16 +1,13 @@
 <allowed_content_type_list>
- <portal_type id="DMS File">
-  <item>Role Definition</item>
- </portal_type>
  <portal_type id="Document Module">
   <item>Text</item>
   <item>External Library File</item>
   <item>External Web Page</item>
   <item>Spreadsheet</item>
   <item>Presentation</item>
-  <item>DMS File</item>
   <item>PDF</item>
   <item>Drawing</item>
+  <item>File</item>
  </portal_type>
  <portal_type id="Drawing">
   <item>Role Definition</item>
@@ -21,11 +18,11 @@
  <portal_type id="File">
   <item>Role Definition</item>
  </portal_type>
+ <portal_type id="Image">
+  <item>Role Definition</item>
+ </portal_type>
  <portal_type id="Image Module">
   <item>Image</item>
- </portal_type>
- <portal_type id="ImageDocument">
-  <item>Role Definition</item>
  </portal_type>
  <portal_type id="PDF">
   <item>Role Definition</item>

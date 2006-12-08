@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Image Document</string> </value>
+            <value> <string>ERP5 Image</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -66,7 +66,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addImageDocument</string> </value>
+            <value> <string>addImage</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ImageDocument</string> </value>
+            <value> <string>Image</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

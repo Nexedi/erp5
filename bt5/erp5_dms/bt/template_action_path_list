@@ -1,17 +1,4 @@
 Book | view
-DMS File | download
-DMS File | file_upload
-DMS File | history
-DMS File | jump_to_all_related
-DMS File | jump_to_predecessor
-DMS File | jump_to_similar
-DMS File | jump_to_similarity_cloud
-DMS File | jump_to_successor
-DMS File | jump_to_wiki_predecessor
-DMS File | local_permission
-DMS File | metadata
-DMS File | related_document
-DMS File | view
 Document Module | advanced_search
 Document Module | list_ui
 Document Module | sort_on
@@ -48,24 +35,37 @@ External Web Page | history
 External Web Page | metadata
 External Web Page | spider
 External Web Page | view
+File | download
+File | file_upload
+File | history
+File | jump_to_all_related
+File | jump_to_predecessor
+File | jump_to_similar
+File | jump_to_similarity_cloud
+File | jump_to_successor
+File | jump_to_wiki_predecessor
+File | local_permission
+File | metadata
+File | related_document
+File | view
 Image Module | list_ui
 Image Module | sort_on
 Image Module | view
-ImageDocument | export
-ImageDocument | file_upload
-ImageDocument | fullsize_view
-ImageDocument | history
-ImageDocument | jump_to_all_related
-ImageDocument | jump_to_predecessor
-ImageDocument | jump_to_similar
-ImageDocument | jump_to_similarity_cloud
-ImageDocument | jump_to_successor
-ImageDocument | jump_to_wiki_predecessor
-ImageDocument | local_permission
-ImageDocument | metadata
-ImageDocument | print
-ImageDocument | related_document
-ImageDocument | view
+Image | export
+Image | file_upload
+Image | fullsize_view
+Image | history
+Image | jump_to_all_related
+Image | jump_to_predecessor
+Image | jump_to_similar
+Image | jump_to_similarity_cloud
+Image | jump_to_successor
+Image | jump_to_wiki_predecessor
+Image | local_permission
+Image | metadata
+Image | print
+Image | related_document
+Image | view
 PDF | download
 PDF | file_upload
 PDF | history

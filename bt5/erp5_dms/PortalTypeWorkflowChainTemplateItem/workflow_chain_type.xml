@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>DMS File</type>
-  <workflow>document_publication_workflow, edit_workflow, local_permission_interaction_workflow, dms_file_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Drawing</type>
   <workflow>local_permission_interaction_workflow, edit_workflow, dms_file_interaction_workflow, document_publication_workflow, ooo_interaction_workflow</workflow>
  </chain>
@@ -13,11 +9,15 @@
  </chain>
  <chain>
   <type>External Web Page</type>
-  <workflow>edit_workflow, external_document_interaction_workflow, external_document_publication_workflow</workflow>
+  <workflow>edit_workflow, external_document_publication_workflow, external_document_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>ImageDocument</type>
-  <workflow>dms_file_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow, edit_workflow</workflow>
+  <type>File</type>
+  <workflow>dms_file_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image</type>
+  <workflow>edit_workflow, dms_file_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>PDF</type>

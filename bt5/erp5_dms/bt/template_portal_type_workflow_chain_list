@@ -1,7 +1,3 @@
-DMS File | dms_file_interaction_workflow
-DMS File | document_publication_workflow
-DMS File | edit_workflow
-DMS File | local_permission_interaction_workflow
 Drawing | dms_file_interaction_workflow
 Drawing | document_publication_workflow
 Drawing | edit_workflow
@@ -13,10 +9,14 @@ External Library File | external_document_publication_workflow
 External Web Page | edit_workflow
 External Web Page | external_document_interaction_workflow
 External Web Page | external_document_publication_workflow
-ImageDocument | dms_file_interaction_workflow
-ImageDocument | document_publication_workflow
-ImageDocument | edit_workflow
-ImageDocument | local_permission_interaction_workflow
+File | dms_file_interaction_workflow
+File | document_publication_workflow
+File | edit_workflow
+File | local_permission_interaction_workflow
+Image | dms_file_interaction_workflow
+Image | document_publication_workflow
+Image | edit_workflow
+Image | local_permission_interaction_workflow
 PDF | dms_file_interaction_workflow
 PDF | document_publication_workflow
 PDF | edit_workflow
