@@ -42,6 +42,7 @@ class DocumentCoordinatesConstraint(Constraint):
   def checkConsistency(self, o, fixit=0, throw=False):
     """Implement here the consistency checker
     """
+    # XXX we probably could check reference syntax here, based on regexp in preferences?
     errors = []
 
     for req in ('reference', 'language', 'version'):
@@ -60,6 +61,10 @@ class DocumentCoordinatesConstraint(Constraint):
     if len(res)>2: # this is very serious
       raise Exception('Fatal error: multiple objects %s - %s - %s exist' % (o.getReference(),o.getLanguage(),o.getVersion()))
       #errors.append(self._generateError(o, N_(s)))
+    if hasattr(o,'Document_additionalConsistencyCheck'):
+      e=o.Document_additionalConsistencyCheck()
+      if e is not None and e!='':
+        errors.append(self._generateError(o, N_(e)))
     if errors and throw:
       raise Exception(str(errors))
     return errors
