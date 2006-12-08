@@ -97,6 +97,8 @@ if fname is not None:\n
     context.reset()\n
     if context.hasFile() and not context.hasOOFile():\n
       context.activate( activity  = \'SQLQueue\').OOoDocument_convertAfter()\n
+  else:\n
+    context.portal_workflow.doActionFor(context,\'validate_action\')\n
 </string> </value>
         </item>
         <item>

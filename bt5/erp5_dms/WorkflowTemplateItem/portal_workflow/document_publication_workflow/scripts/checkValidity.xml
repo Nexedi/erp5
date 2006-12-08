@@ -68,20 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>ob=state_change.object\n
 \n
-err=\'\'\n
-o=state_change.object\n
-res=o.checkConsistency()\n
-res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
-if len(res)>0:\n
-  msg=\'<br/>\'.join(str(c[3]) for c in res)\n
-  raise ValidationFailed(msg)\n
-
-
-]]></string> </value>
+vstate=ob.getValidationState()\n
+if vstate!=\'validated\':\n
+  ob.portal_workflow.doActionFor(ob,\'validate_action\')\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -124,19 +116,9 @@ if len(res)>0:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>err</string>
                             <string>_getattr_</string>
-                            <string>o</string>
-                            <string>res</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>c</string>
-                            <string>_getitem_</string>
-                            <string>len</string>
-                            <string>msg</string>
+                            <string>ob</string>
+                            <string>vstate</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,7 +135,7 @@ if len(res)>0:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkUniqueCoordinates</string> </value>
+            <value> <string>checkValidity</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
