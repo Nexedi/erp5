@@ -73,6 +73,13 @@ def generateFile(self,name,data,format):
   res=base64.decodestring(kw['data'])
   return res
 
+def getAttrFromFilename(self,fname):
+  rx_parse=re.compile(self.portal_preferences.getPreferredDmsFilenameRegexp())
+  m=rx_parse.match(fname)
+  if m is None:
+    return {}
+  return m.groupdict()
+
 
 
 # vim: syntax=python shiftwidth=2 
