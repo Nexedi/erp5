@@ -73,10 +73,11 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>DMS File</string>
-                <string>Graphic</string>
-                <string>ImageDocument</string>
-                <string>PdfDocument</string>
+                <string>Drawing</string>
+                <string>File</string>
+                <string>Image</string>
+                <string>Memo</string>
+                <string>PDF</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>
                 <string>Text</string>
