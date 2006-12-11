@@ -34,8 +34,10 @@ from Globals import DTMLFile
 
 if allowMemcachedTool():
   import memcache
+  import traceback
   from Shared.DC.ZRDB.TM import TM
   from Products.PythonScripts.Utility import allow_class
+  from zLOG import LOG
   
   MARKER = tuple()
   UPDATE_ACTION = 'update'
@@ -43,7 +45,7 @@ if allowMemcachedTool():
   
   class MemcachedDict(TM):
     """
-      Present memcached similarly to a dictionnary (not all method are
+      Present memcached similarly to a dictionary (not all method are
       available).
       Uses transactions to only update memcached at commit time.
       No conflict generation/resolution : last edit wins.
@@ -53,7 +55,7 @@ if allowMemcachedTool():
         - make picklable ?
     """
   
-    def __init__(self, server='127.0.0.1:11211'):
+    def __init__(self, server_list=('127.0.0.1:11211', )):
       """
         Initialise properties :
         memcached_connection
@@ -62,7 +64,7 @@ if allowMemcachedTool():
           Dictionnary used as a connection cache with duration limited to
           transaction length.
         scheduled_action_dict
-          Each key in this dictionnary must be handled at transaction commit.
+          Each key in this dictionary must be handled at transaction commit.
           Value gives the action to take :
             UPDATE_ACTION 
               Take value from local cache and send it to memcached.
@@ -71,7 +73,7 @@ if allowMemcachedTool():
       """
       self.local_cache = {}
       self.scheduled_action_dict = {}
-      self.memcached_connection = memcache.Client((server, ))
+      self.memcached_connection = memcache.Client(server_list)
   
     def __del__(self):
       """
@@ -86,11 +88,14 @@ if allowMemcachedTool():
         Invalidate all local cache to make sure changes donc by other zopes
         would not be ignored.
       """
-      for key, action in self.scheduled_action_dict.iteritems():
-        if action is UPDATE_ACTION:
-          self.memcached_connection.set(key, self.local_cache[key], 0)
-        elif action is DELETE_ACTION:
-          self.memcached_connection.delete(key, 0)
+      try:
+        for key, action in self.scheduled_action_dict.iteritems():
+          if action is UPDATE_ACTION:
+            self.memcached_connection.set(key, self.local_cache[key], 0)
+          elif action is DELETE_ACTION:
+            self.memcached_connection.delete(key, 0)
+      except:
+        LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
       self.scheduled_action_dict.clear()
       self.local_cache.clear()
   
@@ -104,8 +109,6 @@ if allowMemcachedTool():
     def __getitem__(self, key):
       """
         Get an item from local cache, otherwise from memcached.
-        Note that because of memcached python client limitations, it never
-        raises KeyError.
       """
       # We need to register in this function too to be able to flush cache at 
       # transaction end.
@@ -113,6 +116,8 @@ if allowMemcachedTool():
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
         result = self.memcached_connection.get(key)
+        if result is None:
+          raise KeyError, 'Key %s not found.' % (key, )
         self.local_cache[key] = result
       return result
   
@@ -135,25 +140,28 @@ if allowMemcachedTool():
       self.scheduled_action_dict[key] = DELETE_ACTION
       self.local_cache[key] = None
   
-    def set(self, key, val, time=0):
+    def set(self, key, value):
       """
         Set an item to local cache and schedule update of memcached.
       """
       return self.__setitem__(key, value)
   
-    def get(self, key, default=MARKER):
+    def get(self, key, default=None):
       """
         Get an item from local cache, otherwise from memcached.
         Note that because __getitem__ never raises error, 'default' will never
         be used (None will be returned instead).
       """
-      return self.__getitem__(key)
+      try:
+        return self.__getitem__(key)
+      except KeyError:
+        return default
   
   class SharedDict:
     """
       Class to make possible for multiple "users" to store data in the same
-      dictionnary without risking to overwrite other's data.
-      Each "user" of the dictionnary must get an instance of this class.
+      dictionary without risking to overwrite other's data.
+      Each "user" of the dictionary must get an instance of this class.
   
       TODO:
         - handle persistence ?
@@ -162,53 +170,55 @@ if allowMemcachedTool():
     def __init__(self, dictionary, prefix):
       """
         dictionary
-          Instance of dictionnary to share.
+          Instance of dictionary to share.
         prefix
           Prefix used by the "user" owning an instance of this class.
       """
-      self._v_dictionary = dictionary
+      self._dictionary = dictionary
       self.prefix = prefix
   
     def _prefixKey(self, key):
       """
         Prefix key with self.prefix .
       """
+      if not isinstance(key, basestring):
+        raise TypeError, 'Key %s is not a string. Only strings are supported as key in SharedDict' % (repr(key), )
       return '%s_%s' % (self.prefix, key)
   
     def __getitem__(self, key):
       """
         Get item from memcached.
       """
-      return self._v_dictionary.__getitem__(self._prefixKey(key))
+      return self._dictionary.__getitem__(self._prefixKey(key))
     
     def __setitem__(self, key, value):
       """
         Put item in memcached.
       """
-      self._v_dictionary.__setitem__(self._prefixKey(key), value)
+      self._dictionary.__setitem__(self._prefixKey(key), value)
   
     def __delitem__(self, key):
       """
         Delete item from memcached.
       """
-      self._v_dictionary.__delitem__(self._prefixKey(key))
+      self._dictionary.__delitem__(self._prefixKey(key))
   
     # These are the method names called by zope
     __guarded_setitem__ = __setitem__
     __guarded_getitem__ = __getitem__
     __guarded_delitem__ = __delitem__
   
-    def get(self, key, default=MARKER):
+    def get(self, key, default=None):
       """
         Get item from memcached.
       """
-      return self.__getitem__(key)
+      return self._dictionary.get(self._prefixKey(key), default)
   
     def set(self, key, value):
       """
         Put item in memcached.
       """
-      self.__setitem__(key, value)
+      self._dictionary.set(self._prefixKey(key), value)
   
   allow_class(SharedDict)
   
@@ -232,10 +242,11 @@ if allowMemcachedTool():
         Return used memcached dict.
         Create it if does not exist.
       """
-      dictionary = getattr(self, '_v_memcached_dict', None)
-      if dictionary is None:
-        dictionary = MemcachedDict(self.getServerAddress())
-        setattr(self, '_v_memcached_dict', dictionary)
+      try:
+        dictionary = self._v_memcached_dict
+      except AttributeError:
+        dictionary = MemcachedDict(self.getServerAddressList())
+        self._v_memcached_dict = dictionary
       return dictionary
   
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcacheDict')
@@ -246,31 +257,47 @@ if allowMemcachedTool():
         
         key_prefix
           Mendatory argument allowing different tool users from sharing the same
-          dictionnary key namespace.
+          dictionary key namespace.
       """
       return SharedDict(dictionary=self._getMemcachedDict(), prefix=key_prefix)
   
     security.declareProtected(Permissions.ModifyPortalContent, 'setServerAddress')
     def setServerAddress(self, value):
       """
-        Upon server address change, force next access to memcached dict to
-        reconnect to new ip.
-  
-        This is safe in multi zope environment, since we modify self which is
-        persistent. Then all zopes will have to reload this tool instance, and
-        loose their volatile properties in the process, which will force them
-        to reconnect to memcached.
+        Set a memcached server address.
       """
-      self.server_address = value
-      setattr(self, '_v_memcached_dict', None)
+      self.setServerAddressList([value, ])
+      self.server_address_list = [value, ]
+      self._v_memcached_dict = None
   
     security.declareProtected(Permissions.AccessContentsInformation, 'getServerAddress')
     def getServerAddress(self):
       """
         Return server address.
-        Defaults to 127.0.0.1:11211 if not set.
       """
-      return getattr(self, 'server_address', '127.0.0.1:11211')
+      return self.getServerAddressList()[0]
+    
+    def getServerAddressList(self):
+      """
+        Get the list of memcached servers to use.
+        Defaults to ['127.0.0.1:11211', ].
+      """
+      return getattr(self, 'server_address_list', ['127.0.0.1:11211', ])
+
+    def setServerAddressList(self, value):
+      """
+        Set the list of memcached servers to use.
+
+        Upon server address change, force next access to memcached dict to
+        reconnect to new ip.
+
+        This is safe in multi zope environment, since we modify self which is
+        persistent. Then all zopes will have to reload this tool instance, and
+        loose their volatile properties in the process, which will force them
+        to reconnect to memcached.
+      """
+      self.server_address_list = value
+      self._v_memcached_dict = None
 
 else:
   
@@ -281,20 +308,27 @@ else:
     id = "portal_memcached"
     meta_type = "ERP5 Memcached Tool"
     portal_type = "Memcached Tool"
+    title = "DISABLED"
 
     security = ClassSecurityInfo()
     manage_options = ({'label': 'Configure',
                        'action': 'memcached_tool_configure',
                       },) + BaseTool.manage_options
 
-    def getMemcachedDict(self, *args, **kw):
+    def failingMethod(self, *args, **kw):
       """
         if this function is called and memcachedtool is disabled, fail loudly
         with a meaningfull message.
       """
       from Products.ERP5Type import memcached_tool_enable_path
-      raise NotImplementedError, 'MemcachedTool is disabled. You should ask the'\
-        'server administrator to enable it by creating the file %s' % (memcached_tool_enable_path, )
+      raise RuntimeError, 'MemcachedTool is disabled. You should ask'\
+        ' the server administrator to enable it by creating the file %s' % \
+        (memcached_tool_enable_path, )
 
-    memcached_tool_configure = getMemcachedDict = setServerAddress = getMemcachedDict
+    setServerAddress = failingMethod
+    getServerAddress = failingMethod
+    getServerAddressList = failingMethod
+    setServerAddressList = failingMethod
+    memcached_tool_configure = failingMethod
+    getMemcachedDict = failingMethod
 
