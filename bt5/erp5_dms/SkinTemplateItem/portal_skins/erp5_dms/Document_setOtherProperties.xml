@@ -68,41 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># determine content type if not given\n
-# first try from content\n
-context.log(fname,doctype)\n
-if doctype is None or doctype==\'\':\n
-  props=context.Document_getPropertyListFromContent(context,data)\n
-  doctype=props.get(\'doctype\')\n
-# then from filename\n
-if doctype is None or doctype==\'\':\n
-  props=context.Document_getPropertiesFromFilename(context,fname)\n
-  context.log(props)\n
-  doctype_id=props.get(\'doctype_id\')\n
-  if doctype_id is not None:\n
-    doctype=context.Document_idToType(doctype_id)\n
-context.log(doctype)\n
-if doctype is None or doctype==\'\':\n
-  doctype=context.content_type_registry.findTypeName(fname,None,None)\n
-context.log(fname,doctype)\n
-if doctype is None or doctype==\'\':\n
-  raise Exception("content type for file %s not registered" % fname)\n
-\n
-# create content\n
-# find appropriate module\n
-mod=None\n
-modlist=[m for m in context.getPortalObject().contentValues() if m.getId().endswith(\'_module\')]\n
-for mod in modlist:\n
-  if doctype in context.portal_types[mod.getPortalType()].allowed_content_types:\n
-     break\n
-if mod is None:\n
-  raise Exception(\'could not find module for \'+doctype)\n
-# create and populate object\n
-ob=mod.newContent(portal_type=doctype)\n
-ob.manage_upload(data)\n
-ob.Document_setOtherProperties()\n
-ob.DMS_ingestFile(fname,data)\n
-return ob\n
+            <value> <string># implementation layer - additional properties to be set from various sources \n
+# (e.g. current user info)\n
 </string> </value>
         </item>
         <item>
@@ -118,8 +85,14 @@ return ob\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>fname,data, doctype=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,30 +112,12 @@ return ob\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>fname</string>
-                            <string>data</string>
-                            <string>doctype</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>props</string>
-                            <string>doctype_id</string>
-                            <string>Exception</string>
-                            <string>mod</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>m</string>
-                            <string>modlist</string>
-                            <string>_getitem_</string>
-                            <string>ob</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -173,14 +128,12 @@ return ob\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DMS_createObjectFromFile</string> </value>
+            <value> <string>Document_setOtherProperties</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
