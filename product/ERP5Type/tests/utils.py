@@ -89,4 +89,18 @@ def _recreateClassTool(portal):
   reload(ClassTool)
   portal.manage_delObjects(['portal_classes'])
   portal._setObject('portal_classes', ClassTool.ClassTool())
-  
+
+def installRealMemcachedTool(portal):
+  """Replaces portal_memcached by a real memcached tool object.
+  """
+  Products.ERP5Type.allowMemcachedTool = lambda: 1
+  _recreateMemcachedTool(portal)
+
+def _recreateMemcachedTool(portal):
+  """Recreate the memcached tool for this portal.
+  """
+  from Products.ERP5Type.Tool import MemcachedTool
+  reload(MemcachedTool)
+  portal.manage_delObjects(['portal_memcached'])
+  portal._setObject('portal_memcached', MemcachedTool.MemcachedTool())
+

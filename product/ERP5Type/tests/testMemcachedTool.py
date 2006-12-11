@@ -28,17 +28,15 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Tool.MemcachedTool import MemcachedTool
-from Products.ERP5Type import allowMemcachedTool
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.tests.utils import installRealMemcachedTool
 
 class TestMemcachedTool(ERP5TypeTestCase):
   """
     Test MemcachedTool.
-    Note : MemcachedTool needs to be enabled to be tested.
-           This test will fail if it's not the case.
-    Note 2 : When writing tests, keep in mind that the test must not
-             give false positive or negative if the value already exists in
-             an existing memcached server.
+    Note : When writing tests, keep in mind that the test must not give false
+           positive or negative if the value already exists in an existing
+           memcached server.
   """
 
   def getBusinessTemplateList(self):
@@ -46,6 +44,10 @@ class TestMemcachedTool(ERP5TypeTestCase):
 
   def getTitle(self):
     return "MemcachedTool"
+
+  def setUp(self):
+    ERP5TypeTestCase.setUp(self)
+    installRealMemcachedTool(self.getPortal())
 
   def afterSetUp(self):
     self.login()
@@ -58,13 +60,6 @@ class TestMemcachedTool(ERP5TypeTestCase):
 
   def getMemcachedDict(self):
     return self.getPortal().portal_memcached.getMemcachedDict(key_prefix='unit_test')
-
-  def test_00_memcachedToolIsEnabled(self):
-    """
-      Tests that memcached tool is enabled. Otherwise, testing it is
-      pointless.
-    """
-    self.assertTrue(allowMemcachedTool)
 
   def test_01_dictionnaryIsUsable(self):
     """
@@ -135,7 +130,28 @@ class TestMemcachedTool(ERP5TypeTestCase):
     self.assertTrue(tested_dict[tested_key] == tested_value)
     del tested_dict[tested_key]
     get_transaction().commit()
-    self.assertTrue(tested_dict[tested_key] is None)
+    try:
+      dummy = tested_dict[tested_key]
+    except KeyError:
+      pass
+    except:
+      self.fail('Wrong error type is raised when key is not found.')
+    else:
+      self.fail('No error is raised when key is not found.')
+
+  def test_06_checkNonStringKeyFails(self):
+    """
+      Tests that a non-string key is not accepted by SharedDict.
+    """
+    tested_dict = self.getMemcachedDict()
+    tested_key = tuple()
+    tested_value = 'test_value'
+    try:
+      tested_dict[tested_key] = tested_value
+    except TypeError:
+      pass
+    else:
+      self.fail('No error was raised when assigning a value to a non-string key.')
 
 if __name__ == '__main__':
   unittest.main()
