@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=context\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+ob=context\n
 context.log(kw)\n
 if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #doublecheck\n
   context.log(\'we go ahead\')\n
@@ -76,11 +78,15 @@ if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #dou
     res=ob.convert(force=1)\n
     ob.setPropertyListFromContent()\n
     ob.setExternalProcessingStatusMessage(\'converted\')\n
-    context.portal_workflow.doActionFor(context,\'validate_action\')\n
+    if context.getValidationState()!=\'validated\':\n
+      context.portal_workflow.doActionFor(context,\'validate_action\')\n
+  except ValidationFailed,e:\n
+    ob.log(\'Exception\',e)\n
+    ob.setExternalProcessingStatusMessage(str(e))\n
   except Exception,e:\n
     ob.log(\'Exception\',e)\n
     ob.setExternalProcessingStatusMessage(str(e))\n
-    #raise Exception(str(e)) # do we want the activity to keep trying?\n
+    raise Exception(str(e)) # do we want the activity to keep trying? - no, we don\'t, this will cause endless loop\n
 </string> </value>
         </item>
         <item>
@@ -131,13 +137,15 @@ if (ob.hasFile() and not ob.hasOOFile()) or context.REQUEST.get(\'force\'): #dou
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>context</string>
                             <string>ob</string>
                             <string>_getattr_</string>
                             <string>res</string>
-                            <string>Exception</string>
                             <string>e</string>
                             <string>str</string>
+                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
