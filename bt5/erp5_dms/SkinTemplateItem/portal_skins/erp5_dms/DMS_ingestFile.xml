@@ -71,7 +71,7 @@
             <value> <string># this script does not save file data in a document\n
 # it can be run any time\n
 # is meant to extract metadata from file name and contents\n
-\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 if data is None:\n
   if hasattr(context,\'oo_data\'):\n
     data=context.oo_data\n
@@ -96,9 +96,12 @@ if fname is not None:\n
   if hasattr(context,\'convert\') and hasattr(context,\'hasFile\') and hasattr(context,\'hasOOFile\'):\n
     context.reset()\n
     if context.hasFile() and not context.hasOOFile():\n
-      context.activate( activity  = \'SQLQueue\').OOoDocument_convertAfter()\n
-  else:\n
+      context.activate().OOoDocument_convertAfter()\n
+      context.activate(after_method_id=\'OOoDocument_convertAfter\').OOoDocument_postConversion()\n
+  try:\n
     context.portal_workflow.doActionFor(context,\'validate_action\')\n
+  except ValidationFailed:\n
+    pass # we do not want to throw exception, just leave the document not validated\n
 </string> </value>
         </item>
         <item>
@@ -149,6 +152,8 @@ if fname is not None:\n
                           <tuple>
                             <string>fname</string>
                             <string>data</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>None</string>
                             <string>hasattr</string>
                             <string>context</string>
