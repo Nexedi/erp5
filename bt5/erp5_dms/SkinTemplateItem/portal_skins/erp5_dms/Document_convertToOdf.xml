@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>getDoctypeFromContent</string> </value>
+            <value> <string>convertToOdf</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
@@ -34,11 +34,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_getDoctypeFromContent</string> </value>
+            <value> <string>Document_convertToOdf</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>(not used)</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
