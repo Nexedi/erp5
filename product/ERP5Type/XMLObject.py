@@ -77,7 +77,9 @@ class XMLObject( Folder ):
       """
           Replace the content of this object by providing an xml content
       """
-      pass
+      from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+      conduit = ERP5Conduit()
+      self.getParentValue().addNode(object=self, xml=xml, object_id=self.getId())
 
     # Hash method
     def __hash__(self):
