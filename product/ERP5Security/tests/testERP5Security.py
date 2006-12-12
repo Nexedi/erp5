@@ -51,8 +51,6 @@ except ImportError:
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
   """
- 
-  RUN_ALL_TESTS = 1
   
   def getTitle(self):
     """Title of the test."""
@@ -70,7 +68,7 @@ class TestUserManagement(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
   
-  def login(self, quiet=0, run=1):
+  def login(self):
     uf = self.getUserFolder()
     uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
@@ -81,36 +79,23 @@ class TestUserManagement(ERP5TypeTestCase):
     """Returns the acl_users. """
     return self.getPortal().acl_users
 
-  def test_GroupManagerInterfaces(self, run=RUN_ALL_TESTS):
+  def test_GroupManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
-    if not run:
-      return
+    # XXX move to GroupManager test class
     from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
     from Products.ERP5Security.ERP5GroupManager import ERP5GroupManager
     verifyClass(IGroupsPlugin, ERP5GroupManager)
 
-  def test_UserManagerInterfaces(self, run=RUN_ALL_TESTS):
+  def test_UserManagerInterfaces(self):
     """Tests user manager plugin respects interfaces."""
-    if not run:
-      return
     from Products.PluggableAuthService.interfaces.plugins import\
                 IAuthenticationPlugin, IUserEnumerationPlugin
     from Products.ERP5Security.ERP5UserManager import ERP5UserManager
     verifyClass(IAuthenticationPlugin, ERP5UserManager)
     verifyClass(IUserEnumerationPlugin, ERP5UserManager)
 
-  def test_RolesManagerInterfaces(self, run=RUN_ALL_TESTS):
-    """Tests group manager plugin respects interfaces."""
-    if not run:
-      return
-    from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
-    from Products.ERP5Security.ERP5RoleManager import ERP5RoleManager
-    verifyClass(IRolesPlugin, ERP5RoleManager)
-
-  def test_UserFolder(self, run=RUN_ALL_TESTS):
+  def test_UserFolder(self):
     """Tests user folder has correct meta type."""
-    if not run:
-      return
     self.failUnless(isinstance(self.getUserFolder(),
         PluggableAuthService.PluggableAuthService))
 
@@ -156,13 +141,25 @@ class TestUserManagement(ERP5TypeTestCase):
            "Plugin %s should not have authenticated '%s' with password '%s'" %
            (plugin_name, login, password))
 
-  def test_PersonWithLoginPasswordAreUsers(self, run=RUN_ALL_TESTS):
+  def test_PersonWithLoginPasswordAreUsers(self):
     """Tests a person with a login & password is a valid user."""
     p = self._makePerson(reference='the_user', password='secret',
                         career_role='internal')
     self._assertUserExists('the_user', 'secret')
     
-  def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self, run=RUN_ALL_TESTS):
+  def test_PersonLoginCaseSensitive(self):
+    """Login/password are case sensitive."""
+    p = self._makePerson(reference='the_user', password='secret',
+                        career_role='internal')
+    self._assertUserDoesNotExists('the_User', 'secret')
+  
+  def test_PersonLoginNonAscii(self):
+    """Login can contain non ascii chars."""
+    p = self._makePerson(reference='j\xc3\xa9', password='secret',
+                        career_role='internal')
+    self._assertUserExists('j\xc3\xa9', 'secret')
+
+  def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self):
     """Tests a person with a login but no password is not a valid user."""
     self._makePerson(reference='the_user', career_role='internal')
     self._assertUserDoesNotExists('the_user', None)
@@ -170,27 +167,27 @@ class TestUserManagement(ERP5TypeTestCase):
                      career_role='internal')
     self._assertUserDoesNotExists('another_user', '')
   
-  def test_PersonWithEmptyLoginAreNotUsers(self, run=RUN_ALL_TESTS):
+  def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with a login & password is a valid user."""
     self._makePerson(reference='', password='secret', career_role='internal')
     self._assertUserDoesNotExists('', 'secret')
   
-  def test_PersonWithSuperUserLoginCannotBeCreated(self, run=RUN_ALL_TESTS):
+  def test_PersonWithSuperUserLoginCannotBeCreated(self):
     """Tests one cannot create person with the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
     self.assertRaises(RuntimeError, self._makePerson, reference=SUPER_USER)
   
-  def test_PersonWithSuperUserLogin(self, run=RUN_ALL_TESTS):
+  def test_PersonWithSuperUserLogin(self):
     """Tests one cannot use the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
     self._assertUserDoesNotExists(SUPER_USER, '')
 
-  def test_MultiplePersonReference(self, run=RUN_ALL_TESTS):
+  def test_MultiplePersonReference(self):
     """Tests that it's refused to create two Persons with same reference."""
     self._makePerson(reference='new_person')
     self.assertRaises(RuntimeError, self._makePerson, reference='new_person')
 
-  def test_PersonCopyAndPaste(self, run=RUN_ALL_TESTS):
+  def test_PersonCopyAndPaste(self):
     """If we copy and paste a person, login must not be copyied."""
     person = self._makePerson(reference='new_person')
     person_module = self.getPersonModule()
@@ -274,6 +271,12 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """List of BT to install. """
     return ('erp5_base',)
   
+  def test_RolesManagerInterfaces(self):
+    """Tests group manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
+    from Products.ERP5Security.ERP5RoleManager import ERP5RoleManager
+    verifyClass(IRolesPlugin, ERP5RoleManager)
+
   def testMemberRole(self):
     """Test users have the Member role.
     """
