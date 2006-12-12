@@ -2167,7 +2167,12 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
-    for roles_path in self._objects.keys():
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      keys = [object_path]
+    else:
+      keys = self._objects.keys()
+    for roles_path in keys:
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
       obj = p.unrestrictedTraverse(path)
       setattr(obj, '_roles', [])
