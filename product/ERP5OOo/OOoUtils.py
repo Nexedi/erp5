@@ -38,9 +38,10 @@ try:
   from cStringIO import StringIO
 except ImportError:
   from StringIO import StringIO
-from zLOG import LOG
 import imghdr
 import random
+from Products.ERP5Type import Permissions
+from zLOG import LOG
 
 from OFS.Image import Pdata
 
@@ -108,7 +109,7 @@ class OOoBuilder:
       pass
     zf.writestr(filename, stream)
     zf.close()
-  
+
   security.declarePublic('extract')
   def extract(self, filename):
     """
@@ -119,7 +120,7 @@ class OOoBuilder:
     except RuntimeError:
       zf = ZipFile(self._document, mode='r')
     return zf.read(filename)
-  
+
   security.declarePublic('getNameList')
   def getNameList(self):
     try:
@@ -210,7 +211,7 @@ class OOoBuilder:
       request.response.setHeader('Content-Disposition', 'attachment; filename=%s.%s' % (name, extension))
     self._document.seek(0)
     return self._document.read()
-    
+
 InitializeClass(OOoBuilder)
 allow_class(OOoBuilder)
 
@@ -218,11 +219,8 @@ class OOoParser:
   """
     General purpose tools to parse and handle OpenOffice v1.x documents.
   """
-
-
   # Declarative security
   security = ClassSecurityInfo()
-
 
   security.declarePrivate('__init__')
   def __init__(self):
@@ -235,8 +233,7 @@ class OOoParser:
     self.ns = {}
     self.filename = None
 
-
-  security.declareProtected('Import/Export objects', 'openFile')
+  security.declareProtected(Permissions.ImportExportObjects, 'openFile')
   def openFile(self, file_descriptor):
     """
       Load all files in the zipped OpenOffice document
@@ -270,14 +267,12 @@ class OOoParser:
             if name[:5] == "xmlns":
                 self.ns[name[6:]] = doc_ns[0].attributes.item(i).value
 
-
   security.declarePublic('getFilename')
   def getFilename(self):
     """
       Return the name of the OpenOffice file
     """
     return self.filename
-
 
   security.declarePublic('getPicturesMapping')
   def getPicturesMapping(self):
@@ -292,14 +287,12 @@ class OOoParser:
           self.pictures[file_name] = raw_data
     return self.pictures
 
-
   security.declarePublic('getContentDom')
   def getContentDom(self):
     """
       Return the DOM tree of the main OpenOffice content
     """
     return self.oo_content_dom
-
 
   security.declarePublic('getSpreadsheetsDom')
   def getSpreadsheetsDom(self, include_embedded=False):
@@ -311,7 +304,6 @@ class OOoParser:
     if include_embedded == True:
       spreadsheets += self.getEmbeddedSpreadsheetsDom()
     return spreadsheets
-
 
   security.declarePublic('getSpreadsheetsMapping')
   def getSpreadsheetsMapping(self, include_embedded=False, no_empty_lines=False, normalize=True):
@@ -325,7 +317,6 @@ class OOoParser:
       tables = self._getTableListUnion(tables, embedded_tables)
     return tables
 
-
   security.declarePublic('getPlainSpreadsheetsDom')
   def getPlainSpreadsheetsDom(self):
     """
@@ -336,7 +327,6 @@ class OOoParser:
     for table in self.oo_content_dom.getElementsByTagName("table:table"):
       spreadsheets.append(table)
     return spreadsheets
-
 
   security.declarePublic('getPlainSpreadsheetsMapping')
   def getPlainSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
@@ -349,7 +339,6 @@ class OOoParser:
       if new_table != None:
         tables = self._getTableListUnion(tables, new_table)
     return tables
-
 
   security.declarePublic('getEmbeddedSpreadsheetsDom')
   def getEmbeddedSpreadsheetsDom(self):
@@ -374,7 +363,6 @@ class OOoParser:
                 pass
     return spreadsheets
 
-
   security.declarePublic('getEmbeddedSpreadsheetsMapping')
   def getEmbeddedSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
     """
@@ -386,7 +374,6 @@ class OOoParser:
       if new_table != None:
         tables = self._getTableListUnion(tables, new_table)
     return tables
-
 
   security.declarePublic('getSpreadsheetMapping')
   def getSpreadsheetMapping(self, spreadsheet=None, no_empty_lines=False, normalize=True):
@@ -482,7 +469,6 @@ class OOoParser:
                                                 )
     return {table_name: new_table}
 
-
   security.declarePrivate('_getReducedTable')
   def _getReducedTable(self, table):
     """
@@ -513,7 +499,6 @@ class OOoParser:
 
     return table[:table_height]
 
-
   security.declarePrivate('_getTableSizeDict')
   def _getTableSizeDict(self, table):
     """
@@ -529,7 +514,6 @@ class OOoParser:
            , 'height': len(table)
            }
 
-
   security.declarePrivate('_getNormalizedBoundsTable')
   def _getNormalizedBoundsTable(self, table, width=0, height=0):
     """
@@ -541,7 +525,6 @@ class OOoParser:
       while width > len(table[line]):
         table[line].append(None)
     return table
-
 
   security.declarePrivate('_getTableListUnion')
   def _getTableListUnion(self, list1, list2):
@@ -558,8 +541,6 @@ class OOoParser:
         new_key = list2_key + '_' + str(random.randint(1000,9999))
       list1[new_key] = list2[list2_key]
     return list1
-
-
 
 InitializeClass(OOoParser)
 allow_class(OOoParser)
