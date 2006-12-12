@@ -43,12 +43,31 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5.Document.Delivery import Delivery
 from DateTime import DateTime
 
 SOURCE = 'source'
 DESTINATION = 'destination'
 RUN_ALL_TESTS = 1
 QUIET = 1
+
+
+def manage_beforeDelete(self, item, container):
+  Delivery.manage_beforeDelete(self, item, container)
+
+def allowAccountingTransactionDeletion():
+  from Products.ERP5.Document.AccountingTransaction \
+      import AccountingTransaction
+  old_manage_beforeDelete = AccountingTransaction.manage_beforeDelete 
+  AccountingTransaction.manage_beforeDelete = manage_beforeDelete
+  try:
+    from Products.ERP5Type.Document.AccountingTransaction \
+        import AccountingTransaction
+    AccountingTransaction.manage_beforeDelete = manage_beforeDelete
+  except ImportError:
+    # ERP5Type version of this class is only available when ERP5Type document
+    # registry has been initialized.
+    pass
 
 class TestAccounting(ERP5TypeTestCase):
   """Test Accounting. """
@@ -112,6 +131,17 @@ class TestAccounting(ERP5TypeTestCase):
 
     self.login()
 
+  def beforeTearDown(self):
+    """Cleanup for next test.
+    All tests uses the same accounts and same entities, so we just cleanup
+    accounting module and simulation. """
+    get_transaction().abort()
+    allowAccountingTransactionDeletion()
+    for folder in (self.accounting_module, self.portal.portal_simulation):
+      folder.manage_delObjects([i for i in folder.objectIds()])
+    get_transaction().commit()
+    self.tic()
+
   def login(self) :
     """sets the security manager"""
     uf = self.getPortal().acl_users
@@ -157,14 +187,17 @@ class TestAccounting(ERP5TypeTestCase):
   def createEntities(self):
     """Create entities. """
     self.client = self.getOrganisationModule().newContent(
+        title = 'Client',
         portal_type = self.organisation_portal_type,
         group = "client",
         price_currency = "currency_module/USD")
     self.vendor = self.getOrganisationModule().newContent(
+        title = 'Vendor',
         portal_type = self.organisation_portal_type,
         group = "vendor/sub1",
         price_currency = "currency_module/EUR")
     self.other_vendor = self.getOrganisationModule().newContent(
+        title = 'Other Vendor',
         portal_type = self.organisation_portal_type,
         group = "vendor/sub2",
         price_currency = "currency_module/EUR")
