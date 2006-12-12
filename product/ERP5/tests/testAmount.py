@@ -192,9 +192,6 @@ class TestAmount(ERP5TypeTestCase):
     )
 
   def test_01_variationProperty(self, quiet=0, run=run_all_test):
-    """
-      Test property existence
-    """
     if not run: return
     sequence_list = SequenceList()
     # Test setVariationPropertyDict and
@@ -236,6 +233,102 @@ class TestAmount(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+class TestMovement(ERP5TypeTestCase):
+  """Tests for Movement class
+  """
+  def afterSetUp(self):
+    self.login()
+    self.portal = self.getPortal()
+
+  def _makeOne(self, *args, **kw):
+    from Products.ERP5.Document.Movement import Movement
+    mvt = Movement(*args, **kw)
+    # return it wrapped, so that it can access the types tool in _aq_dynamic
+    return mvt.__of__(self.portal)
+
+  def testQuantity(self):
+    mvt = self._makeOne('mvt')
+    mvt.setQuantity(10)
+    self.assertEquals(10, mvt.getQuantity())
+    self.assertEquals(None, mvt.getTotalPrice())
+    mvt.edit(quantity=20)
+    self.assertEquals(20, mvt.getQuantity())
+  
+  def testPrice(self):
+    mvt = self._makeOne('mvt')
+    self.assertEquals(None, mvt.getPrice())
+    mvt.setPrice(10)
+    self.assertEquals(10, mvt.getPrice())
+    self.assertEquals(0, mvt.getTotalPrice())
+    mvt.setQuantity(1)
+    self.assertEquals(10, mvt.getTotalPrice())
+    
+  def testSourceDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setSourceDebit(10)
+    self.assertEquals(10, mvt.getSourceDebit())
+    self.assertEquals(0, mvt.getSourceCredit())
+    self.assertEquals(-10, mvt.getQuantity())
+
+    mvt.edit(source_debit=20)
+    self.assertEquals(20, mvt.getSourceDebit())
+    self.assertEquals(0, mvt.getSourceCredit())
+    self.assertEquals(-20, mvt.getQuantity())
+  
+  def testSourceCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setSourceCredit(10)
+    self.assertEquals(0, mvt.getSourceDebit())
+    self.assertEquals(10, mvt.getSourceCredit())
+    self.assertEquals(10, mvt.getQuantity())
+
+    mvt.edit(source_credit=20)
+    self.assertEquals(0, mvt.getSourceDebit())
+    self.assertEquals(20, mvt.getSourceCredit())
+    self.assertEquals(20, mvt.getQuantity())
+  
+  def testSourceDebitCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setSourceCredit(10)
+    mvt.edit(source_credit=0, source_debit=10)
+    self.assertEquals(10, mvt.getSourceDebit())
+    self.assertEquals(0, mvt.getSourceCredit())
+    self.assertEquals(-10, mvt.getQuantity())
+
+  def testDestinationDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setDestinationDebit(10)
+    self.assertEquals(10, mvt.getDestinationDebit())
+    self.assertEquals(0, mvt.getDestinationCredit())
+    self.assertEquals(10, mvt.getQuantity())
+
+    mvt.edit(destination_debit=20)
+    self.assertEquals(20, mvt.getDestinationDebit())
+    self.assertEquals(0, mvt.getDestinationCredit())
+    self.assertEquals(20, mvt.getQuantity())
+  
+  def testDestinationCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setDestinationCredit(10)
+    self.assertEquals(0, mvt.getDestinationDebit())
+    self.assertEquals(10, mvt.getDestinationCredit())
+    self.assertEquals(-10, mvt.getQuantity())
+
+    mvt.edit(destination_credit=20)
+    self.assertEquals(0, mvt.getDestinationDebit())
+    self.assertEquals(20, mvt.getDestinationCredit())
+    self.assertEquals(-20, mvt.getQuantity())
+  
+  def testDestinationDebitCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setDestinationCredit(10)
+    mvt.edit(destination_credit=0, destination_debit=10)
+    self.assertEquals(10, mvt.getDestinationDebit())
+    self.assertEquals(0, mvt.getDestinationCredit())
+    self.assertEquals(10, mvt.getQuantity())
+  
+  # TODO: test asset price
+
 if __name__ == '__main__':
   framework()
 else:
@@ -243,4 +336,5 @@ else:
   def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestAmount))
+    suite.addTest(unittest.makeSuite(TestMovement))
     return suite

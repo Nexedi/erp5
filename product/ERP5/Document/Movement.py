@@ -732,6 +732,21 @@ class Movement(XMLObject, Amount):
   setDestinationDebit = setSourceCredit
   setDestinationCredit = setSourceDebit
 
+  security.declarePrivate('_edit')
+  def _edit(self, **kw):
+    """Overloaded _edit to support setting debit and credit at the same time,
+    which is required for the GUI.
+    """
+    quantity = 0
+    if kw.has_key('source_debit') and kw.has_key('source_credit'):
+      quantity += (kw.pop('source_credit') or 0 - kw.pop('source_debit') or 0)
+      kw['quantity'] = quantity
+    if kw.has_key('destination_debit') and kw.has_key('destination_credit'):
+      quantity += (kw.pop('destination_debit') or 0 -
+                   kw.pop('destination_credit') or 0)
+      kw['quantity'] = quantity
+    XMLObject._edit(self, **kw)
+
   # Debit and credit methods for asset
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceAssetDebit' )
