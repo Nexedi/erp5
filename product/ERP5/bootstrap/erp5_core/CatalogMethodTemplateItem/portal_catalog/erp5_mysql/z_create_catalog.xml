@@ -116,7 +116,7 @@ CREATE TABLE `catalog` (\n
   `payment_state` varchar(255) default \'\',\n
   `event_state` varchar(255) default \'\',\n
   `immobilisation_state` varchar(255) default \'\',\n
-  `reference` varchar(255) default \'\',\n
+  `reference` varchar(255) binary default \'\',\n
   `grouping_reference` varchar(255) default \'\',\n
   `source_reference` varchar(255) default \'\',\n
   `destination_reference` varchar(255) default \'\',\n
@@ -201,7 +201,7 @@ CREATE TABLE `catalog` (\n
   `payment_state` varchar(255) default \'\',\n
   `event_state` varchar(255) default \'\',\n
   `immobilisation_state` varchar(255) default \'\',\n
-  `reference` varchar(255) default \'\',\n
+  `reference` varchar(255) binary default \'\',\n
   `grouping_reference` varchar(255) default \'\',\n
   `source_reference` varchar(255) default \'\',\n
   `destination_reference` varchar(255) default \'\',\n
