@@ -138,7 +138,9 @@ class CopyContainer:
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)
-      self._updateInternalRelatedContent(local_self=ob, path=ob.getRelativeUrl().split("/"), new_id=new_id)
+      self._updateInternalRelatedContent(local_self=ob, 
+                                         path=ob.getRelativeUrl().split("/"), 
+                                         new_id=new_id)
       #ob._v_is_renamed = 1
       # Rename the object
       return OriginalCopyContainer.manage_renameObject(self, id=id, new_id=new_id, REQUEST=REQUEST)
@@ -370,17 +372,37 @@ class CopyContainer:
           self._v_category_url_before_move = self.getRelativeUrl()
           self._recursiveSetActivityAfterTag(self)
 
-  def _postCopy(self, container, op=0):
-      # Called after the copy is finished to accomodate special cases.
-      # in our case, we want to notify the category system that our path
-      # changed, so that it updates related objects. 
-      if op == 1:
-          old_url = getattr(self, '_v_category_url_before_move', None)
-          if old_url is not None:
-              self.activate(after_method_id='unindexObject').updateRelatedContent(
-                                    old_url,
-                                    self.getRelativeUrl())
+  def _setId(self, id):
+    # Called to set the new id of a copied object.
+    # XXX It is bad to use volatile attribute, because we may have naming 
+    # conflict later.
+    # Currently, it is required to use this volatile attribute
+    # when we do a copy/paste, in order to change the relation in _postCopy.
+    # Such implementation is due to the limitation of CopySuport API, which prevent
+    # to pass parameter to manage_afterClone.
+    self._v_previous_id = self.id
+    self.id=id
 
+  def _postCopy(self, container, op=0):
+    # Called after the copy is finished to accomodate special cases.
+    # The op var is 0 for a copy, 1 for a move.
+    if op == 1:
+      # In our case, we want to notify the category system that our path
+      # changed, so that it updates related objects. 
+      old_url = getattr(self, '_v_category_url_before_move', None)
+      if old_url is not None:
+          self.activate(after_method_id='unindexObject').updateRelatedContent(
+                                old_url,
+                                self.getRelativeUrl())
+    elif op == 0:
+      # Paste a object.
+      # Update related subcontent
+      previous_path = self.getRelativeUrl().split('/')
+      previous_path[-1] = self._v_previous_id
+      
+      self._updateInternalRelatedContent(local_self=self, 
+                                         path=previous_path, 
+                                         new_id=self.id)
 
 #### Helper methods
 
