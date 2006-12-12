@@ -1,4 +1,4 @@
-###############################################################################
+##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #          Jean-Paul Smets-Solanes <jp@nexedi.com>
@@ -32,7 +32,9 @@ class SaleOpportunity:
   """
     Sales Opportunity properties and categories
 
-    XXX Probably useless (use Arrow instead)
+    This propertysheet is now useless. Do not use it.
+    It is only there for reminder of how one should
+    use acquisition in a context of synchronisation.
   """
 
   _properties = (
@@ -60,5 +62,4 @@ class SaleOpportunity:
       'mode'        : 'w' },
   )
 
-  _categories = ('role', 'group', 'activity', 'function',
-           'social_form', 'skill', 'market_segment', 'client')
+  _categories = ()
