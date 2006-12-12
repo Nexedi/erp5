@@ -68,8 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
+\n
+def Object_hasRelation(object):\n
+  # Check if there is some related objets.\n
+  result = 0\n
+  for o in object.getIndexableChildValueList():\n
+    for related in object.portal_categories.getRelatedValueList(object):\n
+      if related.getRelativeUrl().startswith(object.getRelativeUrl()):\n
+        continue\n
+      elif related.getRelativeUrl().startswith(\'portal_simulation\') :\n
+        continue\n
+      else:\n
+        result = 1\n
+        break\n
+  return result\n
 \n
 selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
@@ -77,13 +93,31 @@ uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
 request=context.REQUEST\n
 \n
+\n
+\n
 if uids != []:\n
-  context.manage_cutObjects(uids=uids, REQUEST=request)\n
-  message = N_("Item(s)+Cut.")\n
+  # Check if there is some related objets.\n
+  object_used = 0\n
+\n
+  object_list = [x.getObject() for x in context.portal_catalog(uid=uids)]\n
+  object_used = sum([Object_hasRelation(x) for x in object_list])\n
+\n
+  if object_used > 0:\n
+    if object_used == 1:\n
+      message = N_("Sorry,+1+Item+Is+In+Use.")\n
+    else:\n
+      message = N_("Sorry,+${count}+Items+Are+In+Use.",\n
+                   mapping={\'count\': repr(object_used)})\n
+    qs = \'?portal_status_message=%s\' % message  \n
+  else:\n
+    context.manage_cutObjects(uids=uids, REQUEST=request)\n
+    message = N_("Item(s)+Cut.")\n
 else:\n
   message = N_("Please+select+one+or+more+items+to+cut+first.")\n
 return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -133,9 +167,19 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>Object_hasRelation</string>
                             <string>selected_uids</string>
                             <string>request</string>
+                            <string>object_used</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>object_list</string>
+                            <string>sum</string>
                             <string>message</string>
+                            <string>repr</string>
+                            <string>qs</string>
                           </tuple>
                         </value>
                     </item>
