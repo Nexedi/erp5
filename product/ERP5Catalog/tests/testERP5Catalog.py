@@ -1222,4 +1222,23 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject for x in self.getCatalogTool()(
                 portal_type='Organisation', SearchableText='different')])
     
+  def test_43_ManagePasteObject(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Manage Paste Objects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    portal_catalog = self.getCatalogTool()
+    person_module = self.getPersonModule()
+    person = person_module.newContent(id='1',portal_type='Person')
+    get_transaction().commit()
+    self.tic()
+    copy_data = person_module.manage_copyObjects([person.getId()])
+    new_id = person_module.manage_pasteObjects(copy_data)[0]['new_id']
+    new_person = person_module[new_id]
+    get_transaction().commit()
+    self.tic()
+    path_list = [new_person.getRelativeUrl()]
+    self.checkRelativeUrlInSqlPathList(path_list)
+
 
