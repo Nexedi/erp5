@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/DMS_decorateHtmlRepresentation</string> </value>
+            <value> <string>here/document_preview_iframe</string> </value>
         </item>
       </dictionary>
     </pickle>
