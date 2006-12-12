@@ -2174,9 +2174,12 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       keys = self._objects.keys()
     for roles_path in keys:
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
-      obj = p.unrestrictedTraverse(path)
-      setattr(obj, '_roles', [])
-
+      try:
+        obj = p.unrestrictedTraverse(path)
+        setattr(obj, '_roles', [])
+      except (NotFound, KeyError):
+        pass
+      
 class SitePropertyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
