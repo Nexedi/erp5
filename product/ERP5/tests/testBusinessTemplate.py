@@ -890,6 +890,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     workflow = pw._getOb(wf_id, None)
     self.failUnless(workflow is None)
 
+  def stepCheckWorkflowBackup(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check workflow and its subobjects has been well backup in portal trash
+    """
+    wf_id = sequence.get('workflow_id')
+    tt = self.getPortal()['portal_trash']
+    self.assertEqual(len(tt.objectIds()), 1)
+    bin = tt.objectValues()[0]
+    self.assertNotEqual(len(bin.portal_workflow_items[wf_id].objectIds()), 0)
+
   # Actions
   def stepCreateFirstAction(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2965,6 +2975,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
                        CheckTrashBin \
+                       CheckWorkflowBackup \
                        CheckPortalTypeExists \
                        CheckModuleExists \
                        CheckSkinFolderExists \
