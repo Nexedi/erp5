@@ -260,6 +260,7 @@ def CheckBoxWidget_render(self, field, key, value, REQUEST):
                              name="default_%s:int" % (key, ),
                              value="0")
              ]
+
   if value:
     rendered.append(render_element("input",
                                    type="checkbox",
@@ -342,7 +343,7 @@ TextWidget.render_view = TextWidget_patched_render_view
 
 class IntegerWidget(TextWidget) :
   def render(self, field, key, value, REQUEST) :
-    """Render link.
+    """Render an editable integer.
     """
     if type(value) is type(1.0):
       value = int(value)
@@ -364,6 +365,12 @@ class IntegerWidget(TextWidget) :
                               value=value,
                               size=field.get_value('display_width'),
                               extra=field.get_value('extra'))
+
+  def render_view(self, field, value):
+      """Render a non-editable interger."""
+      if isinstance(value, float):
+          value = int(value)
+      return TextWidget.render_view(self, field, value)
 
 
 from Products.Formulator.StandardFields import IntegerField
