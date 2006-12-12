@@ -834,6 +834,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       for id, wf_ids in cbt.items():
         self.failUnless(id!="Geek Object")
 
+  def stepCheckWorkflowChainExists(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if the workflowChain has been removed
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+
   def stepAddWorkflowToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add workflow to business template
@@ -3183,6 +3196,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
+                       CheckWorkflowChainExists \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
                        CheckCatalogMethodExists \
