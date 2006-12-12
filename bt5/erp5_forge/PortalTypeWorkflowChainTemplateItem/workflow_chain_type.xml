@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
   <type>Bug</type>
-  <workflow>bug_workflow</workflow>
+  <workflow>bug_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
