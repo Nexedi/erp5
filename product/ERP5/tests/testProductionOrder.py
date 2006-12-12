@@ -930,3 +930,102 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCopyPasteSupplyChain(self, sequence=None, sequence_list=None, 
+                               **kw):
+    """
+    Copy/Paste the supply chain
+    """
+    portal = self.getPortal()
+    supply_chain_module = portal.getDefaultModule( \
+                                   portal_type=self.supply_chain_portal_type)
+    supply_chain = sequence.get('supply_chain')
+
+    cb_data = supply_chain_module.manage_copyObjects([supply_chain.getId()])
+    copied, = supply_chain_module.manage_pasteObjects(cb_data)
+    pasted_sc = supply_chain_module[copied['new_id']]
+    sequence.edit(pasted_sc=pasted_sc)
+
+  def stepCheckPastedSupplyChain(self, sequence=None, sequence_list=None, 
+                                 **kw):
+    """
+    Check pasted supply chain
+    """
+    pasted_sc = sequence.get('pasted_sc')
+    pasted_supply_node = pasted_sc.contentValues(portal_type='Supply Node')[0]
+    pasted_supply_link = pasted_sc.contentValues(portal_type='Supply Link')[0]
+    self.assertEquals(pasted_supply_node.getRelativeUrl(),
+                      pasted_supply_link.getDestination())
+
+  def test_04_testCopyPaste(self, quiet=0, run=run_all_test):
+    """
+    Check that relation are changed when doing a copy/paste,
+    on supply chain
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = '\
+            CreateProductionOrganisation1 \
+            CreateProductionSC \
+            CopyPasteSupplyChain \
+            Tic \
+            CheckPastedSupplyChain \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCreateEmptySC(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty Supply Chain
+    """
+    portal = self.getPortal()
+    supply_chain_module = portal.getDefaultModule( \
+                                   portal_type=self.supply_chain_portal_type)
+    supply_chain = supply_chain_module.newContent( \
+                                   portal_type=self.supply_chain_portal_type)
+    supply_chain.edit(
+      title = "Supply Chain Empty",
+    )
+    sequence.edit(empty_supply_chain=supply_chain)
+
+  def stepCutPasteSupplyNodeInAnotherContainer(self, sequence=None, 
+                                               sequence_list=None, **kw):
+    """
+    Cut/Paste a supply node in another container
+    """
+    supply_chain = sequence.get('supply_chain')
+    empty_supply_chain = sequence.get('empty_supply_chain')
+
+    supply_node = supply_chain.contentValues(portal_type='Supply Node')[0]
+    cb_data = supply_chain.manage_cutObjects([supply_node.getId()])
+    copied, = empty_supply_chain.manage_pasteObjects(cb_data)
+
+  def stepCheckPastedSupplyNode(self, sequence=None, sequence_list=None, 
+                                 **kw):
+    """
+    Check pasted supply node
+    """
+    supply_chain = sequence.get('supply_chain')
+    empty_supply_chain = sequence.get('empty_supply_chain')
+
+    supply_node = empty_supply_chain.contentValues(portal_type='Supply Node')[0]
+    supply_link = supply_chain.contentValues(portal_type='Supply Link')[0]
+    self.assertEquals(supply_node.getRelativeUrl(),
+                      supply_link.getDestination())
+
+  def test_05_testCutPasteInAnotherContainer(self, quiet=0, run=run_all_test):
+    """
+    Check that relation are changed when doing a copy/paste,
+    on supply chain
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = '\
+            CreateProductionOrganisation1 \
+            CreateProductionSC \
+            CreateEmptySC \
+            CutPasteSupplyNodeInAnotherContainer \
+            Tic \
+            CheckPastedSupplyNode \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
