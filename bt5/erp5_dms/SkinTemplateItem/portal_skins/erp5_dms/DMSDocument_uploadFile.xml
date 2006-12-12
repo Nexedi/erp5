@@ -84,7 +84,7 @@ if ctype is not None and ctype!=typ:\n
   raise Exception(\'This file should be uploaded into \'+ctype)\n
 \n
 if hasattr(context,\'data\'): # this is a re-upload, we create a \'copy\'\n
-  docmod=context.restrictedTraverse(\'document_module\')\n
+  docmod=context.aq_parent\n
   newob=docmod.newContent(portal_type=typ)\n
   copylist=context.portal_types[typ].getInstanceBaseCategoryList()\n
   # we copy many things, ingestion script may then overwrite some of these\n
