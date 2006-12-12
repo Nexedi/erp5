@@ -832,7 +832,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertRaises(AttributeError,unindex,person,uid=person.getUid())
     get_transaction().abort()
 
-  def test_SortOn(self, quiet=quiet, run=run_all_test):
+  def test_24_SortOn(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Sort On'
@@ -842,7 +842,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             self.getCatalogTool().buildSQLQuery(
             sort_on=(('catalog.title', 'ascending'),))['order_by_expression'])
 
-  def test_SortOnDescending(self, quiet=quiet, run=run_all_test):
+  def test_25_SortOnDescending(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Sort On Descending'
@@ -852,7 +852,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             self.getCatalogTool().buildSQLQuery(
             sort_on=(('catalog.title', 'descending'),))['order_by_expression'])
     
-  def test_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
+  def test__26_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not run: return
     if not quiet:
@@ -863,7 +863,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           self.getCatalogTool().buildSQLQuery(
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
-  def test_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
+  def test_27_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Sort On Ambigous Keys'
@@ -895,7 +895,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           sort_on=(('delivery.start_date', 'ascending'),
                     ))['order_by_expression'])
     
-  def test_SortOnMultipleKeys(self, quiet=quiet, run=run_all_test):
+  def test_28_SortOnMultipleKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Sort On Multiple Keys'
@@ -907,7 +907,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                        ('catalog.id', 'asc')))
                        ['order_by_expression'].replace(' ', ''))
 
-  def test_SortOnRelatedKey(self, quiet=quiet, run=run_all_test):
+  def test_29_SortOnRelatedKey(self, quiet=quiet, run=run_all_test):
     """Sort-on parameter and related key. (Assumes that region_title is a \
     valid related key)"""
     if not run: return
@@ -940,7 +940,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     return organisation
     
-  def test_SimpleQueryDict(self, quiet=quiet, run=run_all_test):
+  def test_30_SimpleQueryDict(self, quiet=quiet, run=run_all_test):
     """use a dict as a keyword parameter.
     """
     if not run: return
@@ -954,7 +954,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.path for x in self.getCatalogTool()(
                 title={'query': organisation_title})])
 
-  def test_RelatedKeySimpleQueryDict(self, quiet=quiet, run=run_all_test):
+  def test_31_RelatedKeySimpleQueryDict(self, quiet=quiet, run=run_all_test):
     """use a dict as a keyword parameter, but using a related key
     """
     if not run: return
@@ -970,7 +970,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 # also member of itself
                 portal_type=organisation.getPortalTypeName())])
 
-  def test_SimpleQueryDictWithOrOperator(self, quiet=quiet,
+  def test_32_SimpleQueryDictWithOrOperator(self, quiet=quiet,
                                                     run=run_all_test):
     """use a dict as a keyword parameter, with OR operator.
     """
@@ -987,7 +987,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 title={'query': (organisation_title, 'something else'),
                        'operator': 'or'})])
 
-  def test_SimpleQueryDictWithAndOperator(self, quiet=quiet,
+  def test_33_SimpleQueryDictWithAndOperator(self, quiet=quiet,
                                                      run=run_all_test):
     """use a dict as a keyword parameter, with AND operator.
     """
@@ -1005,7 +1005,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 title={'query': (organisation_title, organisation_title),
                        'operator': 'and'})])
 
-  def test_SimpleQueryDictWithMaxRangeParameter(self, quiet=quiet,
+  def test_34_SimpleQueryDictWithMaxRangeParameter(self, quiet=quiet,
                                                      run=run_all_test):
     """use a dict as a keyword parameter, with max range parameter ( < )
     """
@@ -1023,7 +1023,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',
                 title={'query': 'B', 'range': 'max'})])
   
-  def test_SimpleQueryDictWithMinRangeParameter(self, quiet=quiet,
+  def test_35_SimpleQueryDictWithMinRangeParameter(self, quiet=quiet,
                                                      run=run_all_test):
     """use a dict as a keyword parameter, with min range parameter ( >= )
     """
@@ -1042,7 +1042,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 title={'query': 'B', 'range': 'min'})])
 
 
-  def test_SimpleQueryDictWithNgtRangeParameter(self, quiet=quiet,
+  def test_36_SimpleQueryDictWithNgtRangeParameter(self, quiet=quiet,
                                                      run=run_all_test):
     """use a dict as a keyword parameter, with ngt range parameter ( <= )
     """
@@ -1060,7 +1060,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',
                 title={'query': 'B', 'range': 'ngt'})])
 
-  def test_SimpleQueryDictWithMinMaxRangeParameter(self, quiet=quiet,
+  def test_37_SimpleQueryDictWithMinMaxRangeParameter(self, quiet=quiet,
                                                      run=run_all_test):
     """use a dict as a keyword parameter, with minmax range parameter ( >=  < )
     """
@@ -1078,7 +1078,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',
                 title={'query': ('B', 'C'), 'range': 'minmax'})])
   
-  def test_SimpleQueryDictWithMinNgtRangeParameter(self, quiet=quiet,
+  def test_38_SimpleQueryDictWithMinNgtRangeParameter(self, quiet=quiet,
                                                      run=run_all_test):
     """use a dict as a keyword parameter, with minngt range parameter ( >= <= )
     """
@@ -1096,7 +1096,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',
                 title={'query': ('B', 'C'), 'range': 'minngt'})])
 
-  def test_DeferredConnection(self, quiet=quiet, run=run_all_test):
+  def test_39_DeferredConnection(self, quiet=quiet, run=run_all_test):
     """ERP5Catalog uses a deferred connection for full text indexing.
     """
     if not run: return
@@ -1118,7 +1118,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 getattr(self.getCatalogTool().getSQLCatalog(),
                               method).connection_id)
 
-  def test_DeleteObject(self, quiet=quiet, run=run_all_test):
+  def test_40_DeleteObject(self, quiet=quiet, run=run_all_test):
     """Simple test to exercise object deletion
     """
     if not run: return
@@ -1135,7 +1135,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEquals(0, len(folder.searchFolder()))
 
-  def test_ProxyRolesInRestrictedPython(self, quiet=quiet, run=run_all_test):
+  def test_41_ProxyRolesInRestrictedPython(self, quiet=quiet, run=run_all_test):
     """test that proxy roles apply to catalog queries within python scripts
     """
     if not run: return
@@ -1192,7 +1192,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     login(self, 'bob')
     self.assertEquals(0, folder.catalog_test_script())
 
-  def test_SearchableText(self, quiet=quiet, run=run_all_test):
+  def test_42_SearchableText(self, quiet=quiet, run=run_all_test):
     """Tests SearchableText is working in ERP5Catalog
     """
     if not run: return
@@ -1222,3 +1222,4 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject for x in self.getCatalogTool()(
                 portal_type='Organisation', SearchableText='different')])
     
+
