@@ -804,6 +804,32 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, variation_text=variation_text, section=organisation_url)
     
+  def stepTestInventoryListBrainGetQuantity(self, sequence=None, sequence_list=None, **kw):
+    """
+    
+    """
+    simulation = self.getPortal().portal_simulation
+    delivery = sequence.get('packing_list_list')[0]
+    
+    organisation_list = sequence.get('organisation_list')
+    organisation_url = organisation_list[0].getRelativeUrl()
+    movement = delivery['1']['movement_0_0_0']
+    variation_text = movement.getVariationText()
+    inventory_kw = {'section':organisation_url,
+                    'variation_text':variation_text}
+    simulation = self.getPortal().portal_simulation
+    uid = movement.getUid()
+    inventory_list = simulation.getInventoryList(**inventory_kw)
+    found = 0
+    for inventory in inventory_list:
+      inventory_object = inventory.getObject()
+      if inventory_object.getUid()==uid:
+        found=1
+        self.assertEquals(inventory_object.getQuantity(), 0.5)
+        self.assertEquals(inventory.getQuantity(), 0.5)
+    self.failUnless(found==1)
+
+    
     
   def stepTestGetInventoryOnVariationCategory(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1785,7 +1811,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
 
-    get_inventory_test_sequence= 'stepTestGetInventoryOnNode \
+    get_inventory_test_sequence= 'stepTestInventoryListBrainGetQuantity \
+                                   stepTestGetInventoryOnNode \
                                    stepTestGetInventoryOnVariationCategory \
                                    stepTestGetInventoryOnPayment \
                                    stepTestGetInventoryOnSection \
