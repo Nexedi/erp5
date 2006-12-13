@@ -12,8 +12,14 @@ Component | price_view
 Component | print
 Component | view
 Component | view_flow_capacity
+Product Module | csv_export
+Product Module | csv_import
+Product Module | list_ui
 Product Module | print
+Product Module | search
+Product Module | sort_on
 Product Module | view
+Product Module | workflow_report
 Product | history
 Product | metadata
 Product | price_view
