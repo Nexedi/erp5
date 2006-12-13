@@ -335,7 +335,7 @@ class ActivityTool (Folder, UniqueObject):
       
     security.declareProtected(Permissions.manage_properties, 'isSubscribed')
     def isSubscribed(self):
-        """"
+        """
         return True, if we are subscribed to TimerService.
         Otherwise return False.
         """
