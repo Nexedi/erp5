@@ -53,14 +53,11 @@ class Project(Order):
 
     # Default Properties
     property_sheets = (
-                       PropertySheet.Base,                # id
-                       PropertySheet.DublinCore,          # description, title
-                       PropertySheet.XMLObject,           # synchro ?
-                       PropertySheet.CategoryCore,        # categories ?
-                       PropertySheet.Arrow,               # destination
-                       PropertySheet.Task,                # start_date, stop_date
+                       PropertySheet.Base,                
+                       PropertySheet.DublinCore,          
+                       PropertySheet.XMLObject,          
+                       PropertySheet.CategoryCore,        
+                       PropertySheet.Arrow,               
+                       PropertySheet.Task,                
                        )
-
-    # Declarative Interface
-    __implements__ = ( )
 
