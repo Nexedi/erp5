@@ -48,6 +48,8 @@
               <tuple>
                 <string>affect</string>
                 <string>affect_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>
