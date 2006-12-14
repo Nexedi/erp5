@@ -78,7 +78,7 @@ query_table</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.parent_uid = <dtml_var query_table>.uid\n
+<dtml-var table_0>.uid = <dtml-var query_table>.parent_uid\n
 
 
 ]]></string> </value>
@@ -117,7 +117,7 @@ query_table</string> </value>
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.parent_uid = <dtml_var query_table>.uid\n
+<dtml-var table_0>.uid = <dtml-var query_table>.parent_uid\n
 
 
 ]]></string> </value>

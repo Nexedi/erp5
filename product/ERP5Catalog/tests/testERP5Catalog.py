@@ -1241,4 +1241,19 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     path_list = [new_person.getRelativeUrl()]
     self.checkRelativeUrlInSqlPathList(path_list)
 
-
+  def test_44_ParentRelatedKeys(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Parent related keys'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    portal_catalog = self.getCatalogTool()
+    person_module = self.getPersonModule()
+    person_module.reindexObject()
+    person = person_module.newContent(id='1',portal_type='Person')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals([person],
+        [x.getObject() for x in self.getCatalogTool()(
+               parent_title=person_module.getTitle())])
+    
