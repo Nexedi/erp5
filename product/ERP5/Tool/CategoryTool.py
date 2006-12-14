@@ -71,6 +71,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
 
     # patch, so that we are able to add the BaseCategory
     allowedContentTypes = BaseTool.allowedContentTypes
+    getVisibleAllowedContentTypeList = BaseTool.getVisibleAllowedContentTypeList
 
     # patch, so that we are able to rename base categories
     _verifyObjectPaste = PortalFolder._verifyObjectPaste
