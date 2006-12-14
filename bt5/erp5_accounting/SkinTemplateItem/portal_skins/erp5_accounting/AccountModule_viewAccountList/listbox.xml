@@ -338,7 +338,11 @@
                           <string>Account Name</string>
                         </tuple>
                         <tuple>
-                          <string>getAccountTypeTitle</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>account_type_title</string>
                           <string>Account Type</string>
                         </tuple>
                         <tuple>
@@ -376,6 +380,14 @@
                         <tuple>
                           <string>AccountModule_getNormalBalance</string>
                           <string>Normal Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -575,6 +587,10 @@
                           <string>id</string>
                         </tuple>
                         <tuple>
+                          <string>gap_title</string>
+                          <string>GAP</string>
+                        </tuple>
+                        <tuple>
                           <string>preferred_gap_id</string>
                           <string>preferred_gap_id</string>
                         </tuple>
@@ -584,7 +600,15 @@
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
-                          <string>state</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
