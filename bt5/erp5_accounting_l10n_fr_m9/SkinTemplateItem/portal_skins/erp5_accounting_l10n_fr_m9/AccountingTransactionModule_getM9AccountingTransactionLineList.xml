@@ -88,33 +88,49 @@ context.REQUEST.other[\'src__\'] = 1\n
 context.REQUEST.other[\'no_limit\'] = 1\n
 context.REQUEST.other[\'search_result_keys\'] = [\'catalog.uid\']\n
 \n
+payment_mode_cache = {None:\'\', \'\':\'\'}\n
+def getPaymentModeCodification(payment_mode):\n
+  if payment_mode in payment_mode_cache:\n
+    return payment_mode_cache[payment_mode]\n
+  category = context.portal_categories.payment_mode.restrictedTraverse(payment_mode)\n
+  category_title = category.getCodification() or category.getTitle()\n
+  payment_mode_cache[payment_mode] = category_title\n
+  return category_title\n
+\n
 # call getMovementHistory by building a subquery with accounting module\n
 # selection\'s query, using the src__=1 trick from above\n
 for brain in simtool.getMovementHistoryList(\n
         where_expression="catalog.parent_uid IN (%s)" %\n
                                  stool.callSelectionFor(selection_name),\n
-        section_category=selection.getParams().get(\'section_category\')):\n
+        section_category=selection.getParams().get(\'section_category\'),\n
+        sort_on=\'parent_int_index\'):\n
 \n
   movement = brain.getObject()\n
   transaction = movement.getParentValue()\n
   origin = transaction.getProperty(\'origin_id\')\n
   sheet = transaction.getProperty(\'aggregate_title\')\n
-  obj = Object(\n
-               parent_portal_type=transaction.getTranslatedPortalType(),\n
-               parent_int_index="%05d" % transaction.getIntIndex(0),\n
-               parent_aggregate_title=sheet,\n
-               parent_origin_id=origin,\n
-               \n
-               mirror_section_uid=brain.mirror_section_uid,\n
-               section_uid=brain.section_uid,\n
-               node_relative_url=brain.node_relative_url,\n
-               getObject=brain.getObject,\n
-               asContext=movement.asContext,\n
-#               Movement_getExplanationUrl=movement.Movement_getExplanationUrl,\n
+  payment_mode_codification = getPaymentModeCodification(\n
+                                  transaction.getPaymentMode())\n
 \n
-               date=brain.date,\n
-               debit=max(brain.total_price, 0),\n
-               credit=max(-brain.total_price, 0), )\n
+  obj = Object(\n
+             parent_portal_type=transaction.getTranslatedPortalType(),\n
+             parent_int_index="%05d" % transaction.getIntIndex(0),\n
+             payment_mode_codification=payment_mode_codification,\n
+             parent_aggregate_title=sheet,\n
+             parent_origin_id=origin,\n
+             \n
+             mirror_section_uid=brain.mirror_section_uid,\n
+             section_uid=brain.section_uid,\n
+             node_relative_url=brain.node_relative_url,\n
+             getObject=brain.getObject,\n
+             asContext=movement.asContext,\n
+#             asContext=lambda *args, **kw: movement, # optim ?\n
+#             Movement_getExplanationUrl=movement.Movement_getExplanationUrl,\n
+\n
+             date=brain.date,\n
+             causality_title="\\n".join(transaction.getCausalityTitleList() or []) ,\n
+             debit=max(brain.total_price, 0),\n
+             credit=max(-brain.total_price, 0), )\n
   line_list.append(obj)\n
   \n
   if brain.node_relative_url:\n
@@ -125,8 +141,8 @@ for brain in simtool.getMovementHistoryList(\n
     account[origin] = total + (brain.total_price or 0)\n
     # per origin and sheet\n
     origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
-    total = origin_cache.setdefault((brain.node_relative_url, sheet), 0)\n
-    origin_cache[(brain.node_relative_url, sheet)] = total + (brain.total_price or 0)\n
+    total = origin_cache.setdefault((sheet, brain.node_relative_url), 0)\n
+    origin_cache[(sheet, brain.node_relative_url)] = total + (brain.total_price or 0)\n
 \n
 return line_list\n
 </string> </value>
@@ -186,12 +202,16 @@ return line_list\n
                             <string>per_origin_and_sheet_cache</string>
                             <string>simtool</string>
                             <string>_write_</string>
+                            <string>None</string>
+                            <string>payment_mode_cache</string>
+                            <string>getPaymentModeCodification</string>
                             <string>_getiter_</string>
                             <string>brain</string>
                             <string>movement</string>
                             <string>transaction</string>
                             <string>origin</string>
                             <string>sheet</string>
+                            <string>payment_mode_codification</string>
                             <string>max</string>
                             <string>obj</string>
                             <string>account</string>

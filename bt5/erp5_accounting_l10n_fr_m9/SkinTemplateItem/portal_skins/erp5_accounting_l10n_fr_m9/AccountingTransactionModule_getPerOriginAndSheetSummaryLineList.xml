@@ -81,7 +81,9 @@ origin_list.sort()\n
 \n
 for origin in origin_list:\n
   values = origin_cache[origin]\n
-  for (account_url, sheet), total_price in values.items():\n
+  items = values.items()\n
+  items.sort()\n
+  for (sheet, account_url), total_price in items:\n
     account_title = portal.restrictedTraverse(account_url\n
                                   ).Account_getFormattedTitle()\n
     debit = max(total_price, 0)\n
@@ -156,8 +158,9 @@ return line_list\n
                             <string>_getiter_</string>
                             <string>origin</string>
                             <string>values</string>
-                            <string>account_url</string>
+                            <string>items</string>
                             <string>sheet</string>
+                            <string>account_url</string>
                             <string>total_price</string>
                             <string>account_title</string>
                             <string>max</string>

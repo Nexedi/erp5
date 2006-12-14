@@ -362,6 +362,14 @@
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
+                          <string>causality_title</string>
+                          <string>Causalities</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_mode_codification</string>
+                          <string>Payment Mode Codif.</string>
+                        </tuple>
+                        <tuple>
                           <string>debit</string>
                           <string>Debit</string>
                         </tuple>
