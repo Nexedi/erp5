@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-document_module?simulation_state=submitted&local_roles=%(local_roles)s&reset=1&portal_type:list=Text;Spreadsheet;Presentation;Drawing;PDF;File;Image;
+document_module?simulation_state=submitted&local_roles=%(local_roles)s&reset=1&portal_type=Text&portal_type=Spreadsheet&portal_type=Presentation&portal_type=Drawing&portal_type=PDF&portal_type=File&portal_type=Image
 
 ]]></string> </value>
         </item>
@@ -113,7 +113,6 @@ document_module?simulation_state=submitted&local_roles=%(local_roles)s&reset=1&p
                         <string>PDF</string>
                         <string>File</string>
                         <string>Image</string>
-                        <string></string>
                       </tuple>
                     </value>
                 </item>
