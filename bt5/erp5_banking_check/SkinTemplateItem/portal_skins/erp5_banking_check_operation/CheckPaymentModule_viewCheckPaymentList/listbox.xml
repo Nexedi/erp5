@@ -336,7 +336,7 @@
                           <string>Counter</string>
                         </tuple>
                         <tuple>
-                          <string>destination_payment_id</string>
+                          <string>destination_payment_reference</string>
                           <string>Account Number</string>
                         </tuple>
                         <tuple>
@@ -389,7 +389,7 @@
                           <string>Counter</string>
                         </tuple>
                         <tuple>
-                          <string>destination_payment_id</string>
+                          <string>destination_payment_reference</string>
                           <string>Account Number</string>
                         </tuple>
                         <tuple>

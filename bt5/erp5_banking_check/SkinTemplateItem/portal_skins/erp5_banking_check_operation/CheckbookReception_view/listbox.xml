@@ -330,7 +330,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>getResourceTitle</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>

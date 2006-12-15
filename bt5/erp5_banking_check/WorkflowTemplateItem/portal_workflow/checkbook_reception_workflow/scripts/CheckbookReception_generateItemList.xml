@@ -119,7 +119,8 @@ for line in line_list:\n
       else:\n
         item.setReference(reference_range_min)\n
         item.setTitle(reference_range_min)\n
-        reference_range_min = str(int(float(reference_range_min)) + 1)\n
+        if quantity>1:\n
+          reference_range_min = str(int(float(reference_range_min)) + 1)\n
         if len(resource.objectValues())>0:\n
           item_type = line.getCheckTypeValue()\n
           item.setPrice(item_type.getPrice())\n

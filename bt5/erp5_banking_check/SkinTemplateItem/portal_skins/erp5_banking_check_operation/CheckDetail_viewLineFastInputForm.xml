@@ -100,12 +100,12 @@
                         <string>listbox_quantity</string>
                         <string>listbox_account_number</string>
                         <string>listbox_price</string>
-                        <string>listbox_reference_range_max</string>
-                        <string>listbox_reference_range_min</string>
                         <string>listbox_destination_payment_reference</string>
                         <string>listbox_check_amount</string>
                         <string>listbox_price_currency</string>
                         <string>listbox_check_type</string>
+                        <string>listbox_reference_range_max</string>
+                        <string>listbox_reference_range_min</string>
                       </list>
                     </value>
                 </item>
