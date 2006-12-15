@@ -338,7 +338,8 @@ class SQLDict(RAMDict):
         uid_list = uid_list_list[i]
         priority = priority_list[i]
         if m.is_executed:
-          activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
+          if len(uid_list) > 0:
+            activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
           get_transaction().commit()                                        # If successful, commit
           if m.active_process:
             active_process = activity_tool.unrestrictedTraverse(m.active_process)
