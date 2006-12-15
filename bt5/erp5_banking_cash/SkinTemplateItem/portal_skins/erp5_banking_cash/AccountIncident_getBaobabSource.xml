@@ -68,52 +68,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change.object\n
-date = transaction.getStartDate()\n
-vault = transaction.getSource()\n
-vaultDestination = transaction.getDestination()\n
-\n
-# use of the constraint : Test source and destination\n
-vliste = transaction.checkConsistency()\n
-transaction.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
-\n
-# check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=vaultDestination, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
-\n
-\n
-if \'reserve\' in vault and \'salle_tri\' in vaultDestination:\n
-  msg = Message(domain="ui", message="Cannot transfer ressource to ${destination} from ${source}.",\n
-                mapping={\'source\':transaction.getSourceValue().getParentValue().getTitle(),\n
-                         \'destination\':transaction.getDestinationValue().getParentValue().getTitle()})\n
-\n
-  raise ValidationFailed, (msg,)\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
-\n
-# Get price and total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-if resource == 2:\n
-  msg = Message(domain="ui", message="No Resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif amount != total_price:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource <> 0 :\n
-  msg = Message(domain="ui", message="Insufficient Balance.")\n
-  raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+            <value> <string># first get the source of the document,\n
+# we will need to add the counter\n
+source = context.getSource()\n
+baobab_source = None\n
+context.log(\'baobab_source\', baobab_source)\n
+# Get the history of the workflow\n
+user_id=\'None\'\n
+context.log(\'workflow_item_list:\',context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\',display=0))\n
+for workflow_item in context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\',display=0):\n
+  context.log(\'workflow_item.getProperty(action)\',workflow_item.getProperty(\'action\'))\n
+  if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
+    user_id=workflow_item.getProperty(\'actor\')\n
+context.log(\'user_id\',user_id)\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+context.log(\'CheckPayment_getBaobabSource site_list\',site_list)\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  context.log(\'site\', site)\n
+  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
+    baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
+    break\n
+  context.log(\'baobab_source\', baobab_source)\n
+  \n
+  \n
+context.log(\'baobab_source\', baobab_source)\n
+return baobab_source\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -134,8 +115,14 @@ elif resource <> 0 :\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,29 +142,24 @@ elif resource <> 0 :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>transaction</string>
-                            <string>date</string>
-                            <string>vault</string>
-                            <string>vaultDestination</string>
-                            <string>vliste</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>msg</string>
-                            <string>resource</string>
-                            <string>amount</string>
-                            <string>total_price</string>
+                            <string>context</string>
+                            <string>source</string>
+                            <string>None</string>
+                            <string>baobab_source</string>
+                            <string>user_id</string>
+                            <string>_getiter_</string>
+                            <string>workflow_item</string>
+                            <string>site_list</string>
+                            <string>site</string>
+                            <string>site_value</string>
                           </tuple>
                         </value>
                     </item>
@@ -194,7 +176,7 @@ elif resource <> 0 :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>AccountIncident_getBaobabSource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

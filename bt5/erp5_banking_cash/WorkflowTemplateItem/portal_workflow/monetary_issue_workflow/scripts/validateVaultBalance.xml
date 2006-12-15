@@ -75,6 +75,12 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
 \n
+# use of the constraint\n
+vliste = transaction.checkConsistency()\n
+transaction.log(\'vliste\', vliste)\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
 vault = transaction.getSource()\n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Monetary Issue Line\')\n
 \n
@@ -154,6 +160,9 @@ elif resource <> 0 :\n
                             <string>Message</string>
                             <string>_getattr_</string>
                             <string>transaction</string>
+                            <string>vliste</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>vault</string>
                             <string>resource</string>
                             <string>amount</string>

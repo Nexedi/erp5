@@ -90,11 +90,6 @@ elif resource == 2:\n
 elif price != cash_detail:\n
   msg = Message(domain="ui", message="Amount differs from input.")\n
   raise ValidationFailed, (msg,)\n
-"""\n
-elif resource == 1:\n
-  msg = Message(domain="ui", message="Insufficient Balance in counter.")\n
-  raise ValidationFailed, (msg,)\n
-"""\n
 </string> </value>
         </item>
         <item>

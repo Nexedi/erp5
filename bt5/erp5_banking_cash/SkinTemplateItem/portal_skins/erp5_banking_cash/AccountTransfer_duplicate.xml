@@ -70,47 +70,36 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+# We will create a new account transfer and then copy most of local properties\n
+# to the new account transfer created\n
+request=context.REQUEST\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 \n
-transaction = state_change.object\n
-date = transaction.getStartDate()\n
-vault = transaction.getSource()\n
-vaultDestination = transaction.getDestination()\n
+edit_kw = {}\n
+edit_kw[\'delivery_mode\'] = context.getDeliveryMode()\n
+edit_kw[\'source_section\'] = context.getSourceSection()\n
+edit_kw[\'source_payment\'] = context.getSourcePayment()\n
+edit_kw[\'external_software\'] = context.getExternalSoftware()\n
+edit_kw[\'posted\'] = context.getPosted()\n
+edit_kw[\'description\'] = context.getDescription()\n
 \n
-# use of the constraint : Test source and destination\n
-vliste = transaction.checkConsistency()\n
-transaction.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
+new_transfer = context.account_transfer_module.newContent(**edit_kw)\n
 \n
-# check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=vaultDestination, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+message = N_("Account Transfer duplicated.")\n
+if not selection_index:\n
+  redirect_url = \'%s/%s?portal_status_message=%s\' % (new_transfer.absolute_url(),\n
+                                                     form_id,\n
+                                                     message)\n
+else:\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % (\n
+                              new_transfer.absolute_url(),\n
+                              form_id,\n
+                              selection_index,\n
+                              selection_name,\n
+                              message)\n
 \n
-\n
-if \'reserve\' in vault and \'salle_tri\' in vaultDestination:\n
-  msg = Message(domain="ui", message="Cannot transfer ressource to ${destination} from ${source}.",\n
-                mapping={\'source\':transaction.getSourceValue().getParentValue().getTitle(),\n
-                         \'destination\':transaction.getDestinationValue().getParentValue().getTitle()})\n
-\n
-  raise ValidationFailed, (msg,)\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
-\n
-# Get price and total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-if resource == 2:\n
-  msg = Message(domain="ui", message="No Resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif amount != total_price:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource <> 0 :\n
-  msg = Message(domain="ui", message="Insufficient Balance.")\n
-  raise ValidationFailed, (msg,)\n
+return request[\'RESPONSE\'].redirect(redirect_url)\n
 
 
 ]]></string> </value>
@@ -134,8 +123,14 @@ elif resource <> 0 :\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,29 +150,30 @@ elif resource <> 0 :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>ignore_layout</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>transaction</string>
-                            <string>date</string>
-                            <string>vault</string>
-                            <string>vaultDestination</string>
-                            <string>vliste</string>
-                            <string>len</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>edit_kw</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>new_transfer</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
                             <string>_getitem_</string>
-                            <string>msg</string>
-                            <string>resource</string>
-                            <string>amount</string>
-                            <string>total_price</string>
                           </tuple>
                         </value>
                     </item>
@@ -189,12 +185,17 @@ elif resource <> 0 :\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <string></string>
+                <string></string>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>AccountTransfer_duplicate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

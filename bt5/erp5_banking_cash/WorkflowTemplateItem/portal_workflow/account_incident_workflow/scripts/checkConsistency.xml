@@ -89,7 +89,8 @@ elif len(in_list) == 0 and len(out_list) == 0:\n
   msg = Message(domain = "ui", message="No resource.")\n
   raise ValidationFailed, (msg,)\n
 elif len(out_list) !=0:\n
-  resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Account Incident Line\')\n
+  #resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Account Incident Line\')\n
+  resource = txn.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Account Incident Line\')\n
   if resource <> 0 :\n
     msg = Message(domain="ui", message="Insufficient Balance.")\n
     raise ValidationFailed, (msg,)\n
@@ -162,7 +163,6 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>out_price</string>
                             <string>len</string>
                             <string>msg</string>
-                            <string>transaction</string>
                             <string>resource</string>
                           </tuple>
                         </value>

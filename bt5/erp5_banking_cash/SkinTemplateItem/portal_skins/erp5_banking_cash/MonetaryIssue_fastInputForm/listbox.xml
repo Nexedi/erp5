@@ -350,6 +350,10 @@
                           <string>End Number</string>
                         </tuple>
                         <tuple>
+                          <string>date</string>
+                          <string>Reception Date</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_translated_title</string>
                           <string>Denomination</string>
                         </tuple>

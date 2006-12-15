@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.CurrencyExchange_getCurrencyList()</string> </value>
+            <value> <string>python: here.CurrencyExchange_getCurrencyList(exclude_reference_currency=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

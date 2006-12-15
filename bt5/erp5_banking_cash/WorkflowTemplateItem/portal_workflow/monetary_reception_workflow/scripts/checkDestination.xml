@@ -72,6 +72,14 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 object = state_change.object\n
+\n
+# use of the constraint\n
+vliste = object.checkConsistency()\n
+object.log(\'vliste\', vliste)\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
+\n
 # first check if we have line defined\n
 if len(object.objectValues(portal_type=\'Cash Delivery Line\')) == 0:\n
   msg = Message(domain="ui", message="No line defined on document.")\n
@@ -83,10 +91,13 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\
   raise ValidationFailed, (msg,)\n
 \n
 # check between letter and destination site codification\n
-line_letter = object.objectValues(portal_type=\'Cash Delivery Line\')[0].objectValues()[0].getEmissionLetter()\n
-if line_letter.lower() != dest.getCodification()[0].lower():\n
-  msg = Message(domain="ui", message="Letter defined on line do not correspond to destination site.")\n
-  raise ValidationFailed, (msg,)\n
+# Make sure objects are Banknotes\n
+first_movement = object.Delivery_getMovementList(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'])[0]\n
+if first_movement.getResourceValue().getPortalType()==\'Banknote\':\n
+  line_letter = first_movement.getEmissionLetter()\n
+  if line_letter.lower() != dest.getCodification()[0].lower():\n
+    msg = Message(domain="ui", message="Letter defined on line do not correspond to destination site.")\n
+    raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -142,10 +153,12 @@ if line_letter.lower() != dest.getCodification()[0].lower():\n
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>object</string>
+                            <string>vliste</string>
                             <string>len</string>
+                            <string>_getitem_</string>
                             <string>msg</string>
                             <string>dest</string>
-                            <string>_getitem_</string>
+                            <string>first_movement</string>
                             <string>line_letter</string>
                           </tuple>
                         </value>

@@ -108,7 +108,7 @@ context.BankingOperationLine_index(line)\n
 bank_account.serialize()\n
 \n
 # Check if the banking operation is correct.\n
-if - price != transaction.getTotalPrice(portal_type = \'Banking Operation Line\'):\n
+if - price != transaction.getTotalPrice(portal_type = \'Banking Operation Line\',fast=0):\n
   msg = Message(domain=\'ui\', message=\'Banking operation and currency sale price do not match.\')\n
   raise ValidationFailed, (msg,)\n
 \n
