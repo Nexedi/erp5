@@ -215,6 +215,14 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion(self.region_list)
     self.assertEqual(p1.getRegionValue(),region_value)
 
+  def test_isMemberOf(self):
+    region_path = 'region/%s' % self.region1
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p1.setRegion(None)
+    self.failIf(p1.isMemberOf(region_path))
+    p1.setRegion(self.region1)
+    self.failUnless(p1.isMemberOf(region_path))
+
   def test_04_ReturnNone(self, quiet=quiet, run=run_all_test):
     # Test if we getCategory return None if the cat is '' or None
     if not run: return
@@ -243,6 +251,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),[self.region1])
 
+  def test_singleAcquisitionIsMemberOf(self):
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    p1 = self.getPersonModule()._getOb(self.id1)
+    o1.setRegion(self.region1)
+    p1.setSubordinationValue(o1)
+    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
+
   def test_06_ListAcquisition(self, quiet=quiet, run=run_all_test):
     # Test if the acquisition for a single value is working
     if not run: return
@@ -254,13 +269,18 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     o1.setRegion(self.region_list)
     p1.setSubordinationValue(o1)
-    test = p1.getSubordinationValue()
-    LOG('Testing... getSubordinationValue',0,test)
     sub = p1.getSubordinationValue()
     self.assertEqual(sub,o1)
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
+  
+  def test_listAcquisitionIsMemberOf(self):
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    p1 = self.getPersonModule()._getOb(self.id1)
+    o1.setRegion(self.region_list)
+    p1.setSubordinationValue(o1)
+    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
 
   def test_07_SubordinationValue(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
@@ -318,7 +338,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     parent_uid_list = [(cat2.getUid(), basecat.getUid(), 1),
                        (cat1.getUid(), basecat.getUid(), 0),
                        (basecat.getUid(), basecat.getUid(), 0)]
-    parent_uid_list.sort()                       
+    parent_uid_list.sort()
     parent_uid_list2 = cat2.getCategoryParentUidList(relative_url = cat2.getRelativeUrl())
     parent_uid_list2.sort()
     self.assertEqual(parent_uid_list2, parent_uid_list)
@@ -336,6 +356,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getGenderValue(),None)
     p1.setSubordinationValue(o1)
     self.assertEqual(p1.getGenderValue(),o1)
+  
+  def test_FallBackAcquisitionIsMemberOf(self):
+    p1 = self.getPersonModule()._getOb(self.id1)
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    p1.setSubordinationValue(o1)
+    self.failUnless(p1.isMemberOf('gender/organisation_module/%s' % self.id1))
 
   def test_11_ParentAcquisition(self, quiet=quiet, run=run_all_test):
     # Test if we can use an alternative base category
@@ -351,7 +377,22 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion(self.region1)
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(sub_person.getRegion(),self.region1)
+  
+  def test_parentAcquisitionIsMemberOf(self):
+    p1 = self.getPersonModule()._getOb(self.id1)
+    sub_person = p1._getOb(self.id1)
+    p1.setRegion(self.region1)
+    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
+    self.failUnless(sub_person.isMemberOf('region/%s' % self.region1))
 
+  def test_parentAcquisitionIsMemberOfWithDifferentCategories(self):
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p1.setRegion(self.region1)
+    sub_person = p1._getOb(self.id1)
+    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
+    sub_person.setRegion(self.region2)
+    self.failUnless(sub_person.isMemberOf('region/%s' % self.region2))
+    
   def test_12_GetRelatedValueAndValueList(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
