@@ -329,6 +329,60 @@ class TestMovement(ERP5TypeTestCase):
   
   # TODO: test asset price
 
+class TestAccountingTransactionLine(TestMovement):
+  """Tests for Accounting Transaction Line class, which have an overloaded
+  'edit' method.
+  """
+  def _makeOne(self, *args, **kw):
+    from Products.ERP5.Document.AccountingTransactionLine import \
+          AccountingTransactionLine
+    mvt = AccountingTransactionLine(*args, **kw)
+    return mvt.__of__(self.portal)
+
+  def testPrice(self):
+    # price is always 1 for accounting transactions lines
+    mvt = self._makeOne('mvt')
+    self.assertEquals(1, mvt.getPrice())
+  
+  def testQuantity(self):
+    mvt = self._makeOne('mvt')
+    mvt.setQuantity(10)
+    self.assertEquals(10, mvt.getQuantity())
+    # self.assertEquals(None, mvt.getTotalPrice()) 
+    # ... not with Accounting Transaction Lines, because price is 1
+    mvt.edit(quantity=20)
+    self.assertEquals(20, mvt.getQuantity())
+
+  def testDefautSourceTotalAssetDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_debit=100)
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetPrice())
+    
+  def testDefautSourceTotalAssetCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_credit=100)
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetPrice())
+  
+  def testDefautDestinationTotalAssetDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_debit=100)
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    
+  def testDefautDestinationTotalAssetCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_credit=100)
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
+  
+  # TODO: more asset price tests
+
 if __name__ == '__main__':
   framework()
 else:
@@ -337,4 +391,5 @@ else:
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestAmount))
     suite.addTest(unittest.makeSuite(TestMovement))
+    suite.addTest(unittest.makeSuite(TestAccountingTransactionLine))
     return suite
