@@ -305,6 +305,8 @@ class ERP5TypeTestCase(PortalTestCase):
                     quiet=install_bt5_quiet,
                     hot_reindexing=hot_reindexing)
       PortalTestCase.setUp(self)
+      global current_app
+      current_app = self.app
       self._updateConnectionStrings()
       self._recreateCatalog()
 
@@ -470,8 +472,6 @@ def setupERP5Site( business_template_list=(),
     try:
       if app is None:
         app = ZopeTestCase.app()
-        global current_app
-        current_app = app
       if not hasattr(aq_base(app), portal_name):
         try:
           _start = time.time()
@@ -553,7 +553,7 @@ def setupERP5Site( business_template_list=(),
           # Reset aq dynamic, so all unit tests will start again
           from Products.ERP5Type.Base import _aq_reset
           _aq_reset()
-
+          
           # Log out
           if not quiet:
             ZopeTestCase._print('Logout ... \n')
