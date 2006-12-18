@@ -71,7 +71,7 @@
       <parameter>FirstPage</parameter>\n
    </action>\n
 \n
-   <para tal:content="form/title" style="Title" i18n:translate="" i18n:domain="ui">toto</para>\n
+   <para tal:content="python: form.getProperty(\'title\')" style="Title" i18n:translate="" i18n:domain="ui">toto</para>\n
    <spacer height="100"/>\n
 \n
 \n
