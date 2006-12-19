@@ -51,7 +51,6 @@ os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
   """
-  RUN_ALL_TESTS = 1
 
   GROUP_CATEGORIES = ( 'group/test_group/A1/B1/C1',
                        'group/test_group/A1/B1/C2',
@@ -233,8 +232,6 @@ class InventoryAPITestCase(ERP5TypeTestCase):
 class TestInventory(InventoryAPITestCase):
   """Tests getInventory methods.
   """
-  RUN_ALL_TESTS = 1
-  
   def testReturnedTypeIsFloat(self):
     """getInventory returns a float"""
     getInventory = self.getSimulationTool().getInventory
@@ -242,7 +239,7 @@ class TestInventory(InventoryAPITestCase):
     # default is 0
     self.assertEquals(0, getInventory())
 
-  def test_SimulationMovement(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_SimulationMovement(self):
     """Test Simulation Movements works in this testing environnement.
     """
     getInventory = self.getSimulationTool().getInventory
@@ -252,7 +249,7 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=100)
     self.assertEquals(200, getInventory(section_uid=self.section.getUid()))
 
-  def test_SimulationMovementisAccountable(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_SimulationMovementisAccountable(self):
     """Test Simulation Movements are not accountable if related to a delivery.
     """
     getInventory = self.getSimulationTool().getInventory
@@ -267,7 +264,7 @@ class TestInventory(InventoryAPITestCase):
     get_transaction().commit(); self.tic() # (after reindexing of course)
     self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
   
-  def test_OmitSimulation(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_OmitSimulation(self):
     """Test omit_simulation argument to getInventory.
     """
     getInventory = self.getSimulationTool().getInventory
@@ -276,7 +273,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(100, getInventory(section_uid=self.section.getUid(),
                                         omit_simulation=1))
 
-  def test_SectionCategory(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_SectionCategory(self):
     """Tests inventory on section category. """
     getInventory = self.getSimulationTool().getInventory
     self.section.setGroup('level1/level2')
@@ -308,7 +305,7 @@ class TestInventory(InventoryAPITestCase):
                       getInventory,
                       section_category='group/notexists')
 
-  def test_MirrorSectionCategory(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_MirrorSectionCategory(self):
     """Tests inventory on mirror section category. """
     getInventory = self.getSimulationTool().getInventory
     self.mirror_section.setGroup('level1/level2')
@@ -341,7 +338,7 @@ class TestInventory(InventoryAPITestCase):
                       getInventory,
                       mirror_section_category='group/notexists')
 
-  def test_NodeCategory(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_NodeCategory(self):
     """Tests inventory on node_category """
     getInventory = self.getSimulationTool().getInventory
     self.node.setGroup('level1/level2')
@@ -359,7 +356,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                 node_category_strict_membership=['group/level1']), 100)
   
-  def test_ResourceCategory(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_ResourceCategory(self):
     """Tests inventory on resource_category """
     getInventory = self.getSimulationTool().getInventory
     self.resource.setProductLine('level1/level2')
@@ -377,7 +374,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
             resource_category_strict_membership=['product_line/level1']), 100)
 
-  def test_PaymentCategory(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_PaymentCategory(self):
     """Tests inventory on payment_category """
     getInventory = self.getSimulationTool().getInventory
     # for now, BankAccount have a product_line category, so we can use this for
@@ -398,7 +395,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
               payment_category_strict_membership=['product_line/level1']), 100)
 
-  def test_SimulationState(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_SimulationState(self):
     """Tests inventory on simulation state. """
     getInventory = self.getSimulationTool().getInventory
     self.payment_node.setProductLine('level1/level2')
@@ -412,7 +409,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(simulation_state=['planned',
                                                      'confirmed']), 100)
 
-  def test_MultipleNodes(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_MultipleNodes(self):
     """Test section category with many nodes. """
     test_group = self.getCategoryTool().resolveCategory('group/test_group')
     self.assertNotEquals(len(test_group.objectValues()), 0)
@@ -443,7 +440,7 @@ class TestInventory(InventoryAPITestCase):
         node_category=category.getRelativeUrl()), total_quantity)
   
   # FIXME: this test is currently broken
-  def TODO_test_DoubleSectionCategory(self, quiet=0, run=RUN_ALL_TESTS):
+  def TODO_test_DoubleSectionCategory(self):
     """Tests inventory on section category, when the section is twice member\
     of the same category like it happens for group and mapping"""
     getInventory = self.getSimulationTool().getInventory
@@ -459,7 +456,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
             section_category_strict_membership=['group/level1/level2']), 100)
 
-  def test_NoSection(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_NoSection(self):
     """Tests inventory on section category / section uid, when the section is\
     empty."""
     getInventory = self.getSimulationTool().getInventory
@@ -500,14 +497,10 @@ class TestInventory(InventoryAPITestCase):
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
   """
-  RUN_ALL_TESTS = 1
-
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
   """
-  RUN_ALL_TESTS = 1
-  
   def testReturnedTypeIsList(self):
     """Movement History List returns a sequence object""" 
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -850,7 +843,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               section_uid=self.section.getUid())
     self.assertEquals(len(movement_history_list), 2)
 
-  def test_SimulationMovement(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_SimulationMovement(self):
     """Test simulation movement are listed in getMovementHistoryList
     """
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -860,7 +853,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                     section_uid=self.section.getUid())
     self.assertEquals(2, len(movement_history_list))
   
-  def test_OmitSimulation(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_OmitSimulation(self):
     """Test omit_simulation argument to getMovementHistoryList.
     """
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -994,7 +987,6 @@ class TestMovementHistoryList(InventoryAPITestCase):
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
   """
-  RUN_ALL_TESTS = 1
 
 if __name__ == '__main__':
   framework()
