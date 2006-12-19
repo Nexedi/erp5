@@ -687,7 +687,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 raising_error_value = 'relation_result_too_long'
               elif len(relation_list) == 1:
                 # If the length is 1, return uid
-                related_object = relation_list[0]
+                relation_uid = relation_uid_list[0]
+                related_object = relation_list[0].getObject()
                 if related_object is not None:
                   display_text = str(related_object.getProperty(catalog_index))
                   # Modify the value, in order to let the user 
