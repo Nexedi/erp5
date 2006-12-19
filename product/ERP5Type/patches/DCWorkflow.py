@@ -65,9 +65,10 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     Called on every request.
     Returns the actions to be displayed to the user.
     '''
+    if not self.worklists:
+      return None  # Optimization
+
     def _listGlobalActions(user=None, id=None, portal_path=None):
-      if not self.worklists:
-          return None  # Optimization
       sm = getSecurityManager()
       portal = self._getPortalRoot()
       res = []
