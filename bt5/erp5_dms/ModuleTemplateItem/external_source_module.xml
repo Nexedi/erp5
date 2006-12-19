@@ -568,10 +568,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Manage extensions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Manage languages</name>
    <role>Manager</role>
   </permission>
