@@ -114,6 +114,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>precision</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>section_filtered</string> </key>
                                 <value>
                                   <dictionary/>
@@ -150,22 +156,23 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>order_by_expression</string>
-                            <string>group_by_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>ignore_variation</string>
-                            <string>standardize</string>
-                            <string>omit_simulation</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>section_filtered</string>
-                            <string>initial_running_total_quantity</string>
-                            <string>initial_running_total_price</string>
-                            <string>input_simulation_state</string>
-                            <string>output_simulation_state</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+<string>group_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>ignore_variation</string>
+<string>standardize</string>
+<string>omit_simulation</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>section_filtered</string>
+<string>initial_running_total_quantity</string>
+<string>initial_running_total_price</string>
+<string>input_simulation_state</string>
+<string>output_simulation_state</string>
+<string>precision</string>
                           </list>
                         </value>
                     </item>
@@ -606,7 +613,8 @@ section_filtered\r\n
 initial_running_total_quantity\r\n
 initial_running_total_price\r\n
 input_simulation_state:list\r\n
-output_simulation_state:list</string> </value>
+output_simulation_state:list\r\n
+precision</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -662,8 +670,13 @@ SELECT\n
   catalog.uid as uid,\n
   catalog.relative_url as relative_url,\n
   stock.date AS date,\n
+<dtml-if expr="precision is not None">\n
+  ROUND(stock.quantity, <dtml-var precision>) AS total_quantity,\n
+  ROUND(stock.total_price, <dtml-var precision>) AS total_price,\n
+<dtml-else>\n
   stock.quantity AS total_quantity,\n
   stock.total_price AS total_price,\n
+</dtml-if>\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
   stock.mirror_section_uid AS mirror_section_uid,\n
@@ -814,8 +827,13 @@ SELECT\n
   catalog.uid as uid,\n
   catalog.relative_url as relative_url,\n
   stock.date AS date,\n
+<dtml-if expr="precision is not None">\n
+  ROUND(stock.quantity, <dtml-var precision>) AS total_quantity,\n
+  ROUND(stock.total_price, <dtml-var precision>) AS total_price,\n
+<dtml-else>\n
   stock.quantity AS total_quantity,\n
   stock.total_price AS total_price,\n
+</dtml-if>\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
   stock.mirror_section_uid AS mirror_section_uid,\n

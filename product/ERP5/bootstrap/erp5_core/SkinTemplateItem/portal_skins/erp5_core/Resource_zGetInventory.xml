@@ -102,6 +102,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>precision</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>section_filtered</string> </key>
                                 <value>
                                   <dictionary/>
@@ -138,20 +144,21 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>order_by_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>ignore_variation</string>
-                            <string>standardize</string>
-                            <string>omit_simulation</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>section_filtered</string>
-                            <string>input_simulation_state</string>
-                            <string>output_simulation_state</string>
-                            <string>group_by_expression</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>ignore_variation</string>
+<string>standardize</string>
+<string>omit_simulation</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>section_filtered</string>
+<string>input_simulation_state</string>
+<string>output_simulation_state</string>
+<string>group_by_expression</string>
+<string>precision</string>
                           </list>
                         </value>
                     </item>
@@ -181,7 +188,8 @@ omit_output\r\n
 section_filtered\r\n
 input_simulation_state:list\r\n
 output_simulation_state:list\r\n
-group_by_expression</string> </value>
+group_by_expression\r\n
+precision</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -222,9 +230,15 @@ group_by_expression</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  SUM(ROUND(stock.quantity,2)) AS inventory,\n
-  SUM(ROUND(stock.quantity,2)) AS total_quantity,\n
-  SUM(ROUND(stock.total_price,2)) AS total_price,\n
+<dtml-if expr="precision is not None">\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price,\n
+<dtml-else>\n
+  SUM(stock.quantity) AS inventory,\n
+  SUM(stock.quantity) AS total_quantity,\n
+  SUM(stock.total_price) AS total_price,\n
+</dtml-if>\n
   COUNT(DISTINCT node.title) AS node_title,\n
   COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
   COUNT(DISTINCT section.title) AS section_title,\n
@@ -353,9 +367,15 @@ ORDER BY\n
                         <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  SUM(ROUND(stock.quantity,2)) AS inventory,\n
-  SUM(ROUND(stock.quantity,2)) AS total_quantity,\n
-  SUM(ROUND(stock.total_price,2)) AS total_price,\n
+<dtml-if expr="precision is not None">\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price,\n
+<dtml-else>\n
+  SUM(stock.quantity) AS inventory,\n
+  SUM(stock.quantity) AS total_quantity,\n
+  SUM(stock.total_price) AS total_price,\n
+</dtml-if>\n
   COUNT(DISTINCT node.title) AS node_title,\n
   COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
   COUNT(DISTINCT section.title) AS section_title,\n

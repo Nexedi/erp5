@@ -73,7 +73,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.portal = self.getPortal()
     if not hasattr(self.portal, 'testing_folder'):
       self.portal.newContent(portal_type='Folder',
-                                              id='testing_folder')
+                            id='testing_folder')
     self.folder = self.portal.testing_folder
     
     self.section = self._makeOrganisation(title='Section')
@@ -472,6 +472,31 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                         section_uid=self.section.getUid()), 100)
   
+  def testPrecision(self):
+    # getInventory supports a precision= argument to specify the precision to
+    # round
+    getInventory = self.getSimulationTool().getInventory
+    getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
+    self._makeMovement( quantity=0.1234, price=1 )
+    self.assertAlmostEquals(0.123,
+                getInventory(precision=3, node_uid=self.node.getUid()),
+                places=3)
+    self.assertAlmostEquals(0.123,
+             getInventoryAssetPrice(precision=3, node_uid=self.node.getUid()),
+             places=3)
+  
+  def testPrecisionAndFloatRoundingIssues(self):
+    # sum([0.1] * 10) != 1.0 but this is not a problem here
+    getInventory = self.getSimulationTool().getInventory
+    getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
+    self._makeMovement( quantity=1, price=1 )
+    for i in range(10):
+      self._makeMovement( quantity=-0.1, price=1 )
+    self.assertEquals(0, getInventory(precision=2, node_uid=self.node.getUid()))
+    self.assertEquals(0, getInventoryAssetPrice(precision=2,
+                                                node_uid=self.node.getUid()))
+    
+
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
   """
@@ -927,6 +952,44 @@ class TestMovementHistoryList(InventoryAPITestCase):
                             node_uid=self.node.getUid(),)
     self.assertEquals(2, len(mvt_history_list))
     self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
+ 
+  def testPrecision(self):
+    # getMovementHistoryList supports a precision= argument to specify the
+    # precision to round
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement( quantity=0.1234, price=1 )
+    mvt_history_list = getMovementHistoryList(
+                            precision=2,
+                            node_uid=self.node.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(0.12, mvt_history_list[0].running_total_quantity)
+    self.assertEquals(0.12, mvt_history_list[0].running_total_price)
+    self.assertEquals(0.12, mvt_history_list[0].total_quantity)
+    self.assertEquals(0.12, mvt_history_list[0].total_price)
+    
+    mvt_history_list = getMovementHistoryList(
+                            precision=3,
+                            node_uid=self.node.getUid())
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(0.123, mvt_history_list[0].running_total_quantity)
+    self.assertEquals(0.123, mvt_history_list[0].running_total_price)
+    self.assertEquals(0.123, mvt_history_list[0].total_quantity)
+    self.assertEquals(0.123, mvt_history_list[0].total_price)
+
+  def testPrecisionAndFloatRoundingIssues(self):
+    # sum([0.1] * 10) != 1.0 but this is not a problem here
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    date = DateTime()
+    self._makeMovement( quantity=1, price=1, start_date=date )
+    for i in range(10):
+      self._makeMovement( quantity=-0.1, price=1, start_date=date+i )
+    mvt_history_list = getMovementHistoryList(
+                            precision=2,
+                            node_uid=self.node.getUid(),
+                            sort_on=[['stock.date', 'ASC']])
+    self.assertEquals(11, len(mvt_history_list))
+    self.assertEquals(0, mvt_history_list[-1].running_total_quantity)
+    self.assertEquals(0, mvt_history_list[-1].running_total_price)
     
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.

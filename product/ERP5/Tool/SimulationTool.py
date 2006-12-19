@@ -451,7 +451,8 @@ class SimulationTool (BaseTool):
       if kw.get('group_by_mirror_node',0):
         group_by_expression_list.append('%s.mirror_node_uid' % table)
       if len(group_by_expression_list):
-        group_by_expression_list.append('%s.resource_uid' % table) # Always group by resource
+        # Always group by resource
+        group_by_expression_list.append('%s.resource_uid' % table)
         sql_kw['group_by_expression'] = ', '.join(group_by_expression_list)
 
       sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
@@ -463,7 +464,8 @@ class SimulationTool (BaseTool):
                               'getInventory')
     def getInventory(self, src__=0, ignore_variation=0, standardise=0,
                      omit_simulation=0, omit_input=0, omit_output=0,
-                     selection_domain=None, selection_report=None, **kw):
+                     selection_domain=None, selection_report=None,
+                     precision=None, **kw):
       """
       Returns an inventory of a single or multiple resources on a single or
       multiple nodes as a single float value
@@ -513,8 +515,8 @@ class SimulationTool (BaseTool):
       section_filter  - only take rows in stock table which section_uid
                         matches section_filter
 
-      mirror_section_filter - only take rows in stock table which mirror_section_uid
-                              matches mirror_section_filter
+      mirror_section_filter - only take rows in stock table which
+                              mirror_section_uid matches mirror_section_filter
 
       variation_text -  only take rows in stock table with specified
                         variation_text.
@@ -568,6 +570,8 @@ class SimulationTool (BaseTool):
       group_by_sub_variation - (useless on getInventory, but useful on
                         getInventoryList)
 
+      precision - the precision used to round quantities and prices.
+
       **kw           -  if we want extended selection with more keywords (but
                         bad performance) check what we can do with
                         buildSqlQuery
@@ -591,7 +595,7 @@ class SimulationTool (BaseTool):
           standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report,
-          **sql_kw)
+          precision=precision, **sql_kw)
       if src__:
         return result
 
@@ -640,7 +644,8 @@ class SimulationTool (BaseTool):
                               'getInventoryList')
     def getInventoryList(self, src__=0, ignore_variation=0, standardise=0,
                          omit_simulation=0, omit_input=0, omit_output=0,
-                         selection_domain=None, selection_report=None, **kw):
+                         selection_domain=None, selection_report=None,
+                         precision=None, **kw):
       """
         Returns a list of inventories for a single or multiple
         resources on a single or multiple nodes, grouped by resource,
@@ -656,7 +661,8 @@ class SimulationTool (BaseTool):
                     standardise=standardise, omit_simulation=omit_simulation,
                     omit_input=omit_input, omit_output=omit_output,
                     selection_domain=selection_domain,
-                    selection_report=selection_report, **sql_kw)
+                    selection_report=selection_report, precision=precision,
+                    **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')
@@ -694,7 +700,8 @@ class SimulationTool (BaseTool):
                               'getInventoryStat')
     def getInventoryStat(self, src__=0, ignore_variation=0, standardise=0,
                          omit_simulation=0, omit_input=0, omit_output=0,
-                         selection_domain=None, selection_report=None, **kw):
+                         selection_domain=None, selection_report=None,
+                         precision=None, **kw):
       """
       getInventoryStat is the pending to getInventoryList in order to
       provide statistics on getInventoryList lines in ListBox such as:
@@ -708,7 +715,8 @@ class SimulationTool (BaseTool):
           standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain,
-          selection_report=selection_report, **sql_kw)
+          selection_report=selection_report,
+          precision=precision, **sql_kw)
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -786,16 +794,10 @@ class SimulationTool (BaseTool):
     def getInventoryAssetPrice(self, src__=0, ignore_variation=0,
                                standardise=0, omit_simulation=0, omit_input=0,
                                omit_output=0, selection_domain=None,
-                               selection_report=None, **kw):
+                               selection_report=None, precision=None, **kw):
       """
       Same thing as getInventory but returns an asset
       price rather than an inventory.
-
-      TODO:
-        - Make sure getInventoryAssetPrice API can 
-	  support precision defition (ie. calculate the 
-	  sum of rounded values)
-
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
       result = self.Resource_zGetInventory(
@@ -803,7 +805,7 @@ class SimulationTool (BaseTool):
           standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report,
-          **sql_kw)
+          precision=precision, **sql_kw)
       if src__ :
         return result
 
@@ -853,7 +855,7 @@ class SimulationTool (BaseTool):
     def getInventoryHistoryList(self, src__=0, ignore_variation=0,
                                 standardise=0, omit_simulation=0, omit_input=0,
                                 omit_output=0, selection_domain=None,
-                                selection_report=None, **kw):
+                                selection_report=None, precision=None, **kw):
       """
       Returns a time based serie of inventory values
       for a single or a group of resource, node, section, etc. This is useful
@@ -869,7 +871,8 @@ class SimulationTool (BaseTool):
                       standardise=standardise, omit_simulation=omit_simulation,
                       omit_input=omit_input, omit_output=omit_output,
                       selection_domain=selection_domain,
-                      selection_report=selection_report, **sql_kw)
+                      selection_report=selection_report, precision=precision,
+                      **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryChart')
@@ -877,7 +880,7 @@ class SimulationTool (BaseTool):
                                  standardise=0, omit_simulation=0,
                                  omit_input=0, omit_output=0,
                                  selection_domain=None,
-                                 selection_report=None, **kw):
+                                 selection_report=None, precision=None, **kw):
       """
       getInventoryHistoryChart is the pensing to getInventoryHistoryList
       to ease the rendering of time based graphs which show the evolution
@@ -892,7 +895,8 @@ class SimulationTool (BaseTool):
                     standardise=standardise, omit_simulation=omit_simulation,
                     omit_input=omit_input, omit_output=omit_output,
                     selection_domain=selection_domain,
-                    selection_report=selection_report, **sql_kw)
+                    selection_report=selection_report, precision=precision,
+                    **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryList')
@@ -901,7 +905,7 @@ class SimulationTool (BaseTool):
                                omit_input=0, omit_output=0,
                                selection_domain=None, selection_report=None,
                                initial_running_total_quantity=0,
-                               initial_running_total_price=0,
+                               initial_running_total_price=0, precision=None,
                                **kw):
       """Returns a list of movements which modify the inventory
       for a single or a group of resource, node, section, etc.
@@ -921,14 +925,14 @@ class SimulationTool (BaseTool):
                                   initial_running_total_quantity,
                          initial_running_total_price=
                                   initial_running_total_price,
-                         **sql_kw)
+                         precision=precision, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
     def getMovementHistoryStat(self, src__=0, ignore_variation=0,
                                standardise=0, omit_simulation=0, omit_input=0,
                                omit_output=0, selection_domain=None,
-                               selection_report=None, **kw):
+                               selection_report=None, precision=None, **kw):
       """
       getMovementHistoryStat is the pending to getMovementHistoryList
       for ListBox stat
@@ -938,7 +942,7 @@ class SimulationTool (BaseTool):
           ignore_variation=ignore_variation, standardise=standardise,
           omit_simulation=omit_simulation, omit_input=omit_input,
           omit_output=omit_output, selection_domain=selection_domain,
-          selection_report=selection_report, **sql_kw)
+          selection_report=selection_report, precision=precision, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, src__=0,
