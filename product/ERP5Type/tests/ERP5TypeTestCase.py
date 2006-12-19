@@ -472,6 +472,10 @@ def setupERP5Site( business_template_list=(),
     try:
       if app is None:
         app = ZopeTestCase.app()
+      # this app will be closed after setUp, but keep an reference anyway, to
+      # make it's REQUEST available during setup
+      global current_app
+      current_app = app
       if not hasattr(aq_base(app), portal_name):
         try:
           _start = time.time()
