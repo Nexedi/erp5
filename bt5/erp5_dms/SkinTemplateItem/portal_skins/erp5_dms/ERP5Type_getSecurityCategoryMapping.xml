@@ -73,6 +73,7 @@ return (\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'source_project\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\',\'source_project\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'group\'] ),\n
 (\'ERP5Type_getSecurityCategoryRoot\',[\'group\']),\n
 )\n
 </string> </value>
