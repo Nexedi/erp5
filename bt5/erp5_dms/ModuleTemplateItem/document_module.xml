@@ -232,8 +232,10 @@
   <permission type='list'>
    <name>Add Zope Tutorials</name>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add portal content</name>
+   <role>Author</role>
+   <role>Manager</role>
   </permission>
   <permission type='list'>
    <name>Add portal events</name>
@@ -407,16 +409,14 @@
    <name>Manage ZCatalogIndex Entries</name>
   </permission>
   <permission type='list'>
-   <name>Manage extensions</name>
-  </permission>
-  <permission type='list'>
    <name>Manage languages</name>
   </permission>
   <permission type='list'>
    <name>Manage messages</name>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Manage portal</name>
+   <role>Manager</role>
   </permission>
   <permission type='list'>
    <name>Manage properties</name>
