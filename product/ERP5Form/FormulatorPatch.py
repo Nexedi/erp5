@@ -997,6 +997,9 @@ class FloatWidget(TextWidget):
             value = str(float(value))
           except ValueError:
             return value
+          else:
+            if 'e' in value: # scientific notation hack
+              return value
           value_list = value.split('.')
           integer = value_list[0]
           if input_style.find(' ')>=0:
