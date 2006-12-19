@@ -1,8 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Document Module">
   <item>Text</item>
-  <item>External Library File</item>
-  <item>External Web Page</item>
   <item>Spreadsheet</item>
   <item>Presentation</item>
   <item>PDF</item>
@@ -14,6 +12,10 @@
  </portal_type>
  <portal_type id="External Library File">
   <item>Book</item>
+ </portal_type>
+ <portal_type id="External Source Module">
+  <item>External Web Page</item>
+  <item>External Library File</item>
  </portal_type>
  <portal_type id="File">
   <item>Role Definition</item>
