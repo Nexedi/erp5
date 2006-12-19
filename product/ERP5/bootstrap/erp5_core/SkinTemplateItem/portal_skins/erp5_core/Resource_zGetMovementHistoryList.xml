@@ -662,7 +662,7 @@ SELECT \n
   q1.*,\n
   @running_total_quantity := q1.total_quantity + \n
             @running_total_quantity AS running_total_quantity,\n
-  @running_total_price := q1.total_price + \n
+  @running_total_price := IFNULL(q1.total_price, 0) + \n
             @running_total_price AS running_total_price\n
 FROM (\n
 SELECT\n
@@ -819,7 +819,7 @@ SELECT \n
   q1.*,\n
   @running_total_quantity := q1.total_quantity + \n
             @running_total_quantity AS running_total_quantity,\n
-  @running_total_price := q1.total_price + \n
+  @running_total_price := IFNULL(q1.total_price, 0) + \n
             @running_total_price AS running_total_price\n
 FROM (\n
 SELECT\n

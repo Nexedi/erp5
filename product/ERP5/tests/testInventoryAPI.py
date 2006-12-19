@@ -931,6 +931,24 @@ class TestMovementHistoryList(InventoryAPITestCase):
       running_total_price += quantity * quantity # we've set price=quantity
       self.assertEquals(running_total_price, brain.running_total_price)
   
+  def testRunningQuantityWithQuantity0(self):
+    # a 0 quantity should not be a problem for running total price
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    date = DateTime()
+    quantity = -1
+    for i in range(3):
+      self._makeMovement( quantity=quantity+i, price=1, start_date=date+i )
+    mvt_history_list = getMovementHistoryList(
+                            node_uid=self.node.getUid(),
+                            sort_on=[['stock.date', 'ASC']])
+    self.assertEquals(3, len(mvt_history_list))
+    self.assertEquals(-1, mvt_history_list[0].running_total_quantity)
+    self.assertEquals(-1, mvt_history_list[0].running_total_price)
+    self.assertEquals(-1, mvt_history_list[1].running_total_quantity)
+    self.assertEquals(-1, mvt_history_list[1].running_total_price)
+    self.assertEquals(0, mvt_history_list[2].running_total_quantity)
+    self.assertEquals(0, mvt_history_list[2].running_total_price)
+
   # bug #352
   def testSameNodeDifferentDates(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
