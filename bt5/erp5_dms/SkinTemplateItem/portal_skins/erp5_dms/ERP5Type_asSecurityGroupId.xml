@@ -125,11 +125,9 @@ for base_category in category_order:\n
 \n
 # Return a list of users or a single group\n
 if user_list:\n
-  #context.log(user_list)\n
   return user_list\n
-context.log(code_list)\n
+code_list=[c for c in code_list if c is not None]\n
 r=\'_\'.join(code_list)\n
-#context.log(category_order,r)\n
 return r\n
 </string> </value>
         </item>
@@ -209,6 +207,9 @@ return r\n
                             <string>user_name</string>
                             <string>category_code</string>
                             <string>AttributeError</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>c</string>
                             <string>r</string>
                           </tuple>
                         </value>
