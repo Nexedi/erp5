@@ -91,8 +91,11 @@ if doctype is None or doctype==\'\':\n
 # create content\n
 # find appropriate module\n
 mod=None\n
-modlist=[m for m in context.getPortalObject().contentValues() if m.getId().endswith(\'_module\')]\n
+modlist=[m for m in context.getPortalObject().objectIds() if m.endswith(\'_module\')]\n
 for mod in modlist:\n
+  mod=context.restrictedTraverse(mod,None)\n
+  if mod is None:\n
+    continue\n
   if doctype in context.portal_types[mod.getPortalType()].allowed_content_types:\n
      break\n
 if mod is None:\n
