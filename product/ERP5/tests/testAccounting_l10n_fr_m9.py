@@ -36,6 +36,7 @@ os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
 os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
@@ -89,16 +90,16 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.category_tool = portal.portal_categories
     self.section = self._createOrganisation()
     self.mirror_section = self._createOrganisation()
-
+  
+  @reindex
   def _createOrganisation(self, **kw):
     """Create an organisation and index it.
     """
     org = self.getOrganisationModule().newContent(portal_type='Organisation')
     org.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return org
 
+  @reindex
   def _getAccount(self, account_id, **kw):
     """Get an account or create it.
     """
@@ -107,10 +108,9 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     if account is None:
       account = account_module.newContent(id=account_id)
     account.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return account
-
+  
+  @reindex
   def _createPurchaseInvoice(self, amount=100, **kw):
     """Create a purchase invoice and index it.
     """
@@ -130,8 +130,6 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                        source_value=payable_account,
                        quantity=-amount)
     invoice.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return invoice
   
   def test_TransmissionSheetModule(self):

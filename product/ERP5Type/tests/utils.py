@@ -32,6 +32,7 @@
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 
+# dummy objects
 class DummyMailHost(MailHost):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
   _last_message attribute.
@@ -46,6 +47,7 @@ class DummyMailHost(MailHost):
     """Record message in _last_message."""
     self._last_message = (mfrom, mto, messageText)
 
+# python scripts
 def createZODBPythonScript(container, script_id, script_params,
                            script_content):
   """Creates a Python script `script_id` in the given `container`, with
@@ -70,6 +72,7 @@ def removeZODBPythonScript(container, script_id):
   """
   container.manage_delObjects([script_id])
 
+# class tool
 def installRealClassTool(portal):
   """Replaces portal_classes by a real class tool object.
   """
@@ -90,6 +93,7 @@ def _recreateClassTool(portal):
   portal.manage_delObjects(['portal_classes'])
   portal._setObject('portal_classes', ClassTool.ClassTool())
 
+# memcache tool
 def installRealMemcachedTool(portal):
   """Replaces portal_memcached by a real memcached tool object.
   """
@@ -103,4 +107,22 @@ def _recreateMemcachedTool(portal):
   reload(MemcachedTool)
   portal.manage_delObjects(['portal_memcached'])
   portal._setObject('portal_memcached', MemcachedTool.MemcachedTool())
+
+# decorators
+class reindex(object):
+  """Decorator to commit transaction and flush activities after the method is
+  called.
+  """
+  def __init__(self, func):
+    self._func = func
+
+  def __get__(self, instance, cls=None):
+    self._instance = instance
+    return self
+  
+  def __call__(self, *args, **kw):
+    ret = self._func(self._instance, *args, **kw)
+    get_transaction().commit()
+    self._instance.tic()
+    return ret
 

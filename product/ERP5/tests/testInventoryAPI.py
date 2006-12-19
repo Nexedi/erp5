@@ -42,6 +42,7 @@ from Testing import ZopeTestCase
 
 from Products.ERP5.Document.OrderRule import OrderRule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import reindex
 
 # Needed in order to have a log file inside the current folder
 os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
@@ -162,34 +163,32 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_dummy_movement')
 
   # TODO: move this to a base class {{{
+  @reindex
   def _makeOrganisation(self, **kw):
     """Creates an organisation."""
     org = self.getPortal().organisation_module.newContent(
           portal_type='Organisation',
           **kw)
-    get_transaction().commit()
-    self.tic()
     return org
 
+  @reindex
   def _makeSalePackingList(self, **kw):
     """Creates a sale packing list."""
     spl = self.getPortal().sale_packing_list_module.newContent(
           portal_type='Sale Packing List',)
     spl.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return spl
   
+  @reindex
   def _makeSaleInvoice(self, created_by_builder=0, **kw):
     """Creates a sale invoice."""
     sit = self.getPortal().accounting_module.newContent(
           portal_type='Sale Invoice Transaction',
           created_by_builder=created_by_builder)
     sit.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return sit
 
+  @reindex
   def _makeCurrency(self, **kw):
     """Creates a currency."""
     currency = self.getCurrencyModule().newContent(
@@ -200,6 +199,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
   _makeResource = _makeCurrency
   # }}}
 
+  @reindex
   def _makeMovement(self, **kw):
     """Creates a movement.
     """
@@ -210,10 +210,9 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     kw.setdefault('source_value', self.mirror_node)
     kw.setdefault('resource_value', self.resource)
     mvt.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return mvt
-
+  
+  @reindex
   def _makeSimulationMovement(self, **kw):
     """Creates a simulation movement.
     """
@@ -227,8 +226,6 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     kw.setdefault('source_value', self.mirror_node)
     kw.setdefault('resource_value', self.resource)
     mvt.edit(**kw)
-    get_transaction().commit()
-    self.tic()
     return mvt
 
 # }}}
@@ -240,7 +237,6 @@ class TestInventory(InventoryAPITestCase):
   
   def testReturnedTypeIsFloat(self):
     """getInventory returns a float"""
-    # XXX it may return a Decimal some day
     getInventory = self.getSimulationTool().getInventory
     self.assertEquals(type(getInventory()), type(0.1))
     # default is 0
