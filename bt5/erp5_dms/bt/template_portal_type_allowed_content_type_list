@@ -1,6 +1,4 @@
 Document Module | Drawing
-Document Module | External Library File
-Document Module | External Web Page
 Document Module | File
 Document Module | PDF
 Document Module | Presentation
@@ -8,6 +6,8 @@ Document Module | Spreadsheet
 Document Module | Text
 Drawing | Role Definition
 External Library File | Book
+External Source Module | External Library File
+External Source Module | External Web Page
 File | Role Definition
 File | Role Definition
 Image Module | Image
