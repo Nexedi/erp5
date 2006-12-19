@@ -89,7 +89,7 @@ def Object_hasRelation(object):\n
   # Check if there is some related objets.\n
   result = 0\n
   for o in object.getIndexableChildValueList():\n
-    for related in object.portal_categories.getRelatedValueList(object):\n
+    for related in object.portal_categories.getRelatedValueList(o):\n
       if related.getRelativeUrl().startswith(object.getRelativeUrl()):\n
         continue\n
       elif related.getRelativeUrl().startswith(\'portal_simulation\') :\n
