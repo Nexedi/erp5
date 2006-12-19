@@ -70,13 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
-\n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
+# the same, but does group only with strict membership\n
+# XXX needs refactoring\n
 \n
 # must always return a list of dicts\n
 context.log(\'base_category_list\',base_category_list)\n
@@ -115,14 +110,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
         else:\n
           raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
       category_list.append(category_dict)\n
-      # if it is group, we go up the hierarchy (because if you work in group/a/b/c, chances are you \n
-      # are working in group/a/b, too :)\n
-      if base_category==\'group\':\n
-        grouplist=category_value.split(\'/\')\n
-        for i in range(1,len(grouplist)):\n
-          cdict=category_dict.copy()\n
-          cdict[\'group\']=\'/\'.join(grouplist[:-i])\n
-          category_list.append(cdict)\n
+\n
     except RuntimeError,e:\n
       context.log(str(e))\n
 \n
@@ -210,10 +198,6 @@ return category_list\n
                             <string>None</string>
                             <string>_write_</string>
                             <string>RuntimeError</string>
-                            <string>grouplist</string>
-                            <string>range</string>
-                            <string>i</string>
-                            <string>cdict</string>
                             <string>e</string>
                             <string>str</string>
                           </tuple>
@@ -232,7 +216,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+            <value> <string>ERP5Type_getSecurityCategoryFromAssignmentStrict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
