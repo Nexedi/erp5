@@ -84,18 +84,21 @@ for origin in origin_list:\n
   items = values.items()\n
   items.sort()\n
   for (sheet, account_url), total_price in items:\n
-    account_title = portal.restrictedTraverse(account_url\n
-                                  ).Account_getFormattedTitle()\n
-    debit = max(total_price, 0)\n
+    account = portal.restrictedTraverse(account_url)\n
+\n
+    # XXX assume a precision of 2 places, because we use EUR for M9\n
+    debit = round(max(total_price, 0), 2)\n
     total_debit += debit\n
-    credit = -min(total_price, 0)\n
+    credit = round(-min(total_price, 0), 2)\n
     total_credit += credit\n
     line_list.append(Object(uid=\'new_\',\n
                             origin=origin,\n
                             sheet=sheet,\n
+                            account_id=account.getId(),\n
+                            account_title=account.getTitle(),\n
+                            account=account.Account_getFormattedTitle(),\n
                             debit=debit,\n
-                            credit=credit,\n
-                            account=account_title))\n
+                            credit=credit))\n
 \n
 cache_storage[\'m9_report_per_origin_and_sheet_summary_total_debit\'] = total_debit\n
 cache_storage[\'m9_report_per_origin_and_sheet_summary_total_credit\'] = total_credit\n
@@ -162,7 +165,8 @@ return line_list\n
                             <string>sheet</string>
                             <string>account_url</string>
                             <string>total_price</string>
-                            <string>account_title</string>
+                            <string>account</string>
+                            <string>round</string>
                             <string>max</string>
                             <string>debit</string>
                             <string>min</string>
