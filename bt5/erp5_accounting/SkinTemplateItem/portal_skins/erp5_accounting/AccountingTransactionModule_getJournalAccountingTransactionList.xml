@@ -96,7 +96,7 @@ journal_total_credit = 0\n
 # this report can be used in two ways:\n
 #   * with a report dialog to specify parameters\n
 if request.has_key(\'at_date\'):\n
-  at_date = request[\'at_date\']\n
+  at_date = request[\'at_date\'].latestTime()\n
   section_category = request[\'transaction_section_category\']\n
   transaction_simulation_state = request[\'transaction_simulation_state\']\n
   transaction_portal_type = request[\'transaction_portal_type\']\n
@@ -104,6 +104,7 @@ if request.has_key(\'at_date\'):\n
   params = { \'sort_on\'         : \'delivery.start_date\',\n
              \'at_date\'         : at_date,\n
              \'simulation_state\': transaction_simulation_state,\n
+             \'search_result_keys\': [],\n
              \'section_category\': section_category,\n
              \'portal_type\'     : transaction_portal_type, }\n
 \n
