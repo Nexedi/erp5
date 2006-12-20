@@ -75,6 +75,7 @@ portal = bug.getPortalObject()\n
 from_name = portal.getProperty(\'email_from_name\', \'ERP5\')\n
 from_address = portal.getProperty(\'email_from_address\', \'postmaster@localhost\')\n
 to_address = portal.getProperty(\'email_to_address\', from_address)\n
+server_url = portal.ERP5Site_getAbsoluteUrl()\n
 \n
 if not to_address:\n
   return\n
@@ -105,7 +106,7 @@ Title: %s\n
 Reporter: %s\n
 Assignee: %s\n
 Status: %s\n
-Path: %s\n
+URL: %s/%s/view\n
 \n
 %s\n
 \n
@@ -114,7 +115,7 @@ Follow-ups:\n
 %s\n
 """ % (from_name, from_address, to_address, bug.getId(), bug.getTitle(), message_id, in_reply_to,\n
        bug.getTitle(), bug.getSourceTitle() or \'\', bug.getDestinationTitle() or \'\',\n
-       bug.getValidationStateTitle(), bug.getPath(),\n
+       bug.getValidationStateTitle(), server_url, bug.getRelativeUrl(),\n
        \'\\n\'.join([\'  \' + x for x in bug.getDescription().split(\'\\n\')]),\n
        \'\\n\'.join([\'  \' + x for x in bug.Bug_getFollowUpListAsText().split(\'\\n\')]),\n
       )\n
@@ -178,6 +179,7 @@ portal.MailHost.send(text)\n
                             <string>from_name</string>
                             <string>from_address</string>
                             <string>to_address</string>
+                            <string>server_url</string>
                             <string>history</string>
                             <string>len</string>
                             <string>append</string>
