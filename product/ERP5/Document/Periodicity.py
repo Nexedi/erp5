@@ -37,8 +37,6 @@ from Products.ERP5Type.DateUtils import addToDate
 
 from zLOG import LOG
 
-
-
 class Periodicity(Base):
     """
     An Alarm is in charge of checking anything (quantity of a certain
@@ -66,14 +64,81 @@ class Periodicity(Base):
                       , PropertySheet.Periodicity
                       )
 
-    security.declareProtected(Permissions.View, 'setNextAlarmDate')
-    def setNextAlarmDate(self,current_date=None):
+    def validateMinute(self, date, previous_date):
+      periodicity_minute_frequency = self.getPeriodicityMinuteFrequency()
+      periodicity_minute_list = self.getPeriodicityMinuteList()
+      if (periodicity_minute_frequency is None) and \
+         (periodicity_minute_list in ([], None, ())):
+        # in this case, we may want to have an periodicity every hour 
+        # based on the start date
+        # without defining anything about minutes periodicity, 
+        # so we compare with minutes with the one defined 
+        # in the previous alarm date
+        return (date.minute() == previous_date.minute())
+      if periodicity_minute_frequency not in ('', None):
+        return (date.minute() % periodicity_minute_frequency) == 0
+      elif len(periodicity_minute_list) > 0:
+        return date.minute() in periodicity_minute_list
+
+    def validateHour(self, date):
+      periodicity_hour_frequency = self.getPeriodicityHourFrequency()
+      periodicity_hour_list = self.getPeriodicityHourList()
+      if (periodicity_hour_frequency is None) and \
+         (periodicity_hour_list in ([], None, ())):
+        return 1
+      if periodicity_hour_frequency not in ('', None):
+        return (date.hour() % periodicity_hour_frequency) == 0
+      elif len(periodicity_hour_list) > 0:
+        return date.hour() in periodicity_hour_list
+
+    def validateDay(self, date):
+      periodicity_day_frequency = self.getPeriodicityDayFrequency()
+      periodicity_month_day_list = self.getPeriodicityMonthDayList()
+      if (periodicity_day_frequency is None) and \
+         (periodicity_month_day_list in ([], None, ())):
+        return 1
+      if periodicity_day_frequency not in ('', None):
+        return (date.day() % periodicity_day_frequency) == 0
+      elif len(periodicity_month_day_list) > 0:
+        return date.day() in periodicity_month_day_list
+
+    def validateWeek(self, date):
+      periodicity_week_frequency = self.getPeriodicityWeekFrequency()
+      periodicity_week_day_list = self.getPeriodicityWeekDayList()
+      periodicity_week_list = self.getPeriodicityWeekList()
+      if (periodicity_week_frequency is None) and \
+         (periodicity_week_day_list in ([], None, ())) and \
+         (periodicity_week_list is None):
+        return 1
+      if periodicity_week_frequency not in ('', None):
+        if not((date.week() % periodicity_week_frequency) == 0):
+          return 0
+      if periodicity_week_day_list not in (None, (), []):
+        if not (date.Day() in periodicity_week_day_list):
+          return 0
+      if periodicity_week_list not in (None, (), []):
+        if not (date.week() in periodicity_week_list):
+          return 0
+      return 1
+
+    def validateMonth(self, date):
+      periodicity_month_frequency = self.getPeriodicityMonthFrequency()
+      periodicity_month_list = self.getPeriodicityMonthList()
+      if (periodicity_month_frequency is None) and \
+         (periodicity_month_list in ([], None, ())):
+        return 1
+      if periodicity_month_frequency not in ('', None):
+        return (date.month() % periodicity_month_frequency) == 0
+      elif len(periodicity_month_list) > 0:
+        return date.month() in periodicity_month_list
+
+    def getNextAlarmDate(self, current_date, next_start_date=None):
       """
       Get the next date where this periodic event should start.
 
       We have to take into account the start date, because
       sometimes an event may be started by hand. We must be
-      sure to never forget to start an event, event with some
+      sure to never forget to start an event, even with some
       delays.
 
       Here are some rules :
@@ -82,14 +147,6 @@ class Periodicity(Base):
       - if the periodicity start date is in the past but we already
         have started the periodic event, then see
       """
-
-      if self.getPeriodicityStartDate() is None:
-        return
-      next_start_date = self.getAlarmDate()
-      if current_date is None:
-        # This is usefull to set the current date as parameter for
-        # unit testing, by default it should be now
-        current_date = DateTime()
       if next_start_date is None:
         next_start_date = current_date
       if next_start_date > current_date:
@@ -99,94 +156,51 @@ class Periodicity(Base):
         nb_days = int(current_date-next_start_date)
         next_start_date = next_start_date + nb_days
 
-      def validateMinute(self,date, previous_date):
-        periodicity_minute_frequency = self.getPeriodicityMinuteFrequency()
-        periodicity_minute_list = self.getPeriodicityMinuteList()
-        if periodicity_minute_frequency is None and periodicity_minute_list in ([],None,()):
-          # in this case, we may want to have an periodicity every hour based on the start date
-          # without defining anything about minutes periodicity, so we compare with
-          # minutes with the one defined in the previous alarm date
-          return (date.minute() == previous_date.minute())
-        if periodicity_minute_frequency not in ('',None):
-          return (date.minute() % periodicity_minute_frequency) == 0
-        elif len(periodicity_minute_list)>0:
-          return date.minute() in periodicity_minute_list
-
-      def validateHour(self,date):
-        periodicity_hour_frequency = self.getPeriodicityHourFrequency()
-        periodicity_hour_list = self.getPeriodicityHourList()
-        if periodicity_hour_frequency is None and periodicity_hour_list in ([],None,()):
-          return 1
-        if periodicity_hour_frequency not in ('',None):
-          return (date.hour() % periodicity_hour_frequency) == 0
-        elif len(periodicity_hour_list)>0:
-          return date.hour() in periodicity_hour_list
-
-      def validateDay(self,date):
-        periodicity_day_frequency = self.getPeriodicityDayFrequency()
-        periodicity_month_day_list = self.getPeriodicityMonthDayList()
-        if periodicity_day_frequency is None and periodicity_month_day_list in ([],None,()):
-          return 1
-        if periodicity_day_frequency not in ('',None):
-          return (date.day() % periodicity_day_frequency) == 0
-        elif len(periodicity_month_day_list)>0:
-          return date.day() in periodicity_month_day_list
-
-      def validateWeek(self,date):
-        periodicity_week_frequency = self.getPeriodicityWeekFrequency()
-        periodicity_week_day_list = self.getPeriodicityWeekDayList()
-        periodicity_week_list = self.getPeriodicityWeekList()
-        if periodicity_week_frequency is None and periodicity_week_day_list in ([],None,()) \
-            and periodicity_week_list is None:
-          return 1
-        if periodicity_week_frequency not in ('',None):
-          if not((date.week() % periodicity_week_frequency) == 0):
-            return 0
-        if periodicity_week_day_list not in (None,(),[]):
-          if not (date.Day() in periodicity_week_day_list):
-            return 0
-        if periodicity_week_list not in (None,(),[]):
-          if not (date.week() in periodicity_week_list):
-            return 0
-        return 1
-
-      def validateMonth(self,date):
-        periodicity_month_frequency = self.getPeriodicityMonthFrequency()
-        periodicity_month_list = self.getPeriodicityMonthList()
-        if periodicity_month_frequency is None and periodicity_month_list in ([],None,()):
-          return 1
-        if periodicity_month_frequency not in ('',None):
-          return (date.month() % periodicity_month_frequency) == 0
-        elif len(periodicity_month_list)>0:
-          return date.month() in periodicity_month_list
-
       previous_date = next_start_date
-      next_start_date = addToDate(next_start_date,minute=1)
+      next_start_date = addToDate(next_start_date, minute=1)
       while 1:
-        validate_minute = validateMinute(self,next_start_date, previous_date)
-        validate_hour = validateHour(self,next_start_date)
-        validate_day = validateDay(self,next_start_date)
-        validate_week = validateWeek(self,next_start_date)
-        validate_month = validateMonth(self,next_start_date)
+        validate_minute = self.validateMinute(next_start_date, previous_date)
+        validate_hour = self.validateHour(next_start_date)
+        validate_day = self.validateDay(next_start_date)
+        validate_week = self.validateWeek(next_start_date)
+        validate_month = self.validateMonth(next_start_date)
         if (next_start_date >= current_date \
             and validate_minute and validate_hour and validate_day \
             and validate_week and validate_month):
           break
         else:
           if not(validate_minute):
-            next_start_date = addToDate(next_start_date,minute=1)
+            next_start_date = addToDate(next_start_date, minute=1)
           else:
             if not(validate_hour):
-              next_start_date = addToDate(next_start_date,hour=1)
+              next_start_date = addToDate(next_start_date, hour=1)
             else:
               if not(validate_day and validate_week and validate_month):
-                next_start_date = addToDate(next_start_date,day=1)
+                next_start_date = addToDate(next_start_date, day=1)
               else:
                 # Everything is right, but the date is still not bigger
                 # than the current date, so we must continue
-                next_start_date = addToDate(next_start_date,minute=1)
-      self.Alarm_zUpdateAlarmDate(uid=self.getUid(),alarm_date=next_start_date)
+                next_start_date = addToDate(next_start_date, minute=1)
+      return next_start_date
 
+    security.declareProtected(Permissions.View, 'setNextAlarmDate')
+    def setNextAlarmDate(self, current_date=None):
+      """
+      Save the next alarm date
+      """
+      if self.getPeriodicityStartDate() is None:
+        return
+      next_start_date = self.getAlarmDate()
+      if current_date is None:
+        # This is usefull to set the current date as parameter for
+        # unit testing, by default it should be now
+        current_date = DateTime()
+
+      next_start_date = self.getNextAlarmDate(current_date, 
+                                              next_start_date=next_start_date)
+      if next_start_date is not None:
+        self.Alarm_zUpdateAlarmDate(uid=self.getUid(), 
+                                    alarm_date=next_start_date)
 
     security.declareProtected(Permissions.View, 'getAlarmDate')
     def getAlarmDate(self):
@@ -205,14 +219,13 @@ class Periodicity(Base):
           alarm_date = periodicity_start_date
       return alarm_date
 
-
     # XXX May be we should create a Date class for following methods ???
-
     security.declareProtected(Permissions.View, 'getWeekDayList')
     def getWeekDayList(self):
       """
       returns something like ['Sunday','Monday',...]
       """
+      # XXX Currently, it's not translated in the UI
       return DateTime._days
 
     # XXX This look like to not works, so override the getter
@@ -242,6 +255,3 @@ class Periodicity(Base):
           if day in day_list:
             new_list += [day]
       return new_list
-
-
-
