@@ -70,8 +70,8 @@
    <action name="nextPageTemplate">\n
       <parameter>FirstPage</parameter>\n
    </action>\n
-\n
-   <para tal:content="python: form.getProperty(\'title\')" style="Title" i18n:translate="" i18n:domain="ui">toto</para>\n
+   \n
+   <para tal:content="python: here.Localizer.erp5_ui.gettext(form.getProperty(\'title\', \'\')).encode(\'utf-8\')" style=\'Title\'> report title </para>\n
    <spacer height="100"/>\n
 \n
 \n
