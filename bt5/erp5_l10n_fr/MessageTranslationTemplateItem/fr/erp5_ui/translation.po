@@ -2242,13 +2242,13 @@ msgid "Permanent variation"
 msgstr "Choix si constant"
 
 msgid "Person"
-msgstr "Personnes"
+msgstr "Personne"
 
 msgid "Person Assignment View"
 msgstr "Affectation"
 
 msgid "Person Career"
-msgstr ""
+msgstr "Carrière"
 
 msgid "Person Career View"
 msgstr "Carrière"
@@ -3424,15 +3424,6 @@ msgstr ""
 
 msgid "planned"
 msgstr "Plannifié"
-
-msgid "portal_categories"
-msgstr ""
-
-msgid "portal_preferences"
-msgstr ""
-
-msgid "portal_templates"
-msgstr ""
 
 msgid "quantity"
 msgstr "Quantité"
