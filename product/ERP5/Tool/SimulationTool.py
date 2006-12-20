@@ -947,7 +947,7 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw):
+        selection_domain=None, selection_report=None, precision=None, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
@@ -958,7 +958,8 @@ class SimulationTool (BaseTool):
       result = self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+          selection_domain=selection_domain, selection_report=selection_report,
+          precision=precision, **sql_kw)
       if src__ :
         return result
 
