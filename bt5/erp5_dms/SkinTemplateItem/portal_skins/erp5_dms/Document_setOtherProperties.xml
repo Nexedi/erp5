@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>user=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,12 +112,14 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>user</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -128,7 +130,9 @@
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

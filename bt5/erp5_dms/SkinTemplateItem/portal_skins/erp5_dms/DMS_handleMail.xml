@@ -103,7 +103,7 @@ context.log(mailprops)\n
 # create objects from attachments\n
 try:\n
   for fname,data in theMail[\'attachments\'].items():\n
-    obj=context.DMS_createObjectFromFile(fname,data,mailprops.get(\'document_type\'))\n
+    obj=context.DMS_createObjectFromFile(fname,data,mailprops.get(\'document_type\'),uname=person.getReference())\n
     # if some properties were in the mail, overwrite the content attrs\n
     for k in mailprops:\n
       atr=k\n
@@ -114,11 +114,13 @@ try:\n
     if gr is None:\n
       print noSubordinationMsg\n
       return printed\n
-    obj.setGroup(person.getSubordinationValue().getGroup())\n
+    obj.setGroup(gr)\n
     obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
     context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
 except Exception,e:\n
-  return str(e)\n
+  context.log_traceback(context)\n
+  raise\n
+  #return str(e)\n
 return\n
 
 
@@ -192,7 +194,6 @@ return\n
                             <string>gr</string>
                             <string>Exception</string>
                             <string>e</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

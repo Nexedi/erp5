@@ -72,7 +72,7 @@
 # first try from content\n
 context.log(fname,doctype)\n
 if doctype is None or doctype==\'\':\n
-  props=context.Document_getPropertyListFromContent(context,data)\n
+  props=context.Document_getPropertyListFromContent(context,data,None)\n
   doctype=props.get(\'doctype\')\n
 # then from filename\n
 if doctype is None or doctype==\'\':\n
@@ -103,7 +103,7 @@ if mod is None:\n
 # create and populate object\n
 ob=mod.newContent(portal_type=doctype)\n
 ob.manage_upload(data)\n
-ob.Document_setOtherProperties()\n
+ob.Document_setOtherProperties(uname)\n
 ob.DMS_ingestFile(fname,data)\n
 return ob\n
 </string> </value>
@@ -122,7 +122,7 @@ return ob\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>fname,data, doctype=None</string> </value>
+            <value> <string>fname,data, doctype=None,uname=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -142,7 +142,7 @@ return ob\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -151,6 +151,7 @@ return ob\n
                             <string>fname</string>
                             <string>data</string>
                             <string>doctype</string>
+                            <string>uname</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
@@ -177,6 +178,7 @@ return ob\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
