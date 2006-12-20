@@ -71,14 +71,14 @@
     <paragraphstyle name="Bullet" fontname="Helvetica" fontsize="9" bulletFontName="Symbol" bulletFontSize="8" leftIndent="20"  firstLineIndent="0" parent="Normal"/>\n
     <paragraphstyle name="Title" parent="Normal" fontname="Helvetica-Bold" fontsize="32" align="CENTER"/>\n
     <paragraphstyle name="Heading1" parent="Normal" fontname="Helvetica-Bold" fontsize="16" spacebefore="20"/>\n
-    <paragraphstyle name="Heading2" parent="Normal" fontname="Helvetica-Bold" fontsize="15"/>\n
-    <paragraphstyle name="Heading3" parent="Normal" fontname="Helvetica-Bold" fontsize="14"/>\n
-    <paragraphstyle name="Heading4" parent="Normal" fontname="Helvetica-Bold" fontsize="13"/>\n
-    <paragraphstyle name="Heading5" parent="Normal" fontname="Helvetica-Bold" fontsize="12"/>\n
-    <paragraphstyle name="Heading6" parent="Normal" fontname="Helvetica-Bold" fontsize="11"/>\n
-    <paragraphstyle name="Heading7" parent="Normal" fontname="Helvetica-Bold" fontsize="10"/>\n
-    <paragraphstyle name="Heading8" parent="Normal" fontname="Helvetica-Bold" fontsize="10"/>\n
-    <paragraphstyle name="Heading9" parent="Normal" fontname="Helvetica-Bold" fontsize="10"/>\n
+    <paragraphstyle name="Heading2" parent="Normal" fontname="Helvetica-Bold" fontsize="15" spacebefore="15"/>\n
+    <paragraphstyle name="Heading3" parent="Normal" fontname="Helvetica-Bold" fontsize="14" spacebefore="10"/>\n
+    <paragraphstyle name="Heading4" parent="Normal" fontname="Helvetica-Bold" fontsize="13" spacebefore="15"/>\n
+    <paragraphstyle name="Heading5" parent="Normal" fontname="Helvetica-Bold" fontsize="12" spacebefore="5"/>\n
+    <paragraphstyle name="Heading6" parent="Normal" fontname="Helvetica-Bold" fontsize="11" spacebefore="5"/>\n
+    <paragraphstyle name="Heading7" parent="Normal" fontname="Helvetica-Bold" fontsize="10" spacebefore="5"/>\n
+    <paragraphstyle name="Heading8" parent="Normal" fontname="Helvetica-Bold" fontsize="10" spacebefore="5"/>\n
+    <paragraphstyle name="Heading9" parent="Normal" fontname="Helvetica-Bold" fontsize="10" spacebefore="5"/>\n
 \n
     <paragraphstyle name="Small" parent="Normal" fontname="Helvetica-Bold" fontsize="6"/>\n
     <paragraphstyle name="Cell" parent="Normal" fontname="Helvetica-Bold" fontsize="9" alignment="center" />\n
