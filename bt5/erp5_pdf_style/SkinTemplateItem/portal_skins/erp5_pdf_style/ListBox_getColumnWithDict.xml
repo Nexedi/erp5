@@ -68,7 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>N_ = context.Base_translateString\n
+            <value> <string># if REQUEST.other contains ${form_id}/${listbox_id}/ListBox_getColumnWithDict\n
+# magic key, this will be used as column width, instead of calculating.\n
+if listbox is not None:\n
+  cache = context.REQUEST.other.get(\n
+        \'%s/%s/ListBox_getColumnWithDict\' % (\n
+            listbox.aq_parent.getId(), listbox.getId()), None)\n
+  if cache is not None:\n
+    return cache\n
+\n
+N_ = context.Base_translateString\n
 \n
 # XXX this is just a copy / paste of the old implementation\n
 # dirty code : if we are in domain or report tree, just use the old one, otherwise\n
@@ -183,7 +192,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width = 19.0, section_width = 4.0</string> </value>
+            <value> <string>listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=19.0, section_width=4.0, listbox=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -203,7 +212,7 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -214,8 +223,11 @@ return result\n
                             <string>is_report_tree_mode</string>
                             <string>frame_width</string>
                             <string>section_width</string>
+                            <string>listbox</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>cache</string>
                             <string>N_</string>
                             <string>result</string>
                             <string>min_column_width</string>
@@ -224,7 +236,6 @@ return result\n
                             <string>line_width</string>
                             <string>col_count</string>
                             <string>column_property</string>
-                            <string>None</string>
                             <string>string_property</string>
                             <string>str</string>
                             <string>len</string>
@@ -259,6 +270,7 @@ return result\n
               <tuple>
                 <float>19.0</float>
                 <float>4.0</float>
+                <none/>
               </tuple>
             </value>
         </item>

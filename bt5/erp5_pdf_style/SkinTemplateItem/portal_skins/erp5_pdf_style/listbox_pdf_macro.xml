@@ -89,7 +89,7 @@
       </tal:block>\n
 \n
 \n
-      <tal:block tal:define="global column_width python:here.ListBox_getColumnWithDict(listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=frame_width)"/>\n
+      <tal:block tal:define="global column_width python:here.ListBox_getColumnWithDict(listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=frame_width, listbox=listbox)"/>\n
 \n
       <table  splitbyrow="1" repeatrows="1" repeatcols="0"  style="StandardTableWithGrid">\n
 \n
