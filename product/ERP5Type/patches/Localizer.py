@@ -12,8 +12,6 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import getToolByName
-
 # Template() is a new method of python 2.4, that's why we have the string.py
 #   file in patches directory.
 try:
@@ -22,7 +20,7 @@ except ImportError:
   from Products.ERP5Type.patches.string import Template
 
 from Products.ERP5Type.Message import Message
-from zLOG import LOG
+from zLOG import LOG, ERROR
 
 class LocalizerPatchError(Exception):
   """Error wen trying to use or apply the Localizer patch"""
@@ -30,7 +28,9 @@ class LocalizerPatchError(Exception):
 # This patch will not work if Translation Service Zope product exist on the system
 try:
   from Products import TranslationService
-  LOG("LocalizerPatchError", 100,"Translation Service Zope Product (%s) and Translation Service tools must be deleted to let Localizer Patch work." % (repr(TranslationService)))
+  LOG("ERP5Type.patches.Localizer", ERROR, "Translation Service Zope Product"
+      " (%s) and Translation Service tools must be deleted to let Localizer "
+      "Patch work." % (repr(TranslationService)))
 except ImportError:
   pass
 
@@ -83,12 +83,13 @@ def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
   if context is None:
     # Placeless!
     return msgid
-  # XXX patch -because if context is ZMailIn, it is at the site root
-  # and does not find Localizer by acquisition
-  try:
-    return context.Localizer.translate(domain, msgid, *args, **kw)
-  except AttributeError:
+
+  localizer = getattr(context, 'Localizer', None)
+  if localizer is None:
+    LOG('ERP5Type.patches.Localizer', ERROR, 'could not find a Localizer '
+         'object in acquisition context, message will not be translated')
     return msgid
+  return localizer.translate(domain, msgid, *args, **kw)
 
 # Apply the monkey patch.
 from Products.Localizer.Localizer import Localizer
