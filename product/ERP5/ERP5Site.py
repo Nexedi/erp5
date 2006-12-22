@@ -816,19 +816,33 @@ class ERP5Site(FolderMixIn, CMFSite):
       Return default module id where a object with portal_type can
       be created.
     """
-    # Very dummy method, but it works with today name convention.
+    # first try to find by naming convention
     module_name = portal_type.lower().replace(' ','_')
     portal_object = self
-    if not hasattr(portal_object, module_name):
-      module_name += '_module'
-      if not hasattr(portal_object, module_name):
-        if default is not MARKER:
-          return default
-        LOG('ERP5Site, getDefaultModuleId', 0,
-            'Unable to find default module for portal_type: %s' % \
-                portal_type)
-        raise ValueError, 'Unable to find module for portal_type: %s' % \
-                          portal_type
+    if hasattr(portal_object, module_name):
+      return module_name
+    module_name += '_module'
+    if hasattr(portal_object, module_name):
+      return module_name
+    # then look for module where the type is allowed
+    module_name=MARKER
+    modlist=[m for m in self.objectIds() if m.endswith('module')]
+    for mod in modlist:
+      module=self.restrictedTraverse(mod,MARKER)
+      if module is MARKER: # we can't access this one
+        continue
+      if portal_type in self.portal_types[module.getPortalType()].allowed_content_types:
+       module_name=mod 
+       break
+    if module_name is not MARKER:
+      return module_name
+    if default is not MARKER:
+      return default
+    LOG('ERP5Site, getDefaultModuleId', 0,
+        'Unable to find default module for portal_type: %s' % \
+         portal_type)
+    raise ValueError, 'Unable to find module for portal_type: %s' % \
+           portal_type
     return module_name
 
   security.declareProtected(Permissions.AccessContentsInformation,
