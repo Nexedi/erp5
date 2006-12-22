@@ -83,8 +83,12 @@ def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
   if context is None:
     # Placeless!
     return msgid
-
-  return context.Localizer.translate(domain, msgid, *args, **kw)
+  # XXX patch -because if context is ZMailIn, it is at the site root
+  # and does not find Localizer by acquisition
+  try:
+    return context.Localizer.translate(domain, msgid, *args, **kw)
+  except AttributeError:
+    return msgid
 
 # Apply the monkey patch.
 from Products.Localizer.Localizer import Localizer
