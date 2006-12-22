@@ -70,6 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>msg=context.convert()\n
 context.log(script.getId(),msg)\n
+if msg[0]==0: # if everything was ok\n
+  context.OOoDocument_postConversion()\n
 return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_status_message=\'+str(msg[1]))\n
 </string> </value>
         </item>
@@ -117,8 +119,8 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_s
                             <string>context</string>
                             <string>msg</string>
                             <string>script</string>
-                            <string>str</string>
                             <string>_getitem_</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
