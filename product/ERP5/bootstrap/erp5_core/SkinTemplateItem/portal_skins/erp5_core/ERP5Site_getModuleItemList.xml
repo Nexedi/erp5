@@ -80,7 +80,7 @@ def getModuleItemList(user=None, portal_path=None):\n
     module = portal.restrictedTraverse(module_id, None)\n
     if module is not None:\n
       if portal.portal_membership.checkPermission(\'View\', module):\n
-        item_list.append((gettext(module.getTitleOrId()), module.getPath()))\n
+        item_list.append((gettext(module.getTitleOrId()), module.absolute_url_path()))\n
 \n
   item_list.sort(lambda a, b:cmp(a[0], b[0]))\n
   return item_list\n
