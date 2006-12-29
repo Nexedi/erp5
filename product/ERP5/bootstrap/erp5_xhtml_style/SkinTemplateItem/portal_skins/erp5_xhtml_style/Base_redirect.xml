@@ -70,16 +70,20 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+   This script factorises code required to redirect to the appropriate\n
+   page from a script. It should probably be extended, reviewed and documented\n
+   so that less code is copied and pasted in dialog scripts.\n
+\n
+   TODO: improve API and extensively document.\n
+"""\n
 from ZTUtils import make_query\n
 request_form = context.REQUEST.form\n
 request_form.update(kw)\n
 request_form = context.ERP5Site_filterParameterList(request_form)\n
 request_form.update(keep_items)\n
 \n
-# JPS-XXX Why ERP5Site ? not Base ? \n
-\n
-if redirect_url is None:\n
-  redirect_url = \'%s/view\' % (context.getPortalObject().absolute_url())\n
+redirect_url = \'%s/%s\' % (context.absolute_url(), form_id)\n
 \n
 parameters = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))\n
 if len(parameters):\n
@@ -114,7 +118,7 @@ return context.REQUEST.RESPONSE.redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>redirect_url=None, keep_items={}, **kw</string> </value>
+            <value> <string>form_id=\'view\', keep_items={}, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,7 +144,7 @@ return context.REQUEST.RESPONSE.redirect( redirect_url )\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>redirect_url</string>
+                            <string>form_id</string>
                             <string>keep_items</string>
                             <string>kw</string>
                             <string>ZTUtils</string>
@@ -148,13 +152,14 @@ return context.REQUEST.RESPONSE.redirect( redirect_url )\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request_form</string>
-                            <string>None</string>
+                            <string>redirect_url</string>
                             <string>dict</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
+                            <string>None</string>
                             <string>parameters</string>
                             <string>len</string>
                             <string>separator</string>
@@ -170,14 +175,14 @@ return context.REQUEST.RESPONSE.redirect( redirect_url )\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <string>view</string>
                 <dictionary/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_redirect</string> </value>
+            <value> <string>Base_redirect</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
