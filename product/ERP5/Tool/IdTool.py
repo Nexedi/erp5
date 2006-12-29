@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
+from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5 import _dtmldir
 
@@ -185,7 +186,7 @@ class IdTool(UniqueObject, Folder):
       if not isinstance(id_group, str):
         id_group = repr(id_group)
       default = isinstance(default, int) and default or 1
-      portal_catalog = self.getPortalObject().portal_catalog['erp5_mysql']
+      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
       query = getattr(portal_catalog, 'z_portal_ids_generate_id')
       commit = getattr(portal_catalog, 'z_portal_ids_commit')
       if None not in (query, commit):
