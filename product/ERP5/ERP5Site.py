@@ -40,7 +40,15 @@ MARKER = []
 
 
 # Site Creation DTML
-manage_addERP5SiteForm = Globals.HTMLFile('dtml/addERP5Site', globals())
+manage_addERP5SiteFormDtml = Globals.HTMLFile('dtml/addERP5Site', globals())
+
+def manage_addERP5SiteForm(*args, **kw):
+  """
+    Make getCatalogStorageList available from inside the dtml.
+  """
+  kw['getCatalogStorageList'] = getCatalogStorageList
+  return manage_addERP5SiteFormDtml(*args, **kw)
+
 manage_addERP5SiteForm.__name__ = 'addERP5Site'
 
 # ERP5Site Constructor
@@ -53,6 +61,7 @@ def manage_addERP5Site(self,
                        email_from_address='postmaster@localhost',
                        email_from_name='Portal Administrator',
                        validate_email=0,
+                       erp5_catalog_storage='',
                        erp5_sql_connection_type='Z MySQL Database Connection',
                        erp5_sql_connection_string='test test',
                        erp5_sql_deferred_connection_type = \
@@ -72,6 +81,7 @@ def manage_addERP5Site(self,
   p = gen.create(self,
                  id,
                  create_userfolder,
+                 erp5_catalog_storage,
                  erp5_sql_connection_type,
                  erp5_sql_connection_string,
                  erp5_sql_deferred_connection_type,
@@ -90,6 +100,40 @@ def manage_addERP5Site(self,
   if RESPONSE is not None:
     RESPONSE.redirect(p.absolute_url())
 
+def getCatalogStorageList(*args, **kw):
+  """
+    Returns the list of business templates available at install which can be
+    used to setup a catalog storage.
+  """
+  result = []
+  bootstrap_dir = getBootstrapDirectory()
+  #import pdb; pdb.set_trace()
+  for item in os.listdir(bootstrap_dir):
+    #LOG('getCatalogStorageList', 0, item)
+    if item == '.svn':
+      continue
+    if item.endswith('.bt5') and os.path.isfile():
+      # Simple heuristic to make it faster than extracting the whole bt
+      if item.endswith('_catalog.bt5'):
+        result.append((item, item))
+    elif os.path.isdir(os.path.join(bootstrap_dir, item)):
+      # Find if the business temlate provides erp5_catalog
+      try:
+        provides_file = open(os.path.join(bootstrap_dir, item, 'bt', 'provision_list'), 'r')
+        provides_list = provides_file.readlines()
+        provides_file.close()
+      except IOError:
+        provides_list = []
+      if 'erp5_catalog' in provides_list:
+        # Get a nice title (the first line of the description).
+        try:
+          title_file = open(os.path.join(bootstrap_dir, item, 'bt', 'description'), 'r')
+          title = title_file.readline()
+          title_file.close()
+        except IOError:
+          title = item
+        result.append((item, title))
+  return result
 
 class ReferCheckerBeforeTraverseHook:
   """This before traverse hook checks the HTTP_REFERER argument in the request
@@ -891,21 +935,25 @@ class ERP5Site(FolderMixIn, CMFSite):
 
 Globals.InitializeClass(ERP5Site)
 
+def getBootstrapDirectory():
+  """
+    Return the name of the bootstrap directory
+  """
+  product_path = package_home(globals())
+  return os.path.join(product_path, 'bootstrap')
+
 class ERP5Generator(PortalGenerator):
 
   klass = ERP5Site
 
   def getBootstrapDirectory(self):
-    """
-      Return the name of the bootstrap directory
-    """
-    product_path = package_home(globals())
-    return os.path.join(product_path, 'bootstrap')
+    return getBootstrapDirectory()
 
   def create(self,
              parent,
              id,
              create_userfolder,
+             erp5_catalog_storage,
              erp5_sql_connection_type,
              erp5_sql_connection_string,
              erp5_sql_deferred_connection_type,
@@ -923,6 +971,8 @@ class ERP5Generator(PortalGenerator):
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
+    p._setProperty('erp5_catalog_storage',
+                   erp5_catalog_storage, 'string')
     p._setProperty('erp5_sql_connection_type',
                    erp5_sql_connection_type, 'string')
     p._setProperty('erp5_sql_connection_string',
@@ -1091,14 +1141,6 @@ class ERP5Generator(PortalGenerator):
                          '-%s' % p.cmf_activity_sql_connection_string)
     elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
       pass
-
-    portal_catalog = getToolByName(p, 'portal_catalog')
-    if (not update) and (not portal_catalog.getSQLCatalog('erp5_mysql')):
-      # Add a empty SQL Catalog, which will be filled when installing
-      # erp5_core business template
-      portal_catalog.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(
-          'erp5_mysql', 'ERP5/MySQL')
-      portal_catalog.default_sql_catalog_id = 'erp5_mysql'
 
     # Add ERP5Form Tools
     addTool = p.manage_addProduct['ERP5Form'].manage_addTool
@@ -1369,7 +1411,11 @@ class ERP5Generator(PortalGenerator):
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       bootstrap_dir = self.getBootstrapDirectory()
-      for bt in ('erp5_core', 'erp5_xhtml_style'):
+      if p.erp5_catalog_storage is not '':
+        business_template_list = ('erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style')
+      else:
+        business_template_list = ('erp5_core', 'erp5_xhtml_style')
+      for bt in business_template_list:
         template = os.path.join(bootstrap_dir, bt)
         if not os.path.exists(template):
           template = os.path.join(bootstrap_dir, '%s.bt5' % bt)

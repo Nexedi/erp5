@@ -297,13 +297,15 @@ class ERP5TypeTestCase(PortalTestCase):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
+      erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
       setupERP5Site(business_template_list=new_template_list,
                     light_install=light_install,
                     portal_name=self.getPortalName(),
                     title=self.getTitle(),
                     create_activities=create_activities,
                     quiet=install_bt5_quiet,
-                    hot_reindexing=hot_reindexing)
+                    hot_reindexing=hot_reindexing,
+                    erp5_catalog_storage=erp5_catalog_storage)
       PortalTestCase.setUp(self)
       global current_app
       current_app = self.app
@@ -460,7 +462,8 @@ def setupERP5Site( business_template_list=(),
                    quiet=0,
                    light_install=1,
                    create_activities=1,
-                   hot_reindexing=1 ):
+                   hot_reindexing=1,
+                   erp5_catalog_storage='erp5_mysql_innodb_catalog'):
     '''
       Creates an ERP5 site.
       business_template_list must be specified correctly
@@ -500,6 +503,7 @@ def setupERP5Site( business_template_list=(),
             extra_constructor_kw['email_from_address'] = email_from_address
           factory = app.manage_addProduct['ERP5']
           factory.manage_addERP5Site(portal_name,
+                                     erp5_catalog_storage=erp5_catalog_storage,
                                      light_install=light_install,
                                      reindex=reindex,
                                      create_activities=create_activities,

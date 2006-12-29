@@ -76,6 +76,20 @@ label {
   <fieldset>
     <legend class="form-title">ERP5/MySQL connectivity (connection strings)</legend>
     <div>
+      <label class="form-label" for="erp5_catalog_storage">Catalog storage</label>
+      <select class="form-element" name="erp5_catalog_storage" id="erp5_catalog_storage" size="1">
+        <dtml-in "getCatalogStorageList()">
+          <dtml-let btid=sequence-key>
+            <dtml-if expr="btid == 'erp5_mysql_innodb_catalog'">
+              <option value="<dtml-var sequence-key html_quote>" selected="selected"><dtml-var sequence-item html_quote></option>
+            <dtml-else>
+              <option value="<dtml-var sequence-key html_quote>"><dtml-var sequence-item html_quote></option>
+            </dtml-if>
+          </dtml-let>
+        </dtml-in>
+      </select>
+    </div>
+    <div>
       <label class="form-label" for="erp5_sql_connection_string">ERP5 Database</label>
       <input class="form-element" name="erp5_sql_connection_string" id="erp5_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
@@ -88,7 +102,7 @@ label {
       <input class="form-element" name="cmf_activity_sql_connection_string" id="cmf_activity_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
     <div>
-      <p>The connection string used for Z MySQL Database Connection are of the form:</p>
+      <p>The connection strings used for Z MySQL Database Connections are of the form:</p>
       <blockquote><code>database[@host[:port]] [user [password [unix_socket]]]</code></blockquote>
     </div>
     <br/>
@@ -104,3 +118,4 @@ label {
 <dtml-else>
   </body></html>
 </dtml-if>
+

@@ -35,7 +35,11 @@ Options:
                              Initialize the email_from_address property of the
                              portal, by defaults, CMFActivity failures are sent
                              on localhost from this address, to this address
- 
+  --erp5_catalog_storage=STRING
+                             Use the given business template as erp5_catalog
+                             dependency provider (ie, the name of the BT
+                             containing ZSQLMethods matching the desired
+                             catalog storage).
 """
 
 def getUnitTestFile():
@@ -190,7 +194,8 @@ def main():
         "hpv", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
-        "erp5_deferred_sql_connection_string=",
+        "erp5_sql_deferred_connection_string=",
+        "erp5_catalog_storage=",
         "email_from_address="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -227,6 +232,8 @@ def main():
       os.environ["erp5_sql_deferred_connection_string"] = arg
     elif opt == "--email_from_address":
       os.environ["email_from_address"] = arg
+    elif opt == "--erp5_catalog_storage":
+      os.environ["erp5_catalog_storage"] = arg
 
   test_list = args
   if not test_list:
