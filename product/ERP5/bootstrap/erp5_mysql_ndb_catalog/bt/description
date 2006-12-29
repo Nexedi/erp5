@@ -1,0 +1,3 @@
+MySQL NDB
+
+Contains all the scripts & configuration required to use MySQL NDB (Network DataBase) tables as a catalog storage backend.
