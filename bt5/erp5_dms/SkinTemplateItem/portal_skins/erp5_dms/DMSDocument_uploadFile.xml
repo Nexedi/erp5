@@ -68,43 +68,55 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>f=kw.get(\'file\',None)\n
-typ=context.getPortalType()\n
+            <value> <string>translateString = context.Base_translateString\n
+request = context.REQUEST\n
+ptype = context.getPortalType()\n
+fname = file.filename\n
 \n
-if f is None or not f:\n
-  raise Exception(\'DMSDocument_uploadFile called without file argument\')\n
+# XXX-JPS - rename to OOoDocument_uploadFile since this is for all types which related to OOoDocument class\n
+# XXX-JPS - it would also be nice to provide this import function at any location\n
+#           Folder_viewOOoDocumentUploadDialog which calls Folder_uploadOOoDocumentFile\n
+#           this way it is easy to add a document anywhere\n
 \n
-fname=f.filename\n
 # we check for appropriate file type (by extension, using content_type_registry)\n
 # we accept or suggest appropriate portal type\n
 ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-if ctype is None and typ!=\'File\':\n
-  raise Exception(\'This file should be uploaded into File\')\n
-if ctype is not None and ctype!=typ:\n
-  raise Exception(\'This file should be uploaded into \'+ctype)\n
+if ctype is None and ptype != \'File\':\n
+  return context.Base_redirect(dialog_id,\n
+              keep_items = dict(portal_status_message = translateString("Sorry, this is not a ${portal_type}. This file should be uploaded into a File document.", mapping = dict(portal_type = ptype)),\n
+                                cancel_url = kw[\'cancel_url\']), **kw)\n
+if ctype is not None and ctype != ptype:\n
+  return context.Base_redirect(dialog_id,\n
+              keep_items = dict(portal_status_message = translateString("Sorry, this is not a ${portal_type}. This file should be uploaded into a ${appropriate_type} document.",\n
+                                                           mapping = dict(portal_type = ptype,\n
+                                                                          appropriate_type = ctype)),\n
+                                cancel_url = kw[\'cancel_url\']), **kw)\n
 \n
-if hasattr(context,\'data\'): # this is a re-upload, we create a \'copy\'\n
-  docmod=context.aq_parent\n
-  newob=docmod.newContent(portal_type=typ)\n
-  copylist=context.portal_types[typ].getInstanceBaseCategoryList()\n
+if hasattr(context, \'data\'): # this is a re-upload, we create a \'copy\'\n
+                            # XXX-JPS please create API for this. Never access attributes directly\n
+  parent = context.getParentValue()\n
+  new_document = parent.newContent(portal_type = ptype)\n
+  property_list = context.portal_types[ptype].getInstanceBaseCategoryList()\n
   # we copy many things, ingestion script may then overwrite some of these\n
   # we rely on ingestion script to determine coordinates\n
-  copylist+=[\'title\',\'short_title\',\'index\',\'description\',\'subject\']\n
-  for a in copylist:\n
-    v=context.getProperty(a)\n
+  property_list += [\'title\', \'short_title\', \'index\', \'description\', \'subject\']\n
+  for prop in property_list:\n
+    v = context.getProperty(prop)\n
     if v is not None:\n
-      newob.setProperty(a,v)\n
-  ob=newob\n
-  msg=\'object already had a file - a new object has been created\'\n
+      new_document.setProperty(prop,v) # XXX-JPS - This is slow - make a dict and use edit instead\n
+  # XXX-JPS Why don\'t we copy and paste ?\n
+  ob = new_document\n
+  msg = translateString(\'Document already contained file data. A new document was created to with the uploaded file.\')\n
 else:\n
-  ob=context\n
-  msg=\'file uploaded\'\n
+  ob = context\n
+  msg = translateString(\'File uploaded.\')\n
 \n
-ob.manage_upload(f)\n
-ob.DMS_ingestFile(f.filename)\n
-url=ob.absolute_url()  \n
+# Upload file\n
+ob.manage_upload(file)\n
+ob.DMS_ingestFile(fname)\n
 \n
-return context.REQUEST.RESPONSE.redirect(url+\'/view?portal_status_message=\'+msg)\n
+# Return to view mode\n
+return ob.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
 </string> </value>
         </item>
         <item>
@@ -121,7 +133,7 @@ return context.REQUEST.RESPONSE.redirect(url+\'/view?portal_status_message=\'+ms
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a,**kw</string> </value>
+            <value> <string>dialog_id=None,form_id=None,file=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,32 +153,36 @@ return context.REQUEST.RESPONSE.redirect(url+\'/view?portal_status_message=\'+ms
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
+                            <string>dialog_id</string>
+                            <string>form_id</string>
+                            <string>file</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>None</string>
-                            <string>f</string>
                             <string>context</string>
-                            <string>typ</string>
-                            <string>Exception</string>
+                            <string>translateString</string>
+                            <string>request</string>
+                            <string>ptype</string>
                             <string>fname</string>
+                            <string>None</string>
                             <string>ctype</string>
-                            <string>hasattr</string>
-                            <string>docmod</string>
-                            <string>newob</string>
+                            <string>_apply_</string>
+                            <string>dict</string>
                             <string>_getitem_</string>
-                            <string>copylist</string>
+                            <string>hasattr</string>
+                            <string>parent</string>
+                            <string>new_document</string>
+                            <string>property_list</string>
                             <string>_getiter_</string>
+                            <string>prop</string>
                             <string>v</string>
                             <string>ob</string>
                             <string>msg</string>
-                            <string>url</string>
                           </tuple>
                         </value>
                     </item>
@@ -178,7 +194,11 @@ return context.REQUEST.RESPONSE.redirect(url+\'/view?portal_status_message=\'+ms
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
