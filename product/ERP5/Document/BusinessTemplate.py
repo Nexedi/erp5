@@ -578,10 +578,18 @@ class ObjectTemplateItem(BaseTemplateItem):
           except KeyError:
             # parent object can be set to nothing, in this case just go on
             container_url = '/'.join(container_path)
-            if update_dict.has_key(container_url):
-              if update_dict[container_url] == 'nothing':
-                continue
-            raise
+            if update_dict.get(container_url) == 'nothing':
+              continue
+            # If container's container is portal_catalog,
+            # then automatically create the container.
+            elif container_path[-2] == 'portal_catalog':
+              container_container = portal.unrestrictedTraverse(container_path[:-1])
+              container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
+              if len(container_container.objectIds()) == 1:
+                container_container.default_sql_catalog_id = container_path[-1]
+              container = portal.unrestrictedTraverse(container_path)
+            else:
+              raise
           container_ids = container.objectIds()
           subobjects_dict = {}
           # Object already exists
