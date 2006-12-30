@@ -342,7 +342,7 @@
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>RoleDefinition_formatAgents</string>
+                          <string>RoleDefinition_getAgentListAsString</string>
                           <string>Agents</string>
                         </tuple>
                       </list>
