@@ -33,8 +33,9 @@ from zLOG import LOG, INFO, PROBLEM
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form.Document.Preference import Preference
@@ -45,8 +46,13 @@ from Products.ERP5Form.Document.Preference import Priority
 class func_code: pass
 
 def createPreferenceMethods(portal) :
-  """Initialize all Preference methods on the preference tool.
-  This method must be called on startup.
+  """
+    Initialize all Preference methods on the preference tool.
+    This method must be called on startup.
+
+    This tool is capable of updating the list of Preference
+    property sheets by looking at all registered property sheets
+    and considering those which name ends with 'Preference'
   """
   attr_list = []
   typestool = getToolByName(portal, 'portal_types')
@@ -65,9 +71,19 @@ def createPreferenceMethods(portal) :
            'unable to import Property Sheet %s' % property_sheet, e)
   # 'Static' property sheets defined on the class
   class_property_sheet_list = Preference.property_sheets
+  # Time to lookup for preferences defined on other modules
+  property_sheets = list(class_property_sheet_list)
+  for id in dir(PropertySheet):
+    if id.endswith('Preference'):
+      ps = getattr(PropertySheet, id)
+      if ps not in property_sheets:
+        property_sheets.append(ps)
+  class_property_sheet_list = tuple(property_sheets)
+  Preference.property_sheets = class_property_sheet_list
+  # We can now merge
   for property_sheet in ( tuple(zmi_property_sheet_list) +
                                 class_property_sheet_list ) :
-    # then generate common method names 
+    # then generate common method names
     for prop in property_sheet._properties :
       if not prop.get('preference', 0) :
         # only properties marked as preference are used
@@ -79,7 +95,7 @@ def createPreferenceMethods(portal) :
       for attribute_name in attr_list:
         method = PreferenceMethod(attribute_name)
         setattr(PreferenceTool, attribute_name, method)
-
+  
 class PreferenceMethod(Method) :
   """ A method object that lookup the attribute on preferences. """
   # This is required to call the method form the Web

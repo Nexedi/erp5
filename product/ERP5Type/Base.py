@@ -376,6 +376,7 @@ class Base( CopyContainer,
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   isPredicate = 0     #
   isTemplate = 0      #
+  isDocument = 0      #
 
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
@@ -500,16 +501,20 @@ class Base( CopyContainer,
 
       Base.aq_related_generated = 1
 
+    # Generate preference methods (since side effect is to reset Preference accessors)
     if not Base.aq_preference_generated:
       try :
         from Products.ERP5Form.PreferenceTool import createPreferenceMethods
+        from Products.ERP5Form.Document.Preference import Preference
         createPreferenceMethods(self.getPortalObject())
+        # Force update of Preference accessors
+        initializePortalTypeDynamicProperties(self, Preference, Preference.portal_type)
       except ImportError, e :
         LOG('Base._aq_dynamic', WARNING,
             'unable to create methods for PreferenceTool', e)
         raise
       Base.aq_preference_generated = 1
-
+    
     # Always try to return something after generation
     if generated:
       # We suppose that if we reach this point

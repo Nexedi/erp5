@@ -37,11 +37,15 @@ class Priority:
   SITE  = 1
   GROUP = 2
   USER  = 3
-   
+
 class Preference( Folder ):
-  """ An user preference 
   """
-    
+    A system or user preference
+
+    TODO:
+      - migrate to ERP5Type the whole preference system
+  """
+
   # CMF Type Definition
   meta_type       = 'ERP5 Preference'
   portal_type     = 'Preference'
@@ -50,14 +54,10 @@ class Preference( Folder ):
   isRADContent    = 1
   
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
+  property_sheets = \
+                    ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.DublinCore
-                    , PropertySheet.Preference
-                    , PropertySheet.AccountingPreference
-                    , PropertySheet.SubversionPreference
-                    , PropertySheet.HtmlStylePreference
-                    , PropertySheet.DMSPreference
                     )
   
   # Declarative security
