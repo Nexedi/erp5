@@ -89,7 +89,7 @@ class ConversionCacheMixin:
       self._cached_mime[tformat] = mime
     if data is not None:
       self._cached_data[tformat] = data
-      self.updateConversion(format = format)
+      self.updateConversion(**format)
     self._p_changed = 1
 
   def getConversion(self, **format):
