@@ -59,7 +59,7 @@ from Products.ERP5OOo.Document.OOoDocument import ConversionError
 # XXX set it to an appropriate value
 erp5_port=9090
 
-class TestDms(ERP5TypeTestCase):
+class TestDocument(ERP5TypeTestCase):
   """
   """
 
@@ -192,15 +192,15 @@ class TestDms(ERP5TypeTestCase):
       LOG('Testing... ',0,'test_04_FileGeneration')
     doctext=self.createTestDocument()
     doctext.getTargetFile('pdf')
-    self.assert_(doctext.hasFileCache('pdf'))
+    self.assert_(doctext.hasConversion(format = 'pdf'))
     doctext.getTargetFile('doc')
-    self.assert_(doctext.hasFileCache('doc'))
+    self.assert_(doctext.hasConversion(format = 'doc'))
     doctext.getTargetFile('txt')
-    self.assert_(doctext.hasFileCache('txt'))
+    self.assert_(doctext.hasConversion(format = 'txt'))
     doctext.getTargetFile('html-writer')
-    self.assert_(doctext.hasFileCache('html-writer'))
+    self.assert_(doctext.hasConversion(format = 'html-writer'))
     doctext.getTargetFile('rtf')
-    self.assert_(doctext.hasFileCache('rtf'))
+    self.assert_(doctext.hasConversion(format = 'rtf'))
     self.failIf(doctext.hasSnapshot())
     doctext.createSnapshot()
     self.failUnless(doctext.hasSnapshot())
@@ -239,7 +239,7 @@ else:
     import unittest
     def test_suite():
         suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestDms))
+        suite.addTest(unittest.makeSuite(TestDocument))
         return suite
 
 
