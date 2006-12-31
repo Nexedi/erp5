@@ -466,6 +466,10 @@ class Base( CopyContainer,
 
     # Generate portal_type methods
     if not Base.aq_portal_type.has_key(ptype):
+      if ptype == 'Preference':
+        # XXX-JPS this should be moved to Preference class
+        from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
+        updatePreferenceClassPropertySheetList()
       initializePortalTypeDynamicProperties(self, klass, ptype)
       generated = 1
 
@@ -502,13 +506,13 @@ class Base( CopyContainer,
       Base.aq_related_generated = 1
 
     # Generate preference methods (since side effect is to reset Preference accessors)
+    # XXX-JPS - This should be moved to PreferenceTool
     if not Base.aq_preference_generated:
       try :
-        from Products.ERP5Form.PreferenceTool import createPreferenceMethods
-        from Products.ERP5Form.Document.Preference import Preference
-        createPreferenceMethods(self.getPortalObject())
-        # Force update of Preference accessors
-        initializePortalTypeDynamicProperties(self, Preference, Preference.portal_type)
+        from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
+        from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
+        updatePreferenceClassPropertySheetList()
+        createPreferenceToolAccessorList(self.getPortalObject())
       except ImportError, e :
         LOG('Base._aq_dynamic', WARNING,
             'unable to create methods for PreferenceTool', e)

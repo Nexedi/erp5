@@ -38,14 +38,29 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
-from Products.ERP5Form.Document.Preference import Preference
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Document.Preference import Priority
 
 
 class func_code: pass
 
-def createPreferenceMethods(portal) :
+def updatePreferenceClassPropertySheetList():
+  # The Preference class should be imported from the common location
+  # in ERP5Type since it could be overloaded in another product
+  from Products.ERP5Type.Document.Preference import Preference
+  # 'Static' property sheets defined on the class
+  class_property_sheet_list = Preference.property_sheets
+  # Time to lookup for preferences defined on other modules
+  property_sheets = list(class_property_sheet_list)
+  for id in dir(PropertySheet):
+    if id.endswith('Preference'):
+      ps = getattr(PropertySheet, id)
+      if ps not in property_sheets:
+        property_sheets.append(ps)
+  class_property_sheet_list = tuple(property_sheets)
+  Preference.property_sheets = class_property_sheet_list
+
+def createPreferenceToolAccessorList(portal) :
   """
     Initialize all Preference methods on the preference tool.
     This method must be called on startup.
@@ -58,7 +73,7 @@ def createPreferenceMethods(portal) :
   typestool = getToolByName(portal, 'portal_types')
   pref_portal_type = typestool.getTypeInfo('Preference')
   if pref_portal_type is None:
-    LOG('createPreferenceMethods', PROBLEM,
+    LOG('createPreferenceToolAccessor', PROBLEM,
            'Preference type information is not installed.')
   # 'Dynamic' property sheets added through ZMI
   zmi_property_sheet_list = []
@@ -67,19 +82,13 @@ def createPreferenceMethods(portal) :
       zmi_property_sheet_list.append(
                   getattr(__import__(property_sheet), property_sheet))
     except ImportError, e :
-      LOG('createPreferenceMethods', PROBLEM,
+      LOG('createPreferenceToolAccessor', PROBLEM,
            'unable to import Property Sheet %s' % property_sheet, e)
   # 'Static' property sheets defined on the class
+  # The Preference class should be imported from the common location
+  # in ERP5Type since it could be overloaded in another product
+  from Products.ERP5Type.Document.Preference import Preference
   class_property_sheet_list = Preference.property_sheets
-  # Time to lookup for preferences defined on other modules
-  property_sheets = list(class_property_sheet_list)
-  for id in dir(PropertySheet):
-    if id.endswith('Preference'):
-      ps = getattr(PropertySheet, id)
-      if ps not in property_sheets:
-        property_sheets.append(ps)
-  class_property_sheet_list = tuple(property_sheets)
-  Preference.property_sheets = class_property_sheet_list
   # We can now merge
   for property_sheet in ( tuple(zmi_property_sheet_list) +
                                 class_property_sheet_list ) :
