@@ -602,7 +602,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
       Return document types.
     """
-    return self._getPortalGroupedTypeList('dms_document')
+    return self._getPortalGroupedTypeList('document')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalWebDocumentTypeList')
