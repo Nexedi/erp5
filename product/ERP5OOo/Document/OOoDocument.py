@@ -1,4 +1,3 @@
-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -33,21 +32,19 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5.Document.File import File
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5OOo.Document.DMSFile import DMSFile, CachingMixin, stripHtml
+from Products.ERP5.Document.File import File, stripHtml
+from Products.ERP5.Document.Document import ConversionCacheMixin
 from DateTime import DateTime
 import xmlrpclib, base64, re, zipfile, cStringIO
-# to overwrite WebDAV methods
-from Products.CMFDefault.File import File as CMFFile
 from Products.CMFCore.utils import getToolByName
 
 enc=base64.encodestring
 dec=base64.decodestring
 
-class ConvertionError(Exception):pass
+class ConversionError(Exception):pass
 
-class OOoDocument(DMSFile, CachingMixin):
+class OOoDocument(File, ConversionCacheMixin):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -88,8 +85,8 @@ class OOoDocument(DMSFile, CachingMixin):
   isRADContent = 1
 
   # Global variables
-  snapshot=None
-  oo_data=None
+  snapshot = None
+  oo_data = None
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -101,16 +98,40 @@ class OOoDocument(DMSFile, CachingMixin):
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Reference
+                    , PropertySheet.TextDocument
                     , PropertySheet.Document
-                    , PropertySheet.DMSFile
-                    , PropertySheet.OOoDocument
                     )
+
+   # XXX-JPS - this property has been put here temporarily
+   # However, it should be implemented as a workflow property in a workflow
+   # dedicated to format conversion handling so that we can see some history of
+   # conversion. Also, this is not really document contents but internal log
+   # so workflow variable for a dedicated "technical" workflow is best
+  _properties =  (
+      { 'id'          : 'external_processing_status_message',
+        'description' : 'message about status',
+        'type'        : 'string',
+        'mode'        : 'w' },
+   # XXX-JPS mime_type should be guessed is possible for the stored file
+   # In any case, it should be named differently because the name
+   # is too unclear. Moreover, the usefulness of this property is
+   # doubtful besides download of converted file. It would be acceptable
+   # for me that this property is stored as an internal property
+   # or, better, in the conversion workflow attributes.
+   #
+   # Properties are meant for "orginal document" information,
+   # not for calculated attributes.
+      { 'id'          : 'mime_type',
+        'description' : 'mime type of the converted OOo file stored',
+        'type'        : 'string',
+        'mode'        : ''},
+  )
 
   # regexps for stripping xml from docs
   rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
   rx_compr=re.compile('\s+')
 
-  searchable_attrs=DMSFile.searchable_attrs+('text_content',) # XXX - good idea - should'n this be made more general ?
+  searchable_property_list = File.searchable_property_list + ('text_content', ) # XXX - good idea - should'n this be made more general ?
 
   def _getServerCoordinate(self):
     """
@@ -118,8 +139,8 @@ class OOoDocument(DMSFile, CachingMixin):
     preferences
     """
     pref=getToolByName(self,'portal_preferences')
-    adr=pref.getPreferredDmsOoodocServerAddress()
-    nr=pref.getPreferredDmsOoodocServerPortNumber()
+    adr=pref.getPreferredOoodocServerAddress()
+    nr=pref.getPreferredOoodocServerPortNumber()
     if adr is None or nr is None:
       raise Exception('you should set conversion server coordinates in preferences')
     return adr,nr
@@ -320,18 +341,18 @@ class OOoDocument(DMSFile, CachingMixin):
     """
     if self.hasSnapshot():
       if REQUEST is not None:
-        return self.returnMessage('already has a snapshot')
-      raise ConvertionError('already has a snapshot')
+        return self.returnMessage('already has a snapshot',1)
+      raise ConversionError('already has a snapshot')
     # making snapshot
     # we have to figure out which pdf format to use
     tgts=[x[1] for x in self.getTargetFormatItemList() if x[1].endswith('pdf')]
     if len(tgts)>1:
-      return self.returnMessage('multiple pdf formats found - this shouldnt happen')
+      return self.returnMessage('multiple pdf formats found - this shouldnt happen',2)
     if len(tgts)==0:
-      return self.returnMessage('no pdf format found')
+      return self.returnMessage('no pdf format found',1)
     fmt=tgts[0]
     self.makeFile(fmt)
-    self.snapshot=Pdata(self._unpackData(self.cacheGet(fmt)[1]))
+    self.snapshot = Pdata(self._unpackData(self.getConversion(format = fmt)[1]))
     return self.returnMessage('snapshot created')
 
   security.declareProtected(Permissions.View,'getSnapshot')
@@ -383,12 +404,12 @@ class OOoDocument(DMSFile, CachingMixin):
     Get (possibly generate) file in a given format
     """
     if not self.isAllowed(format):
-      return self.returnMessage('can not convert to '+format+' for some reason')
+      return self.returnMessage('can not convert to '+format+' for some reason',1)
     try:
       self.makeFile(format)
-      return self.cacheGet(format)
-    except ConvertionError,e:
-      return self.returnMessage(str(e))
+      return self.getConversion(format = format)
+    except ConversionError,e:
+      return self.returnMessage(str(e),2)
 
   security.declareProtected(Permissions.View,'isFileChanged')
   def isFileChanged(self,format):
@@ -396,7 +417,7 @@ class OOoDocument(DMSFile, CachingMixin):
     Checks whether the file was converted (or uploaded) after last generation of
     the target format
     """
-    return not self.hasFileCache(format)
+    return not self.hasConversion(format = format)
 
   security.declareProtected(Permissions.ModifyPortalContent,'makeFile')
   def makeFile(self,format,REQUEST=None):
@@ -413,29 +434,29 @@ class OOoDocument(DMSFile, CachingMixin):
     if not self.isAllowed(format):
       errstr='%s format is not supported' % format
       if REQUEST is not None:
-        return self.returnMessage(errstr)
-      raise ConvertionError(errstr)
+        return self.returnMessage(errstr,2)
+      raise ConversionError(errstr)
     if not self.hasOOFile():
       if REQUEST is not None:
-        return self.returnMessage('needs conversion')
-      raise ConvertionError('needs conversion')
+        return self.returnMessage('needs conversion',1)
+      raise ConversionError('needs conversion')
     if self.isFileChanged(format):
       try:
         mime,data=self._makeFile(format)
-        self.cacheSet(format,mime,data)
+        self.setConversion(data, mime, format = format)
         self._p_changed=1 # XXX not sure it is necessary
       except xmlrpclib.Fault,e:
         if REQUEST is not None:
-          return self.returnMessage('Problem: %s' % str(e))
+          return self.returnMessage('Problem: %s' % str(e),2)
         else:
-          raise ConvertionError(str(e))
-      self.cacheUpdate(format)
+          raise ConversionError(str(e))
+      self.updateConversion(format = format)
       if REQUEST is not None:
         return self.returnMessage('%s created' % format)
     else:
       if REQUEST is not None:
-        return self.returnMessage('%s file is up to date' % format)
-      return ConvertionError('%s file is up to date' % format)
+        return self.returnMessage('%s file is up to date' % format,1)
+      return ConversionError('%s file is up to date' % format)
 
   security.declarePrivate('_makeFile')
   def _makeFile(self,format):
@@ -452,11 +473,11 @@ class OOoDocument(DMSFile, CachingMixin):
   edit=File.edit
 
   # BG copied from File in case
-  index_html = CMFFile.index_html
+  index_html = File.index_html
   security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
-  manage_FTPget = CMFFile.manage_FTPget
-  manage_FTPlist = CMFFile.manage_FTPlist
-  manage_FTPstat = CMFFile.manage_FTPstat
+  manage_FTPget = File.manage_FTPget
+  manage_FTPlist = File.manage_FTPlist
+  manage_FTPstat = File.manage_FTPstat
 
 
 # vim: syntax=python shiftwidth=2 
