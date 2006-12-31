@@ -30,6 +30,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -250,6 +251,16 @@ class Image(File, OFSImage, ConversionCacheMixin):
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, resolution=None):
       """Return the image data."""
+
+      # Quick hack to maintain just enough compatibility for existing sites
+      # Convert to new BTreeFolder2 based class
+      if getattr(aq_base(self), '_count', None) is None:
+        self._initBTrees()
+      # Make sure old Image objects can still be accessed
+      if not hasattr(aq_base(self), 'data') and hasattr(self, '_original'):
+        self.data = self._original.data
+        self.height = self._original.height
+        self.width = self._original.width
 
       # display may be set from a cookie (?)
       if (display is not None or resolution is not None or quality != 75) and defaultdisplays.has_key(display):
