@@ -3,6 +3,9 @@
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
+# Based on Photo by Ron Bickers
+# Copyright (c) 2001 Logic Etc, Inc.  All rights reserved.
+#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -304,7 +307,6 @@ class Image(File, OFSImage, ConversionCacheMixin):
       newimg_file = open(newimg_path, 'r')
       newimg.write(newimg_file.read())
       newimg_file.close()
-
       newimg.seek(0)
       return newimg
 
