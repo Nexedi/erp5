@@ -42,6 +42,7 @@ from Products.ERP5Type.patches import CookieCrumbler
 from Products.ERP5Type.patches import Localizer
 from Products.ERP5Type.patches import CMFMailIn
 from Products.ERP5Type.patches import CMFCoreUtils
+from Products.ERP5Type.patches import PropertySheets
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
