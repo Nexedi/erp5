@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \', \'.join(brain.getObject().getAgentTitleList())\n
+            <value> <string>"""\n
+  XXX-JPS Description here please\n
+"""\n
+return \', \'.join(brain.getObject().getAgentTitleList())\n
 </string> </value>
         </item>
         <item>

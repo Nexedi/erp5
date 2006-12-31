@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return {}\n
+            <value> <string>"""\n
+  XXX-JPS Put description here\n
+"""\n
+# XXX-JPS What is this for. If this part of the Document API, it should be documented in\n
+# the Document class as a customisable script.\n
+return {}\n
 \n
 # write your own method (probably External Method, since it is most likely\n
 # to use re) that would analyze text content of the doc\n

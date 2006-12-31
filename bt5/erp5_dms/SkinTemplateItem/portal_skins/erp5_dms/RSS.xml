@@ -188,7 +188,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import Batch\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+from ZTUtils import Batch\n
 from ZTUtils import LazyFilter\n
 from Products.CMFCore.utils import getToolByName\n
 from Products.CMFDefault.utils import toUnicode\n

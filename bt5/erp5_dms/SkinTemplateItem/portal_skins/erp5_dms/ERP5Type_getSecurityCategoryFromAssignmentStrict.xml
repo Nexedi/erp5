@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
 # the same, but does group only with strict membership\n
 # XXX needs refactoring\n
 \n

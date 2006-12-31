@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># here we calculate permissions for a memo - we must find the recipient\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+\n
+# here we calculate permissions for a memo - we must find the recipient\n
 \n
 context.log(base_category_list)\n
 category_list = []\n

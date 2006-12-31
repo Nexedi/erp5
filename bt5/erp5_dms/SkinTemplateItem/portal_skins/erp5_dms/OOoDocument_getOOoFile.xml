@@ -68,7 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+request=context.REQUEST\n
 request.RESPONSE.setHeader(\'Content-type\', context.getContentType())\n
 context.log(\'mimetype\',context.getContentType())\n
 request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n

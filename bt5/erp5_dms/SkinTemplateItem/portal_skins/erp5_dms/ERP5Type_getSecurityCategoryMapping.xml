@@ -68,7 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#context.log(\'---\')\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+# XXX-JPS This code is quite frightening. I wonder really what it is for.\n
+\n
+#context.log(\'---\')\n
 return (\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'source_project\'] ),\n

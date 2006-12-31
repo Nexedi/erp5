@@ -68,7 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return not(value is None or not value)\n
+            <value> <string>"""\n
+  This script is called at file upload time as an external validator.\n
+  It is meant to check that a file was provided in the upload field\n
+  of the upload dialog.\n
+"""\n
+# XXX-JPS should be moved to File_validateRequiredFile and used everywhere\n
+return not(value is None or not value)\n
 </string> </value>
         </item>
         <item>

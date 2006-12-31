@@ -68,10 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get related object title list in a security-aware way (without throwing exception\n
-# if I don\'t have permissions to access the object)\n
-\n
-ob_list=context.Base_getRelatedObjectValueList(category)\n
+            <value> <string>"""\n
+get related object title list in a security-aware way (without throwing exception\n
+if I don\'t have permissions to access the object)\n
+"""\n
+# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+ob_list=context.Base_getRelatedObjectValueList(category) # XXX-JPS  This is a base category afterall. Name it base_category\n
 title_list=[o.getTitle() for o in ob_list]\n
 \n
 return filter(lambda t:t!=\'\',title_list)\n

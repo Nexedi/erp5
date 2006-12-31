@@ -68,7 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># overwrite this to add implementation-specific consistency check\n
+            <value> <string>"""\n
+  XXX-JPS Please add description. If this is a core custmisable script,\n
+  please explain in Document class in Products.ERP5.Document\n
+"""\n
+# overwrite this to add implementation-specific consistency check\n
 return\n
 </string> </value>
         </item>

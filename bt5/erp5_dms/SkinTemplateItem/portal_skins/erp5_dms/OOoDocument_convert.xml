@@ -68,11 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>msg=context.convert()\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+\n
+msg=context.convert()\n
 context.log(script.getId(),msg)\n
 if msg[0]==0: # if everything was ok\n
   context.OOoDocument_postConversion()\n
 return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_status_message=\'+str(msg[1]))\n
+# XXX-JPS Message translation needed\n
 </string> </value>
         </item>
         <item>

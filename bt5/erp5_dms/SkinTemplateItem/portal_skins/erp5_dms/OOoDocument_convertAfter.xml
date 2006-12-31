@@ -68,7 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 ob=context\n
 context.log(kw)\n

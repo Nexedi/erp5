@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
 # XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
 \n
 # base_category_list : list of category values we need to retrieve\n

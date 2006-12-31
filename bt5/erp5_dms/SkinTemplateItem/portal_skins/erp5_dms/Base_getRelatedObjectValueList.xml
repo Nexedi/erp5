@@ -68,9 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get related object value list in a security-aware way (without throwing exception\n
-# if I don\'t have permissions to access the object)\n
-\n
+            <value> <string>"""\n
+get related object value list in a security-aware way (without throwing exception\n
+if I don\'t have permissions to access the object)\n
+"""\n
+# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+# New names: object_list, category_list, base_category\n
 cat_value_list=context.getPropertyList(category)\n
 if cat_value_list is None:return []\n
 \n

@@ -68,7 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># customizeable way of getting group for a person\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please. Explain why this is needed\n
+  since getGroup exists on person objects.\n
+\n
+  Naming is probably misleading. Naming should explain\n
+  how different this is from getGroup.\n
+"""\n
+# customizeable way of getting group for a person\n
 # instead of default implementation\n
 # here we store group directly in Career\n
 \n

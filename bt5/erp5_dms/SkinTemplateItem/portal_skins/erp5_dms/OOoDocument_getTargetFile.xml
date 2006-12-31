@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># ZMI level interface for getting file converted to a desired format\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+\n
+# ZMI level interface for getting file converted to a desired format\n
 type,data=context.getTargetFile(format)\n
 request=context.REQUEST\n
 request.RESPONSE.setHeader(\'Content-type\', type)\n

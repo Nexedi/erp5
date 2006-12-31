@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+\n
+request=context.REQUEST\n
 fname=request.get(\'filename\')\n
 format=request.get(\'format\')\n
 context.log(\'format\',format)\n

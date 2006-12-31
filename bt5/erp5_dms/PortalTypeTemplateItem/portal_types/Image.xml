@@ -75,9 +75,7 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>dms_document</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

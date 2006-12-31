@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(base_category_list)\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+\n
+context.log(base_category_list)\n
 category_list = []\n
 \n
 # We look for valid assignments of destination users\n

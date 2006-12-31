@@ -68,7 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># implementation layer - operations to be perfomed after converting data to ODF\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+# XXX-JPS This looks like API level.\n
+# A good API for the conversion process with a documentation on OOoDocument class\n
+# would help a lot to make things clearer and better designed.\n
+\n
+# implementation layer - operations to be perfomed after converting data to ODF\n
 return\n
 </string> </value>
         </item>

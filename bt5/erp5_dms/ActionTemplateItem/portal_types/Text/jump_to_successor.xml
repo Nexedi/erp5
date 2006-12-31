@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DMS_jumpToRelatedDocuments?what=related_successor</string> </value>
+            <value> <string>string:${object_url}/Document_jumpToRelatedDocumentList?what=related_successor</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.resetTopObject()\n
+            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+\n
+context.resetTopObject()\n
 context.ExternalDocument_spiderAndSetState()\n
 return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_status_message=Done\')\n
 </string> </value>

@@ -68,7 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>req=context.REQUEST\n
+            <value> <string># XXX-JPS \n
+# This code is horrible: bad spacing, all lines glued together, short unexplicit variable names\n
+# Please reformat and rewrite with readable variables and understandable comments\n
+# Use standard python spacing, put some space between lines if meaningful,\n
+# Add a description. Do not forget to translate messages. This is a multilingual\n
+# system after all.\n
+"""\n
+  XXX-JPS - Put description here\n
+"""\n
+req=context.REQUEST\n
 # with any of\n
 st=req.get(\'SearchableText\',\'\')\n
 context.log(st)\n
@@ -107,7 +116,7 @@ lng=req.get(\'language\')\n
 if lng and lng!=\'0\':\n
   st+=\' language:%s\' % lng\n
 # category search\n
-for c in (\'group\',\'function\',\'site\'):\n
+for c in (\'group\',\'function\',\'site\'): # XXX-JPS What is this hardcoded stuff ?\n
   cval=req.get(\'search_\'+c)\n
   if cval:\n
     st+=\' %s:%s\' % (c,cval)\n

@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  XXX-JPS Description here please\n
+"""\n
+# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+# XXX-JPS is this part of the Document API ? of the ingestion API ?\n
+pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
+if pref is not None and len(pref)==0:\n
+  pref=pref[0]\n
+  if pref==\'never\':return\n
+\n
+ob=kw[\'object\']\n
+if ob.getPortalType()==\'Memo\': # we don\'t check constistency for Memo XXX use type groups, or what?\n
+  res=\'\'\n
+else:\n
+  res=ob.checkConsistency()\n
+  res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
+\n
+# shall we send?\n
+send=(pref==\'always\' or len(res)>0)\n
+if not send:return\n
+\n
+if len(res)>0:\n
+  errmsg=\'<br/>\'.join(str(c[3]) for c in res)\n
+  subjecttpl=\'ingested %(name)s - there was a problem\'\n
+  msgtpl="""Your document "%(name)s" was ingested.\n
+  \n
+  The following problems were detected:\n
+\n
+  %(errmsg)s\n
+  \n
+  click here: %(url)s/view to proceed and fix the problems.\n
+  """\n
+else:\n
+  errmsg=\'\'\n
+  subjecttpl=\'ingested %(name)s\'\n
+  msgtpl="""Your document "%(name)s" was successfully ingested.\n
+\n
+  click here: %(url)s/view to proceed with your work.\n
+  """\n
+\n
+subject=subjecttpl % {\'name\':ob.getSourceReference()}\n
+\n
+msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getSourceReference(), \'errmsg\':errmsg}\n
+\n
+mto=kw[\'address\']\n
+mfro=\'dms@dms.nexedi.com\' # this should be in preferences\n
+\n
+context.MailHost.send(msg,mto,mfro,subject)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>pref</string>
+                            <string>None</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>ob</string>
+                            <string>res</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>c</string>
+                            <string>send</string>
+                            <string>errmsg</string>
+                            <string>subjecttpl</string>
+                            <string>msgtpl</string>
+                            <string>subject</string>
+                            <string>msg</string>
+                            <string>mto</string>
+                            <string>mfro</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_notifyByEmail</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

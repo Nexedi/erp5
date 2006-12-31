@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>klass=context.getClassification()\n
+            <value> <string>"""\n
+  XXX-JPS Description here please\n
+"""\n
+# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+\n
+klass=context.getClassification()\n
 if klass is None:return False\n
 kl=klass.split(\'/\')\n
 \n
