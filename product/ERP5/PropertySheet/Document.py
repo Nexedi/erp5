@@ -46,9 +46,9 @@ class Document:
 
   _constraints = (
       {
-      'id'          :   'unique_coordinates',       # XXX-JPS plural naming - rename to unique_coordinate
-      'description' :   'coordinate triplet must be complete and unique',
-      'type'        :   'DocumentCoordinatesConstraint'}, # XXX-JPS plural - rename to DocumentCoordinateConstraint
+      'id'          :   'unique_reference',
+      'description' :   'The reference, language and version should be unique',
+      'type'        :   'DocumentReferenceConstraint'},
     )
  
 
