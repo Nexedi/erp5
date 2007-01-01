@@ -94,7 +94,7 @@ IDEAS:\n
     <base tal:attributes="href python: \'%s/\' % (url, )"/>\n
     <meta name="generator" content="ERP5"/>\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n
-    <title tal:content="title | string:ERP5"/>\n
+    <title tal:content="python: \'%s | %s\' % (here.getTitle() or here.getId(), here.getPortalObject().getTitle() or here.getPortalObject().getId())"/>\n
     <tal:block tal:repeat="css css_list">\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
@@ -105,7 +105,7 @@ IDEAS:\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
   </head>\n
-  <body onload="fixLeftRightHeight()">\n
+  <body tal:attributes="onload python:\'fixLeftRightHeightAndFocus(%s)\' % int(not is_web_mode)">\n
     <form id="main_form"\n
           tal:attributes="enctype form/Form_getEnctype | nothing;\n
                           action url;\n
@@ -116,6 +116,7 @@ IDEAS:\n
              id="hidden_button" type="submit" value="dummy"\n
              tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
       <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>\n
+      <tal:block metal:define-slot="layout">\n
       <div id="bars">\n
         <div id="main_bar"\n
              tal:content="structure here/ERP5Site_renderCachedNavigationBox">\n
@@ -144,6 +145,7 @@ IDEAS:\n
       <div id="master">\n
         <tal:block metal:define-slot="main"/>\n
       </div>\n
+      </tal:block>\n
     </form>\n
   </body>\n
 </html>\n

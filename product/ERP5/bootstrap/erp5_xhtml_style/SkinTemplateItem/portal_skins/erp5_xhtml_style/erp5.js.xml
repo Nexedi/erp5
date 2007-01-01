@@ -116,8 +116,10 @@ function fixLeftRightHeight(){\n
   }\n
 }\n
 \n
-function fixLeftRightHeightAndFocus() {  \n
-  fixLeftRightHeight();\n
+function fixLeftRightHeightAndFocus(fix_height) {\n
+  if (fix_height == 1) {\n
+    fixLeftRightHeight();\n
+  }\n
   autoFocus();\n
 }
 
