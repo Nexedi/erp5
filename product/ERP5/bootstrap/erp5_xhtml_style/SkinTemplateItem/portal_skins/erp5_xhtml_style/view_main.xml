@@ -98,7 +98,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               tal:define="actions actions/object_view | python: []">\n
           <div class="actions"\n
                tal:condition="python: (not is_web_mode or editable_mode) and len(actions)">\n
-            <button tal:condition="form_action"\n
+            <button tal:condition="python: not is_web_mode and form_action"\n
                     type="submit" class="save" title="Save"\n
                     tal:attributes="name python: \'%s:method\' % (form_action, )"\n
                     i18n:attributes="title" i18n:domain="ui">\n
@@ -116,6 +116,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </div>\n
           <div tal:attributes="class python: editable_mode and \'content editable\' or \'content\'">\n
             <tal:block metal:define-slot="main"/>\n
+          </div>\n
+          <div class="bottom_actions"\n
+               tal:condition="python: is_web_mode and editable_mode and len(actions) and form_action">\n
+            <input type="hidden" name="form_action" value=""\n
+                   tal:attributes="value form_action"/>\n
+            <input type="hidden" name="edit_document_url" value=""\n
+                   tal:attributes="value python:here.WebSite_getDocumentUrl(form_id=form_id, ignore_reference=1)"/>\n
+            <input type="hidden" name="view_document_url" value=""\n
+                   tal:attributes="value python:here.WebSite_getDocumentUrl(form_id=\'view\', ignore_reference=1)"/>\n
+            <button type="submit" class="saveView" title="Save &amp; View"\n
+                    name="Base_editAndViewAsWeb:method"\n
+                    i18n:attributes="title" i18n:domain="ui">\n
+              <span class="image"></span>\n
+              <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; View</span>\n
+            </button>\n
+            <button type="submit" class="saveEdit" title="Save &amp; Edit"\n
+                    name="Base_editAndEditAsWeb:method"\n
+                    i18n:attributes="title" i18n:domain="ui">\n
+              <span class="image"></span>\n
+              <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; Edit</span>\n
+            </button>\n
           </div>\n
         </div>\n
       </tal:block>\n
