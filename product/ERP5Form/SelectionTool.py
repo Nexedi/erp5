@@ -92,6 +92,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
                                 no_reset=False, no_report_depth=False):
       """Redirect to the original form or dialog, using the information given
          as parameters.
+         (Actually does not redirect  in the HTTP meaning because of URL
+         limitation problems.)
 
          DEPRECATED parameters :
          query_string is used to transmit parameters from caller to callee.
@@ -102,25 +104,19 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if REQUEST is None:
         return
 
-      parameter_list = REQUEST.form.copy()
-      if no_reset and parameter_list.has_key('reset'):
-        parameter_list['noreset'] = parameter_list['reset'] # Kept for compatibility - might no be used anymore
-        del parameter_list['reset']
-      if no_report_depth and parameter_list.has_key('report_depth'):
-        parameter_list['noreport_depth'] = parameter_list['report_depth'] # Kept for compatibility - might no be used anymore
-        del parameter_list['report_depth']
-
-      rendered_parameter_list = make_query(dict([(k, v) for k, v in REQUEST.form.iteritems() if v is not None]))
+      if no_reset and REQUEST.form.has_key('reset'):
+        REQUEST.form['noreset'] = REQUEST.form['reset'] # Kept for compatibility - might no be used anymore
+        del REQUEST.form['reset']
+      if no_report_depth and REQUEST.form.has_key('report_depth'):
+        REQUEST.form['noreport_depth'] = REQUEST.form['report_depth'] # Kept for compatibility - might no be used anymore
+        del REQUEST.form['report_depth']
 
       if query_string is not None:
         LOG('SelectionTool', 0, 'DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.')
 
-      context = self.aq_parent
+      context = REQUEST['PARENTS'][0]
       form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
-      url = context.absolute_url() + '/' + form_id      
-      if len(rendered_parameter_list) > 0:
-        url = '%s?%s' % (url, rendered_parameter_list)
-      return REQUEST.RESPONSE.redirect(url)
+      return getattr(context, form_id)()      
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
     def getSelectionNames(self, context=None, REQUEST=None):
@@ -1335,4 +1331,32 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
         tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, None)] # Summary (closed)
 
   return tree_list
+
+# Monkeypatch Folder so it can access portal_activities
+# Cannot be done in ERP5Type/Document/Folder.py because ERP5Type must not
+# depend on ERP5Form
+
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Document.Folder import Folder
+from ZPublisher.mapply import mapply
+
+method_id_filter_list = [x for x in dir(Folder) if getattr(Folder, x, None) is not None and callable(getattr(Folder, x))]
+method_id_filter_list.extend(['_aq_dynamic', ])
+candidate_method_id_list = [x for x in dir(SelectionTool) if getattr(SelectionTool, x, None) is not None and callable(getattr(SelectionTool, x)) and not x.startswith('_') and not x.endswith('__roles__') and x not in method_id_filter_list]
+
+for property_id in candidate_method_id_list:
+  def portal_selection_wrapper(self, wrapper_property_id=property_id, *args, **kw):
+    """
+      Wrapper method for SelectionTool.
+    """
+    portal_selection = getToolByName(self, 'portal_selections')
+    request = self.REQUEST
+    method = getattr(portal_selection, wrapper_property_id)
+    return mapply(method, positional=args, keyword=request,
+                  context=self, bind=1)
+  setattr(Folder, property_id, portal_selection_wrapper)
+  security_property_id = '%s__roles__' % (property_id, )
+  security_property = getattr(SelectionTool, security_property_id, None)
+  if security_property is not None:
+    setattr(Folder, security_property_id, security_property)
 

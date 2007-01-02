@@ -38,8 +38,8 @@
           tal:define="selected_domain_path here/getSelectedDomainPath">
           <tr>
             <td valign="top">
-              <select name="domain_root_url" onChange="submitAction(this.form, 'context/portal_selections/setDomainRoot')"
-                tal:attributes="onChange string:submitAction(this.form, '${context_url}/portal_selections/setDomainRoot')">
+              <select name="domain_root_url"
+                tal:attributes="onChange string:submitAction(this.form, '${context_url}/setDomainRoot')">
                 <tal:block tal:repeat="c here/getDomainRootList">
                   <option value="base_domain"
                     tal:define="path python: c[0]; title python: c[1]"
@@ -60,10 +60,10 @@
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">
                     <a href="method"
                       tal:condition="report_tree/is_open"
-                      tal:attributes="href string:portal_selections/foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>
+                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>
                     <a href="method"
                       tal:condition="not: report_tree/is_open"
-                      tal:attributes="href string:portal_selections/unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>
+                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>
                   </td>
                 </tr>
               </table>
@@ -107,21 +107,21 @@
 	      <td style="white-space: nowrap; vertical-align: middle">
                 <input tal:condition="python: is_domain_tree_supported or is_report_tree_supported"
                   type="image" src="text_block.png" id="listbox_flat_list_mode"
-                  title="Flat List" name="portal_selections/setFlatListMode:method"
+                  title="Flat List" name="setFlatListMode:method"
                   value="1" alt="Flat List"
                   tal:attributes="src string:${portal_url_string}/images/text_block.png;
                                   id string:${field_id}_flat_list_mode"
                   i18n:domain="ui" i18n:attributes="title" />
                 <input tal:condition="is_report_tree_supported"
                   type="image" src="view_tree.png" id="listbox_report_tree_mode"
-                  title="Report Tree" name="portal_selections/setReportTreeMode:method"
+                  title="Report Tree" name="setReportTreeMode:method"
                   value="1" alt="Report Tree"
                   tal:attributes="src string:${portal_url_string}/images/view_tree.png;
                                   id string:${field_id}_report_tree_mode"
                   i18n:domain="ui" i18n:attributes="title" />
                 <input tal:condition="is_domain_tree_supported"
                   type="image" src="view_choose.png" id="listbox_domain_tree_mode"
-                  title="Domain Tree" name="portal_selections/setDomainTreeMode:method"
+                  title="Domain Tree" name="setDomainTreeMode:method"
                   value="1" alt="Domain Tree"
                   tal:attributes="src string:${portal_url_string}/images/view_choose.png;
                                   id string:${field_id}_domain_tree_mode"
@@ -142,17 +142,16 @@
 	      <td style="white-space: nowrap; vertical-align: middle; text-align: center;">
                 <input tal:condition="python: here.current_page > 0"
                   id="listbox_previous_page" type="image" src="1leftarrowv.png"
-                  title="Previous Page" name="portal_selections/previousPage:method"
+                  title="Previous Page" name="previousPage:method"
                   tal:attributes="id string:${field_id}_previous_page;
                                   src string:${portal_url_string}/images/1leftarrowv.png"
                   i18n:domain="ui" i18n:attributes="title" />
               </td>
 	      <td style="white-space: nowrap; vertical-align: middle; text-align: center">
                 <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"
-                  onChange="submitAction(this.form, 'context/portal_selections/setPage')"
                   tal:define="lines here/getMaxLineNumber"
                   tal:attributes="id string:${field_id}_page_selection;
-                                  onChange string:submitAction(this.form, '${context_url}/portal_selections/setPage')"
+                                  onChange string:submitAction(this.form, '${context_url}/setPage')"
                   i18n:domain="ui" i18n:attributes="title">
                   <option value="0"
                     tal:repeat="p python: range(0, here.total_pages)"
@@ -164,7 +163,7 @@
 	      <td style="white-space: nowrap; vertical-align: middle; text-align: center">
                 <input tal:condition="python: here.current_page < here.total_pages - 1"
                   id="listbox_next_page" type="image" src="1rightarrowv.png"
-                  title="Next Page" name="portal_selections/nextPage:method"
+                  title="Next Page" name="nextPage:method"
                   tal:attributes="id string:${field_id}_next_page;
                                   src string:${portal_url_string}/images/1rightarrowv.png"
                   i18n:domain="ui" i18n:attributes="title" />
@@ -178,8 +177,7 @@
               <td tal:condition="is_report_tree_mode"
                 class="Data" style="width: 50px; text-align: left; vertical-align: middle">
                 <select name="report_root_url"
-                  onChange="submitAction(this.form, 'context/portal_selections/setReportRoot')"
-                  tal:attributes="onChange string:submitAction(this.form, '${context_url}/portal_selections/setReportRoot')">
+                  tal:attributes="onChange string:submitAction(this.form, '${context_url}/setReportRoot')">
                   <tal:block tal:repeat="c here/getReportRootList">
                     <option value="base_domain"
                       tal:define="path python: c[0]; title python: c[1]"
@@ -191,11 +189,11 @@
               <td tal:condition="show_select_column"
                 class="Data" style="width: 50px; text-align: center; vertical-align: middle">
                 <input id="listbox_check_all" type="image"
-                  name="portal_selections/checkAll:method" value="1"
+                  name="checkAll:method" value="1"
                   src="checkall.png" alt="Check All" title="Check All"
                   tal:attributes="id string:${field_id}_check_all;
                                   src string:${portal_url_string}/images/checkall.png"
-                  i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="portal_selections/uncheckAll:method" value="1"
+                  i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="uncheckAll:method" value="1"
                   src="%(portal_url_string)s/images/decheckall.png" style="border: 0" alt="Uncheck All" title="Uncheck All"
                   tal:attributes="id string:${field_id}_uncheck_all;
                                   src string:${portal_url_string}/images/decheckall.png"
@@ -206,8 +204,7 @@
                                        title python: value[1];
                                        sort_order python: value[2]">
                   <td tal:condition="sql" class="Data">
-                    <a href="portal_selections/setSelectionQuickSortOrder?selection_name=default&amp;sort_on=id&amp;form_id=view"
-                      tal:attributes="href string:portal_selections/setSelectionQuickSortOrder?selection_name=${selection_name}&amp;sort_on=${sql}&amp;form_id=${form_id}"
+                    <a tal:attributes="href string:setSelectionQuickSortOrder?selection_name=${selection_name}&amp;sort_on=${sql}&amp;form_id=${form_id}"
                       tal:content="title" i18n:domain="ui" i18n:translate="">ID</a>
                     <img tal:condition="python: sort_order == 'ascending'"
                       src="1bottomarrow.png" alt="Ascending Display" title="Ascending Display"
@@ -274,9 +271,8 @@
                   tal:attributes="class css"
                   tal:define="section_name python: line.getContext() is not None and line.getContext().getTitleOrId() or ''">
                   <a tal:condition="section_name"
-                    href="portal_selections/foldReport?report_url=base_domain&amp;form_id=form&amp;list_selection_name=default"
                     tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
-                    tal:attributes="href string:portal_selections/${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"
+                    tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"
                     tal:content="structure python: '%s%s&nbsp;%s' % ('&nbsp;&nbsp;' * line.getDepth(), line.isOpen() and '-' or '+', section_name)" />
                 </td>
                 <td tal:condition="here/showSelectColumn"
