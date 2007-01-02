@@ -21,6 +21,8 @@ organisation_module/supplier
 organisation_module/supplier/**
 person_module/john_smith
 person_module/john_smith/**
+portal_categories/gap/another_country
+portal_categories/gap/another_country/**
 portal_categories/gap/my_country
 portal_categories/gap/my_country/**
 portal_categories/group/client

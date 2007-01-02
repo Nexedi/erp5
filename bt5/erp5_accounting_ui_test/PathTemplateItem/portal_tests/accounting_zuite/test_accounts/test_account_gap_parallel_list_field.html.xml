@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Account GAP Parallel listfield</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test Account GAP Parallel listfield.\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ Add an account -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Add Account</td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Object Created.</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>Dummy Account for UI Test</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_my_account_type</td>\n
+  <td>label=Asset</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>GAP - Another Standards</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>\n
+  <td>label=1 - Equity Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>\n
+  <td>my_country/my_accounting_standards/1</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>\n
+  <td>label=1 - Dummy Account</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>\n
+  <td>my_country/my_accounting_standards/1</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>\n
+  <td>another_country/another_standards/1</td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_account_gap_parallel_list_field.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

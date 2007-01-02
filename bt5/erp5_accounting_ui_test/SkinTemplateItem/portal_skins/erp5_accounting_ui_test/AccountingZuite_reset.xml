@@ -98,6 +98,13 @@ for form in context.getPortalObject().portal_skins\\\n
 stool.setSelectionFor(\'person_selection\', None)\n
 stool.setSelectionFor(\'organisation_selection\', None)\n
 \n
+# delete the "dummy account" we create in test_account_gap_parallel_list_field\n
+dummy_account_list = portal.account_module.searchFolder(\n
+                                        title=\'Dummy Account for UI Test\')\n
+if dummy_account_list:\n
+  portal.account_module.manage_delObjects([dummy_account_list[0].getId()])\n
+\n
+\n
 return "Reset Successfully."\n
 </string> </value>
         </item>
@@ -160,6 +167,7 @@ return "Reset Successfully."\n
                             <string>getattr</string>
                             <string>None</string>
                             <string>listbox</string>
+                            <string>dummy_account_list</string>
                           </tuple>
                         </value>
                     </item>
