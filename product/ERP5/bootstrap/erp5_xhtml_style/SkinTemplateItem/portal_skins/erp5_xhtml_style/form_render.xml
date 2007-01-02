@@ -118,7 +118,7 @@ It is possible to specify a group id and a group title by naming a group followi
         <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
                   tal:attributes="class gid;\n
                                   id    python: \'fieldset_%s\' % (gid.replace(\' \', \'_\'), );">\n
-          <legend tal:content="group/gtitle" class="group_title"/>\n
+          <legend tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"/>\n
           <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
             <tal:block metal:use-macro="field_render"/>\n
           </tal:block>\n

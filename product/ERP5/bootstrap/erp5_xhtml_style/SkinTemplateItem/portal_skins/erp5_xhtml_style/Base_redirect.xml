@@ -75,7 +75,8 @@
    page from a script. It should probably be extended, reviewed and documented\n
    so that less code is copied and pasted in dialog scripts.\n
 \n
-   TODO: improve API and extensively document.\n
+   TODO: improve API and extensively document. ERP5Site_redirect may \n
+   be redundant.\n
 """\n
 from ZTUtils import make_query\n
 request_form = context.REQUEST.form\n

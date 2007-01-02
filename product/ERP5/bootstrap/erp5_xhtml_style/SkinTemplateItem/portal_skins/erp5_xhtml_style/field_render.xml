@@ -106,7 +106,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               class="error"\n
               tal:content="python: field_errors[field_id].error_text"\n
               i18n:translate="" i18n:domain="ui"/>\n
-        <p class="clear"></p>\n
+        <p class="clear" tal:condition="not:is_web_mode"></p>\n
       </tal:block>\n
     </div>\n
   </tal:block>\n

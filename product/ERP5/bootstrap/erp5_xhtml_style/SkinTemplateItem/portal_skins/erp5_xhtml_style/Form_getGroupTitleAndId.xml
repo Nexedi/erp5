@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script split a form group id in two part:\n
+  This script splits a form group id in two part:\n
     * a group id,\n
     * a group title.\n
 \n
@@ -116,7 +116,7 @@ def getFormGroupTitleAndId():\n
     group_title = \')\'.join(group_title_list[:-1]).strip()\n
     # Return the group id if no title found\n
     if len(group_title) == 0:\n
-      group_title = group_id\n
+      group_title = None\n
     res.append({\'gid\': group_id, \'gtitle\': group_title, \'goid\': original_group_id})\n
   return res\n
 \n
