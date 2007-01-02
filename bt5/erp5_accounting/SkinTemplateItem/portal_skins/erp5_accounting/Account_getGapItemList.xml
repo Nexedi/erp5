@@ -68,7 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>display_cache = {}\n
+            <value> <string>"""Return a list of possible GAP categories for a given account.\n
+\n
+if only_preferred_gap parameter is true, this will return only GAP\n
+categories from the GAP set in preferences, otherwise it will return\n
+categories from all available GAP.\n
+"""\n
+\n
+display_cache = {}\n
 \n
 def display(x):\n
   if x not in display_cache:\n
@@ -82,20 +89,25 @@ def display(x):\n
 def sort(x,y):\n
   return cmp(display(x), display(y))\n
 \n
-gap_root = context.portal_preferences.getPreferredAccountingTransactionGap() \n
-if gap_root is None:\n
-  return [(\'Set Preferred GAP In preferences !\', \'\')]\n
+def getGapItemList(only_preferred_gap): \n
+  ctool = context.getPortalObject().portal_categories\n
+  if only_preferred_gap:\n
+    gap_root = context.getPortalObject().portal_preferences\\\n
+                    .getPreferredAccountingTransactionGap() or\\\n
+                               context.getPortalDefaultGapRoot()\n
+    return ctool.resolveCategory(gap_root).getCategoryChildItemList(\n
+        base=0, is_self_excluded=1, display_method=display, sort_method=sort)\n
 \n
-def getGapItemList(gap_root, portal_path): \n
-  obj = context.portal_categories.resolveCategory(gap_root)\n
-  return obj.getCategoryChildItemList(base=0, display_method=display, sort_method=sort)\n
+  result = []  \n
+  for country in ctool.gap.contentValues():\n
+    for gap_root in country.contentValues():\n
+      result.extend(gap_root.getCategoryChildItemList(\n
+        base=0, is_self_excluded=1, display_method=display, sort_method=sort))\n
+  return result\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 getGapItemList = CachingMethod(getGapItemList, id=\'Account_getGapItemList\')\n
-gap_item_list  = getGapItemList(gap_root=gap_root, portal_path=context.portal_url())\n
-\n
-# Don\'t return the last item, which is the gap_root (like "fr/pcg")\n
-return gap_item_list[:-1]\n
+return getGapItemList(only_preferred_gap=only_preferred_gap)\n
 </string> </value>
         </item>
         <item>
@@ -112,7 +124,7 @@ return gap_item_list[:-1]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>only_preferred_gap=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,24 +144,19 @@ return gap_item_list[:-1]\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>only_preferred_gap</string>
                             <string>display_cache</string>
                             <string>display</string>
                             <string>sort</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>gap_root</string>
-                            <string>None</string>
                             <string>getGapItemList</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>gap_item_list</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -161,7 +168,9 @@ return gap_item_list[:-1]\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>
