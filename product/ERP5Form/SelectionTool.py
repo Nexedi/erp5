@@ -1332,9 +1332,9 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
 
   return tree_list
 
-# Monkeypatch Folder so it can access portal_activities
+# Automaticaly add wrappers on Folder so it can access portal_selections.
 # Cannot be done in ERP5Type/Document/Folder.py because ERP5Type must not
-# depend on ERP5Form
+# depend on ERP5Form.
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Document.Folder import Folder
