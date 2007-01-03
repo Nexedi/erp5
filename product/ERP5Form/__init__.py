@@ -138,6 +138,8 @@ def initialize( context ):
                                 'www/FileField.gif')
     FieldRegistry.registerField(StandardFields.LinkField,
                                 'www/LinkField.gif')
+    FieldRegistry.registerField(StandardFields.LabelField,
+                                'www/LabelField.gif')
     FieldRegistry.registerField(MultiLinkField.MultiLinkField,
                                 'www/LinkField.gif')
     FieldRegistry.registerField(InputButtonField.InputButtonField,
