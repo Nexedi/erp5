@@ -82,6 +82,7 @@
       <stylecmd expr="(\'VALIGN\', (0,0),(-1,-1), \'BOTTOM\')"/>\n
     </tablestyle>\n
     <tablestyle name=\'transaction_body\'>\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
       <stylecmd expr="(\'LINEBEFORE\', (0,0),(2,0), 0.1, colors.black)"/>\n
       <stylecmd expr="(\'LINEAFTER\', (-3,0),(-1,0), 0.1, colors.black)"/>\n
       <stylecmd expr="(\'ALIGN\', (-2,0), (-1,-1), \'RIGHT\')"/>\n
