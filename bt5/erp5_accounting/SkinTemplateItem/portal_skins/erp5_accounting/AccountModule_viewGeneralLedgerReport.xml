@@ -84,10 +84,7 @@
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>
                         <string>at_date</string>
-                        <string>at_date_balance</string>
-                        <string>balance</string>
                         <string>from_date</string>
-                        <string>from_date_balance</string>
                       </list>
                     </value>
                 </item>
