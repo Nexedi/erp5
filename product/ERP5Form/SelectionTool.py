@@ -1337,7 +1337,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
 # depend on ERP5Form.
 
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from ZPublisher.mapply import mapply
 
 method_id_filter_list = [x for x in dir(Folder) if getattr(Folder, x, None) is not None and callable(getattr(Folder, x))]
