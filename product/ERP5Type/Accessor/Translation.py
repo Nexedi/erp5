@@ -57,7 +57,7 @@ class TranslatedPropertyGetter(Method):
     domain = instance.getProperty('%s_translation_domain' %
                                   self._original_key)
     value = instance.getProperty(self._original_key)
-    if domain == '' or not value:
+    if domain == '' or (value in ('', None)):
       return value
     localizer = getToolByName(instance, 'Localizer')
     return localizer[domain].gettext(unicode(value, 'utf8')).encode('utf8')
