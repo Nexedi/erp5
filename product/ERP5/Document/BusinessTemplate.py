@@ -90,6 +90,32 @@ catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_expression_instance_archive',
                               '_filter_type_archive',)
 
+def _getCatalog(acquisition_context):
+  """
+    Return the id of the SQLCatalog which correspond to the current BT.
+  """
+  catalog_method_id_list = acquisition_context.getTemplateCatalogMethodIdList()
+  if len(catalog_method_id_list) == 0:
+    return None
+  catalog_method_id = catalog_method_id_list[0]
+  return catalog_method_id.split('/')[0]
+
+def _getCatalogValue(acquisition_context):
+  """
+    Returns the catalog object which correspond to the ZSQLMethods
+    stored/to store in the business template.
+
+    NB: acquisition_context must make possible to reach portal object
+        and getTemplateCatalogMethodIdList.
+  """
+  catalog_id = _getCatalog(acquisition_context)
+  if catalog_id is None:
+    return None
+  try:
+    return acquisition_context.getPortalObject().portal_catalog[catalog_id]
+  except KeyError:
+    return None
+
 def removeAll(entry):
   '''
     Remove all files and directories under 'entry'.
@@ -583,11 +609,14 @@ class ObjectTemplateItem(BaseTemplateItem):
             # If container's container is portal_catalog,
             # then automatically create the container.
             elif container_path[-2] == 'portal_catalog':
+              # The id match, but better double check with the meta type
+              # while avoiding the impact of systematic check
               container_container = portal.unrestrictedTraverse(container_path[:-1])
-              container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
-              if len(container_container.objectIds()) == 1:
-                container_container.default_sql_catalog_id = container_path[-1]
-              container = portal.unrestrictedTraverse(container_path)
+              if container_container.meta_type == 'ERP5 Catalog':
+                container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
+                if len(container_container.objectIds()) == 1:
+                  container_container.default_sql_catalog_id = container_path[-1]
+                container = portal.unrestrictedTraverse(container_path)
             else:
               raise
           container_ids = container.objectIds()
@@ -759,6 +788,9 @@ class ObjectTemplateItem(BaseTemplateItem):
         if trash and trashbin is not None:
           self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
         container.manage_delObjects([object_id])
+        if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
+          # We are removing a ZSQLMethod, remove the SQLCatalog if empty
+          container.aq_parent.manage_delObjects([container.id])
       except (NotFound, KeyError, BadRequest):
         # object is already backup and/or removed
         pass
@@ -1628,10 +1660,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
 
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate build', 0, 'catalog not found')
       return
@@ -1657,10 +1686,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
                       catalog.filter_dict[method_id]['type']
 
   def export(self, context, bta, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate, export', 0, 'no SQL catalog was available')
       return
@@ -1679,7 +1705,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
       bta.addObject(obj=f.getvalue(), name=id, path=path)
       # add all datas specific to catalog inside one file
-      catalog = context.portal_catalog.getSQLCatalog()
       method_id = obj.id
       object_path = os.path.join(path, method_id+'.catalog_keys.xml')
 
@@ -1724,10 +1749,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -1828,10 +1850,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2671,10 +2690,7 @@ class RoleTemplateItem(BaseTemplateItem):
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2699,10 +2715,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2730,10 +2743,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       catalog.sql_search_result_keys = sql_search_result_keys
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2771,10 +2781,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
 class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2799,10 +2806,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2833,10 +2837,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       catalog.sql_catalog_related_keys = tuple(sql_catalog_related_keys)
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2874,10 +2875,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
 class CatalogResultTableTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2902,10 +2900,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2933,10 +2928,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       catalog.sql_search_tables = tuple(sql_search_tables)
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -2975,10 +2967,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
 class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3003,10 +2992,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3034,10 +3020,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
       catalog.sql_catalog_keyword_search_keys = sql_keyword_keys
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3076,10 +3059,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
 class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3104,10 +3084,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3135,10 +3112,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
       catalog.sql_catalog_full_text_search_keys = sql_full_text_keys
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3178,10 +3152,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
 class CatalogRequestKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3206,10 +3177,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3237,10 +3205,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
       catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3279,10 +3244,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
 class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3307,10 +3269,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3337,10 +3296,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
       catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3379,10 +3335,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
 class CatalogTopicKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3407,10 +3360,7 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = list
 
   def install(self, context, trashbin, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3438,10 +3388,7 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
       catalog.sql_catalog_topic_search_keys = sql_catalog_topic_search_keys
 
   def uninstall(self, context, **kw):
-    try:
-      catalog = context.portal_catalog.getSQLCatalog()
-    except KeyError:
-      catalog = None
+    catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
@@ -3984,6 +3931,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         and the one installed if exists
       """
 
+      self.checkDependencies()
+
       modified_object_list = {}
       bt_title = self.getTitle()
 
@@ -4069,6 +4018,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self.getTemplateFormatVersion() == 0:
         force = 1
 
+      if not force:
+        self.checkDependencies()
+
       site = self.getPortalObject()
       from Products.ERP5.ERP5Site import ERP5Generator
       gen = ERP5Generator()
@@ -4121,7 +4073,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               update_catalog = 1
               break
       if update_catalog:
-        catalog = local_configuration.portal_catalog.getSQLCatalog()
+        catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):
           LOG('Business Template', 0, 'no SQL Catalog available')
           update_catalog = 0
