@@ -25,6 +25,7 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
 from Products.ERP5Type.Cache import CachingMethod
+from ZODB.POSException import ConflictError
 
 from zLOG import LOG
 
@@ -174,8 +175,13 @@ class ERP5UserManager(BasePlugin):
           newSecurityManager(self, self.getUser(SUPER_USER))
 
         try:
-          result = self.getPortalObject().portal_catalog(
-                                  portal_type="Person", reference=login)
+          try:
+            result = self.getPortalObject().portal_catalog(
+                                    portal_type="Person", reference=login)
+          except ConflictError:
+            raise
+          except:
+            LOG('ERP5Security', 0, 'getUserByLogin failed', error=sys.exc_info())
         finally:
           setSecurityManager(sm)
         return [item.getObject() for item in result]
