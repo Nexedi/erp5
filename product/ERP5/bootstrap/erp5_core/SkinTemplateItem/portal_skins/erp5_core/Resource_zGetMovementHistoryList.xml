@@ -697,8 +697,8 @@ FROM\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSQLJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSQLJoinExpression()"> </dtml-if>\n
   , catalog as node, catalog as resource\n
 \n
 WHERE\n
@@ -754,11 +754,11 @@ WHERE\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'stock\',\n
+  AND <dtml-var "selection_domain.asSQLExpression(join_table=\'stock\',\n
                                                   join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
+  AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
 </dtml-if>\n
 \n
 GROUP BY\n
@@ -854,8 +854,8 @@ FROM\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSQLJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSQLJoinExpression()"> </dtml-if>\n
   , catalog as node, catalog as resource\n
 \n
 WHERE\n
@@ -911,11 +911,11 @@ WHERE\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'stock\',\n
+  AND <dtml-var "selection_domain.asSQLExpression(join_table=\'stock\',\n
                                                   join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
+  AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
 </dtml-if>\n
 \n
 GROUP BY\n
