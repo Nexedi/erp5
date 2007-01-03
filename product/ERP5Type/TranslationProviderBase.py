@@ -26,6 +26,8 @@ import Products
 
 from zLOG import LOG
 
+_MARKER = {}
+
 class TranslationProviderBase:
   """
   Provide Translation Tabs and management methods for PropertyTranslationDomain
@@ -43,8 +45,8 @@ class TranslationProviderBase:
                      ,
                      )
 
-  security.declarePrivate( 'createInitialPropertyTranslationDomainDict' )
-  def createInitialPropertyTranslationDomainDict(self, ):
+  security.declarePrivate( 'updateInitialPropertyTranslationDomainDict' )
+  def updateInitialPropertyTranslationDomainDict(self, ):
     """
     Create the initial list of association between property and domain name
     """
@@ -53,7 +55,7 @@ class TranslationProviderBase:
     # get the klass of the object based on the constructor document
     m = Products.ERP5Type._m
     ptype_name = ''.join(ptype_object.id.split(' '))
-    constructor = 'add%s' %(ptype_name)
+    constructor = self.factory # This is safer than: 'add%s' %(ptype_name)
     klass = None
     for method, doc in m.items():
       if method == constructor:
@@ -81,18 +83,30 @@ class TranslationProviderBase:
       if prop.get('translatable', 0):
         prop_id = prop['id']
         if not property_domain_dict.has_key(prop_id):
-          property_domain_dict[prop_id] = TranslationInformation(prop_id, '')
+          domain_name = prop.get('translation_domain', None)
+          property_domain_dict[prop_id] = TranslationInformation(prop_id, domain_name)
 
-    self._property_domain_dict = property_domain_dict
+    original_property_domain_dict = getattr(aq_base(self), '_property_domain_dict', {})
+    original_property_domain_keys = original_property_domain_dict.keys()
+    property_domain_keys = property_domain_dict.keys()
+    property_domain_keys.sort()
+    original_property_domain_keys.sort()
+    # Only update if required in order to prevent ZODB to grow
+    if property_domain_keys != original_property_domain_keys:
+      # Update existing dict
+      property_domain_dict.update(original_property_domain_dict)
+      # And store
+      self._property_domain_dict = property_domain_dict
         
   security.declarePrivate( 'getPropertyTranslationDomainDict' )
   def getPropertyTranslationDomainDict(self,):
     """
     Return all the translation defined by a provider.
     """
-    property_domain_dict = getattr(aq_base(self), '_property_domain_dict', {})
-    if len(property_domain_dict) == 0:
-      self.createInitialPropertyTranslationDomainDict()
+    property_domain_dict = getattr(aq_base(self), '_property_domain_dict', _MARKER)
+    if len(property_domain_dict) is _MARKER:
+      # Force update is not defined
+      self.updateInitialPropertyTranslationDomainDict()
     return self._property_domain_dict
 
   #
@@ -103,6 +117,7 @@ class TranslationProviderBase:
     """ Show the 'Translation' management tab.
     """
     translation_list = []
+    self.updateInitialPropertyTranslationDomainDict() # Force update in case of change of PS list
     prop_domain_name_dict = self.getPropertyTranslationDomainDict()
     keys = prop_domain_name_dict.keys()
     keys.sort()
@@ -138,6 +153,9 @@ class TranslationProviderBase:
       prop_object = self._property_domain_dict[prop_name]
       if new_domain_name != prop_object.getDomainName():
         prop_object.setDomainName(new_domain_name)
+
+    from Products.ERP5Type.Base import _aq_reset
+    _aq_reset() # Reset accessor cache
 
     if REQUEST is not None:
       return self.manage_editTranslationForm(REQUEST, manage_tabs_message=
