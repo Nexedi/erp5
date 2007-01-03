@@ -31,9 +31,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Products.ERP5.Core import Variation
+#from Products.ERP5.Core import Variation
 
-class Variation(XMLObject, Variation):
+#class Variation(XMLObject, Variation):
+class Variation(XMLObject):
     """
       A Variation
     """

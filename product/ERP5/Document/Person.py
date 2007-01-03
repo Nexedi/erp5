@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5.Core.Node import Node
+#from Products.ERP5.Core.Node import Node
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import assertAttributePortalType
@@ -48,7 +48,8 @@ try :
 except ImportError:
   pw_encrypt = lambda pw:pw
 
-class Person(Node, XMLObject):
+#class Person(Node, XMLObject):
+class Person(XMLObject):
     """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,

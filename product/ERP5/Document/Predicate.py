@@ -33,7 +33,7 @@ from Acquisition import aq_base, aq_inner
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Utils import convertToUpperCase
 

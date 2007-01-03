@@ -38,14 +38,15 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Variated import Variated
-from Products.ERP5.Core.Resource import Resource as CoreResource
+#from Products.ERP5.Core.Resource import Resource as CoreResource
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG, WARNING
 
-class Resource(XMLMatrix, CoreResource, Variated):
+#class Resource(XMLMatrix, CoreResource, Variated):
+class Resource(XMLMatrix, Variated):
     """
       A Resource
     """
