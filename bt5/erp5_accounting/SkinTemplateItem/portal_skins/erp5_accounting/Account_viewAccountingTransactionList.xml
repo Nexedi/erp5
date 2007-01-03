@@ -71,6 +71,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -91,6 +92,17 @@
                     <value>
                       <list>
                         <string>preferred_warning</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_debit</string>
+                        <string>listbox_credit</string>
+                        <string>listbox_total_price</string>
+                        <string>listbox_running_total_price</string>
                       </list>
                     </value>
                 </item>

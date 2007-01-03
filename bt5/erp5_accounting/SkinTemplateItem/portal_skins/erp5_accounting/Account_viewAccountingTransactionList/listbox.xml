@@ -374,11 +374,11 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>Movement_getDebitPrice</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>Movement_getCreditPrice</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -440,7 +440,24 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>debit</string>
+                          <string>debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>total_price</string>
+                        </tuple>
+                        <tuple>
+                          <string>running_total_price</string>
+                          <string>running_total_price</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -590,11 +607,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Movement_getDebitPrice</string>
+                          <string>debit</string>
                           <string>Account_statDebit</string>
                         </tuple>
                         <tuple>
-                          <string>Movement_getCreditPrice</string>
+                          <string>credit</string>
                           <string>Account_statCredit</string>
                         </tuple>
                         <tuple>

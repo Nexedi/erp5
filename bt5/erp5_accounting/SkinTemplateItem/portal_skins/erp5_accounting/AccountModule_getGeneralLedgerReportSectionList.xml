@@ -112,8 +112,8 @@ account_columns = (\n
       (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
       (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
       (\'getTranslatedSimulationStateTitle\', \'State\'),\n
-      (\'Movement_getDebitPrice\', \'Debit\'),\n
-      (\'Movement_getCreditPrice\', \'Credit\'),\n
+      (\'debit\', \'Debit\'),\n
+      (\'credit\', \'Credit\'),\n
       (\'total_price\', \'Balance\'),\n
       (\'running_total_price\', \'Net\'), )\n
 \n
@@ -127,9 +127,9 @@ else:\n
 \n
   gap_value_list = cat_tool.resolveCategory(cat).getCategoryChildValueList()\n
 \n
-# we don\'t want to display accounts that don\'t have any transactions associated,\n
-# so we use a cache to see if the account contains transaction or not ( regardless\n
-# of from_date )\n
+# we don\'t want to display accounts that don\'t have any transactions\n
+# associated, so we use a cache to see if the account contains transaction or\n
+# not ( regardless of from_date )\n
 account_inventory_list_cache = {}\n
 account_inventory_list_cache_params = params.copy()\n
 if account_inventory_list_cache_params.has_key(\'from_date\'):\n
