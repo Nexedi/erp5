@@ -1,0 +1,63 @@
+
+
+
+Movement
+
+  Resource: Tissu 4
+  Variation:    length:4
+                size:39
+                color:blueT22
+                height:44
+                hw_option:tot,titi
+                service_option:xuxu,aoao
+  Source: Atelier
+  Destination: Tunisie
+  Qty: 40
+
+  source/organisation/5
+  destination/organisation/10
+  resource/modele/56
+  variante/modele/56/bleu
+  variante/modele/56/finitition_pierre_ponce/10
+  variante/modele/56/T38
+  variante/modele/56/32MB
+  variante/modele/56/longueur/30
+  variante/modele/56/large/50
+
+  SQL
+    uid(source), uid(destination), uid(resource), qty, length, color, etc. etc.
+
+  Methods
+    getLength
+    getSize
+    getCoulor
+    getHardwareOptions
+
+
+Resource
+
+
+
+  VariationRange
+    - id: length
+    - min: 10
+    - max: 100
+
+    variation_category/length
+
+  VariationValue
+
+    - id: blue
+
+    variation_category/color
+
+  VariationValue
+
+    - id: solar pannel
+
+    variation_category/power_supply
+
+
+Price is pointr in N dimension space related to variant and....
+
+
