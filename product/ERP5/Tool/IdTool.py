@@ -30,7 +30,7 @@ from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
 
@@ -44,6 +44,8 @@ from BTrees.Length import Length
 class IdTool(UniqueObject, Folder):
   """
     This tools handles the generation of IDs.
+
+    TODO - XXX: please use base tool
   """
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'

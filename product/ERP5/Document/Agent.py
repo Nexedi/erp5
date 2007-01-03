@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.Image import Image
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 
 
 class Agent(Folder, Image):

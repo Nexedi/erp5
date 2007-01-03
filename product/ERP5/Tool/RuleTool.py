@@ -30,7 +30,7 @@ from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
 
 from Products.ERP5 import _dtmldir
@@ -80,6 +80,8 @@ class RuleTool (UniqueObject, Folder):
     Status : OK
 
     NEW NAME : Rules Tool
+
+    TODO: XXX Please use BaseTool
     """
     id = 'portal_rules'
     meta_type = 'ERP5 Rule Tool'
