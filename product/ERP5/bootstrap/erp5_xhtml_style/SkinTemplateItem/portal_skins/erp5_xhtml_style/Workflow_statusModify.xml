@@ -79,7 +79,13 @@ form = getattr(context, dialog_id)\n
 \n
 # Validate the form\n
 try:\n
+  # It is necessary to force editable_mode before validating\n
+  # data. Otherwise, field appears as non editable.\n
+  # This is the pending of form_dialog.\n
+  editable_mode = request.get(\'editable_mode\', 1)\n
+  request.set(\'editable_mode\', 1)\n
   form.validate_all_to_request(request)\n
+  request.set(\'editable_mode\', editable_mode)\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
@@ -196,6 +202,7 @@ return context.ERP5Site_redirect(\n
                             <string>request</string>
                             <string>getattr</string>
                             <string>form</string>
+                            <string>editable_mode</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
                             <string>doaction_param_list</string>

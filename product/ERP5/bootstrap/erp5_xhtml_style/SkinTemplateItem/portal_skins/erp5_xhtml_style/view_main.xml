@@ -122,9 +122,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <input type="hidden" name="form_action" value=""\n
                    tal:attributes="value form_action"/>\n
             <input type="hidden" name="edit_document_url" value=""\n
-                   tal:attributes="value python:here.WebSite_getDocumentUrl(form_id=form_id, ignore_reference=1)"/>\n
+                   tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)"/>\n
             <input type="hidden" name="view_document_url" value=""\n
-                   tal:attributes="value python:here.WebSite_getDocumentUrl(form_id=\'view\', ignore_reference=1)"/>\n
+                   tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')"/>\n
             <button type="submit" class="saveView" title="Save &amp; View"\n
                     name="Base_editAndViewAsWeb:method"\n
                     i18n:attributes="title" i18n:domain="ui">\n

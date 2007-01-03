@@ -106,8 +106,8 @@ if dialog_method == \'Workflow_statusModify\':\n
   value = context.Workflow_statusModify(form_id=kw[\'form_id\'],\n
                                         dialog_id=dialog_id)\n
   # XXX: This test is related to erp5_web and should not be present in configuration where it is not installed.\n
-  if not(getattr(context.REQUEST, \'ignore_layout\', 0)) and context.getApplicableLayout() :\n
-    context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentPhysicalPath())\n
+  #if not(getattr(context.REQUEST, \'ignore_layout\', 0)) and context.getApplicableLayout() :\n
+  #  context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentPhysicalPath())\n
   return value\n
 # Exception for edit relation\n
 if dialog_method == \'Base_editRelation\':\n
@@ -149,7 +149,14 @@ else:\n
 form = getattr(form_context, dialog_id)\n
 # Validate the form\n
 try:\n
+  # It is necessary to force editable_mode before validating\n
+  # data. Otherwise, field appears as non editable.\n
+  # This is the pending of form_dialog.\n
+  request = context.REQUEST\n
+  editable_mode = request.get(\'editable_mode\', 1)\n
+  request.set(\'editable_mode\', 1)\n
   form.validate_all_to_request(context.REQUEST)\n
+  request.set(\'editable_mode\', editable_mode)\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
@@ -323,11 +330,13 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>error_message</string>
                             <string>_getitem_</string>
                             <string>value</string>
-                            <string>getattr</string>
                             <string>None</string>
                             <string>_apply_</string>
                             <string>form_context</string>
+                            <string>getattr</string>
                             <string>form</string>
+                            <string>request</string>
+                            <string>editable_mode</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
                             <string>can_redirect</string>
