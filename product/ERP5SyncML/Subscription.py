@@ -32,7 +32,7 @@ from SyncCode import SyncCode
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Acquisition import Implicit, aq_base
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet

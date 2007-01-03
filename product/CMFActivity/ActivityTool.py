@@ -35,7 +35,7 @@ from types import TupleType, StringType
 import re
 
 from Products.CMFCore import CMFCorePermissions
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions

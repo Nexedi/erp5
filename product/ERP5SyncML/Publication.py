@@ -30,7 +30,7 @@ from Globals import Persistent, PersistentMapping
 from SyncCode import SyncCode
 from Subscription import Subscription
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
 from zLOG import LOG

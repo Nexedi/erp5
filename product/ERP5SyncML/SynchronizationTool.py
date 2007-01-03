@@ -29,7 +29,7 @@ ERP portal_synchronizations tool.
 """
 
 from OFS.SimpleItem import SimpleItem
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
@@ -66,6 +66,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
                            UniqueObject, Folder):
   """
     This tool implements the synchronization algorithm
+
+    TODO: XXX-Please use BaseTool
   """
 
 
