@@ -167,8 +167,8 @@ class Predicate(Folder):
     return result
 
   security.declareProtected( Permissions.AccessContentsInformation,
-                             'buildSqlQuery' )
-  def buildSqlQuery(self, strict_membership=0, table='category',
+                             'buildSQLQuery' )
+  def buildSQLQuery(self, strict_membership=0, table='category',
                           join_table='catalog', join_column='uid'):
     """
       A Predicate can be rendered as an SQL expression. This
@@ -193,7 +193,7 @@ class Predicate(Folder):
         if category_value is not None:
           table_alias = "single_%s_%s" % (table, base_category)
           from_table_dict[table_alias] = 'category'
-          membership_dict[base_category].append(category_value.asSqlExpression(
+          membership_dict[base_category].append(category_value.asSQLExpression(
                                           strict_membership=strict_membership,
                                           table=table_alias,
                                           base_category=base_category))
@@ -214,7 +214,7 @@ class Predicate(Folder):
           join_count += 1
           table_alias = "multi_%s_%s" % (table, join_count)
           from_table_dict[table_alias] = 'category'
-          multimembership_dict[base_category].append(category_value.asSqlExpression(
+          multimembership_dict[base_category].append(category_value.asSQLExpression(
                                           strict_membership=strict_membership,
                                           table=table_alias,
                                           base_category=base_category))
@@ -232,17 +232,17 @@ class Predicate(Folder):
     return { 'from_table_list' : from_table_dict.items(),
              'where_expression' : sql_text }
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
-  def asSqlExpression(self, strict_membership=0, table='category'):
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSQLExpression' )
+  def asSQLExpression(self, strict_membership=0, table='category'):
     """
     """
-    return self.buildSqlQuery(strict_membership=strict_membership, table=table)['where_expression']
+    return self.buildSQLQuery(strict_membership=strict_membership, table=table)['where_expression']
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlJoinExpression' )
-  def asSqlJoinExpression(self, strict_membership=0, table='category', join_table='catalog', join_column='uid'):
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSQLJoinExpression' )
+  def asSQLJoinExpression(self, strict_membership=0, table='category', join_table='catalog', join_column='uid'):
     """
     """
-    table_list = self.buildSqlQuery(strict_membership=strict_membership, table=table)['from_table_list']
+    table_list = self.buildSQLQuery(strict_membership=strict_membership, table=table)['from_table_list']
     sql_text_list = map(lambda (a,b): '%s AS %s' % (b,a), table_list)
     return ' , '.join(sql_text_list)
 
