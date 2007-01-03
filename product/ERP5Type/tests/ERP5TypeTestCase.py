@@ -399,7 +399,7 @@ class ERP5TypeTestCase(PortalTestCase):
     def getSimulationTool(self):
       return getToolByName(self.getPortal(), 'portal_simulation', None)
 
-    def getSqlConnection(self):
+    def getSQLConnection(self):
       return getToolByName(self.getPortal(), 'erp5_sql_connection', None)
 
     def getPortalId(self):

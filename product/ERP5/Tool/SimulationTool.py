@@ -235,7 +235,7 @@ class SimulationTool (BaseTool):
         # keywords for related keys
         **kw):
       """
-      generates keywords and calls buildSqlQuery
+      generates keywords and calls buildSQLQuery
       """
       new_kw = {}
       new_kw.update(kw)
@@ -575,7 +575,7 @@ class SimulationTool (BaseTool):
 
       **kw           -  if we want extended selection with more keywords (but
                         bad performance) check what we can do with
-                        buildSqlQuery
+                        buildSQLQuery
 
       NOTE: we may want to define a parameter so that we can select the kind of
       inventory statistics we want to display (ex. sum, average, cost, etc.)
@@ -1040,7 +1040,7 @@ class SimulationTool (BaseTool):
       selection_domain, selection_report - see ListBox
 
       **kw  - if we want extended selection with more keywords (but bad performance)
-              check what we can do with buildSqlQuery
+              check what we can do with buildSQLQuery
 
       Extra parameters for getTrackingList :
 

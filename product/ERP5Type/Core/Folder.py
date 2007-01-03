@@ -726,18 +726,18 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   getObjectIds = CMFBTreeFolder.objectIds
 
   # Overloading
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentSqlExpression' )
-  def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParentSQLExpression' )
+  def getParentSQLExpression(self, table = 'catalog', strict_membership = 0):
     """
       Builds an SQL expression to search children and subclidren
     """
     if strict_membership:
-      return Base.getParentSqlExpression(self, table=table, strict_membership=strict_membership)
+      return Base.getParentSQLExpression(self, table=table, strict_membership=strict_membership)
     result = "%s.parent_uid = %s" % (table, self.getUid())
     for o in self.objectValues():
       if hasattr(aq_base(o), 'objectValues'):
         # Do not consider non folder objects
-        result = "%s OR %s" % (result, o.getParentSqlExpression(table=table, strict_membership=strict_membership))
+        result = "%s OR %s" % (result, o.getParentSQLExpression(table=table, strict_membership=strict_membership))
     return "( %s )" % result
 
 

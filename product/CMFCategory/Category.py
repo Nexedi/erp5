@@ -414,15 +414,15 @@ class Category(Folder):
       """
       return context.isMemberOf(self.getCategoryName())
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
-    def asSqlExpression(self, strict_membership=0, table='category', base_category = None):
+    security.declareProtected( Permissions.AccessContentsInformation, 'asSQLExpression' )
+    def asSQLExpression(self, strict_membership=0, table='category', base_category = None):
       """
         A Predicate can be rendered as an sql expression. This
         can be useful to create reporting trees based on the
         ZSQLCatalog
       """
-      #LOG('Category.asSqlExpression self', 0, str(self))
-      #LOG('asSqlExpression parent', 0, str(self.aq_parent))
+      #LOG('Category.asSQLExpression self', 0, str(self))
+      #LOG('asSQLExpression parent', 0, str(self.aq_parent))
       if base_category is None:
         base_category = self
       elif type(base_category) is type('a'):
@@ -437,7 +437,7 @@ class Category(Folder):
             (table, self.getUid(), table, base_category.getBaseCategoryUid())
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
-      #  sql_text += ' OR %s' % o.asSqlExpression()
+      #  sql_text += ' OR %s' % o.asSQLExpression()
       return sql_text
 
     # A Category's categories is self
@@ -553,7 +553,7 @@ class BaseCategory(Category):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    def asSqlExpression(self, strict_membership=0, table='category', base_category=None):
+    def asSQLExpression(self, strict_membership=0, table='category', base_category=None):
       """
         A Predicate can be rendered as an sql expression. This
         can be useful to create reporting trees based on the
@@ -568,7 +568,7 @@ class BaseCategory(Category):
                                (table, self.uid, table, self.uid)
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
-      #  sql_text += ' OR %s' % o.asSqlExpression()
+      #  sql_text += ' OR %s' % o.asSQLExpression()
       return sql_text
 
     security.declareProtected(Permissions.AccessContentsInformation, 

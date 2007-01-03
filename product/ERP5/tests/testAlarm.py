@@ -89,7 +89,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.failUnless(self.getCategoryTool()!=None)
     self.failUnless(self.getSimulationTool()!=None)
     self.failUnless(self.getTypeTool()!=None)
-    self.failUnless(self.getSqlConnection()!=None)
+    self.failUnless(self.getSQLConnection()!=None)
     self.failUnless(self.getCatalogTool()!=None)
 
   #def populate(self, quiet=1, run=1):

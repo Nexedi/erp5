@@ -1150,7 +1150,7 @@ class Base( CopyContainer,
     """
     return self
 
-  def asSqlExpression(self, strict_membership=0, table='category', base_category = None):
+  def asSQLExpression(self, strict_membership=0, table='category', base_category = None):
     """
       Any document can be used as a Category. It can therefore
       serve in a Predicate and must be rendered as an sql expression. This
@@ -1171,8 +1171,8 @@ class Base( CopyContainer,
     return sql_text
 
   security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentSqlExpression' )
-  def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
+                             'getParentSQLExpression' )
+  def getParentSQLExpression(self, table = 'catalog', strict_membership = 0):
     """
       Builds an SQL expression to search children and subclidren
     """
@@ -1766,6 +1766,21 @@ class Base( CopyContainer,
     """Returns the title and the id in parenthesis
     """
     return self.title_and_id()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTranslatedShortTitleOrId')
+  def getTranslatedShortTitleOrId(self):
+    """
+    Returns the translated title or the id if the id is empty
+    """
+    title = self.getTranslatedTitle()
+    if title is not None:
+      title = str(title)
+      if title == '' or title is None:
+        return self.getId()
+      else:
+        return title
+    return self.getId()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTranslatedTitleOrId')

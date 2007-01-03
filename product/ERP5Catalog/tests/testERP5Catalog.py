@@ -84,31 +84,31 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def getSqlPathList(self):
+  def getSQLPathList(self):
     """
     Give the full list of path in the catalog
     """
-    sql_connection = self.getSqlConnection()
+    sql_connection = self.getSQLConnection()
     sql = 'select path from catalog'
     result = sql_connection.manage_test(sql)
     path_list = map(lambda x: x['path'],result)
     return path_list
 
-  def checkRelativeUrlInSqlPathList(self,url_list):
-    path_list = self.getSqlPathList()
+  def checkRelativeUrlInSQLPathList(self,url_list):
+    path_list = self.getSQLPathList()
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
       self.failUnless(path in path_list)
-      LOG('checkRelativeUrlInSqlPathList found path:',0,path)
+      LOG('checkRelativeUrlInSQLPathList found path:',0,path)
 
-  def checkRelativeUrlNotInSqlPathList(self,url_list):
-    path_list = self.getSqlPathList()
+  def checkRelativeUrlNotInSQLPathList(self,url_list):
+    path_list = self.getSQLPathList()
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
       self.failUnless(path not in  path_list)
-      LOG('checkRelativeUrlInSqlPathList not found path:',0,path)
+      LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
 
   def test_01_HasEverything(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -118,7 +118,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(self.getCategoryTool()!=None)
     self.failUnless(self.getSimulationTool()!=None)
     self.failUnless(self.getTypeTool()!=None)
-    self.failUnless(self.getSqlConnection()!=None)
+    self.failUnless(self.getSQLConnection()!=None)
     self.failUnless(self.getCatalogTool()!=None)
 
   def test_02_EverythingCatalogued(self, quiet=quiet, run=run_all_test):
@@ -141,37 +141,37 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person = person_module.newContent(id='1',portal_type='Person')
     path_list = [person.getRelativeUrl()]
-    self.checkRelativeUrlNotInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     person.immediateReindexObject()
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('1')
     get_transaction().commit()
     self.tic()
-    self.checkRelativeUrlNotInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
                                       portal_type='Person',
                                       immediate_reindex=1)
     path_list = [person.getRelativeUrl()]
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list)
     person.immediateReindexObject()
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('2')
     get_transaction().commit()
     self.tic()
-    self.checkRelativeUrlNotInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now we will try with the method deleteContent
     person = person_module.newContent(id='3',portal_type='Person')
     path_list = [person.getRelativeUrl()]
-    self.checkRelativeUrlNotInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     person.immediateReindexObject()
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list)
     person_module.deleteContent('3')
     # Now delete things is made with activities
-    self.checkRelativeUrlNotInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     get_transaction().commit()
     self.tic()
-    self.checkRelativeUrlNotInSqlPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list)
 
   def test_04_SearchFolderWithDeletedObjects(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -401,7 +401,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Clear catalog
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
-    sql_connection = self.getSqlConnection()
+    sql_connection = self.getSQLConnection()
     sql = 'select count(*) from catalog where portal_type!=NULL'
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
@@ -419,7 +419,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     message_count = result[0]['COUNT(*)']
     self.assertEquals(0, message_count)
     # Check if object are catalogued
-    self.checkRelativeUrlInSqlPathList([
+    self.checkRelativeUrlInSQLPathList([
                 organisation.getRelativeUrl(),
                 'portal_categories/%s' % base_category.getRelativeUrl()])
 
@@ -454,7 +454,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Clear catalog
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
-    sql_connection = self.getSqlConnection()
+    sql_connection = self.getSQLConnection()
     
     sql = 'SELECT COUNT(*) FROM category '\
         'WHERE uid=%s and category_strict_membership = 1' %\
@@ -521,7 +521,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     portal_catalog = self.getCatalogTool()
     portal = self.getPortal()
-    sql_connection = self.getSqlConnection()
+    sql_connection = self.getSQLConnection()
     
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
@@ -821,7 +821,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                       portal_type='Person',
                                       immediate_reindex=1)
     path_list = [person.getRelativeUrl()]
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list)
     # We will delete the connector
     # in order to make sure it will not work any more
     portal = self.getPortal()
@@ -1239,7 +1239,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     path_list = [new_person.getRelativeUrl()]
-    self.checkRelativeUrlInSqlPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list)
 
   def test_44_ParentRelatedKeys(self, quiet=quiet, run=run_all_test):
     if not run: return

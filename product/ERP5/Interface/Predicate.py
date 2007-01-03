@@ -51,7 +51,7 @@ class Predicate(Interface):
     """
     pass
 
-  def asSqlExpression():
+  def asSQLExpression():
     """
       A Predicate can be rendered as an sql expression. This
       can be useful to create reporting trees based on the

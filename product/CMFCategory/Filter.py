@@ -84,7 +84,7 @@ class Filter(Implicit):
     """
     return self.filter_dict
 
-  def asSql(self):
+  def asSQL(self):
     """
       Returns an SQL expression which can be used as a query
     """

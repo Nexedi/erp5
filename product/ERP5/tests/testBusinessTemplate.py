@@ -83,7 +83,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
     # create the fake catalog table
-    sql_connection = self.getSqlConnection()
+    sql_connection = self.getSQLConnection()
     sql = 'create table if not exists `fake_catalog` (`toto` BIGINT)'
     sql_connection.manage_test(sql)
     self._catch_log_errors()

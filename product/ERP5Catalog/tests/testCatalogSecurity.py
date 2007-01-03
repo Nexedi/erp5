@@ -100,31 +100,31 @@ class Test(ERP5TypeTestCase):
     user = uf.getUserById(username).__of__(uf)
     newSecurityManager(None, user)
 
-  def getSqlPathList(self):
+  def getSQLPathList(self):
     """
     Give the full list of path in the catalog
     """
-    sql_connection = self.getSqlConnection()
+    sql_connection = self.getSQLConnection()
     sql = 'select path from catalog'
     result = sql_connection.manage_test(sql)
     path_list = map(lambda x: x['path'],result)
     return path_list
 
-  def checkRelativeUrlInSqlPathList(self,url_list):
-    path_list = self.getSqlPathList()
+  def checkRelativeUrlInSQLPathList(self,url_list):
+    path_list = self.getSQLPathList()
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
       self.failUnless(path in path_list)
-      LOG('checkRelativeUrlInSqlPathList found path:',0,path)
+      LOG('checkRelativeUrlInSQLPathList found path:',0,path)
 
-  def checkRelativeUrlNotInSqlPathList(self,url_list):
-    path_list = self.getSqlPathList()
+  def checkRelativeUrlNotInSQLPathList(self,url_list):
+    path_list = self.getSQLPathList()
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
       self.failUnless(path not in  path_list)
-      LOG('checkRelativeUrlInSqlPathList not found path:',0,path)
+      LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
 
 
   def test_01_StandardSearchFolder(self, quiet=0, run=run_all_test):
