@@ -1378,17 +1378,11 @@ class TestAccounting(ERP5TypeTestCase):
     account = self.getAccountModule().newContent(portal_type='Account')
     # simulate an old object
     account.is_credit_account = True
-
-    account.setCreditAccount(True)
     self.failUnless(account.isCreditAccount())
+    self.failUnless(account.getProperty('credit_account'))
     
-    # this is what Account_view would do when you update the code before
-    # without updating business template.
-    account.edit(is_credit_account=False)
+    account.setCreditAccount(False)
     self.failIf(account.isCreditAccount())
-    account.edit(is_credit_account=True)
-    self.failUnless(account.getProperty('is_credit_account'))
-
 
   # tests for Invoice_createRelatedPaymentTransaction
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
