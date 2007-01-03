@@ -1040,7 +1040,8 @@ class FloatWidget(TextWidget):
             value += value_list[1]
           if percent:
             value += '%'
-        return value.strip()
+          return value.strip()
+        return ''
 
     def render(self, field, key, value, REQUEST):
         """Render Float input field
@@ -1081,7 +1082,10 @@ class FloatWidget(TextWidget):
         if extra not in (None, ''):
           value = "<div %s>%s</div>" % (extra, value)
 
-        return TextWidgetInstance.render_view(field, value)
+        css_class = field.get_value('css_class')
+        if css_class not in ('', None):
+          return "<span class='%s'>%s</span>" % (css_class, value)
+        return value
 
     def render_pdf(self, field, value):
         """Render the field as PDF."""
