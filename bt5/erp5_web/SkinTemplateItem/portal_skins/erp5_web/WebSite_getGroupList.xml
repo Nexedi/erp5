@@ -138,7 +138,7 @@ Rules:\n
       applied (see \'bottom right\' in the exemple below, where it\'s in the \'bottom\'\n
       aggregate and not in \'right\' one).\n
   5 - This script is compatible with group titles set in parenthesis (handled by\n
-      ERP5XhtmlStyle_getFormGroupTitleAndId script): the matching process will\n
+      Form_getGroupTitleAndId script): the matching process will\n
       ignore the group title (look at \'(Discount on Right Handed Tools) left\n
       discount\').\n
   6 - Matching process between criterion and group id is not case sensitive.\n
@@ -168,24 +168,24 @@ Example:\n
     [ [\'left\',   [ (\'left column\', \'left column\', \'left column\')\n
                  , (\'left ad\', \'left ad\', \'left ad\')\n
                  , (\'left discount\', \'Discount on Right Handed Tools\', \'(Discount on Right Handed Tools) left discount\')\n
-                 ]]\n
+]]\n
     , [\'right\',  [ (\'metadata right\', \'metadata right\', \'metadata right\')\n
                  , (\'right ad\', \'right ad\', \'right ad\')\n
-                 ]]\n
+]]\n
     , [\'center\', [\n
-                 ]]\n
+]]\n
     , [\'bottom\', [ (\'bottom content\', \'bottom content\', \'bottom content\')\n
                  , (\'footer\', \'footer\', \'footer\')\n
                  , (\'bottom right\', \'bottom right\', \'bottom right\')\n
-                 ]]\n
-    ]\n
+]]\n
+]\n
 \n
 \n
 Tips:\n
 \n
-  * The returned list structure is design to let you cast it as dict() if you don\'t\n
-    care about group aggregate ordering. This also help you to get group aggregate\n
-    more easily.\n
+  * The returned list structure is designed to let you cast it as dict() if you don\'t\n
+    care about group aggregate ordering. This can help you to get group aggregate\n
+    more easily in table based HTML layouts.\n
 \n
 """\n
 \n
@@ -202,12 +202,10 @@ layout_form = context\n
 for criterion in group_by_criterion:\n
   aggregate_dict[criterion] = []\n
 \n
-# Put each group in an aggregate\n
-for group_id in layout_form.get_groups(include_empty=0):                      # Rule (2)\n
-\n
-  # TODO: save id title and original id in the returned dict to not recalculate them\n
-  group_details     = context.ERP5XhtmlStyle_getFormGroupTitleAndId(group_id) # Rule (5)\n
-  group_css_classes = group_details[0]\n
+# Get the cached list of groups and titles\n
+for group_details in layout_form.Form_getGroupTitleAndId():                   # Rule (5)\n
+                                                                              # Rule (2)\n
+  group_css_classes = group_details[\'gid\']\n
 \n
   # Criterion matching status\n
   matched = False\n
@@ -231,7 +229,7 @@ for group_id in layout_form.get_groups(include_empty=0):                      # 
 for criterion in group_by_criterion:\n
   aggregate = [ criterion\n
               , aggregate_dict[criterion]\n
-              ]\n
+]\n
   aggregate_list.append(aggregate)\n
 \n
 \n
@@ -290,7 +288,6 @@ return aggregate_list\n
                             <string>criterion</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
-                            <string>group_id</string>
                             <string>group_details</string>
                             <string>_getitem_</string>
                             <string>group_css_classes</string>

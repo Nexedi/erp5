@@ -527,10 +527,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
                           <string>short_title</string>
                           <string>WebSite_getListboxUrl</string>
                         </tuple>
@@ -573,7 +569,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSite_getDocumentValueList</string> </value>
+            <value> <string>WebSection_getDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

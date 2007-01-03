@@ -75,70 +75,55 @@
  to create web sites which can display selected\n
  ERP5 contents through multiple custom web layouts.\n
 \n
- If no name parameter is provided, this script\n
- returns the document which is being displayed\n
- currently in a Web Section or a Web Page\n
- by invoking WebSite_getDefaultWebPageValue. \n
+ This script returns the absolute URL of the current\n
+ document in a pretty way and taking into account\n
+ virtual hosting. The purpose of this script is to be\n
+ able to access documents through a URL such as:\n
 \n
- The default implementation searches for\n
- documents which are in the user language if any\n
- and which reference is equal to the name parameter.\n
+ www.mysite.com/mysection/a-document-reference\n
 \n
- Other implementations are possible: ex. display the last\n
- version in the closest language rather than\n
- the latest version in the user language.\n
+ even if the physical path of the document is\n
 \n
- If a name parameter is provided, it will lookup\n
- the catalog to find the most appropriate\n
- document.\n
+ /erp5/web_page_module/33\n
 \n
- NOTE:\n
- - portal param probably useless \n
+ The default script looks in the acquisition context\n
+ for the first relevant section and build a URL\n
+ based on the section absolute_url and on the\n
+ document reference.\n
+\n
+ More sophisticated behaviours are possible.\n
+\n
+ SUGGESTIONS:\n
+\n
+ - change the behaviour of WebSite_getDocumentUrl\n
+   for non anonymous\n
+ \n
+ - change the behaviour of WebSite_getDocumentUrl\n
+   for documents which are not published.\n
+\n
+ NOTE: it is still unknown whether this script\n
+ needs to be integrated or not to the absolute_url API\n
 """\n
-if portal is None: portal = context.getPortalObject()\n
-portal_catalog = portal.portal_catalog\n
-# The list of portal types here should be large enough to include\n
-# all portal_types defined in the various sections so that\n
-# href tags which point to a document by reference can still work.\n
-valid_portal_type_list = [\'Web Page\', ]\n
+# Return absolute URL if our parent is not a Web Section or Web Site\n
+if context.aq_parent.getPortalType() not in (\'Web Section\', \'Web Site\'):\n
+  return context.absolute_url()\n
 \n
-# This should probably be moved to a specific page\n
-if name is None:\n
-  if context.getPortalType() in valid_portal_type_list:\n
-    return context\n
-  elif context.getPortalType() in (\'Web Site\', \'Web Section\'):\n
-    return context.WebSite_getDefaultWebPageValue()\n
-  else:\n
-    return None\n
+# Return absolute URL if this is not an appropriate portal_type\n
+valid_portal_type_list = [\'Web Page\', ] # WARNING - this is a copy from WebSite_getDocumentValue\n
+if context.getPortalType() not in valid_portal_type_list:\n
+  return context.absolute_url()\n
 \n
-# Find the applicable language\n
-language = context.Localizer.get_selected_language()\n
+# Return absolute URL if this is not a \'live\' document\n
+validation_state=[\'draft\', \'submitted\', \'shared\',     # WARNING - this is a copy from WebSite_getDocumentValueList\n
+                  \'released\', \'published\', \'restricted\']\n
+if context.getValidationState() not in validation_state:\n
+  return context.absolute_url()\n
 \n
-# Search the catalog for all documents matching the reference\n
-# this will only return documents which are accessible by the user\n
-web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list,\n
-                               order_by=[(\'index\', \'descending\'), (\'version\', \'descending\')],\n
-                               language=language)\n
-                               # XXX - group_by is missing here\n
-try:\n
-  # Try to get the first page on the list\n
-  web_page = web_page_list[0]\n
-  web_page = web_page.getObject()\n
-except IndexError:\n
-  # Search again without the language\n
-  web_page_list = portal_catalog(reference=name, portal_type=\'Web Page\',\n
-                                 order_by=[(\'index\', \'descending\'), (\'version\', \'descending\')])\n
-                                 # XXX - group_by is missing here\n
-  try:\n
-    # Try to get the first page on the list\n
-    web_page = web_page_list[0]\n
-    web_page = web_page.getObject()\n
-  except IndexError:\n
-    # Default returns None\n
-    web_page = None\n
+# Find the Web Section or Web Site we belong to\n
+current_section = context.getWebSectionValue()\n
 \n
-# return the web page\n
-return web_page\n
+# Return the URL\n
+return "%s/%s" % (current_section.absolute_url(), context.getReference())\n
 </string> </value>
         </item>
         <item>
@@ -161,7 +146,7 @@ return web_page\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>name=None,portal=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -181,24 +166,17 @@ return web_page\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>name</string>
-                            <string>portal</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_catalog</string>
                             <string>valid_portal_type_list</string>
-                            <string>language</string>
-                            <string>web_page_list</string>
-                            <string>_getitem_</string>
-                            <string>web_page</string>
-                            <string>IndexError</string>
+                            <string>validation_state</string>
+                            <string>current_section</string>
                           </tuple>
                         </value>
                     </item>
@@ -210,15 +188,12 @@ return web_page\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDocumentValue</string> </value>
+            <value> <string>Base_getPermanentURL</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

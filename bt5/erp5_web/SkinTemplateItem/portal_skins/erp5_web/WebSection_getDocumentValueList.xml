@@ -68,154 +68,56 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# This script is part of ERP5 Web\n
-#\n
-# ERP5 Web is an extension to ERP5 which provides a way\n
-# to create web sites which can display selected\n
-# ERP5 contents through multiple custom web layouts.\n
-#\n
-# This script returns a list of document values (ie. objects or brains)\n
-# which are considered as part of this section. It can be\n
-# a list of web pages (usual case), a list of products\n
-# (online catalog), a list of tenders (e-government), etc.\n
-# \n
-# This script shows an implementation which consists in\n
-# listing documents which are either associated to this section\n
-# through \'aggregate\' or which are meet the predicate define\n
-# by the section (ex. which are part of a given publication_section)\n
-# and which are in "published" state and of a "Web Page" portal_type\n
-#\n
-# This script can be changed to meet other requirements. For example\n
-# one may want to display a list of products in a section. In this case,\n
-# this script must return a list of documents of type "Product"\n
-# with a "validated" state and in the appropriate product family.\n
-#\n
-# This script is intended to be overriden by creating an instance \n
-# in each section if necessary\n
+            <value> <string>"""\n
+ This script is part of ERP5 Web\n
 \n
-from string import split\n
+ ERP5 Web is a business template of ERP5 which provides a way\n
+ to create web sites which can display selected\n
+ ERP5 contents through multiple custom web layouts.\n
 \n
+ This script returns a list of document values (ie. objects or brains)\n
+ which are considered as part of this section. It can be\n
+ a list of web pages (usual case), a list of products\n
+ (online catalog), a list of tenders (e-government), etc.\n
+\n
+ The default implementation provided here consists in\n
+ listing documents which meet the predicate defined\n
+ by the section (ex. which are part of a given publication_section)\n
+ and which are in "published" state and of a "Web Page" portal_type.\n
+\n
+ It should be noted that document selection should be implemented\n
+ as much as possible using the Domain API.\n
+\n
+ This script can be changed to meet other requirements. For example\n
+ one may want to display a list of products in a section. In this case,\n
+ this script must return a list of documents of type "Product"\n
+ with a "validated" state and in the appropriate product family.\n
+\n
+ This script is intended to be overriden by creating a new script\n
+ within the Web Site instance if necessary (not inside a\n
+ portal_skin since multiple sites might have different behaviour).\n
+\n
+ Here are some suggestions which can either be implemented using\n
+ SQL (group_by, order_by) or using additional python scripting\n
+ if this is compatible with data size.\n
+\n
+ SUGGESTIONS:\n
+ - Prevent showing duplicate references\n
+ \n
+ - Add documents associated to this section through \'aggregate\'.\n
+\n
+ - Display only the latest version and the appropriate language.\n
+"""\n
 portal_catalog = container.portal_catalog\n
 \n
-# First find the web section we are in\n
-current_node = context\n
-while not current_node.getPortalType() in (\'Web Section\', \'Web Site\'):\n
-  current_node = current_node.aq_parent\n
-# Then find the publication categories referenced by the web section\n
-section_categories = current_node.getMembershipCriterionCategoryList()\n
-section_base_categories_conjunctive = current_node.getMembershipCriterionBaseCategoryList()\n
-section_base_categories_disjunctive = current_node.getMultimembershipCriterionBaseCategoryList()\n
+# First find the Web Section or Web Site we belong to\n
+current_section = context.getWebSectionValue()\n
 \n
-def checkMember(x):\n
-  if x.getValidationState()==\'published\' or x.getValidationState()==\'validated\':\n
-    return current_node.test(x)\n
-\n
-# get all web pages and products and check if they match the predicates of the web section,\n
-# except if there is no membership category in the section.\n
-if not section_categories:\n
-  li = []\n
-else:\n
-  li = list(context.portal_catalog(portal_type="Product"))\n
-  li.extend(list(context.portal_catalog(portal_type="Web Page")))\n
-  li = filter(checkMember, li )\n
-if li:\n
-  my_list=li\n
-else:\n
-  my_list=[]\n
-\n
-# get al web pages associated to the section by aggregate-relation\n
-if hasattr(current_node,\'getAggregateList\'):\n
-  aggregate_values = current_node.getAggregateList()\n
-  aggregate_values = map(context.restrictedTraverse,aggregate_values)\n
-  my_list.extend(aggregate_values) \n
-\n
-# Remove duplicate entries in my_list\n
-my_clean_list=[]\n
-my_reference_list=[]\n
-my_version_list={}\n
-for my_element in my_list:\n
-  if not my_element.getReference() in my_reference_list:\n
-    my_clean_list.append(my_element)\n
-    my_reference_list.append(my_element.getReference())\n
-    if hasattr(my_element,\'getVersion\'):\n
-      my_version_list[my_element.getReference()] = my_element.getVersion()\n
-    else:\n
-      my_version_list[my_element.getReference()] = 0\n
-  else:\n
-    if hasattr(my_element,\'getVersion\'):\n
-      if my_version_list[my_element.getReference()] < my_element.getVersion():\n
-        my_version_list[my_element.getReference()] = my_element.getVersion()\n
-        for clean_item in my_clean_list:\n
-          if clean_item.getReference()==my_element.getReference():\n
-            my_clean_list.remove(clean_item)\n
-            break\n
-        my_clean_list.append(my_element)\n
-    \n
-\n
-\n
-def compareIndex(c1, c2):\n
-  c1_value = c1.getObject()  \n
-  c2_value = c2.getObject()  \n
-  if hasattr(c1_value,\'getIntIndex\') and hasattr(c2_value,\'getIntIndex\') :\n
-    return cmp(c1_value.getIntIndex(), c2_value.getIntIndex()) \n
-  else:\n
-    return 0\n
-\n
-my_clean_list.sort(compareIndex)\n
-return my_clean_list\n
-\n
-\n
-## FYI - old implementation - broken\n
-#from Products.ERP5Form.Selection import DomainSelection\n
-#\n
-#if not context.getMembershipCriterionCategoryList() and not context.getSourceList():\n
-#  return []\n
-#\n
-#def content_cmp(c1, c2):\n
-#  c1_value = c1.getObject()  \n
-#  c2_value = c2.getObject()  \n
-#  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex()) \n
-#\n
-#if context.getMembershipCriterionCategoryList():\n
-#  domain = DomainSelection(domain_dict = {\'web_site\': context})\n
-#  kw[\'selection_domain\'] = domain\n
-#  kw[\'portal_type\'] = \'Web Page\'\n
-#  kw[\'validation_state\'] = \'published\'\n
-#  if not kw.has_key(\'sort_on\'): kw[\'sort_on\'] = \'int_index\'\n
-#  brain_list = list(context.portal_catalog(**kw))\n
-#else:\n
-#  brain_list = []\n
-#\n
-## Make a new search with local documents\n
-#reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
-#if reference_list:\n
-#  brain_list.extend(list(context.portal_catalog(reference= reference_list, portal_type="Web Page")))\n
-#\n
-## Make sure a single reference is counted once only\n
-#brain_dict = {}\n
-#none_list = []\n
-#for b in brain_list:\n
-#  o = b.getObject()\n
-#  if o is not None:\n
-#    reference = o.getReference()\n
-#    if reference is None:\n
-#      none_list.append(b)\n
-#    else:\n
-#      brain_dict[reference] = b\n
-#\n
-#brain_list = brain_dict.values() + none_list\n
-#for bee in brain_list:\n
-#  bee = bee.title\n
-#\n
-## Sort documents\n
-#brain_list.sort(content_cmp)\n
-#\n
-#return brain_list\n
-
-
-]]></string> </value>
+# Return the list of matching documents for the given states\n
+return current_section.searchResults(validation_state=[\'draft\', \'submitted\', \'shared\',\n
+                                                       \'released\', \'public\', \'restricted\'],\n
+                                     order_by=[(\'int_index\', \'descending\')])\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -264,33 +166,11 @@ return my_clean_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>string</string>
-                            <string>split</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>portal_catalog</string>
                             <string>context</string>
-                            <string>current_node</string>
-                            <string>section_categories</string>
-                            <string>section_base_categories_conjunctive</string>
-                            <string>section_base_categories_disjunctive</string>
-                            <string>checkMember</string>
-                            <string>li</string>
-                            <string>list</string>
-                            <string>filter</string>
-                            <string>my_list</string>
-                            <string>hasattr</string>
-                            <string>aggregate_values</string>
-                            <string>map</string>
-                            <string>my_clean_list</string>
-                            <string>my_reference_list</string>
-                            <string>my_version_list</string>
-                            <string>_getiter_</string>
-                            <string>my_element</string>
-                            <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>clean_item</string>
-                            <string>compareIndex</string>
+                            <string>current_section</string>
                           </tuple>
                         </value>
                     </item>

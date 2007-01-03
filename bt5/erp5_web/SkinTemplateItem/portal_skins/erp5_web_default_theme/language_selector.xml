@@ -48,35 +48,14 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block replace="nothing"><!--\n
-    This macro is recursive and display lists of lists to display the breadcrumb as a tree.\n
-    TODO: merge it with site map (similar code)\n
---></tal:block>\n
-<tal:block metal:define-macro="renderBreadcrumbItem">\n
-  <ul tal:define="remaining_items remaining_items | nothing"\n
-      tal:condition="remaining_items">\n
-    <li tal:define="current_item    python: remaining_items[0];\n
-                    remaining_items python: remaining_items[1:]">\n
-      <a tal:attributes="href  python: \'%s/view\' % current_item[1].Base_getPermanentURL();\n
-                         class python: len(remaining_items) == 0 and \'selected\' or \'\'"\n
-          tal:content="python: current_item[0]"/>\n
-      <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
-    </li>\n
-  </ul>\n
+<tal:block tal:define="language_list here/Localizer/get_languages_map;\n
+                       absolute_url here/absolute_url">\n
+<tal:block tal:repeat="language language_list" tal:condition="python:len(language_list) > 1">\n
+<b tal:condition="language/selected"><u tal:content="language/id"/></b>\n
+<a tal:attributes="href python:\'%s/Base_doLanguage?select_language=%s\' % (absolute_url, language[\'id\'])"\n
+   tal:content="language/id" tal:condition="not:language/selected"/>\n
 </tal:block>\n
-\n
-<!-- Initialize the recursive loop -->\n
-<div class="breadcrumb" tal:define="remaining_items python: context.WebSite_getBreadcrumbItemList()">\n
-  <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
-</div>\n
-\n
-<span style="float:right;" tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
-Logged in as: <a style="color:blue;" tal:define="user here/portal_membership/getAuthenticatedMember"\n
-                 tal:content="user"\n
-                 tal:attributes="href python:\'WebSite_redirectToUserView?%s&user=%s\' % (\n
-                                 request.get(\'http_parameters\', None), user)">userid</a>\n
-</span>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
@@ -90,7 +69,7 @@ Logged in as: <a style="color:blue;" tal:define="user here/portal_membership/get
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>breadcrumb</string> </value>
+            <value> <string>language_selector</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

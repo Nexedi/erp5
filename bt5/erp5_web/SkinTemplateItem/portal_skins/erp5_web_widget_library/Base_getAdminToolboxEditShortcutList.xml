@@ -68,44 +68,85 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
- This script is part of ERP5 Web\n
-\n
- ERP5 Web is a business template of ERP5 which provides a way\n
- to create web sites which can display selected\n
- ERP5 contents through multiple custom web layouts.\n
-\n
- This script returns the default document to display\n
- as the front page of a given Web Section or Web Site.\n
- If no default is found, it returns None.\n
-\n
- The default implementation should look at published\n
- documents which are associated to the section\n
- through aggregate relation and try to display those\n
- which are in the user language if any.\n
-\n
- Other implementations are possible: ex. display the last\n
- version in the closest language rather than\n
- the latest version in the user language.\n
-\n
- This script is intended to be overriden by creating a new script\n
- within the Web Site instance if necessary (not inside a\n
- portal_skin since multiple sites might have different behaviour).\n
- \n
+            <value> <string encoding="cdata"><![CDATA[
+
 """\n
-portal_object = context.getPortalObject()\n
+  This script creates edit actions for the admin toolbox\n
+  and adds some extra actions taken from the action_list\n
+  defined in portal_types tool.\n
 \n
-# First find the Web Section or Web Site we belong to\n
-current_section = context.getWebSectionValue()\n
+  The script is able to rewrite some actions by looking at the\n
+  editable_absolute_url property stored on Context objects\n
+  which are created for virtual pages. (ie. pages which\n
+  are obtained through _aq_dynamic from Web Section or Web Page)\n
+"""\n
+# Init some variables\n
+translateString = context.Base_translateString\n
+result = []\n
+portal_type = context.getPortalType()\n
+parent_object = context.aq_parent\n
+parent_pt = parent_object.getPortalType()\n
+request = context.REQUEST\n
+action_dict = request.get(\'actions\', {}) # actions needs to be renamed to action_dict\n
+exchange_action_list = action_dict.get(\'object_exchange\', [])\n
+button_action_list = action_dict.get(\'object_button\', [])\n
+portal_url = context.portal_url()\n
+http_parameters = request.get(\'http_parameters\')\n
+http_parameters = http_parameters.replace(\'editable_mode\', \'dummy_editable_mode\')\n
 \n
-# First get all the applicable references\n
-# There might be more than one reference due to security differences\n
-# (ex. a default restricted web page and a default public web page)\n
-reference_list = context.getAggregateReferenceList()\n
-if not reference_list: return None # Quick return\n
+# Try to get the original absolute_url if this is a permanent URL\n
+absolute_url = context.absolute_url()\n
+editable_absolute_url = getattr(context, \'editable_absolute_url\', absolute_url)\n
 \n
-return context.WebSite_getDocumentValue(name=reference_list)\n
-</string> </value>
+\n
+# Append a button to edit the current document\n
+if not request.form.get(\'editable_mode\', 0): result.append(dict(\n
+  url   = "%s/view?editable_mode:int=1&%s" % (editable_absolute_url, http_parameters),\n
+  icon  = context.getIcon() or \'file_icon.gif\',\n
+  title = translateString("Edit ${portal_type}", mapping=dict(portal_type=portal_type)),\n
+  label = "%s Icon" % portal_type,\n
+))\n
+else: result.append(dict(\n
+  url   = "%s/view?editable_mode=&%s" % (editable_absolute_url, http_parameters),\n
+  icon  = context.getIcon() or \'file_icon.gif\',\n
+  title = translateString("View ${portal_type}", mapping=dict(portal_type=portal_type)),\n
+  label = "%s Icon" % portal_type,\n
+))\n
+\n
+# Append a button to edit the default page\n
+\n
+# Append a button to edit the parent section\n
+if portal_type == \'Web Page\' and parent_pt in (\'Web Section\', \'Web Site\'): result.append(dict(\n
+  url   = "%s/view?editable_mode=1" % parent_object.absolute_url(),\n
+  icon  = parent_object.getIcon(),\n
+  title = translateString("Edit parent ${portal_type}", mapping=dict(portal_type=parent_pt)),\n
+  label = "%s Icon" % parent_pt,\n
+))\n
+\n
+# Append a button to open WEBDAV\n
+for action in button_action_list:\n
+  if action[\'id\'] == \'webdav\':\n
+    result.append(dict(\n
+      url   = action[\'url\'].replace(absolute_url, editable_absolute_url),\n
+      icon  = action[\'icon\'],\n
+      title = translateString(action[\'title\']),\n
+      label = "WebDAV Icon",\n
+    ))\n
+\n
+# Append an exchange button\n
+if len(exchange_action_list):\n
+  action = exchange_action_list[0]\n
+  result.append(dict(\n
+      url   = action[\'url\'].replace(absolute_url, editable_absolute_url),\n
+    icon  = \'%s/images/imp-exp.png\' % portal_url,\n
+    title = translateString(\'Import / Export\'),\n
+    label = "Import / Export Icon",\n
+  ))\n
+\n
+return result\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -115,12 +156,6 @@ return context.WebSite_getDocumentValue(name=reference_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -155,10 +190,25 @@ return context.WebSite_getDocumentValue(name=reference_list)\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_object</string>
-                            <string>current_section</string>
-                            <string>reference_list</string>
-                            <string>None</string>
+                            <string>translateString</string>
+                            <string>result</string>
+                            <string>portal_type</string>
+                            <string>parent_object</string>
+                            <string>parent_pt</string>
+                            <string>request</string>
+                            <string>action_dict</string>
+                            <string>exchange_action_list</string>
+                            <string>button_action_list</string>
+                            <string>portal_url</string>
+                            <string>http_parameters</string>
+                            <string>absolute_url</string>
+                            <string>getattr</string>
+                            <string>editable_absolute_url</string>
+                            <string>dict</string>
+                            <string>_getiter_</string>
+                            <string>action</string>
+                            <string>_getitem_</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
@@ -175,7 +225,7 @@ return context.WebSite_getDocumentValue(name=reference_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDefaultWebPageValue</string> </value>
+            <value> <string>Base_getAdminToolboxEditShortcutList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

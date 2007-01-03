@@ -68,8 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set Web Site layout to default one\n
-default_layout = \'erp5_web_default_layout\'\n
+            <value> <string>"""\n
+  This scripts sets up automatically default parameters\n
+  for a newly created Web Site\n
+"""\n
+# Set Web Site layout to default one\n
+default_layout = \'template_erp5_web\'\n
 context.setContainerLayout(default_layout)\n
 context.setContentLayout(default_layout)\n
 \n

@@ -68,54 +68,47 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# This script is part of ERP5 Web\n
-#\n
-# ERP5 Web is an extension to ERP5 which provides a way\n
-# to create web sites which can display selected\n
-# ERP5 contents through multiple custom web layouts.\n
-#\n
-# This script returns a list of tuples in the form\n
-# (title, value) where title is the title of the \n
-# document provided as value. The document value\n
-# must be wrapped in the acquisition context \n
-# (ex. Web Site / Section / Module / Document).\n
-#\n
-# Scripts of page templates which use this script\n
-# and need to generate the URLs of document values\n
-# should must use the WebSite_getDocumentUrl API \n
-# or eventually the absolute_url API in order\n
-# to benefit from virtual hosting features. \n
-# (ie. do not use getUrl)\n
-# NOTE: Clarification needed when to use which ?\n
-#\n
-# This script can be used to produce breadcrumbs\n
-# in page templates or in widgets. It can be customised\n
-# to implement different behaviours such as\n
-#\n
-# - CMS like breadcrumb (hierarchy of contents)\n
-# - Wiki like breadcrumb (history of navigation)\n
-# - or any other behaviour\n
-#\n
-# The default implementation is hierarchical\n
+            <value> <string>"""\n
+ This script is part of ERP5 Web\n
 \n
-# (kev): I think the current implementation must change to just return the list of object like\n
-#          [ <WebSite at /erp5/web_site_module/1>\n
-#          , <Domain at /erp5/web_site_module/1/1>\n
-#          , <Document at /erp5/web_page_module/1 used for /erp5/web_site_module/1/1>\n
-#          ]\n
-#        and not a list of tuples like (title, object). Thanks to this modification I will be able\n
-#        to choose how to render the link string of the breadcrumb item in the page template of my\n
-#        widget. Because this kind of feature is related to rendering and presentation and because\n
-#        it is not part of core logic of the web API, the title should not be returned by the\n
-#        current script.\n
+ ERP5 Web is a business template of ERP5 which provides a way\n
+ to create web sites which can display selected\n
+ ERP5 contents through multiple custom web layouts.\n
 \n
+ This script returns a list of tuples in the form\n
+ (title, value) where title is the title of the\n
+ document provided as value. The document value\n
+ must be wrapped in the acquisition context\n
+ (ex. Web Site / Section / Module / Document).\n
+\n
+ Scripts of page templates which use this script\n
+ and need to generate the URLs of document values\n
+ should must use the Base_getPermanentURL API\n
+ or the absolute_url API in order\n
+ to benefit from virtual hosting features.\n
+ (ie. do not use getUrl or getPath)\n
+\n
+ This script can be used to produce breadcrumbs\n
+ in page templates or in widgets. It can be customised\n
+ to implement different behaviours such as\n
+\n
+ - CMS like breadcrumb (hierarchy of contents)\n
+ \n
+ - Wiki like breadcrumb (history of navigation)\n
+ \n
+ - or any other behaviour\n
+\n
+ The default implementation is hierarchical.\n
+\n
+ TODO: Clarify absolute_url or Base_getPermanentURL\n
+ TODO: is it so useful to include title ?\n
+"""\n
 crumb = context\n
 crumb_list = []\n
 \n
-while hasattr(crumb, \'getParent\'):\n
-  crumb_list.append(( crumb.ERP5Web_getVerboseTitle(priority = \'short_title\')\n
+# Implementation consists in browsing the aq_parent sequence\n
+while crumb is not None:\n
+  crumb_list.append(( crumb.getProperty(\'translated_short_title\', None) or crumb.getTranslatedTitleOrId()\n
                     , crumb\n
                     ))\n
   if crumb.getPortalType() == \'Web Site\':\n
@@ -124,11 +117,8 @@ while hasattr(crumb, \'getParent\'):\n
     crumb = crumb.aq_parent\n
 \n
 crumb_list.reverse()\n
-\n
 return crumb_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -179,9 +169,8 @@ return crumb_list\n
                             <string>context</string>
                             <string>crumb</string>
                             <string>crumb_list</string>
-                            <string>hasattr</string>
-                            <string>_getattr_</string>
                             <string>None</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

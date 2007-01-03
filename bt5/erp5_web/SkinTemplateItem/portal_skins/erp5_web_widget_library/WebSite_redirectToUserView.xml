@@ -69,76 +69,24 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
- This script is part of ERP5 Web\n
+  Search for the current user and redirect to the default view.\n
+  This code is a good example to show how to redirect to\n
+  the appropriate object in the context of a Web Site.\n
 \n
- ERP5 Web is a business template of ERP5 which provides a way\n
- to create web sites which can display selected\n
- ERP5 contents through multiple custom web layouts.\n
-\n
- If no name parameter is provided, this script\n
- returns the document which is being displayed\n
- currently in a Web Section or a Web Page\n
- by invoking WebSite_getDefaultWebPageValue. \n
-\n
- The default implementation searches for\n
- documents which are in the user language if any\n
- and which reference is equal to the name parameter.\n
-\n
- Other implementations are possible: ex. display the last\n
- version in the closest language rather than\n
- the latest version in the user language.\n
-\n
- If a name parameter is provided, it will lookup\n
- the catalog to find the most appropriate\n
- document.\n
-\n
- NOTE:\n
- - portal param probably useless \n
+  TODO:\n
+  - Implement a wholistic view on user information\n
+    (documents, membership, etc.)\n
 """\n
-if portal is None: portal = context.getPortalObject()\n
-portal_catalog = portal.portal_catalog\n
-# The list of portal types here should be large enough to include\n
-# all portal_types defined in the various sections so that\n
-# href tags which point to a document by reference can still work.\n
-valid_portal_type_list = [\'Web Page\', ]\n
+user_list = context.portal_catalog(reference=user, portal_type="Person")\n
+if len(user_list):\n
+  # We found a user\n
+  user_object = user_list[0].getObject()\n
+  return user_object.Base_redirect(\'view\')\n
 \n
-# This should probably be moved to a specific page\n
-if name is None:\n
-  if context.getPortalType() in valid_portal_type_list:\n
-    return context\n
-  elif context.getPortalType() in (\'Web Site\', \'Web Section\'):\n
-    return context.WebSite_getDefaultWebPageValue()\n
-  else:\n
-    return None\n
-\n
-# Find the applicable language\n
-language = context.Localizer.get_selected_language()\n
-\n
-# Search the catalog for all documents matching the reference\n
-# this will only return documents which are accessible by the user\n
-web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list,\n
-                               order_by=[(\'index\', \'descending\'), (\'version\', \'descending\')],\n
-                               language=language)\n
-                               # XXX - group_by is missing here\n
-try:\n
-  # Try to get the first page on the list\n
-  web_page = web_page_list[0]\n
-  web_page = web_page.getObject()\n
-except IndexError:\n
-  # Search again without the language\n
-  web_page_list = portal_catalog(reference=name, portal_type=\'Web Page\',\n
-                                 order_by=[(\'index\', \'descending\'), (\'version\', \'descending\')])\n
-                                 # XXX - group_by is missing here\n
-  try:\n
-    # Try to get the first page on the list\n
-    web_page = web_page_list[0]\n
-    web_page = web_page.getObject()\n
-  except IndexError:\n
-    # Default returns None\n
-    web_page = None\n
-\n
-# return the web page\n
-return web_page\n
+# No user found\n
+translateString = context.Base_translateString\n
+return context.Base_redirect(form_id, editable_mode=editable_mode,\n
+                             keep_items={\'portal_status_message\': translateString("Sorry, user ${user} could not be accessed.", mapping = dict(user = user))})\n
 </string> </value>
         </item>
         <item>
@@ -154,14 +102,8 @@ return web_page\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>name=None,portal=None</string> </value>
+            <value> <string>user, form_id, editable_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -181,24 +123,23 @@ return web_page\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>name</string>
-                            <string>portal</string>
-                            <string>None</string>
+                            <string>user</string>
+                            <string>form_id</string>
+                            <string>editable_mode</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_catalog</string>
-                            <string>valid_portal_type_list</string>
-                            <string>language</string>
-                            <string>web_page_list</string>
+                            <string>user_list</string>
+                            <string>len</string>
                             <string>_getitem_</string>
-                            <string>web_page</string>
-                            <string>IndexError</string>
+                            <string>user_object</string>
+                            <string>translateString</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -211,14 +152,17 @@ return web_page\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDocumentValue</string> </value>
+            <value> <string>WebSite_redirectToUserView</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Redirect to user view</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

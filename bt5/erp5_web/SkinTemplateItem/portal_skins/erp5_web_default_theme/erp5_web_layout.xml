@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,8 +61,14 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
-                <string>hidden</string>
+                <string>left column transparent (Logo)</string>
+                <string>left column (Navigation)</string>
+                <string>left column (Contents)</string>
+                <string>left column (Search)</string>
+                <string>left column (Debug)</string>
+                <string>right column (Demo)</string>
+                <string>right column (Toolbox)</string>
+                <string>footer</string>
               </list>
             </value>
         </item>
@@ -71,18 +77,67 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>footer</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left column (Contents)</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>subsection_list</string>
+                        <string>section_content_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key>                 <string>left column (Debug)</string> </key>
                     <value>
                       <list>
-                        <string>listbox_caption</string>
+                        <string>applicable_layout</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left column (Navigation)</string> </key>
+                    <value>
+                      <list>
+                        <string>language_selector</string>
+                        <string>breadcrumb</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left column (Search)</string> </key>
+                    <value>
+                      <list>
+                        <string>your_search_text</string>
+                        <string>search_action</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left column transparent (Logo)</string> </key>
+                    <value>
+                      <list>
+                        <string>website_logo</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right column (Demo)</string> </key>
+                    <value>
+                      <list>
+                        <string>about_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right column (Toolbox)</string> </key>
+                    <value>
+                      <list>
+                        <string>admin_toolbox</string>
                       </list>
                     </value>
                 </item>
@@ -91,7 +146,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ImageModule_viewImageList</string> </value>
+            <value> <string>erp5_web_layout</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -99,19 +154,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewContentList</string> </value>
+            <value> <string>erp5_web_default_layout</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
-        </item>
-        <item>
-            <key> <string>rid</string> </key>
-            <value> <int>-1722436574</int> </value>
+            <value> <string>template_erp5_web</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>4</int> </value>
+            <value> <int>6</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
@@ -119,13 +170,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Folder Contents</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Default Web Layout</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

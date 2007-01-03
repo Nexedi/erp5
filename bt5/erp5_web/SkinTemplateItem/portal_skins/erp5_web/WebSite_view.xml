@@ -100,6 +100,7 @@
                       <list>
                         <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_short_title</string>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
                       </list>
