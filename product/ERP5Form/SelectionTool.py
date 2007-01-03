@@ -1337,12 +1337,11 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
 # depend on ERP5Form.
 
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.Core.Folder import FolderMixIn
 from ZPublisher.mapply import mapply
 
-method_id_filter_list = [x for x in dir(Folder) if getattr(Folder, x, None) is not None and callable(getattr(Folder, x))]
-method_id_filter_list.extend(['_aq_dynamic', ])
-candidate_method_id_list = [x for x in dir(SelectionTool) if getattr(SelectionTool, x, None) is not None and callable(getattr(SelectionTool, x)) and not x.startswith('_') and not x.endswith('__roles__') and x not in method_id_filter_list]
+method_id_filter_list = [x for x in FolderMixIn.__dict__ if callable(getattr(FolderMixIn, x))]
+candidate_method_id_list = [x for x in SelectionTool.__dict__ if callable(getattr(SelectionTool, x)) and not x.startswith('_') and not x.endswith('__roles__') and x not in method_id_filter_list]
 
 for property_id in candidate_method_id_list:
   def portal_selection_wrapper(self, wrapper_property_id=property_id, *args, **kw):
@@ -1354,9 +1353,9 @@ for property_id in candidate_method_id_list:
     method = getattr(portal_selection, wrapper_property_id)
     return mapply(method, positional=args, keyword=request,
                   context=self, bind=1)
-  setattr(Folder, property_id, portal_selection_wrapper)
+  setattr(FolderMixIn, property_id, portal_selection_wrapper)
   security_property_id = '%s__roles__' % (property_id, )
   security_property = getattr(SelectionTool, security_property_id, None)
   if security_property is not None:
-    setattr(Folder, security_property_id, security_property)
+    setattr(FolderMixIn, security_property_id, security_property)
 
