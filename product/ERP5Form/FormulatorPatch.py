@@ -24,6 +24,8 @@
 from Products.Formulator.Field import Field
 from Products.Formulator.Widget import Widget
 from AccessControl import ClassSecurityInfo
+from cgi import escape
+import types
 from zLOG import LOG
 
 def Field_generate_field_key(self, validation=0, key=None):
@@ -288,7 +290,7 @@ from Products.Formulator.Widget import TextAreaWidget
 from Products.Formulator.Widget import render_element
 from DocumentTemplate.DT_Util import html_quote
 
-def TextAreaWidget_render_view(self, field, value):
+def TextAreaWidget_render_view(self, field, value): # Probably useless
     width = field.get_value('width')
     height = field.get_value('height')
 
@@ -300,7 +302,8 @@ def TextAreaWidget_render_view(self, field, value):
                           contents=html_quote(value),
                           extra='readonly')
 
-TextAreaWidget.render_view = TextAreaWidget_render_view
+# TextAreaWidget.render_view = TextAreaWidget_render_view
+# See bellow TextWidget_patched_render_view
 
 # Patch the render_view of LinkField so that it is clickable in read-only mode.
 from Products.Formulator.Widget import TextWidget
@@ -329,17 +332,30 @@ LinkField.widget = PatchedLinkWidgetInstance
 # Patch the render_view of TextField to enclose the value within <span> html tags if css class defined
 def TextWidget_patched_render_view(self, field, value):
   """Render text as non-editable.
+     This renderer is designed to be type error resistant.
+     in we get a non string value. It does escape the result
+     and produces clean xhtml.
   """
   if value is None:
     return ''
+  if isinstance(value, types.ListType) or isinstance(value, types.TupleType):
+    old_value = value
+  else:
+    old_value = [str(value)]
+  value = []
+  for line in old_value:
+    value.append(escape(line))
+  value = '<br/>'.join(value)
   css_class = field.get_value('css_class')
   if css_class not in ('', None):
+    # All strings should be escaped before rendering in HTML
+    # except for editor field
     return "<span class='%s'>%s</span>" % (css_class, value)
   return value
 
 from Products.Formulator.Widget import TextWidget
 TextWidget.render_view = TextWidget_patched_render_view
-
+TextAreaWidget.render_view = TextWidget_patched_render_view # Use a standard span rendering
 
 class IntegerWidget(TextWidget) :
   def render(self, field, key, value, REQUEST) :
