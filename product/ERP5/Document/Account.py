@@ -32,9 +32,11 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Products.ERP5.Core.MetaNode import MetaNode
+#from Products.ERP5.Core.MetaNode import MetaNode
 
-class Account(MetaNode, XMLObject):
+
+#class Account(MetaNode, XMLObject):
+class Account(XMLObject):
     """
       An account is an abstract metanode which holds
       currencies. Accounting is implemented through
