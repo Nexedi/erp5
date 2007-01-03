@@ -30,7 +30,7 @@ from Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Type.Base import TempBase
 

@@ -298,11 +298,17 @@ def updateGlobals(this_module, global_hook,
         if key[0:2] != '__':
           setattr(Permissions, key, getattr(permissions_module, key))
 
+  # Return core document_class list (for ERP5Type only)
+  # this was introduced to permit overriding ERP5Type Document classes
+  # which was not possible when they were define in the Document folder
+  path, core_module_id_list = getModuleIdList(product_path, 'Core')
+  for document in core_module_id_list:
+    InitializeDocument(document, document_path=path)
   # Return document_class list
   path, module_id_list = getModuleIdList(product_path, 'Document')
   for document in module_id_list:
     InitializeDocument(document, document_path=path)
-  return module_id_list
+  return module_id_list + core_module_id_list
 
 #####################################################
 # Modules Import

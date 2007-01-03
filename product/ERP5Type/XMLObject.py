@@ -33,7 +33,7 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.Utils import convertToUpperCase
 
-from Document.Folder import Folder
+from Core.Folder import Folder
 from zLOG import LOG
 
 class XMLObject( Folder ):
