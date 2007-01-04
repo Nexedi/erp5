@@ -361,7 +361,7 @@ simulation_state_list:list</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string>InventoryBrain.py</string> </value>
+            <value> <string>ERP5.InventoryBrain</string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
@@ -385,7 +385,7 @@ simulation_state_list:list</string> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>1000</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
