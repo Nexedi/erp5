@@ -20,12 +20,14 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PluggableAuthService.PluggableAuthService import _SWALLOWABLE_PLUGIN_EXCEPTIONS
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from ZODB.POSException import ConflictError
+import sys
 
 from zLOG import LOG
 
@@ -182,6 +184,13 @@ class ERP5UserManager(BasePlugin):
             raise
           except:
             LOG('ERP5Security', 0, 'getUserByLogin failed', error=sys.exc_info())
+            # Here we must raise an exception to prevent calers from caching
+            # a result of a degraded situation.
+            # The kind of exception does not matter as long as it's catched by
+            # PAS and causes a lookup using another plugin or user folder.
+            # As PAS does not define explicitely such exception, we must use
+            # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
+            raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
         finally:
           setSecurityManager(sm)
         return [item.getObject() for item in result]
