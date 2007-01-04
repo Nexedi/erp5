@@ -42,7 +42,7 @@ try:
 except ImportError:
   pass
 
-from zLOG import LOG, TRACE
+from zLOG import LOG, TRACE, WARNING
 
 MAX_PRIORITY = 5
 MAX_GROUPED_OBJECTS = 500
@@ -314,22 +314,27 @@ class SQLDict(RAMDict):
             break
         else:
           get_transaction().abort()
-      except ConflictError:
-        # If a conflict occurs, abort the transaction to minimize the impact,
-        # then simply delay the operations.
-        get_transaction().abort()
-        for uid_list in uid_list_list:
-          if len(uid_list):
-            activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                              retry = 1)
-        get_transaction().commit()
-        return 0
       except:
-        # For other exceptions, put the messages to an invalid state immediately.
-        get_transaction().abort()
-        for uid_list in uid_list_list:
-          if len(uid_list):
-            activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
+        # If an exception occurs, abort the transaction to minimize the impact,
+        try:
+          get_transaction().abort()
+        except:
+          # Unfortunately, database adapters may raise an exception against abort.
+          LOG('SQLDict', WARNING, 'abort failed, thus some objects may be modified accidentally')
+          pass
+        if issubclass(sys.exc_info()[0], ConflictError):
+          # For a conflict error, simply delay the operations.
+          for uid_list in uid_list_list:
+            if len(uid_list):
+              activity_tool.SQLDict_setPriority(uid = uid_list, 
+                                                delay = VALIDATION_ERROR_DELAY,
+                                                retry = 1)
+        else:
+          # For other exceptions, put the messages to an invalid state immediately.
+          for uid_list in uid_list_list:
+            if len(uid_list):
+              activity_tool.SQLDict_assignMessage(uid = uid_list, 
+                                                  processing_node = INVOKE_ERROR_STATE)
         get_transaction().commit()
         return 0
 

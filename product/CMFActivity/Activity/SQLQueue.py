@@ -34,13 +34,14 @@ from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ZODB.POSException import ConflictError
 from types import StringType
+import sys
 
 try:
   from transaction import get as get_transaction
 except ImportError:
   pass
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 MAX_PRIORITY = 5
 
@@ -126,17 +127,23 @@ class SQLQueue(RAMQueue):
         activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
         if m.is_executed:                                          # Make sure message could be invoked
           get_transaction().commit()                                        # If successful, commit
-      except ConflictError:
-        # If a conflict occurs, catch it and delay the operation.
-        get_transaction().abort()
-        activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
-                                           priority = line.priority)
-        get_transaction().commit()
-        return 0
       except:
-        # For the other exceptions, put it into an error state.
-        get_transaction().abort()
-        activity_tool.SQLQueue_assignMessage(uid = line.uid, processing_node = INVOKE_ERROR_STATE)
+        # If an exception occurs, abort the transaction to minimize the impact,
+        try:
+          get_transaction().abort()
+        except:
+          # Unfortunately, database adapters may raise an exception against abort.
+          LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
+          pass
+
+        if issubclass(sys.exc_info()[0], ConflictError):
+          # If a conflict occurs, delay the operation.
+          activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
+                                             priority = line.priority)
+        else:
+          # For the other exceptions, put it into an error state.
+          activity_tool.SQLQueue_assignMessage(uid = line.uid, 
+                                               processing_node = INVOKE_ERROR_STATE)
         get_transaction().commit()
         return 0
 
@@ -144,7 +151,14 @@ class SQLQueue(RAMQueue):
       if m.is_executed:
         activity_tool.SQLQueue_delMessage(uid=line.uid)  # Delete it
       else:
-        get_transaction().abort()                                         # If not, abort transaction and start a new one
+        try:
+          # If not, abort transaction and start a new one
+          get_transaction().abort()
+        except:
+          # Unfortunately, database adapters may raise an exception against abort.
+          LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
+          pass
+
         if line.priority > MAX_PRIORITY:
           # This is an error
           activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = INVOKE_ERROR_STATE)
