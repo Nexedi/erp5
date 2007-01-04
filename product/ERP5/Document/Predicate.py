@@ -169,7 +169,8 @@ class Predicate(Folder):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'buildSQLQuery' )
   def buildSQLQuery(self, strict_membership=0, table='category',
-                          join_table='catalog', join_column='uid'):
+                          join_table='catalog', join_column='uid',
+                          **kw):
     """
       A Predicate can be rendered as an SQL expression. This
       can be used to generate SQL requests in reports or in
@@ -177,6 +178,26 @@ class Predicate(Folder):
 
       XXX - This method is not implemented yet
     """
+    # Build the identity criterion
+    catalog_kw = {}
+    catalog_kw.update(kw) # query_table, REQUEST, ignore_empty_string, **kw
+    for criterion in self.getCriterionList():
+      if criterion.min and criterion.max:
+        catalog_kw[criterion.property] = { 'query' : (criterion.min, criterion.max),
+                                           'range' : 'minmax'
+                                         }
+      elif criterion.min:
+        catalog_kw[criterion.property] = { 'query' : criterion.min,
+                                           'range' : 'min'
+                                         }
+      elif criterion.max:
+        catalog_kw[criterion.property] = { 'query' : criterion.max,
+                                           'range' : 'max'
+                                         }
+      else:
+        catalog_kw[criterion.property] = criterion.identity
+
+    portal_catalog = getToolByName(self, 'portal_catalog')
     portal_categories = getToolByName(self, 'portal_categories')
 
     from_table_dict = {}
@@ -228,9 +249,15 @@ class Predicate(Folder):
     sql_text = ' AND '.join(join_select_list + membership_select_list +
                             multimembership_select_list)
 
-    # And now build criteria
-    return { 'from_table_list' : from_table_dict.items(),
-             'where_expression' : sql_text }
+    # Now merge identity and membership criteria
+    catalog_kw['where_expression'] = sql_text
+    sql_query = portal_catalog.buildSQLQuery(**catalog_kw)
+    for alias, table in sql_query['from_table_list']:
+      if from_table_dict.has_key(alias):
+        raise KeyError, "The same table is used twice for an identity criterion and for a membership criterion"
+      from_table_dict[alias] = table
+    sql_query['from_table_list'] = from_table_dict.items()
+    return sql_query
 
   security.declareProtected( Permissions.AccessContentsInformation, 'asSQLExpression' )
   def asSQLExpression(self, strict_membership=0, table='category'):
@@ -245,6 +272,18 @@ class Predicate(Folder):
     table_list = self.buildSQLQuery(strict_membership=strict_membership, table=table)['from_table_list']
     sql_text_list = map(lambda (a,b): '%s AS %s' % (b,a), table_list)
     return ' , '.join(sql_text_list)
+
+  def searchResults(self, **kw):
+    """
+    """
+    portal_catalog = getToolByName(self, 'portal_catalog')
+    return portal_catalog.searchResults(build_sql_query_method=self.buildSQLQuery,**kw)
+
+  def countResults(self, REQUEST=None, used=None, **kw):
+    """
+    """
+    portal_catalog = getToolByName(self, 'portal_catalog')
+    return portal_catalog.countResults(build_sql_query_method=self.buildSQLQuery,**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):

@@ -26,19 +26,21 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from AccessControl import getSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager, newSecurityManager, setSecurityManager
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet,\
                               Constraint, Interface, Cache
 from Products.ERP5.Document.Domain import Domain
+#from Products.ERP5.Document.WebSite import WebSite
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
 from Globals import get_request
 
 from zLOG import LOG
 
-from Products.ERP5.Document.WebSite import reserved_name_dict, reserved_name_dict_init, CACHE_KEY, WEBSITE_USER
-WEBSECTION_KEY = 'web_section_value'
+from Products.ERP5.Document.WebSite import reserved_name_dict, reserved_name_dict_init
+from Products.ERP5.Document.WebSite import CACHE_KEY, WEBSITE_USER, WEBSECTION_KEY, DOCUMENT_NAME_KEY
+
 
 class WebSection(Domain):
     """
@@ -133,7 +135,7 @@ class WebSection(Domain):
         if user is not None:
           old_manager = getSecurityManager()
           newSecurityManager(get_request(), user)
-        document = self.WebSite_getDocumentValue(portal, name)
+        document = self.WebSite_getDocumentValue(name=name, portal=portal)
         request[CACHE_KEY][name] = document
         if user is not None:
           setSecurityManager(old_manager)
@@ -142,4 +144,14 @@ class WebSection(Domain):
         if request[CACHE_KEY].has_key(name):
           del request[CACHE_KEY][name]
         raise
+      if document is not None:
+        request[DOCUMENT_NAME_KEY] = name
+        document = aq_base(document.asContext(id=name, # Hide some properties to permit location the original
+                                              original_container=document.getParentValue(),
+                                              original_id=document.getId(),
+                                              editable_absolute_url=document.absolute_url()))
       return document
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getWebSiteValue')
+    def getWebSiteValue(self):
+      return self.getParentValue().getWebSiteValue()

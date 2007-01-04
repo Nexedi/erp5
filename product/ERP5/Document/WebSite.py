@@ -62,12 +62,15 @@ class WebSiteTraversalHook(Persistent):
   def _physicalPathToVirtualPath(self, path):
     """
       Remove the path to the VirtualRoot from a physical path
-      and add the path to the WebSite is any
+      and add the path to the WebSite if any
     """
     if type(path) is type(''):
       path = path.split( '/')
 
-    website_path = self._v_request.get(WEBSECTION_KEY, self._v_request.get(WEBSITE_KEY, None))
+    # Every Web Section acts as a mini site though layout for document editing is the root layout
+    #website_path = self._v_request.get(WEBSECTION_KEY, self._v_request.get(WEBSITE_KEY, None))
+    # Only consider Web Site for absolute_url
+    website_path = self._v_request.get(WEBSITE_KEY, None) 
     if website_path:
       website_path = tuple(website_path)    # Make sure all path are tuples
       path = tuple(path)                    # Make sure all path are tuples
@@ -94,6 +97,10 @@ class WebSiteTraversalHook(Persistent):
         i = i + 1
       else:
         break
+    #if self._v_request.has_key(DOCUMENT_NAME_KEY):
+    #  # Replace the last id of the path with the name which
+    #  # was used to lookup the document
+    #  path = path[:-1] + (self._v_request[DOCUMENT_NAME_KEY],)
     return path[i:]
 
   def __call__(self, container, request):
@@ -110,6 +117,7 @@ Domain_getattr = Domain.inheritedAttribute('__getattr__')
 
 # Use a request key to store access attributes and prevent infinite recursion
 CACHE_KEY = 'web_site_aq_cache'
+DOCUMENT_NAME_KEY = 'web_site_document_name'
 reserved_name_dict = { 'getApplicableLayout' : 1,
                        'getLayout' : 1,
                        'Localizer' : 1,
@@ -234,7 +242,7 @@ class WebSite(Domain):
         if user is not None:
           old_manager = getSecurityManager()
           newSecurityManager(get_request(), user)
-        document = self.WebSite_getDocumentValue(portal, name)
+        document = self.WebSite_getDocumentValue(name=name, portal=portal)
         request[CACHE_KEY][name] = document
         if user is not None:
           setSecurityManager(old_manager)
@@ -243,6 +251,11 @@ class WebSite(Domain):
         if request[CACHE_KEY].has_key(name):
           del request[CACHE_KEY][name]
         raise
+      if document is not None:
+        document = aq_base(document.asContext(id=name, # Hide some properties to permit location the original
+                                              original_container=document.getParentValue(),
+                                              original_id=document.getId(),
+                                              editable_absolute_url=document.absolute_url()))
       return document
 
     # Draft - this is being worked on
@@ -274,5 +287,3 @@ class WebSite(Domain):
           a given document
         """
         pass
-
-
