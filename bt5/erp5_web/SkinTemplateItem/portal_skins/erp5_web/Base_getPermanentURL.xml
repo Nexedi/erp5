@@ -91,6 +91,10 @@
  based on the section absolute_url and on the\n
  document reference.\n
 \n
+ The section parameter can be used to provide\n
+ explicitely a section. This can be useful to\n
+ build URL generators for listbox entries.\n
+\n
  More sophisticated behaviours are possible.\n
 \n
  SUGGESTIONS:\n
@@ -101,11 +105,18 @@
  - change the behaviour of WebSite_getDocumentUrl\n
    for documents which are not published.\n
 \n
- NOTE: it is still unknown whether this script\n
- needs to be integrated or not to the absolute_url API\n
+ NOTE: absolute_url is the appropriate API to get\n
+ the absolute_url of the current document. It has\n
+ been tweaked enough in ERP5 Web to support virtual\n
+ hosting and permanent URLs.\n
+ \n
+ Base_getPermanentURL is useful to create a permanent\n
+ URL out of a document which has been accessed either\n
+ directly or through a Web Section / Web Site. It is\n
+ the reverse method of WebSite_getDocumentValue.\n
 """\n
 # Return absolute URL if our parent is not a Web Section or Web Site\n
-if context.aq_parent.getPortalType() not in (\'Web Section\', \'Web Site\'):\n
+if section is None and context.aq_parent.getPortalType() not in (\'Web Section\', \'Web Site\'):\n
   return context.absolute_url()\n
 \n
 # Return absolute URL if this is not an appropriate portal_type\n
@@ -120,10 +131,10 @@ if context.getValidationState() not in validation_state:\n
   return context.absolute_url()\n
 \n
 # Find the Web Section or Web Site we belong to\n
-current_section = context.getWebSectionValue()\n
+if section is None: section = context.getWebSectionValue()\n
 \n
 # Return the URL\n
-return "%s/%s" % (current_section.absolute_url(), context.getReference())\n
+return "%s/%s" % (section.absolute_url(), context.getReference())\n
 </string> </value>
         </item>
         <item>
@@ -146,7 +157,7 @@ return "%s/%s" % (current_section.absolute_url(), context.getReference())\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>section=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -166,17 +177,18 @@ return "%s/%s" % (current_section.absolute_url(), context.getReference())\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>section</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>valid_portal_type_list</string>
                             <string>validation_state</string>
-                            <string>current_section</string>
                           </tuple>
                         </value>
                     </item>
@@ -188,7 +200,9 @@ return "%s/%s" % (current_section.absolute_url(), context.getReference())\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

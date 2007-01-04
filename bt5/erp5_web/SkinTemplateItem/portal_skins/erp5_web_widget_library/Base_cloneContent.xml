@@ -75,11 +75,15 @@
   or by creating a new document.\n
 \n
   This script is called by the admin toolbox.\n
-"""\n
 \n
+  Cloning or creation is prevented if document already exists\n
+  with same reference, version, language. Pretty messages\n
+  are provided to the user.\n
+"""\n
+translateString =  context.Base_translateString\n
 form_data = context.REQUEST.form\n
 \n
-# Define a list of field name to ignore in the cloning process\n
+# Define a list of field name to take into account in the cloning process\n
 ACCEPTABLE_FORM_ID_LIST = [ \\\n
                          \'reference\'\n
                        , \'language\'\n
@@ -89,14 +93,6 @@ ACCEPTABLE_FORM_ID_LIST = [ \\\n
                        , \'short_title\'\n
 ]\n
 \n
-# Clone properties to the new object\n
-kw = {}\n
-property_id_list = context.propertyIds()\n
-for (key, val) in form_data.items():\n
-  if key in ACCEPTABLE_FORM_ID_LIST and key in property_id_list:\n
-    kw[key] = val\n
-new_object.edit(**kw)\n
-\n
 # First make sure that no document already exists with the\n
 # same portal_type, reference, language and version.\n
 if clone:\n
@@ -104,55 +100,56 @@ if clone:\n
 else:\n
   portal_type = form_data[\'new_portal_type\']\n
 \n
-portal_catalog(portal_type=portal_type, reference=reference, ) \n
+# prepare query params\n
+kw = {\'portal_type\' : portal_type}\n
+if form_data.get(\'reference\'): kw[\'reference\'] = form_data[\'reference\']\n
+if form_data.get(\'version\'): kw[\'version\'] = form_data[\'version\']\n
+if form_data.get(\'language\'): kw[\'language\'] = form_data[\'language\']\n
 \n
+# Count documents of same reference and prepare kw\n
+count = int(context.portal_catalog.countResults(**kw)[0][0])\n
+kw[\'reference\'] = kw.get(\'reference\', \'undefined\')\n
+kw[\'language\'] = kw.get(\'language\', \'any\')\n
+kw[\'version\'] = kw.get(\'version\', \'undefined\')\n
+# if count results not 0, warn user\n
+if count:\n
+  return context.Base_redirect(form_id, editable_mode=editable_mode,\n
+        keep_items={\'portal_status_message\': translateString("Sorry, a ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\' already exists. Please select another reference or version.", mapping = kw)})\n
 \n
 # Standard cloning method\n
 if clone:\n
-  \n
-\n
-  \n
-  # TODO ?: If the document language hasn\'t changed and the version wasn\'t increased,\n
-  #           change the copied document reference to "copy-of-%s". This idea came from\n
-  #           the fact some published document are "invisible" because cloned documents\n
-  #           share by default the same reference (within a set of documents of same\n
-  #           references in a given section, only one document is display).\n
-\n
   # We copy contents in place if possible\n
-  directory     = getattr(context, \'original_container\', None) or context.getParentValue()\n
+  directory = getattr(context, \'original_container\', None) or context.getParentValue()\n
 \n
   # Copy and paste the object\n
-  original_id = getattr(context, \'original_id\', None) or context.getId() # This is required for objects acquired in Web Section\n
-  clipboard    = directory.manage_copyObjects(ids=[original_id])\n
+  original_id = getattr(context, \'original_id\', None) or context.getId()\n
+                    # This is required for objects acquired in Web Section\n
+  clipboard = directory.manage_copyObjects(ids=[original_id])\n
   #context.log("Kev test clipboard                  >>>>>", repr(clipboard))\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
-  new_object   = directory[paste_result[0][\'new_id\']]\n
-\n
-  #context.log("Kev test paste_result               >>>>>", repr(paste_result))\n
-  #context.log("Kev test directory.WebSite_getUrl() >>>>>", repr(directory.WebSite_getUrl()))\n
-  #context.log("Kev test new_object.getId()         >>>>>", repr(new_object.getId()))\n
-\n
-  redirect_url = \'%s/view?editable_mode=1\' % new_object.absolute_url()\n
+  new_object = directory[paste_result[0][\'new_id\']]\n
+  message_kind = \'clone\'\n
 \n
 # Create a new object here (this is a copy and paste of the previous WebSite_clone script)\n
 else:\n
   # Guess the new document module\n
-  portal       = context.getPortalObject()\n
-  module       = portal.getDefaultModule(portal_type=portal_type)\n
-  new_object   = module.newContent(portal_type = portal_type)\n
-  redirect_url = \'%s/view?editable_mode=1\' % new_object.absolute_url()\n
-\n
+  portal = context.getPortalObject()\n
+  module = portal.getDefaultModule(portal_type=portal_type)\n
+  new_object = module.newContent(portal_type = portal_type)\n
+  form_id = \'view\'\n
+  message_kind = \'new\'\n
 \n
 # Clone properties to the new object\n
-kw = {}\n
+edit_kw = {}\n
 property_id_list = new_object.propertyIds()\n
 for (key, val) in form_data.items():\n
   if key in ACCEPTABLE_FORM_ID_LIST and key in property_id_list:\n
-    kw[key] = val\n
-new_object.edit(**kw)\n
+    edit_kw[key] = val\n
+new_object.edit(**edit_kw)\n
 \n
-\n
-return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+if not editable_mode: form_id = \'view\'\n
+return new_object.Base_redirect(form_id, editable_mode=1,\n
+        keep_items={\'portal_status_message\': translateString("Created %s ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\'." % message_kind, mapping = kw)})\n
 
 
 ]]></string> </value>
@@ -171,7 +168,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>clone=1</string> </value>
+            <value> <string>clone=1, form_id, editable_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -191,38 +188,42 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>clone</string>
+                            <string>form_id</string>
+                            <string>editable_mode</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translateString</string>
                             <string>form_data</string>
                             <string>ACCEPTABLE_FORM_ID_LIST</string>
-                            <string>kw</string>
-                            <string>property_id_list</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>val</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>new_object</string>
                             <string>portal_type</string>
                             <string>_getitem_</string>
-                            <string>portal_catalog</string>
-                            <string>reference</string>
+                            <string>kw</string>
+                            <string>_write_</string>
+                            <string>int</string>
+                            <string>_apply_</string>
+                            <string>count</string>
                             <string>getattr</string>
                             <string>None</string>
                             <string>directory</string>
                             <string>original_id</string>
                             <string>clipboard</string>
                             <string>paste_result</string>
-                            <string>redirect_url</string>
+                            <string>new_object</string>
+                            <string>message_kind</string>
                             <string>portal</string>
                             <string>module</string>
+                            <string>edit_kw</string>
+                            <string>property_id_list</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>val</string>
                           </tuple>
                         </value>
                     </item>
@@ -236,6 +237,8 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
             <value>
               <tuple>
                 <int>1</int>
+                <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

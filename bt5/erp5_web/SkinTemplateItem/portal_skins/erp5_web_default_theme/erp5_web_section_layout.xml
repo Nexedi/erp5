@@ -103,6 +103,7 @@
                     <key>                 <string>left column (Navigation)</string> </key>
                     <value>
                       <list>
+                        <string>language_selector</string>
                         <string>breadcrumb</string>
                       </list>
                     </value>
