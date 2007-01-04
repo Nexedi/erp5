@@ -119,6 +119,10 @@ class DeferredDB(DB):
         from thread import get_ident
         self._tlock.acquire()
         self._tthread = get_ident()
+        # The Deferred DB instance is sometimes used for several
+        # transactions, so it is required to clear the sql_string_list
+        # each time a transaction starts
+        self.sql_string_list = []
 
     def _finish(self, *ignored):
         from thread import get_ident
