@@ -190,7 +190,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if len(sort_on) > 0:
           kw['sort_on'] = sort_on
         elif kw.has_key('sort_on'):
-          del kw.params['sort_on']
+          del kw.params['sort_on'] # XXX JPS: Should this be really deleted ?
         if method is not None:
           if callable(method):
             if self.domain is not None and self.report is not None:
@@ -428,7 +428,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
 
       if k == 'parent':
         # Special treatment for parent
-        select_expression.append(d.getParentSqlExpression(table='catalog', 
+        select_expression.append(d.getParentSQLExpression(table='catalog',
                                strict_membership=strict_membership))
       elif k is not None:
         if getattr(aq_base(d), 'isPredicate', 0):
@@ -438,7 +438,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
           # This is a category, we must join
           select_expression.append('%s.%s = %s_category.uid' % \
                                 (join_table, join_column, k))
-          select_expression.append(d.asSQLExpression(table='%s_category' % k, 
+          select_expression.append(d.asSQLExpression(table='%s_category' % k,
                                 base_category=k,
                                 strict_membership=strict_membership))
                                 # XXX We should take into account k explicitely
@@ -447,7 +447,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
       result = "( %s )" % ' AND '.join(select_expression)
     else:
       result = ''
-    #LOG('DomainSelection', 0, 'asSQLExpression returns %r' % (result,))      
+    #LOG('DomainSelection', 0, 'asSQLExpression returns %r' % (result,))
     return result
 
   security.declarePublic('asSQLJoinExpression')

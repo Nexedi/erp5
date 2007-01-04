@@ -128,7 +128,7 @@ class TestDocument(ERP5TypeTestCase):
     self.failUnless(self.getCategoryTool()!=None)
     self.failUnless(self.getSimulationTool()!=None)
     self.failUnless(self.getTypeTool()!=None)
-    self.failUnless(self.getSqlConnection()!=None)
+    self.failUnless(self.getSQLConnection()!=None)
     self.failUnless(self.getCatalogTool()!=None)
     self.failUnless(self.getWorkflowTool()!=None)
 
