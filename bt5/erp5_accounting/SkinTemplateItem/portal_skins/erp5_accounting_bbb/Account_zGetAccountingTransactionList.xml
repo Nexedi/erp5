@@ -228,7 +228,7 @@ no_mirror_section_uid</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string>zsqlbrain.py</string> </value>
+            <value> <string>ZSQLCatalog.zsqlbrain</string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
@@ -236,9 +236,7 @@ no_mirror_section_uid</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
