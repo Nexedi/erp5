@@ -77,7 +77,7 @@ if site is None:\n
   site = context.portal_categories.restrictedTraverse(root_site_url)\n
 root_site_uid = site.getUid()\n
 portal_type_list = [x for x in context.getPortalDeliveryTypeList() if x!=\'Cash Movement\']\n
-document_list = context.Baobab_getRemainingOperationList(source_uid=root_site_uid,\n
+document_list = context.Baobab_getRemainingOperationList(site_uid=root_site_uid,\n
                                simulation_state=not_closed_state_list,\n
                                portal_type = portal_type_list)\n
 #document_list = [x.getObject() for x in context.portal_catalog(\n
