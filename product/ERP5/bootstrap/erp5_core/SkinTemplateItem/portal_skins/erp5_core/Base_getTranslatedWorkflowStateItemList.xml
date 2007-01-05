@@ -74,8 +74,10 @@ N_ = context.Base_translateString\n
 wf = getToolByName(context, \'portal_workflow\')[wf_id]\n
 item_list = []\n
 \n
-for state in wf.states.objectValues() :\n
-  item_list.append((N_(state.title), state.id))\n
+for state in wf.states.objectValues():\n
+  if state.title:\n
+    # we hide states without titles, eg \'deleted\'.\n
+    item_list.append((N_(state.title), state.id))\n
 \n
 return item_list\n
 </string> </value>
