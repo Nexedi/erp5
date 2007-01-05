@@ -277,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getTotalPrice()</string> </value>
+            <value> <string>python: cell.getTotalPrice(fast=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

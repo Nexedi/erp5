@@ -348,7 +348,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -405,8 +405,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery.start_date</string>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
+                          <string>start_date</string>
                         </tuple>
                       </list>
                     </value>

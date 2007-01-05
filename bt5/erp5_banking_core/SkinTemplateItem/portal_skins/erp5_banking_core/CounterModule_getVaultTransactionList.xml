@@ -201,7 +201,7 @@ for resource in resource_dict.keys():\n
   resource_value = context.portal_catalog.getObject(resource[0])\n
   if resource_value.getPortalType() not in resource_portal_type:\n
     continue\n
-  if len(resource)==3:\n
+  if len(resource)==3: # case of history\n
     movement = context.portal_catalog.getObject(resource[2])\n
     #context.log(\'movement\',movement)\n
     explanation_value = movement\n
@@ -250,12 +250,6 @@ return repr([x for x in total_inventory_list])\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -381,27 +375,6 @@ return repr([x for x in total_inventory_list])\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

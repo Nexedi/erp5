@@ -71,7 +71,10 @@
             <value> <string>start_date = context.getStartDate()\n
 stop_date = context.getStopDate()\n
 identity_criterion = {\'start_date\':(start_date,stop_date)}\n
-return context.asContext(_range_criterion=identity_criterion)\n
+return context.asContext(_range_criterion=identity_criterion,\n
+                         membership_criterion_base_category=[\'price_currency\',\'resource\'],\n
+                         membership_criterion_category=[\'resource/%s\' % context.getParentValue().getRelativeUrl(),\n
+                                                        \'price_currency/%s\' % context.getPriceCurrency()])\n
 </string> </value>
         </item>
         <item>
@@ -122,7 +125,7 @@ return context.asContext(_range_criterion=identity_criterion)\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>start_date</string>
                             <string>stop_date</string>
                             <string>identity_criterion</string>

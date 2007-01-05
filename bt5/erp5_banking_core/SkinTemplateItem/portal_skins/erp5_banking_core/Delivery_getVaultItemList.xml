@@ -80,6 +80,7 @@
 #                      Delivery_getVaultItemList utilis\xc3\xa9 dans le TALES de my_source dans le formulaire\n
 # user_site = 1 : Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels l\'user est affect\xc3\xa9,\n
 #                 au lieu des encaisses de tous le sites\n
+# exclude_user_site = 0 : Permet de ne pas s\xe9lectionner les encaisses du site auquel appartient l\'utilisateur\n
 # owner_site = 1 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels le propri\xc3\xa9taire du document est affect\xc3\xa9,\n
 #                 au lieu des encaisses de tous le sites\n
 # main_agency = 0 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites qui appartiennent \xe0 une agence principale,\n
@@ -97,7 +98,8 @@ from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, \n
-    site_list=None, with_base=1, all=0, first_level=0,main_agency=0):\n
+    site_list=None, with_base=1, all=0, first_level=0,main_agency=0,\n
+    exclude_site_list=None):\n
 \n
   if vault_type is None:\n
     organisation_list = []\n
@@ -156,6 +158,9 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     for site_member in site_member_list:\n
       site_member_object = site_member.getObject()\n
       site_member_relative_url = site_member_object.getRelativeUrl()\n
+      if exclude_site_list is not None:\n
+        if site_member_relative_url in exclude_site_list:\n
+          continue\n
       if main_agency:\n
         if site_member_relative_url.find(\'principale\')<0:\n
           continue\n
@@ -232,10 +237,21 @@ else:\n
   else:\n
     site_list = [\'site\']\n
 \n
+exclude_site_list = None\n
+if exclude_user_site:\n
+  user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  new_list = []\n
+  for user_site in user_site_list:\n
+    root_site_url = context.Baobab_getVaultSite(vault=user_site).getRelativeUrl()\n
+    if root_site_url not in new_list:\n
+      new_list.append(root_site_url)\n
+  exclude_site_list = new_list\n
+\n
+\n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
   assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all,\n
-  first_level=first_level,main_agency=main_agency)\n
+  first_level=first_level,main_agency=main_agency,exclude_site_list=exclude_site_list)\n
 \n
 if current_url != None :\n
   if \'site\' not in current_url:\n
@@ -261,12 +277,6 @@ return [(\'\', \'\')] + list(vault_list)\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
@@ -280,7 +290,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0,exclude_user_site=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -308,7 +318,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
+                        <value> <int>13</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -326,6 +336,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>owner_site</string>
                             <string>first_level</string>
                             <string>main_agency</string>
+                            <string>exclude_user_site</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -338,6 +349,10 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>new_site_list</string>
                             <string>_getiter_</string>
                             <string>site</string>
+                            <string>exclude_site_list</string>
+                            <string>user_site_list</string>
+                            <string>new_list</string>
+                            <string>root_site_url</string>
                             <string>vault_list</string>
                             <string>current_category</string>
                             <string>append</string>
@@ -371,6 +386,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>0</int>
                 <int>0</int>
                 <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
@@ -382,27 +398,6 @@ return [(\'\', \'\')] + list(vault_list)\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
