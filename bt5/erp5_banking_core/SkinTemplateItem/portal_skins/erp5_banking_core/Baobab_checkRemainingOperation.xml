@@ -76,15 +76,18 @@ if site is None:\n
   root_site_url = context.Baobab_getUserAssignedRootSiteList()[0]\n
   site = context.portal_categories.restrictedTraverse(root_site_url)\n
 root_site_uid = site.getUid()\n
-portal_type_list = context.getPortalDeliveryTypeList()\n
-document_list = [x.getObject() for x in context.portal_catalog(\n
-                                                  simulation_state=not_closed_state_list,\n
-                                                  default_source_uid=root_site_uid,\n
-                                                  portal_type=portal_type_list)]\n
-document_list.extend([x.getObject() for x in context.portal_catalog(\n
-                                                  simulation_state=not_closed_state_list,\n
-                                                  default_destination_uid=root_site_uid,\n
-                                                  portal_type=portal_type_list)])\n
+portal_type_list = [x for x in context.getPortalDeliveryTypeList() if x!=\'Cash Movement\']\n
+document_list = context.Baobab_getRemainingOperationList(source_uid=root_site_uid,\n
+                               simulation_state=not_closed_state_list,\n
+                               portal_type = portal_type_list)\n
+#document_list = [x.getObject() for x in context.portal_catalog(\n
+#                                                  simulation_state=not_closed_state_list,\n
+#                                                  default_source_uid=root_site_uid,\n
+#                                                  portal_type=portal_type_list)]\n
+#document_list.extend([x.getObject() for x in context.portal_catalog(\n
+#                                                  simulation_state=not_closed_state_list,\n
+#                                                  default_destination_uid=root_site_uid,\n
+#                                                  portal_type=portal_type_list)])\n
 for document in document_list:\n
   # Cash movement in ordered stated are allowed\n
   if document.getPortalType() in (\'Cash Movement\',):\n
@@ -156,11 +159,11 @@ for document in document_list:\n
                             <string>context</string>
                             <string>root_site_url</string>
                             <string>root_site_uid</string>
-                            <string>portal_type_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
+                            <string>portal_type_list</string>
                             <string>document_list</string>
                             <string>document</string>
                             <string>Products.ERP5Type.Message</string>

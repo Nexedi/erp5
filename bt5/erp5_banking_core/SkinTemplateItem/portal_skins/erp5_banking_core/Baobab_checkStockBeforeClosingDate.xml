@@ -100,10 +100,12 @@ for counter_vault in counter_vault_list:\n
                                                      group_by_variation=1,\n
                                                      ignore_variation=0)\n
   if len(inventory_list)>0:\n
-    message = Message(domain=\'ui\',\n
-                message=\'Sorry, some resources are still remaining here : $counter_title\',\n
-                mapping={\'counter_title\':counter_title})\n
-    raise ValidationFailed,message\n
+    for inventory in inventory_list:\n
+      if inventory.total_qantity>0:\n
+        message = Message(domain=\'ui\',\n
+                    message=\'Sorry, some resources are still remaining here : $counter_title\',\n
+                    mapping={\'counter_title\':counter_title})\n
+        raise ValidationFailed,message\n
 \n
 max_price = context.portal_preferences.getPreferredUsualCashMaxRenderingPrice()\n
 if max_price is None:\n
@@ -193,6 +195,7 @@ if total_price > max_price:\n
                             <string>counter_title</string>
                             <string>inventory_list</string>
                             <string>len</string>
+                            <string>inventory</string>
                             <string>message</string>
                             <string>max_price</string>
                             <string>usual_cash</string>
