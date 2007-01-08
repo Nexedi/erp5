@@ -39,7 +39,10 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import noSecurityManager
+from AccessControl.SecurityManagement import setSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
@@ -484,23 +487,22 @@ class ActivityTool (Folder, UniqueObject):
         acquired = timerservice_lock.acquire(0)
         if not acquired:
           return
-
+        
+        old_sm = getSecurityManager()
         try:
           # get owner of portal_catalog, so normally we should be able to
           # have the permission to invoke all activities
-          user = self.portal_catalog.getOwner()
+          user = self.portal_catalog.getWrappedOwner()
           newSecurityManager(self.REQUEST, user)
           
           currentNode = self.getCurrentNode()
           
           # only distribute when we are the distributingNode or if it's empty
           if (self.distributingNode == self.getCurrentNode()):
-              self.distribute(len(self._nodes))
-              #LOG('CMFActivity:', INFO, 'self.distribute(node_count=%s)' %len(self._nodes))
+            self.distribute(len(self._nodes))
 
           elif not self.distributingNode:
-              self.distribute(1)
-              #LOG('CMFActivity:', INFO, 'distributingNodes empty! Calling distribute(1)')
+            self.distribute(1)
           
           # SkinsTool uses a REQUEST cache to store skin objects, as
           # with TimerService we have the same REQUEST over multiple
@@ -514,18 +516,14 @@ class ActivityTool (Folder, UniqueObject):
           # the processing_node numbers are the indices of the elements in the node tuple +1
           # because processing_node starts form 1
           if currentNode in self._nodes:
-              self.tic(list(self._nodes).index(currentNode)+1)
-              #LOG('CMFActivity:', INFO, 'self.tic(processing_node=%s)' %str(list(self._nodes).index(currentNode)+1))
+            self.tic(list(self._nodes).index(currentNode)+1)
               
           elif len(self._nodes) == 0:
-              self.tic(1)
-              #LOG('CMFActivity:', INFO, 'Node List is empty! Calling tic(1)')
+            self.tic(1)
 
-        except:
+        finally:
           timerservice_lock.release()
-          raise
-        else:
-          timerservice_lock.release()
+          setSecurityManager(old_sm)
 
     security.declarePublic('distribute')
     def distribute(self, node_count=1):
