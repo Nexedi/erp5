@@ -6,7 +6,7 @@ __version__ = 'TimerServer for Zope 0.1'
 import traceback
 
 import thread
-import sys, os, errno, time, socket
+import sys, os, errno, time, socket, urllib
 from StringIO import StringIO
 from zLOG import LOG, INFO
 
@@ -14,7 +14,6 @@ from ZServer.PubCore import handle
 from ZPublisher.BaseRequest import BaseRequest
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
-from ZPublisher import Client
 
 class TimerServer:
     def __init__(self, module, interval=600):
@@ -36,7 +35,6 @@ class TimerServer:
             '\tInterval: %s seconds.\n'%(time.ctime(time.time()), interval))
 
     def run(self):
-
         # wait until the zhttp_server exist in socket_map
         # because TimerService has to be started after the Zope HTTPServer
         from asyncore import socket_map
@@ -59,8 +57,8 @@ class TimerServer:
         while 1:
             time.sleep(5)
             try:
-                Client.call('http://%s:%s' %(ip, port))
-            except ValueError:
+                urllib.urlopen('http://%s:%s' %(ip, port))
+            except IOError:
                 continue
             break
 
