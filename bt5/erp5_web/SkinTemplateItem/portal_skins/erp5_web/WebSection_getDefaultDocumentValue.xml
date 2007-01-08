@@ -75,49 +75,37 @@
  to create web sites which can display selected\n
  ERP5 contents through multiple custom web layouts.\n
 \n
- This script returns a list of tuples in the form\n
- (title, value) where title is the title of the\n
- document provided as value. The document value\n
- must be wrapped in the acquisition context\n
- (ex. Web Site / Section / Module / Document).\n
+ This script returns the default document to display\n
+ as the front page of a given Web Section or Web Site.\n
+ If no default is found, it returns None.\n
 \n
- Scripts of page templates which use this script\n
- and need to generate the URLs of document values\n
- should must use the Base_getPermanentURL API\n
- or the absolute_url API in order\n
- to benefit from virtual hosting features.\n
- (ie. do not use getUrl or getPath)\n
+ The default implementation should look at published\n
+ documents which are associated to the section\n
+ through the aggregate relation and try to display those\n
+ which are available in the user language if any.\n
 \n
- This script can be used to produce breadcrumbs\n
- in page templates or in widgets. It can be customised\n
- to implement different behaviours such as\n
+ Other implementations are possible: ex. display the last\n
+ version in the closest language rather than\n
+ the latest version in the user language.\n
 \n
- - CMS like breadcrumb (hierarchy of contents)\n
- \n
- - Wiki like breadcrumb (history of navigation)\n
- \n
- - or any other behaviour\n
-\n
- The default implementation is hierarchical.\n
-\n
- TODO: Clarify absolute_url or Base_getPermanentURL\n
- TODO: is it so useful to include title ?\n
+ This script is intended to be overriden by creating a new script\n
+ within a Web Section or a  Web Site instance. Customisation\n
+ is also possible per portal type or per meta type through\n
+ portal skins. It is recommended to use the first approach\n
+ to host multiple sites on a single ERP5Site instance.\n
 """\n
-crumb = context\n
-crumb_list = []\n
+portal_object = context.getPortalObject()\n
 \n
-# Implementation consists in browsing the aq_parent sequence\n
-while crumb is not None:\n
-  crumb_list.append(( crumb.getProperty(\'translated_short_title\', None) or crumb.getTranslatedTitleOrId()\n
-                    , crumb\n
-                    ))\n
-  if crumb.getPortalType() == \'Web Site\':\n
-    crumb = None   # Don\'t go higher than the first Web Site found\n
-  else:\n
-    crumb = crumb.aq_parent\n
+# First find the Web Section or Web Site we belong to\n
+current_section = context.getWebSectionValue()\n
 \n
-crumb_list.reverse()\n
-return crumb_list\n
+# First get all the applicable references\n
+# There might be more than one reference due to security differences\n
+# (ex. a default restricted web page and a default public web page)\n
+reference_list = context.getAggregateReferenceList()\n
+if not reference_list: return None # Quick return\n
+\n
+return context.getDocumentValue(name=reference_list)\n
 </string> </value>
         </item>
         <item>
@@ -166,11 +154,12 @@ return crumb_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>context</string>
-                            <string>crumb</string>
-                            <string>crumb_list</string>
-                            <string>None</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_object</string>
+                            <string>current_section</string>
+                            <string>reference_list</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -187,7 +176,7 @@ return crumb_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getBreadcrumbItemList</string> </value>
+            <value> <string>WebSection_getDefaultDocumentValue</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

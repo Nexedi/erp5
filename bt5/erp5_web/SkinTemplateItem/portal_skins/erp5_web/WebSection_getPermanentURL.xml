@@ -75,36 +75,50 @@
  to create web sites which can display selected\n
  ERP5 contents through multiple custom web layouts.\n
 \n
- This script returns the default document to display\n
- as the front page of a given Web Section or Web Site.\n
- If no default is found, it returns None.\n
+ This script returns the absolute URL of the current\n
+ document in a pretty way and taking into account\n
+ virtual hosting. The purpose of this script is to be\n
+ able to access documents through a URL such as:\n
 \n
- The default implementation should look at published\n
- documents which are associated to the section\n
- through aggregate relation and try to display those\n
- which are in the user language if any.\n
+ www.mysite.com/mysection/a-document-reference\n
 \n
- Other implementations are possible: ex. display the last\n
- version in the closest language rather than\n
- the latest version in the user language.\n
+ even if the physical path of the document is\n
 \n
- This script is intended to be overriden by creating a new script\n
- within the Web Site instance if necessary (not inside a\n
- portal_skin since multiple sites might have different behaviour).\n
- \n
+ /erp5/web_page_module/33\n
+\n
+ This script can be considered as the reverse of\n
+ WebSection_getDocumentValue.\n
+\n
+ The default script looks in the acquisition context\n
+ for the first relevant section and builds a URL\n
+ based on the section absolute_url and on the\n
+ document reference.\n
+\n
+ The document parameter is required.\n
+\n
+ More sophisticated behaviours are possible.\n
+\n
+ SUGGESTIONS:\n
+\n
+ - change the behaviour of WebSection_getPermanentURL\n
+   for non anonymous\n
+\n
+ - change the behaviour of WebSection_getPermanentURL\n
+   for documents which are not published.\n
 """\n
-portal_object = context.getPortalObject()\n
+# Return absolute URL if this is not an appropriate portal_type\n
+valid_portal_type_list = [\'Web Page\', ] # WARNING - this is a copy from WebSection_getDocumentValue\n
+if document.getPortalType() not in valid_portal_type_list:\n
+  return document.absolute_url()\n
 \n
-# First find the Web Section or Web Site we belong to\n
-current_section = context.getWebSectionValue()\n
+# Return absolute URL if this is not a \'live\' document\n
+validation_state=[\'draft\', \'submitted\', \'shared\',     # WARNING - this is a copy from WebSection_getDocumentValueList\n
+                  \'released\', \'published\', \'restricted\']\n
+if document.getValidationState() not in validation_state:\n
+  return document.absolute_url()\n
 \n
-# First get all the applicable references\n
-# There might be more than one reference due to security differences\n
-# (ex. a default restricted web page and a default public web page)\n
-reference_list = context.getAggregateReferenceList()\n
-if not reference_list: return None # Quick return\n
-\n
-return context.WebSite_getDocumentValue(name=reference_list)\n
+# Return the URL\n
+return "%s/%s" % (context.absolute_url(), document.getReference())\n
 </string> </value>
         </item>
         <item>
@@ -127,7 +141,7 @@ return context.WebSite_getDocumentValue(name=reference_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>document</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -147,18 +161,17 @@ return context.WebSite_getDocumentValue(name=reference_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>document</string>
+                            <string>valid_portal_type_list</string>
                             <string>_getattr_</string>
+                            <string>validation_state</string>
                             <string>context</string>
-                            <string>portal_object</string>
-                            <string>current_section</string>
-                            <string>reference_list</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -175,7 +188,7 @@ return context.WebSite_getDocumentValue(name=reference_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDefaultWebPageValue</string> </value>
+            <value> <string>WebSection_getPermanentURL</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

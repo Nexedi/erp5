@@ -321,7 +321,7 @@ return aggregate_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getGroupList</string> </value>
+            <value> <string>Form_getGroupList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

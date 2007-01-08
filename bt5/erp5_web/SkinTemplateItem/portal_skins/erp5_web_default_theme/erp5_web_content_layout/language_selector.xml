@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>section_content_list</string> </value>
+            <value> <string>language_selector</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hiddenLabel languageSelector</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -265,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Documents</string> </value>
+                    <value> <string>Language</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/current_web_section/section_content_render</string> </value>
+            <value> <string>here/language_selector</string> </value>
         </item>
       </dictionary>
     </pickle>

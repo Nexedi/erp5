@@ -52,7 +52,7 @@
   This widget displays the list of Sections contained in the current context.\n
 --></tal:block>\n
 \n
-<ul><tal:block tal:repeat="section python:context.contentValues(portal_type=\'Web Section\')">\n
+<ul><tal:block tal:repeat="section python:here.contentValues(portal_type=\'Web Section\')">\n
   <li>\n
     <a tal:attributes="href python: section.absolute_url_path()"\n
        tal:content="python: section.getProperty(\'translated_short_title\', None)\n

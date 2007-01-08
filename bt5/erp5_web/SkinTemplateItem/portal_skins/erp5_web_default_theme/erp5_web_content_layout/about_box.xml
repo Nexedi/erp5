@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>section_content_list</string> </value>
+            <value> <string>about_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -136,9 +136,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -213,11 +211,15 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+This is a <b>demo</b> html box that displays a some text on the <i>right column</i> of the site.
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -265,7 +267,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Documents</string> </value>
+                    <value> <string>Demo</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,25 +283,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/current_web_section/section_content_render</string> </value>
         </item>
       </dictionary>
     </pickle>

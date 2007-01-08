@@ -73,9 +73,8 @@
   for a newly created Web Site\n
 """\n
 # Set Web Site layout to default one\n
-default_layout = \'template_erp5_web\'\n
-context.setContainerLayout(default_layout)\n
-context.setContentLayout(default_layout)\n
+context.setContainerLayout(\'erp5_web_layout\')\n
+context.setContentLayout(\'erp5_web_content_layout\')\n
 \n
 # Set default webmaster to current user\n
 user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
@@ -124,7 +123,6 @@ context.setWebmaster(user_id)\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>default_layout</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>user_id</string>

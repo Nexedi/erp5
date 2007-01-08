@@ -94,14 +94,21 @@
  with a "validated" state and in the appropriate product family.\n
 \n
  This script is intended to be overriden by creating a new script\n
- within the Web Site instance if necessary (not inside a\n
- portal_skin since multiple sites might have different behaviour).\n
+ within the Web Section or Web Site instance. It can be also\n
+ customised per portal type within portal_skins. Customisation\n
+ thourgh local scripts is recommended to host multiple sites\n
+ on the same ERP5Site instance.\n
+\n
+ The API uses **kw so that it is possible to extend the behaviour of\n
+ the default script with advanced features (ex. group by reference,\n
+ by version, only select a specific publication state, etc.).\n
 \n
  Here are some suggestions which can either be implemented using\n
  SQL (group_by, order_by) or using additional python scripting\n
  if this is compatible with data size.\n
 \n
  SUGGESTIONS:\n
+\n
  - Prevent showing duplicate references\n
  \n
  - Add documents associated to this section through \'aggregate\'.\n
@@ -115,7 +122,7 @@ current_section = context.getWebSectionValue()\n
 \n
 # Return the list of matching documents for the given states\n
 return current_section.searchResults(validation_state=[\'draft\', \'submitted\', \'shared\',\n
-                                                       \'released\', \'public\', \'restricted\'],\n
+                                                       \'released\', \'published\', \'restricted\'],\n
                                      order_by=[(\'int_index\', \'descending\')])\n
 </string> </value>
         </item>

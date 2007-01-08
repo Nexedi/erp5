@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>section_content_list</string> </value>
+            <value> <string>website_logo</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,11 +213,15 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>centered logo</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<a href="http://erp5.org"><img src="erp5-website-logo.png"/></a>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -265,7 +269,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Documents</string> </value>
+                    <value> <string>ERP5 WebSite Logo</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +303,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/current_web_section/section_content_render</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: """<a href="%s" title="%s"><img src="erp5-website-logo.png" alt="Web Site Logo"/></a>""" % (here.getWebSiteValue().absolute_url(), here.getWebSiteValue().getTitleOrId())
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

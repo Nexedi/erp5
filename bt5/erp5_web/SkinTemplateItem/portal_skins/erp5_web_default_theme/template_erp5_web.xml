@@ -105,18 +105,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <!-- Here we force the editable_mode variable to True to let the layout and widgets\n
              based on forms be rendered as editable or non-editable according the "editable"\n
              property on fields.\n
-             However this hasa bad side effect: the editable_mode variable in request is\n
+\n
+             However this has bad side effect: the editable_mode variable in request is\n
              forced to True and is no longer representative of the web site mode.\n
+\n
+             We also set some REQUEST variables which will be needed by Widgets.\n
          -->\n
         </tal:block>\n
 \n
-        <tal:block tal:repeat="aggregate python: layout_form.WebSite_getGroupList([\'header\', \'left\', \'right\', \'footer\'])"\n
+        <tal:block tal:repeat="aggregate python: layout_form.Form_getGroupList([\'header\', \'left\', \'right\', \'footer\'])"\n
                    tal:define="dummy python: request.set(\'editable_mode\', True);\n
                                dummy python: request.set(\'http_parameters\', http_parameters);\n
-                               dummy python: request.set(\'actions\', actions);">\n
+                               dummy python: request.set(\'actions\', actions);\n
+                               dummy python: request.set(\'current_web_section\',\n
+                                                         request.get(\'current_web_section\', here.getWebSectionValue()));\n
+                               dummy python: request.set(\'current_web_document\',\n
+                                                         request.get(\'current_web_document\', here));\n
+                               dummy python: request.set(\'is_web_section_default_document\',\n
+                                                         request.get(\'is_web_section_default_document\', 0));">\n
           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
         </tal:block>\n
-    \n
       </tal:block>\n
     </tal:block>\t\n
   </tal:block>\n
