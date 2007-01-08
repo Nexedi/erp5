@@ -1,0 +1,14 @@
+<component>
+  <import package="ZServer" />
+  
+  <sectiontype name="timer-server"
+               datatype="timerserver.TimerServerFactory"
+               implements="ZServer.server">
+    <key name="interval" datatype="integer" default="600">
+      <description>
+	Interval in seconds.
+      </description>
+    </key>
+  </sectiontype>
+
+</component>

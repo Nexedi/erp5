@@ -1,0 +1,5 @@
+Author
+
+    Nikolay Kim <fafhrd@legco.biz>
+
+Many thanks to Igor Stroh <jenner@dpost.de>

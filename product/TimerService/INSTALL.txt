@@ -1,0 +1,19 @@
+Prerequisites
+
+   * Zope 2.7.0+ (www.zope.org)
+
+
+Instalation
+
+1) go to timerserver directory and run:
+
+   a) python setup.py install
+   b) or create link to timerserver in $ZOPE/lib/python
+
+   timerserver module must be available in python path
+  
+2) add to zope.conf
+
+%import timerserver
+<timer-server>
+</timer-server>
