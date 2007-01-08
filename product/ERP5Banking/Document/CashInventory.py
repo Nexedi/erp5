@@ -60,3 +60,12 @@ class CashInventory(Inventory, BankingOperation):
                       , PropertySheet.FlowCapacity
                       )
 
+    security.declarePublic('alternateReindexObject')
+    def alternateReindexObject(self, **kw):
+      """This method is called when an inventory object is included in a
+      group of catalogged objects.
+      """
+      from Products.ERP5Type.Document import newTempCashDeliveryLine
+      temp_constructor = newTempCashDeliveryLine
+      return self.immediateReindexObject(temp_constructor=temp_constructor,**kw)
+
