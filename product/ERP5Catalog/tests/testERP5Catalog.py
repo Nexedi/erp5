@@ -1204,7 +1204,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ob = folder.newContent()
     ob.setTitle('The title of this object')
     self.failUnless('this' in ob.SearchableText(), ob.SearchableText())
-    # add some other objects, we
+    # add some other objects, we need to create a minimum quantity of data for
+    # full text queries to work correctly
     for i in range(10):
       otherob = folder.newContent()
       otherob.setTitle('Something different')
@@ -1221,6 +1222,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([],
         [x.getObject for x in self.getCatalogTool()(
                 portal_type='Organisation', SearchableText='different')])
+    
+    # test countResults
+    self.assertEquals(1, self.getCatalogTool().countResults(
+              portal_type='Organisation', SearchableText='title')[0][0])
+    self.assertEquals(0, self.getCatalogTool().countResults(
+              portal_type='Organisation', SearchableText='different')[0][0])
     
   def test_43_ManagePasteObject(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -1257,3 +1264,4 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject() for x in self.getCatalogTool()(
                parent_title=person_module.getTitle())])
     
+
