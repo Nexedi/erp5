@@ -2184,11 +2184,24 @@ class Base( CopyContainer,
 
   # Type Casting
   security.declarePrivate( '_getTypeBasedMethod' )
-  def _getTypeBasedMethod(self, method_id, fallback_script_id=None):
+  def _getTypeBasedMethod(self, method_id, fallback_script_id=None,
+                                script_id=None,**kw):
     """
-      Looks up for
+      Looks up for a zodb script wich ends with what is given as method_id
+      and starts with the name of the portal type or meta type.
+
+      For example, method_id can be "asPredicate" and we will on a sale
+      packing list line:
+      SalePackingListLine_asPredicate
+      DeliveryLine_asPredicate
+
+      fallback_script_id : the script to use if nothing is found
     """
-    # Look at local and acquired categories and make it criterion membership
+    # script_id should not be used any more, keep compatibility
+    if script_id is not None:
+      LOG('ERP5Type/Base.getTypeBaseMethod',0,
+           'DEPRECATED script_id parameter is used')
+      fallback_script_id=script_id
     script_name = ''
     script = None
     script_name_end = '_%s' % method_id
