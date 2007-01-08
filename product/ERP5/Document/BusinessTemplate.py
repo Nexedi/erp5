@@ -608,7 +608,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               continue
             # If container's container is portal_catalog,
             # then automatically create the container.
-            elif container_path[-2] == 'portal_catalog':
+            elif len(container_path) > 1 and container_path[-2] == 'portal_catalog':
               # The id match, but better double check with the meta type
               # while avoiding the impact of systematic check
               container_container = portal.unrestrictedTraverse(container_path[:-1])
@@ -4061,7 +4061,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # update catalog if necessary
       update_catalog=0
       catalog_method = getattr(self, '_catalog_method_item', None)
-      if catalog_method is not None and self.getTemplateFormatVersion() == 1:
+      if catalog_method is not None and self.getTemplateFormatVersion() == 1 \
+        and _getCatalogValue(self) is self.getPortalObject().portal_catalog.getSQLCatalog():
+        # It is needed to update the catalog only if the default SQLCatalog is modified.
         for id in catalog_method._objects.keys():
           if id in object_to_update.keys() or force:
             if not force:
