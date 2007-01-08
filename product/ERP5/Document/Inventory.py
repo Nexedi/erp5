@@ -67,15 +67,21 @@ class Inventory(Delivery):
       """
       return self.immediateReindexObject(**kw)
 
-    def immediateReindexObject(self,**kw):
+    def immediateReindexObject(self,temp_constructor=None,**kw):
       """
       Rewrite reindexObject so that we can insert lines in stock table
       to make sure all stock values for resources in this inventory
       is equal to null before the date of this inventory
+
+      temp_constructor is used in some particular cases where we want
+      to have our own temp object constructor, this is usefull if we
+      want to use some classes with some particular methods
       """
       resource_and_variation_list = []
       stock_object_list = []
-      from Products.ERP5Type.Document import newTempDeliveryLine
+      if temp_constructor is None:
+        from Products.ERP5Type.Document import newTempDeliveryLine
+        temp_constructor = newTempDeliveryLine
       start_date = self.getStartDate()
       node = self.getDestination()
       for movement in self.getMovementList():
@@ -101,8 +107,8 @@ class Inventory(Delivery):
                 sub_variation_list = inventory.sub_variation_text.split('\n')
               category_list = self.getCategoryList()
               if inventory.total_quantity != 0:
-                temp_delivery_line = newTempDeliveryLine(self,
-                                                         self.getId())
+                temp_delivery_line = temp_constructor(self,
+                                                      self.getId())
                 kwd['quantity'] = - inventory.total_quantity
                 category_list.append('resource/%s' % inventory.resource_relative_url)
                 category_list.extend(variation_list)
@@ -115,7 +121,7 @@ class Inventory(Delivery):
       if len(stock_object_list)==0:
         # Make sure to remove all lines
         from Products.ERP5Type.Document import newTempBase
-        stock_object_list.append(newTempDeliveryLine(self,self.getId(),
+        stock_object_list.append(temp_constructor(self,self.getId(),
                                  uid=self.getUid()))
       self.portal_catalog.catalogObjectList(stock_object_list,
            method_id_list=('z_catalog_stock_list',),
