@@ -41,6 +41,7 @@ from Products.ERP5Banking.tests.testERP5BankingCheckPayment \
       import TestERP5BankingCheckPaymentMixin
 from Products.ERP5Banking.tests.testERP5BankingMoneyDeposit \
       import TestERP5BankingMoneyDepositMixin
+from Products.ERP5Form.Document.Preference import Priority
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -57,7 +58,11 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                                         TestERP5BankingMixin,
                                         ERP5TypeTestCase):
   """
-  Unit test class for the check payment module
+  Unit test class in order to make sure that it is not possible
+  to debit two times the same account if the amount on the account is
+  too short.
+
+  We will by the way check the way counter dates are working.
   """
 
   login = PortalTestCase.login
@@ -108,6 +113,105 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     # Set some variables : 
     self.money_deposit_module = self.getMoneyDepositModule()
 
+    # Add a preference
+    preference = self.getPortal().portal_preferences.newContent()
+    preference.setPreferredUsualCashMaxRenderingPrice(1000000)
+    preference.setPriority(Priority.USER)
+    preference.enable()
+
+  def stepCheckOpenCounterDateTwiceFail(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not open the counter date twice
+    """
+    self.openCounterDate(site=self.paris,id='counter_date_2',open=0)
+    # open counter date and counter
+    self.assertRaises(ValidationFailed,
+                     self.workflow_tool.doActionFor,
+                     self.counter_date_2,'open_action',
+                     wf_id='counter_date_workflow')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(
+           ob=self.counter_date_2, name='history', wf_id='counter_date_workflow')
+    # check its len is 2
+    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
+    msg = workflow_history[-1]['error_message']
+    self.assertTrue('there is already a counter date opened' in "%s" %(msg,))
+
+  def stepCheckRemainingOperations(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    site = self.counter_date_2.getSiteValue()
+    self.assertRaises(ValidationFailed,
+                     self.getPortal().Baobab_checkRemainingOperation,
+                     site=site)
+
+  def stepCheckNoRemainingOperations(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    site = self.counter_date_1.getSiteValue()
+    self.getPortal().Baobab_checkRemainingOperation(site=site)
+
+  def stepCheckBadStockBeforeClosingDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    site = self.counter_date_1.getSiteValue()
+    self.assertRaises(ValidationFailed,
+                     self.getPortal().Baobab_checkStockBeforeClosingDate,
+                     site=site)
+
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    # Before the test, we need to input the inventory
+    inventory_dict_line_1 = {'id' : 'inventory_line_1',
+                             'resource': self.billet_10000,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+                             'quantity': {'variation/2003': 0, 'variation/1992': 0}}
+
+    inventory_dict_line_2 = {'id' : 'inventory_line_2',
+                             'resource': self.billet_200,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+                             'quantity': {'variation/2003': 0, 'variation/1992': 0}}
+
+    inventory_dict_line_3 = {'id' : 'inventory_line_3',
+                             'resource':self.billet_5000 ,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+                             'quantity': {'variation/2003': 0, 'variation/1992': 0}}
+
+    line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
+    self.line_list = line_list
+    bi_counter = self.paris.surface.banque_interne
+    bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.entrante
+    self.createCashInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
+                             line_list=line_list,extra_id='_reset_in')
+    bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.sortante
+    self.createCashInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
+                             line_list=line_list,extra_id='_reset_out')
+
+  def stepCheckRightStockBeforeClosingDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    site = self.counter_date_2.getSiteValue()
+    self.getPortal().Baobab_checkStockBeforeClosingDate(site=site)
+
   def stepCheckAccountInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the initial inventory before any operations
@@ -147,6 +251,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     sequence_list = SequenceList()
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckAccountInitialInventory ' \
+                      'CheckOpenCounterDateTwiceFail Tic ' \
+                      'CheckNoRemainingOperations Tic ' \
                       'CreateCheckPayment Tic ' \
                       'CheckConsistency Tic ' \
                       'CreateMoneyDeposit ' \
@@ -156,12 +262,16 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'stepValidateAnotherCheckPaymentFails Tic ' \
                       'CheckAccountConfirmedInventory ' \
                       'stepValidateAnotherCheckPaymentFailsAgain Tic ' \
+                      'CheckRemainingOperations Tic ' \
                       'InputCashDetails Tic ' \
                       'MoneyDepositInputCashDetails Tic ' \
                       'DeliverMoneyDeposit Tic ' \
                       'ValidateAnotherCheckPaymentWorksAgain Tic ' \
                       'Pay Tic ' \
-                      'CheckAccountFinalInventory '
+                      'CheckAccountFinalInventory ' \
+                      'CheckBadStockBeforeClosingDate ' \
+                      'ResetInventory Tic ' \
+                      'CheckRightStockBeforeClosingDate '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
