@@ -53,15 +53,16 @@ class TimerService(SimpleItem):
                          for path in self._subscribers]
 
         tick = time.time()
-        prev_tick = tick - interval
-        next_tick = tick + interval
+#        prev_tick = tick - interval
+#        next_tick = tick + interval
 
-        LOG('TimerService', INFO, 'Ttimer tick at %s\n'%time.ctime(tick))
+#        LOG('TimerService', INFO, 'Ttimer tick at %s\n'%time.ctime(tick))
 
         for subscriber in subscriptions:
             try:
-                subscriber.process_timer(
-                    interval, DateTime(tick), DateTime(prev_tick), DateTime(next_tick))
+#                subscriber.process_timer(
+#                    interval, DateTime(tick), DateTime(prev_tick), DateTime(next_tick))
+              subscriber.process_timer(tick, interval)
             except:
                 LOG('TimerService', ERROR, 'Process timer error', error = sys.exc_info())
 
@@ -75,6 +76,12 @@ class TimerService(SimpleItem):
         subscribers = self._subscribers
         if path not in subscribers:
             subscribers.append(path)
+            self._subscribers = subscribers
+
+    def unsubscribeByPath(self, path):
+        subscribers = self._subscribers
+        if path in subscribers:
+            subscribers.remove(path)
             self._subscribers = subscribers
 
     def unsubscribe(self, ob):
@@ -94,12 +101,14 @@ class TimerService(SimpleItem):
 
     def manage_removeSubscriptions(self, no, REQUEST=None):
         """ """
-        subs = self.listAllSubscriptions()
+        subs = self.lisSubscriptions()
+
+        #LOG('asdd',INFO,subs)
 
         remove_list = [subs[n] for n in [int(n) for n in no]]
 
-        for subs, event, fl in remove_list:
-            self.unsubscribe( subs, event_type=event )
+        for sub in remove_list:
+            self.unsubscribeByPath(sub)
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_viewSubscriptions')
