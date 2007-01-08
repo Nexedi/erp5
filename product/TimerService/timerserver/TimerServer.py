@@ -6,10 +6,7 @@ __version__ = 'TimerServer for Zope 0.1'
 import traceback
 
 import thread
-
 import sys, os, errno, time, socket
-
-import ZPublisher.Client
 from StringIO import StringIO
 from zLOG import LOG, INFO
 
@@ -20,7 +17,7 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher import Client
 
 class TimerServer:
-    def __init__(self, module, interval=5):
+    def __init__(self, module, interval=600):
         self.module = module
 
         self.interval = interval

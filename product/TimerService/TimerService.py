@@ -3,7 +3,7 @@
 # Authors: Nik Kim <fafhrd@legco.biz> 
 __version__ = '$Revision: 1.3 $'[11:-2]
 
-import sys, time
+import sys, time, threading
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.SimpleItem import SimpleItem
@@ -15,6 +15,8 @@ from AccessControl import ClassSecurityInfo, Permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 current_version = 1
+
+processing_lock = threading.Lock()
 
 class TimerService(SimpleItem):
     """ timer service, all objects that wants timer
@@ -49,22 +51,30 @@ class TimerService(SimpleItem):
 
     def process_timer(self, interval):
         """ """
+        # Try to acquire a lock, to make sure we only run one processing at a
+        # time, and abort if another processing is currently running
+        acquired = processing_lock.acquire(0)
+        if not acquired:
+          return
+
         subscriptions = [self.unrestrictedTraverse(path)
                          for path in self._subscribers]
 
         tick = time.time()
-#        prev_tick = tick - interval
-#        next_tick = tick + interval
+        prev_tick = tick - interval
+        next_tick = tick + interval
 
 #        LOG('TimerService', INFO, 'Ttimer tick at %s\n'%time.ctime(tick))
 
         for subscriber in subscriptions:
             try:
-#                subscriber.process_timer(
-#                    interval, DateTime(tick), DateTime(prev_tick), DateTime(next_tick))
-              subscriber.process_timer(tick, interval)
+                subscriber.process_timer(
+                    interval, DateTime(tick), DateTime(prev_tick), DateTime(next_tick))
             except:
                 LOG('TimerService', ERROR, 'Process timer error', error = sys.exc_info())
+
+        # When processing is done, release the lock
+        processing_lock.release()
 
     def subscribe(self, ob):
         """ """
@@ -102,8 +112,6 @@ class TimerService(SimpleItem):
     def manage_removeSubscriptions(self, no, REQUEST=None):
         """ """
         subs = self.lisSubscriptions()
-
-        #LOG('asdd',INFO,subs)
 
         remove_list = [subs[n] for n in [int(n) for n in no]]
 
