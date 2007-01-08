@@ -327,7 +327,7 @@ class XMLMatrix(Folder):
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               '_updateCellRange')
-    def _updateCellRange(self, base_id, script_id=None, **kw):
+    def _updateCellRange(self, base_id, **kw):
       """
         The asCellRange script is Portal Type dependent
         which is not the case with this kind of code
@@ -340,7 +340,7 @@ class XMLMatrix(Folder):
 
         asCellRange scripts should be unified if possible
       """
-      script = self._getTypeBasedMethod('asCellRange', script_id=script_id)
+      script = self._getTypeBasedMethod('asCellRange', **kw)
       try:
         cell_range = script(base_id=base_id, matrixbox=0, **kw)
       except UnboundLocalError:
@@ -351,9 +351,9 @@ class XMLMatrix(Folder):
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateCellRange')
-    def updateCellRange(self, base_id='cell', script_id=None, **kw):
+    def updateCellRange(self, base_id='cell', **kw):
       """ same as _updateCellRange, but reindex the object. """
-      self._updateCellRange(base_id=base_id, script_id=script_id, **kw)
+      self._updateCellRange(base_id=base_id, **kw)
       self.reindexObject()
 
 
