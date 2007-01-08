@@ -26,7 +26,8 @@ class TimerService(SimpleItem):
     title = 'TimerService'
 
     security = ClassSecurityInfo()
-
+    security.declareObjectPublic()
+    
     icon = 'misc_/TimerService/timer_icon.gif'
 
     max_size = 0
@@ -48,39 +49,43 @@ class TimerService(SimpleItem):
         """ """
         self._subscribers = []
         self._version = 1
-
+    
+    security.declarePublic('process_timer')
     def process_timer(self, interval):
         """ """
         # Try to acquire a lock, to make sure we only run one processing at a
         # time, and abort if another processing is currently running
         acquired = processing_lock.acquire(0)
         if not acquired:
-          return
-
-        # Don't let TimerService crash when the ERP5Site is not yet existing.
-        # This case append when we create a new Portal: At that step Timer Service start
-        #   to 'ping' the portal before the zope transaction in which the portal is
-        #   created is commited.
-        subscriptions = []
+            return
         try:
-          subscriptions = [self.unrestrictedTraverse(path)
-                           for path in self._subscribers]
-        except KeyError:
-          pass
+          # Don't let TimerService crash when the ERP5Site is not yet existing.
+          # This case append when we create a new Portal: At that step Timer
+          # Service start to 'ping' the portal before the zope transaction in
+          # which the portal is created is commited.
+          subscriptions = []
+          try:
+            subscriptions = [self.unrestrictedTraverse(path)
+                             for path in self._subscribers]
+          except KeyError:
+            pass
 
-        tick = time.time()
-        prev_tick = tick - interval
-        next_tick = tick + interval
+          tick = time.time()
+          prev_tick = tick - interval
+          next_tick = tick + interval
 
-        for subscriber in subscriptions:
-            try:
-                subscriber.process_timer(
-                    interval, DateTime(tick), DateTime(prev_tick), DateTime(next_tick))
-            except:
-                LOG('TimerService', ERROR, 'Process timer error', error = sys.exc_info())
-
-        # When processing is done, release the lock
-        processing_lock.release()
+          for subscriber in subscriptions:
+              try:
+                  subscriber.process_timer(
+                      interval, DateTime(tick),
+                      DateTime(prev_tick), DateTime(next_tick))
+              except:
+                  LOG('TimerService', ERROR, 'Process timer error',
+                      error = sys.exc_info())
+                  raise
+        finally:
+            # When processing is done, release the lock
+            processing_lock.release()
 
     def subscribe(self, ob):
         """ """
@@ -91,6 +96,8 @@ class TimerService(SimpleItem):
             subscribers.append(path)
             self._subscribers = subscribers
 
+    security.declareProtected(
+        Permissions.view_management_screens, 'unsubscribeByPath')
     def unsubscribeByPath(self, path):
         subscribers = self._subscribers
         if path in subscribers:
@@ -111,7 +118,9 @@ class TimerService(SimpleItem):
     def lisSubscriptions(self):
         """ """
         return self._subscribers
-
+    
+    security.declareProtected(
+        Permissions.view_management_screens, 'manage_removeSubscriptions')
     def manage_removeSubscriptions(self, no, REQUEST=None):
         """ """
         subs = self.lisSubscriptions()
