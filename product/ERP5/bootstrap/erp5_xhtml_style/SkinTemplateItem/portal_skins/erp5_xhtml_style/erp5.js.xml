@@ -67,17 +67,18 @@ function submitAction(form,act) {\n
 }\n
 \n
 // The first input element with an "autofocus" class will get the focus,\n
-// else, the first input is chosen.\n
-// XXX - this requires to be fixed\n
+// else, nothing done\n
 function autoFocus() {\n
   var inputs = document.getElementsByTagName("input");\n
-  var input_to_focus = inputs[0];\n
+  var input_to_focus = 0;\n
   for (i=0;i<inputs.length;i++) {\n
     if (inputs[i].className == "autofocus") {\n
       input_to_focus = inputs[i];\n
     }\n
   }\n
-  input_to_focus.focus();\n
+  if (input_to_focus != 0) {\n
+    input_to_focus.focus();\n
+  }\n
 }\n
 \n
 function fixLeftRightHeight(){\n
