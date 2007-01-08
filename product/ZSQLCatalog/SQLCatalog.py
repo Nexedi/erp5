@@ -1534,8 +1534,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if kw:
       where_expression = []
       select_expression = []
+      group_by_expression = []
       if kw.has_key('select_expression'):
         select_expression.append(kw['select_expression'])
+      if kw.has_key('group_by_expression'):
+        group_by_expression.append(kw['group_by_expression'])
+
       from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
 
       sort_on = None
@@ -1543,7 +1547,18 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         new_sort_index = []
         for sort in sort_index:
           if len(sort) == 2:
-            new_sort_index.append((sort[0], sort[1], None))
+            # Try to analyse expressions of the form "title AS unsigned"
+            sort_key_list = sort[0].split()
+            if len(sort_key_list) == 3:
+              sort_key = sort_key_list[0]
+              sort_type = sort_key_list[2]
+            elif len(sort_key_list):
+              sort_key = sort_key_list[0]
+              sort_type = None
+            else:
+              sort_key = sort[0]
+              sort_type = None
+            new_sort_index.append((sort_key, sort[1], sort_type))
           elif len(sort) == 3:
             new_sort_index.append(sort)
         sort_index = new_sort_index
@@ -1576,6 +1591,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
               if as_type == 'int':
                 key = 'CAST(%s AS SIGNED)' % key
+              elif as_type:
+                key = 'CAST(%s AS %s)' % (key, as_type) # Different casts are possible
               if so in ('descending', 'reverse', 'DESC'):
                 new_sort_index.append('%s DESC' % key)
               else:
@@ -1586,6 +1603,45 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           raise
         except:
           LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
+          sort_on = ''
+
+      # Grouping
+      group_by_list = kw.get('group_by', None)
+      if type(group_by_list) is type('a'): group_by_list = [group_by_list]
+      if group_by_list is not None:
+        try:
+          for key in group_by_list:
+            key_is_acceptable = key in acceptable_keys # Only calculate once
+            key_is_related = key in related_keys
+            if key_is_acceptable or key_is_related:
+              if key_is_related: # relation system has priority (ex. security_uid)
+                # We must rename the key
+                method_id = related_method[key]
+                table_list = related_table_list[key]
+                if not related_methods.has_key((table_list,method_id)):
+                  related_methods[(table_list,method_id)] = 1
+                # Prepend renamed table name
+                key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
+              elif key_is_acceptable:
+                if key.find('.') < 0:
+                  # if the key is only used by one table, just append its name
+                  if len(acceptable_key_map[key]) == 1 :
+                    key = '%s.%s' % (acceptable_key_map[key][0], key)
+                  # query_table specifies what table name should be used by default
+                  elif query_table:
+                    key = '%s.%s' % (query_table, key)
+                  elif key == 'uid':
+                    # uid is always ambiguous so we can only change it here
+                    key = 'catalog.uid'
+                # Add table to table dict
+                from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
+              group_by_expression.append(key)
+          group_by_expression = ','.join(group_by_expression)
+          group_by_expression = str(group_by_expression)
+        except ConflictError:
+          raise
+        except:
+          LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new group by expression', error=sys.exc_info())
           sort_on = ''
 
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
@@ -1815,16 +1871,20 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
              'order_by_expression' : sort_on,
              'where_expression' : where_expression,
              'limit_expression' : limit_expression,
-             'select_expression': select_expression}
+             'select_expression': select_expression,
+             'group_by_expression' : group_by_expression}
 
-  def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, **kw):
+  def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, build_sql_query_method=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
-    query = self.buildSQLQuery(REQUEST=REQUEST, **kw)
+    if build_sql_query_method is None:
+      build_sql_query_method = self.buildSQLQuery
+    query = build_sql_query_method(REQUEST=REQUEST, **kw)
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']
     kw['limit_expression'] = query['limit_expression']
     kw['select_expression'] = query['select_expression']
+    kw['group_by_expression'] = query['group_by_expression']
     # Return the result
 
     #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
