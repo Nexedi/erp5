@@ -64,6 +64,9 @@ class CashInventory(Inventory, BankingOperation):
     def alternateReindexObject(self, **kw):
       """This method is called when an inventory object is included in a
       group of catalogged objects.
+
+      Here we use TempCashDeliveryLine class so that methods specific to
+      banking application will work, like getBaobabVariationText
       """
       from Products.ERP5Type.Document import newTempCashDeliveryLine
       temp_constructor = newTempCashDeliveryLine
