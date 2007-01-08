@@ -93,8 +93,11 @@ class Domain(Predicate, MetaNode, MetaResource):
       We must eliminate portal_categories in the RelativeUrl
       since it is never present in the category list
     """
-    return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
-
+    content_path = self.portal_url.getRelativeContentPath(self)
+    if content_path[0] == 'portal_categories':
+      return '/'.join(content_path[1:])
+    return '/'.join(content_path)
+  
   # Generator API
   
   # How to define a generated subdomain

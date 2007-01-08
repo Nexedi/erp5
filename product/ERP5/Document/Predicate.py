@@ -484,7 +484,10 @@ class Predicate(Folder):
       looking up methods named ${PortalType}_asPredicate,
       ${MetaType}_asPredicate, ${Class}_asPredicate     
     """
-    script = self._getTypeBasedMethod('asPredicate', script_id=script_id)
+    if script_id is not None:
+      script = getattr(self, script_id, None)
+    else:
+      script = self._getTypeBasedMethod('asPredicate')
     if script is not None:
       return script()
     return self
