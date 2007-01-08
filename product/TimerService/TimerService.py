@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # -*- Mode: Python; py-indent-offset: 4 -*-
-# Authors: Nik Kim <fafhrd@legco.biz> 
+# Authors: Nik Kim <fafhrd@legco.biz>
 __version__ = '$Revision: 1.3 $'[11:-2]
 
 import sys, time, threading
@@ -30,7 +30,7 @@ class TimerService(SimpleItem):
     icon = 'misc_/TimerService/timer_icon.gif'
 
     max_size = 0
-    
+
     manage_options = (
         ({'label': 'Subscribers', 'action':'manage_viewSubscriptions'},))
 
@@ -41,9 +41,9 @@ class TimerService(SimpleItem):
         globals(),
         __name__='manage_viewSubscriptions'
         )
-    
+
     _version = 0
-    
+
     def __init__(self, id='timer_service'):
         """ """
         self._subscribers = []
@@ -57,14 +57,20 @@ class TimerService(SimpleItem):
         if not acquired:
           return
 
-        subscriptions = [self.unrestrictedTraverse(path)
-                         for path in self._subscribers]
+        # Don't let TimerService crash when the ERP5Site is not yet existing.
+        # This case append when we create a new Portal: At that step Timer Service start
+        #   to 'ping' the portal before the zope transaction in which the portal is
+        #   created is commited.
+        subscriptions = []
+        try:
+          subscriptions = [self.unrestrictedTraverse(path)
+                           for path in self._subscribers]
+        except KeyError:
+          pass
 
         tick = time.time()
         prev_tick = tick - interval
         next_tick = tick + interval
-
-#        LOG('TimerService', INFO, 'Ttimer tick at %s\n'%time.ctime(tick))
 
         for subscriber in subscriptions:
             try:
@@ -79,9 +85,6 @@ class TimerService(SimpleItem):
     def subscribe(self, ob):
         """ """
         path = '/'.join(ob.getPhysicalPath())
-
-        #if not ISMTPHandler.isImplementedBy(ob):
-        #    raise ValueError, 'Object not support ISMTPHandler'
 
         subscribers = self._subscribers
         if path not in subscribers:
@@ -102,7 +105,7 @@ class TimerService(SimpleItem):
         if path in subscribers:
             subscribers.remove(path)
             self._subscribers = subscribers
-    
+
     security.declareProtected(
         Permissions.view_management_screens, 'lisSubscriptions')
     def lisSubscriptions(self):

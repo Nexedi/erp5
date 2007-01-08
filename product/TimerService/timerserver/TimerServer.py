@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # -*- Mode: Python; py-indent-offset: 4 -*-
-# Authors: Nik Kim <fafhrd@legco.biz> 
+# Authors: Nik Kim <fafhrd@legco.biz>
 __version__ = 'TimerServer for Zope 0.1'
 
 import traceback
@@ -96,7 +96,7 @@ class TimerResponse(BaseResponse):
 
     def unauthorized(self):
         pass
-        
+
 
 class TimerRequest(HTTPRequest):
 
