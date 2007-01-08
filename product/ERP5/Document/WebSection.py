@@ -38,14 +38,64 @@ from Globals import get_request
 
 from zLOG import LOG
 
-from Products.ERP5.Document.WebSite import reserved_name_dict, reserved_name_dict_init
-from Products.ERP5.Document.WebSite import CACHE_KEY, WEBSITE_USER, WEBSECTION_KEY, DOCUMENT_NAME_KEY
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
+# Global keys used for URL generation
+WEBSECTION_KEY = 'web_section_value'
+WEBSITE_USER = 'web_site_user'
+
+Domain_getattr = Domain.inheritedAttribute('__getattr__')
+
+# We use a request key (CACHE_KEY) to store access attributes and prevent infinite recursion
+# We define a couple of reserved names for which we are not
+# going to try to do acquisition
+CACHE_KEY = 'web_site_aq_cache'
+DOCUMENT_NAME_KEY = 'web_section_document_name'
+reserved_name_dict = { 'getApplicableLayout' : 1,
+                       'getLayout' : 1,
+                       'Localizer' : 1,
+                       'field_render' : 1,
+                       'getListItemUrl' : 1,
+                       'getLocalPropertyManager' : 1,
+                       'getOrderedGlobalActionList' : 1,
+                       'allow_discussion' : 1,
+                       'im_func' : 1,
+                       'id' : 1,
+                       'method_id' : 1,
+                       'role_map' : 1,
+                       'func_defaults': 1,  }
+reserved_name_dict_init = 0
 
 class WebSection(Domain):
     """
       A Web Section is a Domain with an extended API intended to
-      support the creation of Web front ends to ERP5 contents.
+      support the creation of Web front ends to
+      server ERP5 contents through a pretty and configurable
+      user interface.
+
+      WebSection uses the following scripts for customisation:
+
+      - WebSection_getBreadcrumbItemList
+
+      - WebSection_getDocumentValueList
+
+      - WebSection_getPermanentURL
+
+      - WebSection_getDocumentValue
+
+      - WebSection_getDefaultDocumentValue
+
+      - WebSection_getSectionValue
+
+      - WebSection_getWebSiteValue
+
+      It defines the following REQUEST global variables:
+
+      - current_web_section
+
+      - current_web_document
+
+      - is_web_section_default_document
     """
     # CMF Type Definition
     meta_type = 'ERP5 Web Section'
@@ -66,31 +116,20 @@ class WebSection(Domain):
                       , PropertySheet.SortIndex
                       )
 
-    # Draft - this is being worked on
-    # Due to some issues in acquisition, the implementation  of getWebSectionValue
-    # through acquisition by containment does not work for URLs
-    # such as web_site_module/a/b/c/web_page_module/d
-    # getWebSectionValue will return web_site_module/a/b instead
-    # of web_site_module/a/b/c
-    #security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
-    #def getWebSectionValue(self):
-      #"""
-        #Returns the current web section (ie. self) though containment acquisition
-      #"""
-      #return self
+    web_section_key = WEBSECTION_KEY
 
     def _aq_dynamic(self, name):
       """
         Try to find a suitable document based on the
         web site local naming policies as defined by
-        the WebSite_getDocumentValue script
+        the getDocumentValue method
       """
       global reserved_name_dict_init
       global reserved_name_dict
       request = self.REQUEST
       # Register current web site physical path for later URL generation
-      if not request.has_key(WEBSECTION_KEY):
-        request[WEBSECTION_KEY] = self.getPhysicalPath()
+      if not request.has_key(self.web_section_key):
+        request[self.web_section_key] = self.getPhysicalPath()
         # Normalize web parameter in the request
         # Fix common user mistake and transform '1' string to boolean
         for web_param in ['ignore_layout', 'editable_mode']:
@@ -105,6 +144,7 @@ class WebSection(Domain):
         return dynamic
       # Do some optimisation here for names which can not be names of documents
       if  reserved_name_dict.has_key(name) \
+          or name.endswith('_getDocumentValue') \
           or name.startswith('_') or name.startswith('portal_')\
           or name.startswith('aq_') or name.startswith('selection_') \
           or name.startswith('sort-') or name.startswith('WebSite_') \
@@ -135,7 +175,8 @@ class WebSection(Domain):
         if user is not None:
           old_manager = getSecurityManager()
           newSecurityManager(get_request(), user)
-        document = self.WebSite_getDocumentValue(name=name, portal=portal)
+        LOG('Lookup', 0, str(name))
+        document = self.getDocumentValue(name=name, portal=portal)
         request[CACHE_KEY][name] = document
         if user is not None:
           setSecurityManager(old_manager)
@@ -152,6 +193,198 @@ class WebSection(Domain):
                                               editable_absolute_url=document.absolute_url()))
       return document
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getWebSiteValue')
-    def getWebSiteValue(self):
-      return self.getParentValue().getWebSiteValue()
+    security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
+    def getWebSectionValue(self):
+      """
+        Returns the current web section (ie. self) though containment acquisition.
+
+        To understand the misteries of acquisition and how the rule
+        containment vs. acquisition works, please look at
+        XXXX (Zope web site)
+      """
+      return self
+
+    # Default view display
+    security.declareProtected(Permissions.View, '__call__')
+    def __call__(self):
+      """
+        If a Web Section has a default document, we render
+        the default document instead of rendering the Web Section
+        itself.
+
+        The implementation is based on the presence of specific
+        variables in the REQUEST (besides editable_mode and
+        ignore_layout).
+
+        current_web_section -- defines the Web Section which is
+        used to display the current document.
+
+        current_web_document -- defines the Document (ex. Web Page)
+        which is being displayed within current_web_section.
+
+        is_web_section_default_document -- a boolean which is
+        set each time we display a default document as a section.
+
+        We use REQUEST parameters so that they are reset for every
+        Web transaction and can be accessed from widgets. 
+      """
+      self.REQUEST.set('current_web_section', self)
+      if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
+        document = self.getDefaultDocumentValue()
+        if document is not None:
+          self.REQUEST.set('current_web_document', document)
+          self.REQUEST.set('is_web_section_default_document', 1)
+          return document.__of__(self)()
+      return Domain.__call__(self)
+
+    # Layout Selection API
+    security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
+    def getApplicableLayout(self):
+      """
+        The applicable layout on a section is the container layout.
+      """
+      return self.getContainerLayout()
+
+    # WebSection API
+    security.declareProtected(Permissions.View, 'getDocumentValue')
+    def getDocumentValue(self, name=None, portal=None):
+      """
+        Return the default document with the given
+        name. The name parameter may represent anything
+        such as a document reference, an identifier,
+        etc.
+
+        If name is not provided, the method defaults
+        to returning the default document by calling
+        getDefaultDocumentValue.
+
+        This method must be implemented through a
+        portal type dependent script:
+          WebSection_getDocumentValue
+      """
+      if name is None:
+        return self.getDefaultDocumentValue()
+
+      cache = getReadOnlyTransactionCache(self)
+      method = None
+      if cache is not None:
+        key = ('getDocumentValue', self)
+        try:
+          method = cache[key]
+        except KeyError:
+          pass
+
+      if method is None: method = self._getTypeBasedMethod('getDocumentValue',
+                                        fallback_script_id='WebSection_getDocumentValue')
+
+      if cache is not None:
+        if not cache.has_key(key): cache[key] = method
+
+      return method(name, portal=portal)
+
+    security.declareProtected(Permissions.View, 'getDefaultDocumentValue')
+    def getDefaultDocumentValue(self):
+      """
+        Return the default document of the current
+        section.
+
+        This method must be implemented through a
+        portal type dependent script:
+          WebSection_getDefaultDocumentValue
+      """
+      cache = getReadOnlyTransactionCache(self)
+      if cache is not None:
+        key = ('getDefaultDocumentValue', self)
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+
+      result = self._getTypeBasedMethod('getDefaultDocumentValue',
+                     fallback_script_id='WebSection_getDefaultDocumentValue')()
+
+      if cache is not None:
+        cache[key] = result
+
+      return result
+
+    security.declareProtected(Permissions.View, 'getDocumentValueList')
+    def getDocumentValueList(self, **kw):
+      """
+        Return the list of documents which belong to the
+        current section. The API is designed to
+        support additional parameters so that it is possible
+        to group documents by reference, version, language, etc.
+        or to implement filtering of documents.
+
+        This method must be implemented through a
+        portal type dependent script:
+          WebSection_getDocumentValueList
+      """
+      cache = getReadOnlyTransactionCache(self)
+      if cache is not None:
+        key = ('getDocumentValueList', self) + tuple(kw.items())
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+
+      result = self._getTypeBasedMethod('getDocumentValueList',
+                     fallback_script_id='WebSection_getDocumentValueList')(**kw)
+
+      if cache is not None:
+        cache[key] = result
+
+      return result
+
+    security.declareProtected(Permissions.View, 'getPermanentURL')
+    def getPermanentURL(self, document):
+      """
+        Return a permanent URL of document in the context
+        of the current section.
+
+        This method must be implemented through a
+        portal type dependent script:
+          WebSection_getPermanentURL
+      """
+      cache = getReadOnlyTransactionCache(self)
+      if cache is not None:
+        key = ('getDocumentValueList', self, document.getPath())
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+
+      result = self._getTypeBasedMethod('getPermanentURL',
+                     fallback_script_id='WebSection_getPermanentURL')(document)
+
+      if cache is not None:
+        cache[key] = result
+
+      return result
+
+    security.declareProtected(Permissions.View, 'getBreadcrumbItemList')
+    def getBreadcrumbItemList(self, document):
+      """
+        Return a section dependent breadcrumb in the form
+        of a list of (title, document) tuples.
+
+        This method must be implemented through a
+        portal type dependent script:
+          WebSection_getBreadcrumbItemList
+      """
+      cache = getReadOnlyTransactionCache(self)
+      if cache is not None:
+        key = ('getDocumentValueList', self, document.getPath())
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+
+      result = self._getTypeBasedMethod('getBreadcrumbItemList',
+                     fallback_script_id='WebSection_getBreadcrumbItemList')(document)
+
+      if cache is not None:
+        cache[key] = result
+
+      return result

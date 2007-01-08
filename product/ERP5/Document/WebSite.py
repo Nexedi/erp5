@@ -26,29 +26,18 @@
 ##############################################################################
 
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
-
 from AccessControl import ClassSecurityInfo
-from AccessControl.User import emergency_user
-from AccessControl.SecurityManagement import getSecurityManager, newSecurityManager, setSecurityManager
 
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.Domain import Domain
+from Products.ERP5.Document.WebSection import WebSection, WEBSECTION_KEY
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface, Cache
-from Products.ERP5Type.Base import TempBase
-
-from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
 
 from Globals import get_request
-
 from Persistence import Persistent
-
 from ZPublisher import BeforeTraverse
 
 from zLOG import LOG
 
 WEBSITE_KEY = 'web_site_value'
-WEBSECTION_KEY = 'web_section_value'
-WEBSITE_USER = 'web_site_user'
 
 class WebSiteTraversalHook(Persistent):
   """
@@ -111,62 +100,10 @@ class WebSiteTraversalHook(Persistent):
     self._v_request = request
     request.physicalPathToVirtualPath = self._physicalPathToVirtualPath
 
-
-
-Domain_getattr = Domain.inheritedAttribute('__getattr__')
-
-# Use a request key to store access attributes and prevent infinite recursion
-CACHE_KEY = 'web_site_aq_cache'
-DOCUMENT_NAME_KEY = 'web_site_document_name'
-reserved_name_dict = { 'getApplicableLayout' : 1,
-                       'getLayout' : 1,
-                       'Localizer' : 1,
-                       'field_render' : 1,
-                       'getListItemUrl' : 1,
-                       'getLocalPropertyManager' : 1,
-                       'getOrderedGlobalActionList' : 1,
-                       'allow_discussion' : 1,
-                       'im_func' : 1,
-                       'id' : 1,
-                       'method_id' : 1,
-                       'role_map' : 1,  }
-reserved_name_dict_init = 0
-
-class WebSite(Domain):
+class WebSite(WebSection):
     """
-      A Web Site root class. This class is used by ERP5 Commerce
-      to define the root of an eCommerce site.
-
-      The main idea of the WebSite class is to provide access to
-      documents by leveraging aq_dynamic with a user definable
-      script: WebSite_getDocumentValue
-
-      This script allows for implementing simple or
-      complex document lookup policies:
-
-      - access to documents by a unique reference (ex. as
-        in a Wiki)
-
-      - access to published documents only (ex.
-        publication_state == 'published')
-
-      - access to most relevant document (ex. latest
-        version, applicable language)
-
-      Changing this script allows for configuring completely
-      the behaviour of a web site and tweaking document
-      lookup policies to fit specific needs.
-
-      WARNING:
-        - Z Catalog Search permission must be set for Anonymous
-          (XXX is this still true ?)
-
-      TODO:
-        - accelerate document lookup by caching acceptable keys
-          (XXX is this still true ?)
-
-        - fix missing REQUEST information in aq_dynamic documents
-          (XXX is this still true ?)
+      The Web Site root class is specialises WebSection
+      by defining a global webmaster user.
     """
     # CMF Type Definition
     meta_type       = 'ERP5 Web Site'
@@ -186,79 +123,8 @@ class WebSite(Domain):
                       , PropertySheet.WebSite
                       )
 
-    def _aq_dynamic(self, name):
-      """
-        Try to find a suitable document based on the
-        web site local naming policies as defined by
-        the WebSite_getDocumentValue script
-      """
-      global reserved_name_dict_init
-      global reserved_name_dict
-      request = self.REQUEST
-      # Register current web site physical path for later URL generation
-      if not request.has_key(WEBSITE_KEY):
-        request[WEBSITE_KEY] = self.getPhysicalPath()
-        # Normalize web parameter in the request
-        # Fix common user mistake and transform '1' string to boolean
-        for web_param in ['ignore_layout', 'editable_mode']:
-          if hasattr(request, web_param):
-            if getattr(request, web_param, None) in ('1', 1, True):
-              request.set(web_param, True)
-            else:
-              request.set(web_param, False)
-      # First let us call the super method
-      dynamic = Domain._aq_dynamic(self, name)
-      if dynamic is not None:
-        return dynamic
-      # Do some optimisation here for names which can not be names of documents
-      if  reserved_name_dict.has_key(name) \
-          or name.startswith('_') or name.startswith('portal_')\
-          or name.startswith('aq_') or name.startswith('selection_') \
-          or name.startswith('sort-') or name.startswith('WebSite_') \
-          or name.startswith('WebSection_') or name.startswith('Base_'):
-        return None
-      if not reserved_name_dict_init:
-        # Feed reserved_name_dict_init with skin names
-        portal = self.getPortalObject()
-        for skin_folder in portal.portal_skins.objectValues():
-          for id in skin_folder.objectIds():
-            reserved_name_dict[id] = 1
-        for id in portal.objectIds():
-          reserved_name_dict[id] = 1
-        reserved_name_dict_init = 1
-      #LOG('aq_dynamic name',0, name)
-      if not request.has_key(CACHE_KEY):
-        request[CACHE_KEY] = {}
-      elif request[CACHE_KEY].has_key(name):
-        return request[CACHE_KEY][name]
-      try:
-        portal = self.getPortalObject()
-        # Use the webmaster identity to find documents
-        if request[CACHE_KEY].has_key(WEBSITE_USER):
-          user = request[CACHE_KEY][WEBSITE_USER] # Retrieve user from request cache
-        else:
-          user = portal.acl_users.getUserById(self.getWebmaster())
-          request[CACHE_KEY][WEBSITE_USER] = user # Cache user per request
-        if user is not None:
-          old_manager = getSecurityManager()
-          newSecurityManager(get_request(), user)
-        document = self.WebSite_getDocumentValue(name=name, portal=portal)
-        request[CACHE_KEY][name] = document
-        if user is not None:
-          setSecurityManager(old_manager)
-      except:
-        # Cleanup non recursion dict in case of exception
-        if request[CACHE_KEY].has_key(name):
-          del request[CACHE_KEY][name]
-        raise
-      if document is not None:
-        document = aq_base(document.asContext(id=name, # Hide some properties to permit location the original
-                                              original_container=document.getParentValue(),
-                                              original_id=document.getId(),
-                                              editable_absolute_url=document.absolute_url()))
-      return document
+    web_section_key = WEBSITE_KEY
 
-    # Draft - this is being worked on
     security.declareProtected(Permissions.AccessContentsInformation, 'getWebSiteValue')
     def getWebSiteValue(self):
         """
@@ -266,24 +132,29 @@ class WebSite(Domain):
         """
         return self
 
+    # Virtual Hosting Support
     security.declarePrivate( 'manage_beforeDelete' )
     def manage_beforeDelete(self, item, container):
       if item is self:
         handle = self.meta_type + '/' + self.getId()
         BeforeTraverse.unregisterBeforeTraverse(item, handle)
-      Domain.manage_beforeDelete(self, item, container)
+      WebSection.manage_beforeDelete(self, item, container)
 
     security.declarePrivate( 'manage_afterAdd' )
     def manage_afterAdd(self, item, container):
       if item is self:
         handle = self.meta_type + '/' + self.getId()
         BeforeTraverse.registerBeforeTraverse(item, WebSiteTraversalHook(), handle)
-      Domain.manage_afterAdd(self, item, container)
+      WebSection.manage_afterAdd(self, item, container)
 
     # Experimental methods 
-    def findUrlList(self, document):
-        """
-          Return a list of URLs which exist in the site for
-          a given document
-        """
-        pass
+    def getPermanentURLList(self, document):
+      """
+        Return a list of URLs which exist in the site for
+        a given document. This could be implemented either
+        by keep a history of documents which have been
+        accessed or by parsing all WebSections and listing
+        all documents in each of them to build a reverse
+        mapping of getPermanentURL
+      """
+      pass
