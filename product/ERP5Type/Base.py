@@ -992,7 +992,24 @@ class Base( CopyContainer,
       Previous Name: hasValue
 
       Generic accessor. Calls the real accessor
-      and returns 0 if it fails
+      and returns 0 if it fails.
+
+      The idea of hasProperty is to call the tester methods.
+      It will return True only if a property was defined on the object.
+      (either by calling a Tester accessor or by checking if a local
+      property was added).
+
+      It will return False if the property is not part of the list
+      of valid properties (ie. the list of properties defined in
+      PropertySheets) or if the property has never been updated.
+
+      NOTE - One possible issue in the current implementation is that a
+      property which is set to its default value will be considered
+      as not being defined.
+
+      Ex. self.hasProperty('first_name') on a Person object
+      returns False if the first name was never defined and
+      even if self.getProperty('first_name') returns ''
     """
     accessor_name = 'has' + UpperCase(key)
     if hasattr(self, accessor_name):
@@ -1004,6 +1021,7 @@ class Base( CopyContainer,
       except:
         return 0
     else:
+      # Check in local properties (which obviously were defined at some point)
       for p_id in self.propertyIds():
         if key==p_id:
           return 1
@@ -1029,7 +1047,7 @@ class Base( CopyContainer,
 
   # Object attributes update method
   security.declarePrivate( '_edit' )
-  def _edit(self, REQUEST=None, force_update=0, reindex_object=0, **kw):
+  def _edit(self, REQUEST=None, force_update=0, reindex_object=0, keep_existing=0, **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -1040,7 +1058,10 @@ class Base( CopyContainer,
       be updated through this generic edit method
 
       Modification date is supported by edit_workflow in ERP5
-      There is no need to change it here
+      There is no need to change it here.
+
+      keep_existing -- if set to 1 or True, only those properties for which
+      hasProperty is False will be updated.
     """
     self._v_modified_property_dict = {}
 
@@ -1061,8 +1082,10 @@ class Base( CopyContainer,
           # this can be useful for interaction workflow to implement lookups
           # XXX If iteraction workflow script is triggered by edit and calls
           # edit itself, this is useless as the dict will be overwritten
-          self._v_modified_property_dict[key] = old_value
-          my_modified_property_list.append(key)
+          # If the keep_existing flag is set to 1, we do not update properties which are defined
+          if not keep_existing or not self.hasProperty(key):
+            self._v_modified_property_dict[key] = old_value
+            my_modified_property_list.append(key)
       return my_modified_property_list
 
     my_modified_property_list = getModifiedPropertyList(self)
@@ -1291,7 +1314,7 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
   def getRelativeUrl(self):
     """
-      Returns the absolute path of an object
+      Returns the url of an object relative to the portal site.
     """
     return self.portal_url.getRelativeUrl(self)
 
@@ -2161,7 +2184,7 @@ class Base( CopyContainer,
 
   # Type Casting
   security.declarePrivate( '_getTypeBasedMethod' )
-  def _getTypeBasedMethod(self, method_id, script_id=None):
+  def _getTypeBasedMethod(self, method_id, fallback_script_id=None):
     """
       Looks up for
     """
@@ -2171,14 +2194,13 @@ class Base( CopyContainer,
     script_name_end = '_%s' % method_id
     # Look at a local script which
     # can return a new predicate.
-    if script_id is not None:
-      script = getattr(self, script_id)
-    else:
-      for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
-        script_name = join([script_name_begin.replace(' ',''), script_name_end ], '')
-        if hasattr(self, script_name):
-          script = getattr(self, script_name)
-          break
+    for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
+      script_name = join([script_name_begin.replace(' ',''), script_name_end ], '')
+      if hasattr(self, script_name):
+        script = getattr(self, script_name)
+        break
+    if script is None and fallback_script_id is not None:
+      script = getattr(self, fallback_script_id)
     return script
 
   # Predicate handling
@@ -2380,24 +2402,17 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
   def getApplicableLayout(self):
     """
-      Return applicable layout in this acquisition context by
-      browsing context parents.
+      The application layout of a standard document in the content layout.
 
-      We have to take into account context before containment. This
-      is why standard acquisition must be circumvented here.
+      However, if we are displaying a Web Section as its default document,
+      we should use the container layout.
     """
-    current = self
-    # First try to get a container layout
-    if hasattr(current, 'getContainerLayout') and current.getContainerLayout() not in ('', None):
-      return current.getContainerLayout()
-    # First try to get a content layout
-    while current is not None:
-      if hasattr(current, 'getContentLayout') and current.getContentLayout() not in ('', None):
-        return current.getContentLayout()
-      current = current.getParentValue()
-      if not hasattr(current, 'getApplicableLayout'):
-        return None
-    return None
+    try:
+      if self.REQUEST.get('is_web_section_default_document', None):
+        return self.REQUEST.get('current_web_section').getContainerLayout()
+      return self.getContentLayout() or self.getContainerLayout()
+    except AttributeError:
+      return None
 
   security.declareProtected(Permissions.ChangeLocalRoles,
                             'updateLocalRolesOnSecurityGroups')
@@ -2749,20 +2764,6 @@ class Base( CopyContainer,
     dynamic_property_list.sort()
     dochelper.setDynamicPropertyList(dynamic_property_list)
     return dochelper
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
-  def getWebSectionValue(self):
-    """
-      Returns the current web section (ie. self) though parent acquisition
-      This method has been moved temporatily from WebSection to Base
-      until we understand the bug / issue in acquisition
-    """
-    section = self
-    portal = self.getPortalObject()
-    while section.getPortalType() not in ('Web Site', 'Web Section', ) and\
-          section is not portal:
-      section = section.aq_parent
-    return section
 
 InitializeClass(Base)
 
