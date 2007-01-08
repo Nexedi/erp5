@@ -101,7 +101,7 @@ for counter_vault in counter_vault_list:\n
                                                      ignore_variation=0)\n
   if len(inventory_list)>0:\n
     for inventory in inventory_list:\n
-      if inventory.total_qantity>0:\n
+      if inventory.total_quantity>0:\n
         message = Message(domain=\'ui\',\n
                     message=\'Sorry, some resources are still remaining here : $counter_title\',\n
                     mapping={\'counter_title\':counter_title})\n
