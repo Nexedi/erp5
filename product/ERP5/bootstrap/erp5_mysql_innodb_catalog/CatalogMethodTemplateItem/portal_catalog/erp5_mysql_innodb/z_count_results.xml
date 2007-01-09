@@ -39,6 +39,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>group_by_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>select_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -69,11 +75,12 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>select_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>select_expression</string>
+<string>group_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
                           </list>
                         </value>
                     </item>
@@ -90,10 +97,11 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>from_table_list\r\n
-where_expression\r\n
-select_expression\r\n
-selection_domain\r\n
+            <value> <string>from_table_list\n
+where_expression\n
+select_expression\n
+group_by_expression\n
+selection_domain\n
 selection_report</string> </value>
         </item>
         <item>
@@ -170,6 +178,10 @@ WHERE\n
 ORDER BY\n
   <dtml-var sort_on>\n
 </dtml-if>\n
+<dtml-if group_by_expression>\n
+GROUP BY\n
+  <dtml-var group_by_expression>\n
+</dtml-if>\n
 
 
 ]]></string> </value>
@@ -243,6 +255,10 @@ WHERE\n
 <dtml-if sort_on>\n
 ORDER BY\n
   <dtml-var sort_on>\n
+</dtml-if>\n
+<dtml-if group_by_expression>\n
+GROUP BY\n
+  <dtml-var group_by_expression>\n
 </dtml-if>\n
 
 
