@@ -99,7 +99,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
               <tal:block tal:replace="row_index" />\n
             </label>\n
-            <div class="input" tal:attributes="id string:sort_${row_index}">\n
+            <div class="input" tal:attributes="id string:sort_${row_index}"\n
+                               tal:define="sort_type python:item[min(2, len(item))]">\n
               <select name="field_sort_on">\n
                 <tal:block tal:repeat="option all_columns">\n
                   <option tal:content="python:option[1]"\n
@@ -109,6 +110,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 </tal:block>\n
               </select>\n
               <tal:block tal:replace="structure python:form.sort_order.render(item[1], request)" />\n
+              <tal:block tal:replace="structure python:form.sort_type.render(sort_type, request)" />\n
             </div>\n
             <p class="clear"></p>\n
           </div>\n
@@ -128,6 +130,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                           i18n:translate="" i18n:domain="ui"></option>\n
                 </select>\n
                 <span tal:replace="structure python:form.sort_order.render(\'\', request)" />\n
+                <tal:block tal:replace="structure python:form.sort_type.render(\'\', request)" />\n
               </div>\n
             </tal:block>\n
             <p class="clear"></p>\n
