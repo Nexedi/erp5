@@ -75,6 +75,7 @@
                       <list>
                         <string>sort_on</string>
                         <string>sort_order</string>
+                        <string>sort_type</string>
                       </list>
                     </value>
                 </item>
