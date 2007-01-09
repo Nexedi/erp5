@@ -29,7 +29,7 @@
 from DateTime import DateTime
 from operator import add
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.WebDAVSupport import TextContent
@@ -167,7 +167,7 @@ class Document(XMLObject):
 
       Document classes which implement conversion should use
       the ConversionCacheMixin class so that converted values are
-      stored.
+      stored inside ZODB and do not need to be recalculated.
 
       XXX IDEA - ISSUE: generic API for conversion.
         converted_document = document.convert(...)
@@ -180,47 +180,73 @@ class Document(XMLObject):
       (1) portal type detection
       (2) object creation and upload of data
       (3) metadata discovery (optionally with conversion of data to another format)
-      (4) other possible actions
+      (4) other possible actions to finalise the ingestion (ex. by assigning
+          a reference)
 
       This class handles (3) and calls a ZMI script to do (4).
 
       Metadata can be drawn from various sources:
 
-      input     -   data supplied with http request or set on the object during (2) (e.g.
-                    discovered from email text)
-      file_name -   data which might be encoded in file name
-      user_login-   information about user who is contributing the file
-      content   -   data which might be derived from document content
+      input      -   data supplied with http request or set on the object during (2) (e.g.
+                     discovered from email text)
+      file_name  -    data which might be encoded in file name
+      user_login -   information about user who is contributing the file
+      content    -   data which might be derived from document content
 
       If a certain property is defined in more than one source, it is set according to
       preference order returned by a script 
-      Document_getPreferredDocumentMetadataDiscoveryOrderList (or type-based version).
+         Document_getPreferredDocumentMetadataDiscoveryOrderList
+         (or any type-based version since discovery is type dependent)
+
       Methods for discovering metadata are:
+
         getPropertyDictFromInput
         getPropertyDictFromFileName
         getPropertyDictFromUserLogin
         getPropertyDictFromContent
 
+      Methods for processing content are implemented either in 
+      Document class or in Base class:
+
+        getSearchableReferenceList (Base)
+        getSearchableText (Base)
+        index_html (Document)
+
+      Methods for handling relations are implemented either in 
+      Document class or in Base class:
+
+        getImplicitSuccessorValueList (Base)
+        getImplicitPredecessorValueList (Base)
+        getImplicitSimilarValueList (Base)
+        getSimilarCloudValueList (Document)
+
+      Implicit relations consist in finding document references inside
+      searchable text (ex. INV-23456) and deducting relations from that.
+      Two customisable methods required. One to find a list of implicit references
+      inside the content (getSearchableReferenceList) and one to convert a given
+      document reference into a list of reference strings which could
+      be present in other content (asSearchableReferenceList).
+
+      document.getSearchableReferenceList() returns
+        [
+         {'reference':' INV-12367'},
+         {'reference': 'INV-1112', 'version':'012}', 
+         {'reference': 'AB-CC-DRK', 'version':'011', 'language': 'en'}
+        ]
+
       The Document class behaviour can be extended / customized through scripts
       (which are type-based so can be adjusted per portal type).
 
-      * Document_getFilenameParsingRegexp - returns a regular expression for extracting
-        properties encoded in file name
-
-      * Document_getReferenceLookupRegexp - returns a regular expression for finding
-        references to documents within document text content
-
-      * Document_getPropertyListFromUser - finds a user (by user_login or from session)
+      * Document_getPropertyDictFromUserLogin - finds a user (by user_login or from session)
         and returns properties which should be set on the document
 
-      * Document_getPropertyListFromContent - analyzes document content and returns
+      * Document_getPropertyDictFromContent - analyzes document content and returns
         properties which should be set on the document
 
-      * Document_findImplicitSuccessor - finds appropriate version of a document
-        based on coordinates (which can be incomplete, depending if a document reference
-        found in text content contained version and/or language)
+      * Base_getImplicitSuccesorValueList - finds appropriate all documents
+        referenced in the current content
 
-      * Document_findImplicitPredecessorList - finds document predecessors based on
+      * Base_getImplicitPredecessorValueList - finds document predecessors based on
         the document coordinates (can use only complete coordinates, or also partial)
 
       * Document_getPreferredDocumentMetadataDiscoveryOrderList - returns an order
@@ -230,10 +256,9 @@ class Document(XMLObject):
         is completed (and after document has been converted, so text_content
         is available if the document has it)
 
-      * Document_getNewRevisionNumber - calculates revision number which should be set
+      * Document_getNewRevision - calculates revision number which should be set
         on this document. Implementation depends on revision numbering policy which
         can be very different. Interaction workflow should call setNewRevision method.
-
 
       Subcontent: documents may include subcontent (files, images, etc.)
       so that publication of rich content can be path independent.
@@ -272,7 +297,17 @@ class Document(XMLObject):
                               'subject', 'source_reference', 'source_project_title')
 
 
-  ### Content indexing methods
+  ### Content processing methods
+  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+    """
+      We follow here the standard Zope API for files and images
+      and extend it to support format conversion.
+
+      format - the format specied in the form of an extension
+      string (ex. jpeg, html, text, txt, etc.)
+    """
+    pass
+  
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
     """
@@ -304,47 +339,57 @@ class Document(XMLObject):
   SearchableText = getSearchableText # XXX-JPS - Here wa have a security issue - ask seb what to do
 
   ### Relation getters
-  def _getImplicitSuccessorReferenceList(self):
+  def getSearchableReferenceList(self):
     """
-      Private Implementation Method
+      Public Method
       
-      Find references in text_content, return matches
-      with this we can then find objects
-      The reference regexp defined in Document_getFilenameParsingRegexp should 
-      contain named groups (usually reference, version, language)
-      which make keys of the dictionary returned by this function
-      This function returns a list of dictionaries.
+      This method returns a list of dictionaries which can
+      be used to find objects by reference. It uses for
+      that a regular expression defined at system level
+      preferences.
     """
-    if getattr(self,'getTextContent',_MARKER) is _MARKER:
-      return []
-    if self.getTextContent() is None:
-      return []
+    text = self.getSearchableText()
+    regexp = self.getPreferredReferenceLookupRegexp()
     try:
-      method = self._getTypeBasedMethod('getReferenceLookupRegexp', 
-          fallback_script_id = 'Document_getReferenceLookupRegexp')
-      rx_search = method()
+      rx_search = re.compile(regexp)
     except TypeError: # no regexp in preference
       self.log('please set document reference regexp in preferences')
       return []
-    res = rx_search.finditer(self.getTextContent())
+    res = rx_search.finditer(text)
     res = [(r.group(),r.groupdict()) for r in res]
     return res
-
+    
   security.declareProtected(Permissions.View, 'getImplicitSuccessorValueList')
   def getImplicitSuccessorValueList(self):
     """
     Find objects which we are referencing (if our text_content contains
-    references of other documents). The actual search is delegated to
-    Document_findImplicitSuccessor script. We can use only complete coordinate
-    triplets (reference-version-language) or also partial (e.g. reference only).
-    Normally, Document_findImplicitSuccessor would use getLatestVersionValue to
-    return only the most recent/relevant version.
+    references of other documents). The whole implementation is delegated to
+    Document_getImplicitSuccessorValueList script.
+
+    The implementation goes in 2 steps:
+
+    - Step 1: extract with a regular expression
+      a list of distionaries with various parameters such as 
+      reference, portal_type, language, version, user, etc. This
+      part is configured through a portal preference.
+
+    - Step 2: read the list of dictionaries
+      and build a list of values by calling portal_catalog
+      with appropriate parameters (and if possible build 
+      a complex query whenever this becomes available in
+      portal catalog)
+      
+      The script is reponsible for calling getSearchableReferenceList
+      so that it can use another approach if needed.
+      
+      NOTE: passing a group_by parameter may be useful at a
+      later stage of the implementation.
     """
     # XXX results should be cached as volatile attributes
     # XXX-JPS - Please use TransactionCache in ERP5Type for this
     # TransactionCache does all the work for you
     lst = []
-    for ref in self._getImplicitSuccessorReferenceList():
+    for ref in self.getSearchableReferenceList():
       r = ref[1]
       res = self.Document_findImplicitSuccessor(**r)
       if len(res)>0:
@@ -355,12 +400,21 @@ class Document(XMLObject):
   def getImplicitPredecessorValueList(self):
     """
       This function tries to find document which are referencing us - by reference only, or
-      by reference/language etc.
-      Uses customizeable script Document_findImplicitPredecessorList.
-      
-      It is mostly implementation level - depends on what parameters we use to identify
-      document, and on how a doc must reference me to be my predecessor (reference only,
-      or with a language, etc
+      by reference/language etc. Implementation is passed to 
+        Document_getImplicitPredecessorValueList
+
+      The script should proceed in two steps:
+
+      Step 1: build a list of references out of the context
+      (ex. INV-123456, 123456, etc.)
+
+      Step 2: search using the portal_catalog and use
+      priorities (ex. INV-123456 before 123456)
+      ( if possible build  a complex query whenever 
+      this becomes available in portal catalog )
+
+      NOTE: passing a group_by parameter may be useful at a
+      later stage of the implementation.
     """
     # XXX results should be cached as volatile attributes
     method = self._getTypeBasedMethod('findImplicitPredecessorList', 
@@ -414,8 +468,7 @@ class Document(XMLObject):
 
     return lista_latest.keys()
 
-
-  ### Version and language getters
+  ### Version and language getters - might be moved one day to a mixin class in base
   security.declareProtected(Permissions.View, 'getLatestVersionValue')
   def getLatestVersionValue(self, language=None):
     """
@@ -429,7 +482,7 @@ class Document(XMLObject):
     in any language or in the user language if the version is
     the same.
     """
-    # User portal_catalog
+    # Use portal_catalog
     pass
 
   security.declareProtected(Permissions.View, 'getVersionValueList')
@@ -438,7 +491,7 @@ class Document(XMLObject):
       Returns a list of documents with same reference, same portal_type
       but different version and given language or any language if not given.
     """
-    # User portal_catalog
+    # Use portal_catalog
     pass
 
   security.declareProtected(Permissions.View, 'isVersionUnique')
@@ -446,7 +499,7 @@ class Document(XMLObject):
     """
       Returns true if no other document has the same version and language
     """
-    # User portal_catalog
+    # Use portal_catalog
     pass
 
   security.declareProtected(Permissions.View, 'getLatestRevisionValue')
@@ -454,7 +507,7 @@ class Document(XMLObject):
     """
       Returns the latest revision of ourselves
     """
-    # User portal_catalog
+    # Use portal_catalog
     pass
 
   security.declareProtected(Permissions.View, 'getRevisionValueList')
@@ -462,7 +515,7 @@ class Document(XMLObject):
     """
       Returns a list revision strings for a given reference, version, language
     """
-    # User portal_catalog
+    # Use portal_catalog
     pass
   
   security.declareProtected(Permissions.ModifyPortalContent, 'setNewRevision')
@@ -472,9 +525,9 @@ class Document(XMLObject):
       Delegates to ZMI script because revision numbering policies can be different.
       Should be called by interaction workflow upon appropriate action.
     """
-    # User portal_catalog without security
-    method = self._getTypeBasedMethod('getNewRevisionNumber', 
-        fallback_script_id = 'Document_getNewRevisionNumber')
+    # Use portal_catalog without security
+    method = self._getTypeBasedMethod('getNewRevision', 
+        fallback_script_id = 'Document_getNewRevision')
     new_rev = method()
     self.setRevision(new_rev)
   
@@ -484,7 +537,7 @@ class Document(XMLObject):
       Returns a list of languages which this document is available in
       for the current user.
     """
-    # User portal_catalog
+    # Use portal_catalog
     pass
 
   security.declareProtected(Permissions.View, 'getOriginalLanguage')
@@ -509,9 +562,10 @@ class Document(XMLObject):
       returns properties which should be set on the document
     """
     if user_login is None:
-      user_login = self.portal_something.getUserLogin()
-    return self._getTypeBasedMethod('getPropertyDictFromUserLogin',
+      user_login = str(getSecurityManager().getUser())
+    method = self._getTypeBasedMethod('getPropertyDictFromUserLogin',
         fallback_script_id='Document_getPropertyDictFromUserLogin')
+    return method()
 
   security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromContent')
   def getPropertyDictFromContent(self):
@@ -519,6 +573,8 @@ class Document(XMLObject):
       Based on the document content, find out as many properties as needed.
       returns properties which should be set on the document
     """
+    # XXX this method should first make sure we have text content
+    # or do a conversion
     return self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
 
@@ -577,7 +633,7 @@ class Document(XMLObject):
     for order_id in order_list[0:content_index-1]:
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
-        raise AttributeError, "explain what..."
+        raise AttributeError, "%s is not in valid order key list" % order_id
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id == 'file_name':
@@ -615,7 +671,7 @@ class Document(XMLObject):
     for order_id in order_list[content_index:]:
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
-        raise AttributeError, "explain what..."
+        raise AttributeError, "%s is not in valid order key list" % order_id
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id == 'file_name':
