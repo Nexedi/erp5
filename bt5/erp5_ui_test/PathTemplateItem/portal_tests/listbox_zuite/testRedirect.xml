@@ -119,16 +119,16 @@
 <tr>\n
   <td>verifyAttribute</td>\n
   <td>//tr[@id="listbox_label_line"]/td[2]/a@href</td>\n
-  <td>portal_selections/setSelectionQuickSortOrder?selection_name=foo_line_selection&amp;sort_on=title&amp;form_id=Foo_viewRelationField</td>\n
+  <td>setSelectionQuickSortOrder?selection_name=foo_line_selection&amp;sort_on=title&amp;form_id=Foo_viewRelationField</td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/portal_selections/setSelectionQuickSortOrder?selection_name=foo_line_selection&amp;sort_on=title&amp;form_id=Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0/setSelectionQuickSortOrder?selection_name=foo_line_selection&amp;sort_on=title&amp;form_id=Foo_viewRelationField</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0/setSelectionQuickSortOrder</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -201,7 +201,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0</td>\n
   <td></td>\n
 </tr>\n
 <!-- Go to last and verify -->\n
@@ -247,7 +247,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0/setPage</td>\n
   <td></td>\n
 </tr>\n
 <!-- Go to previous and verify -->\n
@@ -283,7 +283,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0</td>\n
   <td></td>\n
 </tr>\n
 <!-- Go to first and verify -->\n
@@ -329,7 +329,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0/setPage</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -438,7 +438,7 @@
 <!-- END of inspired code -->\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td>${base_url}/foo_module/0/unfoldDomain</td>\n
   <td></td>\n
 </tr>\n
 \n

@@ -324,7 +324,7 @@
 <!-- Check all -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>portal_selections/checkAll:method</td>\n
+\t<td>checkAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -364,7 +364,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>portal_selections/checkAll:method</td>\n
+\t<td>checkAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -385,7 +385,7 @@
 <!-- Uncheck all -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>portal_selections/uncheckAll:method</td>\n
+\t<td>uncheckAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -425,7 +425,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>portal_selections/uncheckAll:method</td>\n
+\t<td>uncheckAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
