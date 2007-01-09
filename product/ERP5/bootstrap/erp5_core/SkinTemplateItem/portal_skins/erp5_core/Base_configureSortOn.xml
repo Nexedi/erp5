@@ -74,8 +74,8 @@
 \n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
-request=context.REQUEST\n
-\n
+request = context.REQUEST\n
+field_sort_type = request.form.get(\'field_sort_type\', None)\n
 \n
 try:\n
   # No validation for now\n
@@ -84,8 +84,13 @@ try:\n
   i = 0\n
   for k in field_sort_on:\n
     if k != \'None\':\n
-      v = field_sort_order[i]\n
-      sort_on += [(k,v)]\n
+      if field_sort_type is None:\n
+        v = field_sort_order[i]\n
+        sort_on += [(k,v)]\n
+      else:\n
+        v = field_sort_order[i]\n
+        t = field_sort_type[i]\n
+        sort_on += [(k, v, t)]\n
     i += 1\n
   context.portal_selections.setSelectionSortOrder(selection_name, sort_on)\n
 except FormValidationError, validation_errors:\n
@@ -149,12 +154,15 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>None</string>
+                            <string>field_sort_type</string>
                             <string>sort_on</string>
                             <string>i</string>
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>_getitem_</string>
                             <string>v</string>
+                            <string>t</string>
                             <string>validation_errors</string>
                             <string>form</string>
                             <string>field_errors</string>
