@@ -30,6 +30,7 @@ from DateTime import DateTime
 from operator import add
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.WebDAVSupport import TextContent
@@ -491,16 +492,27 @@ class Document(XMLObject):
       Returns a list of documents with same reference, same portal_type
       but different version and given language or any language if not given.
     """
-    # Use portal_catalog
-    pass
+    catalog = getToolByName(self, 'portal_catalog', None)
+    return catalog(portal_type=self.getPortalType(),
+                   reference=self.getReference(),
+                   version=version,
+                   language=language,
+                   group_by=('revision',),
+                   order_by=(('revision', 'descending', 'SIGNED'),)
+                  )
 
   security.declareProtected(Permissions.View, 'isVersionUnique')
   def isVersionUnique(self):
     """
-      Returns true if no other document has the same version and language
+      Returns true if no other document of the same
+      portal_type and reference has the same version and language
     """
-    # Use portal_catalog
-    pass
+    catalog = getToolByName(self, 'portal_catalog', None)
+    return catalog.countResults(portal_type=self.getPortalType(),
+                                reference=self.getReference(),
+                                version=self.getVersion(),
+                                language=self.getLanguage(),
+                                ) <= 1
 
   security.declareProtected(Permissions.View, 'getLatestRevisionValue')
   def getLatestRevisionValue(self):
@@ -537,8 +549,13 @@ class Document(XMLObject):
       Returns a list of languages which this document is available in
       for the current user.
     """
-    # Use portal_catalog
-    pass
+    catalog = getToolByName(self, 'portal_catalog', None)
+    return map(lambda o:o.getLanguage(),
+                   catalog(portal_type=self.getPortalType(),
+                           reference=self.getReference(),
+                           version=version,
+                           group_by=('language',),
+                           ))
 
   security.declareProtected(Permissions.View, 'getOriginalLanguage')
   def getOriginalLanguage(self):
