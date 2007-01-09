@@ -497,9 +497,14 @@ class ListBoxRenderer:
   getFieldErrorDict = VolatileCachingMethod(getFieldErrorDict)
 
   def getUrl(self):
-    """Return a requested URL.
     """
-    return self.request.URL
+      Return a requested URL.
+      Generate the URL from context and request because self.request['URL']
+      might contain a function name, which would make all redirections call
+      the function - which both we don't want and will probably crash.
+    """
+    return '%s/%s' % (self.getContext().absolute_url(),
+                      self.request.other.get('current_form_id', 'view'))
 
   getUrl = VolatileCachingMethod(getUrl)
 
