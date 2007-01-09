@@ -64,6 +64,7 @@
     global actions          python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
     global url              here/absolute_url;\n
     global current_form_id  python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
+           dummy            python: request.set(\'current_form_id\', current_form_id);\n
     global current_url      python: \'%s/%s\' % (url, current_form_id);\n
     global current_action   python: here.ERP5Site_getCurrentAction(current_url, actions);\n
 \n
