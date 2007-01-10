@@ -100,7 +100,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
                 if candidate_folder is not None:
                   object = getattr(candidate_folder, name, None)
                   if object is not None:
-                    skin_selection_cache[name] = candidate_folder_id
+                    skin_selection_mapping[skin_selection_name][name] = candidate_folder_id
                     resolve[name] = object.aq_base
                     return resolve[name]
                 else:
