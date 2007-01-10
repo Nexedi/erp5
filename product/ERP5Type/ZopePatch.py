@@ -43,6 +43,9 @@ from Products.ERP5Type.patches import Localizer
 from Products.ERP5Type.patches import CMFMailIn
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import PropertySheets
+from Products.ERP5Type.patches import CMFCoreSkinnable
+from Products.ERP5Type.patches import CMFCoreSkinsTool
+from Products.ERP5Type.patches import OFSFolder
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
