@@ -27,7 +27,7 @@ def CMFCoreSkinsTool_manage_skinLayers(self, *args, **kw):
   """
   if getattr(self, '_v_skin_location_list', None) is not None:
     self._p_changed = 1
-    self._v_skin_location_list.clear()
+    delattr(self, '_v_skin_location_list')
   return original_manage_skinLayers(self, *args, **kw)
 
 def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
