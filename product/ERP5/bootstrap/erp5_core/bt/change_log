@@ -1,3 +1,7 @@
+2006-01-09 Vincent
+* Remove catalog
+* Add a dependency on erp5_catalog
+
 2006-11-24 Aurel
 * add reset parameter when calling Base_viewWorklist
 
