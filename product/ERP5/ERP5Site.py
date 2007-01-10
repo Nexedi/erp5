@@ -1148,10 +1148,13 @@ class ERP5Generator(PortalGenerator):
     if not p.hasObject('portal_preferences'):
       addTool('ERP5 Preference Tool', None)
 
-    # Add ERP5SyncML Tools
-    addTool = p.manage_addProduct['ERP5SyncML'].manage_addTool
-    if not p.hasObject('portal_synchronizations'):
-      addTool('ERP5 Synchronizations', None)
+    try:
+      # Add ERP5SyncML Tools
+      addTool = p.manage_addProduct['ERP5SyncML'].manage_addTool
+      if not p.hasObject('portal_synchronizations'):
+        addTool('ERP5 Synchronizations', None)
+    except AttributeError:
+      pass
 
     # Add Message Catalog
     if not 'Localizer' in p.objectIds():
