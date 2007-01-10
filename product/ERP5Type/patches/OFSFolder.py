@@ -37,7 +37,7 @@ def Folder_setOb(self, id, object):
     return
   if len(aq_chain) < 2: # Acquisition context is not deep enough for context to possibly be below portal skins.
     return
-  portal_skins = aq_chain[-2]
+  portal_skins = aq_chain[1]
   if getattr(portal_skins, 'meta_type', '') != 'CMF Skins Tool' : # It is not a skin tool we're below.
     return
   _updateCacheEntry = getattr(portal_skins.aq_base, '_updateCacheEntry', None)
