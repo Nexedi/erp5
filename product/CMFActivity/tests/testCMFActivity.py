@@ -1354,6 +1354,62 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     self.CheckCountMessageWithTag('SQLDict')
 
+  def test_67_TestCancelFailedActiveObject(self, quiet=0, run=run_all_test):
+    """Cancel an active object to make sure that it does not refer to
+    a persistent object."""
+    if not run: return
+    if not quiet:
+      message = '\nTest if it is possible to safely cancel an active object'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    activity_tool = self.getPortal().portal_activities
+    activity_tool.manageClearActivities(keep=0)
+
+    original_title = 'something'
+    obj = self.getPortal().organisation_module.newContent(
+                    portal_type='Organisation',
+                    title=original_title)
+
+    # Monkey patch Organisation to add a failing method
+    def failingMethod(self):
+      raise ValueError, 'This method always fail'
+    Organisation.failingMethod = failingMethod
+
+    # Monkey patch Message not to send failure notification emails
+    from Products.CMFActivity.ActivityTool import Message
+    originalNotifyUser = Message.notifyUser
+    def notifyUserSilent(self, activity_tool, message=''):
+      pass
+    Message.notifyUser = notifyUserSilent
+
+    # First, index the object.
+    get_transaction().commit()
+    self.flushAllActivities(silent=1, loop_size=100)
+    self.assertEquals(len(activity_tool.getMessageList()), 0)
+
+    # Insert a failing active object.
+    obj.activate().failingMethod()
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 1)
+
+    # Just wait for the active object to be abandoned.
+    self.flushAllActivities(silent=1, loop_size=10)
+    self.assertEquals(len(activity_tool.getMessageList()), 1)
+    self.assertEquals(activity_tool.getMessageList()[0].processing_node, 
+                      INVOKE_ERROR_STATE)
+
+    # Make sure that persistent objects are not present in the connection
+    # cache to emulate a restart of Zope. So all volatile attributes will
+    # be flushed, and persistent objects will be reloaded.
+    activity_tool._p_jar._resetCache()
+
+    # Cancel it via the management interface.
+    message = activity_tool.getMessageList()[0]
+    activity_tool.manageCancel(message.object_path, message.method_id)
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 0)
+
+
 if __name__ == '__main__':
     framework()
 else:
