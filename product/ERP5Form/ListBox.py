@@ -1963,21 +1963,17 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           if isinstance(error_text, str):
             error_text = unicode(error_text, encoding)
           error_message = u'<br />' + error_text
-          processed_value = self.renderer.request.get('field_%s' % key, processed_value)
+          widget_key = editable_field.generate_field_key(key=key)
+          error_value = self.renderer.request.get(widget_key, None)
         else:
           error_message = u''
-
-        # XXX Formulator should be able to accept unicode.
-        if isinstance(processed_value, unicode):
-          display_value = processed_value.encode(encoding)
-        else:
-          display_value = processed_value
+          error_value = None
 
         # XXX this is a horrible hack.
         if editable_field.meta_type in ('DateTimeField', 'ProxyField', ):
           # XXX Some fields prefer None to ''.
           cell_html = editable_field.render( \
-                            value   = original_value
+                            value   = error_value or original_value
                           , REQUEST = brain.asContext( \
                                                REQUEST = self.renderer.request
                                              , form    = self.renderer.request.form
@@ -1991,7 +1987,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # XXX (JPS) - render_view does not get REQUEST - this breaks so many possibilities
           REQUEST = get_request() # Dirtymax hack by JPS - render_view API update required
           REQUEST.cell = self.getObject()
-          cell_html = editable_field.render( value   = original_value
+          cell_html = editable_field.render( value   = error_value or original_value
                                            , REQUEST = brain
                                            , key     = key
                                            )
