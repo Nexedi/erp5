@@ -71,9 +71,11 @@
             <value> <string>REQUEST = container.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
 \n
-uids = getattr(REQUEST, \'uids\', ())\n
+selection_name = kw[\'list_selection_name\']\n
+uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+\n
 ret_url = \'/\'.join([context.absolute_url(), REQUEST.get(\'form_id\', \'view\')])\n
-#return repr(len(uids))\n
+\n
 if len(uids) == 0:\n
   RESPONSE.redirect("%s?portal_status_message=No+Business+Template+Specified" % ret_url)\n
   return\n
@@ -139,9 +141,10 @@ RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s
                             <string>container</string>
                             <string>REQUEST</string>
                             <string>RESPONSE</string>
-                            <string>getattr</string>
-                            <string>uids</string>
+                            <string>_getitem_</string>
+                            <string>selection_name</string>
                             <string>context</string>
+                            <string>uids</string>
                             <string>ret_url</string>
                             <string>len</string>
                             <string>id_list</string>

@@ -70,15 +70,21 @@
             <key> <string>_body</string> </key>
             <value> <string>REQUEST = container.REQUEST\n
 \n
+\n
 bt_id_list = getattr(REQUEST, \'bt_list\', ())\n
 if len(bt_id_list) == 0:\n
   bt_id_list = kw.get(\'bt_list\', ())\n
+\n
+if \'MultiInstallationDialog\' in getattr(REQUEST, \'current_form_id\', \'\'):\n
+  check_dependencies = 0\n
+else:\n
+  check_dependencies = 1\n
 \n
 from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getModifiedObjectList(bt):\n
-  return bt.preinstall()\n
+  return bt.preinstall(check_dependencies = check_dependencies)\n
 \n
 getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', cache_duration=36000)\n
 \n
@@ -174,6 +180,7 @@ return object_list\n
                             <string>getattr</string>
                             <string>bt_id_list</string>
                             <string>len</string>
+                            <string>check_dependencies</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>Products.ERP5Type.Cache</string>

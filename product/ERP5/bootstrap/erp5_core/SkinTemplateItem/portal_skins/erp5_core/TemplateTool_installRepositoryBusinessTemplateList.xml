@@ -74,8 +74,9 @@ from ZTUtils import make_query\n
 \n
 REQUEST = container.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
+selection_name = kw[\'list_selection_name\']\n
 \n
-uids = getattr(REQUEST, \'uids\', ())\n
+uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if len(uids) == 0:\n
   return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), context.urlQuote(\'No Business Template specified.\')))\n
@@ -122,6 +123,8 @@ tuple_list = []\n
 for uid in uids:\n
   tuple_list.append(context.decodeRepositoryBusinessTemplateUid(uid))\n
 tuple_list = context.sortBusinessTemplateList(tuple_list)\n
+\n
+context.log(\'uids = %s\' %(uids,), \'tuple list = %s\' %(tuple_list,))\n
 \n
 bt_list = []\n
 for repository, id in tuple_list:\n
@@ -187,10 +190,11 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
                             <string>container</string>
                             <string>REQUEST</string>
                             <string>RESPONSE</string>
-                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>selection_name</string>
+                            <string>context</string>
                             <string>uids</string>
                             <string>len</string>
-                            <string>context</string>
                             <string>id_list</string>
                             <string>portal_status_message</string>
                             <string>current_uid_list</string>
