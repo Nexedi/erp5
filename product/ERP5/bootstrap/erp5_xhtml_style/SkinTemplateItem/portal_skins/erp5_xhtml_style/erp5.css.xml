@@ -656,6 +656,13 @@ fieldset.bottom .field label {\n
   float: left;\n
 }\n
 \n
+# Exception case of the previous generic rule\n
+# The CSS statement below fix bug #517: it doesn\'t make sense to have\n
+#   floating div in bottom field since label are hidden.\n
+fieldset.bottom .field .input {\n
+  float: inherit;\n
+}\n
+\n
 .content .field .input a {\n
   vertical-align: middle;\n
 }\n
