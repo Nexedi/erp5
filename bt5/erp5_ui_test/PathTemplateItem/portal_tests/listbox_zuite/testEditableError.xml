@@ -45,12 +45,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -63,7 +57,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test that and Editable Column has no Link</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test that an editable field keeps the value entered by the user</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -115,22 +109,40 @@
   <td>Go to first line</td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//a[@href=\'${base_url}/foo_module/0/1/view?selection_index=0&amp;selection_name=foo_line_selection&amp;reset:int=1\']</td>\n
-  <td></td>\n
-  <td>Make sure an no a tag is present in ListBox</td>\n
+  <td>type</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]/input</td>\n
+  <td>aaa</td>\n
+  <td>We type some sting in a float field</td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]/a/input</td>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
   <td></td>\n
-  <td>Make sure an no a tag is present in ListBox</td>\n
+  <td>And save</td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]/input</td>\n
+  <td>aaa</td>\n
+  <td>We check that aaa is still present</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[4]/input</td>\n
+  <td>bbb</td>\n
+  <td>We type some sting in a date field</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
   <td></td>\n
-  <td>Make sure there is an input tag in line 1 col 1</td>\n
+  <td>And save</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[4]/input</td>\n
+  <td>bbb</td>\n
+  <td>We check that bbb is still present</td>\n
 </tr>\n
 </tbody></table>\n
 </body>\n
@@ -150,7 +162,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testEditableNoLink</string> </value>
+            <value> <string>testEditableError</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
