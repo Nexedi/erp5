@@ -94,7 +94,7 @@ class Domain(Predicate, MetaNode, MetaResource):
       since it is never present in the category list
     """
     content_path = self.portal_url.getRelativeContentPath(self)
-    if content_path[0] == 'portal_categories':
+    if content_path[0] in ('portal_categories', 'portal_domains'):
       return '/'.join(content_path[1:])
     return '/'.join(content_path)
   
