@@ -852,7 +852,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             self.getCatalogTool().buildSQLQuery(
             sort_on=(('catalog.title', 'descending'),))['order_by_expression'])
     
-  def test__26_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
+  def test_26_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not run: return
     if not quiet:
@@ -1264,4 +1264,49 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject() for x in self.getCatalogTool()(
                parent_title=person_module.getTitle())])
     
+  def test_46_QueryAndComplexQuery(self,quiet=quiet, run=1):
+    """
+    """
+    if not run: return
+    if not quiet:
+      message = 'Query And Complex Query'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    org_a = self._makeOrganisation(title='abc',description='abc')
+    org_b = self._makeOrganisation(title='bcd',description='bcd')
+    org_c = self._makeOrganisation(title='efg',description='efg')
+    org_e = self._makeOrganisation(title='foo',description='bir')
+    org_f = self._makeOrganisation(title='foo',description='bar')
 
+    from Products.ZSQLCatalog.SQLCatalog import Query,ComplexQuery
+    # title='abc'
+    catalog_kw= {'title':Query(title='abc')}
+    self.failIfDifferentSet([org_a.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    # title with b and c
+    catalog_kw= {'title':Query(title=['%b%','%c%'],operator='AND')}
+    self.failIfDifferentSet([org_a.getPath(), org_b.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    # title='bcd' OR description='efg'
+    catalog_kw = {'query':ComplexQuery(Query(title='bcd'),
+                                       Query(description='efg'),
+                                       operator='OR')}
+    self.failIfDifferentSet([org_b.getPath(), org_c.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    # Recursive Complex Query
+    # (title='abc' and description='abc') OR 
+    #  title='foo' and description='bar'
+    catalog_kw = {'query':ComplexQuery(ComplexQuery(Query(title='abc'),
+                                                    Query(description='abc'),
+                                                    operator='AND'),
+                                       ComplexQuery(Query(title='foo'),
+                                                    Query(description='bar'),
+                                                    operator='AND'),
+                                       operator='OR')}
+    self.failIfDifferentSet([org_a.getPath(), org_f.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    
