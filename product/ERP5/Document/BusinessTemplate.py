@@ -4536,7 +4536,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
           if (not self.portal_templates.IsOneProviderInstalled(dependency)) \
              and ((installed_bt is None) \
-                  or (version_restriction is not None and 
+                  or (version_restriction not in (None, '') and 
                      (not self.portal_templates.compareVersionStrings(installed_bt.getVersion(), version_restriction)))):
             missing_dep_list.append((dependency, version_restriction or ''))
       if len(missing_dep_list) != 0:
