@@ -933,6 +933,48 @@ class TestBase(ERP5TypeTestCase):
     tmp_object.edit(title='new title')
     self.assertEquals('new title', tmp_object.getTitle())
 
+  def test_13_aqDynamicWithNonExistentWorkflow(self, quiet=quiet, run=run_all_test):
+    """Test if _aq_dynamic still works even if an associated workflow
+    is not present in the portal. This may cause an infinite recursion."""
+    if not run: return
+
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type = portal_type)
+    obj = module.newContent(portal_type = portal_type)
+
+    # Add a non-existent workflow.
+    pw = self.getWorkflowTool()
+    dummy_worlflow_id = 'never_existent_workflow'
+    pw.manage_addWorkflow('dc_workflow (Web-configurable workflow)', 
+                          dummy_worlflow_id)
+    cbt = pw._chains_by_type
+    props = {}
+    for id, wf_ids in cbt.iteritems():
+      if id == portal_type:
+        wf_ids = list(wf_ids) + [dummy_worlflow_id]
+      props['chain_%s' % id] = ','.join(wf_ids)
+    pw.manage_changeWorkflows('', props = props)
+    pw.manage_delObjects([dummy_worlflow_id])
+
+    # Make sure that _aq_dynamic will be called again.
+    _aq_reset()
+
+    try:
+      self.assertRaises(AttributeError, obj.thisMethodShouldNotBePresent)
+    finally:
+      # Make sure that the artificial workflow is not referred to any longer.
+      cbt = pw._chains_by_type
+      props = {}
+      for id, wf_ids in cbt.iteritems():
+        if id == portal_type:
+          # Remove the non-existent workflow.
+          wf_ids = [wf_id for wf_id in wf_ids \
+                    if wf_id != dummy_worlflow_id]
+        props['chain_%s' % id] = ','.join(wf_ids)
+      pw.manage_changeWorkflows('', props = props)
+
+
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
   """
