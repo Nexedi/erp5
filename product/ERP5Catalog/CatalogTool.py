@@ -589,7 +589,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return property_dict
 
     security.declarePrivate('getDynamicRelatedKeyList')
-    def getDynamicRelatedKeyList(self, sql_catalog_id=None, **kw):
+    def getDynamicRelatedKeyList(self, key_list, sql_catalog_id=None):
       """
       Return the list of dynamic related keys.
       This method will try to automatically generate new related key
@@ -603,7 +603,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       base_cat_id_list = self.portal_categories.getBaseCategoryDict()
       default_string = 'default_'
       strict_string = 'strict_'
-      for key in kw.keys():
+      for key in key_list:
         prefix = ''
         strict = 0
         if key.startswith(default_string):
