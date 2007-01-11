@@ -53,6 +53,7 @@ from DateTime import DateTime
 from Acquisition import aq_base, aq_inner
 from zLOG import LOG
 import time
+from ZODB.POSException import ConflictError
 
 try:
   from transaction import get as get_transaction
@@ -642,6 +643,36 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(o.getTitle(), 'a')
     self.assertEquals(portal_activities.countMessageWithTag('toto'), 0)
 
+  def TryConflictErrorsWhileProcessing(self, activity):
+    """Try to execute active objects which may throw conflict errors
+    while processing, and check if they are still executed."""
+    # Make sure that no active object is installed.
+    activity_tool = self.getPortal().portal_activities
+    activity_tool.manageClearActivities(keep=0)
+
+    # Need an object.
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = organisation_module._getOb(self.company_id)
+    get_transaction().commit()
+    self.flushAllActivities(silent = 1, loop_size = 10)
+    self.assertEquals(len(activity_tool.getMessageList()), 0)
+
+    # Monkey patch Organisation to induce conflict errors artificially.
+    def induceConflictErrors(self, limit):
+      if self.__class__.current_num_conflict_errors < limit:
+        self.__class__.current_num_conflict_errors += 1
+        raise ConflictError
+    Organisation.induceConflictErrors = induceConflictErrors
+
+    # Test some range of conflict error occurences.
+    for i in xrange(10):
+      Organisation.current_num_conflict_errors = 0
+      o.activate(activity = activity).induceConflictErrors(i)
+      get_transaction().commit()
+      self.flushAllActivities(silent = 1, loop_size = i + 10)
+      self.assertEquals(len(activity_tool.getMessageList()), 0)
 
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
@@ -1408,6 +1439,28 @@ class TestCMFActivity(ERP5TypeTestCase):
     activity_tool.manageCancel(message.object_path, message.method_id)
     get_transaction().commit()
     self.assertEquals(len(activity_tool.getMessageList()), 0)
+
+  def test_68_TestConflictErrorsWhileProcessingWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Test if conflict errors spoil out active objects with SQLDict.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Conflict Errors While Processing With SQLDict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.TryConflictErrorsWhileProcessing('SQLDict')
+
+  def test_69_TestConflictErrorsWhileProcessingWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Test if conflict errors spoil out active objects with SQLQueue.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Conflict Errors While Processing With SQLQueue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.TryConflictErrorsWhileProcessing('SQLQueue')
 
 
 if __name__ == '__main__':

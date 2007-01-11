@@ -33,7 +33,7 @@ from DateTime import DateTime
 from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ZODB.POSException import ConflictError
-from types import StringType
+from types import StringType, ClassType
 import sys
 
 try:
@@ -159,9 +159,15 @@ class SQLQueue(RAMQueue):
           LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
 
-        if line.priority > MAX_PRIORITY:
+        if type(m.exc_type) is ClassType \
+                and issubclass(m.exc_type, ConflictError):
+          activity_tool.SQLQueue_setPriority(uid = line.uid, 
+                                             date = next_processing_date,
+                                             priority = line.priority)
+        elif line.priority > MAX_PRIORITY:
           # This is an error
-          activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = INVOKE_ERROR_STATE)
+          activity_tool.SQLQueue_assignMessage(uid = line.uid, 
+                                               processing_node = INVOKE_ERROR_STATE)
                                                                             # Assign message back to 'error' state
           m.notifyUser(activity_tool)                                       # Notify Error
         else:
