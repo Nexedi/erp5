@@ -206,6 +206,16 @@
 \t<td>Business Template test_xhtml_style, test_web installed</td>\n
 \t<td></td>\n
 </tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/BTZuite_reset?end=1"/>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+  <td></td>\n
+</tr>\n
 </body>\n
 </html>\n
 

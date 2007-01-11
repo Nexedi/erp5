@@ -74,16 +74,16 @@ for bt in bt_list:\n
   if bt.getTitle().startswith(\'test_\'):\n
     bt.uninstall()\n
 \n
-is_test_repos_present = False\n
-repository_list = context.portal_templates.getRepositoryList()\n
-for repository in repository_list:\n
-  if repository.startswith(\'http://torrent.erp5.org/dists/snapshot/test_bt5\'):\n
-    is_test_repos_present = True\n
-    break\n
+# modify repository list information\n
+if end:\n
+  # set default repository list when test is finished\n
+  repository_list = [\'http://torrent.erp5.org/dists/snapshot/bt5\']\n
+else:\n
+  # just used test repository to not display to many bt and thus have listbox\n
+  # with many pages\n
+  repository_list = [\'http://torrent.erp5.org/dists/snapshot/test_bt5\']\n
 \n
-if not is_test_repos_present:\n
-  repository_list.append(\'http://torrent.erp5.org/dists/snapshot/test_bt5\')\n
-  context.portal_templates.updateRepositoryBusinessTemplateList(repository_list)\n
+context.portal_templates.updateRepositoryBusinessTemplateList(repository_list)\n
 \n
 return \'Reset Successfully.\'\n
 </string> </value>
@@ -108,7 +108,7 @@ return \'Reset Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>end=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,22 +128,19 @@ return \'Reset Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>end</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>bt_list</string>
                             <string>_getiter_</string>
                             <string>bt</string>
-                            <string>False</string>
-                            <string>is_test_repos_present</string>
                             <string>repository_list</string>
-                            <string>repository</string>
-                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -155,7 +152,9 @@ return \'Reset Successfully.\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
