@@ -615,6 +615,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     # This sub category should be referred to only by itself
     value_list = pc.getRelatedValueList(c)
     self.assertEquals(len(value_list), 1)
+    
+    #test _getDefaultRelatedProperty Accessor
+    person = self.getPortal().person_module.newContent(id='person_test')
+    org = self.getPortal().organisation_module.newContent(id='organisation_test',destination='person_module/person_test')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(person.getDefaultDestinationRelated(),'organisation_module/organisation_test' )
 
   def test_17_CategoriesAndDomainSelection(self, quiet=quiet,
       run=run_all_test):
