@@ -136,6 +136,9 @@ selection_report</string> </value>
 
 SELECT\n
   COUNT(DISTINCT catalog.uid) <dtml-comment>We need subselect for better statistics</dtml-comment>\n
+<dtml-if select_expression>\n
+  , <dtml-var select_expression>\n
+</dtml-if>\n
 FROM\n
   <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
   <dtml-if selection_domain>\n
@@ -207,6 +210,9 @@ ORDER BY\n
 
 SELECT\n
   COUNT(DISTINCT catalog.uid) <dtml-comment>We need subselect for better statistics</dtml-comment>\n
+<dtml-if select_expression>\n
+  , <dtml-var select_expression>\n
+</dtml-if>\n
 FROM\n
   <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
   <dtml-if selection_domain>\n
