@@ -946,7 +946,7 @@ class TestBase(ERP5TypeTestCase):
     # Add a non-existent workflow.
     pw = self.getWorkflowTool()
     dummy_worlflow_id = 'never_existent_workflow'
-    pw.manage_addWorkflow('dc_workflow (Web-configurable workflow)', 
+    pw.manage_addWorkflow('dc_workflow (Web-configurable workflow)',
                           dummy_worlflow_id)
     cbt = pw._chains_by_type
     props = {}
@@ -961,7 +961,8 @@ class TestBase(ERP5TypeTestCase):
     _aq_reset()
 
     try:
-      self.assertRaises(AttributeError, obj.thisMethodShouldNotBePresent)
+      self.assertRaises(AttributeError, getattr, obj,
+                        'thisMethodShouldNotBePresent')
     finally:
       # Make sure that the artificial workflow is not referred to any longer.
       cbt = pw._chains_by_type
