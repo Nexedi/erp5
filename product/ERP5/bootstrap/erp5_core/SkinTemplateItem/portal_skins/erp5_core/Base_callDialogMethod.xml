@@ -87,13 +87,13 @@ kw.update(request_form)\n
 # Exceptions for UI\n
 if dialog_method == \'Base_configureUI\':\n
   return context.Base_configureUI(form_id=kw[\'form_id\'],\n
-                                  selection_name=kw[\'selection_name\'],\n
+                                  selection_name=kw[\'list_selection_name\'],\n
                                   field_columns=kw[\'field_columns\'],\n
                                   stat_columns=kw[\'stat_columns\'])\n
 # Exceptions for Sort\n
 if dialog_method == \'Base_configureSortOn\':\n
   return context.Base_configureSortOn(form_id=kw[\'form_id\'],\n
-                                      selection_name=kw[\'selection_name\'],\n
+                                      selection_name=kw[\'list_selection_name\'],\n
                                       field_sort_on=kw[\'field_sort_on\'],\n
                                       field_sort_order=kw[\'field_sort_order\'])\n
 # Exceptions for Base_edit\n
@@ -113,7 +113,7 @@ if dialog_method == \'Workflow_statusModify\':\n
 if dialog_method == \'Base_editRelation\':\n
   return context.Base_editRelation(form_id=kw[\'form_id\'],\n
                                    field_id=kw[\'field_id\'],\n
-                                   selection_name=kw[\'selection_name\'],\n
+                                   selection_name=kw[\'list_selection_name\'],\n
                                    selection_index=kw[\'selection_index\'],\n
                                    uids=kw.get(\'uids\', ()),\n
                                    listbox_uid=kw.get(\'listbox_uid\', None),\n
@@ -122,7 +122,7 @@ if dialog_method == \'Base_editRelation\':\n
 # Exception for create relation\n
 if dialog_method == \'Base_createRelation\':\n
   return context.Base_createRelation(form_id=kw[\'form_id\'],\n
-                                     selection_name=kw[\'selection_name\'],\n
+                                     selection_name=kw[\'list_selection_name\'],\n
                                      selection_index=kw[\'selection_index\'],\n
                                      base_category=kw[\'base_category\'],\n
                                      object_uid=kw[\'object_uid\'],\n
@@ -134,7 +134,7 @@ if dialog_method == \'Base_createRelation\':\n
 # Exception for folder delete\n
 if dialog_method == \'Folder_delete\':\n
   return context.Folder_delete(form_id=kw[\'form_id\'],\n
-                               selection_name=kw[\'selection_name\'],\n
+                               selection_name=kw[\'list_selection_name\'],\n
                                uids=kw[\'listbox_uid\'],\n
                                md5_object_uid_list=kw[\'md5_object_uid_list\'])\n
 \n
@@ -209,7 +209,7 @@ if enable_pickle or (form.update_action != \'\'):\n
 \n
 # Check if the selection changed\n
 if hasattr(kw, \'previous_md5_object_uid_list\'):\n
-  selection_list = context.portal_selections.callSelectionFor(kw[\'selection_name\'], context=context)\n
+  selection_list = context.portal_selections.callSelectionFor(kw[\'list_selection_name\'], context=context)\n
   if selection_list is not None:\n
     object_uid_list = map(lambda x:x.getObject().getUid(), selection_list)\n
     error = context.portal_selections.selectionHasChanged(kw[\'previous_md5_object_uid_list\'], object_uid_list)\n
@@ -218,19 +218,18 @@ if hasattr(kw, \'previous_md5_object_uid_list\'):\n
 \n
 # if dialog_category is object_search, then edit the selection\n
 if dialog_category == "object_search" :\n
-  context.portal_selections.setSelectionParamsFor(kw[\'selection_name\'], kw)\n
+  context.portal_selections.setSelectionParamsFor(kw[\'list_selection_name\'], kw)\n
 \n
 # if we have checked line in listbox, modify the selection\n
 listbox_uid = kw.get(\'listbox_uid\', None)\n
 # In some cases, the listbox exists, is editable, but the selection name\n
 # has no meaning, for example fast input dialogs.\n
 # In such cases, we must not try to update a non-existing selection.\n
-if listbox_uid is not None and kw.has_key(\'selection_name\'):\n
+if listbox_uid is not None and kw.has_key(\'list_selection_name\'):\n
   uids = kw.get(\'uids\')\n
   selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
-    kw[\'selection_name\'],\n
+    kw[\'list_selection_name\'],\n
     listbox_uid, uids)\n
-\n
 # Remove values which doesn\'t work with make_query.\n
 clean_kw = {}\n
 for k, v in kw.items() :\n
