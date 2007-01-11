@@ -87,11 +87,6 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Install Business Templates From Repositories</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
 \t<td>click</td>\n
 \t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX2ZyLmJ0NScKcDIKdC4=\']</td>\n
 \t<td></td>\n
@@ -117,11 +112,6 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Validate Installation</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
 \t<td></td>\n
@@ -134,11 +124,6 @@
 <tr>\n
 \t<td>open</td>\n
 \t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Install Business Templates From Repositories</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -162,11 +147,6 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Install Business Templates From Repositories</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
 \t<td>click</td>\n
 \t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX3BsLmJ0NScKcDIKdC4=\']</td>\n
 \t<td></td>\n
@@ -174,11 +154,6 @@
 <tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Validate Installation</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -194,11 +169,6 @@
 <tr>\n
 \t<td>open</td>\n
 \t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Install Business Templates From Repositories</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -224,11 +194,6 @@
 <tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Validate Installation</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
