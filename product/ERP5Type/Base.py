@@ -1533,6 +1533,25 @@ class Base( CopyContainer,
   getRelatedValueList = _getRelatedValueList
 
   security.declareProtected( Permissions.AccessContentsInformation,
+                             '_getDefaultRelatedProperty' )
+  def _getDefaultRelatedProperty(self, id, property_name, spec=(), filter=None,
+                                      portal_type=(), strict_membership=0):
+    property_list = self._getCategoryTool().getRelatedPropertyList(self, id,
+                          property_name=property_name,
+                          spec=spec, filter=filter,
+                          portal_type=portal_type,
+                          strict_membership=strict_membership)
+    try:
+      return property_list[0]
+    except IndexError:
+      return None
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDefaultRelatedProperty' )
+  getDefaultRelatedProperty = _getDefaultRelatedProperty
+
+  
+  security.declareProtected( Permissions.AccessContentsInformation,
                              '_getRelatedPropertyList' )
   def _getRelatedPropertyList(self, id, property_name, spec=(), filter=None,
                                       portal_type=(), strict_membership=0):
