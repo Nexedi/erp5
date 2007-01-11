@@ -674,6 +674,49 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.flushAllActivities(silent = 1, loop_size = i + 10)
       self.assertEquals(len(activity_tool.getMessageList()), 0)
 
+  def TryConflictErrorsWhileValidating(self, activity):
+    """Try to execute active objects which may throw conflict errors
+    while validating, and check if they are still executed."""
+    # Make sure that no active object is installed.
+    activity_tool = self.getPortal().portal_activities
+    activity_tool.manageClearActivities(keep=0)
+
+    # Need an object.
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = organisation_module._getOb(self.company_id)
+    get_transaction().commit()
+    self.flushAllActivities(silent = 1, loop_size = 10)
+    self.assertEquals(len(activity_tool.getMessageList()), 0)
+
+    # Monkey patch Queue to induce conflict errors artificially.
+    def validate(self, *args, **kwargs):
+      from Products.CMFActivity.Activity.Queue import Queue
+      if Queue.current_num_conflict_errors < Queue.conflict_errors_limit:
+        Queue.current_num_conflict_errors += 1
+        # LOG('TryConflictErrorsWhileValidating', 0, 'causing a conflict error artificially')
+        raise ConflictError
+      return self.original_validate(*args, **kwargs)
+    from Products.CMFActivity.Activity.Queue import Queue
+    Queue.original_validate = Queue.validate
+    Queue.validate = validate
+
+    try:
+      # Test some range of conflict error occurences.
+      for i in xrange(10):
+        Queue.current_num_conflict_errors = 0
+        Queue.conflict_errors_limit = i
+        o.activate(activity = activity).getId()
+        get_transaction().commit()
+        self.flushAllActivities(silent = 1, loop_size = i + 10)
+        self.assertEquals(len(activity_tool.getMessageList()), 0)
+    finally:
+      Queue.validate = Queue.original_validate
+      del Queue.original_validate
+      del Queue.current_num_conflict_errors
+      del Queue.conflict_errors_limit
+
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1461,6 +1504,28 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
     self.TryConflictErrorsWhileProcessing('SQLQueue')
+
+  def test_70_TestConflictErrorsWhileValidatingWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Test if conflict errors spoil out active objects with SQLDict.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Conflict Errors While Validating With SQLDict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.TryConflictErrorsWhileValidating('SQLDict')
+
+  def test_71_TestConflictErrorsWhileValidatingWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Test if conflict errors spoil out active objects with SQLQueue.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Conflict Errors While Validating With SQLQueue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.TryConflictErrorsWhileValidating('SQLQueue')
 
 
 if __name__ == '__main__':
