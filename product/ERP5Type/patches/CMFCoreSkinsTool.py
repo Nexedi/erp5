@@ -21,14 +21,17 @@ from Products.CMFCore.SkinsTool import SkinsTool
 
 original_manage_skinLayers = SkinsTool.manage_skinLayers
 
-def CMFCoreSkinsTool_manage_skinLayers(self, *args, **kw):
+def CMFCoreSkinsTool_manage_skinLayers(self, chosen=(), add_skin=0, del_skin=0,
+                                       skinname='', skinpath='', REQUEST=None):
   """
     Make sure cache is flushed when skin layers are modified.
   """
   if getattr(self, '_v_skin_location_list', None) is not None:
     self._p_changed = 1
     delattr(self, '_v_skin_location_list')
-  return original_manage_skinLayers(self, *args, **kw)
+  return original_manage_skinLayers(self, chosen=chosen, add_skin=add_skin,
+                                    del_skin=del_skin, skinname=skinname,
+                                    skinpath=skinpath, REQUEST=REQUEST)
 
 def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
   """
