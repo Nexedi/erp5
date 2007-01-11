@@ -3925,13 +3925,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self.portal_templates.update(self)
 
-    def preinstall(self, **kw):
+    def preinstall(self, check_dependencies=1, **kw):
       """
         Return the list of modified/new/removed object between a Business Template
         and the one installed if exists
       """
 
-      self.checkDependencies()
+      if check_dependencies:
+        # required because in multi installation, dependencies has already
+        # been checked before and it will failed here as dependencies can be
+        # installed at the same time
+        self.checkDependencies()
 
       modified_object_list = {}
       bt_title = self.getTitle()
