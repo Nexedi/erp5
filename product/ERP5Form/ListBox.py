@@ -1282,7 +1282,9 @@ class ListBoxRenderer:
     set to None, otherwise to a string.
     """
     sort_list = self.getSelectionTool().getSelectionSortOrder(self.getSelectionName())
-    sort_dict = dict(sort_list)
+    sort_dict = {}
+    for sort_item in sort_list:
+      sort_dict[sort_item[0]] = sort_item[1] # sort_item can be couple or a triplet
     sort_column_id_set = self.getSortColumnIdSet()
 
     value_list = []
