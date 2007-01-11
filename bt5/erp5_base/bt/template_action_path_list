@@ -86,7 +86,6 @@ Organisation | metadata
 Organisation | person_list
 Organisation | print
 Organisation | view
-Person Module | career_print
 Person Module | csv_export
 Person Module | csv_import
 Person Module | list_ui
