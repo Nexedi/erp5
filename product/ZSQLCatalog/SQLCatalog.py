@@ -32,6 +32,7 @@ from Acquisition import aq_parent, aq_inner, aq_base, aq_self
 from zLOG import LOG, WARNING, INFO, TRACE, DEBUG
 from ZODB.POSException import ConflictError
 from DocumentTemplate.DT_Var import sql_quote
+from Products.PythonScripts.Utility import allow_class
 
 import time
 import sys
@@ -168,6 +169,223 @@ class UidBuffer(TM):
     self._register()
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
+
+class QueryMixin:
+
+  def getOperator(self):
+    return self.operator
+
+  def _quoteSQLString(self, value):
+    """Return a quoted string of the value.
+    """
+    if hasattr(value, 'ISO'):
+      value = value.ISO()
+    elif hasattr(value, 'strftime'):
+      value = value.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+      value = sql_quote(str(value))
+    return value
+
+class Query(QueryMixin):
+  """
+  This allow to define constraints on a sql column
+  """
+  def __init__(self,format=None,operator=None,range=None,
+                    search_mode=None,**kw):
+    self.format = format
+    if operator is None:
+      operator = 'OR'
+    self.operator = operator
+    self.range = range
+    self.search_mode = search_mode
+    key_list = kw.keys()
+    if len(key_list)!=1:
+      raise KeyError, 'Query must have only one key'
+    self.key = key_list[0]
+    self.value = kw[self.key]
+
+  def __call__(self):
+    self.asSQLExpression()
+
+  def getRange(self):
+    return self.range
+
+  def getFormat(self):
+    return self.format
+
+  def getSearchMode(self):
+    return self.search_mode
+
+  def asSQLExpression(self,key_alias_dict=None,keyword_search_keys=None,
+                           full_text_search_keys=None,
+                           ignore_empty_string=1,stat__=0):
+    """
+    Build the sql string
+    """
+    sql_expression = ''
+    value = self.getValue()
+    key = self.getKey()
+    ignore_key=0
+    if key_alias_dict is not None:
+      # Try to find the alias
+      if key not in key_alias_dict:
+        ignore_key=1
+      else:
+        key = key_alias_dict.get(key)
+        if key is None:
+          ignore_key=1
+    where_expression = []
+    select_expression = []
+    # Default case: variable equality
+    range_value = self.getRange()
+    if ignore_key:
+      pass
+    elif range_value is not None:
+      if isinstance(value, (list, tuple)):
+        query_min = self._quoteSQLString(min(value))
+        query_max = self._quoteSQLString(max(value))
+      else:
+        query_min=query_max=value
+      if range_value == 'min' :
+        where_expression.append("%s >= '%s'" % (key, query_min))
+      elif range_value == 'max' :
+        where_expression.append("%s < '%s'" % (key, query_max))
+      elif range_value == 'minmax' :
+        where_expression.append("%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max))
+      elif range_value == 'minngt' :
+        where_expression.append("%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max))
+      elif range_value == 'ngt' :
+        where_expression.append("%s <= '%s'" % (key, query_max))
+    elif isinstance(value, basestring) or isinstance(value, DateTime) \
+        or isinstance(value, (list, tuple)):
+      value_list = value
+      if isinstance(value, basestring) or isinstance(value, DateTime):
+        value_list = [value]
+      # For security.
+      for value in value_list:
+        value = self._quoteSQLString(value)
+        if value != '' or not ignore_empty_string:
+          if '%' in value:
+            where_expression.append("%s LIKE '%s'" % (key, value))
+          elif value.startswith('='):
+            where_expression.append("%s = '%s'" % (key, value[1:]))
+          elif value.startswith('>='):
+            where_expression.append("%s >= '%s'" % (key, value[2:]))
+          elif value.startswith('<='):
+            where_expression.append("%s <= '%s'" % (key, value[2:]))
+          elif value.startswith('>'):
+            where_expression.append("%s > '%s'" % (key, value[1:]))
+          elif value.startswith('<'):
+            where_expression.append("%s < '%s'" % (key, value[1:]))
+          elif value.startswith('!='):
+            where_expression.append("%s != '%s'" % (key, value[2:]))
+          elif key in keyword_search_keys:
+            # We must add % in the request to simulate the catalog
+            where_expression.append("%s LIKE '%%%s%%'" % (key, value))
+          elif key in full_text_search_keys:
+            # We must add % in the request to simulate the catalog
+            # we first check if there is a special search_mode for this key
+            # incl. table name, or for all keys of that name,
+            # or there is a search_mode supplied for all fulltext keys
+            # or we fall back to natural mode
+            search_mode=self.getSearchMode()
+            if search_mode is None:
+              search_mode = 'natural'
+            search_mode=search_mode.lower()
+            mode = full_text_search_modes.get(search_mode,'')
+            where_expression.append("MATCH %s AGAINST ('%s' %s)" % (key, value, mode))
+            if not stat__:
+              # we return relevance as Table_Key_relevance
+              select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_')))
+              # and for simplicity as Key_relevance
+              if '.' in key:
+                select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
+          else:
+            where_expression.append("%s = '%s'" % (key, value))
+    else:
+      where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
+
+    
+    if len(where_expression)>0:
+      if len(where_expression)==1:
+        where_expression = where_expression[0]
+      else:
+        where_expression = '(%s)' % (' %s ' % self.getOperator()).join(where_expression)
+    else: where_expression = ''
+    return {'where_expression':where_expression,
+            'select_expression_list':select_expression}
+  
+  def getKey(self):
+    return self.key
+
+  def getValue(self):
+    return self.value
+
+  def getSQLKeyList(self):
+    """
+    Returns the list of keys used by this
+    instance
+    """
+    return [self.getKey()]
+
+allow_class(Query)
+
+class ComplexQuery(QueryMixin):
+  """
+  Used in order to concatenate many queries
+  """
+  def __init__(self,*args,**kw):
+    self.query_list = args
+    operator = None
+    if kw.has_key('operator'):
+      operator = kw['operator']
+      del kw['operator']
+    if operator is None:
+      operator = 'AND'
+    self.operator=operator
+    self.__dict__.update(kw)
+
+  def __call__(self):
+    self.asSQLExpression()
+
+  def getQueryList(self):
+    return self.query_list
+
+  def asSQLExpression(self,key_alias_dict=None,
+                           ignore_empty_string=1,
+                           keyword_search_keys=None,
+                           full_text_search_keys=None,
+                           stat__=0):
+    """
+    Build the sql string
+    """
+    sql_expression_list = []
+    select_expression_list = []
+    for query in self.getQueryList():
+      query_result = query.asSQLExpression( key_alias_dict=key_alias_dict,
+                             ignore_empty_string=ignore_empty_string,
+                             keyword_search_keys=keyword_search_keys,
+                             full_text_search_keys=full_text_search_keys,
+                             stat__=stat__)
+      sql_expression_list.append(query_result['where_expression'])
+      select_expression_list.extend(query_result['select_expression_list'])
+    operator = self.getOperator()
+    result = {'where_expression':('(%s)' %  \
+                         (' %s ' % operator).join(sql_expression_list)),
+              'select_expression_list':select_expression_list}
+    return result
+
+  def getSQLKeyList(self):
+    """
+    Returns the list of keys used by this
+    instance
+    """
+    key_list=[]
+    for query in self.getQueryList():
+      key_list.extend(query.getSQLKeyList())
+    return key_list
+
+allow_class(ComplexQuery)
 
 class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   """ An Object Catalog
@@ -630,7 +848,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except:
         LOG('SQLCatalog', WARNING,
             'could not clear catalog with %s' % method_name, error=sys.exc_info())
-        pass
 
     # Reserved uids have been removed.
     self.clearReserved()
@@ -753,7 +970,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         for field in field_list:
           keys[field] = 1
           keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
-      for related in self.getSqlCatalogRelatedKeyList():
+      for related in self.getSQLCatalogRelatedKeyList():
         related_tuple = related.split('|')
         related_key = related_tuple[0].strip()
         keys[related_key] = 1
@@ -1398,37 +1615,25 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     ids.sort()
     return ids
 
-  def _quoteSQLString(self, value):
-    """Return a quoted string of the value.
-    """
-    if hasattr(value, 'ISO'):
-      value = value.ISO()
-    elif hasattr(value, 'strftime'):
-      value = value.strftime('%Y-%m-%d %H:%M:%S')
-    else:
-      value = sql_quote(str(value))
-    return value
-
-  def getSqlCatalogRelatedKeyList(self, **kw):
+  def getSQLCatalogRelatedKeyList(self, key_list=None):
     """
     Return the list of related keys.
     This method can be overidden in order to implement
     dynamic generation of some related keys.
     """
+    if key_list is None:
+      key_list = []
     # Do not generate dynamic related key for acceptable_keys
-    dynamic_key_list = kw.keys()
-    dynamic_key_list = [k for k in dynamic_key_list \
+    dynamic_key_list = [k for k in key_list \
         if k not in self.getColumnMap().keys()]
     dynamic_kw = {}
-    for key in dynamic_key_list:
-      dynamic_kw[key] = kw[key]
 
-    dynamic_list = self.getDynamicRelatedKeyList(**dynamic_kw)
+    dynamic_list = self.getDynamicRelatedKeyList(dynamic_key_list)
     full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
     return full_list
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
-                          ignore_empty_string=1, **kw):
+                          ignore_empty_string=1, query=None,stat__=0,**kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     # Get search arguments:
     if REQUEST is None and (kw is None or kw == {}):
@@ -1474,16 +1679,63 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       sort_index = [(sort_index, so)]
     elif not isinstance(sort_index, (list, tuple)):
       sort_index = None
-    
+
+    # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
+    new_kw = {}
+    usage_len = len('_usage')
+    for k, v in kw.items():
+      if k.endswith('_usage'):
+        new_k = k[0:-usage_len]
+        if not new_kw.has_key(new_k):
+          new_kw[new_k] = {}
+        if not isinstance(new_kw[new_k], dict):
+          new_kw[new_k] = {'query': new_kw[new_k]}
+        split_v = v.split(':')
+        new_kw[new_k] = {split_v[0]: split_v[1]}
+      else:
+        if not new_kw.has_key(k):
+          new_kw[k] = v
+        else:
+          new_kw[k]['query'] = v
+    kw = new_kw
+
+    # Build the list of Queries and ComplexQueries
+    query_dict = {}
+    key_list = [] # the list of column keys
+    key_alias_dict = {}
+    for key in kw.keys():
+      if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit'):
+        value = kw[key]
+        current_query = None
+        new_query_dict = {}
+        if isinstance(value,(Query,ComplexQuery)):
+          current_query=value
+        else:
+          if isinstance(value,dict):
+            for value_key in value.keys():
+              if value_key=='query':
+                new_query_dict[key]=value['query']
+              else:
+                new_query_dict[value_key]=value[value_key]
+          else:
+            new_query_dict[key]=value
+          current_query = Query(**new_query_dict)
+        query_dict[key]=current_query
+        key_list.extend(current_query.getSQLKeyList())
+
+    if query is not None:
+      query_dict['query'] = query
+      key_list.extend(query.getSQLKeyList())
+
     # if we have a sort index, we must take it into account to get related
     # keys.
     if sort_index:
       related_key_kw = dict(kw)
       for sort_info in sort_index:
-        related_key_kw.setdefault(sort_info[0], '')
-      related_tuples = self.getSqlCatalogRelatedKeyList(**related_key_kw)
-    else:
-      related_tuples = self.getSqlCatalogRelatedKeyList(**kw)
+        sort_key = sort_info[0]
+        if sort_key not in key_list:
+          key_list.append(sort_key)
+    related_tuples = self.getSQLCatalogRelatedKeyList(key_list=key_list)
     
     # Define related maps
     # each tuple from `related_tuples` has the form (key,
@@ -1524,347 +1776,156 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           # Only copy a few keys from the REQUEST
           if key in self.sql_catalog_request_keys:
             kw[key] = REQUEST[key]
-      # Let us try first not to use this
-      #for key in related_keys:
-      #  if REQUEST.has_key(key):
-      #    kw[key] = REQUEST[key]
 
-    # Let us start building the where_expression
-    # and select_expression
-    if kw:
-      where_expression = []
-      select_expression = []
-      group_by_expression = []
+    def getNewKeyAndUpdateVariables(key):
+      key_is_acceptable = key in acceptable_keys # Only calculate once
+      key_is_related = key in related_keys
+      new_key = None
+      if key_is_acceptable or key_is_related:
+        if key_is_related: # relation system has priority (ex. security_uid)
+          # We must rename the key
+          method_id = related_method[key]
+          table_list = related_table_list[key]
+          if not related_methods.has_key((table_list,method_id)):
+            related_methods[(table_list,method_id)] = 1
+          # Prepend renamed table name
+          new_key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], 
+                               related_column[key])
+        elif key_is_acceptable:
+          if key.find('.') < 0:
+            # if the key is only used by one table, just append its name
+            if len(acceptable_key_map[key]) == 1 :
+              new_key = '%s.%s' % (acceptable_key_map[key][0], key)
+            # query_table specifies what table name should be used by default
+            elif query_table and \
+                '%s.%s' % (query_table, key) in acceptable_keys:
+              new_key = '%s.%s' % (query_table, key)
+            elif key == 'uid':
+              # uid is always ambiguous so we can only change it here
+              new_key = 'catalog.uid'
+          else:
+            new_key = key
+          if new_key is not None:
+            # Add table to table dict, we use catalog by default
+            from_table_dict[acceptable_key_map[new_key][0]] = acceptable_key_map[new_key][0] 
+      key_alias_dict[key] = new_key
+      return new_key
+
+    where_expression_list = []
+    select_expression_list = []
+    group_by_expression_list = []
+    where_expression = ''
+    select_expression = ''
+    group_by_expression = ''
+
+    from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
+    if len(kw):
       if kw.has_key('select_expression'):
         select_expression.append(kw['select_expression'])
       if kw.has_key('group_by_expression'):
-        group_by_expression.append(kw['group_by_expression'])
-
-      from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
-
-      sort_on = None
-      if sort_index is not None:
-        new_sort_index = []
-        for sort in sort_index:
-          if len(sort) == 2:
-            # Try to analyse expressions of the form "title AS unsigned"
-            sort_key_list = sort[0].split()
-            if len(sort_key_list) == 3:
-              sort_key = sort_key_list[0]
-              sort_type = sort_key_list[2]
-            elif len(sort_key_list):
-              sort_key = sort_key_list[0]
-              sort_type = None
-            else:
-              sort_key = sort[0]
-              sort_type = None
-            new_sort_index.append((sort_key, sort[1], sort_type))
-          elif len(sort) == 3:
-            new_sort_index.append(sort)
-        sort_index = new_sort_index
-        try:
-          new_sort_index = []
-          for (key , so, as_type) in sort_index:
-            key_is_acceptable = key in acceptable_keys # Only calculate once
-            key_is_related = key in related_keys
-            if key_is_acceptable or key_is_related:
-              if key_is_related: # relation system has priority (ex. security_uid)
-                # We must rename the key
-                method_id = related_method[key]
-                table_list = related_table_list[key]
-                if not related_methods.has_key((table_list,method_id)):
-                  related_methods[(table_list,method_id)] = 1
-                # Prepend renamed table name
-                key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
-              elif key_is_acceptable:
-                if key.find('.') < 0:
-                  # if the key is only used by one table, just append its name
-                  if len(acceptable_key_map[key]) == 1 :
-                    key = '%s.%s' % (acceptable_key_map[key][0], key)
-                  # query_table specifies what table name should be used by default
-                  elif query_table:
-                    key = '%s.%s' % (query_table, key)
-                  elif key == 'uid':
-                    # uid is always ambiguous so we can only change it here
-                    key = 'catalog.uid'
-                # Add table to table dict
-                from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
-              if as_type == 'int':
-                key = 'CAST(%s AS SIGNED)' % key
-              elif as_type:
-                key = 'CAST(%s AS %s)' % (key, as_type) # Different casts are possible
-              if so in ('descending', 'reverse', 'DESC'):
-                new_sort_index.append('%s DESC' % key)
-              else:
-                new_sort_index.append('%s' % key)
-          sort_index = join(new_sort_index,',')
-          sort_on = str(sort_index)
-        except ConflictError:
-          raise
-        except:
-          LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
-          sort_on = ''
-
+        group_by_expression_list.append(kw['group_by_expression'])
       # Grouping
       group_by_list = kw.get('group_by', None)
       if type(group_by_list) is type('a'): group_by_list = [group_by_list]
       if group_by_list is not None:
         try:
           for key in group_by_list:
-            key_is_acceptable = key in acceptable_keys # Only calculate once
-            key_is_related = key in related_keys
-            if key_is_acceptable or key_is_related:
-              if key_is_related: # relation system has priority (ex. security_uid)
-                # We must rename the key
-                method_id = related_method[key]
-                table_list = related_table_list[key]
-                if not related_methods.has_key((table_list,method_id)):
-                  related_methods[(table_list,method_id)] = 1
-                # Prepend renamed table name
-                key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
-              elif key_is_acceptable:
-                if key.find('.') < 0:
-                  # if the key is only used by one table, just append its name
-                  if len(acceptable_key_map[key]) == 1 :
-                    key = '%s.%s' % (acceptable_key_map[key][0], key)
-                  # query_table specifies what table name should be used by default
-                  elif query_table:
-                    key = '%s.%s' % (query_table, key)
-                  elif key == 'uid':
-                    # uid is always ambiguous so we can only change it here
-                    key = 'catalog.uid'
-                # Add table to table dict
-                from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
-              group_by_expression.append(key)
-          group_by_expression = ','.join(group_by_expression)
-          group_by_expression = str(group_by_expression)
+            new_key = getNewKeyAndUpdateVariables(key)
+            group_by_expression_list.append(new_key)
         except ConflictError:
           raise
         except:
           LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new group by expression', error=sys.exc_info())
-          sort_on = ''
-
-      # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
-      new_kw = {}
-      usage_len = len('_usage')
-      for k, v in kw.items():
-        if k.endswith('_usage'):
-          new_k = k[0:-usage_len]
-          if not new_kw.has_key(new_k):
-            new_kw[new_k] = {}
-          if not isinstance(new_kw[new_k], dict):
-            new_kw[new_k] = {'query': new_kw[new_k]}
-          split_v = v.split(':')
-          new_kw[new_k] = {split_v[0]: split_v[1]}
-        else:
-          if not new_kw.has_key(k):
-            new_kw[k] = v
+          group_by_expression = ''
+      if len(group_by_expression_list)>0:
+        group_by_expression = ','.join(group_by_expression_list)
+        group_by_expression = str(group_by_expression)
+    sort_on = None
+    if sort_index is not None:
+      new_sort_index = []
+      for sort in sort_index:
+        if len(sort) == 2:
+          # Try to analyse expressions of the form "title AS unsigned"
+          sort_key_list = sort[0].split()
+          if len(sort_key_list) == 3:
+            sort_key = sort_key_list[0]
+            sort_type = sort_key_list[2]
+          elif len(sort_key_list):
+            sort_key = sort_key_list[0]
+            sort_type = None
           else:
-            new_kw[k]['query'] = v
-      kw = new_kw
-      #LOG('new kw', 0, str(kw))
-      # We can now consider that old style query is changed into new style
-      for key in kw.keys(): # Do not use kw.items() because this consumes much more memory
-        value = kw[key]
-        if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit'):
-          # Make sure key belongs to schema
-          key_is_acceptable = key in acceptable_keys # Only calculate once
-          key_is_related = key in related_keys
-          if key_is_acceptable or key_is_related:
-            if key_is_related: # relation system has priority (ex. security_uid)
-              # We must rename the key
-              method_id = related_method[key]
-              table_list = related_table_list[key]
-              if not related_methods.has_key((table_list,method_id)):
-                related_methods[(table_list,method_id)] = 1
-              # Prepend renamed table name
-              base_key = key
-              key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
-              if base_key in keyword_search_keys:
-                keyword_search_keys.append(key)
-              if base_key in full_text_search_keys:
-                full_text_search_keys.append(key)
-            elif key_is_acceptable:
-              if key.find('.') < 0:
-                # if the key is only used by one table, just append its name
-                if len(acceptable_key_map[key]) == 1 :
-                  key = acceptable_key_map[key][0] + '.' + key
-                # query_table specifies what table name should be used by default
-                elif query_table and \
-                    '%s.%s' % (query_table, key) in acceptable_keys:
-                  key = '%s.%s' % (query_table, key)
-                elif key == 'uid':
-                  # uid is always ambiguous so we can only change it here
-                  key = 'catalog.uid'
-              # Add table to table dict
-              from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
-            # Default case: variable equality
-            if isinstance(value, basestring) or isinstance(value, DateTime):
-              # For security.
-              value = self._quoteSQLString(value)
-              if value != '' or not ignore_empty_string:
-                if '%' in value:
-                  where_expression.append("%s LIKE '%s'" % (key, value))
-                elif value.startswith('='):
-                  where_expression.append("%s = '%s'" % (key, value[1:]))
-                elif value.startswith('>='):
-                  where_expression.append("%s >= '%s'" % (key, value[2:]))
-                elif value.startswith('<='):
-                  where_expression.append("%s <= '%s'" % (key, value[2:]))
-                elif value.startswith('>'):
-                  where_expression.append("%s > '%s'" % (key, value[1:]))
-                elif value.startswith('<'):
-                  where_expression.append("%s < '%s'" % (key, value[1:]))
-                elif value.startswith('!='):
-                  where_expression.append("%s != '%s'" % (key, value[2:]))
-                elif key in keyword_search_keys:
-                  # We must add % in the request to simulate the catalog
-                  where_expression.append("%s LIKE '%%%s%%'" % (key, value))
-                elif key in full_text_search_keys:
-                  # We must add % in the request to simulate the catalog
-                  # we first check if there is a special search_mode for this key
-                  # incl. table name, or for all keys of that name,
-                  # or there is a search_mode supplied for all fulltext keys
-                  # or we fall back to natural mode
-                  search_mode=kw.get('search_mode_%s' % key) \
-                      or kw.get('search_mode_%s' % key.replace('.','_')) \
-                      or ('.' in key and kw.get('search_mode_%s' % key.split('.')[1])) \
-                      or kw.get('search_mode', 'natural')
-                  if search_mode is not None:
-                    search_mode=search_mode.lower()
-                  mode = full_text_search_modes.get(search_mode,'')
-                  where_expression.append("MATCH %s AGAINST ('%s' %s)" % (key, value, mode))
-                  # we return relevance as Table_Key_relevance
-                  select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_')))
-                  # and for simplicity as Key_relevance
-                  if '.' in key:
-                    select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
-                else:
-                  where_expression.append("%s = '%s'" % (key, value))
-            elif isinstance(value, (list, tuple)):
-              # We have to create an OR from tuple or list
-              query_item = []
-              for value_item in value:
-                if value_item != '' or not ignore_empty_string:
-                  # we consider empty string as Non Significant
-                  # also for lists
-                  if isinstance(value_item, (int, float, long)):
-                    query_item.append("%s = %s" % (key, value_item))
-                  else:
-                    # For security.
-                    value_item = self._quoteSQLString(value_item)
-                    if '%' in value_item:
-                      query_item.append("%s LIKE '%s'" % (key, value_item))
-                    elif key in keyword_search_keys:
-                      # We must add % in the request to simulate the catalog
-                      query_item.append("%s LIKE '%%%s%%'" % (key, value_item))
-                    elif key in full_text_search_keys:
-                      # We must add % in the request to simulate the catalog
-                      # we first check if there is a special search_mode for this key
-                      # incl. table name, or for all keys of that name,
-                      # or there is a search_mode supplied for all fulltext keys
-                      # or we fall back to natural mode
-                      search_mode=kw.get('search_mode_%s' % key) \
-                          or kw.get('search_mode_%s' % key.replace('.','_')) \
-                          or ('.' in key and kw.get('search_mode_%' % key.split('.')[1])) \
-                          or kw.get('search_mode', 'natural')
-                      if search_mode is not None:
-                        search_mode=search_mode.lower()
-                      mode = full_text_search_modes.get(search_mode, '')
-                      query_item.append("MATCH %s AGAINST ('%s')" % (key, value, mode))
-                      # we return relevance as Table_Key_relevance
-                      select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_')))
-                      # and for simplicity as Key_relevance
-                      if '.' in key:
-                        select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
-                    else:
-                      query_item.append("%s = '%s'" % (key, value_item))
-              if len(query_item) > 0:
-                where_expression.append('(%s)' % join(query_item, ' OR '))
-            elif isinstance(value, dict):
-              # We are in the case of a complex query
-              query_item = []
-              query_value = value['query']
-              if not isinstance(query_value, (list, tuple)):
-                query_value = [query_value]
-              operator_value = sql_quote(value.get('operator', 'or'))
-              range_value = value.get('range')
-
-              if range_value :
-                query_min = self._quoteSQLString(min(query_value))
-                query_max = self._quoteSQLString(max(query_value))
-                if range_value == 'min' :
-                  query_item.append("%s >= '%s'" % (key, query_min))
-                elif range_value == 'max' :
-                  query_item.append("%s < '%s'" % (key, query_max))
-                elif range_value == 'minmax' :
-                  query_item.append("%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max))
-                elif range_value == 'minngt' :
-                  query_item.append("%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max))
-                elif range_value == 'ngt' :
-                  query_item.append("%s <= '%s'" % (key, query_max))
-              else :
-                for query_value_item in query_value :
-                  query_item.append("%s = '%s'" % (key, self._quoteSQLString(query_value_item)))
-              if len(query_item) > 0:
-                where_expression.append('(%s)' % join(query_item, ' %s ' % operator_value))
+            sort_key = sort[0]
+            sort_type = None
+          new_sort_index.append((sort_key, sort[1], sort_type))
+        elif len(sort) == 3:
+          new_sort_index.append(sort)
+      sort_index = new_sort_index
+        
+      try:
+        new_sort_index = []
+        for (key , so, as_type) in sort_index:
+          key = getNewKeyAndUpdateVariables(key)
+          if key is not None:
+            if as_type == 'int':
+              key = 'CAST(%s AS SIGNED)' % key
+            elif as_type:
+              key = 'CAST(%s AS %s)' % (key, as_type) # Different casts are possible
+            if so in ('descending', 'reverse', 'DESC'):
+              new_sort_index.append('%s DESC' % key)
             else:
-              where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
-          elif key in topic_search_keys:
-            # ERP5 CPS compatibility
-            topic_operator = 'or'
-            if isinstance(value, dict):
-              topic_operator = sql_quote(value.get('operator', 'or'))
-              value = value['query']
-            if isinstance(value, basestring):
-              topic_value = [value]
-            else:
-              topic_value = value # list or tuple
-            query_item = []
-            for topic_key in topic_value:
-              if topic_key in acceptable_keys:
-                if topic_key.find('.') < 0:
-                  # if the key is only used by one table, just append its name
-                  if len(acceptable_key_map[topic_key]) == 1 :
-                    topic_key = '%s.%s' % (acceptable_key_map[topic_key][0], topic_key)
-                  # query_table specifies what table name should be used
-                  elif query_table:
-                    topic_key = '%s.%s' % (query_table, topic_key)
-                # Add table to table dict
-                from_table_dict[acceptable_key_map[topic_key][0]] = acceptable_key_map[topic_key][0] # We use catalog by default
-                query_item.append("%s = 1" % topic_key)
-            # Join
-            if len(query_item) > 0:
-              where_expression.append('(%s)' % join(query_item, ' %s ' % topic_operator))
-      # Calculate extra where_expression based on required joins
-      for k, tid in from_table_dict.items():
-        if k != query_table:
-          where_expression.append('%s.uid = %s.uid' % (query_table, tid))
-      # Calculate extra where_expressions based on related definition
-      for (table_list, method_id) in related_methods.keys():
-        related_method = getattr(self, method_id, None)
-        if related_method is not None:
-          table_id = {'src__' : 1} # Return query source, do not evaluate
-          table_id['query_table'] = query_table
-          table_index = 0
-          for t_tuple in related_table_map[(table_list,method_id)]:
-            table_id['table_%s' % table_index] = t_tuple[1] # table_X is set to mapped id
-            from_table_dict[t_tuple[1]] = t_tuple[0]
-            table_index += 1
-          where_expression.append(related_method(**table_id))
-      # Concatenate expressions
-      if kw.get('where_expression'):
-        if len(where_expression) > 0:
-          where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
-      else:
-        where_expression = join(where_expression, ' AND ')
-      select_expression= join(select_expression,',')
+              new_sort_index.append('%s' % key)
+          else:
+            LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
+        sort_index = join(new_sort_index,',')
+        sort_on = str(sort_index)
+      except ConflictError:
+        raise
+      except:
+        LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
+        sort_on = ''
 
-      limit_expression = kw.get('limit', None)
-      if isinstance(limit_expression, (list, tuple)):
-        limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
-      elif limit_expression is not None:
-        limit_expression = str(limit_expression)
+    for key in key_list:
+      if not key_alias_dict.has_key(key):
+        getNewKeyAndUpdateVariables(key)
+    if len(query_dict):
+      for key,query in query_dict.items():
+        query_result = query.asSQLExpression(key_alias_dict=key_alias_dict,
+                                    full_text_search_keys=full_text_search_keys,
+                                    keyword_search_keys=keyword_search_keys,
+                                    ignore_empty_string=ignore_empty_string,
+                                    stat__=stat__)
+        if query_result['where_expression'] not in ('',None):
+          where_expression_list.append(query_result['where_expression'])
+        select_expression_list.extend(query_result['select_expression_list'])
+
+    # Calculate extra where_expression based on required joins
+    for k, tid in from_table_dict.items():
+      if k != query_table:
+        where_expression_list.append('%s.uid = %s.uid' % (query_table, tid))
+    # Calculate extra where_expressions based on related definition
+    for (table_list, method_id) in related_methods.keys():
+      related_method = getattr(self, method_id, None)
+      if related_method is not None:
+        table_id = {'src__' : 1} # Return query source, do not evaluate
+        table_id['query_table'] = query_table
+        table_index = 0
+        for t_tuple in related_table_map[(table_list,method_id)]:
+          table_id['table_%s' % table_index] = t_tuple[1] # table_X is set to mapped id
+          from_table_dict[t_tuple[1]] = t_tuple[0]
+          table_index += 1
+        where_expression_list.append(related_method(**table_id))
+    # Concatenate expressions
+    if kw.get('where_expression',None) is not None:
+      if len(where_expression) > 0:
+        where_expression_list.append(kw['where_expression'])
+    where_expression = join(where_expression_list, ' AND ')
+    select_expression= join(select_expression_list,',')
+
+    limit_expression = kw.get('limit', None)
+    if isinstance(limit_expression, (list, tuple)):
+      limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
+    elif limit_expression is not None:
+      limit_expression = str(limit_expression)
 
     # Use a dictionary at the moment.
     return { 'from_table_list' : from_table_dict.items(),
@@ -1913,6 +1974,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # Return the result
     kw['used'] = used
     kw['REQUEST'] = REQUEST
+    kw['stat__'] = 1
     return self.queryResults(method, **kw)
 
   def recordObjectList(self, path_list, catalog=1):
