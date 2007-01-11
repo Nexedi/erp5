@@ -233,14 +233,14 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     Base.aq_portal_type[ptype] = prop_holder
 
 def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
-  # We should now make sure workflow methods are defined
-  # and also make sure simulation state is defined
-  portal_workflow = getToolByName(self, 'portal_workflow')
-#   LOG('getWorkflowsFor', 0,
-#       str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
+  """We should now make sure workflow methods are defined
+  and also make sure simulation state is defined."""
+  # aq_inner is required to prevent extra name lookups from happening
+  # infinitely. For instance, if a workflow is missing, and the acquisition
+  # wrapper contains an object with _aq_dynamic defined, the workflow id
+  # is looked up with _aq_dynamic, thus causes infinite recursions.
+  portal_workflow = aq_inner(getToolByName(self, 'portal_workflow'))
   for wf in portal_workflow.getWorkflowsFor(self):
-#     LOG('in aq_portal_type %s' % id, 0,
-#         "found state workflow %s" % wf.id)
     if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
       wf_id = wf.id
       # Create state var accessor
