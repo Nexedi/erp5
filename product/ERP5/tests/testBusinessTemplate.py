@@ -1019,7 +1019,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Create ZSQL Method into catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
     method_id = "z_fake_method"
     addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
@@ -1046,7 +1046,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Create ZSQL Method into catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     method_id = "z_another_fake_method"
     addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
     addSQLMethod(id=method_id,title='', connection_id='test test', arguments='', template='')
@@ -1064,7 +1064,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Create ZSQL Method into catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
     previous_method = catalog._getOb(method_id,None)
     self.assertEquals(previous_method.title,'')
@@ -1076,7 +1076,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Create ZSQL Method into catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
     previous_method = catalog._getOb(method_id,None)
     self.assertEquals(previous_method.title,'toto')
@@ -1089,7 +1089,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     method_id = sequence.get('zsql_method_id', None)
     self.failUnless(method_id is not None)
-    bt.edit(template_catalog_method_id_list=['erp5_mysql/'+method_id])
+    pc = self.getCatalogTool()
+    catalog_id = pc.getSQLCatalog().id
+    bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
 
   def stepAddNewCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1100,15 +1102,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     method_id = sequence.get('zsql_method_id', None)
     self.failUnless(method_id is not None)
     another_method_id = sequence.get('another_zsql_method_id', None)
-    bt.edit(template_catalog_method_id_list=['erp5_mysql/'+method_id,
-            'erp5_mysql/'+another_method_id])
+    pc = self.getCatalogTool()
+    catalog_id = pc.getSQLCatalog().id
+    bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id,
+            catalog_id+'/'+another_method_id])
 
   def stepCheckCatalogMethodExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check presence of ZSQL Method in catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
@@ -1127,7 +1131,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Check non-presence of ZSQL Method in catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
@@ -1143,7 +1147,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Remove ZSQL Method from catalog
     """
     pc = self.getCatalogTool()
-    catalog = pc._getOb('erp5_mysql', None)
+    catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     catalog.manage_delObjects([method_id])
@@ -1819,7 +1823,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Install importzed business template
     """
     import_bt = sequence.get('import_bt')
-    object_to_update = {'portal_catalog/erp5_mysql/z_another_fake_method':'install'}
+    pc = self.getCatalogTool()
+    catalog_id = pc.getSQLCatalog().id
+    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method':'install'}
     import_bt.install(object_to_update=object_to_update)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
