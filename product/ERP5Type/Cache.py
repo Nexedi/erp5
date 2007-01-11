@@ -29,7 +29,7 @@
 import string
 from time import time
 from AccessControl.SecurityInfo import allow_class
-from AccessControl import getSecurityManager
+from CachePlugins.BaseCache import CachedMethodError
 from zLOG import LOG
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
@@ -189,7 +189,14 @@ class CachingMethod:
       ## no caching enabled for this site or no such cache factory
       value = self.callable_object(*args, **kwd)
     return value
-    
+
+  def delete(self, id, cache_factory=DEFAULT_CACHE_FACTORY, scope=DEFAULT_CACHE_SCOPE):
+    """ Delete cache key. """
+    cache_id = self.generateCacheId(id)
+    cache_factory = CachingMethod.factories[cache_factory]
+    for cp in cache_factory.getCachePluginList():
+      cp.delete(cache_id, scope)
+
   def generateCacheId(self, method_id, *args, **kwd):
     """ Generate proper cache id based on *args and **kwd  """
     ## generate cache id out of arguments passed.
