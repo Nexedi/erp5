@@ -114,7 +114,6 @@ class ImmobilisableItem(XMLObject, Amount):
       immo_list = []
       owner_change_list = []
       immo_and_owner_list = []
-      
       if immobilisation_movement_list is None:
         # First build the SQL query
         sql_dict = dict(kw)
@@ -145,12 +144,10 @@ class ImmobilisableItem(XMLObject, Amount):
             date_range += 'max'
         if len(date_query) != 0:
           sql_dict[date_key] = { 'range':date_range, 'query':date_query}
-        
         # Then execute the query
         immobilisation_movement_list = catalog(**sql_dict)
         if kw.get('src__', 0) == 1:
           return immobilisation_movement_list
-      
       # Then build immobilisation list
       for movement in immobilisation_movement_list:
         movement = movement.getObject()
@@ -160,7 +157,7 @@ class ImmobilisableItem(XMLObject, Amount):
             raise ImmobilisationValidityError, \
                   '%s : some preceding movements are still in calculating state' % self.getRelativeUrl()
           immo_list.append(movement)
-      return immo_list            
+      return immo_list
 
       
     def _ownerChange(self, first_section, second_section):
@@ -172,9 +169,9 @@ class ImmobilisableItem(XMLObject, Amount):
       """
       if first_section == second_section:
         return 0
+      
       first_section = self._getFirstIndependantOrganisation(first_section)
       second_section = self._getFirstIndependantOrganisation(second_section)
-      
       if first_section is None:
         if second_section is None:
           return 0
@@ -205,7 +202,10 @@ class ImmobilisableItem(XMLObject, Amount):
           organisation = section
       else:
         category = section
-        organisation = category.getMappingRelatedValue()
+        try:
+          organisation = category.getMappingRelatedValueList(strict_membership = 1)[0]
+        except IndexError:
+          organisation = section
       if organisation is None or \
          (not hasattr(organisation, 'getPriceCurrencyValue')) or \
          (not hasattr(organisation, 'getFinancialYearStopDate')) or \
@@ -342,7 +342,6 @@ class ImmobilisableItem(XMLObject, Amount):
       section_change_list = self.getSectionChangeList(from_date=from_date,
                                                       at_date=to_date,
                                                       **kw)
-
       # Sanity check
       section_movement_list = []
       date_list = [movement.getStopDate() for movement in immobilisation_list]
@@ -370,7 +369,6 @@ class ImmobilisableItem(XMLObject, Amount):
       for immobilisation in immobilisation_list[:]:
         if immobilisation.getAmortisationMethod() in ("", None, NO_CHANGE_METHOD):
           immobilisation_list.remove(immobilisation)
-              
       immo_period_list = []
       current_immo_period = {}
       immo_cursor = 0
@@ -425,7 +423,7 @@ class ImmobilisableItem(XMLObject, Amount):
           immo_period_list.append(current_immo_period)
           current_immo_period = {}
         current_immo_period = {}
-
+         
         # Then open the new one
         if open_new_period and method != UNIMMOBILISING_METHOD:
           # First check if there is a valid owner in this period
@@ -553,7 +551,6 @@ class ImmobilisableItem(XMLObject, Amount):
             
       if current_immo_period not in (None,{}):
         immo_period_list.append(current_immo_period)
-
       # Round dates since immobilisation calculation is made on days
       for immo_period in immo_period_list:
         for property in ('start_date', 'stop_date', 'initial_date'):
@@ -725,14 +722,17 @@ class ImmobilisableItem(XMLObject, Amount):
       Returns the deprecated value of item at given date, or now.
       If with_currency is set, returns a string containing the value and the corresponding currency.
       """
+      
       if at_date is None:
         at_date = DateTime()
       kw_key_list = kw.keys()
       kw_key_list.sort()
+      
       if kw_key_list.count('immo_cache_dict'):
         kw_key_list.remove('immo_cache_dict')
       immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
       kw['immo_cache_dict'] = immo_cache_dict
+      
       if immo_cache_dict['price'].has_key( (self.getRelativeUrl(), at_date) + 
             tuple([(key,kw[key]) for key in kw_key_list]) ) :
         returned_price = immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) + 
@@ -946,7 +946,6 @@ class ImmobilisableItem(XMLObject, Amount):
       returned_price = annuity_start_price - annuity_value
       if returned_price < NEGLIGEABLE_PRICE:
         returned_price = 0
-
       if returned_price is None:
         return None
       returned_price += disposal_price
@@ -1003,7 +1002,7 @@ class ImmobilisableItem(XMLObject, Amount):
       """
       Calculate the amortisation annuities for the item
       in an activity
-      SOULD BE RUN AS MANAGER
+      SHOULD BE RUN AS MANAGER
       """
       # An item can be expanded for amortisation only when related deliveries
       # are no more in 'calculating' immobilisation_state
@@ -1020,7 +1019,7 @@ class ImmobilisableItem(XMLObject, Amount):
     def immediateExpandAmortisation(self):
       """
       Calculate the amortisation annuities for the item
-      SOULD BE RUN AS MANAGER
+      SHOULD BE RUN AS MANAGER
       """
       try:
         self._createAmortisationRule()
@@ -1089,7 +1088,6 @@ class ImmobilisableItem(XMLObject, Amount):
           # This movement is a ownership change movement
           owner_change_list.append(movement)
           previous_section = new_section
-
       owner_list = []
       for movement in owner_change_list:
         owner = movement.getDestinationSectionValue()
@@ -1110,7 +1108,7 @@ class ImmobilisableItem(XMLObject, Amount):
       return None
 
 
-    security.declareProtected(Permissions.View, 'getCurrentSctionValue')
+    security.declareProtected(Permissions.View, 'getCurrentSectionValue')
     def getCurrentSectionValue(self, **kw):
       """
       Return the current owner of the item
