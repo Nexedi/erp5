@@ -814,6 +814,10 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.buildSQLQuery(REQUEST=REQUEST, query_table=query_table, **kw)
     return ''
 
+  # Compatibility SQL Sql
+  security.declarePublic('buildSqlQuery')
+  buildSqlQuery = buildSQLQuery
+
   def searchResults(self, REQUEST=None, used=None, sql_catalog_id=None, **kw):
     """
     Search the catalog according to the ZTables search interface.
