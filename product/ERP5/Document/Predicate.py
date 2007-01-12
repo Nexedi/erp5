@@ -259,19 +259,31 @@ class Predicate(Folder):
     sql_query['from_table_list'] = from_table_dict.items()
     return sql_query
 
+  # Compatibililty SQL Sql
+  security.declareProtected( Permissions.AccessContentsInformation, 'buildSqlQuery' )
+  buildSqlQuery = buildSQLQuery
+
   security.declareProtected( Permissions.AccessContentsInformation, 'asSQLExpression' )
   def asSQLExpression(self, strict_membership=0, table='category'):
     """
     """
     return self.buildSQLQuery(strict_membership=strict_membership, table=table)['where_expression']
 
+  # Compatibililty SQL Sql
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
+  asSqlExpression = asSQLExpression
+
   security.declareProtected( Permissions.AccessContentsInformation, 'asSQLJoinExpression' )
   def asSQLJoinExpression(self, strict_membership=0, table='category', join_table='catalog', join_column='uid'):
     """
     """
     table_list = self.buildSQLQuery(strict_membership=strict_membership, table=table)['from_table_list']
-    sql_text_list = map(lambda (a,b): '%s AS %s' % (b,a), table_list)
+    sql_text_list = map(lambda (a,b): '%s AS %s' % (b,a), filter(lambda (a,b): a != join_table, table_list))
     return ' , '.join(sql_text_list)
+
+  # Compatibililty SQL Sql
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlJoinExpression' )
+  asSqlJoinExpression = asSQLJoinExpression
 
   def searchResults(self, **kw):
     """
