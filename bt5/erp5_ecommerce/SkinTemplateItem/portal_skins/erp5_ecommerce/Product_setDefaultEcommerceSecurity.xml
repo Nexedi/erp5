@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script is part of ERP5 E-Commerce.\n
+#\n
+# It is used to set the security permissions of a Product in a way\n
+# that it can be used in an E-Commerce web site. This means,\n
+# it must be possible to show it in a product list and to access\n
+# its detail-page without being logged in.\n
+\n
+permission_list = context.possible_permissions()\n
+\n
+# First, remove all permissions (very secure by default)\n
+# We should keep only Manager, or we will not be able to\n
+# do the end of the script\n
+for permission in permission_list:\n
+  context.manage_permission(permission, [\'Manager\'], 0)\n
+\n
+# Then, define default ERP5 permissions\n
+common_permission_list = [p for p in [\n
+  \'Access Transient Objects\',\n
+  \'Access contents information\',\n
+  \'Access session data\',\n
+  \'List folder contents\',\n
+  \'View\',\n
+  \'View History\',\n
+] if p in permission_list]\n
+\n
+anonymous_permission_list = [p for p in [\n
+  \'Access contents information\',\n
+  \'View\',\n
+] if p in permission_list]\n
+\n
+author_permission_list = [p for p in [\n
+  \'Add portal content\',\n
+  \'Add portal folders\',\n
+] if p in permission_list]\n
+\n
+assignor_permission_list = [p for p in [\n
+  \'Modify portal content\',\n
+  \'Change local roles\',\n
+  \'Delete objects\',\n
+] if p in permission_list]\n
+\n
+# Define ERP5 permissions for each role\n
+erp5_role_dict = {\n
+  \'Anonymous\': anonymous_permission_list,\n
+  \'Assignee\': common_permission_list,\n
+  \'Assignor\': common_permission_list + author_permission_list +\\\n
+              assignor_permission_list,\n
+  \'Associate\': common_permission_list,\n
+  \'Auditor\' : common_permission_list,\n
+  \'Author\': common_permission_list + author_permission_list,\n
+  \'Manager\': permission_list\n
+}\n
+\n
+# Add ERP5 permissions\n
+erp5_permission_dict = {}\n
+for role,permission_list in erp5_role_dict.items():\n
+  for permission in permission_list:\n
+    if not erp5_permission_dict.has_key(permission):\n
+      erp5_permission_dict[permission] = []\n
+    erp5_permission_dict[permission].append(role)\n
+\n
+for permission,role_list in erp5_permission_dict.items():\n
+  context.debug(permission + str(role_list))\n
+  context.manage_permission(permission,role_list, 0)\n
+\n
+return "finished"\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>permission_list</string>
+                            <string>_getiter_</string>
+                            <string>permission</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>p</string>
+                            <string>common_permission_list</string>
+                            <string>anonymous_permission_list</string>
+                            <string>author_permission_list</string>
+                            <string>assignor_permission_list</string>
+                            <string>erp5_role_dict</string>
+                            <string>erp5_permission_dict</string>
+                            <string>role</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>role_list</string>
+                            <string>str</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Product_setDefaultEcommerceSecurity</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Make Products Accessible</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
