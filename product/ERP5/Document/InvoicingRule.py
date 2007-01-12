@@ -108,21 +108,24 @@ class InvoicingRule(Rule):
     if source_section == destination_section or source_section is None \
         or destination_section is None:
       return []
-    
+
+    # XXX Harcoded list
     invoice_line = {
-        'price': context_movement.getPrice(),
-        'quantity': context_movement.getCorrectedQuantity(),
-        'quantity_unit': context_movement.getQuantityUnit(),
-        'efficiency': context_movement.getEfficiency(),
-        'resource': context_movement.getResource(),
-        'variation_category_list': context_movement.getVariationCategoryList(),
-        'variation_property_dict': context_movement.getVariationPropertyDict(),
-        'start_date': context_movement.getStartDate(),
-        'stop_date': context_movement.getStopDate(),
         'source': context_movement.getSource(),
         'source_section': source_section,
         'destination': context_movement.getDestination(),
         'destination_section': destination_section,
+        'start_date': context_movement.getStartDate(),
+        'stop_date': context_movement.getStopDate(),
+        'resource': context_movement.getResource(),
+        'variation_category_list': context_movement.getVariationCategoryList(),
+        'variation_property_dict': context_movement.getVariationPropertyDict(),
+        'aggregate_list': context_movement.getAggregateList(),
+        'quantity': context_movement.getCorrectedQuantity(),
+        'quantity_unit': context_movement.getQuantityUnit(),
+        'price': context_movement.getPrice(),
+        'price_currency': context_movement.getPriceCurrency(),
+        'efficiency': context_movement.getEfficiency(),
         # We do need to collect invoice lines to build invoices
         'deliverable': 1
         }

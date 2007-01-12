@@ -135,18 +135,27 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             LOG("InvoiceTransactionRule", PROBLEM,
                 "expanding %s: without resource" % applied_rule.getPath())
 
+        # XXX Harcoded list
         prevision_line = {
             'id': transaction_line.getId(),
             'source': transaction_line.getSource(),
-            'destination': transaction_line.getDestination(),
             'source_section': context_movement.getSourceSection(),
+            'destination': transaction_line.getDestination(),
             'destination_section': context_movement.getDestinationSection(),
+            'start_date': context_movement.getStartDate(),
+            'stop_date': context_movement.getStopDate(),
             'resource': resource,
+#               'variation_category_list': \
+#                   transaction_line.getVariationCategoryList(),
+#               'variation_property_dict': \
+#                   transaction_line.getVariationPropertyDict(),
+#               'aggregate_list': transaction_line.getAggregateList(),
+#               'price': transaction_line.getPrice(),
+#               'price_currency': transaction_line.getPriceCurrency(),
             # calculate (quantity * price) * cell_quantity
             'quantity': (context_movement.getCorrectedQuantity() *
               context_movement.getPrice()) * transaction_line.getQuantity(),
-            'start_date': context_movement.getStartDate(),
-            'stop_date': context_movement.getStopDate(),
+#               'quantity_unit': transaction_line.getQuantityUnit(),
             'force_update': 1,
             }
         prevision_list.append(prevision_line)

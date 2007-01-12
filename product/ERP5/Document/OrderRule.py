@@ -163,12 +163,25 @@ class OrderRule(DeliveryRule):
     property_dict = {}
 
     if default_property_list is None:
-      LOG("Order Rule , _getPropertiesTo", WARNING,
-                                "Hardcoded properties set")
+      # XXX Hardcoded value
+#       LOG("Order Rule , _getPropertiesTo", WARNING,
+#                                 "Hardcoded properties set")
       default_property_list = (
-        'source_section', 'destination_section', 'source',
-        'destination', 'resource', 'variation_category_list',
-        'aggregate_list', 'start_date', 'stop_date')
+        'source',
+        'source_section', 
+        'destination', 
+        'destination_section', 
+        'start_date', 
+        'stop_date',
+        'resource', 
+        'variation_category_list',
+        'variation_property_dict', 
+        'aggregate_list', 
+        'price', 
+        'price_currency',
+        'quantity', 
+        'quantity_unit', 
+      )
   
       for prop in default_property_list:
          property_dict[prop] = movement.getProperty(prop)

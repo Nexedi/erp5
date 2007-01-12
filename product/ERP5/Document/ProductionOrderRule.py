@@ -72,14 +72,23 @@ class ProductionOrderRule(OrderRule):
       property_dict = {}
 
       if default_property_list is None:
-        LOG("Order Rule , _getExpandablePropertyDict", WARNING,
-            "Hardcoded properties set")
+        # XXX Hardcoded value
+#         LOG("Order Rule , _getExpandablePropertyDict", WARNING,
+#             "Hardcoded properties set")
         default_property_list = (
+          'destination', 
           'destination_section',
-          'destination', 'resource', 
+          'start_date', 
+          'stop_date',
+          'resource', 
           'variation_category_list',
+          'variation_property_dict', 
           'aggregate_list',
-          'start_date', 'stop_date')
+          'price', 
+          'price_currency',
+          'quantity', 
+          'quantity_unit', 
+        )
     
       supply_chain = self.getSupplyChain(applied_rule)
       # We got a supply chain

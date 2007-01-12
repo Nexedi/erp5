@@ -115,6 +115,7 @@ class DeliveryRule(Rule):
             # Weare on a cell
             new_id = "%s_%s" % (deliv_mvt.getParentId(), deliv_mvt.getId())
           # Generate the simulation deliv_mvt
+          # XXX Hardcoded value
           new_sim_mvt = applied_rule.newContent(
               portal_type=movement_type,
               id=new_id,
@@ -123,33 +124,49 @@ class DeliveryRule(Rule):
               delivery_value=deliv_mvt,
               delivery_ratio=1,
               deliverable=1,
+
               source=deliv_mvt.getSource(),
               source_section=deliv_mvt.getSourceSection(),
               destination=deliv_mvt.getDestination(),
               destination_section=deliv_mvt.getDestinationSection(),
-              quantity=deliv_mvt.getQuantity(),
+              start_date=deliv_mvt.getStartDate(),
+              stop_date=deliv_mvt.getStopDate(),
+
               resource=deliv_mvt.getResource(),
               variation_category_list=deliv_mvt.getVariationCategoryList(),
               variation_property_dict=deliv_mvt.getVariationPropertyDict(),
-              start_date=deliv_mvt.getStartDate(),
-              stop_date=deliv_mvt.getStopDate())
+              aggregate_list=deliv_mvt.getAggregateList(),
+
+              quantity=deliv_mvt.getQuantity(),
+              quantity_unit=deliv_mvt.getQuantityUnit(),
+              price=deliv_mvt.getPrice(),
+              price_currency=deliv_mvt.getPriceCurrency(),
+          )
         elif sim_mvt in existing_movement_list:
           if sim_mvt not in immutable_movement_list:
             # modification allowed
+            # XXX Hardcoded value
             sim_mvt.edit(
                 delivery_value=deliv_mvt,
                 delivery_ratio=1,
                 deliverable=1,
+
                 source=deliv_mvt.getSource(),
                 source_section=deliv_mvt.getSourceSection(),
                 destination=deliv_mvt.getDestination(),
                 destination_section=deliv_mvt.getDestinationSection(),
-                quantity=deliv_mvt.getQuantity(),
+                start_date=deliv_mvt.getStartDate(),
+                stop_date=deliv_mvt.getStopDate(),
+
                 resource=deliv_mvt.getResource(),
                 variation_category_list=deliv_mvt.getVariationCategoryList(),
                 variation_property_dict=deliv_mvt.getVariationPropertyDict(),
-                start_date=deliv_mvt.getStartDate(),
-                stop_date=deliv_mvt.getStopDate(),
+                aggregate_list=deliv_mvt.getAggregateList(),
+
+                quantity=deliv_mvt.getQuantity(),
+                quantity_unit=deliv_mvt.getQuantityUnit(),
+                price=deliv_mvt.getPrice(),
+                price_currency=deliv_mvt.getPriceCurrency(),
                 force_update=1)
           else:
             # modification disallowed, must compensate
