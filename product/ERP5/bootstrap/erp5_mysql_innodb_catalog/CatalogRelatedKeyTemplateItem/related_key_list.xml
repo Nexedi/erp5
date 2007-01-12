@@ -11,6 +11,14 @@
  <key>item_resource_category_uid | category/category_uid/z_related_resource_uid_from_item</key>
  <key>item_section_category_uid | category/category_uid/z_related_section_uid_from_item</key>
  <key>parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</key>
+ <key>parent_description | catalog/description/z_related_parent</key>
+ <key>parent_float_index | catalog/float_index/z_related_parent</key>
+ <key>parent_int_index | catalog/int_index/z_related_parent</key>
+ <key>parent_portal_type | catalog/portal_type/z_related_parent</key>
+ <key>parent_reference | catalog/reference/z_related_parent</key>
+ <key>parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</key>
+ <key>parent_string_index | catalog/string_index/z_related_parent</key>
+ <key>parent_title | catalog/title/z_related_parent</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
  <key>resourceType | movement,catalog/portal_type/z_related_resource_from_movement</key>
  <key>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</key>
