@@ -1821,7 +1821,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
     if len(kw):
       if kw.has_key('select_expression'):
-        select_expression.append(kw['select_expression'])
+        select_expression_list.append(kw['select_expression'])
       if kw.has_key('group_by_expression'):
         group_by_expression_list.append(kw['group_by_expression'])
       # Grouping
