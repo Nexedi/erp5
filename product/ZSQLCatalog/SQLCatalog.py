@@ -1916,7 +1916,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         where_expression_list.append(related_method(**table_id))
     # Concatenate expressions
     if kw.get('where_expression',None) is not None:
-      if len(where_expression) > 0:
+      if len(kw['where_expression']) > 0:
         where_expression_list.append(kw['where_expression'])
     where_expression = join(where_expression_list, ' AND ')
     select_expression= join(select_expression_list,',')
