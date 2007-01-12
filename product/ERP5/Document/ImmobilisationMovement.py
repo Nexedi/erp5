@@ -30,7 +30,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Base, Permissions, PropertySheet, Constraint, Interface
-#from Products.ERP5.Core import MetaNode, MetaResource
+from Products.ERP5.Core import MetaNode, MetaResource
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from Products.ERP5Type.XMLObject import XMLObject
@@ -109,7 +109,6 @@ class ImmobilisationMovement(Movement, XMLObject):
     If to_translate is set, the method may return a dictionary {'msg':'...', 'mapping':{} }
     """
     relative_url = self.getRelativeUrl()
-    
     def checkValuesAreNotNone(property_list):
       errors = []
       for key, value, name in property_list:
@@ -178,6 +177,7 @@ class ImmobilisationMovement(Movement, XMLObject):
       return errors
 
     item_list = self.getAggregateValueList()
+    
     if len(item_list) == 0:
       # No item aggregated, so the movement is considered as valid
       #errors.append([self.getRelativeUrl(),
@@ -189,9 +189,12 @@ class ImmobilisationMovement(Movement, XMLObject):
     check_uncontinuous = 0
     if self.getStopDate() is not None:
       if method not in [None, "", NO_CHANGE_METHOD, UNIMMOBILISING_METHOD]:
-        continuous = self.getAmortisationMethodParameter("continuous")["continuous"]
+        get_amo_method_parameter = self.getAmortisationMethodParameter("continuous")
+        continuous = get_amo_method_parameter["continuous"]
         if not continuous:
           check_uncontinuous = 1
+        # We need to check if the preceding movement is in the same period, and valid
+        # This check must be done on each item
         else:
           # We need to check if the preceding movement is in the same period, and if it is valid
           # This check must be done on each item
@@ -270,7 +273,7 @@ class ImmobilisationMovement(Movement, XMLObject):
       parameter_dict[parameter] = None
     amortisation_method = self.getActualAmortisationMethodForItem(item, **kw)
     if amortisation_method not in (None, NO_CHANGE_METHOD, UNIMMOBILISING_METHOD, ""):
-      parameter_object = self.unrestrictedTraverse(AMORTISATION_METHOD_PREFIX + amortisation_method)
+      parameter_object = self.getPortalObject().unrestrictedTraverse(AMORTISATION_METHOD_PREFIX + amortisation_method)
       if parameter_object is not None:
         for parameter in parameter_list:
           parameter_dict[parameter] = getattr(parameter_object, parameter, None)
@@ -298,7 +301,6 @@ class ImmobilisationMovement(Movement, XMLObject):
             new_param_list.append(param)
         new_parameter_dict[key] = new_param_list
       parameter_dict = new_parameter_dict
-      
     return parameter_dict
 
       
