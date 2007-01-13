@@ -1632,6 +1632,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
     return full_list
 
+  # Compatibililty SQL Sql
+  getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
+
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, query=None,stat__=0,**kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
@@ -1860,7 +1863,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         elif len(sort) == 3:
           new_sort_index.append(sort)
       sort_index = new_sort_index
-        
+
       try:
         new_sort_index = []
         for (key , so, as_type) in sort_index:
@@ -1897,7 +1900,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         if query_result['where_expression'] not in ('',None):
           where_expression_list.append(query_result['where_expression'])
         select_expression_list.extend(query_result['select_expression_list'])
-
+      
     # Calculate extra where_expression based on required joins
     for k, tid in from_table_dict.items():
       if k != query_table:
@@ -1936,6 +1939,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
              'select_expression': select_expression,
              'group_by_expression' : group_by_expression}
 
+  # Compatibililty SQL Sql
+  buildSqlQuery = buildSQLQuery
+
   def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, build_sql_query_method=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if build_sql_query_method is None:
@@ -1952,7 +1958,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
     #LOG('acceptable_key_map',0,'acceptable_key_map: %s' % str(acceptable_key_map))
     #LOG('queryResults',0,'kw: %s' % str(kw))
-    #LOG('queryResults',0,'from_table_list: %s' % str(from_table_dict.keys()))
+    #LOG('queryResults',0,'from_table_list: %s' % str(query['from_table_list']))
     return sql_method(src__=src__, **kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):
