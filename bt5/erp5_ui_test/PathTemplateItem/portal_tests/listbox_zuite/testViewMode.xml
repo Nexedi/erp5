@@ -96,9 +96,9 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>*Title 0*</td>\n
-\t<td></td>\n
+\t<td>verifyValue</td>\n
+\t<td>field_my_title</td>\n
+\t<td>Title 0</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
