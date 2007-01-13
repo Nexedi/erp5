@@ -2021,7 +2021,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           # No brain, no way
           self.renderer.request.cell = self.getObject()
-          cell_html = editable_field.render( value   = error_value or user_value or display_value
+          cell_html = editable_field.render( value   = display_value
                                            , REQUEST = brain
                                            , key     = key
                                            )
