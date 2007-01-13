@@ -37,6 +37,7 @@ from Selection import Selection, DomainSelection
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import _checkPermission
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
@@ -1711,6 +1712,13 @@ class ListBoxRendererLine:
 
   getUid = VolatileCachingMethod(getUid)
 
+  def getUrl(self):
+    """Return the absolute URL path of the object
+    """
+    return self.getBrain().getUrl()
+
+  getUrl = VolatileCachingMethod(getUrl)
+
   def isSummary(self):
     """Return whether this line is a summary or not.
     """
@@ -1894,6 +1902,19 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
     html_list = []
 
+    # Check is there is a validation error at the level of the listbox
+    # as a whole. This will be required later to decide wherer to
+    # display values from (ie. from the REQUEST or from the object)
+    has_error = 0
+    for key in error_dict.keys():
+      for editable_id in editable_column_id_set:
+        candidate_field_key = "%s_%s" % (field_id, editable_id)
+        if key.startswith(candidate_field_key):
+          has_error = 1
+          break
+      if has_error:
+        break
+
     for (original_value, processed_value), (sql, title), alias \
       in zip(self.getValueList(), self.renderer.getSelectedColumnList(), self.renderer.getColumnAliasList()):
       # By default, no error.
@@ -1956,38 +1977,51 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       if editable_field is not None and sql in editable_column_id_set:
         # XXX what if the object does not have uid?
         key = '%s_%s' % (editable_field_id, self.getUid())
-        if error_dict.has_key(key):
-          error = True
+        widget_key = editable_field.generate_field_key(key=key)
+        if has_error: # If there is any error on listbox, we should use what the user has typed
+          display_value = None
+        else:
+          validated_value_dict = self.renderer.request.get(field_id, None)
+          if validated_value_dict is None:
+            # If this is neither an error nor a validated listbox
+            # we should use the original value
+            display_value = original_value
+          else:
+            # If the listbox has been validated (ie. as it is the
+            # case whenever a relation field displays a popup menu)
+            # we have to use the value entered by the user
+            display_value = None #
+        if error_dict.has_key(key): # If error on current field, we should display message
           error_text = error_dict[key].error_text
           error_text = cgi.escape(error_text)
           if isinstance(error_text, str):
             error_text = unicode(error_text, encoding)
           error_message = u'<br />' + error_text
-          widget_key = editable_field.generate_field_key(key=key)
-          error_value = self.renderer.request.get(widget_key, None)
         else:
           error_message = u''
-          error_value = None
 
-        # XXX this is a horrible hack.
-        if editable_field.meta_type in ('DateTimeField', 'ProxyField', ):
-          # XXX Some fields prefer None to ''.
+        if brain is not None:
+          # We needed a way to pass the current line object (ie. brain)
+          # to the field which is being displayed. Since the
+          # render_view API did not permit this, we pass the line object
+          # as the REQUEST. But this has side effects since it breaks
+          # many possibilities. Therefore, the trick is to wrap
+          # the REQUEST into the brain. In addition, the define a
+          # cell property on the request itself so that forms may
+          # use the 'cell' value (refer to get_value method in Form.py)
           cell_html = editable_field.render( \
-                            value   = error_value or original_value
+                            value   = display_value
                           , REQUEST = brain.asContext( \
                                                REQUEST = self.renderer.request
                                              , form    = self.renderer.request.form
+                                             , cell    = self.getObject()
                                              )
                           , key     = key
                           )
         else:
-          # We use REQUEST which is not so good here.
-          # This prevents from using standard display process.
-          # XXX what does the above comment mean exactly? why don't we fix Formulator?
-          # XXX (JPS) - render_view does not get REQUEST - this breaks so many possibilities
-          REQUEST = get_request() # Dirtymax hack by JPS - render_view API update required
-          REQUEST.cell = self.getObject()
-          cell_html = editable_field.render( value   = error_value or original_value
+          # No brain, no way
+          self.renderer.request.cell = self.getObject()
+          cell_html = editable_field.render( value   = error_value or user_value or display_value
                                            , REQUEST = brain
                                            , key     = key
                                            )
@@ -2010,6 +2044,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is None:
           html = processed_value
         else:
+          # JPS-XXX - I think we should not display a URL for objects
+          # which do not have the View permission
           html = u'<a href="%s">%s</a>' % (url, processed_value)
 
       html_list.append((html, original_value, error, editable_field))
