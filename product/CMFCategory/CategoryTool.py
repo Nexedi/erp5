@@ -288,7 +288,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
     def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
       """
-        Returns the uids of all categories provided in categories
+        Returns the uids of all categories provided in categorie. This
+        method can support relative_url such as site/group/a/b/c which
+        base category is site yet use categories defined in group.
+
+        It is also able to use acquisition to create complex categories
+        such as site/group/a/b/c/b1/c1 where b and b1 are both children
+        categories of a.
 
         relative_url -- a single relative url of a list of
                         relative urls
@@ -313,7 +319,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 # ie. when some documents act as categories
                 if not strict:
                   while o.meta_type == 'CMF Category':
-                    o = o.aq_parent
+                    o = o.aq_parent # We want acquisition here without aq_inner
                     uid_dict[(int(o.uid), bo_uid, 0)] = 1 # Non Strict Membership
         except (KeyError, AttributeError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
@@ -723,9 +729,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if spec is (): spec = portal_type
 
       # We must treat parent in a different way
-      #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_parent)))
+      #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_inner.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_inner.aq_parent)))
       if base_category == 'parent':
-        parent = context.aq_parent # aq_inner ?
+        parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
         if parent.portal_type in spec:
           if base:
             return ['parent/' + parent.getRelativeUrl()]
@@ -871,7 +877,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                              # to get a local defined category
       
       base_category_value = self.getCategoryValue(base_category)
-      #LOG("result",0,str(result))
+      #LOG("result", 0, str(result))
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
         if base_category_value.getAcquisitionMaskValue() and \
@@ -903,16 +909,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
             elif len(new_result) > 0:
               return new_result # Found enough information to return
         # Next we look at references
-        #LOG("Get Acquired BC",0,base_category_value.getAcquisitionBaseCategoryList())
+        #LOG("Get Acquired BC", 0, base_category_value.getAcquisitionBaseCategoryList())
         acquisition_base_category_list = base_category_value.getAcquisitionBaseCategoryList()
         alt_base_category_list = base_category_value.getFallbackBaseCategoryList()
         all_acquisition_base_category_list = acquisition_base_category_list + alt_base_category_list
         acquisition_pt = base_category_value.getAcquisitionPortalTypeList(())
         for my_base_category in base_category_value.getAcquisitionBaseCategoryList():
-        #for my_base_category in all_acquisition_base_category_list:
           # We implement here special keywords
           if my_base_category == 'parent':
-            parent = context.aq_parent
+            parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
             if not hasattr(aq_base(parent), 'portal_type'):
               my_acquisition_object_list = []
             else:
@@ -925,8 +930,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 my_acquisition_object_list = [parent]
               else:
                 my_acquisition_object_list = []
-              #else:
-              #  my_acquisition_object_list = []
           else:
             #LOG('getAcquiredCategoryMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(context), str(acquired_object_dict)))
             my_acquisition_list = self.getSingleCategoryAcquiredMembershipList(context,
