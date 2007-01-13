@@ -64,11 +64,9 @@ def get_value(self, id, **kw):
         REQUEST = get_request()
         form = self.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
         object = getattr(form, 'aq_parent', None)
-        if object:
-            # NEEDS TO BE CHECKED
-            # container = object.aq_inner.aq_parent ORIGINAL VERSION - not so good ?
-            container = object.aq_parent
-            #container = object.getParentNode()
+        if object is not None:
+            container = object.aq_inner.aq_parent
+            #container = object.aq_parent # This was the version used for long - I see no reason to do this  
         else:
             container = None
         kw['field'] = self
