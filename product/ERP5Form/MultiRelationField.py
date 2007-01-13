@@ -306,15 +306,16 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     portal_url = getToolByName(here, 'portal_url')
     portal_url_string = portal_url()
     portal_object = portal_url.getPortalObject()
+    portal_selections_url_string = here.portal_selections.absolute_url_path()
     if sub_index is None:
       sub_index_string = ''
     else:
       sub_index_string = '_%s' % sub_index
     return '&nbsp;<input type="image" ' \
          'src="%s/images/exec16.png" value="update..." ' \
-         'name="%s/portal_selections/viewSearchRelatedDocumentDialog%s%s' \
+         'name="%s/viewSearchRelatedDocumentDialog%s%s' \
          ':method"/>' % \
-           (portal_url_string, portal_object.getPath(),
+           (portal_url_string, portal_selections_url_string,
            relation_index, sub_index_string)
 
   def render_relation_link(self, field, value, REQUEST):
@@ -728,6 +729,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 menu_item_list.extend([(
                                   x.getObject().getProperty(catalog_index),
                                   x.uid) for x in relation_list])
+                # Add blank line
+                menu_item_list.append(('', ''))
                 REQUEST.set(relation_item_id, menu_item_list)
                 raising_error_needed = 1
                 raising_error_value = 'relation_result_ambiguous'
