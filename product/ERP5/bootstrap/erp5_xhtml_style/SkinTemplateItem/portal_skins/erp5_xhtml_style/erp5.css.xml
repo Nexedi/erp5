@@ -402,6 +402,20 @@ input, textarea, select, button, body, div, span, fieldset {\n
   padding: 0;\n
 }\n
 \n
+div.pre div {\n
+ background: #FFF;\n
+}\n
+\n
+span.pre {\n
+ font-family: monospace;\n
+ color: black;\n
+ white-space: pre-wrap;       /* css-3 */\n
+ white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */\n
+ white-space: -pre-wrap;      /* Opera 4-6 */\n
+ white-space: -o-pre-wrap;    /* Opera 7 */\n
+ word-wrap: break-word;       /* Internet Explorer 5.5+ */\n
+}\n
+\n
 button, select, input {\n
   vertical-align: middle;\n
 }\n
@@ -656,9 +670,9 @@ fieldset.bottom .field label {\n
   float: left;\n
 }\n
 \n
-# Exception case of the previous generic rule\n
-# The CSS statement below fix bug #517: it doesn\'t make sense to have\n
-#   floating div in bottom field since label are hidden.\n
+/* Exception case of the previous generic rule\n
+   The CSS statement below fix bug #517: it doesn\'t make sense to have\n
+   floating div in bottom field since label are hidden. */\n
 fieldset.bottom .field .input {\n
   float: inherit;\n
 }\n
