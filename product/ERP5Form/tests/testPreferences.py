@@ -241,7 +241,7 @@ class TestPreferences(ERP5TypeTestCase):
     # standards attributes must not be looked up on Preferences
     self.assertNotEquals(pref_tool.getTitleOrId(), group.getTitleOrId())
     self.assertNotEquals(pref_tool.objectValues(), group.objectValues())
-    self.assertNotEquals(pref_tool.aq_parent, group.aq_parent)
+    self.assertNotEquals(pref_tool.getParentValue(), group.getParentValue())
     try :
       pref_tool.getPreferredNotExistingPreference()
       self.fail('Attribute error should be raised for dummy methods')
