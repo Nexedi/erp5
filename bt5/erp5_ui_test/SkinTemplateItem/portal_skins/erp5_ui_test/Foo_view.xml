@@ -100,6 +100,7 @@
                         <string>listbox_title</string>
                         <string>listbox_id</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_start_date</string>
                       </list>
                     </value>
                 </item>

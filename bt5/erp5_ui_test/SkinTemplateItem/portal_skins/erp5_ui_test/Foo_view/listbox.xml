@@ -355,6 +355,10 @@
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -409,6 +413,10 @@
                         <tuple>
                           <string>quantity</string>
                           <string>quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Date</string>
                         </tuple>
                       </list>
                     </value>
