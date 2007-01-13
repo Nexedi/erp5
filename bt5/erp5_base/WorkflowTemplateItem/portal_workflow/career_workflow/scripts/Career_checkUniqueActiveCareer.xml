@@ -74,7 +74,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 # Get the career object and its parent\n
 career_object = state_change.object\n
-person_object = career_object.aq_parent\n
+person_object = career_object.getParentValue()\n
 \n
 active_careers = []\n
 \n

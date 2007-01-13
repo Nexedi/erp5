@@ -409,7 +409,7 @@ if not ignore_yearly_sums:\n
     , \'delivery.start_date\'    : {\'range\': "minngt", \'query\': (year_start_date, year_stop_date)}\n
     , \'destination_section_uid\': context.getDestinationSectionUid()  # Employee\'s UID\n
     }\n
-  accounting_folder = context.aq_parent\n
+  accounting_folder = context.getParentValue()\n
   paysheet_transactions = accounting_folder.searchFolder(**search_params)\n
 \n
 \n

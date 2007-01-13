@@ -67,7 +67,7 @@
   <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
                  selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
                  editable_columns python:listbox.get_value(\'editable_columns\', REQUEST=request);\n
-                 editable_fields python:dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
+                 editable_fields python:dict([(column[0], getattr(listbox.getParentValue(), \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                  selection python:here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                  is_domain_tree_mode python:selection.domain_tree_mode;\n
                  is_report_tree_mode python:selection.report_tree_mode;" >\n

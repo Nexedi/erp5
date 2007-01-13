@@ -74,7 +74,7 @@ if state_change.object.acl_users.meta_type == \'Pluggable Auth Service\':\n
 \n
 # Get the assignment object and its parent\n
 assignment_object = state_change.object\n
-person_object     = assignment_object.aq_parent\n
+person_object     = assignment_object.getParentValue()\n
 \n
 # Call the script if available\n
 person_security_script = getattr(person_object, \'Person_updateUserSecurityGroup\', None)\n

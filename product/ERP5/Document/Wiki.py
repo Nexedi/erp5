@@ -100,9 +100,9 @@ class Wiki( Document ):
     }
     
     def _getTopLevelUrl(self):
-      o = self.aq_parent
+      o = self.getParentValue()
       while o.meta_type == 'ERP5 Wiki':
-        o = o.aq_parent
+        o = o.getParentValue()
       return o.absolute_url()
       
     def _render_text(self, text):

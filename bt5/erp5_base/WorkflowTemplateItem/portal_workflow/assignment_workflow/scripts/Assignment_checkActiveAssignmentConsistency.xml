@@ -79,7 +79,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 # Get the assignment object and its parent\n
 assignment_object = state_change.object\n
-person_object     = assignment_object.aq_parent\n
+person_object     = assignment_object.getParentValue()\n
 \n
 # Add the current assignment site\n
 assignment_site_list = [assignment_object.getSite()]\n

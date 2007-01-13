@@ -81,7 +81,7 @@ class AppliedRule(XMLObject):
       if self.isRootAppliedRule():
         return 1
       else:
-        parent_value = self.aq_parent
+        parent_value = self.getParentValue()
         rule = self.getSpecialiseValue()
         return rule.test(parent_value)
 

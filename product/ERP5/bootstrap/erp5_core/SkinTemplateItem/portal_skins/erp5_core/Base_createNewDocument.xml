@@ -71,7 +71,7 @@
             <value> <string>REQUEST=context.REQUEST\n
 \n
 # Add an object of the same type as self\n
-parent = context.aq_parent\n
+parent = context.getParentValue()\n
 # XXX May be this need to be changed in order to get something else than\n
 # the permission "Add portal content"\n
 new_id = parent.generateNewId()\n

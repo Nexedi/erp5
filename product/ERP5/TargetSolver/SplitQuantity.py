@@ -46,11 +46,11 @@ class SplitQuantity(CopyToTarget):
     """
     split_index = 0
     new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
-    while getattr(simulation_movement.aq_parent, new_id, None) is not None:
+    while getattr(simulation_movement.getParentValue(), new_id, None) is not None:
       split_index += 1
       new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
     # Adopt different dates for defferred movements
-    new_movement = simulation_movement.aq_parent.newContent(
+    new_movement = simulation_movement.getParentValue().newContent(
       portal_type = "Simulation Movement",
       id = new_id,
       efficiency = simulation_movement.getEfficiency(),

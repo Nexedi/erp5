@@ -76,7 +76,7 @@ class AmountFilter(MappedValue, Amount):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'update')
     def update(self, amount_line):
-      context = self.aq_parent.asContext(**amount_line)
+      context = self.getParentValue().asContext(**amount_line)
       # Test predicate
       if self.test(context):
         # Update amount_line

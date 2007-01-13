@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.aq_parent.getVariationCategoryItemList(base_category_list = here.getQVariationBaseCategoryList() )</string> </value>
+            <value> <string>python: here.getParentValue().getVariationCategoryItemList(base_category_list = here.getQVariationBaseCategoryList() )</string> </value>
         </item>
       </dictionary>
     </pickle>

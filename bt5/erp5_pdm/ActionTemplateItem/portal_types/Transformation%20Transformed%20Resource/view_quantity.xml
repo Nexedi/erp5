@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: len(object.aq_parent.getVariationBaseCategoryList()) != 0</string> </value>
+            <value> <string>python: len(object.getParentValue().getVariationBaseCategoryList()) != 0</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -133,7 +133,7 @@ while crumb is not None:\n
   if crumb.getPortalType() == \'Web Site\':\n
     crumb = None   # Don\'t go higher than the first Web Site found\n
   else:\n
-    crumb = crumb.aq_parent\n
+    crumb = crumb.getParentValue()\n
 \n
 crumb_list.reverse()\n
 return crumb_list\n

@@ -78,7 +78,7 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       """
         Explicitly acquire simulation_state from parent
       """
-      return self.aq_parent.getSimulationState()
+      return self.getParentValue().getSimulationState()
     
     
     # MatrixBox methods      
@@ -96,7 +96,7 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
         Only account movements which are not associated to a delivery
         Whenever delivery is there, delivery has priority
       """
-      return self.aq_parent.aq_parent.isAccountable()
+      return self.getParentValue().getParentValue().isAccountable()
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
     def getProperty(self, key, d=None):
@@ -114,7 +114,7 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
             return getattr(self, key)
           else:
             LOG("Not Found Property %s"%key, -100,"")
-            return self.aq_parent.getProperty(key)
+            return self.getParentValue().getProperty(key)
       #except:
       #  LOG("WARNING: ERP5", 0, 'Could not access mapped value property %s' % key)
       #  return None

@@ -89,7 +89,7 @@ line = []\n
 column = []\n
 tab = []\n
 \n
-transformation = context.aq_parent\n
+transformation = context.getParentValue()\n
 \n
 \n
 \n
@@ -141,7 +141,7 @@ transformation = context.aq_parent\n
 #                                                                        base=base,\n
 #                                                                        current_category=current_category)\n
 #        tab_category_item_list_list.append(tab_category_item_list)\n
-#      transformation = self.aq_parent\n
+#      transformation = self.getParentValue()\n
 #      transformation_category_item_list = transformation.getVariationCategoryItemList(\n
 #                                                          display_id=display_id,\n
 #                                                          base=base,\n
@@ -252,7 +252,7 @@ line = []\n
 column = []\n
 tab = []\n
 \n
-transformation = context.aq_parent\n
+transformation = context.getParentValue()\n
 \n
 # Those value are define on property sheet of portal type\n
 line_base_category = transformation.getVariationBaseCategoryLine()\n

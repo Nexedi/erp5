@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getSourcePayment() or context.aq_parent.getBaobabSourcePayment()\n
+            <value> <string>return context.getSourcePayment() or context.getParentValue().getBaobabSourcePayment()\n
 </string> </value>
         </item>
         <item>

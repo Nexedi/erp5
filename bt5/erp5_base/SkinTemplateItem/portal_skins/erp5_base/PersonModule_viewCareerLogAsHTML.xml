@@ -79,7 +79,7 @@
      </tr>\n
       <tr tal:repeat="item python:here.Base_sortObjectListLikeSQL(here.Person_zGetPersonCareerLog(),((\'start_date\',\'ASC\'),))">\n
          <span tal:define="my_assignment python:item.getObject();\n
-                                   my_person python:my_assignment.aq_parent"\n
+                                   my_person python:my_assignment.getParentValue()"\n
                     >\n
           <td valign="top"><a tal:content="my_person/getTitle" \n
                        tal:attributes="href python:\'%s/Person_viewProfile\' % my_person.getRelativeUrl()" /></td>\n

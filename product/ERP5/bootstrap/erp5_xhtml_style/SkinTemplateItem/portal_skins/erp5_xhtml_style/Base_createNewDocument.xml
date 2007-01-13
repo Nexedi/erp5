@@ -73,7 +73,7 @@ this type cannot be added in the container.\n
 """\n
 N_ = context.getPortalObject().Base_translateString\n
 REQUEST=context.REQUEST\n
-parent = context.aq_parent\n
+parent = context.getParentValue()\n
 allowed_type_list = parent.getVisibleAllowedContentTypeList()\n
 \n
 if not allowed_type_list:\n

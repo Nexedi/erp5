@@ -98,7 +98,7 @@ for base_category in item_list:\n
     sub_field_property_dict[\'title\']=basecatobject.getTranslatedTitle()\n
     # we cache this, so that we can apply expensive path processing techniques\n
     sub_field_property_dict[\'item_list\']=cached_DMSGetItemList(base_category)\n
-    sub_field_property_dict[\'value\']=context.aq_parent.aq_parent.getProperty(base_category)\n
+    sub_field_property_dict[\'value\']=context.getParentValue().getParentValue().getProperty(base_category)\n
     \n
     sub_field_dict[base_category]=sub_field_property_dict\n
 \n

@@ -59,7 +59,7 @@ class Capacity(XMLObject):
         Overload reindexing in order to forward any modifications of capacity
         to simulation tool
       """
-      self.aq_parent.updateCapacity()
+      self.getParentValue().updateCapacity()
       XMLObject.reindexObject(self)
 
 

@@ -135,7 +135,7 @@ for attachment_id, attachment_type, attachment_data in attachment_list:\n
 #   result = context.portal_catalog.searchResults(**kw)\n
 #   for object in result:\n
 #     object = object.getObject()\n
-#     parent = object.aq_parent\n
+#     parent = object.getParentValue()\n
 #     if parent.getPortalType() == \'Person\':\n
 #       organisation = parent.getSubordinationValue()\n
 #       if organisation is None:\n

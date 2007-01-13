@@ -214,7 +214,7 @@ XXX: Folder_filter accesses selection directly\n
         <span class="description" i18n:translate="" i18n:domain="ui">Print</span>\n
       </button>\n
       <button class="new" type="submit" title="New"\n
-              tal:attributes="name python: hasattr(here.aq_parent, \'getLastId\') and \'Base_createNewDocument:method\' or \'Folder_create:method\'"\n
+              tal:attributes="name python: hasattr(here.getParentValue(), \'getLastId\') and \'Base_createNewDocument:method\' or \'Folder_create:method\'"\n
               i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n

@@ -58,4 +58,3 @@ class Predicate(Interface):
       ZSQLCatalog
     """
     pass
-

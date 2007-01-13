@@ -78,7 +78,7 @@ get_variation_base_category_method_dict = {\n
 }\n
 \n
 cell_range = []\n
-transformation = context.aq_parent\n
+transformation = context.getParentValue()\n
 \n
 # Those value are define on property sheet of portal type\n
 line_base_category = transformation.getVariationBaseCategoryLine()\n

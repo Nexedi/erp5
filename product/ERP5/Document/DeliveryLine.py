@@ -123,7 +123,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
         Only account movements which are not associated to a delivery
         Whenever delivery is there, delivery has priority
       """
-      return self.aq_parent.isAccountable() and (not self.hasCellContent())
+      return self.getParentValue().isAccountable() and (not self.hasCellContent())
 
     def _getTotalPrice(self, context, fast=1):
       """ Returns the total price for this line or the cells it contains. """

@@ -128,7 +128,7 @@ class ExternalWebPage(ExternalDocument):
       return self
     else:
       while 1:
-        ob=ob.aq_parent
+        ob=ob.getParentValue()
         if ob==self.getPortalObject():
           return self
         if hasattr(ob,'urldict') and len(ob.urldict)>0:

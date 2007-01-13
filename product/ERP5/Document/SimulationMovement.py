@@ -159,7 +159,7 @@ class SimulationMovement(Movement):
     if order is not None:
       return order.getSimulationState()
     try:
-      parent_state = self.aq_parent.getSimulationState()
+      parent_state = self.getParentValue().getSimulationState()
       return parent_to_movement_simulation_state[parent_state]
     except (KeyError, AttributeError):
       LOG('ERP5 WARNING:',100, 'Could not acquire getSimulationState on %s'
@@ -295,7 +295,7 @@ class SimulationMovement(Movement):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isOrderable')
   def isOrderable(self):
-    applied_rule = self.aq_parent
+    applied_rule = self.getParentValue()
     rule = applied_rule.getSpecialiseValue()
     if rule is not None:
       return rule.isOrderable(self)
@@ -306,7 +306,7 @@ class SimulationMovement(Movement):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isDeliverable')
   def isDeliverable(self):
-    applied_rule = self.aq_parent
+    applied_rule = self.getParentValue()
     rule = applied_rule.getSpecialiseValue()
     if rule is not None:
       return rule.isDeliverable(self)

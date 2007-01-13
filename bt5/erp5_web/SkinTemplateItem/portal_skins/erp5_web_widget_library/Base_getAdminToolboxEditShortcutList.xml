@@ -84,7 +84,7 @@
 translateString = context.Base_translateString\n
 result = []\n
 portal_type = context.getPortalType()\n
-parent_object = context.aq_parent\n
+parent_object = context.getParentValue()\n
 parent_pt = parent_object.getPortalType()\n
 request = context.REQUEST\n
 action_dict = request.get(\'actions\', {}) # actions needs to be renamed to action_dict\n

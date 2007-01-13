@@ -990,7 +990,7 @@ class ImmobilisableItem(XMLObject, Amount):
       else:
         # Delete first rules and re expand if possible
         for my_applied_rule in my_applied_rule_list[:-1]:
-          my_applied_rule.aq_parent._delObject(my_applied_rule.getId())
+          my_applied_rule.getParentValue()._delObject(my_applied_rule.getId())
         my_applied_rule = my_applied_rule_list[-1]
       # We are now certain we have a single applied rule
       # It is time to expand it

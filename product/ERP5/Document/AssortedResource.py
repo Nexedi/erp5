@@ -154,7 +154,7 @@ class AssortedResource(TransformedResource):
       """
         Nice for A
       """
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       transformation_category_list = transformation.getVariationCategoryList()
       variation_category_list = []
       for p in cell_index:
@@ -176,7 +176,7 @@ class AssortedResource(TransformedResource):
       """
         Nice for C
       """
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       transformation_category_list = transformation.getVariationCategoryList()
       variation_category_list = []
       for p in cell_index:
@@ -192,7 +192,7 @@ class AssortedResource(TransformedResource):
         Nice for C
       """
       #LOG('getAssortmentVariationBaseCategoryList', 0, repr(self))
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       return transformation.getVariationBaseCategoryList()
 
     # XXX Should be moved to somewhere more global, as this is general.
@@ -228,7 +228,7 @@ class AssortedResource(TransformedResource):
 
     # Update the range of cells according to the currently selected base categories.
     def _updateCellRange(self, base=1, current_category=None):
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       kwd = {'base_id': 'quantity'}
       kw = []
       base_category_list = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())
@@ -282,7 +282,7 @@ class AssortedResource(TransformedResource):
       kwd = {}
       kwd['base_id'] = 'variation'
       kw = []
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       line_id = transformation.getVariationBaseCategoryLine()
       column_id = transformation.getVariationBaseCategoryColumn()
       line = [[None]]
@@ -358,7 +358,7 @@ class AssortedResource(TransformedResource):
                                                                         base=base,
                                                                         current_category=current_category)
         tab_category_item_list_list.append(tab_category_item_list)
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       transformation_category_item_list = transformation.getVariationCategoryItemList(
                                                           display_id=display_id,
                                                           base=base,
@@ -380,9 +380,9 @@ class AssortedResource(TransformedResource):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getVLineItemList')
     def getVLineItemList(self):
-      base_category = self.aq_parent.getVariationBaseCategoryLine()
+      base_category = self.getParentValue().getVariationBaseCategoryLine()
       if base_category in self.getVVariationBaseCategoryList():
-        clist = self.aq_parent.getCategoryMembershipList(base_category, base=1)
+        clist = self.getParentValue().getCategoryMembershipList(base_category, base=1)
       else:
         clist = [None]
       result = []
@@ -392,9 +392,9 @@ class AssortedResource(TransformedResource):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getVColumnItemList')
     def getVColumnItemList(self):
-      base_category = self.aq_parent.getVariationBaseCategoryColumn()
+      base_category = self.getParentValue().getVariationBaseCategoryColumn()
       if base_category in self.getVVariationBaseCategoryList():
-        clist = self.aq_parent.getCategoryMembershipList(base_category, base=1)
+        clist = self.getParentValue().getCategoryMembershipList(base_category, base=1)
       else:
         clist = [None]
       result = []
@@ -407,7 +407,7 @@ class AssortedResource(TransformedResource):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getVTabItemList')
     def getVTabItemList(self):
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       line_id = transformation.getVariationBaseCategoryLine()
       column_id = transformation.getVariationBaseCategoryColumn()
       base_category_list = transformation.getVariationBaseCategoryList()
@@ -458,7 +458,7 @@ class AssortedResource(TransformedResource):
       """
         Check the constitency of transformation elements
       """
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       transformation_category_list = transformation.getVariationCategoryList()
 
       error_list = XMLMatrix._checkConsistency(self, fixit=fixit)
@@ -518,7 +518,7 @@ class AssortedResource(TransformedResource):
       # First, we set initial values for quantity and variation
       # Currently, we only consider discrete variations
       # Continuous variations will be implemented in a future version of ERP5
-      transformation = self.aq_parent
+      transformation = self.getParentValue()
       error_list = []
       variation = []
       line_item_list = []

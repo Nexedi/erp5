@@ -1050,8 +1050,8 @@ class TestPropertySheet:
       self.assertEquals('copy title', copy.getTitle())
     
       # acquisition context is the same
-      self.assertEquals(self.getPersonModule(), obj.aq_parent)
-      self.assertEquals(self.getPersonModule(), copy.aq_parent)
+      self.assertEquals(self.getPersonModule(), obj.getParentValue())
+      self.assertEquals(self.getPersonModule(), copy.getParentValue())
 
     def test_21_ActionCondition(self, quiet=quiet, run=run_all_test):
       """Tests action conditions
