@@ -440,6 +440,9 @@ class Category(Folder):
       #  sql_text += ' OR %s' % o.asSQLExpression()
       return sql_text
 
+    security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
+    asSqlExpression = asSQLExpression
+  
     # A Category's categories is self
 
 
