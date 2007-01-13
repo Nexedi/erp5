@@ -85,7 +85,13 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
     def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
       """
-        Returns the uids of all categories provided in categories
+        Returns the uids of all categories provided in categorie. This
+        method can support relative_url such as site/group/a/b/c which
+        base category is site yet use categories defined in group.
+
+        It is also able to use acquisition to create complex categories
+        such as site/group/a/b/c/b1/c1 where b and b1 are both children
+        categories of a.
 
         relative_url -- a single relative url of a list of
                         relative urls
@@ -114,7 +120,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
                 # ie. when some documents act as categories
                 if not strict:
                   while o.meta_type == 'ERP5 Category' or o.meta_type == 'CMF Category':
-                    o = o.aq_parent
+                    o = o.aq_parent # We want acquisition here without aq_inner
                     uid_dict[(o.getUid(), bo_uid, 0)] = 1 # Non strict
         except (TypeError, KeyError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
