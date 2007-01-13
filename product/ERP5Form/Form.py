@@ -32,7 +32,9 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.DummyField import fields
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
-from Products.ERP5Type import PropertySheet
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
+from Products.ERP5Type import PropertySheet, Permissions
 
 from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
@@ -362,12 +364,35 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
+        # Security
+        #
+        # The minimal action consists in checking that
+        # we have View permission on the current object
+        # before rendering a form. Otherwise, object with
+        # AccessContentInformation can be viewed by invoking
+        # a form directly.
+        #
+        # What would be better is to prevent calling certain
+        # forms to render objects. This can not be done
+        # through actions since we are using sometimes forms
+        # to render the results of a report dialog form.
+        # An a appropriate solutions could consist in adding
+        # a permission field to the form. Another solutions
+        # is the use of REFERER in the rendering process.
+        #
+        # Both solutions are not perfect if the goal is, for
+        # example, to prevent displaying private information of
+        # staff. The only real solution is to use a special
+        # permission (ex. AccessPrivateInformation) for those
+        # properties which are sensitive.
         if not kwargs.has_key('args'):
             kwargs['args'] = args
         form = self
         object = getattr(form, 'aq_parent', None)
-        if object:
+        if object is not None:
           container = object.aq_inner.aq_parent
+          if not _checkPermission(Permissions.View, object):
+            raise AccessControl_Unauthorized('This document is not authorizes for view.')
         else:
           container = None
         pt = getattr(self,self.pt)
