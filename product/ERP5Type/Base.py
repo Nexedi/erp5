@@ -386,8 +386,11 @@ class Base( CopyContainer,
   aq_preference_generated = 0
   # FIXME: Preference should not be included in ERP5Type
 
-  # Declarative security
+  # Declarative security - in ERP5 we use AccessContentsInformation to
+  # define the right of accessing content properties as opposed
+  # to view which is the right to view the object with a form
   security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
@@ -1847,17 +1850,22 @@ class Base( CopyContainer,
     except TypeError:
       return None
 
-  # Default views
+  # Default views - the default security in CMFCore
+  # is View - however, security was not defined on
+  # __call__ -  to be consistent, between view and
+  # __call__ we have to define permission here to View
+  security.declareProtected(Permissions.View, '__call__')
+
   security.declareProtected(Permissions.View, 'list')
   def list(self,reset=0):
-        '''
-        Returns the default list even if folder_contents is overridden.
-        '''
-        list_action = _getViewFor(self, view='list')
-        if getattr(aq_base(list_action), 'isDocTemp', 0):
-            return apply(list_action, (self, self.REQUEST),reset=reset)
-        else:
-            return list_action(reset=reset)
+    """
+    Returns the default list even if folder_contents is overridden.
+    """
+    list_action = _getViewFor(self, view='list')
+    if getattr(aq_base(list_action), 'isDocTemp', 0):
+        return apply(list_action, (self, self.REQUEST),reset=reset)
+    else:
+        return list_action(reset=reset)
 
   # Proxy methods for security reasons
   security.declareProtected(Permissions.AccessContentsInformation, 'getOwnerInfo')
