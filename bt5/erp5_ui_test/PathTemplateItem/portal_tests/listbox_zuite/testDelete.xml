@@ -116,19 +116,25 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>1</td>\n
+\t<td>0</td>\n
+  <td>We suppose here that the workflow is configured in such way that deleted items can still be viewed.</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>2</td>\n
+\t<td>1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>3</td>\n
+\t<td>2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -166,6 +172,11 @@
 \t<td>0</td>\n
 </tr>\n
 <tr>\n
+  <td>click</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>Folder_deleteObjectList:method</td>\n
 \t<td></td>\n
@@ -180,8 +191,6 @@
 \t<td>Sorry You Can Not Delete 1 Item.</td>\n
 \t<td></td>\n
 </tr>\n
-\n
-\n
 <tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>link=0</td>\n
