@@ -35,6 +35,7 @@ from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.utils import SimpleItemWithProperties
 from Products.CMFCore.Expression import createExprContext
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions
@@ -91,6 +92,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
     _properties = (TypeInformation._basic_properties + (
         {'id':'factory', 'type': 'string', 'mode':'w',
          'label':'Product factory method'},
+        {'id':'permission', 'type': 'string', 'mode':'w',
+         'label':'Add permission'},
         {'id':'init_script', 'type': 'string', 'mode':'w',
          'label':'Init Script'},
         {'id':'acquire_local_roles'
@@ -141,6 +144,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
     hidden_content_type_list = ()
     filter_actions = 0
     allowed_action_list = []
+    permission = ''
 
     # Groups are used to classify portal types (e.g. resource).
     defined_group_list = (
@@ -170,6 +174,17 @@ class ERP5TypeInformation( FactoryTypeInformation,
     #
     #   Agent methods
     #
+    security.declarePublic('isConstructionAllowed')
+    def isConstructionAllowed( self, container ):
+        """
+        Does the current user have the permission required in
+        order to construct an instance?
+        """
+        permission = self.permission
+        if permission and not _checkPermission( permission, container ):
+            return 0
+        return FactoryTypeInformation.isConstructionAllowed(self, container)
+
     def _getFactoryMethod(self, container, check_security=1):
         if not self.product or not self.factory:
             raise ValueError, ('Product factory for %s was undefined' %
