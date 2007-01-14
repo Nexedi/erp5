@@ -178,12 +178,12 @@ SELECT DISTINCT\n
 FROM\n
   <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
   <dtml-if selection_domain>\n
-    <dtml-let expression="selection_domain.asSQLJoinExpression(category_table_alias = 'domain_category')">\n
+    <dtml-let expression="selection_domain.asSQLJoinExpression(category_table_alias = \'domain_category\')">\n
       <dtml-if expression> , <dtml-var expression> </dtml-if>\n
     </dtml-let>\n
   </dtml-if>\n
   <dtml-if selection_report>\n
-    <dtml-let expression="selection_report.asSQLJoinExpression(category_table_alias = 'report_category')">\n
+    <dtml-let expression="selection_report.asSQLJoinExpression(category_table_alias = \'report_category\')">\n
       <dtml-if expression> , <dtml-var expression> </dtml-if>\n
     </dtml-let>\n
   </dtml-if>\n
@@ -194,12 +194,12 @@ WHERE \n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 <dtml-if selection_domain>\n
-  <dtml-let expression="selection_domain.asSQLExpression(category_table_alias = 'domain_category')">\n
+  <dtml-let expression="selection_domain.asSQLExpression(category_table_alias = \'domain_category\')">\n
     <dtml-if expression> AND <dtml-var expression> </dtml-if>\n
   </dtml-let>\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  <dtml-let expression="selection_report.asSQLExpression(strict_membership=1, category_table_alias = 'report_category')">\n
+  <dtml-let expression="selection_report.asSQLExpression(strict_membership=1, category_table_alias = \'report_category\')">\n
     <dtml-if expression> AND <dtml-var expression> </dtml-if>\n
   </dtml-let>\n
 </dtml-if>\n
