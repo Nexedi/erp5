@@ -4883,6 +4883,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_base_category', ())
       return
 
+# Block acquisition on all _item_name_list properties by setting
+# a default class value to None
+for key in BusinessTemplate._item_name_list:
+  setattr(BusinessTemplate, key, None) 
+
 # Transaction Manager used for update of business template workflow
 # XXX update seems to works without it
 
