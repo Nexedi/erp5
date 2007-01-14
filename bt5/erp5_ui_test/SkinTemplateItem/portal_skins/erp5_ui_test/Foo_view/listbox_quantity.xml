@@ -233,7 +233,7 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
+                    <value> <string>-1 234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>

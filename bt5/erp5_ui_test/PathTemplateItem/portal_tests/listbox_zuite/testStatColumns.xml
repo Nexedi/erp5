@@ -111,6 +111,33 @@
 \t<td></td>\n
 </tr>\n
 \n
+<!-- view mode with editable field -->\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/0/view</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_stat_line"]/td[2]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_stat_line"]/td[4]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_stat_line"]/td[3]</td>\n
+\t<td>1 234.5</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyNotEditable</td>\n
+\t<td>//tr[@id="listbox_stat_line"]/td[3]</td>\n
+\t<td></td>\n
+</tr>\n
+\n
 </tbody></table>\n
 </body>\n
 </html>\n
