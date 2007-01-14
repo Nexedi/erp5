@@ -274,6 +274,8 @@ class TestDomainTool(ERP5TypeTestCase):
     self.supply_line.setPricedQuantity(1)
     self.supply_line.setDefaultResourceValue(self.resource)
     order_line.setDefaultResourceValue(self.resource)
+    self.assertEquals(self.supply_line.getDefaultResourceValue(),self.resource)
+    self.assertEquals(order_line.getDefaultResourceValue(),self.resource)
     date1 = DateTime('2005/04/08 10:47:26.388 GMT-4')
     date2 = DateTime('2005/04/10 10:47:26.388 GMT-4')
     self.supply_line.setStartDateRangeMin(date1)
