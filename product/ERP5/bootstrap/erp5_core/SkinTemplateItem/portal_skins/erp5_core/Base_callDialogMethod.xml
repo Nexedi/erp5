@@ -87,13 +87,13 @@ kw.update(request_form)\n
 # Exceptions for UI\n
 if dialog_method == \'Base_configureUI\':\n
   return context.Base_configureUI(form_id=kw[\'form_id\'],\n
-                                  selection_name=kw[\'list_selection_name\'],\n
+                                  selection_name=kw[\'selection_name\'],\n
                                   field_columns=kw[\'field_columns\'],\n
                                   stat_columns=kw[\'stat_columns\'])\n
 # Exceptions for Sort\n
 if dialog_method == \'Base_configureSortOn\':\n
   return context.Base_configureSortOn(form_id=kw[\'form_id\'],\n
-                                      selection_name=kw[\'list_selection_name\'],\n
+                                      selection_name=kw[\'selection_name\'],\n
                                       field_sort_on=kw[\'field_sort_on\'],\n
                                       field_sort_order=kw[\'field_sort_order\'])\n
 # Exceptions for Base_edit\n
@@ -218,7 +218,7 @@ if hasattr(kw, \'previous_md5_object_uid_list\'):\n
 \n
 # if dialog_category is object_search, then edit the selection\n
 if dialog_category == "object_search" :\n
-  context.portal_selections.setSelectionParamsFor(kw[\'list_selection_name\'], kw)\n
+  context.portal_selections.setSelectionParamsFor(kw[\'selection_name\'], kw)\n
 \n
 # if we have checked line in listbox, modify the selection\n
 listbox_uid = kw.get(\'listbox_uid\', None)\n
