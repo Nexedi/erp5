@@ -414,8 +414,8 @@ class TestHR(ERP5TypeTestCase):
     organisation.setDefaultAddressRegion(region_path)
     organisation.setDefaultAddressZipCode('59000')
     organisation.setDefaultAddressStreetAddress('42, rue des gnous')
-    organisation.setDefaultTelephoneText('55 55 5555')
-    organisation.setDefaultFaxText('69 1337')
+    organisation.setDefaultTelephoneText('+55(0)66-5555') # Phone follows default conventions
+    organisation.setDefaultFaxText('+55(0)69-1337')
     organisation.setDefaultEmailText('kevin@truc-bidule.com')
 
     self.failUnless('default_address' in organisation.contentIds())
@@ -429,7 +429,7 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals( organisation.getDefaultAddressRegion()
                      , default_address.getRegion()
                      )
-#     self.assertEquals( organisation.getDefaultAddressRegionTitle()
+#     self.assertEquals( organisation.getDefaultAddressRegionTitle() # XXX Why ?
 #                      , default_address.getRegionTitle()
 #                      )
 #     self.assertEquals( organisation.getDefaultAddressRegionValue()
