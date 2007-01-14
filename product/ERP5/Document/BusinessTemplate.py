@@ -499,7 +499,10 @@ class ObjectTemplateItem(BaseTemplateItem):
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
-      obj = obj._getCopy(context)
+      try:
+        obj = obj._getCopy(context)
+      except AttributeError:
+        raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
       obj = self.removeProperties(obj)
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'):
