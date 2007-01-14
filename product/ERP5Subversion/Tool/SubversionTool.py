@@ -885,6 +885,10 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   other_files=None, recurse=False):
     """Revert local changes in a file or a directory
        in ZODB and on hard drive
+
+       XXX-JPS: naming of parameters is wrong. added_files
+       should be added_file_list. Action: rename to added_file_list
+       and provide compatibility for scripts.
     """
     client = self._getClient()
     object_to_update = {}
@@ -923,7 +927,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           path_added_list.append(tmp)
     ## hack to remove objects
     # Create a temporary bt with objects to delete
-    tmp_bt = getToolByName(business_template, 'portal_templates')\
+    tmp_bt = getToolByName(business_template.getPortalObject(), 'portal_templates')\
     .newContent(portal_type="Business Template")
     tmp_bt.setTemplatePathList(path_added_list)
     tmp_bt.setTitle('tmp_bt_revert')
