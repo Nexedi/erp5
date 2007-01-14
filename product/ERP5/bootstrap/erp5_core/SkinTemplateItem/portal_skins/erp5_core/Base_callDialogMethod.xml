@@ -134,7 +134,7 @@ if dialog_method == \'Base_createRelation\':\n
 # Exception for folder delete\n
 if dialog_method == \'Folder_delete\':\n
   return context.Folder_delete(form_id=kw[\'form_id\'],\n
-                               selection_name=kw[\'list_selection_name\'],\n
+                               selection_name=kw[\'selection_name\'],\n
                                uids=kw[\'listbox_uid\'],\n
                                md5_object_uid_list=kw[\'md5_object_uid_list\'])\n
 \n
