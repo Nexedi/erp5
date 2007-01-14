@@ -939,7 +939,7 @@ class ListBoxRenderer:
           params.setdefault('meta_type', meta_type_list)
 
         # Remove useless parameters as FileUpload
-        for k, v in params.items():          
+        for k, v in params.items():
           if k == "listbox":
             # listbox can also contain useless parameters
             new_list = []
@@ -948,7 +948,7 @@ class ListBoxRenderer:
                 if v1 in (None, '') or hasattr(v1, 'read'):
                   del line[k1]
               new_list.append(line)
-            params[k] = new_list                            
+            params[k] = new_list
           if v in (None, '') or hasattr(v, 'read'):
             del params[k]
 
@@ -991,6 +991,16 @@ class ListBoxRenderer:
     return params
 
   getParamDict = VolatileCachingMethod(getParamDict)
+
+  def getEditableField(self, alias):
+    """Get an editable field for column, using column alias.
+    Return None if a field for this column does not exist.
+    """
+    form = self.getForm()
+    editable_field_id = '%s_%s' % (self.getId(), alias)
+    if form.has_field(editable_field_id):
+      return form.get_field(editable_field_id)
+    return None
 
   def getListMethod(self):
     """Return the list method object.
@@ -1377,6 +1387,10 @@ class ListBoxRenderer:
         else:
           original_value = stat_method
           processed_value = original_value
+      
+      editable_field = self.getEditableField(alias)
+      if editable_field is not None:
+        processed_value = editable_field.render_view(value=original_value)
 
       if not isinstance(processed_value, unicode):
         processed_value = unicode(str(processed_value), self.getEncoding())
@@ -1815,17 +1829,15 @@ class ListBoxRendererLine:
         brain = self.getBrain()
 
         # Use a widget, if any.
-        editable_field_id = '%s_%s' % (self.renderer.getId(), alias)
+        editable_field = self.renderer.getEditableField(alias)
         tales = False
-        form = self.renderer.getForm()
-        if form.has_field(editable_field_id):
-          editable_field = form.get_field(editable_field_id)
+        if editable_field is not None:
           tales = editable_field.tales.get('default', '')
           if tales:
             original_value = editable_field.__of__(obj).get_value('default',
                                                         cell=brain)
             processed_value = original_value
-
+        
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
           if hasattr(aq_self(brain), alias):
@@ -1925,11 +1937,9 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
       # If a field is editable, generate an input form.
       # XXX why don't we generate an input form when a widget is not defined?
-      editable_field_id = '%s_%s' % (field_id, alias)
-      if not self.isSummary() and form.has_field(editable_field_id):
-        editable_field = form.get_field(editable_field_id)
-      else:
-        editable_field = None
+      editable_field = None
+      if not self.isSummary():
+        editable_field = self.renderer.getEditableField(alias)
 
       # Prepare link value - we now use it for both static and field rendering
       no_link = False
@@ -1976,7 +1986,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
       if editable_field is not None and sql in editable_column_id_set:
         # XXX what if the object does not have uid?
-        key = '%s_%s' % (editable_field_id, self.getUid())
+        key = '%s_%s' % (editable_field.getId(), self.getUid())
         widget_key = editable_field.generate_field_key(key=key)
         if has_error: # If there is any error on listbox, we should use what the user has typed
           display_value = None

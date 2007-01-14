@@ -310,7 +310,7 @@
                 <td class="Data" align="left"
                   tal:define="original_value python: value[0]; processed_value python: value[1]"
                   tal:attributes="align python: isinstance(original_value, (float, int, long)) and 'right' or 'left'"
-                  tal:content="processed_value" />
+                  tal:content="structure processed_value" />
               </tal:block>
             </tr>
           </table>
