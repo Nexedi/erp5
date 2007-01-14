@@ -1148,6 +1148,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
         # Define new HTTP_REFERER
         REQUEST.HTTP_REFERER = '%s/%s' % (o.absolute_url(),
                                           dialog_id)
+
+        # If we are called from a Web Site, we should return
+        # in the context of the Web Section
+        if self.getApplicableLayout() is not None:
+          return getattr(o.__of__(self.getWebSectionValue()), dialog_id)(REQUEST=REQUEST)
         # Return the search dialog
         return getattr(o, dialog_id)(REQUEST=REQUEST)
 
