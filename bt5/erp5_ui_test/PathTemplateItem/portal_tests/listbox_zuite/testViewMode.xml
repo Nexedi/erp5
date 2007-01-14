@@ -382,11 +382,26 @@
 \t<td>//tr[@id="listbox_data_line_2"]/td[2]//input[@type="text"]</td>\n
 \t<td></td>\n
 </tr>\n
-<!-- Check a validation error message. -->\n
+<!-- Check validation error messages. -->\n
 <tr>\n
 \t<td>type</td>\n
 \t<td>//tr[@id="listbox_data_line_0"]/td[3]//input[@type="text"]</td>\n
 \t<td>abc</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[1]</td>\n
+\t<td>yyyy</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[2]</td>\n
+\t<td>mm</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[3]</td>\n
+\t<td>dd</td>\n
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
@@ -402,6 +417,31 @@
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
 \t<td>*You did not enter a floating point*</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[1]</td>\n
+\t<td>yyyy</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[2]</td>\n
+\t<td>mm</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[3]</td>\n
+\t<td>dd</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>//tr[@id=\'listbox_data_line_1\']/td[4]/input[3]</td>\n
+\t<td>dd</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id="listbox_data_line_1"]/td[4]</td>\n
+\t<td>*You did not enter a valid date and time.*</td>\n
 </tr>\n
 \n
 \n

@@ -92,7 +92,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertTitle</td>\n
-\t<td>Foo - Title 0</td>\n
+\t<td>*Foo - Title 0*</td> <!-- XXX not flexible -->\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -108,11 +108,6 @@
 <tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>Base_edit:method</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyTitle</td>\n
-\t<td>Foo - Title 0</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -132,7 +127,7 @@
 </tr>\n
 <tr>\n
 \t<td>verifyTitle</td>\n
-\t<td>Foo - Title 0</td>\n
+\t<td>*Foo - Title 0*</td> <!-- XXX not flexible -->\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
