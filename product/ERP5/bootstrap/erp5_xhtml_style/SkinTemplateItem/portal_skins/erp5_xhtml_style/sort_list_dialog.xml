@@ -100,7 +100,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               <tal:block tal:replace="row_index" />\n
             </label>\n
             <div class="input" tal:attributes="id string:sort_${row_index}"\n
-                               tal:define="sort_type python:item[min(2, len(item))]">\n
+                               tal:define="sort_type python:((len(item) > 2) and item[2]) or \'\'">\n
               <select name="field_sort_on">\n
                 <tal:block tal:repeat="option all_columns">\n
                   <option tal:content="python:option[1]"\n
