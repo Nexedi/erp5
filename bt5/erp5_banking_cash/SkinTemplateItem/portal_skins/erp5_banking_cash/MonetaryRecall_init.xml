@@ -68,48 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string>site_list = context.Baobab_getUserAssignedSiteList()\n
+if len(site_list) == 0:\n
+  context.log("ClassificationSurvey_init", "unabled to determine site")\n
 \n
-source = context.getSource()\n
-currency = context.Baobab_getPortalReferenceCurrencyID()\n
-source_section = context.getSourceSection()\n
-\n
-\n
-if source_section is None :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , \'portal_status_message=Please+select+a+site.\'\n
-                              )\n
-  return request.RESPONSE.redirect( redirect_url )\n
-\n
-\n
-\n
-if \'serre\' in context.getSource():\n
-  cash_status = [\'retired\',]\n
-else:\n
-  cash_status = [\'cancelled\',\'mutilated\', \'maculated\']\n
- \n
-#emission_letter = context.Baobab_getUserEmissionLetterList() \n
-#emission_letter =  list(context.getSourceSectionValue().getCodification()[0])\n
-emission_letter = list((context.getSourceSectionValue().getCodification()[0]).lower())\n
-\n
-variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
-\n
-#, \'emission_letter_list\'     : emission_letter A REMETTRE APRES LES TESTS\n
-cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
-                    , \'operation_currency\'       : currency\n
-                    , \'cash_status_list\'         : cash_status\n
-                    , \'emission_letter_list\'      : emission_letter\n
-                    , \'variation_list\'           : variation\n
-                    , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : False\n
-                    , \'column_base_category\'     : \'variation\'\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url()\n
-                                                          )\n
+site = site_list[0]\n
+site = context.Baobab_getVaultSite(site)\n
+context.setSource("%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies" %(site.getRelativeUrl(),))\n
 </string> </value>
         </item>
         <item>
@@ -132,7 +97,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -158,21 +123,14 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>args</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>source</string>
-                            <string>currency</string>
-                            <string>source_section</string>
-                            <string>None</string>
-                            <string>redirect_url</string>
-                            <string>cash_status</string>
-                            <string>list</string>
+                            <string>site_list</string>
+                            <string>len</string>
                             <string>_getitem_</string>
-                            <string>emission_letter</string>
-                            <string>variation</string>
-                            <string>False</string>
-                            <string>cash_detail_dict</string>
+                            <string>site</string>
                           </tuple>
                         </value>
                     </item>
@@ -189,7 +147,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MonetaryDestruction_viewLineFastInputDialog</string> </value>
+            <value> <string>MonetaryRecall_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
