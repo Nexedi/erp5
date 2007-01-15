@@ -114,6 +114,7 @@ class WebSection(Domain):
                       , PropertySheet.DublinCore
                       , PropertySheet.WebSite
                       , PropertySheet.SortIndex
+                      , PropertySheet.Predicate
                       )
 
     web_section_key = WEBSECTION_KEY
