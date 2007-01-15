@@ -793,7 +793,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         container.manage_delObjects([object_id])
         if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
-          container.aq_parent.manage_delObjects([container.id])
+          container.getParentValue().manage_delObjects([container.id])
       except (NotFound, KeyError, BadRequest):
         # object is already backup and/or removed
         pass
@@ -1041,44 +1041,41 @@ class CategoryTemplateItem(ObjectTemplateItem):
       portal = context.getPortalObject()
       category_tool = portal.portal_categories
       tool_id = self.tool_id
-      if light_install==0:
-        ObjectTemplateItem.install(self, context, trashbin, **kw)
-      else:
-        for relative_url in self._archive.keys():
-          obj = self._archive[relative_url]
-          # Wrap the object by an aquisition wrapper for _aq_dynamic.
-          obj = obj.__of__(category_tool)
-          container_path = relative_url.split('/')[0:-1]
-          category_id = relative_url.split('/')[-1]
-          container = category_tool.unrestrictedTraverse(container_path)
-          container_ids = container.objectIds()
-          if category_id in container_ids:    # Object already exists
-            # XXX call backup here
-            subobjects_dict = self._backupObject('backup', trashbin, container_path, category_id)
-            container.manage_delObjects([category_id])
-          category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
-          for prop in obj.propertyIds():
-            if prop not in ('id', 'uid'):
-              try:
-                prop_value = obj.getProperty(prop, evaluate=0)
-              except TypeError: # the getter doesn't support evaluate=
-                prop_value = obj.getProperty(prop)
-              category.setProperty(prop, prop_value)
-          # import sub objects if there is
-          if len(subobjects_dict) > 0:
-            # get a jar
-            connection = obj._p_jar
-            o = category
-            while connection is None:
-              o = o.aq_parent
-              connection = o._p_jar
-            # import subobjects
-            for subobject_id in subobjects_dict.keys():
-              subobject_data = subobjects_dict[subobject_id]
-              subobject_data.seek(0)
-              subobject = connection.importFile(subobject_data)
-              if subobject_id not in category.objectIds():
-                category._setObject(subobject_id, subobject)
+      for relative_url in self._archive.keys():
+        obj = self._archive[relative_url]
+        # Wrap the object by an aquisition wrapper for _aq_dynamic.
+        obj = obj.__of__(category_tool)
+        container_path = relative_url.split('/')[0:-1]
+        category_id = relative_url.split('/')[-1]
+        container = category_tool.unrestrictedTraverse(container_path)
+        container_ids = container.objectIds()
+        if category_id in container_ids:    # Object already exists
+          # XXX call backup here
+          subobjects_dict = self._backupObject('backup', trashbin, container_path, category_id)
+          container.manage_delObjects([category_id])
+        category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
+        for prop in obj.propertyIds():
+          if prop not in ('id', 'uid'):
+            try:
+              prop_value = obj.getProperty(prop, evaluate=0)
+            except TypeError: # the getter doesn't support evaluate=
+              prop_value = obj.getProperty(prop)
+            category.setProperty(prop, prop_value)
+        # import sub objects if there is
+        if len(subobjects_dict) > 0:
+          # get a jar
+          connection = obj._p_jar
+          o = category
+          while connection is None:
+            o = o.aq_parent
+            connection = o._p_jar
+          # import subobjects
+          for subobject_id in subobjects_dict.keys():
+            subobject_data = subobjects_dict[subobject_id]
+            subobject_data.seek(0)
+            subobject = connection.importFile(subobject_data)
+            if subobject_id not in category.objectIds():
+              category._setObject(subobject_id, subobject)
 
 
 class SkinTemplateItem(ObjectTemplateItem):
