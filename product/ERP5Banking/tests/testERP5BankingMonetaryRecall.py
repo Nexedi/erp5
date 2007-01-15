@@ -231,7 +231,6 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.monetary_recall = self.monetary_recall_module.newContent(
                                  id='monetary_recall_1', 
                                  portal_type='Monetary Recall', 
-                                 source_value=self.cash, 
                                  description='test',
                                  source_total_asset_price=52400.0)
     
