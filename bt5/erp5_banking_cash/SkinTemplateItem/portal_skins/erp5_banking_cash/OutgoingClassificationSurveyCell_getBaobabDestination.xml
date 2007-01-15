@@ -68,10 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList():\n
-  return \'%s/auxiliaire/encaisse_des_billets_ventiles_et_detruits\' %(\'/\'.join(context.getSource().split(\'/\')[:-2]),)\n
+            <value> <string>document_site = context.getDeliveryValue().getBaobabSourceValue()\n
+site_url = context.Baobab_getVaultSite(document_site).getRelativeUrl()\n
+if context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList():\n
+  return \'%s/caveau/serre/encaisse_des_billets_retires_de_la_circulation\' % site_url\n
 else:\n
-  return \'%s/auxiliaire/encaisse_des_externes\' %(\'/\'.join(context.getSource().split(\'/\')[:-2]),)\n
+  return \'%s/caveau/auxiliaire/encaisse_des_externes\' % site_url\n
 </string> </value>
         </item>
         <item>
@@ -124,7 +126,8 @@ else:\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getitem_</string>
+                            <string>document_site</string>
+                            <string>site_url</string>
                           </tuple>
                         </value>
                     </item>
