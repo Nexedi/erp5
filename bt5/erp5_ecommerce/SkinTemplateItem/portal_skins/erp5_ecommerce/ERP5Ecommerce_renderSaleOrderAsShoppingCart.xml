@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div>\n
+<tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
+                       empty_cart python: len(shopping_cart_items)==0;\n
+                       website here/getWebSiteValue;">\n
+ \n
+  <p tal:condition = "empty_cart"> Your shopping cart is empty. </p>\n
+\n
+  <form action="" tal:condition = "not: empty_cart">\n
+  <table>\n
+    <thead>\n
+      <th>Shopping Cart Items:</th>\n
+      <th>Price:</th>\n
+      <th>Quantity:</th>\n
+    </thead>\n
+    <tbody>  \n
+      <tal:block tal:repeat="order_line shopping_cart_items">\n
+      <tr tal:define="resource python: website.restrictedTraverse(order_line.getResource());\n
+                      quantity python: int(order_line.getTotalQuantity());\n
+                      price    python: resource.getPrice();\n
+                      order_line_id order_line/getId;\n
+           global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
+         <td>\n
+           <a href="" tal:attributes="href resource/absolute_url">\n
+             <b tal:content="order_line/getTitle"/> <br/>\n
+             <a tal:attributes="href python: \'%s?field_my_order_line_id=%s\' \n
+                                              %(website.SaleOrder_deleteShoppingCartItem.absolute_url(), \n
+                                                order_line_id)"> \n
+              Delete \n
+             </a>\n
+           </a>\n
+         </td>\n
+         <td>\n
+           <span tal:replace="price"/> <span tal:replace="currency"/>\n
+         </td>\n
+         <td>\n
+           <input type="input" \n
+                  name="field_my_buy_quantity"\n
+                  size="2"\n
+                  tal:attributes ="value quantity"/>\n
+         </td>\n
+      </tr>\n
+    </tal:block>\n
+    <tr>\n
+      <td></td>\n
+      <td></td>\n
+      <td>\n
+        <br/>\n
+        <input type="submit" name="SaleOrder_update:method" value="Update"/>\n
+      </td>\n
+    </tbody>\n
+  </table>\n
+  </form>\n
+\n
+  <tal:block tal:condition = "not: empty_cart">\n
+    <br/><br/>\n
+    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
+       <span tal:replace="currency"/>\n
+    </b> <br/>\n
+    <form action="">\n
+      <input type="submit" value="Proceed to checkout" name="SaleOrder_confirmShopping:method">\n
+    </form> \n
+\n
+  </tal:block>\n
+</tal:block>\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Ecommerce_renderSaleOrderAsShoppingCart</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Render custom cart content</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -74,7 +74,7 @@ from Products.ERP5Type.Document import newTempOrderLine\n
 \n
 request = context.REQUEST\n
 product = context\n
-quantity = request.get(\'field_your_buy_quantity\', 1)\n
+quantity = request.get(\'field_my_buy_quantity\', 1)\n
 shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
 \n
 ## check if we don\'t have already such a product in cart\n
@@ -98,6 +98,7 @@ if line_found == False:\n
 \n
 redirect_url = request.get(\'HTTP_REFERER\', context.absolute_url())\n
 redirect_url = redirect_url.split(\'?\')[0]\n
+#redirect_url = context.getWebSectionValue().absolute_url()\n
 request.RESPONSE.redirect("%s?portal_status_message=Added to cart." %redirect_url)\n
 
 
@@ -181,7 +182,7 @@ request.RESPONSE.redirect("%s?portal_status_message=Added to cart." %redirect_ur
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Add To Shopping Cart</string> </value>
+            <value> <string>Add product to shopping cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

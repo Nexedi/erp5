@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div>\n
+<tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
+                       empty_cart python: len(shopping_cart_items)==0;\n
+                       website here/getWebSiteValue;">\n
+\n
+  <legend>My shopping cart</legend>\n
+\n
+  <ul tal:repeat="order_line shopping_cart_items">\n
+    <li tal:define="resource python: website.restrictedTraverse(order_line.getResource());\n
+                    quantity python: int(order_line.getTotalQuantity());\n
+                    price    python: resource.getPrice();\n
+         global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
+\n
+       <a href="" tal:attributes="href resource/absolute_url">\n
+         <b tal:content="order_line/getTitle"/> \n
+       </a>\n
+       <br/>\n
+       Price: <span tal:replace="price"/> <span tal:replace="currency"/>\n
+       <br/>\n
+       - quantity: <span tal:replace="quantity"/>\n
+    </li>\n
+  </ul> \n
+\n
+  <tal:block tal:condition = "not: empty_cart">\n
+    <br/>\n
+    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
+       <span tal:replace="currency"/>\n
+    </b>\n
+\n
+    <input type="submit" value="View Shopping Cart" name="SaleOrder_viewAsWeb:method"/>\n
+\n
+    <input type="submit" value="Proceed to checkout" name="SaleOrder_confirmShopping:method"/>\n
+\n
+  </tal:block>\n
+</tal:block>\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Ecommerce_shoppingCartWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Render cart portlet</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
+          <string>Products.Formulator.StandardFields</string>
+          <string>StringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_buy_button</string> </value>
+            <value> <string>my_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -22,11 +22,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
+                    <value> <string>Selected by you username is already occupied. Please select another one.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -34,11 +30,7 @@
                 </item>
                 <item>
                     <key> <string>too_long</string> </key>
-                    <value> <string>You entered too many characters.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
+                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -64,6 +56,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,23 +80,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -108,15 +96,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -143,6 +131,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -159,23 +155,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -187,15 +171,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -215,34 +199,23 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<select name="field_my_buy_quantity" >\n
-<option value="1">1 </option>\n
-<option\n
-value="2">2 </option>\n
-<option\n
-value="3">3 </option>\n
-<option\n
-value="4">4 </option>\n
-<option\n
-value="5">5 </option>\n
-<option\n
-value="6">6 </option>\n
-</select>\n
-<button type="submit"\n
-class="save" title="Confirm"\n
-name="Product_addToShoppingCart:method">Add to Shopping Cart</button>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>12</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -250,15 +223,13 @@ name="Product_addToShoppingCart:method">Add to Shopping Cart</button>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>50</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -269,20 +240,16 @@ name="Product_addToShoppingCart:method">Add to Shopping Cart</button>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Add to cart</string> </value>
+                    <value> <string>Your username</string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -292,12 +259,27 @@ name="Product_addToShoppingCart:method">Add to Shopping Cart</button>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>ERP5Ecommerce_isValidUsername</string> </value>
         </item>
       </dictionary>
     </pickle>

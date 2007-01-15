@@ -204,41 +204,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-user_id = context.portal_membership.getAuthenticatedMember().getId()\n
-request = context.REQUEST\n
+            <value> <string>request = context.REQUEST\n
 website = context.getWebSiteValue()\n
-\n
-## determine customer if not such create an account\n
-if context.portal_membership.isAnonymousUser():\n
-  redirect_url = website.ERP5Ecommerce_newCustomerAccountForm.absolute_url()\n
-  request.RESPONSE.redirect(redirect_url + \'?editable_mode=1&portal_status_message=You need to create an account.\')\n
-  return\n
-\n
-#context.debug(context.portal_membership.isAnonymousUser())\n
-\n
 shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
+if field_my_order_line_id is not None:\n
+  shopping_cart.manage_delObjects(field_my_order_line_id)\n
+  portal_status_message = "Successfully removed from shopping cart."\n
+else:\n
+  portal_status_message = "Please select an item."\n
 \n
-sale_order = context.ERP5Ecommerce_createSaleOrderFromShoppingCart(shopping_cart)\n
-context.debug("aaaaaaaaaaaaaaaa")\n
-\n
-## clean up shopping cart\n
-context.ERP5Ecommerce_getShoppingCart(reset=True)\n
-\n
-return \n
-\n
-## set as sale order owner\n
-shopping_cart_persistent.setDestination("person_module/"+user_id_number)\n
-\n
-\n
-## redirect\n
-redirect_url=context.REQUEST[\'HTTP_REFERER\']\n
-redirect_url=redirect_url[:redirect_url.index("/portal_sessions/shoppingcart")]+"/thank-you"\n
-context.REQUEST.RESPONSE.redirect(redirect_url)\n
-
-
-]]></string> </value>
+redirect_url = website.SaleOrder_viewAsWeb.absolute_url()\n
+request.RESPONSE.redirect(redirect_url + \'?portal_status_message=%s\' %portal_status_message)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -254,7 +231,7 @@ context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>field_my_order_line_id = None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -283,24 +260,21 @@ context.REQUEST.RESPONSE.redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>field_my_order_line_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>user_id</string>
                             <string>request</string>
                             <string>website</string>
-                            <string>redirect_url</string>
                             <string>shopping_cart</string>
-                            <string>sale_order</string>
-                            <string>True</string>
-                            <string>shopping_cart_persistent</string>
-                            <string>user_id_number</string>
-                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>portal_status_message</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -312,16 +286,18 @@ context.REQUEST.RESPONSE.redirect(redirect_url)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>SaleOrder_deleteShoppingCartItem</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm order</string> </value>
+            <value> <string>Delete a shopping cart item</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

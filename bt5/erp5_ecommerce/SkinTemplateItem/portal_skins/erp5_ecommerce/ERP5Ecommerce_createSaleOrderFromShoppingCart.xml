@@ -155,7 +155,7 @@ return sale_order\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create Persistent Sale Order from shopping cart</string> </value>
+            <value> <string>Create persistent Sale Order from shopping cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

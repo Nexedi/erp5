@@ -68,18 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script is part of ERP5 E-Commerce.\n
-#\n
-# It is used to set the security permissions of a Product in a way\n
-# that it can be used in an E-Commerce web site. This means,\n
-# it must be possible to show it in a product list and to access\n
-# its detail-page without being logged in.\n
-\n
-permission_list = context.possible_permissions()\n
+            <value> <string>""" This script is used to set the security permissions of a Product in a way\n
+that it can be used in an E-Commerce web site. This means,\n
+it must be possible to show it in a product list and to access\n
+its detail-page without being logged in. """\n
 \n
 # First, remove all permissions (very secure by default)\n
 # We should keep only Manager, or we will not be able to\n
 # do the end of the script\n
+permission_list = context.possible_permissions()\n
 for permission in permission_list:\n
   context.manage_permission(permission, [\'Manager\'], 0)\n
 \n
@@ -113,24 +110,25 @@ assignor_permission_list = [p for p in [\n
 erp5_role_dict = {\n
   \'Anonymous\': anonymous_permission_list,\n
   \'Assignee\': common_permission_list,\n
-  \'Assignor\': common_permission_list + author_permission_list +\\\n
+  \'Assignor\': common_permission_list + \\\n
+              author_permission_list +\\\n
               assignor_permission_list,\n
   \'Associate\': common_permission_list,\n
   \'Auditor\' : common_permission_list,\n
-  \'Author\': common_permission_list + author_permission_list,\n
+  \'Author\': common_permission_list + \\\n
+            author_permission_list,\n
   \'Manager\': permission_list\n
 }\n
 \n
 # Add ERP5 permissions\n
 erp5_permission_dict = {}\n
-for role,permission_list in erp5_role_dict.items():\n
+for role, permission_list in erp5_role_dict.items():\n
   for permission in permission_list:\n
     if not erp5_permission_dict.has_key(permission):\n
       erp5_permission_dict[permission] = []\n
     erp5_permission_dict[permission].append(role)\n
 \n
 for permission,role_list in erp5_permission_dict.items():\n
-  context.debug(permission + str(role_list))\n
   context.manage_permission(permission,role_list, 0)\n
 \n
 return "finished"\n
@@ -194,7 +192,6 @@ return "finished"\n
                             <string>_write_</string>
                             <string>_getitem_</string>
                             <string>role_list</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -215,7 +212,7 @@ return "finished"\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Make Products Accessible</string> </value>
+            <value> <string>Make products accessible for anonymous</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

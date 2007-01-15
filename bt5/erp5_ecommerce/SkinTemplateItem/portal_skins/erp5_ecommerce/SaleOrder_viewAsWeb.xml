@@ -88,10 +88,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_description</string>
-                        <string>my_buy_button</string>
-                        <string>my_buy_quantity</string>
+                        <string>shopping_cart</string>
+                        <string>shopping_item_list</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +104,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Product_viewAsShop</string> </value>
+            <value> <string>SaleOrder_viewAsWeb</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +128,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Product shop view</string> </value>
+            <value> <string>Shopping cart details</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fax</string> </value>
+            <value> <string>my_first_name</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -211,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -239,11 +239,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Fax</string> </value>
+                    <value> <string>First Name</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

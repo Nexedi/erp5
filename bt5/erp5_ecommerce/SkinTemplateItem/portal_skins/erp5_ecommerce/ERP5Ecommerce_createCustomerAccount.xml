@@ -68,56 +68,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-pm = context.person_module\n
+            <value> <string>from Products.Formulator.Errors import FormValidationError\n
 \n
-data=dict(context.REQUEST)\n
+form = context.getWebSectionValue().ERP5Ecommerce_newCustomerAccountForm\n
+request = context.REQUEST\n
+form_kw = request.form\n
+person_kw = {}\n
+field_prefix = \'field_my_\'\n
 \n
-# Input Validation (Quick & Dirty)\n
-if "" in [data[\'field_first_name\'],\n
-          data[\'field_last_name\'],\n
-          data[\'field_email\'],\n
-          data[\'field_password\'],\n
-          data[\'field_telephone\'],\n
-          data[\'field_zip\'],\n
-          data[\'field_city\']]:\n
-  context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentUrl()+"/incomplete-form")\n
-  return "Incomplete"\n
-if data[\'field_password\'] != data[\'field_repeat_password\']:\n
-  context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentUrl()+"/password-mismatch")\n
-  return "Password Mismatch"\n
+for key in form_kw.keys():\n
+  if key.startswith(field_prefix):\n
+    person_kw[key.replace(field_prefix, \'\')] = form_kw[key]\n
 \n
-# The Input validation could be very much improved by getting back\n
-# to the Form and highlighting the corresponding fields.\n
+try:\n
+  form.validate_all_to_request(request)\n
+  validated = True\n
+except FormValidationError, validation_errors:\n
+  validated = False\n
 \n
-pp = pm.newContent(portal_type=\'Person\')\n
-pp.setFirstName(data[\'field_first_name\'])\n
-pp.setLastName(data[\'field_last_name\'])\n
-pp.setReference(data[\'field_email\'])\n
-pp.setPassword(data[\'field_password\'])\n
-pp.setCareerRole(\'internal\')\n
-pp.validate()\n
-context.acl_users.zodb_roles.manage_assignRoleToPrincipals("Member",[pp.getReference()],context.REQUEST.response)\n
-context.acl_users.zodb_roles.manage_assignRoleToPrincipals("Assignor",[pp.getReference()],context.REQUEST.response)\n
-context.REQUEST.response.redirect("")\n
+if validated == False:\n
+  context.REQUEST.set(\'field_errors\', form.ErrorFields(validation_errors))\n
+  return form(validation_errors)\n
 \n
-pp.newContent(portal_type=\'Email\', id=\'default_email\', url_string=data[\'field_email\'])\n
-pp.newContent(portal_type=\'Telephone\', id=\'default_telephone\', telephone_number=data[\'field_telephone\'])\n
-pp.newContent(portal_type=\'Fax\', id=\'default_fax\', telephone_number=data[\'field_fax\'])\n
-address = pp.newContent(portal_type=\'Address\', id=\'default_address\', \n
-                        street_address=data[\'field_address\'], \n
-                        zip_code=data[\'field_zip\'], \n
-                        city=data[\'field_city\'])\n
-address.setRegion(data[\'field_country\'])\n
+person_module = context.person_module\n
+person = person_module.newContent(portal_type=\'Person\', **person_kw)\n
+person.validate()\n
+\n
+## TODO: create an assignment\n
+return \n
 \n
 context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentUrl()+"/person-created")\n
-\n
-# Debugging output\n
-return "OKAY - New Person was created for "+str(context).replace("<","").replace(">","")\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -139,6 +120,7 @@ return "OKAY - New Person was created for "+str(context).replace("<","").replace
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -167,15 +149,26 @@ return "OKAY - New Person was created for "+str(context).replace("<","").replace
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.Formulator.Errors</string>
+                            <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>pm</string>
-                            <string>dict</string>
-                            <string>data</string>
+                            <string>form</string>
+                            <string>request</string>
+                            <string>form_kw</string>
+                            <string>person_kw</string>
+                            <string>field_prefix</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
                             <string>_getitem_</string>
-                            <string>pp</string>
-                            <string>address</string>
-                            <string>str</string>
+                            <string>_write_</string>
+                            <string>True</string>
+                            <string>validated</string>
+                            <string>validation_errors</string>
+                            <string>False</string>
+                            <string>person_module</string>
+                            <string>_apply_</string>
+                            <string>person</string>
                           </tuple>
                         </value>
                     </item>
@@ -192,7 +185,7 @@ return "OKAY - New Person was created for "+str(context).replace("<","").replace
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_createPerson</string> </value>
+            <value> <string>ERP5Ecommerce_createCustomerAccount</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

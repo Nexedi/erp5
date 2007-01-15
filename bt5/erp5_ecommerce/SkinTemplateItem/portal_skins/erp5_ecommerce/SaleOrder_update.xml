@@ -206,36 +206,30 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-user_id = context.portal_membership.getAuthenticatedMember().getId()\n
 request = context.REQUEST\n
 website = context.getWebSiteValue()\n
 \n
-## determine customer if not such create an account\n
-if context.portal_membership.isAnonymousUser():\n
-  redirect_url = website.ERP5Ecommerce_newCustomerAccountForm.absolute_url()\n
-  request.RESPONSE.redirect(redirect_url + \'?editable_mode=1&portal_status_message=You need to create an account.\')\n
-  return\n
+shopping_cart_items = context.ERP5Ecommerce_getShoppingCartItemList()\n
+quantity = request.get(\'field_my_buy_quantity\', None)\n
 \n
-#context.debug(context.portal_membership.isAnonymousUser())\n
+## when we have one item in shoppping cart we get \n
+## quantity as a string rather as a list\n
+if isinstance(quantity, str):\n
+  quantity = [quantity]\n
 \n
-shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
+counter = 0\n
+for order_line in shopping_cart_items:\n
+  new_quantity = int(quantity[counter])\n
+  if new_quantity>=1:\n
+    order_line.setQuantity(new_quantity)\n
+  else:\n
+    ## remove it from shopping cart\n
+    shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
+    shopping_cart.manage_delObjects(order_line.getId())\n
+  counter += 1\n
 \n
-sale_order = context.ERP5Ecommerce_createSaleOrderFromShoppingCart(shopping_cart)\n
-context.debug("aaaaaaaaaaaaaaaa")\n
-\n
-## clean up shopping cart\n
-context.ERP5Ecommerce_getShoppingCart(reset=True)\n
-\n
-return \n
-\n
-## set as sale order owner\n
-shopping_cart_persistent.setDestination("person_module/"+user_id_number)\n
-\n
-\n
-## redirect\n
-redirect_url=context.REQUEST[\'HTTP_REFERER\']\n
-redirect_url=redirect_url[:redirect_url.index("/portal_sessions/shoppingcart")]+"/thank-you"\n
-context.REQUEST.RESPONSE.redirect(redirect_url)\n
+redirect_url = website.SaleOrder_viewAsWeb.absolute_url()\n
+request.RESPONSE.redirect(redirect_url + \'?portal_status_message=Your cart content was updated.\')\n
 
 
 ]]></string> </value>
@@ -291,16 +285,21 @@ context.REQUEST.RESPONSE.redirect(redirect_url)\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>user_id</string>
                             <string>request</string>
                             <string>website</string>
-                            <string>redirect_url</string>
-                            <string>shopping_cart</string>
-                            <string>sale_order</string>
-                            <string>True</string>
-                            <string>shopping_cart_persistent</string>
-                            <string>user_id_number</string>
+                            <string>shopping_cart_items</string>
+                            <string>None</string>
+                            <string>quantity</string>
+                            <string>isinstance</string>
+                            <string>str</string>
+                            <string>counter</string>
+                            <string>_getiter_</string>
+                            <string>order_line</string>
+                            <string>int</string>
                             <string>_getitem_</string>
+                            <string>new_quantity</string>
+                            <string>shopping_cart</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -317,11 +316,11 @@ context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>SaleOrder_update</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm order</string> </value>
+            <value> <string>Update Sale Order</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -48,33 +48,10 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shopping_cart here/ERP5Ecommerce_getShoppingCart;\n
-                       empty_cart python: len(here.ERP5Ecommerce_getShoppingCart().objectValues())==0">\n
-\n
-  <legend>My shopping cart</legend>\n
-\n
-  <ul tal:repeat="order_line shopping_cart/objectValues">\n
-    <li tal:define="resource python: here.restrictedTraverse(order_line.getResource());\n
-                    quantity python: int(order_line.getTotalQuantity());\n
-                    price    python: resource.getPrice();\n
-                    currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
-       <a href="" tal:attributes="href resource/absolute_url">\n
-         <b tal:content="order_line/getTitle"/> \n
-       </a><br/>\n
-       Price: <span tal:replace="price"/> <span tal:replace="currency"/><br/>\n
-       - quantity: <span tal:replace="quantity"/>\n
-    </li>\n
-  </ul>\n
-\n
-  <!--Total price: <span tal:replace="shopping_cart/getTotalPrice"/> -->\n
-  <form action="">\n
-  <input type="submit"\n
-         name="SaleOrder_confirmShopping:method"\n
-         tal:omit-tag="empty_cart"\n
-         value="Proceed to checkout"/>\n
-  </form>\n
-\n
-</tal:block>
+  <legend>\n
+    <span tal:content="here/portal_membership/getAuthenticatedMember"/> \n
+  </legend>\n
+
 
 ]]></string> </value>
         </item>
@@ -88,11 +65,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_miniShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_loginStatusWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Render cart content</string> </value>
+            <value> <string>Render login status</string> </value>
         </item>
       </dictionary>
     </pickle>

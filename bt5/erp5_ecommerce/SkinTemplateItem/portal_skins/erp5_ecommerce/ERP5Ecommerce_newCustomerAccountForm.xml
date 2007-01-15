@@ -65,6 +65,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -73,30 +74,46 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_description</string>
-                        <string>my_buy_button</string>
-                        <string>my_buy_quantity</string>
+                        <string>Title</string>
+                        <string>my_first_name</string>
+                        <string>my_last_name</string>
+                        <string>my_default_email_text</string>
+                        <string>my_default_telephone_text</string>
+                        <string>my_default_fax_text</string>
+                        <string>my_default_address_street_address</string>
+                        <string>my_default_address_city</string>
+                        <string>my_default_address_zip_code</string>
+                        <string>my_default_address_region</string>
+                        <string>my_reference</string>
+                        <string>my_password</string>
+                        <string>password_confirm</string>
+                        <string>submit_register</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -106,7 +123,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Product_viewAsShop</string> </value>
+            <value> <string>ERP5Ecommerce_newCustomerAccountForm</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,7 +131,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Product_view</string> </value>
+            <value> <string>newCustomerForm</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -130,7 +147,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Product shop view</string> </value>
+            <value> <string>Register new customer account</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

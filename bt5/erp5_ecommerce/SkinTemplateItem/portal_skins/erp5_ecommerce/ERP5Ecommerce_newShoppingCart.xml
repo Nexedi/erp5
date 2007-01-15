@@ -144,7 +144,7 @@ return order\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create new Shopping Cart</string> </value>
+            <value> <string>Create new shopping cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

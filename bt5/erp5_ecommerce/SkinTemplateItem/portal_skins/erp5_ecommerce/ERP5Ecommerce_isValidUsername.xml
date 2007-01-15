@@ -68,32 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-from DateTime import DateTime\n
-\n
-now = DateTime()\n
-request = context.REQUEST\n
-session_id = request.get(\'session_id\', None)\n
-expire_timeout_days = 7\n
-cache_factory = \'erp5_session_cache\'\n
-\n
-if session_id is None:\n
-  ## first call so generate session_id and send back via cookie\n
-  session_id = context.ERP5Ecommerce_generateSessionID(max_long=10)\n
-  request.RESPONSE.setCookie(\'session_id\', session_id, expires=(now +expire_timeout_days).fCommon(), path=\'/\')\n
-\n
-\n
-cache_method = CachingMethod(callable_object = context.ERP5Ecommerce_newShoppingCart, \\\n
-                             id = session_id, \\\n
-                             cache_factory=cache_factory)\n
-if reset:\n
-  ## reset cart \n
-  cache_method.delete(id=session_id, cache_factory=cache_factory)\n
-  return \n
-else:\n
-  ## take order for this session\n
-  shopping_cart = cache_method()\n
-  return shopping_cart\n
+            <value> <string>user_list = context.acl_users.searchUsers(id=editor, exact_match=True)\n
+return len(user_list)==0\n
 </string> </value>
         </item>
         <item>
@@ -109,8 +85,22 @@ else:\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>reset = False</string> </value>
+            <value> <string>editor, request</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,26 +120,19 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>reset</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>DateTime</string>
-                            <string>now</string>
+                            <string>editor</string>
+                            <string>request</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>None</string>
-                            <string>session_id</string>
-                            <string>expire_timeout_days</string>
-                            <string>cache_factory</string>
-                            <string>cache_method</string>
-                            <string>shopping_cart</string>
+                            <string>True</string>
+                            <string>user_list</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
@@ -161,18 +144,16 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_getShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_isValidUsername</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get Shopping Cart</string> </value>
+            <value> <string>Is valid username provided?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

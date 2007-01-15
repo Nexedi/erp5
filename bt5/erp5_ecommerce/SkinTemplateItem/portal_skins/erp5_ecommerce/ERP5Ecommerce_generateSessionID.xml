@@ -68,8 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>import string\n
-from random import choice\n
+            <value> <string>from random import choice\n
+import string\n
 return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
 </string> </value>
         </item>
@@ -114,9 +114,9 @@ return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
                         <value>
                           <tuple>
                             <string>max_long</string>
-                            <string>string</string>
                             <string>random</string>
                             <string>choice</string>
+                            <string>string</string>
                             <string>_getattr_</string>
                             <string>append</string>
                             <string>$append0</string>
