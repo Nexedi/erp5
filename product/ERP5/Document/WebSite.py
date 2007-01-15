@@ -121,6 +121,7 @@ class WebSite(WebSection):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.WebSite
+                      , PropertySheet.Predicate
                       )
 
     web_section_key = WEBSITE_KEY
