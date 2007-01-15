@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(deliveryLineType=\'Outgoing Classification Survey Line\')</string> </value>
+            <value> <string>python: here.getTotalPrice(portal_type=[\'Outgoing Classification Survey Line\',\'Cash Delivery Cell\'],fast=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

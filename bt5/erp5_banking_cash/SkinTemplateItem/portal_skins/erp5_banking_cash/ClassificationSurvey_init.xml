@@ -74,7 +74,7 @@ if len(site_list) == 0:\n
 \n
 site = site_list[0]\n
 site = context.Baobab_getVaultSite(site)\n
-context.setSource("%s/caveau/auxiliaire/encaisse_des_billets_a_ventiler_et_a_detruire" %(site.getRelativeUrl(),))\n
+context.setSource("%s/caveau/auxiliaire/encaisse_des_billets_ventiles_et_detruits" %(site.getRelativeUrl(),))\n
 </string> </value>
         </item>
         <item>

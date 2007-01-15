@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Integer_toString(int(here.getTotalPrice()))</string> </value>
+            <value> <string>python: here.Integer_toString(int(here.getTotalPrice(fast=0)))</string> </value>
         </item>
       </dictionary>
     </pickle>

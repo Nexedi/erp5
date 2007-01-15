@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(deliveryLineType=\'Monetary Issue Line\')</string> </value>
+            <value> <string>python: here.getTotalPrice(portal_type=[\'Monetary Issue Line\',\'Cash Delivery Cell\'],fast=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -70,24 +70,25 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = state_change[\'object\']\n
 bank_account = transaction.getDestinationPaymentValue()\n
-price = transaction.CurrencyPurchase_getQuantity()\n
-\n
+price = transaction.getSourceTotalAssetPrice()\n
 line = transaction.get(\'movement\')\n
-if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
+\n
+if ():  \n
+  if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
+    # This is a single currency operation, so it is not necessary to convert the price.\n
+    line.setSourceCredit(price)\n
+\n
+elif () :\n
+  line = transaction.get(\'movement\')\n
+  if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
   # This is a single currency operation, so it is not necessary to convert the price.\n
-  line.setSourceCredit(price)\n
+    line.setSourceDebit(price)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -168,27 +169,6 @@ if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

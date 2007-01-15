@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(deliveryLineType=\'Incoming Cash Sorting Line\')</string> </value>
+            <value> <string>python: here.getTotalPrice(portal_type=[\'Incoming Cash Sorting Line\',\'Cash Delivery Cell\'],fast=0)</string> </value>
         </item>
       </dictionary>
     </pickle>
