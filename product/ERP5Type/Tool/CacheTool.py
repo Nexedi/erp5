@@ -33,7 +33,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type import _dtmldir
-from Products.ERP5Type.Cache import CachingMethod, CacheFactory
+from Products.ERP5Type.Cache import * 
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
 from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
@@ -175,12 +175,13 @@ class CacheTool(BaseTool):
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache updated.')
     
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
-  def clearCache(self, REQUEST=None):
-    """ Clear whole cache structure """
+  def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,), REQUEST=None):
+    """ Clear cache factory. """
     ram_cache_root = self.getRamCacheRoot()
-    for cf in ram_cache_root:
-      for cp in ram_cache_root[cf].getCachePluginList():
-        cp.clearCache()
+    for cf_key in cache_factory_list:
+      if ram_cache_root.has_key(cf_key):	    
+        for cp in ram_cache_root[cf_key].getCachePluginList():
+          cp.clearCache()
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache cleared.')
 

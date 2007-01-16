@@ -243,9 +243,11 @@ def disableReadOnlyTransactionCache(context):
 ## TODO: Check if it make sense to keep them any more ##
 ########################################################
 
-def clearCache():
-  """Clear the whole cache. """
-  for cf_obj in CachingMethod.factories.values():
-    for cp in cf_obj.getCachePluginList():
-      cp.clearCache()
+def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
+  """Clear specified cache factory list."""
+  cache_storage = CachingMethod.factories
+  for cf_key in cache_factory_list:
+    if cache_storage.has_key(cf_key):	  
+      for cp in cache_storage[cf_key].getCachePluginList():
+        cp.clearCache()
 
