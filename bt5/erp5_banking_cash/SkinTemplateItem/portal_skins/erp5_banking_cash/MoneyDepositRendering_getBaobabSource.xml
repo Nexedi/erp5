@@ -69,12 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source = context.getSource()\n
-site = context.Baobab_getVaultSite(source)\n
-\n
-if \'devise\' in source:\n
-  return  "%s/caveau/auxiliaire/encaisse_des_devises/%s" %(site.getRelativeUrl(), source.split("/")[-1])\n
-else:\n
-  return  "%s/caveau/auxiliaire/%s" %(site.getRelativeUrl(), source.split("/")[-1])\n
+if source is not None:\n
+  source = \'%s/%s\' % (source,\'entrante\')\n
+return source\n
 </string> </value>
         </item>
         <item>
@@ -128,8 +125,7 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>source</string>
-                            <string>site</string>
-                            <string>_getitem_</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -146,7 +142,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MoneyDepositRendering_getBaobabDestination</string> </value>
+            <value> <string>MoneyDepositRendering_getBaobabSource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
