@@ -74,7 +74,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
-vault = transaction.getSource()\n
+vault = transaction.getBaobabSource()\n
 date = transaction.getStartDate()\n
 \n
 # check we are in an opened accounting day\n
