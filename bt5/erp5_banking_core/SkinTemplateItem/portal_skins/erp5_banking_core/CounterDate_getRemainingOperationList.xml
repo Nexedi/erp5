@@ -68,16 +68,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>site_uid = context.getSiteUid()\n
+            <value> <string>if site is not None:\n
+  site_uid = site.getUid()\n
+else:\n
+  site_uid = context.getSiteUid()\n
 operation_list = []\n
 if site_uid is not None:\n
   not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\')\n
-  portal_type_list = [x for x in context.getPortalDeliveryTypeList() if x != \'Cash Movement\']\n
-  operation_list.extend(context.Baobab_getRemainingOperationList(\n
+  portal_type_list = [x for x in context.getPortalDeliveryTypeList()]\n
+  document_list = context.Baobab_getRemainingOperationList(\n
                         site_uid=site_uid,\n
                         simulation_state=not_closed_state_list,\n
-                        portal_type=portal_type_list))\n
+                        portal_type=portal_type_list)\n
+  append = operation_list.append\n
+  for document in document_list:\n
+    # Cash movement in ordered stated are allowed\n
+    if document.getPortalType()==\'Cash Movement\':\n
+      if document.getSimulationState()==\'ordered\':\n
+        continue\n
+    append(document)\n
 \n
+def operation_sort(a,b):\n
+  result = cmp(a.getPortalType(),b.getPortalType())\n
+  if result==0:\n
+    result = cmp(a.getSourceReference(),b.getSourceReference())\n
+  return result\n
+\n
+operation_list.sort(operation_sort)\n
 \n
 return operation_list\n
 </string> </value>
@@ -102,7 +119,7 @@ return operation_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>site=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,24 +139,28 @@ return operation_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>site</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>site_uid</string>
-                            <string>operation_list</string>
                             <string>None</string>
+                            <string>_getattr_</string>
+                            <string>site_uid</string>
+                            <string>context</string>
+                            <string>operation_list</string>
                             <string>not_closed_state_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>portal_type_list</string>
+                            <string>document_list</string>
+                            <string>document</string>
+                            <string>operation_sort</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,7 +172,9 @@ return operation_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

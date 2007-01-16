@@ -71,32 +71,14 @@
             <value> <string># Make sure there is not any operation wich is not finished yet\n
 # This is usefull when we close a counter date\n
 \n
-not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\')\n
-if site is None:\n
-  root_site_url = context.Baobab_getUserAssignedRootSiteList()[0]\n
-  site = context.portal_categories.restrictedTraverse(root_site_url)\n
-root_site_uid = site.getUid()\n
-portal_type_list = [x for x in context.getPortalDeliveryTypeList() if x!=\'Cash Movement\']\n
-document_list = context.Baobab_getRemainingOperationList(site_uid=root_site_uid,\n
-                               simulation_state=not_closed_state_list,\n
-                               portal_type = portal_type_list)\n
-#document_list = [x.getObject() for x in context.portal_catalog(\n
-#                                                  simulation_state=not_closed_state_list,\n
-#                                                  default_source_uid=root_site_uid,\n
-#                                                  portal_type=portal_type_list)]\n
-#document_list.extend([x.getObject() for x in context.portal_catalog(\n
-#                                                  simulation_state=not_closed_state_list,\n
-#                                                  default_destination_uid=root_site_uid,\n
-#                                                  portal_type=portal_type_list)])\n
+document_list = context.CounterDate_getRemainingOperationList(site=site)\n
+\n
+\n
 for document in document_list:\n
-  # Cash movement in ordered stated are allowed\n
-  if document.getPortalType() in (\'Cash Movement\',):\n
-    if document.getSimulationState()==\'planned\':\n
-      continue\n
   from Products.ERP5Type.Message import Message\n
   from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
   portal_type = document.getTranslatedPortalType()\n
-  reference = document.getReference()\n
+  reference = document.getSourceReference()\n
   if reference is None:\n
     reference = Message(domain=\'ui\',message=\'Not defined\')\n
   message = Message(domain="ui", \n
@@ -152,19 +134,10 @@ for document in document_list:\n
                         <value>
                           <tuple>
                             <string>site</string>
-                            <string>not_closed_state_list</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>root_site_url</string>
-                            <string>root_site_uid</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>portal_type_list</string>
                             <string>document_list</string>
+                            <string>_getiter_</string>
                             <string>document</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
@@ -172,6 +145,7 @@ for document in document_list:\n
                             <string>ValidationFailed</string>
                             <string>portal_type</string>
                             <string>reference</string>
+                            <string>None</string>
                             <string>message</string>
                           </tuple>
                         </value>
