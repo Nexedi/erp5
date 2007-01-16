@@ -147,6 +147,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
                              'quantity': self.quantity_200}
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.document_vault = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
     self.gros_versement = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.counter_vault = self.paris.surface.gros_versement.guichet_1
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
@@ -237,7 +238,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(
                                          id='money_deposit_rendering_1',
                                          portal_type='Money Deposit Rendering',
-                                         source_value=self.gros_versement,
+                                         source_value=self.document_vault,
                                          description='test',
                                          source_total_asset_price=52400.0)
     # execute tic
@@ -249,7 +250,8 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # check its portal type
     self.assertEqual(self.money_deposit_rendering.getPortalType(), 'Money Deposit Rendering')
     # check that its source is auxiliaire
-    self.assertEqual(self.money_deposit_rendering.getSource(), 'site/testsite/paris/surface/gros_versement/guichet_1/encaisse_des_billets_et_monnaies/entrante')
+    self.assertEqual(self.money_deposit_rendering.getSource(), 'site/testsite/paris/surface/gros_versement/guichet_1/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.money_deposit_rendering.getBaobabSource(), 'site/testsite/paris/surface/gros_versement/guichet_1/encaisse_des_billets_et_monnaies/entrante')
     # check that its destination is gros_versement
     #self.assertEqual(self.money_deposit_rendering.getDestination(), 'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
 
@@ -287,7 +289,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is auxiliaire
-      self.assertEqual(cell.getSourceValue(), self.gros_versement)
+      self.assertEqual(cell.getBaobabSourceValue(), self.gros_versement)
       # check the destination vault is gros_versement
       #self.assertEqual(cell.getDestinationValue(), self.auxiliaire)
       if cell.getId() == 'movement_0_0_0':
