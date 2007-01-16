@@ -116,6 +116,12 @@
    <name>Add Cookie Crumblers</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add DCOracle2 Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Add DCOracle2 Stored Procedures</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Database Methods</name>
    <role>Manager</role>
@@ -351,6 +357,9 @@
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Change DCOracle2 Stored Procedures</name>
+  </permission>
   <permission type='tuple'>
    <name>Change DTML Documents</name>
    <role>Manager</role>
@@ -493,6 +502,9 @@
   </permission>
   <permission type='list'>
    <name>Edit target</name>
+  </permission>
+  <permission type='list'>
+   <name>Execute DCOracle2 Stored Procedures</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>
