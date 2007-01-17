@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string>zsqlbrain.py</string> </value>
+            <value> <string>ZSQLCatalog.zsqlbrain</string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
