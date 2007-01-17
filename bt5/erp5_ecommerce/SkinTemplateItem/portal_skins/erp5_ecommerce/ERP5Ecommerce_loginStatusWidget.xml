@@ -48,10 +48,41 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-  <legend>\n
-    <span tal:content="here/portal_membership/getAuthenticatedMember"/> \n
-  </legend>\n
-
+<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">\n
+\n
+  <tal:block tal:condition="isAnon">\n
+   <h4>You\'re not logged in.</h4>\n
+   I have an account:\n
+   <form action="">\n
+     <table>\n
+       <tr>\n
+         <td>Username:</td>\n
+         <td><input name="__ac_name" size="10" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></td>\n
+       </tr>\n
+       <tr>\n
+         <td>Password:</td>\n
+         <td><input type="password" name="__ac_password" size="10"/></td>\n
+       </tr>\n
+       <tr>\n
+         <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>\n
+             <input type="hidden" name="__ac_persistent" value="1"/>\n
+             <input type="submit" value="Login" name="ERP5Ecommerce_logged_in:method"/>\n
+         </td>\n
+       </tr>\n
+     </table>\n
+   </form>\n
+   \n
+   <a href="ERP5Ecommerce_newCustomerAccountForm?editable_mode=1"> I want to create an account</a>\n
+   <br/>\n
+\n
+  </tal:block>\n
+\n
+  <tal:block tal:condition="not: isAnon">\n
+    <h4>Hello, <span tal:replace="here/portal_membership/getAuthenticatedMember"/></h4>\n
+    <a href="ERP5Ecommerce_logout"> Log out</a><br/>\n
+  </tal:block>\n
+\n
+</tal:block>
 
 ]]></string> </value>
         </item>
@@ -69,7 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Render login status</string> </value>
+            <value> <string>Login status widget</string> </value>
         </item>
       </dictionary>
     </pickle>

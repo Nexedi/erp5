@@ -48,12 +48,14 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<div>\n
 <tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
                        empty_cart python: len(shopping_cart_items)==0;\n
-                       website here/getWebSiteValue;">\n
- \n
-  <p tal:condition = "empty_cart"> Your shopping cart is empty. </p>\n
+                       website here/getWebSiteValue;\n
+                       confirm_mode python: bool(options.get(\'confirm_mode\', False))">\n
+\n
+  <tal:block tal:condition = "empty_cart"> \n
+    <h3>Your shopping cart is empty.</h3>\n
+  </tal:block>\n
 \n
   <form action="" tal:condition = "not: empty_cart">\n
   <table>\n
@@ -64,16 +66,17 @@
     </thead>\n
     <tbody>  \n
       <tal:block tal:repeat="order_line shopping_cart_items">\n
-      <tr tal:define="resource python: website.restrictedTraverse(order_line.getResource());\n
-                      quantity python: int(order_line.getTotalQuantity());\n
+      <tr tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
+                      quantity python: int(order_line[\'quantity\']);\n
                       price    python: resource.getPrice();\n
-                      order_line_id order_line/getId;\n
+                      order_line_id python: shopping_cart_items.index(order_line);\n
            global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
          <td>\n
            <a href="" tal:attributes="href resource/absolute_url">\n
-             <b tal:content="order_line/getTitle"/> <br/>\n
-             <a tal:attributes="href python: \'%s?field_my_order_line_id=%s\' \n
-                                              %(website.SaleOrder_deleteShoppingCartItem.absolute_url(), \n
+             <b tal:content="resource/getTitle"/> <br/>\n
+             <a  tal:condition="not: confirm_mode"\n
+                 tal:attributes="href python: \'%s?field_my_order_line_id=%s\' \n
+                                              %(website.ERP5Ecommerce_deleteShoppingCartItem.absolute_url(), \n
                                                 order_line_id)"> \n
               Delete \n
              </a>\n
@@ -83,36 +86,27 @@
            <span tal:replace="price"/> <span tal:replace="currency"/>\n
          </td>\n
          <td>\n
-           <input type="input" \n
+           <input tal:condition="not: confirm_mode"\n
+                  type="input" \n
                   name="field_my_buy_quantity"\n
                   size="2"\n
                   tal:attributes ="value quantity"/>\n
+           <span tal:condition="confirm_mode" tal:content="quantity"/>\n
          </td>\n
       </tr>\n
     </tal:block>\n
-    <tr>\n
-      <td></td>\n
-      <td></td>\n
-      <td>\n
-        <br/>\n
-        <input type="submit" name="SaleOrder_update:method" value="Update"/>\n
-      </td>\n
     </tbody>\n
   </table>\n
   </form>\n
 \n
   <tal:block tal:condition = "not: empty_cart">\n
-    <br/><br/>\n
+    <br/>\n
     <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
        <span tal:replace="currency"/>\n
-    </b> <br/>\n
-    <form action="">\n
-      <input type="submit" value="Proceed to checkout" name="SaleOrder_confirmShopping:method">\n
-    </form> \n
-\n
+    </b> \n
+    <br/>\n
   </tal:block>\n
-</tal:block>\n
-</div>
+</tal:block>
 
 ]]></string> </value>
         </item>
@@ -130,7 +124,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Render custom cart content</string> </value>
+            <value> <string>Soppingcart content widget</string> </value>
         </item>
       </dictionary>
     </pickle>

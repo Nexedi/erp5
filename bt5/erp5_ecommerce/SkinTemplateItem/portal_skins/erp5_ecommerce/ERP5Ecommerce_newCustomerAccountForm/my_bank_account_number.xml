@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>EmailField</string>
+          <string>StringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_email_text</string> </value>
+            <value> <string>my_bank_account_number</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -23,10 +23,6 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_email</string> </key>
-                    <value> <string>You did not enter an email address.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -215,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -227,7 +223,9 @@
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -247,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Email</string> </value>
+                    <value> <string>Card number</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -263,6 +261,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>ERP5Ecommerce_isValidCreditCardNumber</string> </value>
         </item>
       </dictionary>
     </pickle>

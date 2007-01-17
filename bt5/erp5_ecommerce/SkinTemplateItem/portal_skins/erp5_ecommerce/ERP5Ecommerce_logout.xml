@@ -23,6 +23,126 @@
             <value> <int>3</int> </value>
         </item>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_bindings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_cache_settings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_permissions_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_WebDAV_Locks_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_properties_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Take_ownership_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Undo_changes_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_management_screens_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Lock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Unlock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
@@ -68,41 +188,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Document import newTempOrderLine\n
+            <value> <string>REQUEST = context.REQUEST\n
+if REQUEST.has_key(\'portal_skin\'):\n
+   context.portal_skins.clearSkinCookie()\n
 \n
-request = context.REQUEST\n
-product = context\n
-quantity = request.get(\'field_my_buy_quantity\', 1)\n
-shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
+REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
 \n
-## check if we don\'t have already such a product in cart\n
-line_found=False\n
-for order_line in shopping_cart.objectValues():\n
-  if order_line.getObject().getResource() == product.getRelativeUrl():\n
-    new_quantity = order_line.getQuantity()+int(quantity)\n
-    if new_quantity<=0:\n
-      shopping_cart.deleteContent(order_line.getId())\n
-    else:\n
-      order_line.setQuantity(new_quantity)\n
-    line_found=True\n
-    break\n
-\n
-if line_found == False:\n
-  ## new Product, add to shopping cart\n
-  my_orderline= shopping_cart.newContent(portal_type=\'Sale Order Line\', \\\n
-                                         title = product.getTitle(), \\\n
-                                         resource = product.getRelativeUrl(), \\\n
-                                         quantity=quantity)\n
-\n
-redirect_url = request.get(\'HTTP_REFERER\', context.absolute_url())\n
-redirect_url = redirect_url.split(\'?\')[0]\n
-#redirect_url = context.getWebSectionValue().absolute_url()\n
-request.RESPONSE.redirect("%s?portal_status_message=Added to cart." %redirect_url)\n
-
-
-]]></string> </value>
+translateString = context.Base_translateString\n
+context.Base_redirect(\'view\', \\\n
+                      editable_mode=False, \\\n
+                      keep_items={\'portal_status_message\': translateString("You have been logged out.", mapping = dict())})\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -119,6 +215,12 @@ request.RESPONSE.redirect("%s?portal_status_message=Added to cart." %redirect_ur
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,24 +246,12 @@ request.RESPONSE.redirect("%s?portal_status_message=Added to cart." %redirect_ur
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOrderLine</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>product</string>
-                            <string>quantity</string>
-                            <string>shopping_cart</string>
+                            <string>REQUEST</string>
+                            <string>translateString</string>
                             <string>False</string>
-                            <string>line_found</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
-                            <string>int</string>
-                            <string>new_quantity</string>
-                            <string>True</string>
-                            <string>my_orderline</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -178,11 +268,11 @@ request.RESPONSE.redirect("%s?portal_status_message=Added to cart." %redirect_ur
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Product_addToShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_logout</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Add product to shopping cart</string> </value>
+            <value> <string>Logout handler</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

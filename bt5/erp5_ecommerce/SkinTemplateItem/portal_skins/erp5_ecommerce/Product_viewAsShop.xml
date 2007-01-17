@@ -90,8 +90,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
+                        <string>my_price</string>
                         <string>my_buy_button</string>
-                        <string>my_buy_quantity</string>
                       </list>
                     </value>
                 </item>

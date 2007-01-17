@@ -68,15 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order_module = context.getDefaultModule(\'Sale Order\')\n
+            <value> <string>user_id = context.portal_membership.getAuthenticatedMember().getId()\n
+user_list = context.person_module.portal_catalog(reference=user_id, \\\n
+                                                 portal_type="Person")\n
+user_object = user_list[0].getObject()\n
+\n
+order_module = context.getPortalObject().sale_order_module\n
 sale_order = order_module.newContent(portal_type=\'Sale Order\')\n
+sale_order.setDestination(user_object.getRelativeUrl())\n
 \n
-for order_line in shopping_cart.objectValues():\n
+for order_line in shopping_cart:\n
+  resource = context.restrictedTraverse(order_line[\'resource\'])\n
   sale_order.newContent(portal_type = \'Sale Order Line\',\n
-                        resource = order_line.getResource(),\n
-                        quantity = order_line.getQuantity(),\n
-                        title = order_line.getTitle())\n
-\n
+                        resource = order_line[\'resource\'],\n
+                        quantity = order_line[\'quantity\'],\n
+                        price = resource.getPrice(),\n
+                        title = resource.getTitle())\n
 return sale_order\n
 </string> </value>
         </item>
@@ -100,6 +107,7 @@ return sale_order\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -131,10 +139,15 @@ return sale_order\n
                             <string>shopping_cart</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>user_id</string>
+                            <string>user_list</string>
+                            <string>_getitem_</string>
+                            <string>user_object</string>
                             <string>order_module</string>
                             <string>sale_order</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
+                            <string>resource</string>
                           </tuple>
                         </value>
                     </item>

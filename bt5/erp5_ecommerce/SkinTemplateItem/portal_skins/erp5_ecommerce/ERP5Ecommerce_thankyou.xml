@@ -88,8 +88,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>shopping_cart</string>
-                        <string>submit</string>
+                        <string>my_thankyou</string>
                       </list>
                     </value>
                 </item>
@@ -104,7 +103,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewAsWeb</string> </value>
+            <value> <string>ERP5Ecommerce_thankyou</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,7 +127,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Edit shopping cart</string> </value>
+            <value> <string>Thank you</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -68,15 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Why can\'t we use getTotalPrice on temporary Order object? """\n
-total = 0.0\n
+            <value> <string>total = 0.0\n
 shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
-for order_line in shopping_cart.objectValues():\n
-  try:\n
-    total += order_line.getPrice() * order_line.getTotalQuantity()\n
-  except RuntimeError:\n
-    ## why this happens is a mistery ?\n
-    pass\n
+for order_line in shopping_cart:\n
+  resource = context.restrictedTraverse(order_line[\'resource\'])\n
+  total += resource.getPrice() * order_line[\'quantity\']\n
 return str(total)\n
 </string> </value>
         </item>
@@ -134,7 +130,8 @@ return str(total)\n
                             <string>shopping_cart</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
-                            <string>RuntimeError</string>
+                            <string>_getitem_</string>
+                            <string>resource</string>
                             <string>str</string>
                           </tuple>
                         </value>
@@ -156,7 +153,7 @@ return str(total)\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Calculate total price of items in shopping cart</string> </value>
+            <value> <string>Calculate total price for items in shopping cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -65,7 +65,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -82,13 +81,13 @@
                 <item>
                     <key>                 <string>center</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>hidden</string> </key>
-                    <value>
-                      <list/>
+                      <list>
+                        <string>my_bank_account_holder_name</string>
+                        <string>my_bank_account_number</string>
+                        <string>my_bank_code</string>
+                        <string>my_stop_date</string>
+                        <string>submit_register</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -108,7 +107,6 @@
                         <string>my_reference</string>
                         <string>my_password</string>
                         <string>password_confirm</string>
-                        <string>submit_register</string>
                       </list>
                     </value>
                 </item>
@@ -147,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Register new customer account</string> </value>
+            <value> <string>New customer account</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

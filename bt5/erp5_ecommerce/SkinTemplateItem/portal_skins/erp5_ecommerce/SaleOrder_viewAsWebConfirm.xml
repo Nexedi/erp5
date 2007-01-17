@@ -65,7 +65,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -74,45 +73,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>Title</string>
-                        <string>first_name</string>
-                        <string>last_name</string>
-                        <string>email</string>
-                        <string>telephone</string>
-                        <string>fax</string>
-                        <string>address</string>
-                        <string>zip</string>
-                        <string>city</string>
-                        <string>country</string>
-                        <string>password</string>
-                        <string>repeat_password</string>
-                        <string>submit_register</string>
+                        <string>shopping_cart</string>
+                        <string>submit</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -122,7 +104,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_newCustomerForm</string> </value>
+            <value> <string>SaleOrder_viewAsWebConfirm</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +112,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>newCustomerForm</string> </value>
+            <value> <string>Product_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -146,7 +128,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Register New Customer</string> </value>
+            <value> <string>Confirm order</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

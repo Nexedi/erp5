@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
-return shopping_cart.objectValues(\'ERP5 Order Line\')\n
+            <value> <string>return context.ERP5Ecommerce_getShoppingCart()\n
 </string> </value>
         </item>
         <item>
@@ -115,7 +114,6 @@ return shopping_cart.objectValues(\'ERP5 Order Line\')\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>shopping_cart</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,7 +134,7 @@ return shopping_cart.objectValues(\'ERP5 Order Line\')\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Getshopping cart items</string> </value>
+            <value> <string>Get shopping cart items</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

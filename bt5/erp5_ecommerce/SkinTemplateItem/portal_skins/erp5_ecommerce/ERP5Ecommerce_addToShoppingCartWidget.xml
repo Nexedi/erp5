@@ -48,36 +48,18 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
-                       empty_cart python: len(shopping_cart_items)==0;\n
-                       website here/getWebSiteValue;">\n
-\n
-  <ul tal:repeat="order_line shopping_cart_items">\n
-    <li tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
-                    quantity python: int(order_line[\'quantity\']);\n
-                    price    python: resource.getPrice();\n
-         global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
-\n
-       <a href="" tal:attributes="href resource/absolute_url">\n
-         <b tal:content="resource/getTitle"/> \n
-       </a>\n
-       <br/>\n
-       Price: <span tal:replace="price"/> <span tal:replace="currency"/>\n
-       <br/>\n
-       - quantity: <span tal:replace="quantity"/>\n
-    </li>\n
-  </ul> \n
-\n
-  <tal:block tal:condition = "not: empty_cart">\n
-    <br/>\n
-    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
-       <span tal:replace="currency"/>\n
-    </b><br/>\n
-    <a href="SaleOrder_viewAsWeb?editable_mode=1">Edit Shopping Cart</a><br/>\n
-    <a href="SaleOrder_confirmShopping?editable_mode=1">Proceed to checkout</a>\n
+<form action="">\n
+<select name="field_my_buy_quantity">\n
+  <tal:block tal:repeat="index python: range(1,31)">\n
+    <option tal:content="index" tal:attributes="value index"/>\n
   </tal:block>\n
+</select>\n
 \n
-</tal:block>
+<input type="submit"\n
+       class="save"\n
+       name="ERP5Ecommerce_addToShoppingCart:method" \n
+       value="Add to Shopping Cart"/>\n
+</form>
 
 ]]></string> </value>
         </item>
@@ -91,11 +73,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_shoppingCartWidget</string> </value>
+            <value> <string>ERP5Ecommerce_addToShoppingCartWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Mini shopping cart widget</string> </value>
+            <value> <string>Add to cart button widget</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -206,11 +206,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-request = context.REQUEST\n
-website = context.getWebSiteValue()\n
-\n
+translateString = context.Base_translateString\n
 shopping_cart_items = context.ERP5Ecommerce_getShoppingCartItemList()\n
-quantity = request.get(\'field_my_buy_quantity\', None)\n
+shopping_cart = shopping_cart_items\n
+quantity = field_my_buy_quantity \n
 \n
 ## when we have one item in shoppping cart we get \n
 ## quantity as a string rather as a list\n
@@ -221,15 +220,19 @@ counter = 0\n
 for order_line in shopping_cart_items:\n
   new_quantity = int(quantity[counter])\n
   if new_quantity>=1:\n
-    order_line.setQuantity(new_quantity)\n
+    order_line[\'quantity\'] = new_quantity\n
   else:\n
     ## remove it from shopping cart\n
-    shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
-    shopping_cart.manage_delObjects(order_line.getId())\n
+    del shopping_cart_items[counter]\n
   counter += 1\n
 \n
-redirect_url = website.SaleOrder_viewAsWeb.absolute_url()\n
-request.RESPONSE.redirect(redirect_url + \'?portal_status_message=Your cart content was updated.\')\n
+## update back cache so we have consistent results between cache plugins\n
+context.ERP5Ecommerce_getShoppingCart(action=\'update\', \\\n
+                                      new_shopping_cart = shopping_cart)\n
+\n
+context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
+                      editable_mode=True, \\\n
+                      keep_items={\'portal_status_message\': translateString("Your cart content updated.", mapping = dict())})\n
 
 
 ]]></string> </value>
@@ -248,7 +251,7 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=Your cart cont
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>field_my_buy_quantity=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -277,18 +280,18 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=Your cart cont
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>field_my_buy_quantity</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>website</string>
+                            <string>translateString</string>
                             <string>shopping_cart_items</string>
-                            <string>None</string>
+                            <string>shopping_cart</string>
                             <string>quantity</string>
                             <string>isinstance</string>
                             <string>str</string>
@@ -298,8 +301,9 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=Your cart cont
                             <string>int</string>
                             <string>_getitem_</string>
                             <string>new_quantity</string>
-                            <string>shopping_cart</string>
-                            <string>redirect_url</string>
+                            <string>_write_</string>
+                            <string>True</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -311,16 +315,18 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=Your cart cont
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_update</string> </value>
+            <value> <string>ERP5Ecommerce_updateShoppingCart</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update Sale Order</string> </value>
+            <value> <string>Update shopping cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

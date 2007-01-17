@@ -70,18 +70,27 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.Formulator.Errors import FormValidationError\n
 \n
-form = context.getWebSectionValue().ERP5Ecommerce_newCustomerAccountForm\n
+form = context.ERP5Ecommerce_newCustomerAccountForm\n
 request = context.REQUEST\n
 form_kw = request.form\n
 person_kw = {}\n
 field_prefix = \'field_my_\'\n
+translateString = context.Base_translateString\n
 \n
 for key in form_kw.keys():\n
   if key.startswith(field_prefix):\n
     person_kw[key.replace(field_prefix, \'\')] = form_kw[key]\n
+person_kw[\'career_role\'] = \'internal\'\n
 \n
+## get credit card account details\n
+bank_kw = {}\n
+for key in (\'bank_code\', \'bank_account_holder_name\', \'bank_account_number\',):\n
+  bank_kw[key] = person_kw.pop(key)\n
+bank_kw[\'stop_date\'] = \'%s/%s/%s\' %(request.get(\'subfield_field_my_stop_date_year\', \'\'), \\\n
+                                    request.get(\'subfield_field_my_stop_date_month\', \'\'), \\\n
+                                    request.get(\'subfield_field_my_stop_date_month\', \'\') )\n
 try:\n
-  form.validate_all_to_request(request)\n
+  kw = form.validate_all_to_request(request)\n
   validated = True\n
 except FormValidationError, validation_errors:\n
   validated = False\n
@@ -94,10 +103,18 @@ person_module = context.person_module\n
 person = person_module.newContent(portal_type=\'Person\', **person_kw)\n
 person.validate()\n
 \n
-## TODO: create an assignment\n
-return \n
+## save credit card information\n
+credit_card = person.newContent(portal_type=\'Credit Card\')\n
+credit_card.edit(**bank_kw)\n
 \n
-context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentUrl()+"/person-created")\n
+person.immediateReindexObject()\n
+\n
+context.Base_redirect(\'ERP5Ecommerce_logged_in\', \\\n
+                      editable_mode=False, \\\n
+                      keep_items={\'portal_status_message\': translateString("Your account was created.", mapping = dict()),\n
+                                  \'came_from\': context.absolute_url(),\n
+                                  \'__ac_name\': person_kw[\'reference\'],\n
+                                  \'__ac_password\': person_kw[\'password\']})\n
 </string> </value>
         </item>
         <item>
@@ -158,10 +175,13 @@ context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentUrl()+"/person-crea
                             <string>form_kw</string>
                             <string>person_kw</string>
                             <string>field_prefix</string>
+                            <string>translateString</string>
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>bank_kw</string>
+                            <string>kw</string>
                             <string>True</string>
                             <string>validated</string>
                             <string>validation_errors</string>
@@ -169,6 +189,8 @@ context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentUrl()+"/person-crea
                             <string>person_module</string>
                             <string>_apply_</string>
                             <string>person</string>
+                            <string>credit_card</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

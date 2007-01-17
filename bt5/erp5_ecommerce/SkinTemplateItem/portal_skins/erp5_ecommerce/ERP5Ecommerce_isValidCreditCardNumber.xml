@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return value\n
+            <value> <string>credit_card = request.get(\'field_my_bank_account_number\', \'\')\n
+if credit_card == \'\':\n
+  return False\n
+else:\n
+  ## validate it to an external system, using also card holder name\n
+  return True\n
 </string> </value>
         </item>
         <item>
@@ -84,16 +89,14 @@
             </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string>value</string> </value>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <key> <string>_params</string> </key>
+            <value> <string>editor, request</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,13 +116,18 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>value</string>
+                            <string>editor</string>
+                            <string>request</string>
+                            <string>_getattr_</string>
+                            <string>credit_card</string>
+                            <string>False</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,11 +144,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_newShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_isValidCreditCardNumber</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create new shopping cart</string> </value>
+            <value> <string>Is valid credit card number specified?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

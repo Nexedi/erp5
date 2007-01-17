@@ -45,38 +45,29 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
-                       empty_cart python: len(shopping_cart_items)==0;\n
-                       website here/getWebSiteValue;">\n
-\n
-  <ul tal:repeat="order_line shopping_cart_items">\n
-    <li tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
-                    quantity python: int(order_line[\'quantity\']);\n
-                    price    python: resource.getPrice();\n
-         global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
-\n
-       <a href="" tal:attributes="href resource/absolute_url">\n
-         <b tal:content="resource/getTitle"/> \n
-       </a>\n
-       <br/>\n
-       Price: <span tal:replace="price"/> <span tal:replace="currency"/>\n
-       <br/>\n
-       - quantity: <span tal:replace="quantity"/>\n
-    </li>\n
-  </ul> \n
-\n
-  <tal:block tal:condition = "not: empty_cart">\n
-    <br/>\n
-    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
-       <span tal:replace="currency"/>\n
-    </b><br/>\n
-    <a href="SaleOrder_viewAsWeb?editable_mode=1">Edit Shopping Cart</a><br/>\n
-    <a href="SaleOrder_confirmShopping?editable_mode=1">Proceed to checkout</a>\n
+<tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
+           tal:define="dummy here/setupCurrentSkin;" />\n
+<tal:block tal:define="response request/RESPONSE;\n
+                       mtool here/portal_membership;\n
+                       isAnon mtool/isAnonymousUser|nothing;">\n
+  <tal:block tal:condition="isAnon">\n
+    <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
+                           url python: \'%s?portal_status_message=%s\' % (request.get(\'came_from\'), here.getPortalObject().Localizer.translate(\'ui\', \'Login+and/or+password+is+incorrect.\'));\n
+                           dummy python: response.redirect(url);"/>\n
   </tal:block>\n
-\n
+  <tal:block tal:condition="not: isAnon">\n
+    <tal:block tal:define="came_from python: request.get(\'came_from\') or here.portal_url() + \'/view\';\n
+                           dummy python: response.redirect(came_from);" />\n
+  </tal:block>\n
 </tal:block>
 
 ]]></string> </value>
@@ -91,11 +82,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_shoppingCartWidget</string> </value>
+            <value> <string>ERP5Ecommerce_logged_in</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Mini shopping cart widget</string> </value>
+            <value> <string>Login Handler</string> </value>
         </item>
       </dictionary>
     </pickle>

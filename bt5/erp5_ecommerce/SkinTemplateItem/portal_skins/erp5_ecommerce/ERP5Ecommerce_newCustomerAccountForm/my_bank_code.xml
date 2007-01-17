@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>EmailField</string>
+          <string>RadioField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_email_text</string> </value>
+            <value> <string>my_bank_code</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,16 +25,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>not_email</string> </key>
-                    <value> <string>You did not enter an email address.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -60,14 +56,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,7 +68,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,7 +80,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -97,10 +93,6 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -135,14 +127,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -155,7 +139,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -163,7 +151,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -172,10 +164,6 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -210,14 +198,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>30</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -230,16 +210,35 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Visa</string>
+                          <string>Visa</string>
+                        </tuple>
+                        <tuple>
+                          <string>Master</string>
+                          <string>Master</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>vertical</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -247,11 +246,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Email</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Credit card type</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

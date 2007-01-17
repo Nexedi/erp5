@@ -205,16 +205,24 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
-website = context.getWebSiteValue()\n
-shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
-if field_my_order_line_id is not None:\n
-  shopping_cart.manage_delObjects(field_my_order_line_id)\n
-  portal_status_message = "Successfully removed from shopping cart."\n
-else:\n
-  portal_status_message = "Please select an item."\n
+isAnon = context.portal_membership.isAnonymousUser()\n
+translateString = context.Base_translateString\n
 \n
-redirect_url = website.SaleOrder_viewAsWeb.absolute_url()\n
-request.RESPONSE.redirect(redirect_url + \'?portal_status_message=%s\' %portal_status_message)\n
+if isAnon:\n
+  ## create first an account for user\n
+  context.Base_redirect(\'ERP5Ecommerce_newCustomerAccountForm\', \\\n
+                      editable_mode=True, \\\n
+                      keep_items={\'portal_status_message\': translateString("You need to create an account.", mapping = dict())})\n
+  return\n
+\n
+shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
+sale_order = context.ERP5Ecommerce_createSaleOrderFromShoppingCart(shopping_cart)\n
+\n
+## clean up shopping cart\n
+context.ERP5Ecommerce_getShoppingCart(action=\'reset\')\n
+\n
+context.Base_redirect(\'ERP5Ecommerce_thankyou\', \\\n
+                      editable_mode=False)\n
 </string> </value>
         </item>
         <item>
@@ -231,7 +239,7 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=%s\' %portal_s
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_my_order_line_id = None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -260,21 +268,22 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=%s\' %portal_s
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>field_my_order_line_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>website</string>
+                            <string>isAnon</string>
+                            <string>translateString</string>
+                            <string>True</string>
+                            <string>dict</string>
                             <string>shopping_cart</string>
-                            <string>None</string>
-                            <string>portal_status_message</string>
-                            <string>redirect_url</string>
+                            <string>sale_order</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -286,18 +295,16 @@ request.RESPONSE.redirect(redirect_url + \'?portal_status_message=%s\' %portal_s
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_deleteShoppingCartItem</string> </value>
+            <value> <string>SaleOrder_finalizeShopping</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delete a shopping cart item</string> </value>
+            <value> <string>Finalize order</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

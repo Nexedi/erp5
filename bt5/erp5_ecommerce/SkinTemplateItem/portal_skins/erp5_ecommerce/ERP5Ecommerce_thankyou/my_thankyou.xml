@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_buy_button</string> </value>
+            <value> <string>my_thankyou</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,9 +71,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -112,7 +110,11 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<h3>Thank you for using our online shop! Your order will be processed now.</h3>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -136,29 +138,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Add to cart</string> </value>
+                    <value> <string>Thank you</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/ERP5Ecommerce_addToShoppingCartWidget</string> </value>
         </item>
       </dictionary>
     </pickle>
