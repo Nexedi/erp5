@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document.gif</string> </value>
+            <value> <string>web_section.png</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -115,6 +115,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>

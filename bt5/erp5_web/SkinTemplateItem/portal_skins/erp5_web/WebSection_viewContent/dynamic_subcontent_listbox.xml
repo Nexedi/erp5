@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>dynamic_subcontent_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -45,6 +45,10 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -187,6 +191,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -310,10 +318,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Base_viewSearchResultList</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>all_columns</string> </key>
                     <value>
                       <list/>
@@ -334,10 +338,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
@@ -346,37 +346,27 @@
                           <string>Short Title</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>translated_validation_state_title</string>
+                          <string>Validation State</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>version</string>
-                          <string>Version</string>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
                         </tuple>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>caption</string>
-                          <string>Caption</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -399,17 +389,12 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>publication_section</string>
-                          <string>publication_section</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -418,12 +403,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>caption</string>
-                          <string>Caption</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -435,18 +415,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
                     </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -454,20 +426,16 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
                     <value> <string>list</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_cookie</string> </key>
-                    <value> <string>FOLDER_LIST</string> </value>
-                </item>
-                <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -483,7 +451,16 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Web Page</string>
+                          <string>Web Page</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Section</string>
+                          <string>Web Section</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -497,12 +474,8 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>reverse</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -512,16 +485,21 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>image_selection</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Short Title</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -542,17 +520,34 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Images</string> </value>
+                    <value> <string>Section Content</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                      </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -574,26 +569,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>countFolder</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>getDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

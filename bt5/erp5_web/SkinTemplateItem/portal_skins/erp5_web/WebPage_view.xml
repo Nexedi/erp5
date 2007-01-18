@@ -64,7 +64,7 @@
                 <string>left (Page Properties)</string>
                 <string>right (Publication)</string>
                 <string>center</string>
-                <string>bottom</string>
+                <string>bottom (Content)</string>
               </list>
             </value>
         </item>
@@ -73,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom (Content)</string> </key>
                     <value>
                       <list>
                         <string>my_text_content</string>

@@ -83,7 +83,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column (Contents)</string> </key>
+                    <key> <string>left column (Contents)</string> </key>
                     <value>
                       <list>
                         <string>subsection_list</string>
@@ -92,7 +92,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column (Debug)</string> </key>
+                    <key> <string>left column (Debug)</string> </key>
                     <value>
                       <list>
                         <string>applicable_layout</string>
@@ -100,7 +100,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column (Navigation)</string> </key>
+                    <key> <string>left column (Navigation)</string> </key>
                     <value>
                       <list>
                         <string>language_selector</string>
@@ -109,7 +109,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column (Search)</string> </key>
+                    <key> <string>left column (Search)</string> </key>
                     <value>
                       <list>
                         <string>your_search_text</string>
@@ -118,7 +118,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column transparent (Logo)</string> </key>
+                    <key> <string>left column transparent (Logo)</string> </key>
                     <value>
                       <list>
                         <string>website_logo</string>
@@ -126,7 +126,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right column (Demo)</string> </key>
+                    <key> <string>right column (Demo)</string> </key>
                     <value>
                       <list>
                         <string>about_box</string>
@@ -134,7 +134,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right column (Toolbox)</string> </key>
+                    <key> <string>right column (Toolbox)</string> </key>
                     <value>
                       <list>
                         <string>admin_toolbox</string>

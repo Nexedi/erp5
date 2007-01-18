@@ -118,7 +118,7 @@ return context.Base_cloneContent(clone=0)\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

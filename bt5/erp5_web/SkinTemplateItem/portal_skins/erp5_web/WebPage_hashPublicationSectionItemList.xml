@@ -68,68 +68,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
- This script is part of ERP5 Web\n
-\n
- ERP5 Web is a business template of ERP5 which provides a way\n
- to create web sites which can display selected\n
- ERP5 contents through multiple custom web layouts.\n
-\n
- This script returns a list of document values (ie. objects or brains)\n
- which are considered as part of this section. It can be\n
- a list of web pages (usual case), a list of products\n
- (online catalog), a list of tenders (e-government), etc.\n
-\n
- The default implementation provided here consists in\n
- listing documents which meet the predicate defined\n
- by the section (ex. which are part of a given publication_section)\n
- and which are in "published" state and of a "Web Page" portal_type.\n
-\n
- It should be noted that document selection should be implemented\n
- as much as possible using the Domain API.\n
-\n
- This script can be changed to meet other requirements. For example\n
- one may want to display a list of products in a section. In this case,\n
- this script must return a list of documents of type "Product"\n
- with a "validated" state and in the appropriate product family.\n
-\n
- This script is intended to be overriden by creating a new script\n
- within the Web Section or Web Site instance. It can be also\n
- customised per portal type within portal_skins. Customisation\n
- thourgh local scripts is recommended to host multiple sites\n
- on the same ERP5Site instance.\n
-\n
- The API uses **kw so that it is possible to extend the behaviour of\n
- the default script with advanced features (ex. group by reference,\n
- by version, only select a specific publication state, etc.).\n
-\n
- Here are some suggestions which can either be implemented using\n
- SQL (group_by, order_by) or using additional python scripting\n
- if this is compatible with data size.\n
-\n
- SUGGESTIONS:\n
-\n
- - Prevent showing duplicate references\n
- \n
- - Add documents associated to this section through \'aggregate\'.\n
-\n
- - Display only the latest version and the appropriate language.\n
+            <value> <string encoding="cdata"><![CDATA[
+
 """\n
-portal_catalog = container.portal_catalog\n
+  This script repeats publication section items\n
+  in such way that it is possible to select multiple\n
+  publication sections for a single web page.\n
+"""\n
+# Initialise result\n
+sub_field_list = []\n
 \n
-# First find the Web Section or Web Site we belong to\n
-current_section = context.getWebSectionValue()\n
+# Maximum size of the MultiListField\n
+default_sub_field_property_dict.update({\n
+  \'title\': \'Publication\',\n
+  \'required\': 0,\n
+  \'field_type\': \'ListField\',\n
+  \'size\': 1,\n
+  \'item_list\': [(\'\', \'\')] + item_list,\n
+  \'value\': None,\n
+})\n
 \n
-# Build the list of parameters\n
-if not kw.has_key(\'validation_state\'):\n
-  kw[\'validation_state\'] = [\'draft\', \'submitted\', \'shared\',\n
-                            \'released\', \'published\', \'restricted\']\n
-if not kw.has_key(\'order_by\'):\n
-  kw[\'order_by\'] = [(\'int_index\', \'descending\')]\n
+z = 0\n
+for i in range(1):\n
+  new_dict = default_sub_field_property_dict.copy()\n
+  new_dict[\'title\'] = \'&nbsp;\'\n
+  new_dict[\'key\'] = str(z)\n
+  z += 1\n
+  sub_field_list.append(new_dict)\n
 \n
-# Return the list of matching documents for the given states\n
-return current_section.searchResults(**kw)\n
-</string> </value>
+\n
+section_list = context.getPublicationSectionList()\n
+section_list.reverse()\n
+for value in section_list:\n
+  new_dict = default_sub_field_property_dict.copy()\n
+  new_dict[\'value\'] = value\n
+  new_dict[\'title\'] = \'&nbsp;\'\n
+  new_dict[\'key\'] = str(z)\n
+  z += 1\n
+  sub_field_list.append(new_dict)\n
+\n
+new_dict[\'title\'] = \'Publication Section\'\n
+sub_field_list.reverse()\n
+return sub_field_list\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -144,14 +127,8 @@ return current_section.searchResults(**kw)\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -171,20 +148,29 @@ return current_section.searchResults(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
+                            <string>item_list</string>
+                            <string>value_list</string>
+                            <string>default_sub_field_property_dict</string>
+                            <string>is_right_display</string>
+                            <string>sub_field_list</string>
                             <string>_getattr_</string>
-                            <string>container</string>
-                            <string>portal_catalog</string>
-                            <string>context</string>
-                            <string>current_section</string>
+                            <string>None</string>
+                            <string>z</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>new_dict</string>
                             <string>_write_</string>
-                            <string>_apply_</string>
+                            <string>str</string>
+                            <string>context</string>
+                            <string>section_list</string>
+                            <string>value</string>
                           </tuple>
                         </value>
                     </item>
@@ -196,12 +182,15 @@ return current_section.searchResults(**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <dictionary/>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getDocumentValueList</string> </value>
+            <value> <string>WebPage_hashPublicationSectionItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,6 +61,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>left</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -70,10 +71,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>dynamic_subcontent_listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
@@ -82,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewContentList</string> </value>
+            <value> <string>WebSection_viewContent</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -94,7 +103,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

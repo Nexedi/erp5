@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Document</string> </value>
+            <value> <string>ERP5 Text Document</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDocument</string> </value>
+            <value> <string>addTextDocument</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -98,6 +98,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>

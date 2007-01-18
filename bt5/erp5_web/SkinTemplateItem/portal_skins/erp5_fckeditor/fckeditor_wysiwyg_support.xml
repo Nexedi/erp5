@@ -67,7 +67,7 @@
                        isRegisteredPA     python: test(here.Title() and here.meta_type==\'PloneArticle\', 1,0);\n
                        path_user          python: test(isInFactory or isRegisteredFolder or isRegisteredPA,request.URLPATH1,request.URLPATH2);\n
                        cols               cols | python: 40;\n
-                       rows               rows | python: 20;\n
+                       rows               rows | python: 18;\n
                        editor_width       width | python: int(cols * 19.5);\n
                        editor_height      height | python: int(rows * 24);\n
                        editor_width       python: str(editor_width).replace(\'px\',\'\');\n
@@ -83,7 +83,7 @@ oFCKeditor.BasePath = \'${portal_path}\';\n
 oFCKeditor.Value    = \'${cleaninput}\';\n
 \n
 // set the css for editor area\n
-oFCKeditor.Config[\'EditorAreaCSS\'] = \'${portal_path}css/medicentre.css\';\n
+oFCKeditor.Config[\'EditorAreaCSS\'] = \'${portal_path}/erp5_editor.css\';\n
 \n
 // editor appearance\n
 oFCKeditor.ToolbarSet = \'ERP5WebZopeCmf\';\n

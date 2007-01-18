@@ -9,12 +9,12 @@
  <portal_type id="Web Section">
   <item>Web Section</item>
   <item>File</item>
-  <item>Web Page</item>
   <item>Image</item>
  </portal_type>
  <portal_type id="Web Site">
-  <item>Web Container</item>
   <item>Web Section</item>
+  <item>Image</item>
+  <item>File</item>
  </portal_type>
  <portal_type id="Web Site Module">
   <item>Web Site</item>

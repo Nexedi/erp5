@@ -132,7 +132,7 @@ context.REQUEST[\'RESPONSE\'].redirect(redir)\n
                             <string>edit_document_url</string>
                             <string>kw</string>
                             <string>getattr</string>
-<string>context</string>
+                            <string>context</string>
                             <string>edit_method</string>
                             <string>_apply_</string>
                             <string>base_value</string>
