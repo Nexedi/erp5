@@ -33,10 +33,10 @@ grand_parent_portal_type | catalog,catalog/portal_type/z_related_grand_parent
 variationCategory | category/category_uid/z_related_uid
 translated_validation_state | translation/translated_message/z_related_translated_validation_state
 stock_resource_category_uid | category/category_uid/z_related_resource_uid_from_stock
-parent_title | catalog/title/z_related_parent   
-parent_int_index | catalog/int_index/z_related_parent    
-parent_string_index | catalog/string_index/z_related_parent   
-parent_float_index | catalog/float_index/z_related_parent    
-parent_reference | catalog/reference/z_related_parent   
-parent_description | catalog/description/z_related_parent    
+parent_title | catalog/title/z_related_parent
+parent_int_index | catalog/int_index/z_related_parent
+parent_string_index | catalog/string_index/z_related_parent
+parent_float_index | catalog/float_index/z_related_parent
+parent_reference | catalog/reference/z_related_parent
+parent_description | catalog/description/z_related_parent
 parent_portal_type | catalog/portal_type/z_related_parent

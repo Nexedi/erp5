@@ -10,7 +10,6 @@
  <key>item_node_category_uid | category/category_uid/z_related_node_uid_from_item</key>
  <key>item_resource_category_uid | category/category_uid/z_related_resource_uid_from_item</key>
  <key>item_section_category_uid | category/category_uid/z_related_section_uid_from_item</key>
- <key>parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</key>
  <key>parent_description | catalog/description/z_related_parent</key>
  <key>parent_float_index | catalog/float_index/z_related_parent</key>
  <key>parent_int_index | catalog/int_index/z_related_parent</key>
