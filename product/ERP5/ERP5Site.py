@@ -111,7 +111,7 @@ def getCatalogStorageList(*args, **kw):
     #LOG('getCatalogStorageList', 0, item)
     if item == '.svn':
       continue
-    if item.endswith('.bt5') and os.path.isfile():
+    if item.endswith('.bt5') and os.path.isfile(item):
       # Simple heuristic to make it faster than extracting the whole bt
       if item.endswith('_catalog.bt5'):
         result.append((item, item))
