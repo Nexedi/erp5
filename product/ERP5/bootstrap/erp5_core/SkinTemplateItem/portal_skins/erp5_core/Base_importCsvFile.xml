@@ -88,7 +88,10 @@ def splitCsvLine(str_line):\n
 \n
   p_stack = \'\'\n
   for p in pieces_of_line:\n
-    p_stack += p\n
+    if p_stack == \'\':\n
+      p_stack = p\n
+    else:\n
+      p_stack += \',%s\' % p\n
     if p_stack.count(\'"\') % 2 == 0:\n
       unclean_list.append(p_stack)\n
       p_stack = \'\'\n
@@ -133,6 +136,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
