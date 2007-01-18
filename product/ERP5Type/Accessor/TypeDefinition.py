@@ -143,7 +143,7 @@ type_definition = {
                              'isList'  : 1,
                            },
                            # Content are subdocuments (ex. default_career)
-    'content'             : { 'cast'    : identity,          
+    'content'             : { 'cast'    : identity,
                              'null'    : ('', 'None', None,),
                              'default' : None,
                              'isList'  : 0,
