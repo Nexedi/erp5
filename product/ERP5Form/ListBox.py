@@ -2010,7 +2010,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           error_message = u''
 
-        if brain is not None:
+        if getattr(brain, 'asContext', None) is not None:
           # We needed a way to pass the current line object (ie. brain)
           # to the field which is being displayed. Since the
           # render_view API did not permit this, we pass the line object
@@ -2029,7 +2029,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                           , key     = key
                           )
         else:
-          # No brain, no way
+          # If the brain does not support asContext (eg. it is None), no way
           self.renderer.request.cell = self.getObject()
           cell_html = editable_field.render( value   = display_value
                                            , REQUEST = brain

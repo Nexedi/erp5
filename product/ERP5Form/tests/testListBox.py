@@ -172,6 +172,7 @@ return []
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
+      field_count_method = '',
       field_sort = 'title | ASC\n'
                    'uid | ASC',)
     
@@ -204,6 +205,7 @@ return []
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
+      field_count_method = '',
       field_default_params = 'dummy_default_param | dummy value',)
     
     # render the listbox, checks are done by list method itself
@@ -229,6 +231,7 @@ return []
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
+      field_count_method = '',
       field_columns = ['alternate_title | Alternate Title',],)
     
     request = get_request()
@@ -294,6 +297,39 @@ return []
 
     # Make sure that word is there
     self.assertEqual(rendered_listbox.find(word) > 0, True)
+
+  def test_ObjectSupport(self):
+    # make sure listbox supports rendering of simple objects
+    # the only requirement is that objects have a `uid` attribute which is a
+    # string starting by new_ (a convention to prevent indexing of objects).
+    portal = self.getPortal()
+    list_method_id = 'DummyListMethodId'
+    portal.ListBoxZuite_reset()
+    form = portal.FooModule_viewFooList
+    listbox = form.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = list_method_id,
+      field_count_method = '',
+      field_editable_columns = ['title | title'],
+      field_columns = ['title | Title',],)
+    form.manage_addField('listbox_title', 'Title', 'StringField')
+    
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        list_method_id,
+        'selection=None, **kw',
+        "from Products.PythonScripts.standard import Object\n"
+        "return [Object(uid='new_', title='Object Title')]")
+    
+    request = get_request()
+    request['here'] = portal.foo_module
+    line_list = [l for l in listbox.get_value('default',
+                               render_format='list',
+                               REQUEST=request) if l.isDataLine()]
+    self.assertEquals(1, len(line_list))
+    self.assertEquals('Object Title', line_list[0].getColumnProperty('title'))
+    html = listbox.render(REQUEST=request)
+    self.failUnless('Object Title' in html, html)
 
 if __name__ == '__main__':
   framework()
