@@ -35,25 +35,15 @@ def CMFCoreSkinsTool_manage_skinLayers(self, chosen=(), add_skin=0, del_skin=0,
 
 def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
   """
-    Update cache entry for object_id.
-    Container_id is used to determine quickly if the entry must be updated or
-    not by comparing its position with the current value if any.
+    Actually, do not even try to update the cache smartly : it would only
+    update the cache of the current thread. So just mark the object as
+    modified (for other thread to refresh) and delete the cache (to force
+    current thread to refresh too before future cache uses in the samle
+    query).
   """
-  skin_location_list = getattr(self, '_v_skin_location_list', None)
-  if skin_location_list is None:
-    self.initializeCache()
-    skin_location_list = getattr(self, '_v_skin_location_list')
-  for selection_name, skin_folder_id_string in self._getSelections().iteritems():
-    skin_folder_id_list = skin_folder_id_string.split(',')
-    if container_id in skin_folder_id_list:
-      skin_folder_id_list.reverse()
-      this_folder_index = skin_folder_id_list.index(container_id)
-      if skin_location_list.has_key(object_id):
-        existing_folder_index = skin_folder_id_list.index(skin_location_list[object_id])
-      else:
-        existing_folder_index = this_folder_index + 1
-      if existing_folder_index > this_folder_index:
-        skin_location_list[selection_name][object_id] = container_id
+  if getattr(self, '_v_skin_location_list', None) is not None:
+    self._p_changed = 1
+    delattr(self, '_v_skin_location_list')
 
 SkinsTool.manage_skinLayers = CMFCoreSkinsTool_manage_skinLayers
 SkinsTool._updateCacheEntry = CMFCoreSkinsTool__updateCacheEntry
