@@ -86,8 +86,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
       <div id="main_content" class="column center">\n
         <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
-          <!-- XXX Why no portal message displayed there ?\n
-                Normally a message should be displayed when saving an object through web interface... -->\n
           <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
         </tal:block>\n
         <tal:block metal:define-slot="main"/>\n
@@ -144,6 +142,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>template_erp5_web</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
