@@ -53,7 +53,7 @@
   are published and linked with the current section through Predicate.\n
 --></tal:block>\n
 \n
-<ul tal:repeat="document python: request.current_web_section.getDocumentValueList()">\n
+<ul tal:repeat="document python: request.current_web_section.getDocumentValueList(group_by=(\'reference\',))">\n
   <li><a tal:attributes="href python: context.getPermanentURL(document)"\n
          tal:content="python: document.getProperty(\'translated_short_title\', None)\n
                               or document.getTranslatedTitleOrId()"/></li>\n
@@ -72,6 +72,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>section_content_render</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
