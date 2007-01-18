@@ -107,7 +107,7 @@ class File(Document, CMFFile):
       file = kw.get('file')
       precondition = kw.get('precondition')
       if self._isNotEmpty(file):
-        CMFFile._edit(self, precondition=precondition, file=file)
+        self._setFile(file, precondition=precondition)
       del kw['file']
     Base._edit(self, **kw)
 
@@ -141,6 +141,7 @@ class File(Document, CMFFile):
 
   getcontentlength = get_size
 
+  # File management virtual accessor
   security.declareProtected(Permissions.View, 'hasFile')
   def hasFile(self):
     """
@@ -150,6 +151,15 @@ class File(Document, CMFFile):
     if getattr(self,'data', _marker) is not _marker: # XXX-JPS - use propertysheet accessors
       return getattr(self,'data') is not None
     return False
+
+  def _setFile(self, data, precondition=None):
+    self.clearConversionCache()
+    CMFFile._edit(self, precondition=precondition, file=data)
+
+  security.declareProtected(Permissions.ModifyPortalContent,'setFile')
+  def setFile(self, data, precondition=None):
+    self._setFile(data, precondition=precondition)
+    self.reindexObject()
 
   security.declarePrivate('_unpackData')
   def _unpackData(self,data):
@@ -179,6 +189,7 @@ class File(Document, CMFFile):
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
   def PUT(self,REQUEST,RESPONSE):
+    self.clearConversionCache()
     CMFFile.PUT(self,REQUEST,RESPONSE)
     self.DMS_ingestFile(fname=self.getId()) # XXX-JPS we should call here Document_discoverMetadata
                                             # with the filename as parameter

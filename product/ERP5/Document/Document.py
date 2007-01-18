@@ -30,6 +30,8 @@ from DateTime import DateTime
 from operator import add
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from Acquisition import aq_base
+from Globals import PersistentMapping
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
@@ -58,11 +60,11 @@ class ConversionCacheMixin:
     * Implement ZODB BLOB
   """
   # time of generation of various formats
-  _cached_time = {}
+  _cached_time = None # Defensive programming - prevent caching to RAM
   # generated files (cache)
-  _cached_data = {}
+  _cached_data = None # Defensive programming - prevent caching to RAM
   # mime types for cached formats XXX to be refactored
-  _cached_mime = {}
+  _cached_mime = None # Defensive programming - prevent caching to RAM
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -74,15 +76,26 @@ class ConversionCacheMixin:
     Clear cache (invoked by interaction workflow upon file upload
     needed here to overwrite class attribute with instance attrs
     """
-    self._cached_time = {}
-    self._cached_data = {}
-    self._cached_mime = {}
+    self._cached_time = PersistentMapping()
+    self._cached_data = PersistentMapping()
+    self._cached_mime = PersistentMapping()
+
+  security.declareProtected(Permissions.View, 'updateConversionCache')
+  def updateConversionCache(self):
+    aself = aq_base(self)
+    if not hasattr(aself, '_cached_time'):
+      self._cached_time = PersistentMapping()
+    if not hasattr(aself, '_cached_data'):
+      self._cached_data = PersistentMapping()
+    if not hasattr(aself, '_cached_mime'):
+      self._cached_mime = PersistentMapping()
 
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **format):
     """
       Checks whether we have a version in this format
     """
+    self.updateConversionCache()
     return self._cached_data.has_key(makeSortedTuple(format))
 
   security.declareProtected(Permissions.View, 'getCacheTime')
@@ -90,11 +103,13 @@ class ConversionCacheMixin:
     """
       Checks when if ever was the file produced
     """
+    self.updateConversionCache()
     return self._cached_time.get(makeSortedTuple(format), 0)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateConversion')
   def updateConversion(self, **format):
-      self._cached_time[makeSortedTuple(format)] = DateTime()
+    self.updateConversionCache()
+    self._cached_time[makeSortedTuple(format)] = DateTime()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
   def setConversion(self, data, mime=None, **format):
@@ -102,6 +117,7 @@ class ConversionCacheMixin:
     Saves a version of the document in a given format; records mime type
     and conversion time (which is right now).
     """
+    self.updateConversionCache()
     tformat = makeSortedTuple(format)
     if mime is not None:
       self._cached_mime[tformat] = mime
@@ -121,6 +137,7 @@ class ConversionCacheMixin:
     so that it does it all by itself; this'd eliminate the need for setConversion public method)
     XXX-BG: I'm not sure now what I meant by this...
     """
+    self.updateConversionCache()
     tformat = makeSortedTuple(format)
     return self._cached_mime.get(tformat, ''), self._cached_data.get(tformat, '')
 
@@ -129,6 +146,7 @@ class ConversionCacheMixin:
     """
     Get cache details as string (for debugging)
     """
+    self.updateConversionCache()
     s = 'CACHE INFO:<br/><table><tr><td>format</td><td>size</td><td>time</td><td>is changed</td></tr>'
     for f in self._cached_time.keys():
       t = self._cached_time[f]
