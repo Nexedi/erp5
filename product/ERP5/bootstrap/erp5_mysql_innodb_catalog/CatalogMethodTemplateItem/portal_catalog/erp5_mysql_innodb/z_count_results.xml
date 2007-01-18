@@ -75,12 +75,12 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>from_table_list</string>
-<string>where_expression</string>
-<string>select_expression</string>
-<string>group_by_expression</string>
-<string>selection_domain</string>
-<string>selection_report</string>
+                            <string>from_table_list</string>
+                            <string>where_expression</string>
+                            <string>select_expression</string>
+                            <string>group_by_expression</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
                           </list>
                         </value>
                     </item>

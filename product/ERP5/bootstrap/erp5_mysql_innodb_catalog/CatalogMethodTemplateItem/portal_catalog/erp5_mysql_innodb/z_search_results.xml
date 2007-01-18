@@ -104,16 +104,16 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>selection</string>
-<string>selection_domain</string>
-<string>selection_report</string>
-<string>where_expression</string>
-<string>select_expression</string>
-<string>group_by_expression</string>
-<string>from_table_list</string>
-<string>sort_on</string>
-<string>limit_expression</string>
-<string>search_mode</string>
+                            <string>selection</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>where_expression</string>
+                            <string>select_expression</string>
+                            <string>group_by_expression</string>
+                            <string>from_table_list</string>
+                            <string>sort_on</string>
+                            <string>limit_expression</string>
+                            <string>search_mode</string>
                           </list>
                         </value>
                     </item>
