@@ -2454,6 +2454,16 @@ class Base( CopyContainer,
     except AttributeError:
       return None
 
+  security.declarePublic('isWebMode')
+  def isWebMode(self):
+    if self.getApplicableLayout() is None:
+      return False
+    if getattr(self.REQUEST, 'ignore_layout', None) is not None:
+      return False
+    if getattr(self.REQUEST, 'editable_mode', 0):
+      return False
+    return True
+
   security.declareProtected(Permissions.ChangeLocalRoles,
                             'updateLocalRolesOnSecurityGroups')
   def updateLocalRolesOnSecurityGroups(self, **kw):
