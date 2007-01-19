@@ -80,7 +80,7 @@ if product is None:\n
 line_found=False\n
 for order_line in shopping_cart:\n
   if order_line[\'resource\'] == product.getRelativeUrl():\n
-    new_quantity = order_line[\'quantity\'] + int(quantity)\n
+    new_quantity = int(order_line[\'quantity\']) + quantity\n
     if new_quantity<=0:\n
       ## remove items with zero quantity\n
       del shopping_cart[indexof(order_line)]\n
@@ -90,7 +90,7 @@ for order_line in shopping_cart:\n
     break\n
 \n
 if line_found == False:\n
-  ## new Product, add to shopping cart\n
+  ## new Resource so add it to shopping cart\n
   tmp = {}\n
   tmp[\'resource\'] = product.getRelativeUrl()\n
   tmp[\'quantity\'] = quantity\n

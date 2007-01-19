@@ -89,7 +89,8 @@
                     <value>
                       <list>
                         <string>shopping_cart</string>
-                        <string>submit</string>
+                        <string>customer_details</string>
+                        <string>submit_payment</string>
                       </list>
                     </value>
                 </item>

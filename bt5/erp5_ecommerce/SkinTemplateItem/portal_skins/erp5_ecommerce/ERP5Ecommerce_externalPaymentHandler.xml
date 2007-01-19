@@ -204,20 +204,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
+            <value> <string>""" This script is called by external payment system.\n
+Here you can check if payment was successfull or not."""\n
 \n
-if isAnon:\n
-  ## create first an account for user\n
-  context.Base_redirect(\'ERP5Ecommerce_newCustomerAccountForm\', \\\n
-                      editable_mode=True, \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please use it to login.", mapping = dict())})\n
-  return\n
-else:\n
-  ## redirect to final confirmation form\n
-  context.Base_redirect(\'SaleOrder_viewAsWebConfirm\',\n
-                        editable_mode=True)\n
+\n
+## TODO: implement payment check for CyberMut\n
+\n
+\n
+## finalize order\n
+\n
+## redirect\n
 </string> </value>
         </item>
         <item>
@@ -240,7 +236,6 @@ else:\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -268,15 +263,7 @@ else:\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>isAnon</string>
-                            <string>translateString</string>
-                            <string>True</string>
-                            <string>dict</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -292,11 +279,11 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>ERP5Ecommerce_externalPaymentHandler</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Redirect to appropriate form</string> </value>
+            <value> <string>External online payment system handler</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

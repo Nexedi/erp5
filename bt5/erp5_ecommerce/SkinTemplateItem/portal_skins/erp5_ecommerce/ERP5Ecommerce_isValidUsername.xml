@@ -98,6 +98,7 @@ return len(user_list)==0\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>

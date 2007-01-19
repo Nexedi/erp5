@@ -68,10 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>user_id = context.portal_membership.getAuthenticatedMember().getId()\n
-user_list = context.person_module.portal_catalog(reference=user_id, \\\n
-                                                 portal_type="Person")\n
-user_object = user_list[0].getObject()\n
+            <value> <string>user_object = context.ERP5Ecommerce_getShoppingCartCustomer()\n
 \n
 order_module = context.getPortalObject().sale_order_module\n
 sale_order = order_module.newContent(portal_type=\'Sale Order\')\n
@@ -139,14 +136,12 @@ return sale_order\n
                             <string>shopping_cart</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>user_id</string>
-                            <string>user_list</string>
-                            <string>_getitem_</string>
                             <string>user_object</string>
                             <string>order_module</string>
                             <string>sale_order</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
+                            <string>_getitem_</string>
                             <string>resource</string>
                           </tuple>
                         </value>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>shopping_cart</string> </value>
+            <value> <string>customer_details</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -265,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Shopping cart</string> </value>
+                    <value> <string>Customer details</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/ERP5Ecommerce_editShoppingCartWidget</string> </value>
+            <value> <string>here/ERP5Ecommerce_viewShoppingCartCustomerWidget</string> </value>
         </item>
       </dictionary>
     </pickle>

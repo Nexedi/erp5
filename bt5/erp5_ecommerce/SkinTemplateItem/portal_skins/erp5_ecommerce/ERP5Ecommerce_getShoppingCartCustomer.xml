@@ -68,13 +68,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>total = 0.0\n
-shopping_cart = context.ERP5Ecommerce_getShoppingCart()\n
-for order_line in shopping_cart:\n
-  resource = context.restrictedTraverse(order_line[\'resource\'])\n
-  total += resource.getPrice() * order_line[\'quantity\']\n
-return str(total)\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+if context.portal_membership.isAnonymousUser():\n
+  return None\n
+\n
+user_id = context.portal_membership.getAuthenticatedMember().getId()\n
+user_list = context.person_module.portal_catalog(reference=user_id, \\\n
+                                                 portal_type="Person")\n
+if len(user_list)>0:\n
+  user_object = user_list[0].getObject()\n
+  return user_object\n
+else:\n
+  ## not found\n
+  return None\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -96,6 +106,7 @@ return str(total)\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -124,15 +135,14 @@ return str(total)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>total</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>shopping_cart</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
+                            <string>None</string>
+                            <string>user_id</string>
+                            <string>user_list</string>
+                            <string>len</string>
                             <string>_getitem_</string>
-                            <string>resource</string>
-                            <string>str</string>
+                            <string>user_object</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,11 +159,11 @@ return str(total)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_getTotalPriceForShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_getShoppingCartCustomer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Calculate total price for items in shopping cart</string> </value>
+            <value> <string>Get shopping cart customer object</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -158,7 +158,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Submit</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+&nbsp;
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>

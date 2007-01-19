@@ -82,11 +82,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_logged_in</string> </value>
+            <value> <string>ERP5Ecommerce_login</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Login Handler</string> </value>
+            <value> <string>Login handler</string> </value>
         </item>
       </dictionary>
     </pickle>

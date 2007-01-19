@@ -82,7 +82,7 @@ if session_id is None:\n
   session_id = context.ERP5Ecommerce_generateSessionID(max_long=20)\n
   request.RESPONSE.setCookie(\'session_id\', session_id, expires=(now +expire_timeout_days).fCommon(), path=\'/\')\n
 \n
-cache_method = CachingMethod(callable_object = context.ERP5Ecommerce_newShoppingCart, \\\n
+cache_method = CachingMethod(callable_object = context.ERP5Ecommerce_createShoppingCart, \\\n
                              id = session_id, \\\n
                              cache_factory=cache_factory)\n
 if action==\'reset\':\n
@@ -90,12 +90,12 @@ if action==\'reset\':\n
   cache_method.delete(id=session_id, cache_factory=cache_factory)\n
 elif action==\'update\':\n
   ## update back to cache\n
-  pass\n
+  pass \n
   #cache_method.delete(id=session_id, cache_factory=cache_factory)\n
   #cache_method(value=new_shopping_cart)\n
 else:\n
-  ## take order for this session\n
-  shopping_cart = cache_method(value=[])\n
+  ## take shopping cart for this customer\n
+  shopping_cart = cache_method()\n
   return shopping_cart\n
 </string> </value>
         </item>
@@ -177,7 +177,7 @@ else:\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get Shopping Cart</string> </value>
+            <value> <string>Get shopping cart for customer</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

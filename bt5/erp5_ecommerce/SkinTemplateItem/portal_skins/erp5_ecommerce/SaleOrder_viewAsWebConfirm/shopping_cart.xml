@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ERP5Ecommerce_renderSaleOrderAsShoppingCart(confirm_mode=1)</string> </value>
+            <value> <string>python: here.ERP5Ecommerce_editShoppingCartWidget(confirm_mode=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

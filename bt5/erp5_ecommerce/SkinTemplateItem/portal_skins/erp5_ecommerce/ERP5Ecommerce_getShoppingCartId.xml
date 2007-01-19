@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return value\n
+            <value> <string>return context.REQUEST.get(\'session_id\')\n
 </string> </value>
         </item>
         <item>
@@ -85,15 +85,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>value</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,13 +105,14 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>value</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,11 +129,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_newShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_getShoppingCartId</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create new shopping cart</string> </value>
+            <value> <string>Get shopping cart id</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -48,38 +48,33 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">\n
+<tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
+                       empty_cart python: len(shopping_cart_items)==0;\n
+                       website python: here.getWebSiteValue();">\n
 \n
-  <tal:block tal:condition="isAnon">\n
-   <h4>You\'re not logged in.</h4>\n
-   I have an account:\n
-   <form action="ERP5Ecommerce_login">\n
-     <table>\n
-       <tr>\n
-         <td>Username:</td>\n
-         <td><input name="__ac_name" size="10" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></td>\n
-       </tr>\n
-       <tr>\n
-         <td>Password:</td>\n
-         <td><input type="password" name="__ac_password" size="10"/></td>\n
-       </tr>\n
-       <tr>\n
-         <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>\n
-             <input type="hidden" name="__ac_persistent" value="1"/>\n
-             <input type="submit" value="Login"/>\n
-         </td>\n
-       </tr>\n
-     </table>\n
-   </form>\n
-   \n
-   <a href="ERP5Ecommerce_newCustomerAccountForm?editable_mode=1"> I want to create an account</a>\n
-   <br/>\n
+  <ul tal:repeat="order_line shopping_cart_items">\n
+    <li tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
+                    quantity python: int(order_line[\'quantity\']);\n
+                    price    python: resource.getPrice();\n
+                    currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
 \n
-  </tal:block>\n
+       <a href="" tal:attributes="href resource/absolute_url">\n
+         <b tal:content="resource/getTitle"/> \n
+       </a>\n
+       <br/>\n
+       Price: <span tal:replace="price"/> <span tal:replace="currency"/>\n
+       <br/>\n
+       - quantity: <span tal:replace="quantity"/>\n
+    </li>\n
+  </ul> \n
 \n
-  <tal:block tal:condition="not: isAnon">\n
-    <h4>Hello, <span tal:replace="here/portal_membership/getAuthenticatedMember"/></h4>\n
-    <a href="ERP5Ecommerce_logout"> Log out</a><br/>\n
+  <tal:block tal:condition = "not: empty_cart">\n
+    <br/>\n
+    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getShoppingCartTotalPrice(include_currency=True)"/> \n
+    </b>\n
+    <br/>\n
+    <a href="SaleOrder_viewAsWeb?editable_mode=1">Edit Shopping Cart</a><br/>\n
+    <a href="SaleOrder_confirmShopping?editable_mode=1">Proceed to checkout</a>\n
   </tal:block>\n
 \n
 </tal:block>
@@ -96,11 +91,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_loginStatusWidget</string> </value>
+            <value> <string>ERP5Ecommerce_viewShoppingCartMiniWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Login status widget</string> </value>
+            <value> <string>Mini shopping cart widget</string> </value>
         </item>
       </dictionary>
     </pickle>

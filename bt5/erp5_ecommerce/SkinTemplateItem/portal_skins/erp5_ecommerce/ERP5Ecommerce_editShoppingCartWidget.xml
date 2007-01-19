@@ -60,9 +60,10 @@
   <form action="" tal:condition = "not: empty_cart">\n
   <table>\n
     <thead>\n
-      <th>Shopping Cart Items:</th>\n
-      <th>Price:</th>\n
-      <th>Quantity:</th>\n
+      <th>Product</th>\n
+      <th>Quantity</th>\n
+      <th>Price</th>\n
+      <th>Total</th>\n
     </thead>\n
     <tbody>  \n
       <tal:block tal:repeat="order_line shopping_cart_items">\n
@@ -70,8 +71,8 @@
                       quantity python: int(order_line[\'quantity\']);\n
                       price    python: resource.getPrice();\n
                       order_line_id python: shopping_cart_items.index(order_line);\n
-           global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
-         <td>\n
+                      currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
+         <td align="right">\n
            <a href="" tal:attributes="href resource/absolute_url">\n
              <b tal:content="resource/getTitle"/> <br/>\n
              <a  tal:condition="not: confirm_mode"\n
@@ -82,10 +83,7 @@
              </a>\n
            </a>\n
          </td>\n
-         <td>\n
-           <span tal:replace="price"/> <span tal:replace="currency"/>\n
-         </td>\n
-         <td>\n
+         <td align="right">\n
            <input tal:condition="not: confirm_mode"\n
                   type="input" \n
                   name="field_my_buy_quantity"\n
@@ -93,19 +91,31 @@
                   tal:attributes ="value quantity"/>\n
            <span tal:condition="confirm_mode" tal:content="quantity"/>\n
          </td>\n
+         <td align="right">\n
+           <span tal:replace="price"/><br/><span tal:replace="currency"/>\n
+         </td>\n
+         <td align="right">\n
+           <span tal:replace="python: price*quantity"/><br/><span tal:replace="currency"/>\n
+         </td>\n
       </tr>\n
     </tal:block>\n
+    <tal:block tal:condition = "not: empty_cart">\n
+      <tr>\n
+        <td align="right"><br/>Sub total:</td>\n
+        <td></td>\n
+        <td></td>\n
+        <td align="right"> <br/>\n
+          <b><span tal:replace="python: here.ERP5Ecommerce_getShoppingCartTotalPrice(include_currency=True)"/>\n
+          </b>\n
+         </td>\n
+      </tr>\n
+   </tal:block>\n
+\n
     </tbody>\n
   </table>\n
   </form>\n
 \n
-  <tal:block tal:condition = "not: empty_cart">\n
-    <br/>\n
-    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
-       <span tal:replace="currency"/>\n
-    </b> \n
-    <br/>\n
-  </tal:block>\n
+  \n
 </tal:block>
 
 ]]></string> </value>
@@ -120,11 +130,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_renderSaleOrderAsShoppingCart</string> </value>
+            <value> <string>ERP5Ecommerce_editShoppingCartWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Soppingcart content widget</string> </value>
+            <value> <string>Shopping cart edit content widget</string> </value>
         </item>
       </dictionary>
     </pickle>

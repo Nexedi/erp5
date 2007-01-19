@@ -48,34 +48,9 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shopping_cart_items here/ERP5Ecommerce_getShoppingCartItemList;\n
-                       empty_cart python: len(shopping_cart_items)==0;\n
-                       website here/getWebSiteValue;">\n
-\n
-  <ul tal:repeat="order_line shopping_cart_items">\n
-    <li tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
-                    quantity python: int(order_line[\'quantity\']);\n
-                    price    python: resource.getPrice();\n
-         global     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
-\n
-       <a href="" tal:attributes="href resource/absolute_url">\n
-         <b tal:content="resource/getTitle"/> \n
-       </a>\n
-       <br/>\n
-       Price: <span tal:replace="price"/> <span tal:replace="currency"/>\n
-       <br/>\n
-       - quantity: <span tal:replace="quantity"/>\n
-    </li>\n
-  </ul> \n
-\n
-  <tal:block tal:condition = "not: empty_cart">\n
-    <br/>\n
-    <b>Total price: <span tal:replace="python: here.ERP5Ecommerce_getTotalPriceForShoppingCart()"/> \n
-       <span tal:replace="currency"/>\n
-    </b><br/>\n
-    <a href="SaleOrder_viewAsWeb?editable_mode=1">Edit Shopping Cart</a><br/>\n
-    <a href="SaleOrder_confirmShopping?editable_mode=1">Proceed to checkout</a>\n
-  </tal:block>\n
+<tal:block tal:define="customer here/ERP5Ecommerce_getCustomer">\n
+Person id:   <span tal:content="customer/getId"/>  <br/>\n
+Name:   <span tal:content="customer/getTitle"/>  <br/>\n
 \n
 </tal:block>
 
@@ -91,11 +66,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Ecommerce_shoppingCartWidget</string> </value>
+            <value> <string>ERP5Ecommerce_viewShoppingCartCustomerWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Mini shopping cart widget</string> </value>
+            <value> <string>Customer information widget</string> </value>
         </item>
       </dictionary>
     </pickle>
