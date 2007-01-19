@@ -85,7 +85,6 @@ class ImmobilisableItem(XMLObject, Amount):
                       , PropertySheet.Reference
                       , PropertySheet.Amortisation
                       )
-
     security.declareProtected(Permissions.View, 'getImmobilisationRelatedMovementList')
     def getImmobilisationRelatedMovementList(self,
                                              from_date = None,
@@ -116,7 +115,7 @@ class ImmobilisableItem(XMLObject, Amount):
       immo_and_owner_list = []
       if immobilisation_movement_list is None:
         # First build the SQL query
-        sql_dict = dict(kw)
+        sql_dict = self.getCleanSqlDict(kw)
         sql_dict['aggregate_uid'] = self.getUid()
         if filter_valid:
           sql_dict['immobilisation_state'] = ['calculating','valid']
@@ -1037,7 +1036,7 @@ class ImmobilisableItem(XMLObject, Amount):
       Only the movements in current_inventory_state are taken into account
       """
       # Get tracking list
-      sql_kw = dict(kw)
+      sql_kw = self.getCleanSqlDict(kw)
       sql_kw['item'] = self.getRelativeUrl()
       sql_kw['sort-on'] = 'item.date'
       sql_kw['sort-order'] = 'ascending'
@@ -1072,7 +1071,7 @@ class ImmobilisableItem(XMLObject, Amount):
       the corresponding ownership change dates
       If at_date is None, return the result all the time
       """
-      new_kw = dict(kw)
+      new_kw = self.getCleanSqlDict(kw)
       new_kw['to_date'] = at_date
       movement_list = self.getSectionMovementValueList(**new_kw)
       # Find ownership changes
@@ -1114,4 +1113,12 @@ class ImmobilisableItem(XMLObject, Amount):
       Return the current owner of the item
       """
       return self.getSectionValue(at_date = DateTime(), **kw)
-
+    
+    security.declareProtected(Permissions.View, 'getCleanSqlDict')
+    def getCleanSqlDict(self, kw):
+      no_sql_list = ['immo_cache_dict']
+      sql_dict = {}
+      for k,v in kw.items():
+        if k not in no_sql_list:
+          sql_dict[k] = v
+      return sql_dict
