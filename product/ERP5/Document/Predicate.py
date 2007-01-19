@@ -221,8 +221,7 @@ class Predicate(Folder):
     membership_select_list = map(lambda l: '( %s )' % ' OR '.join(l),
                                                          membership_dict.values())
 
-    # First build SQL for membership criteria
-    # It would be much nicer if all this was handled by the catalog in a central place
+    # Then build SQL for multimembership_dict criteria
     multimembership_dict = {}
     for base_category in self.getMultimembershipCriterionBaseCategoryList():
       multimembership_dict[base_category] = [] # Init dict with valid base categories
@@ -266,6 +265,9 @@ class Predicate(Folder):
   security.declareProtected( Permissions.AccessContentsInformation, 'asSQLExpression' )
   def asSQLExpression(self, strict_membership=0, table='category'):
     """
+      A Predicate can be rendered as an SQL expression. This
+      can be used to generate SQL requests in reports or in
+      catalog search queries.
     """
     return self.buildSQLQuery(strict_membership=strict_membership, table=table)['where_expression']
 
