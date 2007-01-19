@@ -59,6 +59,7 @@ class TextDocument(Document, TextContent):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isDocument = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -77,8 +78,32 @@ class TextDocument(Document, TextContent):
     # Declarative interfaces
     __implements__ = ()
 
-    # Patch
-    PUT = TextContent.PUT # XXX-JPS - Here wa have a security issue - ask seb what to do
+    # Explicit inheritance
+    security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+    PUT = TextContent.PUT # We have a security issue here with Zope < 2.8
+
+    security.declareProtected(Permissions.View, 'manage_FTPget')
+    manage_FTPget = TextContent.manage_FTPget
+
+    # Default Display
+    security.declareProtected(Permissions.View, 'index_html')
+    def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+      """
+        Unlike for images and files, we want to provide
+        in the case of HTML a nice standard display with
+        all the layout of a Web Site. If no format is provided,
+        the default rendering will use the standard ERP5 machinery.
+        By providing a format parameter, it is possible to
+        convert the text content into various formats.
+      """
+      if format is None:
+        # The default is to use ERP5 Forms to render the page
+        return self.view()
+      # For now we just return the raw content
+      return self.getTextContent()
+      # XXX - In the future, we will use portal transforms
+      # to render the content in any format
+      return self.portal_transforms.convertTo('text/text', self.getTextContent())
 
     ### Content indexing methods
     security.declareProtected(Permissions.View, 'getSearchableText')
@@ -88,8 +113,9 @@ class TextDocument(Document, TextContent):
         We should try to do some kind of file conversion here so that getTextContent
         returns something more readable.
         """
-        searchable_text = "%s %s %s %s" %  (self.getTitle(), self.getDescription(),
-                                            self.getId(), self.getTextContent())
+        searchable_text = "%s %s %s %s %s" %  (self.getTitle(), self.getShortTitle(),
+                                               self.getDescription(),
+                                               self.getId(), self.getTextContent())
         return searchable_text
 
     # Compatibility with CMF Catalog / CPS sites
