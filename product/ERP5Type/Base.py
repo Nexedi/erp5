@@ -819,7 +819,7 @@ class Base( CopyContainer,
             value += [method()] # We should add depends here
       if copy_value:
         if not hasattr(self, storage_id):
-          setattr(self, value)
+          setattr(self, storage_id, value)
       # Pop context
       del TRANSACTION._erp5_acquisition_stack[acquisition_key]
       return value
