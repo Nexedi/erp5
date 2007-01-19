@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_section_content</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -421,8 +421,16 @@
                           <string>Web Page</string>
                         </tuple>
                         <tuple>
+                          <string>Product</string>
+                          <string>Product</string>
+                        </tuple>
+                        <tuple>
                           <string>Web Section</string>
                           <string>Web Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>
@@ -453,7 +461,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>site_content_selection</string> </value>
+                    <value> <string>section_content_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -479,7 +487,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Site Content</string> </value>
+                    <value> <string>Section Content</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -526,7 +534,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>WebSection_getDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

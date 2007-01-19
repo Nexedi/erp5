@@ -84,9 +84,9 @@
 translateString = context.Base_translateString\n
 result = []\n
 portal_type = context.getPortalType()\n
-parent_object = context.getParentValue()\n
-parent_pt = parent_object.getPortalType()\n
 request = context.REQUEST\n
+current_web_section = request.current_web_section\n
+current_web_section_pt = current_web_section.getPortalType()\n
 action_dict = request.get(\'actions\', {}) # actions needs to be renamed to action_dict\n
 exchange_action_list = action_dict.get(\'object_exchange\', [])\n
 button_action_list = action_dict.get(\'object_button\', [])\n
@@ -113,17 +113,15 @@ else: result.append(dict(\n
   label = "%s Icon" % portal_type,\n
 ))\n
 \n
-# Append a button to edit the default page\n
-\n
 # Append a button to edit the parent section\n
-if portal_type == \'Web Page\' and parent_pt in (\'Web Section\', \'Web Site\'): result.append(dict(\n
-  url   = "%s/view?editable_mode=1" % parent_object.absolute_url(),\n
-  icon  = parent_object.getIcon(),\n
-  title = translateString("Edit parent ${portal_type}", mapping=dict(portal_type=parent_pt)),\n
-  label = "%s Icon" % parent_pt,\n
+if portal_type not in (\'Web Section\', \'Web Site\'): result.append(dict(\n
+  url   = "%s/view?editable_mode=1" % current_web_section.absolute_url(),\n
+  icon  = current_web_section.getIcon(),\n
+  title = translateString("Edit parent ${portal_type}", mapping=dict(portal_type=current_web_section_pt)),\n
+  label = "%s Icon" % current_web_section_pt,\n
 ))\n
 \n
-# Append a button to open WEBDAV\n
+# Append all icon buttons\n
 for action in button_action_list:\n
   if action[\'id\'] == \'webdav\':\n
     result.append(dict(\n
@@ -193,9 +191,9 @@ return result\n
                             <string>translateString</string>
                             <string>result</string>
                             <string>portal_type</string>
-                            <string>parent_object</string>
-                            <string>parent_pt</string>
                             <string>request</string>
+                            <string>current_web_section</string>
+                            <string>current_web_section_pt</string>
                             <string>action_dict</string>
                             <string>exchange_action_list</string>
                             <string>button_action_list</string>

@@ -61,7 +61,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left webcontent</string>
+                <string>webcontent header bottom</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -79,7 +79,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left webcontent</string> </key>
+                    <key>                 <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>

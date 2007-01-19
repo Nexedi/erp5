@@ -98,7 +98,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>WebPage_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

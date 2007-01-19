@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
+          <string>Products.Formulator.StandardFields</string>
+          <string>TextAreaField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_content</string> </value>
+            <value> <string>my_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -136,9 +136,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -265,7 +263,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Default Content</string> </value>
+                    <value> <string>Description</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,25 +279,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.WebSite_getDefaultWebPageValue().getTextContent()</string> </value>
         </item>
       </dictionary>
     </pickle>

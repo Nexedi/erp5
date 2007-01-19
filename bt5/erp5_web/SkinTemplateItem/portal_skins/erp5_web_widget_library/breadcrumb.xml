@@ -51,7 +51,8 @@
 <tal:block replace="nothing"><!--\n
     This macro is recursive and display lists of lists to display the breadcrumb as a tree.\n
     TODO: merge it with site map (similar code)\n
---></tal:block>\n
+-->\n
+</tal:block>\n
 <tal:block metal:define-macro="renderBreadcrumbItem">\n
   <ul tal:define="remaining_items remaining_items | nothing"\n
       tal:condition="remaining_items">\n
@@ -65,8 +66,13 @@
   </ul>\n
 </tal:block>\n
 \n
-<!-- Initialize the recursive loop -->\n
-<div class="breadcrumb" tal:define="remaining_items python: context.getBreadcrumbItemList(here)">\n
+<!-- Initialize the recursive loop starting from context or from web section -->\n
+<div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(here)"\n
+                        tal:condition="not:request/is_web_section_default_document">\n
+  <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
+</div>\n
+<div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(request.current_web_section)"\n
+                        tal:condition="request/is_web_section_default_document">\n
   <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
 </div>\n
 \n

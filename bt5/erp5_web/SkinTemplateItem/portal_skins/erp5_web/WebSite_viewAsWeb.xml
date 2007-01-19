@@ -80,7 +80,8 @@
                     <key> <string>webcontent bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_section_content</string>
+                        <string>my_description</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -88,8 +89,7 @@
                     <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
-                        <string>page_title</string>
-                        <string>page_summary</string>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>

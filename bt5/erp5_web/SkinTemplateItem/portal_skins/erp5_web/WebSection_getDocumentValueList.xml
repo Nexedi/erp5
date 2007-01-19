@@ -126,6 +126,8 @@ if not kw.has_key(\'validation_state\'):\n
                             \'released\', \'published\', \'restricted\']\n
 if not kw.has_key(\'order_by\'):\n
   kw[\'order_by\'] = [(\'int_index\', \'descending\')]\n
+#if not kw.has_key(\'group_by\'):\n
+#  kw[\'group_by\'] = [(\'reference\',)]\n
 \n
 # Return the list of matching documents for the given states\n
 return current_section.searchResults(**kw)\n

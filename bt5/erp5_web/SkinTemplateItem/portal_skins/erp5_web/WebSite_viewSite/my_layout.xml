@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>my_layout</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -195,7 +195,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>headline</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -203,7 +203,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The title is display as main content title and page title.</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -211,11 +211,11 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>Layout</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

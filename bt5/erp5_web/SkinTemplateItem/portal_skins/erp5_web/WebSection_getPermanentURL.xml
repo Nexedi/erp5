@@ -112,9 +112,9 @@ if document.getPortalType() not in valid_portal_type_list:\n
   return document.absolute_url()\n
 \n
 # Return absolute URL if this is not a \'live\' document\n
-validation_state=[\'draft\', \'submitted\', \'shared\',     # WARNING - this is a copy from WebSection_getDocumentValueList\n
-                  \'released\', \'published\', \'restricted\']\n
-if document.getValidationState() not in validation_state:\n
+validation_state = [\'draft\', \'submitted\', \'shared\',     # WARNING - this is a copy from WebSection_getDocumentValueList\n
+                    \'released\', \'published\', \'restricted\']\n
+if not document.getReference() or document.getValidationState() not in validation_state:\n
   return document.absolute_url()\n
 \n
 # Return the URL\n

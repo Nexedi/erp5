@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>page_summary</string> </value>
+            <value> <string>my_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -124,9 +124,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -197,11 +195,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>summary</string> </value>
+                    <value> <string>headline</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Current document summary.</string> </value>
+                    <value> <string>Web Section</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -245,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Summary</string> </value>
+                    <value> <string>Title</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -261,25 +259,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getDescription()</string> </value>
         </item>
       </dictionary>
     </pickle>
