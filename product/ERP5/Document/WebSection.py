@@ -36,7 +36,7 @@ from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
 from Globals import get_request
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
@@ -176,7 +176,10 @@ class WebSection(Domain):
         if user is not None:
           old_manager = getSecurityManager()
           newSecurityManager(get_request(), user)
-        LOG('Lookup', 0, str(name))
+        else:
+          LOG('WebSection _aq_dynamic', WARNING, 'No user defined for %s.'
+          'This will prevent accessing object through their permanent URL' % self.getWebmaster())
+        #LOG('Lookup', 0, str(name))
         document = self.getDocumentValue(name=name, portal=portal)
         request[CACHE_KEY][name] = document
         if user is not None:
