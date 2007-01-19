@@ -120,7 +120,7 @@ class WebSite(WebSection):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.WebSite
+                      , PropertySheet.WebSection
                       , PropertySheet.Predicate
                       )
 

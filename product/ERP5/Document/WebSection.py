@@ -112,7 +112,7 @@ class WebSection(Domain):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.WebSite
+                      , PropertySheet.WebSection
                       , PropertySheet.SortIndex
                       , PropertySheet.Predicate
                       )
@@ -171,7 +171,10 @@ class WebSection(Domain):
         if request[CACHE_KEY].has_key(WEBSITE_USER):
           user = request[CACHE_KEY][WEBSITE_USER] # Retrieve user from request cache
         else:
-          user = portal.acl_users.getUserById(self.getWebmaster())
+          # Cache webmaster for faster lookup
+          if not hasattr(aq_base(self), '_v_section_webmaster'):
+            self._v_section_webmaster = self.getWebmaster()
+          user = portal.acl_users.getUserById(self._v_section_webmaster)
           request[CACHE_KEY][WEBSITE_USER] = user # Cache user per request
         if user is not None:
           old_manager = getSecurityManager()
