@@ -326,8 +326,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
+                          <string>translated_title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                       </list>
                     </value>
@@ -390,7 +394,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -417,20 +421,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Web Page</string>
-                          <string>Web Page</string>
-                        </tuple>
-                        <tuple>
-                          <string>Product</string>
-                          <string>Product</string>
-                        </tuple>
-                        <tuple>
                           <string>Web Section</string>
                           <string>Web Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>
@@ -461,12 +453,17 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>section_content_selection</string> </value>
+                    <value> <string>site_section_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -487,7 +484,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section Content</string> </value>
+                    <value> <string>Site Sections</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -534,7 +531,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSection_getDocumentValueList</string> </value>
+            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>

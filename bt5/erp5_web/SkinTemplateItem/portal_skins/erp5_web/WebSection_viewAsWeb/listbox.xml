@@ -326,8 +326,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -390,7 +398,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -419,18 +427,6 @@
                         <tuple>
                           <string>Web Page</string>
                           <string>Web Page</string>
-                        </tuple>
-                        <tuple>
-                          <string>Product</string>
-                          <string>Product</string>
-                        </tuple>
-                        <tuple>
-                          <string>Web Section</string>
-                          <string>Web Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>
@@ -466,7 +462,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -487,7 +488,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section Content</string> </value>
+                    <value> <string>Recent Changes</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -534,7 +535,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSection_getDocumentValueList</string> </value>
+            <value> <string>getDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>
