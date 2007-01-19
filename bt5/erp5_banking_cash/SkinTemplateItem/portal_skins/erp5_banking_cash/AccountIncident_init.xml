@@ -70,6 +70,13 @@
             <key> <string>_body</string> </key>
             <value> <string>user_site = context.Baobab_getUserAssignedRootSiteList()[0]\n
 context.edit(source=user_site)\n
+transaction = context\n
+\n
+movement = transaction.newContent(portal_type=\'Banking Operation Line\',\n
+                       id=\'movement\',\n
+                       source=\'account_module/bank_account\', # Set default source\n
+                       destination=\'account_module/bank_account\', # Set default destination\n
+                       )\n
 </string> </value>
         </item>
         <item>
@@ -124,6 +131,8 @@ context.edit(source=user_site)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>user_site</string>
+                            <string>transaction</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>

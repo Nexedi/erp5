@@ -71,20 +71,24 @@
             <value> <string>destination = context.getDestination()\n
 baobab_destination = None\n
 # Get the history of the workflow\n
-user_id=None\n
-for workflow_item in context.Base_getWorkflowHistoryItemList(\'money_deposit_workflow\',display=0):\n
-  if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
-    user_id=workflow_item.getProperty(\'actor\')\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
-    baobab_destination = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
-    break\n
-if user_id is not None and baobab_destination is None:\n
-  from Products.ERP5Type.Message import Message\n
-  message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n
-  raise ValueError,message\n
+if destination is not None:\n
+  user_id=None\n
+  for workflow_item in context.Base_getWorkflowHistoryItemList(\'money_deposit_workflow\',display=0):\n
+    if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
+      user_id=workflow_item.getProperty(\'actor\')\n
+  site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+  context.log(\'MoneyDeposit_getBaobabDestination, site_list\',site_list)\n
+  for site in site_list:\n
+    site_value = context.portal_categories.getCategoryValue(site)\n
+    context.log(\'MoneyDeposit_getBaobabDestination, destination\',destination)\n
+    context.log(\'MoneyDeposit_getBaobabDestination, site\',site)\n
+    if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
+      baobab_destination = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
+      break\n
+  if user_id is not None and baobab_destination is None:\n
+    from Products.ERP5Type.Message import Message\n
+    message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n
+    raise ValueError,message\n
 return baobab_destination\n
 </string> </value>
         </item>

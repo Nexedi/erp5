@@ -75,9 +75,29 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 txn = state_change[\'object\']\n
+\n
+user_id = txn.portal_membership.getAuthenticatedMember().getUserName()\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+# context.log(\'validateVaultBalance site_list\',site_list)\n
+source = txn.getSource()\n
+baobab_source = None\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
+    baobab_source = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
+    break\n
+source = baobab_source\n
+source_object = context.portal_categories.getCategoryValue(source)\n
+\n
+# check again that we are in the good accounting date\n
+if not txn.Baobab_checkCounterDateOpen(site=source_object, date=txn.getStartDate()):\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
 in_list = txn.objectValues(portal_type=\'Incoming Account Incident Line\')\n
 out_list = txn.objectValues(portal_type=\'Outgoing Account Incident Line\')\n
-vault = "%s/surface/salle_tri/encaisse_des_differences" %(txn.getSource(),)\n
+vault = "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(txn.getSource(),)\n
 price = txn.getSourceTotalAssetPrice()\n
 in_price = txn.getTotalPrice(portal_type=[\'Incoming Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 out_price = txn.getTotalPrice(portal_type=[\'Outgoing Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
@@ -149,6 +169,17 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>_getitem_</string>
                             <string>txn</string>
                             <string>_getattr_</string>
+                            <string>user_id</string>
+                            <string>context</string>
+                            <string>site_list</string>
+                            <string>source</string>
+                            <string>None</string>
+                            <string>baobab_source</string>
+                            <string>_getiter_</string>
+                            <string>site</string>
+                            <string>site_value</string>
+                            <string>source_object</string>
+                            <string>msg</string>
                             <string>in_list</string>
                             <string>out_list</string>
                             <string>vault</string>
@@ -156,7 +187,6 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>len</string>
-                            <string>msg</string>
                             <string>resource</string>
                           </tuple>
                         </value>

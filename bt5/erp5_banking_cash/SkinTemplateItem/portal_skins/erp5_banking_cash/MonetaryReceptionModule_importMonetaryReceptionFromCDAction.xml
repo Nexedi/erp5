@@ -197,7 +197,7 @@ def split_head(CD_file_line_list):\n
                              \'/\' + head_start_date_string[0:2] + \' 0:0am\'\n
     head_start_date = DateTime(head_start_date_string )\n
   except:\n
-    return {\'error\':True, \'message\':"message_dict[\'01\']", \'head_dict\':{}}\n
+    return {\'error\':True, \'message\':message_dict[\'01\'], \'head_dict\':{}}\n
   #\n
 \n
   head_resource_string = (head_resource_string  or \'\').strip()\n

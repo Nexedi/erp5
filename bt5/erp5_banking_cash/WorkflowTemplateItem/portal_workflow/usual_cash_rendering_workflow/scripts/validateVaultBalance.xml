@@ -78,6 +78,11 @@ date = transaction.getStartDate()\n
 vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
 \n
+# use of the constraint\n
+vliste = transaction.checkConsistency()\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getTranslatedMessage(),)\n
+\n
 # check we are in an opened accounting day\n
 if not transaction.Baobab_checkCounterDateOpen(site=vault, date=date):\n
   msg = Message(domain = "ui", message="Counter Date is not opened")\n
@@ -158,6 +163,9 @@ elif resource <> 0 :\n
                             <string>date</string>
                             <string>vault</string>
                             <string>vaultDestination</string>
+                            <string>vliste</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>

@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getTotalPrice(deliveryLineType=\'Outgoing Account Incident Line\')</string> </value>
+            <value> <string>python: cell.getTotalPrice(deliveryLineType=\'Incoming Account Incident Line\')</string> </value>
         </item>
       </dictionary>
     </pickle>

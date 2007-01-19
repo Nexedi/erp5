@@ -73,12 +73,15 @@ bank_account = transaction.getDestinationPaymentValue()\n
 price = transaction.getSourceTotalAssetPrice()\n
 line = transaction.get(\'movement\')\n
 \n
-if ():  \n
+in_list = transaction.objectValues(portal_type=\'Incoming Account Incident Line\')\n
+out_list = transaction.objectValues(portal_type=\'Outgoing Account Incident Line\')\n
+\n
+if (len(in_list)!= 0):  \n
   if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
     # This is a single currency operation, so it is not necessary to convert the price.\n
     line.setSourceCredit(price)\n
 \n
-elif () :\n
+elif (len(out_list) != 0) :\n
   line = transaction.get(\'movement\')\n
   if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
   # This is a single currency operation, so it is not necessary to convert the price.\n
@@ -146,6 +149,9 @@ elif () :\n
                             <string>bank_account</string>
                             <string>price</string>
                             <string>line</string>
+                            <string>in_list</string>
+                            <string>out_list</string>
+                            <string>len</string>
                             <string>None</string>
                           </tuple>
                         </value>

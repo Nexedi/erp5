@@ -72,7 +72,7 @@
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Outgoing Account Incident Line\'\n
                     , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'         : [\'to_sort\']\n
+                    , \'cash_status_list\'         : [\'valid\',\'new_emitted\']\n
                     , \'emission_letter_list\'     : None\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
                     , \'currency_cash_portal_type\': None\n

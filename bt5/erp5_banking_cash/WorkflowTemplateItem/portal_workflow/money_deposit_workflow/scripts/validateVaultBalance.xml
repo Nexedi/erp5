@@ -73,9 +73,30 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 \n
-source = transaction.getSource()\n
-resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\', no_balance_check=1)\n
+destination = transaction.getDestination()\n
+resource = transaction.CashDelivery_checkCounterInventory(source = destination, portal_type=\'Cash Delivery Line\', \n
+                                                          same_source=1,no_balance_check=1)\n
 #transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
+\n
+\n
+user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+# context.log(\'validateVaultBalance site_list\',site_list)\n
+destination = transaction.getDestination()\n
+baobab_destination = None\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
+    baobab_destination = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
+    break\n
+destination = baobab_destination\n
+destination_object = context.portal_categories.getCategoryValue(destination)\n
+\n
+# check again that we are in the good accounting date\n
+if not transaction.Baobab_checkCounterDateOpen(site=destination_object, date=transaction.getStartDate()):\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
@@ -146,11 +167,20 @@ elif price != cash_detail:\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>source</string>
+                            <string>destination</string>
                             <string>resource</string>
+                            <string>user_id</string>
+                            <string>context</string>
+                            <string>site_list</string>
+                            <string>None</string>
+                            <string>baobab_destination</string>
+                            <string>_getiter_</string>
+                            <string>site</string>
+                            <string>site_value</string>
+                            <string>destination_object</string>
+                            <string>msg</string>
                             <string>price</string>
                             <string>cash_detail</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

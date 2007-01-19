@@ -109,7 +109,7 @@ Base_viewWorklist?simulation_state=confimed&portal_type=Account Incident&reset=1
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>planned</string>
+                        <string>confirmed</string>
                       </tuple>
                     </value>
                 </item>

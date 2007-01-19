@@ -19,20 +19,26 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Validate</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=deliver_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>deliver</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,23 +52,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>archive</string> </value>
+            <value> <string>deliver_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>archived</string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>script_name</string> </key>
+            <value> <string>validateSourceAndDestination</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Validate Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
