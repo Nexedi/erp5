@@ -117,22 +117,26 @@ class ERP5Report(ERP5Form):
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
+        if not self.report_method:
+          raise KeyError, 'report method is not set on the report'
+
         if not kwargs.has_key('args'):
           kwargs['args'] = args
         form = self
-        object = getattr(form, 'aq_parent', None)
-        if object:
-          container = object.aq_inner.aq_parent
+        obj = getattr(form, 'aq_parent', None)
+        if obj is not None:
+          container = obj.aq_inner.aq_parent
         else:
           container = None
-        pt = getattr(self,self.pt)
-        report_method = getattr(object,self.report_method)
+        pt = getattr(self, self.pt)
+
+        report_method = getattr(obj, self.report_method)
         extra_context = self.pt_getContext()
         extra_context['options'] = kwargs
         extra_context['form'] = self
         extra_context['request'] = get_request()
         extra_context['container'] = container ## PROBLEM NOT TAKEN INTO ACCOUNT
-        extra_context['here'] = object
+        extra_context['here'] = obj
         extra_context['report_method'] = report_method
         return pt.pt_render(extra_context=extra_context)
 
