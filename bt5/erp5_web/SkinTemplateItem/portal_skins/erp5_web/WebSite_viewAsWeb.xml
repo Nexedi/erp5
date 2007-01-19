@@ -46,8 +46,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,8 +67,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
-                <string>hidden</string>
+                <string>webcontent header bottom</string>
+                <string>webcontent bottom</string>
               </list>
             </value>
         </item>
@@ -71,18 +77,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>webcontent bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>my_section_content</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox_caption</string>
+                        <string>page_title</string>
+                        <string>page_summary</string>
                       </list>
                     </value>
                 </item>
@@ -91,7 +98,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ImageModule_viewImageList</string> </value>
+            <value> <string>WebSite_viewAsWeb</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -99,15 +106,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewContentList</string> </value>
+            <value> <string>WebSite_viewAsWeb</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
-        </item>
-        <item>
-            <key> <string>rid</string> </key>
-            <value> <int>-1722436574</int> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -119,13 +122,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Folder Contents</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Web Site</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

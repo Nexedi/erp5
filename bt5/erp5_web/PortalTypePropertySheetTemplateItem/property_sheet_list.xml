@@ -2,10 +2,11 @@
  <portal_type id="Web Page">
   <item>Reference</item>
   <item>SortIndex</item>
+  <item>TextDocument</item>
  </portal_type>
  <portal_type id="Web Section">
-  <item>SortIndex</item>
   <item>WebSite</item>
+  <item>SortIndex</item>
  </portal_type>
  <portal_type id="Web Site">
   <item>WebSite</item>

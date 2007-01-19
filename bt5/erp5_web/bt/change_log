@@ -1,3 +1,6 @@
+2007-01-19 JPS
+* Global commit of refactored bt. More refactoring needed still
+
 2006-10-05 Kevin
 * Minor fixes.
 * Don't show unvisible object in sub_web_object_list (thanks to Kristian).

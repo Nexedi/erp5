@@ -8,5 +8,3 @@ Features:
  * Multi-publication: 1 document can be published in several sections.
  * Collection of generic web widgets (breadcrumb, listbox, admin toolbar, ...).
  * Support FCKeditor for content edition.
-
-NB: The actual web widget collection contain some outdated code that need to be adapted to the new API.

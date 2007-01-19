@@ -38,25 +38,19 @@
    <name>Add CMF Caching Policy Managers</name>
   </permission>
   <permission type='list'>
-   <name>Add CMF Calendar Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add CMF Core Tools</name>
   </permission>
   <permission type='list'>
    <name>Add CMF Default Tools</name>
   </permission>
   <permission type='list'>
+   <name>Add CMF Groups Tools</name>
+  </permission>
+  <permission type='list'>
    <name>Add CMF Report Tools</name>
   </permission>
   <permission type='list'>
-   <name>Add CMF Setup Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add CMF Sites</name>
-  </permission>
-  <permission type='list'>
-   <name>Add CMF Unique Id Tools</name>
   </permission>
   <permission type='list'>
    <name>Add CMFActivity Tools</name>
@@ -66,9 +60,6 @@
   </permission>
   <permission type='list'>
    <name>Add CMFMailIn Tools</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Configured CMF Sites</name>
   </permission>
   <permission type='list'>
    <name>Add Content Type Registrys</name>
@@ -146,6 +137,15 @@
    <name>Add Formulator Forms</name>
   </permission>
   <permission type='list'>
+   <name>Add GroupUserFolder</name>
+  </permission>
+  <permission type='list'>
+   <name>Add GroupUserFolders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Groups</name>
+  </permission>
+  <permission type='list'>
    <name>Add LocalContents</name>
   </permission>
   <permission type='list'>
@@ -215,7 +215,7 @@
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Deferred Database Connections</name>
+   <name>Add Z MySQL Database Deferred Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
@@ -236,9 +236,6 @@
    <name>Add portal content</name>
   </permission>
   <permission type='list'>
-   <name>Add portal events</name>
-  </permission>
-  <permission type='list'>
    <name>Add portal folders</name>
   </permission>
   <permission type='list'>
@@ -246,6 +243,9 @@
   </permission>
   <permission type='list'>
    <name>Add portal topics</name>
+  </permission>
+  <permission type='list'>
+   <name>Add secure MailHost objects</name>
   </permission>
   <permission type='list'>
    <name>Change Browser Id Manager</name>
@@ -320,9 +320,6 @@
    <name>Change permissions</name>
   </permission>
   <permission type='list'>
-   <name>Change portal events</name>
-  </permission>
-  <permission type='list'>
    <name>Change portal topics</name>
   </permission>
   <permission type='list'>
@@ -339,6 +336,9 @@
   </permission>
   <permission type='list'>
    <name>Define permissions</name>
+  </permission>
+  <permission type='list'>
+   <name>Delete Groups</name>
   </permission>
   <permission type='list'>
    <name>Delete objects</name>
@@ -410,6 +410,9 @@
    <name>Manage ZCatalogIndex Entries</name>
   </permission>
   <permission type='list'>
+   <name>Manage extensions</name>
+  </permission>
+  <permission type='list'>
    <name>Manage languages</name>
   </permission>
   <permission type='list'>
@@ -461,6 +464,9 @@
    <name>Search for principals</name>
   </permission>
   <permission type='list'>
+   <name>Set Group Ownership</name>
+  </permission>
+  <permission type='list'>
    <name>Set own password</name>
   </permission>
   <permission type='list'>
@@ -485,10 +491,16 @@
    <name>Use Factories</name>
   </permission>
   <permission type='list'>
+   <name>Use external editor</name>
+  </permission>
+  <permission type='list'>
    <name>Use mailhost services</name>
   </permission>
   <permission type='list'>
    <name>View</name>
+  </permission>
+  <permission type='list'>
+   <name>View Groups</name>
   </permission>
   <permission type='list'>
    <name>View History</name>

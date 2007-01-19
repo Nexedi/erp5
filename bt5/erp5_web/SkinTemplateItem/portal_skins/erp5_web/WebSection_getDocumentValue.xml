@@ -100,11 +100,11 @@ language = portal.Localizer.get_selected_language()\n
 \n
 # Search the catalog for all documents matching the reference\n
 # this will only return documents which are accessible by the user\n
-web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list,\n
-                               language=language,\n
-                               order_by=[(\'version\', \'descending\')],\n
-                               group_by=(\'reference\',))\n
-\n
+web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list, \n
+                               order_by=[(\'index\', \'descending\'), (\'version\', \'descending\')],\n
+                               language=language)\n
+                               # XXX - group_by is missing here\n
+                               # portal_catalog extension required\n
 try:\n
   # Try to get the first page on the list\n
   web_page = web_page_list[0]\n
@@ -112,8 +112,9 @@ try:\n
 except IndexError:\n
   # Search again without the language\n
   web_page_list = portal_catalog(reference=name, portal_type=\'Web Page\', \n
-                                 order_by=[(\'version\', \'descending\')],\n
-                                 group_by=(\'reference\',))\n
+                                 order_by=[(\'index\', \'descending\'), (\'version\', \'descending\')])\n
+                                 # XXX - group_by is missing here\n
+                                 # portal_catalog extension required\n
   try:\n
     # Try to get the first page on the list\n
     web_page = web_page_list[0]\n
@@ -203,10 +204,6 @@ return web_page\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_getDocumentValue</string> </value>
-        </item>
-        <item>
-            <key> <string>isIndexable</string> </key>
-            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

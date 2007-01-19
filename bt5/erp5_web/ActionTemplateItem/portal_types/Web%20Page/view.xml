@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: not (hasattr(request, \'web_site_value\') and not (getattr(request, \'ignore_layout\', False) or getattr(request, \'editable_mode\', False)))</string> </value>
+            <value> <string>python: object is not None and not object.isWebMode()</string> </value>
         </item>
       </dictionary>
     </pickle>

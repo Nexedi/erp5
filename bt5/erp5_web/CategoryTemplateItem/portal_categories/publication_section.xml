@@ -31,15 +31,33 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_append_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_copy_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -47,104 +65,25 @@
             <value> <string>python: []</string> </value>
         </item>
         <item>
-            <key> <string>creation_date</string> </key>
+            <key> <string>acquisition_sync_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Sun</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Dec</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>38323.8602553</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Sunday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>December</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>21</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>1133728726060</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>38</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>46.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Sun.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>pm</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Dec.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>46.06</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>1133728726.06</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+1</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>2005</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.860255324071</float> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>category_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -154,110 +93,47 @@
             </value>
         </item>
         <item>
+            <key> <string>fallback_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>publication_section</string> </value>
+        </item>
+        <item>
+            <key> <string>id_generator</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id_group</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
             <value> <string>1</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
+            <key> <string>membership_criterion_base_category</string> </key>
             <value>
-              <object>
-                <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Sun</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Dec</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>38323.8604503</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Sunday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>December</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>21</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>1133728742906</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>39</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>2.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Sun.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>pm</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Dec.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>2.906</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>1133728742.91</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+1</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>2005</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.860450300926</float> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>multimembership_criterion_base_category</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -265,11 +141,47 @@
             <value> <string>Base Category</string> </value>
         </item>
         <item>
+            <key> <string>read_permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>rid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Publication Sections</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>write_permission</string> </key>
             <value>
               <none/>
             </value>

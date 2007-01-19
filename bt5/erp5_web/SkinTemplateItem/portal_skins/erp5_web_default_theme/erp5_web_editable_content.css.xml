@@ -451,6 +451,27 @@ div#main_content > fieldset.webcontent span.summary {\n
   padding: 0 2em;\n
   font-style: italic;\n
 }\n
+\n
+\n
+div#main_content fieldset.webcontent span.headline {\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 250%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+  text-align: left;\n
+}\n
+\n
+div#main_content .headline legend,\n
+div#main_content .headline label {\n
+  margin: 0;\n
+  width: 0em;\n
+  text-align: left;\n
+  float: left;\n
+  display: none;\n
+}\n
 
 
 ]]></string> </value>

@@ -4,22 +4,24 @@ Web Page Module | view
 Web Page | history
 Web Page | list
 Web Page | metadata
-Web Page | related
-Web Page | render
 Web Page | view
+Web Page | view_editor
 Web Page | web_view
 Web Section | history
+Web Section | list
 Web Section | metadata
+Web Section | new_default_page
+Web Section | new_page
 Web Section | predicate
 Web Section | section_content
 Web Section | view
 Web Section | web_view
-Web Section | web_view_default_page
 Web Site Module | list_ui
 Web Site Module | sort_on
 Web Site Module | view
 Web Site | history
 Web Site | metadata
+Web Site | new_default_page
 Web Site | predicate
 Web Site | view
 Web Site | web_view
