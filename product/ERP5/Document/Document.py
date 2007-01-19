@@ -320,13 +320,22 @@ class Document(XMLObject):
   def index_html(self, REQUEST, RESPONSE, format=None, **kw):
     """
       We follow here the standard Zope API for files and images
-      and extend it to support format conversion.
+      and extend it to support format conversion. The idea
+      is that an image which ID is "something.jpg" should
+      ne directly accessible through the URL
+      /a/b/something.jpg. The same is true for a file and
+      for any document type which primary purpose is to
+      be used by a helper application rather than displayed
+      as HTML in a web browser. Exceptions to this approach
+      include Web Pages which are intended to be primarily rendered
+      withing the layout of a Web Site or withing a standard ERP5 page.
+      Please refer to the index_html of TextDocument.
 
-      format - the format specied in the form of an extension
+      format - the format specified in the form of an extension
       string (ex. jpeg, html, text, txt, etc.)
     """
     pass
-  
+
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
     """
