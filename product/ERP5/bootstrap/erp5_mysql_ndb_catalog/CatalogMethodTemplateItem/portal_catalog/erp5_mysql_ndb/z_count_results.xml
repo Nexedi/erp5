@@ -166,6 +166,10 @@ WHERE\n
     <dtml-if expression> AND <dtml-var expression> </dtml-if>\n
   </dtml-let>\n
 </dtml-if>\n
+<dtml-if group_by_expression>\n
+GROUP BY\n
+  <dtml-var group_by_expression>\n
+</dtml-if>\n
 <dtml-if sort_on>\n
 ORDER BY\n
   <dtml-var sort_on>\n
