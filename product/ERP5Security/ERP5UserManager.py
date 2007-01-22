@@ -20,7 +20,8 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PluggableAuthService.PluggableAuthService import _SWALLOWABLE_PLUGIN_EXCEPTIONS
+from Products.PluggableAuthService.PluggableAuthService import \
+    _SWALLOWABLE_PLUGIN_EXCEPTIONS
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
@@ -44,7 +45,7 @@ manage_addERP5UserManagerForm = PageTemplateFile(
     __name__='manage_addERP5UserManagerForm' )
 
 def addERP5UserManager(dispatcher, id, title=None, REQUEST=None):
-    """ Add a ERP5UserManagern to a Pluggable Auth Service. """
+    """ Add a ERP5UserManager to a Pluggable Auth Service. """
 
     eum = ERP5UserManager(id, title)
     dispatcher._setObject(eum.getId(), eum)
