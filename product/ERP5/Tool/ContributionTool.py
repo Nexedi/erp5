@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import re
+import string
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
@@ -39,6 +41,9 @@ from Acquisition import aq_base
 
 NO_DISCOVER_METADATA_KEY = '_v_no_discover_metadata'
 USER_NAME_KEY = '_v_document_user_login'
+TEMP_NEW_OBJECT_KEY = '_v_new_object'
+
+_marker = []  # Create a new marker object.
 
 class ContributionTool(BaseTool):
   """
@@ -61,7 +66,7 @@ class ContributionTool(BaseTool):
   id = 'portal_contributions'
   meta_type = 'ERP5 Contribution Tool'
   portal_type = 'Contribution Tool'
-  allowed_types = ('File', 'Image') # XXX Is this really needed ?
+  allowed_types = ('File', 'Image', 'Text') # XXX Is this really needed ?
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -70,11 +75,12 @@ class ContributionTool(BaseTool):
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
   security.declarePrivate('findTypeName')
-  def findTypeName(self, name, ob):
+  def findTypeName(self, file_name, ob):
     """
       Finds the appropriate portal type based on the file name
       or if necessary the content of ob
     """
+    portal_type = None
     # We should only consider those portal_types which share the
     # same meta_type with the current object
     valid_portal_type_list = []
@@ -83,21 +89,31 @@ class ContributionTool(BaseTool):
         valid_portal_type_list.append(pt.id)
 
     # Check if the filename tells which portal_type this is
-    portal_type = self.getPropertyDictFromFileName(file_name).get('portal_type', None)
+    portal_type_list = self.getPropertyDictFromFileName(file_name).get('portal_type', [])
+    if len(portal_type_list) == 1:
+      # if we have only one, then this is it
+      return portal_type_list[0]
 
     # If it is still None, we need to read the document
     # to check which of the candidates is suitable
     if portal_type is None:
       # The document is now responsible of telling all its properties
       portal_type = ob.getPropertyDictFromContent().get('portal_type', None)
+      if portal_type is not None:
+        # we check if it matches the candidate list, if there were any
+        if len(portal_type_list)>1 and portal_type not in portal_type_list:
+          raise TypeError('%s not in the list of %s' % (portal_type, str(portal_type_list)))
+        return portal_type
 
     if portal_type is None:
       # We can not do anything anymore
       return ob.portal_type
+      #return None
 
     if portal_type not in valid_portal_type_list:
       # We will not be able to migrate ob to portal_type
-      return ob.portal_type
+      #return ob.portal_type
+      return None
 
     return portal_type
 
@@ -118,6 +134,9 @@ class ContributionTool(BaseTool):
         We always generate ID. So, we must prevent using the one
         which we were provided.
     """
+    if portal_type is None:
+      portal_type = kw.get('portal_type')
+    kw['portal_type'] = portal_type
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
@@ -126,19 +145,25 @@ class ContributionTool(BaseTool):
     # Try to find the file_name
     file = kw.get('file', None)
     if file is not None:
-      file_name = file.name
+      try:
+        file_name = file.filename
+      except AttributeError: # file can be raw data
+        file_name = kw.get('file_name')
     else:
       file_name = None
+    if file_name is not None:
+      # we store it as source_reference
+      kw['source_reference'] = file_name
 
     # If the portal_type was provided, we can go faster
-    if portal_type is not None:
+    if portal_type is not None and portal_type != '':
       # We know the portal_type, let us find the module
       module = self.getDefaultModule(portal_type)
 
       # And return a document
       # NOTE: we use the module ID generator rather than the provided ID
-      document = module.newContent(portal_type=portal_type, **kw)
-      if discover_metadata: document.discoverMetadata(file_name=file_name, user_login=user_login)
+      document = module.newContent(**kw)
+      #if discover_metadata: document.discoverMetadata(file_name=file_name, user_login=user_login)
       return document
 
     # From here, there is no hope unless a file was provided    
@@ -146,25 +171,26 @@ class ContributionTool(BaseTool):
       raise ValueError, "could not determine portal type"
 
     # So we will simulate WebDAV to get an empty object
-    # woith PUT_factory
+    # with PUT_factory
     ob = self.PUT_factory( file_name, None, None )
 
     # Then put the file inside ourselves for a short while
-    BaseTool._setObject(self, name, ob)
-    document = self[name]
-    
-    # Then edit the document contents (so that upload can happen)
-    document._edit(**kw)
+    #BaseTool._setObject(self, name, ob)
+    #document = self[name]
     
     # Remove the object from ourselves
-    self._delObject(name, ob)
+    #self._delObject(name, ob)
 
     # Move it to where it belongs
     if not discover_metadata: setattr(self, NO_DISCOVER_METADATA_KEY, 1)
     setattr(ob, USER_NAME_KEY, user_login)
-    document = self._setObject(name, ob)
+    #document = self._setObject(name, ob)
 
     # Reindex it and return it
+    # because PUT_factory unwraps the object, we have to get it from volatile, grrr...
+    document = getattr(self, TEMP_NEW_OBJECT_KEY)[0]
+    # Then edit the document contents (so that upload can happen)
+    #document._edit(**kw)
     document.immediateReindexObject()
     return document
 
@@ -177,21 +203,36 @@ class ContributionTool(BaseTool):
     pass
 
   security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromFileName')
-  def getPropertyDictFromFileName(self, fname):
+  def getPropertyDictFromFileName(self, file_name):
     """
       Gets properties from filename. File name is parsed with a regular expression
       set in preferences. The regexp should contain named groups.
     """
+    if file_name is None:
+      return {}
+    property_dict = {}
     rx_src = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
-    if not rx_src:
-      return
-    rx_parse = re.compile()
-    if rx_parse is None:
-      return
-    dict = rx_parse.match(fname)
+    if rx_src:
+      rx_parse = re.compile()
+      if rx_parse is not None:
+        try:
+          property_dict = rx_parse.match(file_name).groupdict()
+        except AttributeError: # no match
+          pass
     method = self._getTypeBasedMethod('getPropertyDictFromFileName', 
         fallback_script_id = 'ContributionTool_getPropertyDictFromFileName')
-    return method(fname, **dict)
+    property_dict = method(file_name, property_dict)
+    if not property_dict.has_key('portal_type'):
+      # we have to find candidates by file extenstion
+      try:
+        index = file_name.rfind('.')
+        if index != -1:
+          ext = file_name[index+1:]
+          property_dict['portal_type'] = self.ContributionTool_getCandidateTypeListByExtension(ext)
+      except ValueError: # no dot in file name
+        pass
+    return property_dict
+
 
   # WebDAV virtual folder support
   def _setObject(self, name, ob, user_login=None):
@@ -219,6 +260,8 @@ class ContributionTool(BaseTool):
     # Find the portal type based on file name and content
     # We provide ob in the context of self to make sure scripting is possible
     portal_type = self.findTypeName(name, ob.__of__(self))
+    if portal_type is None:
+      raise TypeError, "Unable to determine portal type"
     
     # We know the portal_type, let us find the module
     module = self.getDefaultModule(portal_type)
@@ -231,10 +274,37 @@ class ContributionTool(BaseTool):
 
     # We can now discover metadata unless NO_DISCOVER_METADATA_KEY was set on ob
     document = module[new_id]
+    # store as volatile to be able to retrieve in a while
+    # keep name (to doublecheck this is the one)
+    # because PUT_factory will eventually call it by file name
+    setattr(self, TEMP_NEW_OBJECT_KEY, (document, name))
     user_login = getattr(self, USER_NAME_KEY, None)
     if not getattr(ob, NO_DISCOVER_METADATA_KEY, 0): document.discoverMetadata(file_name=name, user_login=user_login)
 
     # Return document to newContent method
     return document
     
+  def _getOb(self, id, default=_marker):
+    """
+    Check for volatile temp object info first
+    and try to find it
+    """
+    ob, new_id = getattr(self, TEMP_NEW_OBJECT_KEY, (None, None))
+    if ob is not None:
+      if new_id == id:
+        return ob
+    return BaseTool._getOb(self, id, default)
+
+  def _delOb(self, id):
+    """
+    We don't need to delete, since we never set here
+    """
+    pass
+
+
 InitializeClass(ContributionTool)
+
+
+
+
+# vim: filetype=python syntax=python shiftwidth=2 
