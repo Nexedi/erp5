@@ -101,7 +101,16 @@ div#main_content button {\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
 ------------------------------------------------------------------ */\n
 \n
-div#main_content .ListSummary table {display: none}\n
+div#main_content .ListSummary table {\n
+  width: 100%;\n
+  background-color: white;\n
+  padding: .1em;\n
+  margin-top: 1em;\n
+  background: #fff url(erp5-website-field.png) top repeat-x;\n
+  border: 1pt solid #ccc;\n
+  color: #666;\n
+  padding: 2px;\n
+}\n
 \n
 div#main_content .ListContent table {\n
   margin-bottom: 2em;\n
@@ -114,10 +123,19 @@ div#main_content .ListContent td {\n
   vertical-align: top;\n
 }\n
 \n
-div#main_content .ListContent td.Data  {background-color: #adb9cc}\n
-div#main_content .ListContent td.DataA {background-color: #fff}\n
-div#main_content .ListContent td.DataB {background-color: #eee}\n
+div#main_content .ListContent td.Data  {\n
+  background: #adb9cc\n
+}\n
 \n
+div#main_content .ListContent tr.DataA {\n
+  background: #fff\n
+}\n
+\n
+div#main_content .ListContent tr.DataB {\n
+  background: #eee\n
+}\n
+\n
+div#main_content .ListContent table tr:hover {background: #ccc}\n
 \n
 /* Custom web Listbox styling.\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
@@ -199,7 +217,11 @@ div#main_content table.listbox tbody td a,\n
 div#main_content table.listbox tbody td a:hover,\n
 div#main_content table.listbox tbody td a:visited {color: #4343D9}\n
 \n
-div#main_content table.listbox tbody tr:hover {background: #f6f6f6}\n
+div#main_content table.listbox tbody tr {\n
+  background: #fff;\n
+}\n
+\n
+div#main_content table.listbox tbody tr:hover {background: #ccc}\n
 \n
 div#main_content table.listbox tbody span.number, tbody span.date {float: right}\n
 \n
@@ -224,7 +246,6 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {\n
   text-decoration: none;\n
   background: #eee;\n
 }\n
-\n
 \n
 /*========================================================================================\n
 **  PAGE LAYOUT\n
@@ -462,15 +483,6 @@ div#main_content fieldset.webcontent span.headline {\n
   text-shadow: .1em .1em .1em #eee;\n
   line-height: 140%;\n
   text-align: left;\n
-}\n
-\n
-div#main_content .headline legend,\n
-div#main_content .headline label {\n
-  margin: 0;\n
-  width: 0em;\n
-  text-align: left;\n
-  float: left;\n
-  display: none;\n
 }\n
 
 
