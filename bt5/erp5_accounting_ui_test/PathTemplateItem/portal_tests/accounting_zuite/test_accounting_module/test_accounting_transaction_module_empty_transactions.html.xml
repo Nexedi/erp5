@@ -272,11 +272,6 @@ Accounting Transaction Module Displays empty Transactions\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertTitle</td>\n
-  <td>Delete The Objects</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>assertText</td>\n
   <td>listbox_record_number</td>\n
   <td>2 record(s)</td>\n
@@ -288,13 +283,6 @@ Accounting Transaction Module Displays empty Transactions\n
   <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
-<!-- FIXME: bug in xhtml style ?\n
-<tr>\n
-  <td>assertTitle</td>\n
-  <td>Folder Contents</td>\n
-  <td></td>\n
-</tr>\n
--->\n
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Deleted.</td>\n
