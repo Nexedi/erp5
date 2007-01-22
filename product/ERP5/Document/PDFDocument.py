@@ -66,13 +66,14 @@ class PDFDocument(File, ConversionCacheMixin):
                     )
 
 
-  def getTargetFile(self,format):
-    '''
-    we need to make our own, because Photo's methods are not
-    sufficient (we have to zip etc)
-    '''
-    if not self.hasConversion(format = format):
+  def index_html(self, REQUEST, RESPONSE, format, force=0):
+    """
+      Returns data in the appropriate format
+    """
+    mime = 'image/'+format.lower()
+    if force or not self.hasConversion(format = format):
       self.setConversion(self._makeFile(format), 'application/zip', format=format)
+    RESPONSE.setHeader('Content-Type', 'application/zip')
     return self.getConversion(format = format)
 
   def _makeFile(self,format):
