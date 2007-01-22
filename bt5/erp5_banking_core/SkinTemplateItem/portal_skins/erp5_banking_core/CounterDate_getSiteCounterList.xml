@@ -73,6 +73,11 @@
 site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
 counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", site_uid = site.getUid())]\n
 \n
+def sort_counter(a,b):\n
+  return cmp(a.getTitle(),b.getTitle())\n
+\n
+counter_list.sort(sort_counter)\n
+\n
 return counter_list\n
 </string> </value>
         </item>
@@ -133,6 +138,7 @@ return counter_list\n
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>counter_list</string>
+                            <string>sort_counter</string>
                           </tuple>
                         </value>
                     </item>

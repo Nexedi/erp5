@@ -68,39 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if site is not None:\n
-  site_uid = site.getUid()\n
-else:\n
-  site_uid = context.getSiteUid()\n
-operation_list = []\n
-if site_uid is not None:\n
-  not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\')\n
-  portal_type_list = [x for x in context.getPortalDeliveryTypeList()]\n
-  document_list = context.Baobab_getRemainingOperationList(\n
-                        site_uid=site_uid,\n
-                        simulation_state=not_closed_state_list,\n
-                        portal_type=portal_type_list)\n
-  append = operation_list.append\n
-  for document in document_list:\n
-    # Cash movement in ordered stated are allowed\n
-    portal_type = document.getPortalType()\n
-    if portal_type==\'Cash Movement\':\n
-      if document.getSimulationState()==\'ordered\':\n
-        continue\n
-    elif portal_type==\'Stop Payment\':\n
-      if document.getSimulationState()==\'started\':\n
-        continue\n
-    append(document)\n
-\n
-def operation_sort(a,b):\n
-  result = cmp(a.getPortalType(),b.getPortalType())\n
-  if result==0:\n
-    result = cmp(a.getSourceReference(),b.getSourceReference())\n
-  return result\n
-\n
-operation_list.sort(operation_sort)\n
-\n
-return operation_list\n
+            <value> <string>site_list = [x[1] for x in context.Delivery_getVaultItemList(vault_type=(\'site\',),strict_membership=1,\n
+                                              leaf_node=0,user_site=0) if x[1]!=\'\']\n
+for site in site_list:\n
+  site_value = context.portal_categories.restrictedTraverse(site)\n
+  if site_value.getCodification()==codification:\n
+    return site_value\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -123,7 +97,7 @@ return operation_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None,**kw</string> </value>
+            <value> <string>codification</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,23 +123,18 @@ return operation_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>kw</string>
-                            <string>None</string>
-                            <string>_getattr_</string>
-                            <string>site_uid</string>
-                            <string>context</string>
-                            <string>operation_list</string>
-                            <string>not_closed_state_list</string>
+                            <string>codification</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>x</string>
-                            <string>portal_type_list</string>
-                            <string>document_list</string>
-                            <string>document</string>
-                            <string>portal_type</string>
-                            <string>operation_sort</string>
+                            <string>_getitem_</string>
+                            <string>site_list</string>
+                            <string>site</string>
+                            <string>site_value</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,14 +146,12 @@ return operation_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CounterDate_getRemainingOperationList</string> </value>
+            <value> <string>Baobab_getSiteFromCodification</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

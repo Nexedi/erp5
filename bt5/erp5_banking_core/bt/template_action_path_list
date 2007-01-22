@@ -32,6 +32,7 @@ Checkbook Model Check Amount Variation | metadata
 Checkbook Model Check Amount Variation | print
 Checkbook Model Check Amount Variation | view
 Checkbook Model Module | list_ui
+Checkbook Model Module | print_pdf
 Checkbook Model Module | sort_on
 Checkbook Model Module | view
 Checkbook Model | history
@@ -39,6 +40,7 @@ Checkbook Model | metadata
 Checkbook Model | print
 Checkbook Model | view
 Checkbook Module | list_ui
+Checkbook Module | print_pdf
 Checkbook Module | sort_on
 Checkbook Module | view
 Checkbook | create_check_list
@@ -50,6 +52,7 @@ Coin | history
 Coin | metadata
 Coin | view
 Counter Date Module | list_ui
+Counter Date Module | print_pdf
 Counter Date Module | sort_on
 Counter Date Module | view
 Counter Date | history
@@ -57,13 +60,14 @@ Counter Date | metadata
 Counter Date | remaining_operations
 Counter Date | view
 Counter Module | list_ui
+Counter Module | print_pdf
 Counter Module | sort_on
 Counter Module | vault_report
 Counter Module | view
 Counter | history
 Counter | metadata
 Counter | view
-Currency Cash Module | list
 Currency Cash Module | list_sort_on
 Currency Cash Module | list_ui
+Currency Cash Module | print_pdf
 Currency Cash Module | view
