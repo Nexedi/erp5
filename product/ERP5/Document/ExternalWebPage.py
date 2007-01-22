@@ -30,9 +30,12 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.File import stripHtml
 from Products.ERP5.Document.ExternalDocument import ExternalDocument, SpiderException
+from Products.CMFCore.utils import getToolByName
 
 import mimetypes, re, urllib
 from htmlentitydefs import name2codepoint
+
+portal_workflow = getToolByName('portal_workflow')
 
 rx=[]
 rx.append(re.compile('<!--.*?-->',re.DOTALL|re.MULTILINE)) # clear comments (sometimes JavaScript code in comments contains > chars)
@@ -202,7 +205,8 @@ class ExternalWebPage(ExternalDocument):
     try:
       s=recode(s)
     except CanNotDecode:
-      self.setExternalProcessingStatusMessage("Spidered on %s, %i chars, but could not decode" % (self._time(), chars))
+      msg = "Spidered on %s, %i chars, but could not decode" % (self._time(), chars)
+      portal_workflow.doActionFor(context, 'process', comment=msg)
       return False
     s=stripHtml(s) # remove headers, doctype and the like
     s=clearHtml(s) # remove tags

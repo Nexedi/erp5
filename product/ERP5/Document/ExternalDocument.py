@@ -127,20 +127,24 @@ class ExternalDocument(Document):
       s,inf=self._spiderSource()
     except Exception,e:
       self.log(e,level=1)
-      self.setExternalProcessingStatusMessage("Tried on %s: %s" % (self._time(),str(e)))
+      msg = "Tried on %s: %s" % (self._time(),str(e))
+      portal_workflow.doActionFor(context, 'process', comment=msg)
       return False
     chars=len(s)
     if chars==0:
-      self.setExternalProcessingStatusMessage("Tried on %s: got empty string" % self._time())
+      msg = "Tried on %s: got empty string" % self._time() 
+      portal_workflow.doActionFor(context, 'process', comment=msg)
       return False
     try:
       s=self._processData(s,inf)
     except Exception,e:
       self.log(e,level=1)
-      self.setExternalProcessingStatusMessage("Spidered on %s, %i chars, but could not process; reason: %s" % (self._time(), chars, str(e)))
+      msg = "Spidered on %s, %i chars, but could not process; reason: %s" % (self._time(), chars, str(e))
+      portal_workflow.doActionFor(context, 'process', comment=msg)
       return False
     self.setTextContent(s)
-    self.setExternalProcessingStatusMessage("Spidered on %s, %i chars, recorded %i chars" % (self._time(), chars, len(s)))
+    msg = "Spidered on %s, %i chars, recorded %i chars" % (self._time(), chars, len(s))
+    portal_workflow.doActionFor(context, 'process', comment=msg)
     return True
 
   security.declareProtected(Permissions.View, 'getProtocolItemList')
