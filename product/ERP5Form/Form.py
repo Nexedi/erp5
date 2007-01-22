@@ -50,7 +50,7 @@ import sys
 
 from Products.Formulator.Field import Field
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 def get_value(self, id, **kw):
     """Get value for id."""
@@ -59,24 +59,22 @@ def get_value(self, id, **kw):
         self.tales = {}
 
     tales_expr = self.tales.get(id, "")
-    # tales_expr = self.get_tales(id)
     if tales_expr:
         REQUEST = get_request()
         form = self.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
-        object = getattr(form, 'aq_parent', None)
-        if object is not None:
-            container = object.aq_inner.aq_parent
-            #container = object.aq_parent # This was the version used for long - I see no reason to do this  
+        obj = getattr(form, 'aq_parent', None)
+        if obj is not None:
+            container = obj.aq_inner.aq_parent
         else:
             container = None
         kw['field'] = self
         kw['form'] = form
         kw['request'] = REQUEST
-        kw['here'] = object
+        kw['here'] = obj
         kw['modules'] = SecureModuleImporter
         kw['container'] = container
         try :
-            kw['preferences'] = object.getPortalObject().portal_preferences
+            kw['preferences'] = obj.getPortalObject().portal_preferences
         except AttributeError :
             LOG('ERP5Form', 0,
               'portal_preferences not put in TALES context (not installed?)')
@@ -101,8 +99,9 @@ def get_value(self, id, **kw):
         except:
             # We add this safety exception to make sure we always get
             # something reasonable rather than generate plenty of errors
-            LOG('ERP5Form.get_value ( %s/%s [%s]), exception on tales_expr: '%(
-                self.aq_parent.getId(), self.getId(), id) ,0,'', error=sys.exc_info())
+            LOG('ERP5Form', PROBLEM,
+                'Field.get_value ( %s/%s [%s]), exception on tales_expr: ' %
+                ( form.getId(), self.getId(), id), error=sys.exc_info())
             value = self.get_orig_value(id)
     else:
         # FIXME: backwards compat hack to make sure overrides dict exists
@@ -110,7 +109,6 @@ def get_value(self, id, **kw):
             self.overrides = {}
 
         override = self.overrides.get(id, "")
-        # override = self.get_override(id)
         if override:
             # call wrapped method to get answer
             value = override.__of__(self)()
@@ -386,22 +384,19 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         if not kwargs.has_key('args'):
             kwargs['args'] = args
         form = self
-        object = getattr(form, 'aq_parent', None)
-        if object is not None:
-          container = object.aq_inner.aq_parent
-          if not _checkPermission(Permissions.View, object):
-            raise AccessControl_Unauthorized('This document is not authorizes for view.')
+        obj = getattr(form, 'aq_parent', None)
+        if obj is not None:
+          container = obj.aq_inner.aq_parent
+          if not _checkPermission(Permissions.View, obj):
+            raise AccessControl_Unauthorized('This document is not authorized for view.')
         else:
           container = None
         pt = getattr(self,self.pt)
-        extra_context = self.pt_getContext()
-        extra_context['options'] = kwargs
-        extra_context['form'] = self
-        extra_context['container'] = container ## PROBLEM NOT TAKEN INTO ACCOUNT
-        extra_context['here'] = object
-        # We initialize here an index which is used to generate
-        # different method ids for every field
-        request = extra_context['request']
+        extra_context = dict( container=container,
+                              template=self,
+                              form=self,
+                              options=kwargs,
+                              here=obj )
         return pt.pt_render(extra_context=extra_context)
 
     def _exec(self, bound_names, args, kw):
