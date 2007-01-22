@@ -26,20 +26,19 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
+import mimetypes
+import re
 
+from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type.Base import Base
-
 from Products.CMFDefault.File import File as CMFFile
-
 from zLOG import LOG
-
-import mimetypes, re
 from DateTime import DateTime
+
 mimetypes.init()
 
 rs=[]
@@ -47,10 +46,12 @@ rs.append(re.compile('<HEAD>.*</HEAD>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
 rs.append(re.compile('<!DOCTYPE[^>]*>'))
 rs.append(re.compile('<.?(HTML|BODY)[^>]*>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
 
+
 def stripHtml(txt): # XXX-JPS to be moved to TextDocument
   for r in rs:
     txt=r.sub('',txt)
   return txt
+
 
 class File(Document, CMFFile):
   """
@@ -172,7 +173,7 @@ class File(Document, CMFFile):
       data_list = []
       while data is not None:
         data_list.append(data.data)
-        data=data.next
+        data = data.next
       return ''.join(data_list)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
@@ -191,8 +192,8 @@ class File(Document, CMFFile):
   def PUT(self,REQUEST,RESPONSE):
     self.clearConversionCache()
     CMFFile.PUT(self,REQUEST,RESPONSE)
-    self.DMS_ingestFile(fname=self.getId()) # XXX-JPS we should call here Document_discoverMetadata
-                                            # with the filename as parameter
+    self.discoverMetadata(fname=self.getId())
+
 
   # DAV Support
   index_html = CMFFile.index_html # XXX-JPS - Here we have a security issue - ask seb what to do
