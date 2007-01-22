@@ -824,6 +824,8 @@ class Document(XMLObject):
       for later. It converts what needs conversion to base, and
       does things that can be done only after it is converted).
     """
+    if getattr(self, 'convertToBase', _MARKER) is not _MARKER:
+      self.convertToBase()
     # Get the order from preferences
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
