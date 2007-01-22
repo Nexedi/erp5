@@ -65,6 +65,7 @@ class PDFDocument(File, ConversionCacheMixin):
                     , PropertySheet.Data
                     )
 
+
   def getTargetFile(self,format):
     '''
     we need to make our own, because Photo's methods are not
@@ -74,32 +75,30 @@ class PDFDocument(File, ConversionCacheMixin):
       self.setConversion(self._makeFile(format), 'application/zip', format=format)
     return self.getConversion(format = format)
 
-
   def _makeFile(self,format):
-    tempfile.tempdir=os.path.join(os.getenv('INSTANCE_HOME'),'tmp')
-    os.putenv('TMPDIR','/tmp') # because if we run zope as root, we have /root/tmp here and convert goes berserk
+    tempfile.tempdir = os.path.join(os.getenv('INSTANCE_HOME'), 'tmp')
+    os.putenv('TMPDIR', '/tmp') # because if we run zope as root, we have /root/tmp here and convert goes crazy
     if not os.path.exists(tempfile.tempdir):
-      os.mkdir(tempfile.tempdir,0775)
-    fr=tempfile.mktemp(suffix='.pdf')
-    to=tempfile.mktemp(suffix='.'+format)
-    file_fr=open(fr,'w')
+      os.mkdir(tempfile.tempdir, 0775)
+    fr = tempfile.mktemp(suffix='.pdf')
+    to = tempfile.mktemp(suffix = '.' + format)
+    file_fr = open(fr, 'w')
     file_fr.write(self._unpackData(self.data))
     file_fr.close()
-    cmd='convert %s %s' % (fr,to)
+    cmd = 'convert %s %s' % (fr, to)
     os.system(cmd)
     # pack it
-    f=cStringIO.StringIO()
-    z=zipfile.ZipFile(f,'a')
-    print to.replace('.','*')
-    for fname in glob.glob(to.replace('.','*')):
-      base=os.path.basename(fname)
-      pg=re.match('.*(\d+)\.'+format,base).groups()
+    f = cStringIO.StringIO()
+    z = zipfile.ZipFile(f, 'a')
+    for fname in glob.glob(to.replace('.', '*')):
+      base = os.path.basename(fname)
+      pg = re.match('.*(\d+)\.'+format, base).groups()
       if pg:
-        pg=pg[0]
-        arcname='%s/page-%s.%s' % (format,pg,format)
+        pg = pg[0]
+        arcname = '%s/page-%s.%s' % (format, pg, format)
       else:
-        arcname=base
-      z.write(fname,arcname)
+        arcname = base
+      z.write(fname, arcname)
     z.close()
     f.seek(0)
     return f.read()
@@ -116,19 +115,19 @@ class PDFDocument(File, ConversionCacheMixin):
     for simplicity we check only modification_date, which means we rebuild txt and html after every edit
     but that shouldn't hurt too much
     """
-    if hasattr(self,'data') and (force==1 or not self.hasConversion(format = 'txt') or self.getTextContent() is None):
+    if hasattr(self, 'data') and (force == 1 or not self.hasConversion(format = 'txt') or self.getTextContent() is None):
       # XXX-JPS accessing attribute data is bad
-      self.log('PdfDocument','regenerating txt')
-      tmp=tempfile.NamedTemporaryFile()
+      self.log('PdfDocument', 'regenerating txt')
+      tmp = tempfile.NamedTemporaryFile()
       tmp.write(self._unpackData(self.data))
       tmp.seek(0)
-      cmd='pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
-      r=os.popen(cmd)
-      self.setTextContent(r.read().replace('\n',' '))
+      cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
+      r = os.popen(cmd)
+      self.setTextContent(r.read().replace('\n', ' '))
       tmp.close()
       r.close()
       self.setConversion('empty', format = 'txt') # we don't need to store it twice, just mark we have it
-    return File.getSearchableText(self,md)
+    return File.getSearchableText(self, md)
 
   SearchableText=getSearchableText
 
@@ -137,19 +136,19 @@ class PDFDocument(File, ConversionCacheMixin):
     '''
     get simplified html version to display
     '''
-    if not hasattr(self,'data'):
+    if not hasattr(self, 'data'):
       return 'no data'
     if force==1 or not self.hasConversion(format = 'html'):
-      self.log('PDF','regenerating html')
-      tmp=tempfile.NamedTemporaryFile()
+      self.log('PDF', 'regenerating html')
+      tmp = tempfile.NamedTemporaryFile()
       tmp.write(self._unpackData(self.data))
       tmp.seek(0)
-      cmd='pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
-      r=os.popen(cmd)
-      h=r.read()
+      cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
+      r = os.popen(cmd)
+      h = r.read()
       tmp.close()
       r.close()
-      h=stripHtml(h)
+      h = stripHtml(h)
       self.setConversion(h, format = 'html')
       self.updateConversion(format = 'html')
     return self.getConversion(format = 'html')[1]
