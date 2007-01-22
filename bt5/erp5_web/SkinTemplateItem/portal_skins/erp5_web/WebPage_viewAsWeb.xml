@@ -71,15 +71,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>webcontent header bottom</string> </key>
+                    <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>dynamic_subcontent_listbox</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -496,8 +496,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>short_title</string>
-                          <string>Short Title</string>
+                          <string>reference</string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>
@@ -525,28 +525,7 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>short_title</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
