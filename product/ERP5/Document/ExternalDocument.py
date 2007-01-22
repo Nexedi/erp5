@@ -29,8 +29,11 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Document import Document
+from Products.CMFCore.utils import getToolByName
 
-import mimetypes, re, urllib
+import mimetypes
+import re
+import urllib
 from htmlentitydefs import name2codepoint
 from DateTime import DateTime
 
@@ -123,6 +126,7 @@ class ExternalDocument(Document):
     sets status message
     returned value tells us if it succeeded or failed
     """
+    portal_workflow = getToolByName(self, 'portal_workflow')
     try:
       s,inf=self._spiderSource()
     except Exception,e:

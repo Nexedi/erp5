@@ -35,8 +35,6 @@ from Products.CMFCore.utils import getToolByName
 import mimetypes, re, urllib
 from htmlentitydefs import name2codepoint
 
-portal_workflow = getToolByName('portal_workflow')
-
 rx=[]
 rx.append(re.compile('<!--.*?-->',re.DOTALL|re.MULTILINE)) # clear comments (sometimes JavaScript code in comments contains > chars)
 rx.append(re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)) # clear tags
@@ -206,6 +204,7 @@ class ExternalWebPage(ExternalDocument):
       s=recode(s)
     except CanNotDecode:
       msg = "Spidered on %s, %i chars, but could not decode" % (self._time(), chars)
+      portal_workflow = getToolByName(self, 'portal_workflow')
       portal_workflow.doActionFor(context, 'process', comment=msg)
       return False
     s=stripHtml(s) # remove headers, doctype and the like
