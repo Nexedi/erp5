@@ -44,6 +44,7 @@ class TestConstraint(PropertySheetTestCase):
   quiet = 1
 
   object_portal_type = "Organisation"
+  object_content_portal_type = "Address"
   object_title = "Title test"
 
   def getTitle(self):
@@ -1174,6 +1175,121 @@ class TestConstraint(PropertySheetTestCase):
     # now we can use testing_category as any category accessor
     self.assertEquals(obj, obj.getTestingCategoryValue())
 
+  def stepCreateContentExistence(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a Content Existence Constraint
+    """
+    self._createGenericConstraint(
+                            sequence,
+                            klass_name='ContentExistence',
+                            id='ContentExistence',
+                            description='ContentExistence test',
+                            portal_type=(self.object_content_portal_type, )
+                            )
+
+  def stepCreateContentObject(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a Content Object inside one Object
+    """
+    object = sequence.get('object')
+    content_object = object.newContent(portal_type=self.object_content_portal_type)
+    sequence.edit(
+        content_object = content_object,
+    )
+
+  def test_ContentExistenceConstraint(self, quiet=quiet, run=run_all_test):
+    """
+      Tests Content Existence
+    """
+
+    if not run: return
+    sequence_list = SequenceList()
+    # Test Constraint without any content
+    sequence_string = '\
+              CreateObject \
+              CreateContentExistence \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with content
+    sequence_string = '\
+              CreateObject \
+              CreateContentExistence \
+              CreateContentObject \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def stepCreateStringAttributeMatch(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a String Atribute Match Constraint
+    """
+    self._createGenericConstraint(
+                            sequence,
+                            klass_name='StringAttributeMatch',
+                            id='StringAttributeMatch',
+                            description='StringAttributeMatch test',
+                            title='^[^ ]'
+                            )
+
+  def stepSetObjectTitle0(self, sequence=None, sequence_list=None, **kw):
+    """
+      Set valid Title to Object 
+    """
+    object = sequence.get('object')
+    object.setTitle(self.object_title)
+    sequence.edit(
+        object = object,
+    )
+
+  def stepSetObjectTitle1(self, sequence=None, sequence_list=None, **kw):
+    """
+      Set empty (or invalid string) to Object
+    """
+    object = sequence.get('object')
+    object.setTitle(' ')
+    sequence.edit(
+        object = object,
+    )
+
+  def test_StringAttributeMatchConstraint(self, quiet=quiet, run=run_all_test):
+    """
+      Tests Content Existence
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test Constraint with empty Title
+    sequence_string = '\
+              CreateObject \
+              CreateStringAttributeMatch \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with Title
+    sequence_string = '\
+              CreateObject \
+              CreateStringAttributeMatch \
+              SetObjectTitle0 \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with invalid Title 
+    # Not match with regex
+    sequence_string = '\
+              CreateObject \
+              CreateStringAttributeMatch \
+              SetObjectTitle1 \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
     framework()

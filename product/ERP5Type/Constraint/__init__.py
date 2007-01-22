@@ -8,3 +8,5 @@ from CategoryExistence import CategoryExistence
 from PortalTypeClass import PortalTypeClass
 from CategoryAcquiredMembershipArity import CategoryAcquiredMembershipArity
 from TALESConstraint import TALESConstraint
+from ContentExistence import ContentExistence
+from StringAttributeMatch import StringAttributeMatch
