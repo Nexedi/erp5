@@ -35,7 +35,6 @@ from Acquisition import aq_base
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionCacheMixin
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from OFS.content_types import guess_content_type
@@ -55,7 +54,7 @@ defaultdisplays = {'thumbnail' : (128,128),
 
 default_formats = ['jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm']
 
-class Image(File, OFSImage, ConversionCacheMixin):
+class Image(File, OFSImage):
   """
     An Image is a File which contains image data. It supports
     various conversions of format, size, resolution through
