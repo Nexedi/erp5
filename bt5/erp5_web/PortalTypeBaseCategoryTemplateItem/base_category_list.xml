@@ -1,16 +1,14 @@
 <base_category_list>
  <portal_type id="Web Page">
-  <item>destination</item>
+  <item>successor</item>
   <item>publication_section</item>
+  <item>predecessor</item>
   <item>similar</item>
-  <item>source</item>
  </portal_type>
  <portal_type id="Web Section">
-  <item>source</item>
-  <item>causality</item>
+  <item>aggregate</item>
  </portal_type>
  <portal_type id="Web Site">
-  <item>causality</item>
-  <item>source</item>
+  <item>aggregate</item>
  </portal_type>
 </base_category_list>
