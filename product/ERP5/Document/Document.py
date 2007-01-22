@@ -85,11 +85,11 @@ class ConversionCacheMixin:
   security.declareProtected(Permissions.View, 'updateConversionCache')
   def updateConversionCache(self):
     aself = aq_base(self)
-    if not hasattr(aself, '_cached_time'):
+    if not hasattr(aself, '_cached_time') or self._cached_time is None:
       self._cached_time = PersistentMapping()
-    if not hasattr(aself, '_cached_data'):
+    if not hasattr(aself, '_cached_data') or self._cached_data is None:
       self._cached_data = PersistentMapping()
-    if not hasattr(aself, '_cached_mime'):
+    if not hasattr(aself, '_cached_mime') or self._cached_mime is None:
       self._cached_mime = PersistentMapping()
 
   security.declareProtected(Permissions.View, 'hasConversion')
