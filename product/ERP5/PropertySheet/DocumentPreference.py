@@ -32,17 +32,27 @@ class DocumentPreference:
   """
 
   _properties = (
+    { 'id'          : 'preferred_ooodoc_server_address',
+      'description' : 'address of a server for converting docs (ip or domain)',
+      'type'        : 'string',
+      'preference'  :1,
+      'mode'        : '' },
+    { 'id'          : 'preferred_ooodoc_server_port_number',
+      'description' : 'port number of a server for converting docs (ip or domain)',
+      'type'        : 'int',
+      'preference'  :1,
+      'mode'        : '' },
     { 'id'          : 'preferred_document_base_category',
       'description' : 'list of categories to choose from while classifying',
       'type'        : 'lines',
       'preference'  : 1,
       'mode'        : '' },
-    { 'id'          : 'preferred_document_reference_regexp',
+    { 'id'          : 'preferred_document_reference_regular_expression',
       'description' : 'a regular expression to find and verify doc references',
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : '' },
-    { 'id'          : 'preferred_document_filename_regexp',
+    { 'id'          : 'preferred_document_file_name_regular_expression',
       'description' : 'a regular expression to parse file names',
       'type'        : 'string',
       'preference'  : 1,
@@ -59,6 +69,7 @@ class DocumentPreference:
       'preference'      : 1,
       'mode'            : '' },
     # XXX-JPS. This is not a real property - it is somehow a hack.
+    # BG: I was advised by somebody from Nexedi (I think it was Jerome)
     { 'id'              : 'document_ingestion_email_notification_selection',
       'description'     : 'List of possible values for preferred_document_ingestion_email_notification',
       'type'            : 'lines',
