@@ -101,7 +101,7 @@
   -->\n
   <div name="adminSection" class="adminSection"\n
        tal:condition="here/isDocument | python: (portal_type in [\'Web Site\', \'Web Section\']\n
-                                             and here.WebSite_getDefaultWebPageValue())">\n
+                                             and here.WebSection_getDefaultDocumentValue() )">\n
 \n
       <h3>\n
         <span id="create_new_document_title"></span>\n

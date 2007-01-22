@@ -85,7 +85,10 @@ translateString = context.Base_translateString\n
 result = []\n
 portal_type = context.getPortalType()\n
 request = context.REQUEST\n
-current_web_section = request.current_web_section\n
+if(portal_type == \'Web Page\'):\n
+  current_web_section = context.getParent()\n
+else:\n
+  current_web_section = request.current_web_section\n
 current_web_section_pt = current_web_section.getPortalType()\n
 action_dict = request.get(\'actions\', {}) # actions needs to be renamed to action_dict\n
 exchange_action_list = action_dict.get(\'object_exchange\', [])\n
@@ -100,12 +103,12 @@ editable_absolute_url = getattr(context, \'editable_absolute_url\', absolute_url
 \n
 \n
 # Append a button to edit the current document\n
-if not request.form.get(\'editable_mode\', 0): result.append(dict(\n
+if not request.form.get(\'editable_mode\', 0): \n
+  result.append(dict(\n
   url   = "%s/view?editable_mode:int=1&%s" % (editable_absolute_url, http_parameters),\n
   icon  = context.getIcon() or \'file_icon.gif\',\n
   title = translateString("Edit ${portal_type}", mapping=dict(portal_type=portal_type)),\n
-  label = "%s Icon" % portal_type,\n
-))\n
+  label = "%s Icon" % portal_type,))\n
 else: result.append(dict(\n
   url   = "%s/view?editable_mode=&%s" % (editable_absolute_url, http_parameters),\n
   icon  = context.getIcon() or \'file_icon.gif\',\n
