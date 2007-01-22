@@ -25,6 +25,13 @@
 #
 ##############################################################################
 
+import xmlrpclib
+import base64
+import re
+import zipfile
+import cStringIO
+from DateTime import DateTime
+
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName
@@ -35,14 +42,17 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.File import File, stripHtml
 from Products.ERP5.Document.Document import ConversionCacheMixin
-from DateTime import DateTime
-import xmlrpclib, base64, re, zipfile, cStringIO
 from Products.CMFCore.utils import getToolByName
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 enc=base64.encodestring
 dec=base64.decodestring
 
+_MARKER = []
+
+
 class ConversionError(Exception):pass
+
 
 class OOoDocument(File, ConversionCacheMixin):
   """
@@ -128,48 +138,78 @@ class OOoDocument(File, ConversionCacheMixin):
   )
 
   # regexps for stripping xml from docs
-  rx_strip=re.compile('<[^>]*?>',re.DOTALL|re.MULTILINE)
-  rx_compr=re.compile('\s+')
+  rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
+  rx_compr = re.compile('\s+')
 
   searchable_property_list = File.searchable_property_list + ('text_content', ) # XXX - good idea - should'n this be made more general ?
 
+  def index_html(self, REQUEST, RESPONSE, format=None, force=0):
+    """
+      Standard function - gets converted version (from cache or new)
+      sets headers and returns converted data.
+
+      Format can be only one string (because we are OOoDocument and do not
+      accept more formatting arguments).
+
+      Force can force conversion.
+    """
+    self.log(format, force)
+    if (not self.hasOOFile()) or force:
+      self.convertToBase()
+    if format is None:
+      result = self.getOOFile()
+      mime = self.getMimeType()
+      self.log(mime)
+    else:
+      try:
+        mime, result = self.convert(format=format, force=force)
+      except ConversionError, e:
+        raise # should we do something here?
+    #RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime)) XXX to be implemented
+    RESPONSE.setHeader('Content-Type', mime)
+    #RESPONSE.setHeader('Content-Length', self.size) XXX to be implemented
+    RESPONSE.setHeader('Accept-Ranges', 'bytes')
+    # XXX here we should find out extension for this mime type and append to filename
+    RESPONSE.setBase(None)
+    return result
+
   def _getServerCoordinate(self):
     """
-    Returns OOo conversion server data from 
-    preferences
+      Returns OOo conversion server data from 
+      preferences
     """
-    pref=getToolByName(self,'portal_preferences')
-    adr=pref.getPreferredOoodocServerAddress()
-    nr=pref.getPreferredOoodocServerPortNumber()
+    pref = getToolByName(self,'portal_preferences')
+    adr = pref.getPreferredOoodocServerAddress()
+    nr = pref.getPreferredOoodocServerPortNumber()
     if adr is None or nr is None:
       raise Exception('you should set conversion server coordinates in preferences')
-    return adr,nr
+    return adr, nr
 
   def _mkProxy(self):
-    sp=xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinate(),allow_none=True)
+    sp=xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinate(), allow_none=True)
     return sp
 
-  def returnMessage(self,msg,code=0):
+  def returnMessage(self, msg, code=0):
     """
-    code > 0 indicates a problem
-    we distinguish data return from message by checking if it is a tuple
+      code > 0 indicates a problem
+      we distinguish data return from message by checking if it is a tuple
     """
-    m=Message(domain='ui',message=msg)
-    return (code,m)
+    m = Message(domain='ui', message=msg)
+    return (code, m)
 
-  security.declareProtected(Permissions.ModifyPortalContent,'convert')
-  def convert(self,force=0,REQUEST=None):
+  security.declareProtected(Permissions.View, 'convert')
+  def convertToBase(self, force=0, REQUEST=None):
     """
-    Converts from the initial format to OOo format;
-    communicates with the conversion server
-    and gets converted file as well as metadata
+      Converts from the initial format to base format (ODF);
+      communicates with the conversion server
+      and gets converted file as well as metadata
     """
-    if force==0 and self.hasOOFile():
-      return self.returnMessage('OOo file is up do date',1)
+    if force == 0 and self.hasOOFile():
+      return self.returnMessage('OOo file is up do date', 1)
     try:
-      self._convert()
-    except xmlrpclib.Fault,e:
-      return self.returnMessage('Problem: %s' % (str(e) or 'undefined'),2)
+      self._convertToBase()
+    except xmlrpclib.Fault, e:
+      return self.returnMessage('Problem: %s' % (str(e) or 'undefined'), 2)
     return self.returnMessage('converted')
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
@@ -189,178 +229,165 @@ class OOoDocument(File, ConversionCacheMixin):
 
     cached_getTargetFormatItemList = CachingMethod(cached_getTargetFormatItemList,
                                         id = "OOoDocument_getTargetFormatItemList" )
-
     return cached_getTargetFormatItemList(self.getContentType())
 
-
-  security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTargetFormatList')
   def getTargetFormatList(self):
     """
       Returns a list of acceptable formats for conversion
     """
     return map(lambda x: x[0], self.getTargetFormatItemList())
 
-
-  security.declareProtected(Permissions.ModifyPortalContent,'reset')
+  security.declareProtected(Permissions.ModifyPortalContent, 'reset')
   def reset(self):
-    '''reset'''
+    """
+      make the object a non-converted one, as if it was brand new
+    """
     self.clearCache()
-    self.oo_data=None
-    m=self.returnMessage('new')
+    self.oo_data = None
+    m = self.returnMessage('new')
     self.setExternalProcessingStatusMessage(str(m[1]))
 
   security.declareProtected(Permissions.ModifyPortalContent,'isAllowed')
   def isAllowed(self, format):
     """
-    Checks if the current document can be converted
-    into the specified format.
-
+      Checks if the current document can be converted
+      into the specified format.
     """
-    if not self.hasOOFile(): return False
-    allowed=self.getTargetFormatItemList()
+    allowed = self.getTargetFormatItemList()
     if allowed is None: return False
     return (format in [x[1] for x in allowed])
 
   security.declareProtected(Permissions.ModifyPortalContent,'editMetadata')
-  def editMetadata(self,newmeta):
+  def editMetadata(self, newmeta):
     """
-    Updates metadata information in the converted OOo document
-    based on the values provided by the user. This is implemented
-    through the invocation of the conversion server.
+      Updates metadata information in the converted OOo document
+      based on the values provided by the user. This is implemented
+      through the invocation of the conversion server.
     """
-    sp=self._mkProxy()
-    kw=sp.run_setmetadata(self.getTitle(),enc(self._unpackData(self.oo_data)),newmeta)
-    self.oo_data=Pdata(dec(kw['data']))
+    sp = self._mkProxy()
+    kw = sp.run_setmetadata(self.getTitle(), enc(self._unpackData(self.oo_data)), newmeta)
+    self.oo_data = Pdata(dec(kw['data']))
     self._setMetaData(kw['meta'])
     return True # XXX why return ? - why not?
 
   security.declarePrivate('_convert')
-  def _convert(self):
+  def _convertToBase(self):
     """
-    Converts the original document into OOo document
-    by invoking the conversion server. Store the result
-    on the object. Update metadata information.
+      Converts the original document into ODF
+      by invoking the conversion server. Store the result
+      on the object. Update metadata information.
     """
-    sp=self._mkProxy()
-    kw=sp.run_convert(self.getSourceReference(),enc(self._unpackData(self.data)))
-    self.oo_data=Pdata(dec(kw['data']))
+    sp = self._mkProxy()
+    kw = sp.run_convert(self.getSourceReference(), enc(self._unpackData(self.data)))
+    self.oo_data = Pdata(dec(kw['data']))
     # now we get text content 
-    text_data=self.extractTextContent()
+    text_data = self.extractTextContent()
     self.setTextContent(text_data)
     self._setMetaData(kw['meta'])
 
   security.declareProtected(Permissions.View,'extractTextContent')
   def extractTextContent(self):
     """
-    extract plain text from ooo docs - the simplest way possible, works for all ODF formats
+      extract plain text from ooo docs - the simplest way possible, works for all ODF formats
     """
-    cs=cStringIO.StringIO()
+    cs = cStringIO.StringIO()
     cs.write(self._unpackData(self.oo_data))
-    z=zipfile.ZipFile(cs)
-    s=z.read('content.xml')
-    s=self.rx_strip.sub(" ",s) # strip xml
-    s=self.rx_compr.sub(" ",s) # compress multiple spaces
+    z = zipfile.ZipFile(cs)
+    s = z.read('content.xml')
+    s = self.rx_strip.sub(" ", s) # strip xml
+    s = self.rx_compr.sub(" ", s) # compress multiple spaces
     cs.close()
     z.close()
     return s
 
-  security.declareProtected(Permissions.ModifyPortalContent,'setPropertyListFromContent')
-  def setPropertyListFromContent(self):
-    '''docstring'''
-    atrs=self.Document_getPropertyListFromContent(self,self.getTextContent(),self.getPortalType())
-    doctype=atrs.get('doctype','None')
-    if doctype!='None' and doctype!=self.getPortalType():
-      raise Exception('portal type mismatch - content gave %s, I have %s' % (doctype,self.getPortalType()))
-    for a in atrs:
-      self.setProperty(a,atrs[a])
 
   security.declarePrivate('_setMetaData')
   def _setMetaData(self,meta):
     """
-    Sets metadata properties of the ERP5 object.
+      Sets metadata properties of the ERP5 object.
 
-    XXX - please double check that some properties
-    are not already defined in the Document class (which is used
-    for Web Page in ERP5)
+      XXX - please double check that some properties
+      are not already defined in the Document class (which is used
+      for Web Page in ERP5)
 
-    XXX - it would be quite nice if the metadata structure
-          could also support user fields in OOo
-          (user fields are so useful actually...)
-          XXX - I think it does (BG)
+      XXX - it would be quite nice if the metadata structure
+            could also support user fields in OOo
+            (user fields are so useful actually...)
+            XXX - I think it does (BG)
     """
     for k,v in meta.items():
-      meta[k]=v.encode('utf-8')
-    self.setTitle(meta.get('title',''))
-    self.setSubject(meta.get('keywords','').split())
-    self.setDescription(meta.get('description',''))
+      meta[k] = v.encode('utf-8')
+    self.setTitle(meta.get('title', ''))
+    self.setSubject(meta.get('keywords', '').split())
+    self.setDescription(meta.get('description', ''))
     #self.setLanguage(meta.get('language',''))
-    if meta.get('MIMEType',False):
+    if meta.get('MIMEType', False):
       self.setContentType(meta['MIMEType'])
     #self.setReference(meta.get('reference',''))
 
-  security.declareProtected(Permissions.View,'getOOFile')
+  security.declareProtected(Permissions.View, 'getOOFile')
   def getOOFile(self):
     """
-    Return the converted OOo document.
+      Return the converted OOo document.
 
-    XXX - use a propertysheet for this instead. We have a type
-          called data in property sheet. Look at File implementation
-    XXX - doesn't seem to be there...
+      XXX - use a propertysheet for this instead. We have a type
+            called data in property sheet. Look at File implementation
+      XXX - doesn't seem to be there...
     """
-    data=self.oo_data
+    data = self.oo_data
     return data
 
-  security.declareProtected(Permissions.View,'hasOOFile')
+  security.declareProtected(Permissions.View, 'hasOOFile')
   def hasOOFile(self):
     """
-    Checks whether we have an OOo converted file
+      Checks whether we have an OOo converted file
     """
-    _marker=[]
-    if getattr(self,'oo_data',_marker) is not _marker: # XXX - use propertysheet accessors
-      return getattr(self,'oo_data') is not None
+    _marker = []
+    if getattr(self, 'oo_data',_marker) is not _marker: # XXX - use propertysheet accessors
+      return getattr(self, 'oo_data') is not None
     return False
 
-  security.declareProtected(Permissions.View,'hasSnapshot')
+  security.declareProtected(Permissions.View, 'hasSnapshot')
   def hasSnapshot(self):
     """
-    Checks whether we have a snapshot.
+      Checks whether we have a snapshot.
     """
-    _marker=[]
-    if getattr(self,'snapshot',_marker) is not _marker: # XXX - use propertysheet accessors
-      return getattr(self,'snapshot') is not None
+    _marker = []
+    if getattr(self, 'snapshot', _marker) is not _marker: # XXX - use propertysheet accessors
+      return getattr(self, 'snapshot') is not None
     return False
 
   security.declareProtected(Permissions.ModifyPortalContent,'createSnapshot')
   def createSnapshot(self,REQUEST=None):
     """
-    Create a PDF snapshot
+      Create a PDF snapshot
 
-    XXX - we should not create a snapshot if some error happened at conversion
-          is this checked ?
-    XXX - error at conversion raises an exception, so it should be ok
+      XXX - we should not create a snapshot if some error happened at conversion
+            is this checked ?
+      XXX - error at conversion raises an exception, so it should be ok
     """
     if self.hasSnapshot():
       if REQUEST is not None:
-        return self.returnMessage('already has a snapshot',1)
+        return self.returnMessage('already has a snapshot', 1)
       raise ConversionError('already has a snapshot')
     # making snapshot
     # we have to figure out which pdf format to use
-    tgts=[x[1] for x in self.getTargetFormatItemList() if x[1].endswith('pdf')]
-    if len(tgts)>1:
-      return self.returnMessage('multiple pdf formats found - this shouldnt happen',2)
+    tgts = [x[1] for x in self.getTargetFormatItemList() if x[1].endswith('pdf')]
+    if len(tgts) > 1:
+      return self.returnMessage('multiple pdf formats found - this shouldnt happen', 2)
     if len(tgts)==0:
       return self.returnMessage('no pdf format found',1)
-    fmt=tgts[0]
+    fmt = tgts[0]
     self.makeFile(fmt)
     self.snapshot = Pdata(self._unpackData(self.getConversion(format = fmt)[1]))
     return self.returnMessage('snapshot created')
 
   security.declareProtected(Permissions.View,'getSnapshot')
-  def getSnapshot(self,REQUEST=None):
+  def getSnapshot(self, REQUEST=None):
     """
-    Returns the snapshot.
+      Returns the snapshot.
     """
-    '''getSnapshot'''
     if not self.hasSnapshot():
       self.createSnapshot()
     return self.snapshot
@@ -368,7 +395,7 @@ class OOoDocument(File, ConversionCacheMixin):
   security.declareProtected(Permissions.ManagePortal,'deleteSnapshot')
   def deleteSnapshot(self):
     """
-    Deletes the snapshot - in theory this should never be done
+      Deletes the snapshot - in theory this should never be done
     """
     try:
       del(self.snapshot)
@@ -376,78 +403,91 @@ class OOoDocument(File, ConversionCacheMixin):
       pass
 
   def getHtmlRepresentation(self):
-    '''
-    get simplified html version to display
-    '''
+    """
+      get simplified html version to display
+    """
     # we have to figure out which html format to use
-    tgts=[x[1] for x in self.getTargetFormatItemList() if x[1].startswith('html')]
-    if len(tgts)==0:
+    tgts = [x[1] for x in self.getTargetFormatItemList() if x[1].startswith('html')]
+    if len(tgts) == 0:
       return 'no html representation available'
-    fmt=tgts[0]
-    fmt,data=self.getTargetFile(fmt)
-    cs=cStringIO.StringIO()
+    fmt = tgts[0]
+    fmt, data = self.convert(fmt)
+    cs = cStringIO.StringIO()
     cs.write(self._unpackData(data))
-    z=zipfile.ZipFile(cs)
-    h='could not extract anything'
+    z = zipfile.ZipFile(cs)
+    h = 'could not extract anything'
     for f in z.infolist():
-      fn=f.filename
+      fn = f.filename
       if fn.endswith('html'):
-        h=z.read(fn)
+        h = z.read(fn)
         break
     z.close()
     cs.close()
     return stripHtml(h)
 
-  security.declareProtected(Permissions.View,'getTargetFile')
-  def getTargetFile(self,format,REQUEST=None):
+  security.declareProtected(Permissions.View, 'convert')
+  def convert(self, format, REQUEST=None, force=0):
     """
-    Get (possibly generate) file in a given format
+      Get file in a given format.
+      Runs makeFile to make sure we have the requested version cached,
+      then returns from cache.
     """
+    # first check if we have base
+    if not self.hasOOFile():
+      self.convertToBase()
     if not self.isAllowed(format):
-      return self.returnMessage('can not convert to '+format+' for some reason',1)
+      if REQUEST is not None:
+        return self.returnMessage('can not convert to ' + format + ' for some reason',1)
+      else:
+        raise ConversionError, 'can not convert to ' + format + ' for some reason'
     try:
-      self.makeFile(format)
+      # make if necessary, return from cache
+      self.makeFile(format, force)
       return self.getConversion(format = format)
     except ConversionError,e:
-      return self.returnMessage(str(e),2)
+      if REQUEST is not None:
+        return self.returnMessage(str(e), 2)
+      raise
 
-  security.declareProtected(Permissions.View,'isFileChanged')
-  def isFileChanged(self,format):
+  security.declareProtected(Permissions.View, 'isFileChanged')
+  def isFileChanged(self, format):
     """
-    Checks whether the file was converted (or uploaded) after last generation of
-    the target format
+      Checks whether the file was converted (or uploaded) after last generation of
+      the target format
     """
-    return not self.hasConversion(format = format)
+    return not self.hasConversion(format=format)
 
-  security.declareProtected(Permissions.ModifyPortalContent,'makeFile')
-  def makeFile(self,format,REQUEST=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'makeFile')
+  def makeFile(self, format, force=0, REQUEST=None, **kw):
     """
-    This method implement the file conversion cache:
-      * check if the format is supported
-      * check date of last conversion to OOo, compare with date of last
-      * if necessary, create new file and cache
-      * update file generation time
+      This method implement the file conversion cache:
+        * check if the format is supported
+        * check date of last conversion to OOo, compare with date of last
+        * if necessary, create new file and cache
+        * update file generation time
 
-    TODO:
-      * support of images in html conversion (as subobjects for example)
+      Fails silently if we have an up to date version.
+
+      TODO:
+        * support of images in html conversion (as subobjects for example)
     """
     if not self.isAllowed(format):
-      errstr='%s format is not supported' % format
+      errstr = '%s format is not supported' % format
       if REQUEST is not None:
-        return self.returnMessage(errstr,2)
+        return self.returnMessage(errstr, 2)
       raise ConversionError(errstr)
     if not self.hasOOFile():
       if REQUEST is not None:
-        return self.returnMessage('needs conversion',1)
+        return self.returnMessage('needs conversion', 1)
       raise ConversionError('needs conversion')
-    if self.isFileChanged(format):
+    if self.isFileChanged(format) or force:
       try:
-        mime,data=self._makeFile(format)
+        mime, data = self._makeFile(format)
         self.setConversion(data, mime, format = format)
-        self._p_changed=1 # XXX not sure it is necessary
-      except xmlrpclib.Fault,e:
+        self._p_changed = 1 # XXX not sure it is necessary
+      except xmlrpclib.Fault, e:
         if REQUEST is not None:
-          return self.returnMessage('Problem: %s' % str(e),2)
+          return self.returnMessage('Problem: %s' % str(e), 2)
         else:
           raise ConversionError(str(e))
       self.updateConversion(format = format)
@@ -455,25 +495,23 @@ class OOoDocument(File, ConversionCacheMixin):
         return self.returnMessage('%s created' % format)
     else:
       if REQUEST is not None:
-        return self.returnMessage('%s file is up to date' % format,1)
-      return ConversionError('%s file is up to date' % format)
+        return self.returnMessage('%s file is up to date' % format, 1)
 
   security.declarePrivate('_makeFile')
   def _makeFile(self,format):
     """
-    Communicates with server to convert a file
+      Communicates with server to convert a file
     """
     # real version:
-    sp=self._mkProxy()
-    kw=sp.run_generate(self.getSourceReference(),enc(self._unpackData(self.oo_data)),None,format)
-    return kw['mime'],Pdata(dec(kw['data']))
+    sp = self._mkProxy()
+    kw = sp.run_generate(self.getSourceReference(), enc(self._unpackData(self.oo_data)), None, format)
+    return kw['mime'], Pdata(dec(kw['data']))
 
   # make sure to call the right edit methods
-  _edit=File._edit
-  edit=File.edit
+  _edit = File._edit
+  edit = File.edit
 
   # BG copied from File in case
-  index_html = File.index_html
   security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
   manage_FTPget = File.manage_FTPget
   manage_FTPlist = File.manage_FTPlist
