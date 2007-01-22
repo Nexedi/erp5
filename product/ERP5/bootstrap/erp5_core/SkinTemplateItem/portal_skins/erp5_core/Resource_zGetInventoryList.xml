@@ -243,6 +243,9 @@ SELECT\n
   stock.uid AS stock_uid,\n
   stock.date as date,\n
   stock.simulation_state as simulation_state,\n
+  stock.mirror_section_uid as mirror_section_uid,\n
+  stock.payment_uid as payment_uid,\n
+  stock.mirror_node_uid as mirror_node_uid,\n
   catalog.path as path\n
 \n
 FROM\n
@@ -381,6 +384,9 @@ SELECT\n
   stock.uid AS stock_uid,\n
   stock.date as date,\n
   stock.simulation_state as simulation_state,\n
+  stock.mirror_section_uid as mirror_section_uid,\n
+  stock.payment_uid as payment_uid,\n
+  stock.mirror_node_uid as mirror_node_uid,\n
   catalog.path as path\n
 \n
 FROM\n

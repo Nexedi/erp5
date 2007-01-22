@@ -172,7 +172,7 @@ class SimulationTool (BaseTool):
       category_tool = getToolByName(self, 'portal_categories')
       property_uid_list = []
       if type(property) is type('') :
-        if as_text == 0:
+        if not as_text:
           prop_value = category_tool.getCategoryValue(property)
           if prop_value is None:
             raise ValueError, 'Category %s does not exists' % property
@@ -181,7 +181,7 @@ class SimulationTool (BaseTool):
           property_uid_list.append(property)
       elif type(property) is type([]) or type(property) is type(()) :
         for property_item in property :
-          if as_text == 0:
+          if not as_text:
             prop_value = category_tool.getCategoryValue(property_item)
             if prop_value is None:
               raise ValueError, 'Category %s does not exists' % property_item
@@ -193,14 +193,14 @@ class SimulationTool (BaseTool):
         if type(property['query']) is type('') :
           property['query'] = [property['query']]
         for property_item in property['query'] :
-          if as_text == 0:
+          if not as_text:
             prop_value = category_tool.getCategoryValue(property_item)
             if prop_value is None:
               raise ValueError, 'Category %s does not exists' % property_item
             tmp_uid_list.append(prop_value.getUid())
           else:
             tmp_uid_list.append(property_item)
-        if len(tmp_uid_list) :
+        if tmp_uid_list:
           property_uid_list = {}
           property_uid_list['operator'] = property['operator']
           property_uid_list['query'] = tmp_uid_list
@@ -443,19 +443,26 @@ class SimulationTool (BaseTool):
 
       # build the group by expression
       group_by_expression_list = []
-      if kw.get('group_by_node',0):
+      if kw.get('group_by_node', 0):
         group_by_expression_list.append('%s.node_uid' % table)
-      if kw.get('group_by_sub_variation',0):
-        group_by_expression_list.append('%s.sub_variation_text' % table)
-      if kw.get('group_by_variation',0):
-        group_by_expression_list.append('%s.variation_text' % table)
-      if kw.get('group_by_mirror_node',0):
+      if kw.get('group_by_mirror_node', 0):
         group_by_expression_list.append('%s.mirror_node_uid' % table)
-      if len(group_by_expression_list):
-        # Always group by resource
-        group_by_expression_list.append('%s.resource_uid' % table)
+      if kw.get('group_by_section', 0):
+        group_by_expression_list.append('%s.section_uid' % table)
+      if kw.get('group_by_mirror_section', 0):
+        group_by_expression_list.append('%s.mirror_section_uid' % table)
+      if kw.get('group_by_payment', 0):
+        group_by_expression_list.append('%s.payment_uid' % table)
+      if kw.get('group_by_sub_variation', 0):
+        group_by_expression_list.append('%s.sub_variation_text' % table)
+      if kw.get('group_by_variation', 0):
+        group_by_expression_list.append('%s.variation_text' % table)
+      if group_by_expression_list:
+        # by default, we group by resource
+        if kw.get('group_by_resource', 1):
+          group_by_expression_list.append('%s.resource_uid' % table)
         new_kw['group_by_expression'] = ', '.join(group_by_expression_list)
-
+      
       sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
       return sql_kw
 

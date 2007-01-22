@@ -27,6 +27,9 @@
 ##############################################################################
 
 """Unit Tests for Inventory API.
+
+TODO: test variation
+
 """
 
 import sys
@@ -85,6 +88,9 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.mirror_node = self._makeOrganisation(title='Mirror Node')
     self.resource = self.getCurrencyModule().newContent(
                                   title='Resource',
+                                  portal_type='Currency')
+    self.other_resource = self.getCurrencyModule().newContent(
+                                  title='Other Resource',
                                   portal_type='Currency')
     # create a dummy Rule, to be able to create simulation movements
     rule_tool = self.portal.portal_rules
@@ -524,8 +530,69 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals([r for r in inventory_list if r.node_relative_url ==
                   self.mirror_node.getRelativeUrl()][0].inventory, -300)
 
-  # TODO group by mirror_node, section, mirror_section, payment, resource
-  # ? and maybe project, function, portal_type ?
+  def test_GroupByMirrorNode(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=100)
+    self._makeMovement(source_value=self.other_node, quantity=100)
+    self._makeMovement(source_value=None, quantity=100)
+    inventory_list = getInventoryList(section_uid=self.section.getUid(),
+                                      group_by_mirror_node=1)
+    self.assertEquals(3, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.mirror_node_uid ==
+                  self.mirror_node.getUid()][0].inventory, 100)
+    self.assertEquals([r for r in inventory_list if r.mirror_node_uid ==
+                  self.other_node.getUid()][0].inventory, 100)
+    self.assertEquals([r for r in inventory_list
+                       if r.mirror_node_uid is None][0].inventory, 100)
+
+  def test_GroupBySection(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=100)
+    self._makeMovement(destination_section_value=self.other_node, quantity=100)
+    self._makeMovement(destination_section_value=None, quantity=100)
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_section=1)
+    self.assertEquals(3, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.section_relative_url ==
+                  self.section.getRelativeUrl()][0].inventory, 100)
+    self.assertEquals([r for r in inventory_list if r.section_relative_url ==
+                  self.other_node.getRelativeUrl()][0].inventory, 100)
+    self.assertEquals([r for r in inventory_list if r.section_relative_url is
+                  None][0].inventory, 100)
+  
+  def test_GroupByResource(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=100)
+    self._makeMovement(resource_value=self.other_resource, quantity=100)
+    # group_by_resource is implicit ...
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_node=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.resource_relative_url ==
+                  self.resource.getRelativeUrl()][0].inventory, 100)
+    self.assertEquals([r for r in inventory_list if r.resource_relative_url ==
+                  self.other_resource.getRelativeUrl()][0].inventory, 100)
+    # ... but can be disabled
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_node=1,
+                                      group_by_resource=0)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(inventory_list[0].inventory, 200)
+
+  def test_GroupByPayment(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=100)
+    self._makeMovement(destination_payment_value=self.payment_node,
+                       quantity=200)
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_node=1, group_by_payment=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.payment_uid is
+                      None][0].inventory, 100)
+    self.assertEquals([r for r in inventory_list if r.payment_uid ==
+                       self.payment_node.getUid()][0].inventory, 200)
+
+
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
@@ -1030,10 +1097,12 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(11, len(mvt_history_list))
     self.assertEquals(0, mvt_history_list[-1].running_total_quantity)
     self.assertEquals(0, mvt_history_list[-1].running_total_price)
-    
+
+
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
   """
+
 
 if __name__ == '__main__':
   framework()
