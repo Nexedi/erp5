@@ -28,13 +28,8 @@
 
 """Tests ERP5 User Management.
 """
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
 
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                      get_request
@@ -308,8 +303,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     The site category is not defined explictly the role, and will have the
     current site of the user.
     """
-    return NotImplemented # FIXME: currently this test raises error
-                           
     ti = self._getTypeInfo()
     ti.addRole(id='Assignor', description='desc.',
            name='an Assignor role for testing',
@@ -323,7 +316,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.failUnless('Assignor' in
             getSecurityManager().getUser().getRolesInContext(obj))
-  
+
   def testAcquireLocalRoles(self):
     """Tests that document does not acquire loal roles from their parents if
     "acquire local roles" is not checked."""
@@ -352,13 +345,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.failIf('Assignor' in
             getSecurityManager().getUser().getRolesInContext(obj))
     
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestUserManagement))
-    suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestUserManagement))
+  suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
+  return suite
 
