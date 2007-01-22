@@ -31,7 +31,6 @@ from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 
@@ -63,7 +62,6 @@ class SimulationTool (BaseTool):
 
     -
 
-    TODO: XXX please use BaseTool
     """
     id = 'portal_simulation'
     meta_type = 'ERP5 Simulation Tool'
@@ -76,26 +74,17 @@ class SimulationTool (BaseTool):
     #
     #   ZMI methods
     #
-    manage_options = ( ( { 'label'      : 'Overview'
-                         , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     + Folder.manage_options
-                     )
-
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainSimulationTool', _dtmldir )
 
-    # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
-        # Filters the list of available meta types.
-        all = SimulationTool.inheritedAttribute('filtered_meta_types')(self)
-        meta_types = []
-        for meta_type in self.all_meta_types():
-            if meta_type['name'] in self.allowed_types:
-                meta_types.append(meta_type)
-        return meta_types
+      # Filters the list of available meta types.
+      all = SimulationTool.inheritedAttribute('filtered_meta_types')(self)
+      meta_types = []
+      for meta_type in self.all_meta_types():
+        if meta_type['name'] in self.allowed_types:
+          meta_types.append(meta_type)
+      return meta_types
 
     def tpValues(self) :
       """ show the content in the left pane of the ZMI """
