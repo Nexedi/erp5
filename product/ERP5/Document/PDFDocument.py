@@ -33,6 +33,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.File import File, stripHtml
 from Products.ERP5.Document.Document import ConversionCacheMixin
+from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 
 import tempfile, os, glob, zipfile, cStringIO, re
@@ -62,14 +63,24 @@ class PDFDocument(File, ConversionCacheMixin):
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.Document
+                    , PropertySheet.TextDocument
                     , PropertySheet.Data
                     )
 
 
   def index_html(self, REQUEST, RESPONSE, format, force=0):
     """
-      Returns data in the appropriate format
+      Returns data in the appropriate format (graphical)
+      it is always a zip because multi-page pdfs are converted into a zip
+      file of many images
     """
+    if format == 'html':
+      RESPONSE.setHeader('Content-Type', 'text/html;charset=UTF-8')
+      return self.getHtmlRepresentation(force)
+    if format == 'txt':
+      RESPONSE.setHeader('Content-Type', 'text/plain;charset=UTF-8')
+      self._convertToText(force)
+      return self.getTextContent()
     mime = 'image/'+format.lower()
     if force or not self.hasConversion(format = format):
       self.setConversion(self._makeFile(format), 'application/zip', format=format)
@@ -110,25 +121,45 @@ class PDFDocument(File, ConversionCacheMixin):
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None, force=0):
     """
-    Used by the catalog for basic full text indexing
-    we get text content by using pdftotext
-    but we have to do it only once after uplad
-    for simplicity we check only modification_date, which means we rebuild txt and html after every edit
-    but that shouldn't hurt too much
+      Used by the catalog for basic full text indexing
+      conditionally convert pdf to text
     """
-    if hasattr(self, 'data') and (force == 1 or not self.hasConversion(format = 'txt') or self.getTextContent() is None):
+    self._convertToText(force)
+    return File.getSearchableText(self, md)
+
+  security.declarePrivate('_convertToText')
+  def _convertToText(self, force):
+    """
+      Private implementation method.
+      If we don't have txt cache or we are forced to convert, we try to do it
+      using system pdftotext utility. We set the result as text_content property.
+      We mark it in cache as done, even if we fail, so we don't keep trying if it
+      doesn't work.
+    """
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    if hasattr(self, 'data') and (force == 1 or not self.hasConversion(format = 'txt')):
       # XXX-JPS accessing attribute data is bad
       self.log('PdfDocument', 'regenerating txt')
-      tmp = tempfile.NamedTemporaryFile()
-      tmp.write(self._unpackData(self.data))
-      tmp.seek(0)
-      cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
-      r = os.popen(cmd)
-      self.setTextContent(r.read().replace('\n', ' '))
-      tmp.close()
-      r.close()
-      self.setConversion('empty', format = 'txt') # we don't need to store it twice, just mark we have it
-    return File.getSearchableText(self, md)
+      try:
+        try:
+          tmp = tempfile.NamedTemporaryFile()
+          tmp.write(self._unpackData(self.data))
+          tmp.seek(0)
+          cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
+          r = os.popen(cmd)
+          self.setTextContent(r.read().replace('\n', ' '))
+          tmp.close()
+          r.close()
+        except Exception, e:
+          self.log(str(e))
+          msg = 'Conversion to text failed: ' + str(e)
+        else:
+          msg = 'Converted to text'
+      finally:
+        portal_workflow.doActionFor(self, 'process', comment=msg)
+        # we don't need to store it twice, just mark we have it (or rather we already tried)
+        # we try only once
+        self.setConversion('empty', format = 'txt') 
 
   SearchableText=getSearchableText
 
@@ -136,22 +167,29 @@ class PDFDocument(File, ConversionCacheMixin):
   def getHtmlRepresentation(self, force=0):
     '''
     get simplified html version to display
+    If we fail to convert, we set workflow message and put error message
+    as html preview so that the user knows what's going on
     '''
+    portal_workflow = getToolByName(self, 'portal_workflow')
     if not hasattr(self, 'data'):
       return 'no data'
     if force==1 or not self.hasConversion(format = 'html'):
-      self.log('PDF', 'regenerating html')
-      tmp = tempfile.NamedTemporaryFile()
-      tmp.write(self._unpackData(self.data))
-      tmp.seek(0)
-      cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
-      r = os.popen(cmd)
-      h = r.read()
-      tmp.close()
-      r.close()
-      h = stripHtml(h)
+      try:
+        self.log('PDF', 'regenerating html')
+        tmp = tempfile.NamedTemporaryFile()
+        tmp.write(self._unpackData(self.data))
+        tmp.seek(0)
+        cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
+        r = os.popen(cmd)
+        h = r.read()
+        tmp.close()
+        r.close()
+        h = stripHtml(h)
+      except Exception, e:
+        msg = 'Could not convert to html: ' + str(e)
+        h = msg
+        portal_workflow.doActionFor(self, 'process', comment=msg)
       self.setConversion(h, format = 'html')
-      self.updateConversion(format = 'html')
     return self.getConversion(format = 'html')[1]
 
 # vim: syntax=python shiftwidth=2 
