@@ -142,19 +142,18 @@ class AlarmTool(BaseTool):
 
   security.declareProtected(Permissions.ManageProperties, 'isSubscribed')
   def isSubscribed(self):
-      """
-      return True, if we are subscribed to TimerService.
-      Otherwise return False.
-      """
-      service = getTimerService(self)
-      if not service:
-          LOG('AlarmTool', INFO, 'TimerService not available')
-          return False
-
-      path = '/'.join(self.getPhysicalPath())
-      if path in service.lisSubscriptions():
-          return True
+    """ return True, if we are subscribed to TimerService.
+    Otherwise return False.
+    """
+    service = getTimerService(self)
+    if not service:
+      LOG('AlarmTool', INFO, 'TimerService not available')
       return False
+
+    path = '/'.join(self.getPhysicalPath())
+    if path in service.lisSubscriptions():
+      return True
+    return False
 
   security.declareProtected(Permissions.ManageProperties, 'subscribe')
   def subscribe(self):
