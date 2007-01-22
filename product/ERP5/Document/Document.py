@@ -28,6 +28,7 @@
 
 from DateTime import DateTime
 from operator import add
+import re
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
@@ -37,9 +38,10 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.WebDAVSupport import TextContent
 from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 
 _MARKER = []
-VALID_ORDER_KEY_LIST = ('user', 'content', 'file_name', 'input')
+VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 
 def makeSortedTuple(kw):
   items = kw.items()
@@ -262,7 +264,7 @@ class Document(XMLObject):
       * Document_getPropertyDictFromContent - analyzes document content and returns
         properties which should be set on the document
 
-      * Base_getImplicitSuccesorValueList - finds appropriate all documents
+      * Base_getImplicitSuccessorValueList - finds appropriate all documents
         referenced in the current content
 
       * Base_getImplicitPredecessorValueList - finds document predecessors based on
@@ -317,7 +319,8 @@ class Document(XMLObject):
 
 
   ### Content processing methods
-  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+  security.declareProtected(Permissions.View, 'index_html')
+  def index_html(self, REQUEST, RESPONSE, format=None, force=0, **kw):
     """
       We follow here the standard Zope API for files and images
       and extend it to support format conversion. The idea
@@ -331,36 +334,57 @@ class Document(XMLObject):
       withing the layout of a Web Site or withing a standard ERP5 page.
       Please refer to the index_html of TextDocument.
 
-      format - the format specified in the form of an extension
+      Should return appropriate format (calling convert
+      if necessary) and set headers.
+
+      format - the format specied in the form of an extension
       string (ex. jpeg, html, text, txt, etc.)
+      force - convert doc even if it has a cached version which seems to be up2date
+      **kw can be various things - e.g. resolution
+
+    """
+    pass
+
+  security.declareProtected(Permissions.View, 'convert')
+  def convert(self, format, **kw):
+    """
+      Main content conversion function, returns result which should
+      be returned and stored in cache.
+      format - the format specied in the form of an extension
+      string (ex. jpeg, html, text, txt, etc.)
+      **kw can be various things - e.g. resolution
     """
     pass
 
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
     """
-    Used by the catalog for basic full text indexing.
-    Uses searchable_property_list attribute to put together various properties
-    of the document into one searchable text string.
+      Used by the catalog for basic full text indexing.
+      Uses searchable_property_list attribute to put together various properties
+      of the document into one searchable text string.
 
-    XXX-JPS - This method is nice. It should probably be moved to Base class
-    searchable_property_list could become a standard class attribute.
+      XXX-JPS - This method is nice. It should probably be moved to Base class
+      searchable_property_list could become a standard class attribute.
 
-    TODO (future): Make this property a per portal type property.
+      TODO (future): Make this property a per portal type property.
     """
     def getPropertyListOrValue(property):
       """
-      we try to get a list, else we get value and convert to list
+        we try to get a list, else we get value and convert to list
       """
       val = self.getPropertyList(property)
       if val is None:
         val = self.getProperty(property)
         if val is not None and val != '':
-          val=[val]
+          val = [val]
+        else:
+          val = []
+      else:
+        val = list(val)
       return val
-        
-    searchable_text = reduce(add, map(lambda x: self.getPropertyListOrValue(x) or ' ',
+    searchable_text = reduce(add, map(lambda x: getPropertyListOrValue(x),
                                                 self.searchable_property_list))
+    searchable_text = ' '.join(searchable_text)
     return searchable_text
 
   # Compatibility with CMF Catalog
@@ -377,7 +401,7 @@ class Document(XMLObject):
       preferences.
     """
     text = self.getSearchableText()
-    regexp = self.getPreferredReferenceLookupRegexp()
+    regexp = self.portal_preferences.getPreferredDocumentReferenceRegularExpression()
     try:
       rx_search = re.compile(regexp)
     except TypeError: # no regexp in preference
@@ -390,11 +414,11 @@ class Document(XMLObject):
   security.declareProtected(Permissions.View, 'getImplicitSuccessorValueList')
   def getImplicitSuccessorValueList(self):
     """
-    Find objects which we are referencing (if our text_content contains
-    references of other documents). The whole implementation is delegated to
-    Document_getImplicitSuccessorValueList script.
+      Find objects which we are referencing (if our text_content contains
+      references of other documents). The whole implementation is delegated to
+      Base_getImplicitSuccessorValueList script.
 
-    The implementation goes in 2 steps:
+      The implementation goes in 2 steps:
 
     - Step 1: extract with a regular expression
       a list of distionaries with various parameters such as 
@@ -414,22 +438,19 @@ class Document(XMLObject):
       later stage of the implementation.
     """
     # XXX results should be cached as volatile attributes
-    # XXX-JPS - Please use TransactionCache in ERP5Type for this
-    # TransactionCache does all the work for you
-    lst = []
-    for ref in self.getSearchableReferenceList():
-      r = ref[1]
-      res = self.Document_findImplicitSuccessor(**r)
-      if len(res)>0:
-        lst.append(res[0].getObject())
-    return lst
+    refs = [r[1] for r in self.getSearchableReferenceList()]
+    res = self.Base_getImplicitSuccessorValueList(refs)
+    # get unique latest (most relevant) versions
+    res = [r.getObject().getLatestVersionValue() for r in res]
+    res_dict = dict.fromkeys(res)
+    return res_dict.keys()
 
   security.declareProtected(Permissions.View, 'getImplicitPredecessorValueList')
   def getImplicitPredecessorValueList(self):
     """
       This function tries to find document which are referencing us - by reference only, or
       by reference/language etc. Implementation is passed to 
-        Document_getImplicitPredecessorValueList
+        Base_getImplicitPredecessorValueList
 
       The script should proceed in two steps:
 
@@ -445,11 +466,13 @@ class Document(XMLObject):
       later stage of the implementation.
     """
     # XXX results should be cached as volatile attributes
-    method = self._getTypeBasedMethod('findImplicitPredecessorList', 
-        fallback_script_id = 'Document_findImplicitPredecessorList')
+    method = self._getTypeBasedMethod('getImplicitPredecessorValueList', 
+        fallback_script_id = 'Base_getImplicitPredecessorValueList')
     lst = method()
-    lst = [r.getObject() for r in lst]
-    di = dict.fromkeys(lst) # make it unique
+    # make it unique first time (before getting lastversionvalue)
+    di = dict.fromkeys([r.getObject() for r in lst])
+    # then get latest version and make unique again
+    di = dict.fromkeys([o.getLatestVersionValue() for o in di.keys()])
     ref = self.getReference()
     return [o for o in di.keys() if o.getReference() != ref] # every object has its own reference in SearchableText
 
@@ -464,7 +487,7 @@ class Document(XMLObject):
     return []
 
   security.declareProtected(Permissions.View, 'getSimilarCloudValueList')
-  def getSimilarCloudValueList(self):
+  def getSimilarCloudValueList(self, depth=0):
     """
       Returns all documents which are similar to us, directly or indirectly, and
       in both directions. In other words, it is a transitive closure of similar 
@@ -473,45 +496,83 @@ class Document(XMLObject):
     lista = {}
     depth = int(depth)
 
-    gettername = 'get%sValueList' % upperCase(category)
-    relatedgettername = 'get%sRelatedValueList' % upperCase(category)
+    #gettername = 'get%sValueList' % convertToUpperCase(category)
+    #relatedgettername = 'get%sRelatedValueList' % convertToUpperCase(category)
 
-    def getRelatedList(self, level=0):
+    def getRelatedList(ob, level=0):
       level += 1
-      getter = getattr(self, gettername)
-      relatedgetter = getattr(self, relatedgettername)
-      res = getter() + relatedgetter()
+      #getter = getattr(self, gettername)
+      #relatedgetter = getattr(self, relatedgettername)
+      #res = getter() + relatedgetter()
+      res = ob.getSimilarValueList() + ob.getSimilarRelatedValueList()
       for r in res:
         if lista.get(r) is None:
           lista[r] = True # we use dict keys to ensure uniqueness
         if level != depth:
           getRelatedList(r, level)
 
-    getRelatedList(context)
+    getRelatedList(self)
     lista_latest = {}
     for o in lista.keys():
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
-    if lista_latest.has_key(context): lista_latest.pop(context) # remove this document
-    if lista_latest.has_key(context.getLatestVersionValue()): lista_latest.pop(contextLatestVersionValue()) # remove this document
+    if lista_latest.has_key(self): lista_latest.pop(self) # remove this document
+    if lista_latest.has_key(self.getLatestVersionValue()): lista_latest.pop(self()) # remove this document
 
     return lista_latest.keys()
+
+  security.declareProtected(Permissions.View, 'hasFile')
+  def hasFile(self):
+    """
+    Checks whether we have an initial file
+    """
+    _marker = []
+    if getattr(self,'data', _marker) is not _marker: # XXX-JPS - use propertysheet accessors
+      return getattr(self, 'data') is not None
+    return False
 
   ### Version and language getters - might be moved one day to a mixin class in base
   security.declareProtected(Permissions.View, 'getLatestVersionValue')
   def getLatestVersionValue(self, language=None):
     """
-    Tries to find the latest version with the latest revions
-    of self which the current user is allowed to access.
+      Tries to find the latest version with the latest revision
+      of self which the current user is allowed to access.
 
-    If language is provided, return the latest document
-    in the language.
+      If language is provided, return the latest document
+      in the language.
 
-    If language is not provided, return the latest version
-    in any language or in the user language if the version is
-    the same.
+      If language is not provided, return the latest version
+      in original language or in the user language if the version is
+      the same.
     """
-    # Use portal_catalog
-    pass
+    catalog = getToolByName(self, 'portal_catalog', None)
+    kw = dict(reference=self.getReference(), sort_on=(('version','descending'),('revision','descending'),))
+    if language is not None: kw['language'] = language
+    res = catalog(**kw)
+
+    original_language = self.getOriginalLanguage()
+    user_language = self.Localizer.get_selected_language()
+
+    # if language was given return it
+    if language is not None:
+      return res[0]
+    else:
+      first = res[0]
+      in_original = None
+      for ob in res:
+        if ob.getLanguage() == original_language:
+          # this is in original language
+          in_original = ob
+        if ob.getVersion() != first.getVersion():
+          # we are out of the latest version - return in_original or first
+          if in_original is not None:
+            return in_original
+          else:
+            return first # this shouldn't happen in real life
+        if ob.getLanguage() == user_language:
+          # we found it in the user language
+          return ob
+    # this is the only doc in this version
+    return self
 
   security.declareProtected(Permissions.View, 'getVersionValueList')
   def getVersionValueList(self, version=None, language=None):
@@ -520,55 +581,103 @@ class Document(XMLObject):
       but different version and given language or any language if not given.
     """
     catalog = getToolByName(self, 'portal_catalog', None)
-    return catalog(portal_type=self.getPortalType(),
+    kw = dict(portal_type=self.getPortalType(),
                    reference=self.getReference(),
-                   version=version,
-                   language=language,
                    group_by=('revision',),
                    order_by=(('revision', 'descending', 'SIGNED'),)
                   )
+    if version: kw['version'] = version
+    if language: kw['language'] = language
+    return catalog(**kw)
 
   security.declareProtected(Permissions.View, 'isVersionUnique')
   def isVersionUnique(self):
     """
       Returns true if no other document of the same
       portal_type and reference has the same version and language
+      
+      XXX should delegate to script with proxy roles
     """
     catalog = getToolByName(self, 'portal_catalog', None)
-    return catalog.countResults(portal_type=self.getPortalType(),
+    # XXX why this does not work???
+    #return catalog.countResults(portal_type=self.getPortalType(),
+                                #reference=self.getReference(),
+                                #version=self.getVersion(),
+                                #language=self.getLanguage(),
+                                #) <= 1
+    return len(catalog(portal_type=self.getPortalType(),
                                 reference=self.getReference(),
                                 version=self.getVersion(),
                                 language=self.getLanguage(),
-                                ) <= 1
+                                )) <= 1
 
   security.declareProtected(Permissions.View, 'getLatestRevisionValue')
   def getLatestRevisionValue(self):
     """
       Returns the latest revision of ourselves
     """
-    # Use portal_catalog
-    pass
+    if not self._checkCompleteCoordinates():
+      return None
+    catalog = getToolByName(self, 'portal_catalog', None)
+    res = catalog(
+        reference=self.getReference(),
+        language=self.getLanguage(),
+        version=self.getVersion(),
+        sort_on=(('revision','descending'),)
+        )
+    if len(res) == 0:
+      return None
+    return res[0].getObject()
 
   security.declareProtected(Permissions.View, 'getRevisionValueList')
   def getRevisionValueList(self):
     """
       Returns a list revision strings for a given reference, version, language
+      XXX should it return revision strings, or docs (as the func name would suggest)?
     """
     # Use portal_catalog
-    pass
+    if not self._checkCompleteCoordinates():
+      return []
+    res = self.portal_catalog(reference=self.getReference(),
+                  language=self.getLanguage(),
+                  version=self.getVersion()
+                  )
+    d = {}
+    for r in res:
+      d[r.getRevision()] = True
+      revs = d.keys()
+      revs.sort(reverse=True)
+    return revs
+
+  security.declarePrivate('_checkCompleteCoordinates')
+  def _checkCompleteCoordinates(self):
+    """
+      test if the doc has all coordinates
+    """
+    reference = self.getReference()
+    version = self.getVersion()
+    language = self.getLanguage()
+    return (reference and version and language)
   
   security.declareProtected(Permissions.ModifyPortalContent, 'setNewRevision')
-  def setNewRevision(self):
+  def setNewRevision(self, immediate_reindex=False):
     """
       Set a new revision number automatically
       Delegates to ZMI script because revision numbering policies can be different.
       Should be called by interaction workflow upon appropriate action.
+
+      Sometimes we should reindex immediately, to avoid other doc setting
+      the same revision (if revisions are global and there is heavy traffic)
     """
-    # Use portal_catalog without security
+    # Use portal_catalog without security (proxy roles on scripts)
     method = self._getTypeBasedMethod('getNewRevision', 
         fallback_script_id = 'Document_getNewRevision')
     new_rev = method()
     self.setRevision(new_rev)
+    if immediate_reindex:
+      self.immediateReindexObject()
+    else:
+      self.reindexObject()
   
   security.declareProtected(Permissions.View, 'getLanguageList')
   def getLanguageList(self, version=None):
@@ -593,7 +702,14 @@ class Document(XMLObject):
     # Approach 2: use workflow analysis (delegate to script if necessary)
     #             workflow analysis is the only way for multiple orginals
     # XXX - cache or set?
-    pass
+    reference = self.getReference()
+    if not reference:
+      return 
+    catalog = getToolByName(self, 'portal_catalog', None)
+    res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
+    # XXX this should be security-unaware - delegate to script with proxy roles
+    return res[0].getLanguage() # XXX what happens if it is empty?
+    
 
   ### Property getters
   # Property Getters are document dependent so that we can
@@ -619,8 +735,9 @@ class Document(XMLObject):
     """
     # XXX this method should first make sure we have text content
     # or do a conversion
-    return self._getTypeBasedMethod('getPropertyDictFromContent',
+    method = self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
+    return method()
 
   security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromFileName')
   def getPropertyDictFromFileName(self, file_name):
@@ -648,25 +765,26 @@ class Document(XMLObject):
                             # disappear within a given transaction
     return kw
 
+
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
   def discoverMetadata(self, file_name=None, user_login=None):
     """
-    This is the main metadata discovery function - controls the process
-    of discovering data from various sources. The discovery itself is
-    delegated to scripts or uses preferences-configurable regexps.
+      This is the main metadata discovery function - controls the process
+      of discovering data from various sources. The discovery itself is
+      delegated to scripts or uses preferences-configurable regexps.
 
-    file_name - this parameter is a file name of the form "AA-BBB-CCC-223-en"
+      file_name - this parameter is a file name of the form "AA-BBB-CCC-223-en"
 
-    user_login - this is a login string of a person; can be None if the user is
-      currently logged in, then we'll get him from session
+      user_login - this is a login string of a person; can be None if the user is
+        currently logged in, then we'll get him from session
     """
 
     # Get the order
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
-    order_list = method()
+    order_list = list(method())
 
     # Start with everything until content
     content_index = order_list.index('content')
@@ -686,10 +804,15 @@ class Document(XMLObject):
         result = method(file_name)
       else:
         result = method()
-      kw.update(result)
+      if result is not None:
+        kw.update(result)
       
     # Edit content
-    self.edit(kw)
+    try:
+      del(kw['portal_type'])
+    except KeyError:
+      pass
+    self.edit(**kw)
 
     # Finish in second stage
     self.activate().finishMetadataDiscovery()
@@ -697,20 +820,20 @@ class Document(XMLObject):
   security.declareProtected(Permissions.ModifyPortalContent, 'finishMetadataDiscovery')
   def finishMetadataDiscovery(self):
     """
-    This is called by portal_activities, to leave time-consuming procedures
-    for later. It converts the OOoDocument (later maybe some other formats) and
-    does things that can be done only after it is converted).
+      This is called by portal_activities, to leave time-consuming procedures
+      for later. It converts what needs conversion to base, and
+      does things that can be done only after it is converted).
     """
     # Get the order from preferences
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
-    order_list = method()
+    order_list = list(method())
 
     # Start with everything until content
     content_index = order_list.index('content')
 
-    # Start with everything until content - build a dictionnary according to the order
+    # do content and everything that is later
     kw = {}
     for order_id in order_list[content_index:]:
       if order_id not in VALID_ORDER_KEY_LIST:
@@ -724,10 +847,11 @@ class Document(XMLObject):
         result = method(file_name)
       else:
         result = method()
-      kw.update(result)
+      if result is not None:
+        kw.update(result)
       
     # Edit content
-    self.edit(kw)
+    self.edit(**kw)
 
     # Erase backup attributes
     delattr(self, '_backup_input')
