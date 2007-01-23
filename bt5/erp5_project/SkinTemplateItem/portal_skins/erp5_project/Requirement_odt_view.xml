@@ -55,12 +55,6 @@ AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -118,27 +112,6 @@ AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>

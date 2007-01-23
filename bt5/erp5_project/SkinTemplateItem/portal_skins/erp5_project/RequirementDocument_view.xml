@@ -110,7 +110,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_source_decision_title</string>
