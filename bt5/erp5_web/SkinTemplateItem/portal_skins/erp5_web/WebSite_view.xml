@@ -98,11 +98,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
                         <string>my_short_title</string>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
+                        <string>my_id</string>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
@@ -110,8 +110,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_webmaster</string>
                         <string>my_aggregate_title_list</string>
+                        <string>my_webmaster</string>
                       </list>
                     </value>
                 </item>
