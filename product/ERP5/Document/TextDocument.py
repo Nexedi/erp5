@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type.WebDAVSupport import TextContent
@@ -99,11 +100,12 @@ class TextDocument(Document, TextContent):
       if format is None:
         # The default is to use ERP5 Forms to render the page
         return self.view()
-      # For now we just return the raw content
-      return self.getTextContent()
-      # XXX - In the future, we will use portal transforms
-      # to render the content in any format
-      return self.portal_transforms.convertTo('text/text', self.getTextContent())
+      # Return the raw content
+      if format == 'raw':
+        return self.getTextContent()
+      mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
+      return getToolByName(self, 'portal_transforms').convertTo(mime_type,
+                           self.getTextContent(), object=self, mimetype=self.getTextFormat())
 
     ### Content indexing methods
     security.declareProtected(Permissions.View, 'getSearchableText')
