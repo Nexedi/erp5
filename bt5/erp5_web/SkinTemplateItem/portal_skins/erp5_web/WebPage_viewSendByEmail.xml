@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>for email in email_recipient_list:\n
-  context.MailHost.send("From: %s\\nTo: %s\\n\\n\\n%s" % (email_sender,email,email_text),\n
+  context.MailHost.send("From: %s\\nTo: %s\\nContent-Type: text/plain;\\n  charset=\\"utf-8\\"\\n\\n\\n%s" % (email_sender,email,email_text),\n
                         mto=email, mfrom=email_sender,\n
                         subject=email_title, encode=\'8bit\')\n
 \n
