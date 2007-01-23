@@ -79,11 +79,11 @@
 &lt;!--\n
 var oFCKeditor      = new FCKeditor(\'${inputname}\');\n
 var pathUser        = \'${path_user}/\';\n
-oFCKeditor.BasePath = \'${portal_path}\';\n
+oFCKeditor.BasePath = \'${path_user}\';\n
 oFCKeditor.Value    = \'${cleaninput}\';\n
 \n
 // set the css for editor area\n
-oFCKeditor.Config[\'EditorAreaCSS\'] = \'${portal_path}/erp5_editor.css\';\n
+oFCKeditor.Config[\'EditorAreaCSS\'] = \'${portal_path}erp5_editor.css\';\n
 \n
 // editor appearance\n
 oFCKeditor.ToolbarSet = \'ERP5WebZopeCmf\';\n
