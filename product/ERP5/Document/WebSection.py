@@ -52,6 +52,7 @@ Domain_getattr = Domain.inheritedAttribute('__getattr__')
 CACHE_KEY = 'web_site_aq_cache'
 DOCUMENT_NAME_KEY = 'web_section_document_name'
 reserved_name_dict = { 'getApplicableLayout' : 1,
+                       'getContainerLayout': 1,
                        'isWebMode' : 1,
                        'getLayout' : 1,
                        'Localizer' : 1,
