@@ -145,15 +145,11 @@ class ContributionTool(BaseTool):
     # Try to find the file_name
     file = kw.get('file', None)
     if file is not None:
-      try:
-        file_name = file.filename
-      except AttributeError: # file can be raw data
-        file_name = kw.get('file_name')
-    else:
-      file_name = None
-    if file_name is not None:
+      file_name = file.filename
       # we store it as source_reference
       kw['source_reference'] = file_name
+    else:
+      file_name = None
 
     # If the portal_type was provided, we can go faster
     if portal_type is not None and portal_type != '':
@@ -174,23 +170,32 @@ class ContributionTool(BaseTool):
     # with PUT_factory
     ob = self.PUT_factory( file_name, None, None )
 
-    # Then put the file inside ourselves for a short while
-    #BaseTool._setObject(self, name, ob)
-    #document = self[name]
-    
-    # Remove the object from ourselves
-    #self._delObject(name, ob)
+    # Raise an error if we could not guess the portal type
+    # XXX Maybe we should try to pass the typ param
+    if ob is None:
+      raise ValueError, "Could not determine the document type"
 
-    # Move it to where it belongs
+    # Then put the file inside ourselves for a short while
+    BaseTool._setObject(self, file_name, ob)
+    document = self[file_name]
+
+    # Then edit the document contents (so that upload can happen)
+    document._edit(**kw)
+
+    # Remove the object from ourselves
+    BaseTool._delObject(self, file_name)
+
+    # Move the document to where it belongs
     if not discover_metadata: setattr(self, NO_DISCOVER_METADATA_KEY, 1)
     setattr(ob, USER_NAME_KEY, user_login)
-    #document = self._setObject(name, ob)
+    document = self._setObject(file_name, ob)
 
-    # Reindex it and return it
-    # because PUT_factory unwraps the object, we have to get it from volatile, grrr...
-    document = getattr(self, TEMP_NEW_OBJECT_KEY)[0]
-    # Then edit the document contents (so that upload can happen)
-    #document._edit(**kw)
+    # Time to empty the cache
+    if hasattr(self, '_v_document_cache'):
+      if self._v_document_cache.has_key(file_name):
+        del self._v_document_cache[file_name]
+
+    # Reindex it and return the document
     document.immediateReindexObject()
     return document
 
@@ -233,7 +238,6 @@ class ContributionTool(BaseTool):
         pass
     return property_dict
 
-
   # WebDAV virtual folder support
   def _setObject(self, name, ob, user_login=None):
     """
@@ -274,12 +278,13 @@ class ContributionTool(BaseTool):
 
     # We can now discover metadata unless NO_DISCOVER_METADATA_KEY was set on ob
     document = module[new_id]
-    # store as volatile to be able to retrieve in a while
-    # keep name (to doublecheck this is the one)
-    # because PUT_factory will eventually call it by file name
-    setattr(self, TEMP_NEW_OBJECT_KEY, (document, name))
     user_login = getattr(self, USER_NAME_KEY, None)
-    if not getattr(ob, NO_DISCOVER_METADATA_KEY, 0): document.discoverMetadata(file_name=name, user_login=user_login)
+    #if not getattr(ob, NO_DISCOVER_METADATA_KEY, 0): document.discoverMetadata(file_name=name, user_login=user_login)
+
+    # Keep the document close to us
+    if not hasattr(self, '_v_document_cache'):
+      self._v_document_cache = {}
+    self._v_document_cache[name] = document.getRelativeUrl()
 
     # Return document to newContent method
     return document
@@ -289,22 +294,31 @@ class ContributionTool(BaseTool):
     Check for volatile temp object info first
     and try to find it
     """
-    ob, new_id = getattr(self, TEMP_NEW_OBJECT_KEY, (None, None))
-    if ob is not None:
-      if new_id == id:
-        return ob
-    return BaseTool._getOb(self, id, default)
+    if hasattr(self, '_v_document_cache'):
+      document_url = self._v_document_cache.get(id, None)
+      if document_url is not None:
+        return self.getPortalObject().unrestrictedTraverse(document_url)
+
+    if default is _marker:
+      return BaseTool._getOb(self, id)
+    else:
+      return BaseTool._getOb(self, id, default=default)
 
   def _delOb(self, id):
     """
     We don't need to delete, since we never set here
     """
-    pass
+    if hasattr(self, '_v_document_cache'):
+      document_url = self._v_document_cache.get(id, None)
+      if document_url is not None:
+        document = self.getPortalObject().unrestrictedTraverse(document_url)
+        if document is not None:
+          document.getParentValue()._delOb(document.getId())
+          del self._v_document_cache[id]
+          return
 
+    return BaseTool._delOb(self, id)
 
 InitializeClass(ContributionTool)
-
-
-
 
 # vim: filetype=python syntax=python shiftwidth=2 
