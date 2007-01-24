@@ -34,7 +34,7 @@ from zLOG import LOG
 class BankAccountReference(Constraint):
   """
     This constraint checks that the bank account follow
-    the bceao settings (len of field) :
+    the bank settings (len of field) :
 
     bank_country_code (1)
     bank_code (4)
