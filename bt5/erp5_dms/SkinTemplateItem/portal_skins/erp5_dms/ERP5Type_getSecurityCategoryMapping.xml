@@ -68,19 +68,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+            <value> <string>"""\n
+Core security script - defines the way to get security groups of the current user.\n
 """\n
-  XXX-JPS Description here please\n
-"""\n
+\n
 # XXX-JPS This code is quite frightening. I wonder really what it is for.\n
 \n
-#context.log(\'---\')\n
 return (\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'source_project\'] ),\n
-(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\',\'source_project\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\', \'source_project\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'group\'] ),\n
-(\'ERP5Type_getSecurityCategoryRoot\',[\'group\']),\n
+(\'ERP5Type_getSecurityCategoryRoot\', [\'group\']),\n
 )\n
 </string> </value>
         </item>

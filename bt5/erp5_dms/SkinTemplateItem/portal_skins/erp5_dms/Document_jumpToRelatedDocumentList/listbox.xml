@@ -543,7 +543,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/DMS_getRelatedDocumentsListboxTitle</string> </value>
+            <value> <string>here/REQUEST/listbox_title</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -562,7 +562,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DMS_getRelatedDocumentList</string> </value>
+            <value> <string>Document_getRelatedDocumentList</string> </value>
         </item>
       </dictionary>
     </pickle>

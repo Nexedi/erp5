@@ -68,22 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
-"""\n
+            <value> <string>"""\n
 we return only those base categories to which all Document-related portal_types belong\n
 you need to define the list of Document types here\n
-and to add a base category add it in DMSFile property sheets\n
+and to add a base category to it in DMSFile property sheets\n
 or manually for all these portal_types\n
 """\n
 \n
-types=context.getPortalDocumentTypeList()\n
-nrtypes=len(types)\n
-basecatdict={}\n
-for t in types:\n
-  bases=context.portal_types[t].getInstanceBaseCategoryList()\n
-  for b in bases:\n
-    basecatdict[b]=basecatdict.setdefault(b,0)+1\n
-basecatlist=[k for k,v in basecatdict.items() if v==nrtypes]\n
+type_list = context.getPortalDocumentTypeList()\n
+nr_of_types = len(type_list)\n
+\n
+basecatdict = {}\n
+\n
+for type in type_list:\n
+  type_base_cat_list = context.portal_types[type].getInstanceBaseCategoryList()\n
+  for base_cat in type_base_cat_list:\n
+    basecatdict[base_cat] = basecatdict.setdefault(base_cat, 0)+1\n
+\n
+basecatlist = [k for k,v in basecatdict.items() if v == nr_of_types]\n
 basecatlist.sort()\n
 return basecatlist\n
 </string> </value>
@@ -130,15 +132,15 @@ return basecatlist\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>types</string>
+                            <string>type_list</string>
                             <string>len</string>
-                            <string>nrtypes</string>
+                            <string>nr_of_types</string>
                             <string>basecatdict</string>
                             <string>_getiter_</string>
-                            <string>t</string>
+                            <string>type</string>
                             <string>_getitem_</string>
-                            <string>bases</string>
-                            <string>b</string>
+                            <string>type_base_cat_list</string>
+                            <string>base_cat</string>
                             <string>_write_</string>
                             <string>append</string>
                             <string>$append0</string>

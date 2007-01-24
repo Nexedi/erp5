@@ -81,7 +81,11 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DMS_jumpToRelatedDocuments?what=all</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:${object_url}/Document_jumpToRelatedDocumentList?relation_id=all&listbox_title=All related documents
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

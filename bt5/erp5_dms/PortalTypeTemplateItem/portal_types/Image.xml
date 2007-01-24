@@ -75,7 +75,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>document</string>
+              </tuple>
             </value>
         </item>
         <item>

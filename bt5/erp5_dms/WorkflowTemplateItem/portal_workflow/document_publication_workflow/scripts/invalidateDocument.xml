@@ -68,10 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=state_change.object\n
+            <value> <string>"""\n
+invalidate document\n
+(when it is hidden)\n
+"""\n
+\n
+ob=state_change.object\n
 \n
 if ob.getValidationState()==\'validated\':\n
-  ob.portal_workflow.doActionFor(ob,\'invalidate_action\')\n
+  ob.portal_workflow.doActionFor(ob, \'invalidate_action\')\n
 </string> </value>
         </item>
         <item>

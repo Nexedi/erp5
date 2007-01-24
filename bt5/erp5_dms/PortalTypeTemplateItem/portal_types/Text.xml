@@ -82,7 +82,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>dms_document</string>
+                <string>document</string>
               </tuple>
             </value>
         </item>

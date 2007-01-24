@@ -68,64 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+            <value> <string>"""\n
+This is the same as ERP5Type_getSecurityCategoryFromAssignment\n
+only it returns only the first part of category\n
+It is used e.g. to figure out if the user is working anywhere\n
+in the certain organisation - for this, all we need is the first part\n
+of the group category.\n
 """\n
-  XXX-JPS Description here please\n
-"""\n
-# XXX it is the same as ERP5Type_getSecurityCategoryFromAssignment\n
-# only it returns only the first part of category\n
 \n
-# XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
-\n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
-\n
-# must always return a list of dicts\n
-\n
-category_list = []\n
-\n
-person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
-# It is better to keep getObject(), in this script this\n
-# prevent a very strange bug, sometimes without getObject the\n
-# assignment is not found\n
-person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type=\'Person\', reference=user_name)]\n
-\n
-if len(person_object_list) != 1:\n
-  if len(person_object_list) > 1:\n
-    raise ConsistencyError, "Error: There is more than one Person with reference \'%s\'" % user_name\n
-  else:\n
-    # if a person_object was not found in the module, we do nothing more\n
-    # this happens for example when a manager with no associated person object\n
-    # creates a person_object for a new user\n
-    return []\n
-person_object = person_object_list[0]\n
-\n
-# We look for valid assignments of this user\n
-for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
-  if assignment.getValidationState() == \'open\':\n
-    category_dict = {}\n
-    for base_category in base_category_list:\n
-      if base_category==\'source_project\':\n
-        category_value=assignment.getDestinationProject()\n
-      else:\n
-        category_value = assignment.getProperty(base_category)\n
-      #context.log(category_value)\n
-      if category_value not in (None, \'\'):\n
-        category_value=category_value.split(\'/\')[0]\n
-        category_dict[base_category] = category_value\n
-      else:\n
-        raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
-    category_list.append(category_dict)\n
-#context.log(category_list)\n
-return category_list\n
-
-
-]]></string> </value>
+return context.ERP5Type_getSecurityCategoryFromAssignment(base_category_list, user_name, object, portal_type, strict=True, root=True)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -185,26 +137,9 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>person_module</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>person_object_list</string>
-                            <string>len</string>
-                            <string>ConsistencyError</string>
-                            <string>_getitem_</string>
-                            <string>person_object</string>
-                            <string>assignment</string>
-                            <string>category_dict</string>
-                            <string>base_category</string>
-                            <string>category_value</string>
-                            <string>None</string>
-                            <string>_write_</string>
-                            <string>RuntimeError</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>

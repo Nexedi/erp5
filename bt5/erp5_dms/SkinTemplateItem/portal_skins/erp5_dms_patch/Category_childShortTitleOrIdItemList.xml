@@ -68,36 +68,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># equivalent to for getCategoryChildLogicalPathItemList\n
-# the point is to display short_title if available else id\n
-# instead of title in case categories have long titles and deep nesting\n
-# use with care and caching, may be expensive\n
+            <value> <string>"""\n
+equivalent to getCategoryChildLogicalPathItemList\n
+the point is to display short_title if available else id\n
+instead of title in case categories have long titles and deep nesting\n
+use with care and caching, may be expensive\n
+"""\n
 \n
-labelcache={} # so that we do not resolve all items in every path\n
+labelcache = {} # so that we do not resolve all items in every path\n
 \n
 def getLabel(c):\n
   return c.getShortTitle() or c.getId()\n
 \n
 def makeLogicalPathItem(o):\n
-  retval=[]\n
-  path=o.getRelativeUrl().split(\'/\')\n
-  pathlabels=[]\n
+  retval = []\n
+  path = o.getRelativeUrl().split(\'/\')\n
+  pathlabels = []\n
   for i,p in enumerate(path):\n
-    pathhash=\'/\'.join(path[:i+1])\n
+    pathhash = \'/\'.join(path[:i + 1])\n
     if not labelcache.has_key(pathhash):\n
-      cat=context.portal_categories.resolveCategory(pathhash)\n
-      labelcache[pathhash]=getLabel(cat)\n
+      cat = context.portal_categories.resolveCategory(pathhash)\n
+      labelcache[pathhash] = getLabel(cat)\n
     pathlabels.append(labelcache[pathhash])\n
   retval.append(\'/\'.join(pathlabels[1:]))\n
   retval.append(\'/\'.join(path[1:]))\n
   return retval\n
 \n
-#basecat=context.portal_categories.resolveCategory(\'function\')\n
-basecat=context\n
+#basecat = context.portal_categories.resolveCategory(\'function\')\n
+basecat = context\n
 \n
-children=basecat.getCategoryChildValueList()\n
-children=map(makeLogicalPathItem,children)\n
-children.insert(0,[\'\',\'\'])\n
+children = basecat.getCategoryChildValueList()\n
+children = map(makeLogicalPathItem, children)\n
+children.insert(0, [\'\', \'\'])\n
 \n
 return children\n
 </string> </value>

@@ -68,22 +68,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
-"""\n
-  XXX-JPS Description here please\n
+            <value> <string>"""\n
+Security categories assigned from the Person who is set as the destination\n
+of the document (e.g. in Memo type).\n
 """\n
 \n
-# here we calculate permissions for a memo - we must find the recipient\n
-\n
-context.log(base_category_list)\n
 category_list = []\n
 \n
 for ob in object.getDestinationValueList():\n
-  context.log(ob.getRelativeUrl())\n
   category_dict = {}\n
   for base_category in base_category_list:\n
-    if base_category==\'group\':\n
-      category_value=ob.Person_getGroup()\n
+    if base_category == \'group\':\n
+      category_value = ob.Person_getPrincipalGroup()\n
     else:\n
       category_value = ob.getProperty(base_category)\n
     if category_value not in (None, \'\'):\n
@@ -153,10 +149,9 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>ob</string>
                             <string>category_dict</string>
                             <string>base_category</string>
@@ -164,6 +159,7 @@ return category_list\n
                             <string>None</string>
                             <string>_write_</string>
                             <string>RuntimeError</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

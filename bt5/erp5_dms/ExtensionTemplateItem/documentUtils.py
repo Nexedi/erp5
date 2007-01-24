@@ -3,46 +3,64 @@ import xmlrpclib, base64
 from Products.CMFCore.utils import getToolByName
 
 def extractContent(data):
-  cs=cStringIO.StringIO()
+  """
+  extract text content from ODF data
+  directly by unzipping (no need for oood here)
+  """
+  # XXX probably not used - to really get text content it should
+  # strip xml too
+  cs = cStringIO.StringIO()
   cs.write(data)
   try:
-    z=zipfile.ZipFile(cs)
+    z = zipfile.ZipFile(cs)
   except zipfile.BadZipfile:
     cs.close()
     return ''
-  s=z.read('content.xml')
+  s = z.read('content.xml')
   cs.close()
   z.close()
   return s
 
-def convertToOdf(self,name,data):
-  sp=mkProxy(self)
-  kw=sp.run_convert(name,base64.encodestring(data))
-  odf=base64.decodestring(kw['data'])
+###### XXX these methods repeat what is in OOoDocument class
+# maybe redundant, but we need to access them from Script (Python)
+
+def convertToOdf(self, name, data):
+  """
+  convert data into ODF format
+  to be used in ingestion when we don't yet have an ERP5 object
+  to work with (and we for example have to figure out portal_type)
+  """
+  sp = mkProxy(self)
+  kw = sp.run_convert(name,base64.encodestring(data))
+  odf = base64.decodestring(kw['data'])
   return odf
 
 def mkProxy(self):
-  pref=getToolByName(self,'portal_preferences')
-  adr=pref.getPreferredDmsOoodocServerAddress()
-  nr=pref.getPreferredDmsOoodocServerPortNumber()
+  pref = getToolByName(self,'portal_preferences')
+  adr = pref.getPreferredDmsOoodocServerAddress()
+  nr = pref.getPreferredDmsOoodocServerPortNumber()
   if adr is None or nr is None:
     raise Exception('you should set conversion server coordinates in preferences')
-  sp=xmlrpclib.ServerProxy('http://%s:%d' % (adr,nr),allow_none=True)
+  sp = xmlrpclib.ServerProxy('http://%s:%d' % (adr,nr), allow_none=True)
   return sp
 
-def generateFile(self,name,data,format):
-  sp=mkProxy(self)
-  kw=sp.run_generate(name,data,None,format)
-  res=base64.decodestring(kw['data'])
+def generateFile(self, name, data, format):
+  sp = mkProxy(self)
+  kw = sp.run_generate(name, data, None, format)
+  res = base64.decodestring(kw['data'])
   return res
 
-def getAttrFromFilename(self,fname):
-  rx_parse=re.compile(self.portal_preferences.getPreferredDmsFilenameRegexp())
-  m=rx_parse.match(fname)
+def getAttrFromFilename(self, fname):
+  """
+  parse file name using regexp specified in preferences
+  """
+  rx_parse = re.compile(self.portal_preferences.getPreferredDmsFilenameRegexp())
+  m = rx_parse.match(fname)
   if m is None:
     return {}
   return m.groupdict()
 
-
+def ofof(one, another):
+  return one.__of__(another)
 
 # vim: syntax=python shiftwidth=2 

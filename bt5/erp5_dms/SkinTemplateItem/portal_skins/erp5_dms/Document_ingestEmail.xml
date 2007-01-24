@@ -70,59 +70,70 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-#from Products.ERP5Type.Message import Message\n
+"""\n
+The email ingestion script, called by ZMailIn upon reception of an email.\n
+Finds out who sent the letter, finds the sender, discovers properties that may\n
+be contained in the mail body (using Document_getPropertyListFromMail),\n
+then creates and object from every attachment and sends notifications to the\n
+sender.\n
 \n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
+If it returns anything, it is bounced back to the sender as an error message. No return\n
+value means everything was fine.\n
 """\n
-  XXX-JPS Description here\n
-"""\n
-noSenderInHeaderMsg="no sender in headers"\n
-noSenderMsg="you are not in user database"\n
-manySendersMsg="very serious error: your address has multiple entries"\n
-noSubordinationMsg="you do not have properly set subordination (I could not find a group you are working in)"\n
+\n
+#from Products.ERP5Type.Message import Message\n
+# translating doesn\'t make sense since we have no session, so no preferences\n
+\n
+noSenderInHeaderMsg = "no sender in headers"\n
+noSenderMsg = "you are not in user database"\n
+manySendersMsg = "very serious error: your address has multiple entries"\n
+noSubordinationMsg = "you do not have properly set subordination (I could not find a group you are working in)"\n
 \n
 # get sender from headers\n
-fromraw=theMail[\'headers\'][\'from\']\n
+fromraw = theMail[\'headers\'][\'from\']\n
 \n
-senderemail=context.findAddress(fromraw)\n
+senderemail = context.findAddress(fromraw)\n
 if senderemail is None:\n
   print noSenderInHeaderMsg\n
   return printed\n
 \n
 # find sender\n
 context.log(senderemail)\n
-r=context.portal_catalog(portal_type=\'Email\',url_string=senderemail)\n
-if len(r)==0:\n
+r = context.portal_catalog(portal_type=\'Email\', url_string=senderemail)\n
+if len(r) == 0:\n
   print noSenderMsg\n
   return printed\n
-if len(r)>1:\n
+if len(r) > 1:\n
   print manySendersMsg\n
   return printed\n
-senderm=r[0]\n
-person=senderm.getParent()\n
-context.log(script.getId(),\'ok, this address belongs to \'+person.getRelativeUrl())\n
 \n
-mailprops=context.Document_getPropertiesFromMail(theMail[\'body\'])\n
+senderm = r[0]\n
+person = senderm.getParent()\n
+context.log(script.getId(), \'ok, this address belongs to \' + person.getRelativeUrl())\n
+\n
+mailprops = context.Document_getPropertyListFromMail(theMail[\'body\'])\n
 context.log(mailprops)\n
+\n
 # create objects from attachments\n
 try:\n
-  for fname,data in theMail[\'attachments\'].items():\n
-    obj=context.DMS_createObjectFromFile(fname,data,mailprops.get(\'document_type\'),uname=person.getReference())\n
+  for fname, data in theMail[\'attachments\'].items():\n
+    obj  = context.Document_createObjectFromFile(fname, data, portal_type=mailprops.get(\'document_type\'), user_name=person.getReference())\n
     # if some properties were in the mail, overwrite the content attrs\n
     for k in mailprops:\n
-      atr=k\n
-      if k==\'programme\':atr=\'source_project\'\n
-      if k!=\'document_type\':\n
-        obj.setProperty(atr,mailprops[k])\n
-    gr=person.Person_getGroup()\n
+      atr = k\n
+      if k == \'programme\': atr = \'source_project\'\n
+      if k != \'document_type\':\n
+        obj.setProperty(atr, mailprops[k])\n
+    gr = person.Person_getPrincipalGroup()\n
     if gr is None:\n
       print noSubordinationMsg\n
       return printed\n
     obj.setGroup(gr)\n
-    obj.manage_setLocalRoles(person.getReference(),[\'Owner\',])\n
-    context.DMS_notifyByEmail(address=senderemail,event=\'ingest\',object=obj)\n
-except Exception,e:\n
-  context.log_traceback(context)\n
+    obj.manage_setLocalRoles(person.getReference(), [\'Owner\',])\n
+    context.Document_notifyByEmail(address=senderemail, event=\'ingest\', object=obj)\n
+except Exception, e:\n
+  # context.log_traceback(context) # what the *** was this?\n
+  context.log(e)\n
   raise\n
   #return str(e)\n
 return\n

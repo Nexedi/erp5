@@ -72,7 +72,6 @@
 
 o=state_change.object\n
 u=o.getUrlString()\n
-context.log(u)\n
 i=u.find(\'://\')\n
 if i>-1:\n
   prot=u[:i]\n
@@ -128,7 +127,6 @@ if i>-1:\n
                             <string>_getattr_</string>
                             <string>o</string>
                             <string>u</string>
-                            <string>context</string>
                             <string>i</string>
                             <string>_getitem_</string>
                             <string>prot</string>

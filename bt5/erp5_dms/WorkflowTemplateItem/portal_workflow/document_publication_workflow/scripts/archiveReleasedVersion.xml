@@ -68,16 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>o=state_change.object\n
-ref=o.getReference()\n
+            <value> <string>o = state_change.object\n
+ref = o.getReference()\n
 if ref is None: # this shouldn\'t happen\n
   raise Exception(\'how on earth can reference be None?\')\n
-lng=o.getLanguage()\n
+lng = o.getLanguage()\n
 if lng is None: # ibidem\n
   raise Exception(\'how on earth can language be None?\')\n
-res=context.portal_catalog(reference=ref,language=lng,simulation_state=\'released\')\n
+res = context.portal_catalog(reference=ref, language=lng, simulation_state=\'released\')\n
 for ob in [r.getObject() for r in res]: # again, this should never happen, but still\n
-  o.portal_workflow.doActionFor(ob,\'archive_action\')\n
+  o.portal_workflow.doActionFor(ob, \'archive_action\')\n
 </string> </value>
         </item>
         <item>

@@ -72,11 +72,11 @@
 get related object title list in a security-aware way (without throwing exception\n
 if I don\'t have permissions to access the object)\n
 """\n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
-ob_list=context.Base_getRelatedObjectValueList(category) # XXX-JPS  This is a base category afterall. Name it base_category\n
-title_list=[o.getTitle() for o in ob_list]\n
 \n
-return filter(lambda t:t!=\'\',title_list)\n
+ob_list = context.Base_getRelatedObjectValueList(category)\n
+title_list = [o.getTitle() for o in ob_list]\n
+\n
+return filter(lambda t:t!=\'\', title_list)\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +99,7 @@ return filter(lambda t:t!=\'\',title_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category</string> </value>
+            <value> <string>base_category</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,9 +125,10 @@ return filter(lambda t:t!=\'\',title_list)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>category</string>
+                            <string>base_category</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>category</string>
                             <string>ob_list</string>
                             <string>append</string>
                             <string>$append0</string>

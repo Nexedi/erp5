@@ -69,35 +69,41 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  XXX-JPS Description here please\n
+Implementation of a highly sophisticated security system. Context has a security classification\n
+like "personal/project", "collaborative/public" etc and we check if a given policy or a set of \n
+policies (defined with wildcard, like "personal/*" or "*/project") applies to the context.\n
+\n
+Classification has to have two levels, and first level is translated into a selected second-level\n
+classification.\n
+\n
+Some classifications require something more to apply (like */project requires source_project), but\n
+this check can be skipped by setting membershiponly to True.\n
 """\n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
 \n
-klass=context.getClassification()\n
-if klass is None:return False\n
-kl=klass.split(\'/\')\n
+klass = context.getClassification()\n
+if klass is None: return False\n
+kl = klass.split(\'/\')\n
 \n
-if len(kl)==1:\n
+if len(kl) == 1:\n
   # personal = personal/restricted\n
-  if kl[0]==\'personal\':kl.append(\'restricted\')\n
+  if kl[0] == \'personal\': kl.append(\'restricted\')\n
   # collaborative = collaborative/team\n
-  if kl[0]==\'collaborative\':kl.append(\'team\')\n
+  if kl[0] == \'collaborative\': kl.append(\'team\')\n
 \n
 # personal/restricted is unconditional\n
-if kl==[\'personal,restricted\']:\n
-  return policy==\'personal/restricted\'\n
+if kl == [\'personal,restricted\']:\n
+  return policy == \'personal/restricted\'\n
 \n
-pol=policy.split(\'/\')\n
-\n
+pol = policy.split(\'/\')\n
 \n
 if not membershiponly:\n
   # project policies do not apply if we don\'t have source_project\n
-  if pol[1]==\'project\':\n
-    if context.getSourceProject()==None:\n
+  if pol[1] == \'project\':\n
+    if context.getSourceProject() == None:\n
       return False\n
 \n
 # if all conditions are met, check if the policy is ok (wildcards are ok)\n
-return (pol[0] in (\'*\',kl[0])) and (pol[1] in (\'*\',kl[1]))\n
+return (pol[0] in (\'*\', kl[0])) and (pol[1] in (\'*\', kl[1]))\n
 </string> </value>
         </item>
         <item>
@@ -120,7 +126,7 @@ return (pol[0] in (\'*\',kl[0])) and (pol[1] in (\'*\',kl[1]))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>policy,membershiponly=False</string> </value>
+            <value> <string>policy, membershiponly=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

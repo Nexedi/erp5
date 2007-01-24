@@ -69,58 +69,57 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  XXX-JPS Description here please\n
+This script is called when a file is uploaded to an object via ERP5 standard interface.\n
+It does the following:\n
+\n
+- determines portal types appropriate for the file type uploaded, and checks if the context portal type\n
+  is one of those (this is not a complete check, but all we can do at this stage)\n
+- checks if context already has some data (we do not allow re-upload of files)\n
+If the context has data, it creates a copy of context (with the same portal type most important properties\n
+  copied) and uploads the file into the copy (the rest is handled by portal_contributions)\n
+Otherwise it just uploads the file and calls metadata discovery script.\n
+\n
 """\n
-# XXX-JPS the number of upload / ingestion method is too high and their organisation\n
-# is very confusing. The only way to progress is to explain the general concept\n
-# within the Document or File class (do not forget that TextDocument can also\n
-# be uploaded) \n
+\n
 translateString = context.Base_translateString\n
 request = context.REQUEST\n
-ptype = context.getPortalType()\n
-fname = file.filename\n
+current_type = context.getPortalType()\n
+file_name = file.filename\n
 \n
-# XXX-JPS - rename to OOoDocument_uploadFile since this is for all types which related to OOoDocument class\n
-# XXX-JPS - it would also be nice to provide this import function at any location\n
-#           Folder_viewOOoDocumentUploadDialog which calls Folder_uploadOOoDocumentFile\n
-#           this way it is easy to add a document anywhere\n
-\n
-# we check for appropriate file type (by extension, using content_type_registry)\n
+# we check for appropriate file type (by extension)\n
+# ContributionTool_getCandidateTypeListByExtension script returns a tuple of\n
+# one or more possible portal types for given extension\n
 # we accept or suggest appropriate portal type\n
-ctype=context.content_type_registry.findTypeName(fname,None,None)\n
-if ctype is None and ptype != \'File\':\n
-  return context.Base_redirect(dialog_id,\n
-              keep_items = dict(portal_status_message = translateString("Sorry, this is not a ${portal_type}. This file should be uploaded into a File document.", mapping = dict(portal_type = ptype)),\n
-                                cancel_url = kw[\'cancel_url\']), **kw)\n
-if ctype is not None and ctype != ptype:\n
-  return context.Base_redirect(dialog_id,\n
-              keep_items = dict(portal_status_message = translateString("Sorry, this is not a ${portal_type}. This file should be uploaded into a ${appropriate_type} document.",\n
-                                                           mapping = dict(portal_type = ptype,\n
-                                                                          appropriate_type = ctype)),\n
-                                cancel_url = kw[\'cancel_url\']), **kw)\n
+ext = file_name[file_name.rfind(\'.\')+1:]\n
+candidate_type_list = context.ContributionTool_getCandidateTypeListByExtension(ext)\n
+if candidate_type_list == () and current_type != \'File\':\n
+  portal_status_message = translateString("Sorry, this is not one of ${portal_type}. This file should be uploaded into a File document.", \n
+                                    mapping = dict(portal_type = str(candidate_type_list)))\n
+  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message=portal_status_message,cancel_url = kw[\'cancel_url\']), **kw)\n
+if candidate_type_list and current_type not in candidate_type_list:\n
+  portal_status_message = translateString("Sorry, this is a ${portal_type}. This file should be uploaded into a ${appropriate_type} document.",\n
+                                mapping = dict(portal_type = current_type, appropriate_type = str(candidate_type_list)))\n
+  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message =portal_status_message, cancel_url = kw[\'cancel_url\']), **kw)\n
 \n
-if hasattr(context, \'data\'): # this is a re-upload, we create a \'copy\'\n
-                            # XXX-JPS please create API for this. Never access attributes directly\n
-  parent = context.getParentValue()\n
-  new_document = parent.newContent(portal_type = ptype)\n
-  property_list = context.portal_types[ptype].getInstanceBaseCategoryList()\n
-  # we copy many things, ingestion script may then overwrite some of these\n
+if context.hasFile(): # this is a re-upload, we create a \'copy\'\n
+  property_list = context.portal_types[current_type].getInstanceBaseCategoryList() # all category memberships\n
+  # we copy many things, ingestion script may then overwrite some of these (if allowed)\n
   # we rely on ingestion script to determine coordinates\n
-  property_list += [\'title\', \'short_title\', \'index\', \'description\', \'subject\']\n
+  property_list += [\'title\', \'short_title\', \'index\', \'description\'] # maybe\n
+  vals = {}\n
+  vals[\'source_reference\'] = file_name\n
   for prop in property_list:\n
     v = context.getProperty(prop)\n
     if v is not None:\n
-      new_document.setProperty(prop,v) # XXX-JPS - This is slow - make a dict and use edit instead\n
-  # XXX-JPS Why don\'t we copy and paste ?\n
-  ob = new_document\n
-  msg = translateString(\'Document already contained file data. A new document was created to with the uploaded file.\')\n
+      vals[prop] = v\n
+  # we create new ob by portal_contributions, supplying current properties as input props\n
+  ob = context.portal_contributions.newContent(portal_type = current_type, file=file, **vals)\n
+  msg = translateString(\'Document already contained file data. A new document was created to which the file was uploaded.\')\n
 else:\n
   ob = context\n
+  ob.manage_upload(file)\n
+  ob.discoverMetadata(file_name=file_name)\n
   msg = translateString(\'File uploaded.\')\n
-\n
-# Upload file\n
-ob.manage_upload(file)\n
-ob.DMS_ingestFile(fname)\n
 \n
 # Return to view mode\n
 return ob.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
@@ -174,20 +173,22 @@ return ob.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},
                             <string>context</string>
                             <string>translateString</string>
                             <string>request</string>
-                            <string>ptype</string>
-                            <string>fname</string>
-                            <string>None</string>
-                            <string>ctype</string>
-                            <string>_apply_</string>
-                            <string>dict</string>
+                            <string>current_type</string>
+                            <string>file_name</string>
                             <string>_getitem_</string>
-                            <string>hasattr</string>
-                            <string>parent</string>
-                            <string>new_document</string>
+                            <string>ext</string>
+                            <string>candidate_type_list</string>
+                            <string>dict</string>
+                            <string>str</string>
+                            <string>portal_status_message</string>
+                            <string>_apply_</string>
                             <string>property_list</string>
+                            <string>vals</string>
+                            <string>_write_</string>
                             <string>_getiter_</string>
                             <string>prop</string>
                             <string>v</string>
+                            <string>None</string>
                             <string>ob</string>
                             <string>msg</string>
                           </tuple>

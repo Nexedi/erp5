@@ -141,6 +141,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>revision</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>short_title</string> </key>
                                 <value>
                                   <dictionary/>
@@ -171,28 +177,29 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>Creator</string>
-                            <string>Date</string>
-                            <string>PrincipiaSearchSource</string>
-                            <string>SearchableText</string>
-                            <string>CreationDate</string>
-                            <string>EffectiveDate</string>
-                            <string>ExpiresDate</string>
-                            <string>ModificationDate</string>
-                            <string>Type</string>
-                            <string>bobobase_modification_time</string>
-                            <string>created</string>
-                            <string>effective</string>
-                            <string>expires</string>
-                            <string>getIcon</string>
-                            <string>in_reply_to</string>
-                            <string>modified</string>
-                            <string>review_state</string>
-                            <string>summary</string>
-                            <string>language</string>
-                            <string>version</string>
-                            <string>short_title</string>
+<string>uid</string>
+<string>Creator</string>
+<string>Date</string>
+<string>PrincipiaSearchSource</string>
+<string>SearchableText</string>
+<string>CreationDate</string>
+<string>EffectiveDate</string>
+<string>ExpiresDate</string>
+<string>ModificationDate</string>
+<string>Type</string>
+<string>bobobase_modification_time</string>
+<string>created</string>
+<string>effective</string>
+<string>expires</string>
+<string>getIcon</string>
+<string>in_reply_to</string>
+<string>modified</string>
+<string>review_state</string>
+<string>summary</string>
+<string>language</string>
+<string>version</string>
+<string>revision</string>
+<string>short_title</string>
                           </list>
                         </value>
                     </item>
@@ -230,6 +237,7 @@ review_state\r\n
 summary\r\n
 language\r\n
 version\r\n
+revision\r\n
 short_title</string> </value>
         </item>
         <item>
@@ -296,7 +304,8 @@ VALUES\n
   <dtml-sqlvar expr="summary[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="language[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="version[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="short_title[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="short_title[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="revision[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n
@@ -367,7 +376,8 @@ VALUES\n
   <dtml-sqlvar expr="summary[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="language[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="version[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="short_title[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="short_title[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="revision[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n

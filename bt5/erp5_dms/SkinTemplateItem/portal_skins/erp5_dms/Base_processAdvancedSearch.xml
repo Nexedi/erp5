@@ -68,11 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>req=context.REQUEST\n
-sstr=context.Base_assembleSearchString()\n
+            <value> <string>req = context.REQUEST\n
+sstr = context.Base_assembleSearchString()\n
 context.log(sstr)\n
-req.set(\'SearchableText\',sstr)\n
-return context.Base_advancedSearchResults()\n
+req.set(\'SearchableText\', sstr)\n
+return context.Base_viewAdvancedSearchResultList()\n
 </string> </value>
         </item>
         <item>

@@ -69,8 +69,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  XXX-JPS Description here please\n
+Used by Base_viewLocalPermissionList which displays all agents set locally\n
+(by adding Role Definition objects) and their roles, in a listbox\n
+which shows roles and agents assigned this role.\n
+This scripts formats names of agents which have a certain role.\n
 """\n
+\n
 return \', \'.join(brain.getObject().getAgentTitleList())\n
 </string> </value>
         </item>

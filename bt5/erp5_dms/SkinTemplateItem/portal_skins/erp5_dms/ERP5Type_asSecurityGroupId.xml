@@ -68,21 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+            <value> <string>"""\n
+Part of the core of security mechanism - translates a list of categories\n
+into a structure of codification codes.\n
+\n
+The differences to the "stock" implementation are:\n
+\n
+* sometimes we use Project\n
+  object instead of a category, and Project has reference instead of codification,\n
+  so we have to provide for it\n
+\n
+* category value can refer to a Person (by reference), then we look for the Person\n
+  instead of resolving category\n
+\n
 """\n
-  XXX-JPS Description here please\n
-"""\n
-# category_order : list of base_categories we want to use to generate the group id\n
-# kw : keys should be base categories,\n
-#      values should be value of corresponding relative urls (obtained by getBaseCategory())\n
-#\n
-# Example call : context.ERP5TypeSecurity_asGroupId(category_order=(\'site\', \'group\', \'function\'),\n
-#                    site=\'france/lille\', group=\'nexedi\', function=\'accounting/accountant\')\n
-# This will generate a string like \'LIL_NXD_ACT\' where "LIL", "NXD" and "ACT" are the codification\n
-#   of respecively "france/lille", "nexedi" and "accounting/accountant" categories\n
-#\n
-# ERP5Type_asSecurityGroupId can also return a list of users whenever a category points\n
-# to a Person instance. This is useful to implement user based local role assignments\n
 \n
 code_list = []\n
 user_list = []\n
@@ -104,10 +103,10 @@ for base_category in category_order:\n
     category_list = [category_list]\n
   for category in category_list:\n
     category_path   = \'%s/%s\' % (base_category, category)\n
-    if base_category==\'reference\': # we will be looking for Person\n
-      res=context.portal_catalog(portal_type=\'Person\',reference=category)\n
-      if res is not None and len(res)==1:\n
-        category_object=res[0].getObject()\n
+    if base_category == \'reference\': # we will be looking for Person\n
+      res=context.portal_catalog(portal_type=\'Person\', reference=category)\n
+      if res is not None and len(res) == 1:\n
+        category_object = res[0].getObject()\n
       else:\n
        raise Exception("no person "+category)\n
     else:\n
@@ -130,8 +129,8 @@ for base_category in category_order:\n
 # Return a list of users or a single group\n
 if user_list:\n
   return user_list\n
-code_list=[c for c in code_list if c is not None]\n
-r=\'_\'.join(code_list)\n
+code_list = [c for c in code_list if c is not None]\n
+r = \'_\'.join(code_list)\n
 return r\n
 </string> </value>
         </item>

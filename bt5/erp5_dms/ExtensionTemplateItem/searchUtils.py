@@ -1,4 +1,4 @@
-'''
+"""
 RULES
 
 Single arguments:
@@ -15,8 +15,15 @@ Multiple arguments:
     - state (simulation_state), type (portal_type)
 
 Everything else is treated as SearchableText
-'''
+"""
 
+# XXX score:
+# pythonicity: high
+# obfuscation level: brain-twisting
+
+# how to customize:
+# (1) think for two hours
+# (2) type for 20 seconds
 
 import re
 import sys
@@ -24,10 +31,14 @@ sys.path.append('/usr/lib/zope/lib/python/')
 from DateTime import DateTime
 
 def dateRangeProc(s):
-    m=re.match('(\d)([my]).*',s)
+    """
+    process date range (can be given in months or years)
+    """
+    m=re.match('(\d)([wmy]).*',s)
     try:
         dif=0
         gr=m.groups()
+        if gr[1]=='w':dif=int(gr[0])*7
         if gr[1]=='m':dif=int(gr[0])*30
         if gr[1]=='y':dif=int(gr[0])*365
         return ('creation_from',DateTime()-dif)

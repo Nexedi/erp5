@@ -68,16 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=state_change.object\n
-kw=ob.REQUEST\n
-ob.log(\'interaction\',\'edit\')\n
-f=kw.get(\'my_file\',None)\n
-ob.log(\'f\',f)\n
+            <value> <string>ob = state_change.object\n
+kw = ob.REQUEST\n
+f = kw.get(\'my_file\', None)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  if hasattr(ob,\'clearCache\'): # e.g. DMS File doesnt have it\n
-    ob.clearCache()\n
+  if hasattr(ob, \'clearConversionCache\'): # e.g. File doesn\'t have it\n
+    ob.clearConversionCache()\n
 </string> </value>
         </item>
         <item>

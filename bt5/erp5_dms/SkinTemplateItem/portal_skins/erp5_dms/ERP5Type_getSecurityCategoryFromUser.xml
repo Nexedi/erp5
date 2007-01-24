@@ -70,20 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
 """\n
-  XXX-JPS Description here please\n
+Get security categories from current user\n
+XXX I\'m not sure it is used anywhere at the moment.\n
 """\n
-\n
-# XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
-\n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
-\n
-# must always return a list of dicts\n
 \n
 category_list = []\n
 \n
@@ -111,7 +101,7 @@ for base_category in base_category_list:\n
   else:\n
     raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
   category_list.append(category_dict)\n
-#context.log(category_list)\n
+\n
 return category_list\n
 
 

@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>hash_script_id</string> </key>
-                    <value> <string>Base_hashDocumentCategoryItemList</string> </value>
+                    <value> <string>Document_hashBaseCategoryList</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getDocumentCategoryItemList</string> </value>
+            <value> <string>here/Document_getBaseCategoryList</string> </value>
         </item>
       </dictionary>
     </pickle>

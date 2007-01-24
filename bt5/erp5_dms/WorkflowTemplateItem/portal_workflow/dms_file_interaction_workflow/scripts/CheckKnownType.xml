@@ -68,20 +68,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=state_change.object\n
+            <value> <string>"""\n
+called for registered types, checks if the type is correct\n
+XXX (the same is done in Document_uploadFile - seems that we\n
+have redundancy here)\n
+"""\n
+\n
+ob=state_change.object\n
 kw=ob.REQUEST\n
-f=kw.get(\'my_file\',None)\n
+f=kw.get(\'my_file\', None)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  fname=f.filename\n
+  fname = f.filename\n
   # we check for appropriate file type (by extension, using content_type_registry)\n
   # we accept or suggest appropriate portal type\n
-  ctype=context.content_type_registry.findTypeName(fname,None,None)\n
+  ctype = context.content_type_registry.findTypeName(fname, None, None)\n
   if ctype is None:\n
     raise Exception(\'This file should be created as DMS File\')\n
-  if ctype!=ob.getPortalType():\n
-    raise Exception(\'This file should be created as \'+ctype)\n
+  if ctype != ob.getPortalType():\n
+    raise Exception(\'This file should be created as \' + ctype)\n
 </string> </value>
         </item>
         <item>

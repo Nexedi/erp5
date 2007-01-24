@@ -71,30 +71,36 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-  XXX-JPS Description here please\n
-"""\n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
-# XXX-JPS is this part of the Document API ? of the ingestion API ?\n
-pref=context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
-if pref is not None and len(pref)==0:\n
-  pref=pref[0]\n
-  if pref==\'never\':return\n
+Used by email ingestor (Document_ingestEmail) to notify the user\n
+about ingestion of a document (can also be used by other ingestion channels).\n
+Checks consistency and lets the user know if everything is ok (this is a bit of a duplication\n
+because consistency is checked also upon an attempt to validate).\n
 \n
-ob=kw[\'object\']\n
-if ob.getPortalType()==\'Memo\': # we don\'t check constistency for Memo XXX use type groups, or what?\n
-  res=\'\'\n
+Preferences decide if the notification is sent always, only if something is wrong or never.\n
+\n
+Notifcation contains url of the document, so that one can click and do something.\n
+"""\n
+\n
+pref = context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
+if pref is not None and len(pref) != 0:\n
+  pref=pref[0]\n
+  if pref == \'never\': return\n
+\n
+ob = kw[\'object\']\n
+if ob.getPortalType() == \'Memo\': # we don\'t check constistency for Memo XXX use type groups, or what?\n
+  res = \'\'\n
 else:\n
-  res=ob.checkConsistency()\n
-  res=[c for c in res if c[1]==\'DocumentCoordinatesConstraint inconsistency\']\n
+  res = ob.checkConsistency()\n
+  res = [c for c in res if c[1] == \'DocumentCoordinatesConstraint inconsistency\']\n
 \n
 # shall we send?\n
-send=(pref==\'always\' or len(res)>0)\n
-if not send:return\n
+send = (pref == \'always\' or len(res) > 0)\n
+if not send: return\n
 \n
-if len(res)>0:\n
-  errmsg=\'<br/>\'.join(str(c[3]) for c in res)\n
-  subjecttpl=\'ingested %(name)s - there was a problem\'\n
-  msgtpl="""Your document "%(name)s" was ingested.\n
+if len(res) > 0:\n
+  errmsg = \'<br/>\'.join(str(c[3]) for c in res)\n
+  subjecttpl = \'ingested %(name)s - there was a problem\'\n
+  msgtpl = """Your document "%(name)s" was ingested.\n
   \n
   The following problems were detected:\n
 \n
@@ -103,21 +109,21 @@ if len(res)>0:\n
   click here: %(url)s/view to proceed and fix the problems.\n
   """\n
 else:\n
-  errmsg=\'\'\n
-  subjecttpl=\'ingested %(name)s\'\n
-  msgtpl="""Your document "%(name)s" was successfully ingested.\n
+  errmsg = \'\'\n
+  subjecttpl = \'ingested %(name)s\'\n
+  msgtpl = """Your document "%(name)s" was successfully ingested.\n
 \n
   click here: %(url)s/view to proceed with your work.\n
   """\n
 \n
-subject=subjecttpl % {\'name\':ob.getSourceReference()}\n
+subject = subjecttpl % {\'name\': ob.getSourceReference()}\n
 \n
-msg=msgtpl % {\'url\':ob.absolute_url(),\'name\':ob.getSourceReference(), \'errmsg\':errmsg}\n
+msg = msgtpl % {\'url\': ob.absolute_url(), \'name\': ob.getSourceReference(), \'errmsg\': errmsg}\n
 \n
-mto=kw[\'address\']\n
-mfro=\'dms@dms.nexedi.com\' # this should be in preferences\n
+mto = kw[\'address\']\n
+mfro = \'dms@dms.nexedi.com\' # XXX this should be in preferences\n
 \n
-context.MailHost.send(msg,mto,mfro,subject)\n
+context.MailHost.send(msg, mto, mfro, subject)\n
 
 
 ]]></string> </value>

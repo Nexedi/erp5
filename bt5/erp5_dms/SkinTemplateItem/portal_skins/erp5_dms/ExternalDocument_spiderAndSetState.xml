@@ -68,18 +68,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this is called from interaction workflow, upon every edit\n
-# can be called regularly from portal_alarms, or something like that\n
+            <value> <string>"""\n
+Refreshes the content of external document; then publishes or retracts\n
+depending on whether refresh was successful.\n
+\n
+This is called from interaction workflow, upon every edit\n
+can be called regularly from portal_alarms, or something like that.\n
+"""\n
 \n
 if context.getUrlProtocol() is None or context.getUrlString() is None:\n
   context.log("Incomplete url in %s" % context.getRelativeUrl(),context.getQualifiedUrl())\n
-  res=False\n
+  res = False\n
 else:\n
-  res=context.spiderSource()\n
-if res and context.getSimulationState()==\'draft\':\n
-  context.getPortalObject().portal_workflow.doActionFor(context,\'publish_action\')\n
-if not res and context.getSimulationState()==\'public\':\n
-  context.getPortalObject().portal_workflow.doActionFor(context,\'retract_action\')\n
+  res = context.spiderSource()\n
+\n
+if res and context.getSimulationState() == \'draft\':\n
+  context.getPortalObject().portal_workflow.doActionFor(context, \'publish_action\')\n
+if not res and context.getSimulationState() == \'public\':\n
+  context.getPortalObject().portal_workflow.doActionFor(context, \'retract_action\')\n
+\n
 context.reindexObject()\n
 </string> </value>
         </item>

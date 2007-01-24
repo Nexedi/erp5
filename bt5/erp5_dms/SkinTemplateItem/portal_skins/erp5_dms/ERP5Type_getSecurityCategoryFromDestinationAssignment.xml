@@ -68,12 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
-"""\n
-  XXX-JPS Description here please\n
+            <value> <string>"""\n
+Get security categories from the Assignments of the Person the document\n
+is addressed to (destination). Can be multiple destination persons.\n
 """\n
 \n
-context.log(base_category_list)\n
 category_list = []\n
 \n
 # We look for valid assignments of destination users\n
@@ -82,8 +81,8 @@ for person_object in object.getDestinationValueList(portal_type=\'Person\'):\n
     if assignment.getValidationState() == \'open\':\n
       category_dict = {}\n
       for base_category in base_category_list:\n
-        if base_category==\'source_project\':\n
-          category_value=assignment.getDestinationProject()\n
+        if base_category == \'source_project\':\n
+          category_value = assignment.getDestinationProject()\n
         else:\n
           category_value = assignment.getProperty(base_category)\n
         if category_value not in (None, \'\'):\n
@@ -91,7 +90,7 @@ for person_object in object.getDestinationValueList(portal_type=\'Person\'):\n
         else:\n
           raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
       category_list.append(category_dict)\n
-context.log(category_list)\n
+\n
 return category_list\n
 </string> </value>
         </item>
@@ -153,10 +152,9 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>person_object</string>
                             <string>assignment</string>
                             <string>category_dict</string>

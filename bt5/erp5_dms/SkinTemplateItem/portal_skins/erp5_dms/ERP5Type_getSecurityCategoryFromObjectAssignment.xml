@@ -68,16 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+            <value> <string>"""\n
+This is for calculating permissions to a Person object\n
+we take categories from his Assignments, so we don\'t look for\n
+Person, just take from the object.\n
 """\n
-  XXX-JPS Description here please\n
-"""\n
 \n
-# here we calculate permissions for a Person, so we need categories from his assignment\n
+# XXX could use some refactoring...\n
 \n
-# must always return a list of dicts\n
-\n
-context.log(base_category_list)\n
 category_list = []\n
 \n
 person_object = object\n
@@ -87,8 +85,8 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
   if assignment.getValidationState() == \'open\':\n
     category_dict = {}\n
     for base_category in base_category_list:\n
-      if base_category==\'source_project\':\n
-        category_value=assignment.getDestinationProject()\n
+      if base_category == \'source_project\':\n
+        category_value = assignment.getDestinationProject()\n
       else:\n
         category_value = assignment.getProperty(base_category)\n
       if category_value not in (None, \'\'):\n
@@ -96,7 +94,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
       else:\n
         raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
     category_list.append(category_dict)\n
-context.log(category_list)\n
+\n
 return category_list\n
 </string> </value>
         </item>
@@ -158,11 +156,10 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>category_list</string>
                             <string>person_object</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>assignment</string>
                             <string>category_dict</string>
                             <string>base_category</string>

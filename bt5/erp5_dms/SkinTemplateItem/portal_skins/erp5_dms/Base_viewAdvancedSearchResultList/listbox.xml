@@ -575,7 +575,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DMS_getAdvancedSearchResults</string> </value>
+            <value> <string>Base_getAdvancedSearchResultList</string> </value>
         </item>
       </dictionary>
     </pickle>

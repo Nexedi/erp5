@@ -68,14 +68,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this will go away - we don\'t upload files in edit\n
+            <value> <string>"""\n
+this is not used in current implementation\n
+because we don\'t upload files in edit\n
+"""\n
+\n
 ob=state_change.object\n
 kw=ob.REQUEST\n
-f=kw.get(\'my_file\',None)\n
+f=kw.get(\'my_file\', None)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  ob.DMS_ingestFile(f.filename) # we don\'t analyze contents (yet)\n
+  ob.Document_discoverMetadata(f.filename)\n
 </string> </value>
         </item>
         <item>

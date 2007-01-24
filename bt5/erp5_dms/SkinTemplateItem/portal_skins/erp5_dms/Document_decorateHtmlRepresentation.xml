@@ -70,12 +70,15 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
-htmlrepr=context.getHtmlRepresentation()[:2000]\n
-htmlrepr=\'<div style="background-color:white;color:black;">%s</div>\' % htmlrepr\n
-context.log(context.REQUEST[\'URL\'])\n
-if context.portal_type==\'Spreadsheet\':\n
-  htmlrepr=htmlrepr.replace(\'<A HREF="#table\',\'<A HREF="%s#table\' % context.REQUEST[\'URL\'])\n
+htmlrepr = context.getHtmlRepresentation()\n
+\n
+# wrap it in a div with white background\n
+htmlrepr = \'<div style="background-color:white;color:black;">%s</div>\' % htmlrepr\n
+\n
+# fix internal links in spreadsheet\n
+if context.portal_type == \'Spreadsheet\':\n
+  htmlrepr = htmlrepr.replace(\'<A HREF="#table\',\'<A HREF="%s#table\' % context.REQUEST[\'URL\'])\n
+\n
 return htmlrepr\n
 
 
@@ -121,10 +124,10 @@ return htmlrepr\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>htmlrepr</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

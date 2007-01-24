@@ -102,7 +102,7 @@
                         <string>my_translated_simulation_state_title</string>
                         <string>my_option_recursively</string>
                         <string>my_recursion_depth</string>
-                        <string>my_external_processing_status_message</string>
+                        <string>external_processing_status_message</string>
                       </list>
                     </value>
                 </item>

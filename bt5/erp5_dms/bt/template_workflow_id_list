@@ -4,5 +4,6 @@ document_staging_workflow
 document_validation_workflow
 external_document_interaction_workflow
 external_document_publication_workflow
+external_processing_workflow
 local_permission_interaction_workflow
 ooo_interaction_workflow

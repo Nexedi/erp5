@@ -68,14 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+            <value> <string>"""\n
+Public interface to getSnapshot API method - sets headers and returns\n
+output (a pdf file which is generated only once and never changes, even if\n
+file data change).\n
 """\n
-  XXX-JPS Description here please\n
-"""\n
-request=context.REQUEST\n
+\n
+request = context.REQUEST\n
 request.RESPONSE.setHeader(\'Content-type\', \'application/pdf\')\n
-context.log(\'format\',\'application/pdf\')\n
 request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.pdf"\' % context.title_or_id())\n
+\n
 return context.getSnapshot()\n
 </string> </value>
         </item>

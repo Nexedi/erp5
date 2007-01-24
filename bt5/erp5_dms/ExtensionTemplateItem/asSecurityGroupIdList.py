@@ -82,5 +82,5 @@ def asSecurityGroupIdList(self, category_order=None, **kw):
   #LOG('asSecurityGroupIdList, result',0,['_'.join(x) for x in getCombinationList(code_list) if len(x)])
   #return ['_'.join(x) for x in getCombinationList(code_list) if len(x)]
   #LOG('asSecurityGroupIdList', 0,  'return full_code_list = %s' %(full_code_list,))
-  #self.log('full_code_list',full_code_list)
+  self.log('full_code_list',full_code_list)
   return full_code_list

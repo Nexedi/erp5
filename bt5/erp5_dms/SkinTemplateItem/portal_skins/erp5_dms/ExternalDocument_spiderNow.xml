@@ -68,14 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
-"""\n
-  XXX-JPS Description here please\n
+            <value> <string>"""\n
+Public interface to ExternalDocument_spiderAndSetState script.\n
 """\n
 \n
 context.resetTopObject()\n
 context.ExternalDocument_spiderAndSetState()\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/view?portal_status_message=Done\')\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=Done\')\n
 </string> </value>
         </item>
         <item>

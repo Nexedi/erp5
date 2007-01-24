@@ -68,9 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob=state_change.object\n
+            <value> <string>"""\n
+when OOoDocument is edited, we update metadata in the ODF file\n
+"""\n
+\n
+ob=state_change.object\n
 kw=ob.REQUEST\n
-metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'language\')\n
+metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'language\') # XXX hardcoded?\n
 f=kw.get(\'my_file\',None)\n
 \n
 # edit metadata (only if we have OOo file)\n

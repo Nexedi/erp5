@@ -71,35 +71,42 @@
             <value> <string># XXX results should be cached as volatile attributes\n
 \n
 """\n
-  XXX-JPS put description here\n
+Get a list of related documents; wiki relations use API methods, explicit relations\n
+(predecessor etc) get a list of related docs and return the newest (default)\n
+version of each of them.\n
+\'all\' returns a combined set of all related docs.\n
 """\n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
 # XXX-JPS should probably be moved to core API of document\n
 # with dynamic method selection\n
 # getWikiSuccessorValueList = get + upperCase(wiki_successor) + ValueList\n
 # Document_getSimilarityCloud = Document_get + upperCase(cloud) + ValueList\n
+# BG - not much use, they\'re too different\n
+\n
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase\n
 \n
 def getRelatedLatest(category):\n
-  funcname=\'get%sValueList\' % category.title()\n
-  func=getattr(context,funcname)\n
-  return [o.DMSDocument_getLatestVersion() for o in func()]\n
+  funcname = \'get%sValueList\' % convertToUpperCase(category)\n
+  func = getattr(context, funcname)\n
+  return [o.getLatestVersionValue() for o in func()]\n
 \n
-what=kw.get(\'what\') # XXX-JPS Change \'what\' to more explicit name and include in API of script\n
-if what==\'wiki_predecessor\':\n
-  return context.getWikiPredecessorValueList()\n
-if what==\'wiki_successor\':\n
-  return context.getWikiSuccessorValueList()\n
-if what.startswith(\'related\'):\n
-  return getRelatedLatest(what[8:])\n
-if what==\'cloud\':\n
-  return context.DMS_getSimilarityCloud()\n
-if what==\'all\':\n
-  dic={}\n
-  for ob in context.getWikiPredecessorValueList()+context.getWikiSuccessorValueList()+\\\n
-    getRelatedLatest(\'predecessor\')+getRelatedLatest(\'successor\')+getRelatedLatest(\'similar\'):\n
-    dic[ob]=True\n
+relation_id = kw.get(\'relation_id\') # XXX-JPS Change \'what\' to more explicit name and include in API of script\n
+if relation_id == \'wiki_predecessor\':\n
+  return context.getImplicitPredecessorValueList()\n
+if relation_id == \'wiki_successor\':\n
+  return context.getImplicitSuccessorValueList()\n
+if relation_id.startswith(\'related\'):\n
+  return getRelatedLatest(relation_id[8:])\n
+if relation_id == \'cloud\':\n
+  return context.getSimilarCloudValueList()\n
+if relation_id == \'all\':\n
+  dic = {}\n
+  for ob in context.getImplicitPredecessorValueList() + context.getImplicitSuccessorValueList() + \\\n
+    getRelatedLatest(\'predecessor\') + getRelatedLatest(\'successor\') + getRelatedLatest(\'similar\'):\n
+    dic[ob] = True\n
   return dic.keys()\n
-return []\n
+\n
+context.log(\'Relation %s is not provided for in this script\' % relation)\n
+return [] # failover - undefined relation\n
 </string> </value>
         </item>
         <item>
@@ -144,9 +151,12 @@ return []\n
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>convertToUpperCase</string>
+                            <string>convertToMixedCase</string>
                             <string>getRelatedLatest</string>
                             <string>_getattr_</string>
-                            <string>what</string>
+                            <string>relation_id</string>
                             <string>context</string>
                             <string>_getitem_</string>
                             <string>dic</string>
@@ -154,6 +164,7 @@ return []\n
                             <string>ob</string>
                             <string>True</string>
                             <string>_write_</string>
+                            <string>relation</string>
                           </tuple>
                         </value>
                     </item>

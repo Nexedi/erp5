@@ -72,18 +72,17 @@
 get related object value list in a security-aware way (without throwing exception\n
 if I don\'t have permissions to access the object)\n
 """\n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
-# New names: object_list, category_list, base_category\n
-cat_value_list=context.getPropertyList(category)\n
-if cat_value_list is None:return []\n
 \n
-def getValueIfAvailable(cat_value):\n
-  ob=context.restrictedTraverse(cat_value,None)\n
+category_list = context.getPropertyList(base_category)\n
+if category_list is None:\n
+  return []\n
+\n
+def getValueIfAvailable(category):\n
+  ob = context.restrictedTraverse(category, None)\n
   return ob \n
 \n
-ob_list=[getValueIfAvailable(c) for c in cat_value_list]\n
-return ob_list\n
-return [o for o in ob_list if o is not None]\n
+ob_list = [getValueIfAvailable(category) for category in category_list]\n
+return [o for o in object_list if o is not None]\n
 </string> </value>
         </item>
         <item>
@@ -106,7 +105,7 @@ return [o for o in ob_list if o is not None]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category</string> </value>
+            <value> <string>base_category</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,17 +131,18 @@ return [o for o in ob_list if o is not None]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>category</string>
+                            <string>base_category</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>cat_value_list</string>
+                            <string>category_list</string>
                             <string>None</string>
                             <string>getValueIfAvailable</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>c</string>
+                            <string>category</string>
                             <string>ob_list</string>
+                            <string>object_list</string>
                             <string>o</string>
                           </tuple>
                         </value>

@@ -10,6 +10,7 @@ External Library File | external_document_publication_workflow
 External Web Page | edit_workflow
 External Web Page | external_document_interaction_workflow
 External Web Page | external_document_publication_workflow
+External Web Page | external_processing_workflow
 File | dms_file_interaction_workflow
 File | document_publication_workflow
 File | document_validation_workflow
@@ -43,5 +44,6 @@ Text | dms_file_interaction_workflow
 Text | document_publication_workflow
 Text | document_validation_workflow
 Text | edit_workflow
+Text | external_processing_workflow
 Text | local_permission_interaction_workflow
 Text | ooo_interaction_workflow

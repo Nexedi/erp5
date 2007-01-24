@@ -68,14 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># to assign categories from parallel list field\n
-o=sci.object\n
-request=o.REQUEST\n
-pref=\'subfield_field_my_dms_category_list_\'\n
+            <value> <string>"""\n
+to assign categories from parallel list field\n
+"""\n
+\n
+o = sci.object\n
+request = o.REQUEST\n
+pref = \'subfield_field_my_dms_category_list_\'\n
 for k,v in request.items():\n
+  #context.log(k)\n
   if k.startswith(pref):\n
-    if v!=\'\':\n
-      o.setProperty(k.replace(pref,\'\'),v)\n
+    if v != \'\':\n
+      context.log(v)\n
+      o.setProperty(k.replace(pref, \'\'), v)\n
 </string> </value>
         </item>
         <item>
@@ -126,6 +131,7 @@ for k,v in request.items():\n
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

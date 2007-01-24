@@ -123,6 +123,7 @@ CREATE TABLE `compatibility` (\n
   `summary` text,\n
   `language` varchar(5) default \'\',\n
   `version` varchar(10) default \'\',\n
+  `revision` varchar(10) default \'\',\n
   `short_title` varchar(100) default \'\',\n
   PRIMARY KEY  (`uid`),\n
   KEY `Type` (`Type`),\n
@@ -188,6 +189,7 @@ CREATE TABLE `compatibility` (\n
   `summary` text,\n
   `language` varchar(5) default \'\',\n
   `version` varchar(10) default \'\',\n
+  `revision` varchar(10) default \'\',\n
   `short_title` varchar(100) default \'\',\n
   PRIMARY KEY  (`uid`),\n
   KEY `Type` (`Type`),\n

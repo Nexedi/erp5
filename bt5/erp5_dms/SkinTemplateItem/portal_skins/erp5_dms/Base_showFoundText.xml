@@ -70,25 +70,37 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
 """\n
-  XXX-JPS put descrition here\n
+This is used in listbox with search results - shows parts of the searchable text\n
+of a document which contain searched words, highlighting the words.\n
+Calls external method cutFound to get appropriately sliced result.\n
 """\n
-tags=(\'<div style="font-weight:bold;display:inline;">\',\'</div>\')\n
-trail=5\n
-maxlines=5\n
-txt=brain.getObject().SearchableText()\n
-st=selection.params.get(\'SearchableText\')\n
-if st is None:\n
-  # we should return something\n
-  return txt[min(len(txt)-300,200):500] # a somewhat arbitrary choice to trim searchable attrs\n
-args=context.parseSearchString(st)\n
-sw=args.get(\'SearchableText\')\n
-if sw is None or sw==\'\':\n
-  # we should return something\n
-  return txt[min(len(txt)-300,200):500] # a somewhat arbitrary choice to trim searchable attrs\n
-res=context.cutFound(context,txt,sw,tags,trail,maxlines)\n
-return \' \'.join(map(str,res))\n
+\n
+# tags to surround words which were searched for\n
+tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\')\n
+\n
+# how many words to include before and after the highlighted word\n
+trail = 5\n
+\n
+# maximum lines to show\n
+maxlines = 5\n
+\n
+txt = brain.getObject().SearchableText()\n
+search_string = selection.params.get(\'SearchableText\')\n
+if search_string is None:\n
+  # if the searched text is empty (e.g. because the listbox uses its own method)\n
+  # we return something\n
+  return txt[min(len(txt) - 300, 200) : 500] # a somewhat arbitrary choice to trim searchable attrs\n
+\n
+search_argument_list = context.parseSearchString(search_string)\n
+search_words = search_argument_list.get(\'SearchableText\')\n
+if search_words is None or search_words == \'\':\n
+  # if the searched text is empty (e.g. because we used only parameters without pure searchable text)\n
+  # we return something\n
+  return txt[min(len(txt) - 300, 200) : 500] # a somewhat arbitrary choice to trim searchable attrs\n
+\n
+res = context.cutFound(context, txt, search_words, tags, trail, maxlines)\n
+return \' \'.join(map(str, res))\n
 
 
 ]]></string> </value>
@@ -140,14 +152,14 @@ return \' \'.join(map(str,res))\n
                             <string>maxlines</string>
                             <string>_getattr_</string>
                             <string>txt</string>
-                            <string>st</string>
+                            <string>search_string</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>min</string>
                             <string>len</string>
                             <string>context</string>
-                            <string>args</string>
-                            <string>sw</string>
+                            <string>search_argument_list</string>
+                            <string>search_words</string>
                             <string>res</string>
                             <string>map</string>
                             <string>str</string>

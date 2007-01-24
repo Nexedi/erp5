@@ -68,39 +68,50 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
-"""\n
-  XXX-JPS Description here\n
+            <value> <string>"""\n
+Used by parellel list field\n
+Document_library/my_dms_category_list\n
+(see http://wiki.erp5.org/HowToConfigureParallelListField)\n
+To produce a tree we use Category_childShortTitleOrIdItemList\n
+to display short title or id\n
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
-context.log(value_list)\n
+\n
 def cached_DMSGetItemList(base_category):\n
-    basecatobject=context.portal_categories.resolveCategory(base_category)\n
-    #return [(context.Base_trimPathName(x,100),y) for x,y in basecatobject.getCategoryChildLogicalPathItemList()]\n
+    basecatobject = context.portal_categories.resolveCategory(base_category)\n
     return basecatobject.Category_childShortTitleOrIdItemList()\n
 \n
-cached_DMSGetItemList=CachingMethod(cached_DMSGetItemList,id=\'DMGetItemListCachedMethodWhatever\')\n
+cached_DMSGetItemList = CachingMethod(cached_DMSGetItemList, id=\'DMGetItemListCachedMethodWhatever\')\n
 \n
 if default_sub_field_property_dict is None:\n
-  default_sub_field_property_dict={\'field_type\': \'MultiListField\', \'item_list\': [], \'required\': 0, \'value\': [], \'is_right_display\': 0, \'key\': \'default\', \'title\': \'Categories\', \'size\': 5}\n
+  default_sub_field_property_dict = {\n
+   \'field_type\': \'MultiListField\',\n
+   \'item_list\': [],\n
+   \'required\': 0,\n
+   \'value\': [],\n
+   \'is_right_display\': 0,\n
+   \'key\': \'default\',\n
+   \'title\': \'Categories\',\n
+   \'size\': 5\n
+  }\n
 \n
-sub_field_dict={}\n
-maximum_list_size=5\n
+sub_field_dict = {}\n
+maximum_list_size = 5\n
 \n
-default_sub_field_property_dict[\'field_type\']=\'ListField\'\n
-default_sub_field_property_dict[\'size\']=1\n
+default_sub_field_property_dict[\'field_type\'] = \'ListField\'\n
+default_sub_field_property_dict[\'size\'] = 1\n
 \n
 for base_category in item_list:\n
   if not sub_field_dict.has_key(base_category):\n
-    basecatobject=context.portal_categories.resolveCategory(base_category)\n
-    sub_field_property_dict=default_sub_field_property_dict.copy()\n
-    sub_field_property_dict[\'key\']=base_category\n
-    sub_field_property_dict[\'title\']=basecatobject.getTranslatedTitle()\n
+    basecatobject = context.portal_categories.resolveCategory(base_category)\n
+    sub_field_property_dict = default_sub_field_property_dict.copy()\n
+    sub_field_property_dict[\'key\'] = base_category\n
+    sub_field_property_dict[\'title\'] = basecatobject.getTranslatedTitle()\n
     # we cache this, so that we can apply expensive path processing techniques\n
-    sub_field_property_dict[\'item_list\']=cached_DMSGetItemList(base_category)\n
-    sub_field_property_dict[\'value\']=context.getParentValue().getParentValue().getProperty(base_category)\n
-    \n
-    sub_field_dict[base_category]=sub_field_property_dict\n
+    sub_field_property_dict[\'item_list\'] = cached_DMSGetItemList(base_category)\n
+    sub_field_property_dict[\'value\'] = context.getParentValue().getParentValue().getProperty(base_category)\n
+\n
+    sub_field_dict[base_category] = sub_field_property_dict\n
 \n
 return sub_field_dict.values()\n
 \n
@@ -160,8 +171,6 @@ return sub_field_dict.values()\n
                             <string>is_right_display</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>cached_DMSGetItemList</string>
                             <string>None</string>
                             <string>sub_field_dict</string>
@@ -169,6 +178,8 @@ return sub_field_dict.values()\n
                             <string>_write_</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>basecatobject</string>
                             <string>sub_field_property_dict</string>
                           </tuple>

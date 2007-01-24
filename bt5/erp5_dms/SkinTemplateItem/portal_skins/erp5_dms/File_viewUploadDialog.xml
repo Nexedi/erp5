@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>DMSDocument_uploadFile</string> </value>
+            <value> <string>Document_uploadFile</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -118,7 +118,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DMS_FileUploadDialog</string> </value>
+            <value> <string>File_uploadDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

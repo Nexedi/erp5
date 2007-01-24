@@ -81,7 +81,11 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Document_jumpToRelatedDocumentList?what=wiki_predecessor</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:${object_url}/Document_jumpToRelatedDocumentList?relation_id=wiki_predecessor&listbox_title=Wiki predecessors
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

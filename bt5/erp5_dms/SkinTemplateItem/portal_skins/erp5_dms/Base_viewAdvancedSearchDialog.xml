@@ -94,12 +94,13 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>SearchableText</string>
+                        <string>SearchableText_any</string>
+                        <string>SearchableText_all</string>
+                        <string>SearchableText_phrase</string>
+                        <string>SearchableText_without</string>
                         <string>my_search_portal_type</string>
                         <string>creation_from</string>
                         <string>creation_to</string>
-                        <string>publication_from</string>
-                        <string>publication_to</string>
                       </list>
                     </value>
                 </item>
@@ -113,6 +114,7 @@
                         <string>mine</string>
                         <string>newest</string>
                         <string>search_mode</string>
+                        <string>my_created_within</string>
                       </list>
                     </value>
                 </item>

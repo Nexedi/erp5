@@ -42,7 +42,6 @@
               <list>
                 <string>AssignCategories</string>
                 <string>ClearCacheUponUpload</string>
-                <string>IngestAfterUpload</string>
                 <string>UpdateLocalRoles</string>
               </list>
             </value>
@@ -76,7 +75,6 @@
                 <string>Drawing</string>
                 <string>File</string>
                 <string>Image</string>
-                <string>Memo</string>
                 <string>PDF</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>

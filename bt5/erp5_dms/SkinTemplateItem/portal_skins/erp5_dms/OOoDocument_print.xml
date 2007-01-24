@@ -68,11 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS reformat code as explained in Base_assembleSearchString\n
+            <value> <string>"""\n
+We assume that if you want a printout, you\'d be happy with pdf\n
+so this is what we return.\n
 """\n
-  XXX-JPS Description here please\n
-"""\n
-request=context.REQUEST\n
+\n
+request = context.REQUEST\n
 request.RESPONSE.setHeader(\'Content-type\', \'application/x-pdf\')\n
 request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n
 return context.getTargetFile(\'pdf\')\n

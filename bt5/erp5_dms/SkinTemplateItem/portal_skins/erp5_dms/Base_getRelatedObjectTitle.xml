@@ -72,10 +72,12 @@
 get related object title in a security-aware way (without throwing exception\n
 if I don\'t have permissions to access the object)\n
 """\n
-# XXX-JPS reformat code as explained in Base_assembleSearchString\n
-cat_value=context.getProperty(category) # XXX-JPS please rename cat_value - this is a path - value is normally used to name objects (ex. getResourceValue). Also, category parameter is strange. This is a base category afterall. Name it base_category\n
-if cat_value is None:return \'\'\n
-ob=context.restrictedTraverse(cat_value,None)\n
+\n
+base_category = context.getProperty(category)\n
+if base_category is None:\n
+  return \'\'\n
+\n
+ob = context.restrictedTraverse(base_category, None)\n
 return ob is not None and ob.getTitle() or \'\'\n
 # XXX-JPS What would be the problem in using getMyCategoryTitle() ?\n
 </string> </value>
@@ -129,7 +131,7 @@ return ob is not None and ob.getTitle() or \'\'\n
                             <string>category</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>cat_value</string>
+                            <string>base_category</string>
                             <string>None</string>
                             <string>ob</string>
                           </tuple>

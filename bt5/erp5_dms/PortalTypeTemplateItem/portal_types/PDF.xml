@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addPDF</string> </value>
+            <value> <string>addPDFDocument</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -76,9 +76,7 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>dms_document</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -68,73 +68,88 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX-JPS \n
-# This code is horrible: bad spacing, all lines glued together, short unexplicit variable names\n
-# Please reformat and rewrite with readable variables and understandable comments\n
-# Use standard python spacing, put some space between lines if meaningful,\n
-# Add a description. Do not forget to translate messages. This is a multilingual\n
-# system after all.\n
+            <value> <string>"""\n
+This script receives a request from advanced search form and \n
+puts together a search string in a search syntax, depending on\n
+parameters received. It is the reverse of parseSearchString external\n
+method.\n
 """\n
-  XXX-JPS - Put description here\n
-"""\n
-req=context.REQUEST\n
-# with any of\n
-st=req.get(\'SearchableText\',\'\')\n
-context.log(st)\n
-# exact phrase\n
-s_phrase=req.get(\'SearchableText_phrase\',\'\')\n
-if s_phrase!="":\n
-  st+=\' "\'+s_phrase+\'"\'\n
-# with all words\n
-s_all=req.get(\'SearchableText_all\',\'\')\n
-if s_all!="":\n
-  st+=\' \'+\' \'.join(\'+\'+w for w in s_all.split(\' \'))\n
-# without words\n
-s_without=req.get(\'SearchableText_without\',\'\')\n
-if s_without!="":\n
-  st+=\' \'+\' \'.join(\'-\'+w for w in s_without.split(\' \'))\n
-# by creation date\n
-daterange=req.get(\'created_within\',\'\')\n
+\n
+req = context.REQUEST\n
+\n
+# words to search in \'any of the words\' form - left intact\n
+search_string = req.get(\'SearchableText_any\',\'\')\n
+\n
+# exact phrase to search for - double-quoted\n
+search_phrase = req.get(\'SearchableText_phrase\',\'\')\n
+if search_phrase != "":\n
+  search_string += \' "\' + search_phrase + \'"\'\n
+\n
+# search "with all of the words" - each word prefixed by "+"\n
+search_all = req.get(\'SearchableText_all\',\'\')\n
+if search_all != "":\n
+  search_string += \' \' + \' \'.join(\'+\' + word for word in search_all.split(\' \'))\n
+\n
+# search without these words - every word prefixed by "-"\n
+search_without = req.get(\'SearchableText_without\',\'\')\n
+if search_without!="":\n
+  search_string += \' \' + \' \'.join(\'-\' + word for word in search_without.split(\' \'))\n
+\n
+# search limited to a certain date range - add "created:xxx"\n
+daterange = req.get(\'created_within\',\'\')\n
 if daterange!=\'\':\n
-  st+=\' created:\'+daterange\n
-# portal type\n
-doctype=req.get(\'search_portal_type\')\n
-context.log(doctype)\n
-if doctype==\'all\':doctype=None\n
-if isinstance(doctype,str):\n
-  doctype=[doctype]\n
-if doctype:\n
-  if len(doctype)==1:\n
-    st+=\' type:"%s"\' % doctype[0]\n
+  search_string += \' created:\' + daterange\n
+\n
+# only given portal_types - add "type:Type" or type:(Type1,Type2...)\n
+portal_type_list = req.get(\'search_portal_type\')\n
+if portal_type_list == \'all\':\n
+  portal_type_list=None\n
+if isinstance(portal_type_list,str):\n
+  portal_type_list=[portal_type_list]\n
+if portal_type_list:\n
+  if len(portal_type_list)==1:\n
+    search_string += \' type:"%s"\' % portal_type_list[0]\n
   else:\n
-    st+=\' type:(%s)\' % \',\'.join(doctype)\n
-ref=req.get(\'reference\')\n
-if ref:st+=\' reference:%s\' % ref\n
-ver=req.get(\'version\')\n
-if ver:st+=\' version:%s\' % ver\n
+    search_string += \' type:(%s)\' % \',\'.join(portal_type_list)\n
+\n
+# search by reference\n
+ref = req.get(\'reference\')\n
+if ref:\n
+  search_string += \' reference:%s\' % ref\n
+\n
+# search by version\n
+ver = req.get(\'version\')\n
+if ver:\n
+  search_string += \' version:%s\' % ver\n
+\n
+# search by language\n
 lng=req.get(\'language\')\n
-if lng and lng!=\'0\':\n
-  st+=\' language:%s\' % lng\n
+if lng and lng != \'0\':\n
+  search_string += \' language:%s\' % lng\n
+\n
 # category search\n
-for c in (\'group\',\'function\',\'site\'): # XXX-JPS What is this hardcoded stuff ?\n
-  cval=req.get(\'search_\'+c)\n
-  if cval:\n
-    st+=\' %s:%s\' % (c,cval)\n
+for category in context.Document_getBaseCategoryList():\n
+  category_value = req.get(\'search_\' + category)\n
+  if category_value:\n
+    search_string += \' %s:%s\' % (category, category_value)\n
+\n
 #only my docs\n
-mine=req.get(\'mine\')\n
+mine = req.get(\'mine\')\n
 if mine:\n
-  st+=\' mine:yes\'\n
+  search_string += \' mine:yes\'\n
+\n
 # only newest versions\n
-newest=req.get(\'newest\')\n
+newest = req.get(\'newest\')\n
 if newest:\n
-  st+=\' newest:yes\'\n
+  search_string += \' newest:yes\'\n
+\n
 # search mode\n
-sm=req.get(\'search_mode\')\n
-smmap={\'in_boolean_mode\':\'boolean\',\'with_query_expansion\':\'expanded\'}\n
-if sm and smmap.has_key(sm):\n
-  st+=\' mode:%s\' % smmap[sm]\n
-context.log(st)\n
-return st\n
+search_mode = req.get(\'search_mode\')\n
+search_mode_map={\'in_boolean_mode\':\'boolean\',\'with_query_expansion\':\'expanded\'}\n
+if search_mode and search_mode_map.has_key(search_mode):\n
+  search_string += \' mode:%s\' % search_mode_map[search_mode]\n
+\n
+return search_string\n
 </string> </value>
         </item>
         <item>
@@ -188,12 +203,12 @@ return st\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>req</string>
-                            <string>st</string>
-                            <string>s_phrase</string>
-                            <string>s_all</string>
-                            <string>s_without</string>
+                            <string>search_string</string>
+                            <string>search_phrase</string>
+                            <string>search_all</string>
+                            <string>search_without</string>
                             <string>daterange</string>
-                            <string>doctype</string>
+                            <string>portal_type_list</string>
                             <string>None</string>
                             <string>isinstance</string>
                             <string>str</string>
@@ -203,12 +218,12 @@ return st\n
                             <string>ver</string>
                             <string>lng</string>
                             <string>_getiter_</string>
-                            <string>c</string>
-                            <string>cval</string>
+                            <string>category</string>
+                            <string>category_value</string>
                             <string>mine</string>
                             <string>newest</string>
-                            <string>sm</string>
-                            <string>smmap</string>
+                            <string>search_mode</string>
+                            <string>search_mode_map</string>
                           </tuple>
                         </value>
                     </item>

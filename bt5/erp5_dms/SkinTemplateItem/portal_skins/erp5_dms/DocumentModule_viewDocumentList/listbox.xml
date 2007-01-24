@@ -387,6 +387,18 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string>Language</string>
+                        </tuple>
+                        <tuple>
+                          <string>revision</string>
+                          <string>Revision</string>
+                        </tuple>
+                        <tuple>
                           <string>short_title</string>
                           <string>Short Title</string>
                         </tuple>
@@ -397,10 +409,6 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>version</string>
-                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>
