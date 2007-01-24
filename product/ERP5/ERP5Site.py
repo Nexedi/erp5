@@ -1278,30 +1278,41 @@ class ERP5Generator(PortalGenerator):
     if ERP5Security is not None:
       # Use Pluggable Auth Service instead of the standard acl_users.
       p.manage_addProduct['PluggableAuthService'].addPluggableAuthService()
+      pas_dispatcher = p.acl_users.manage_addProduct['PluggableAuthService']
       # Add legacy ZODB support
-      p.acl_users.manage_addProduct['PluggableAuthService'].addZODBUserManager('zodb_users')
-      p.acl_users.manage_addProduct['PluggableAuthService'].addZODBGroupManager('zodb_groups')
-      p.acl_users.manage_addProduct['PluggableAuthService'].addZODBRoleManager('zodb_roles')
+      pas_dispatcher.addZODBUserManager('zodb_users')
+      pas_dispatcher.addZODBGroupManager('zodb_groups')
+      pas_dispatcher.addZODBRoleManager('zodb_roles')
       # Add CMF Portal Roles
       #XXX Maybe it will be no longer required once PAS is the standard
       p.acl_users.zodb_roles.addRole('Member')
       p.acl_users.zodb_roles.addRole('Reviewer')
       # Register ZODB Interface
-      p.acl_users.zodb_users.manage_activateInterfaces(('IAuthenticationPlugin',
-                                                    'IUserEnumerationPlugin','IUserAdderPlugin'))
-      p.acl_users.zodb_groups.manage_activateInterfaces(('IGroupsPlugin',
-                                                    'IGroupEnumerationPlugin'))
-      p.acl_users.zodb_roles.manage_activateInterfaces(('IRoleEnumerationPlugin',
-                                                    'IRolesPlugin', 'IRoleAssignerPlugin'))
+      p.acl_users.zodb_users.manage_activateInterfaces(
+                                       ('IAuthenticationPlugin',
+                                        'IUserEnumerationPlugin',
+                                        'IUserAdderPlugin'))
+      p.acl_users.zodb_groups.manage_activateInterfaces(
+                                       ('IGroupsPlugin',
+                                       'IGroupEnumerationPlugin'))
+      p.acl_users.zodb_roles.manage_activateInterfaces(
+                                       ('IRoleEnumerationPlugin',
+                                        'IRolesPlugin',
+                                        'IRoleAssignerPlugin'))
       # Add ERP5UserManager
-      p.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
-      p.acl_users.manage_addProduct['ERP5Security'].addERP5GroupManager('erp5_groups')
-      p.acl_users.manage_addProduct['ERP5Security'].addERP5RoleManager('erp5_roles')
+      erp5security_dispatcher = p.acl_users.manage_addProduct['ERP5Security']
+      erp5security_dispatcher.addERP5UserManager('erp5_users')
+      erp5security_dispatcher.addERP5GroupManager('erp5_groups')
+      erp5security_dispatcher.addERP5RoleManager('erp5_roles')
+      erp5security_dispatcher.addERP5UserFactory('erp5_user_factory')
       # Register ERP5UserManager Interface
-      p.acl_users.erp5_users.manage_activateInterfaces(('IAuthenticationPlugin',
-                                                        'IUserEnumerationPlugin',))
+      p.acl_users.erp5_users.manage_activateInterfaces(
+                                        ('IAuthenticationPlugin',
+                                        'IUserEnumerationPlugin',))
       p.acl_users.erp5_groups.manage_activateInterfaces(('IGroupsPlugin',))
       p.acl_users.erp5_roles.manage_activateInterfaces(('IRolesPlugin',))
+      p.acl_users.erp5_user_factory.manage_activateInterfaces(
+                                        ('IUserFactoryPlugin',))
     elif withnuxgroups:
       # NuxUserGroups user folder
       p.manage_addProduct['NuxUserGroups'].addUserFolderWithGroups()

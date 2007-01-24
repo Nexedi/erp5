@@ -24,6 +24,7 @@ from Products.PluggableAuthService.permissions import ManageGroups
 import ERP5UserManager
 import ERP5GroupManager
 import ERP5RoleManager
+import ERP5UserFactory
 
 def mergedLocalRoles(object):
     """Returns a merging of object and its ancestors'
@@ -59,13 +60,14 @@ def mergedLocalRoles(object):
 registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
 registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
 registerMultiPlugin(ERP5RoleManager.ERP5RoleManager.meta_type)
+registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
 
 def initialize(context):
 
     context.registerClass( ERP5UserManager.ERP5UserManager
                          , permission=ManageUsers
                          , constructors=(
-                            ERP5UserManager.manage_addERP5UserManagerForm, 
+                            ERP5UserManager.manage_addERP5UserManagerForm,
                             ERP5UserManager.addERP5UserManager, )
                          , visibility=None
                          , icon='www/portal.gif'
@@ -74,7 +76,7 @@ def initialize(context):
     context.registerClass( ERP5GroupManager.ERP5GroupManager
                          , permission=ManageGroups
                          , constructors=(
-                            ERP5GroupManager.manage_addERP5GroupManagerForm, 
+                            ERP5GroupManager.manage_addERP5GroupManagerForm,
                             ERP5GroupManager.addERP5GroupManager, )
                          , visibility=None
                          , icon='www/portal.gif'
@@ -88,3 +90,13 @@ def initialize(context):
                          , visibility=None
                          , icon='www/portal.gif'
                          )
+
+    context.registerClass( ERP5UserFactory.ERP5UserFactory
+                         , permission=ManageUsers
+                         , constructors=(
+                            ERP5UserFactory.manage_addERP5UserFactoryForm,
+                            ERP5UserFactory.addERP5UserFactory, )
+                         , visibility=None
+                         , icon='www/portal.gif'
+                         )
+

@@ -2262,8 +2262,8 @@ class Base( CopyContainer,
       Zope objects.
       - False means that the role acquisition chain is cut.
 
-    The code to support this is in the user folder, see
-    patches/PropertiedUser.py
+    The code to support this is on the user class, see
+    ERP5Security.ERP5UserFactory.ERP5User
     """
     def cached_getAcquireLocalRoles(portal_type):
       ti = self._getTypesTool().getTypeInfo(self)
