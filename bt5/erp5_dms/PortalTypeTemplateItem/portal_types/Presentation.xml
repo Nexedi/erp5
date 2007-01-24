@@ -88,7 +88,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>dms_document</string>
+                <string>document</string>
               </tuple>
             </value>
         </item>
@@ -104,6 +104,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
