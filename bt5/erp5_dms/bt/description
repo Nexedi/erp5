@@ -1,4 +1,4 @@
-XXX content type registry has to be set up properly (it does NOT come with bt5) - see wiki
+XXX content type registry has to be set up properly (it does NOT come with bt5) - see wiki http://wiki.erp5.org/HowToUseERP5DMS
 ----------------------------------------------------
 A simple document management system in which security is based on classification templates. Documents are supported either through OpenOffice (Text, Presentation, Spreadsheets, etc.) or through ImageMagics (images).
 NOTE: publication_section overlaps with erp5_web
