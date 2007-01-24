@@ -28,6 +28,7 @@
 
 import re
 import string
+import pdb
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
@@ -104,6 +105,8 @@ class ContributionTool(BaseTool):
         if len(portal_type_list)>1 and portal_type not in portal_type_list:
           raise TypeError('%s not in the list of %s' % (portal_type, str(portal_type_list)))
         return portal_type
+      # if not found but the candidate list is there, return the first
+      return portal_type_list[0]
 
     if portal_type is None:
       # We can not do anything anymore
@@ -134,9 +137,6 @@ class ContributionTool(BaseTool):
         We always generate ID. So, we must prevent using the one
         which we were provided.
     """
-    if portal_type is None:
-      portal_type = kw.get('portal_type')
-    kw['portal_type'] = portal_type
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
@@ -158,8 +158,9 @@ class ContributionTool(BaseTool):
 
       # And return a document
       # NOTE: we use the module ID generator rather than the provided ID
-      document = module.newContent(**kw)
-      #if discover_metadata: document.discoverMetadata(file_name=file_name, user_login=user_login)
+      document = module.newContent(portal_type=portal_type, **kw)
+      if discover_metadata: document.discoverMetadata(file_name=file_name, user_login=user_login)
+      pdb.set_trace()
       return document
 
     # From here, there is no hope unless a file was provided    
@@ -196,7 +197,10 @@ class ContributionTool(BaseTool):
         del self._v_document_cache[file_name]
 
     # Reindex it and return the document
-    document.immediateReindexObject()
+    # XXX seems we have to commit now, otherwise it is not reindexed properly later
+    # dunno why
+    get_transaction().commit()
+    document.reindexObject()
     return document
 
   security.declareProtected( Permissions.AddPortalContent, 'fromXML' )
@@ -227,7 +231,11 @@ class ContributionTool(BaseTool):
     method = self._getTypeBasedMethod('getPropertyDictFromFileName', 
         fallback_script_id = 'ContributionTool_getPropertyDictFromFileName')
     property_dict = method(file_name, property_dict)
-    if not property_dict.has_key('portal_type'):
+    if property_dict.has_key('portal_type'):
+      # we have to return portal_type as a tuple
+      # because we can allow for having multiple types (candidates)
+      property_dict['portal_type'] = (property_dict['portal_type'],)
+    else:
       # we have to find candidates by file extenstion
       try:
         index = file_name.rfind('.')
@@ -279,7 +287,7 @@ class ContributionTool(BaseTool):
     # We can now discover metadata unless NO_DISCOVER_METADATA_KEY was set on ob
     document = module[new_id]
     user_login = getattr(self, USER_NAME_KEY, None)
-    #if not getattr(ob, NO_DISCOVER_METADATA_KEY, 0): document.discoverMetadata(file_name=name, user_login=user_login)
+    if not getattr(ob, NO_DISCOVER_METADATA_KEY, 0): document.discoverMetadata(file_name=name, user_login=user_login)
 
     # Keep the document close to us
     if not hasattr(self, '_v_document_cache'):
