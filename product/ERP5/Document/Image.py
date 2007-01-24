@@ -32,6 +32,7 @@
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
+from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.File import File
