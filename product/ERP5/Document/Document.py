@@ -716,7 +716,7 @@ class Document(XMLObject):
   # handle the weird cases in which needed properties change with the type of document
   # and the usual cases in which accessing content changes with the meta type
   security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromUserLogin')
-  def getPropertyDictFromUserLogin(self, user_login):
+  def getPropertyDictFromUserLogin(self, user_login=None):
     """
       Based on the user_login, find out as many properties as needed.
       returns properties which should be set on the document
@@ -768,7 +768,7 @@ class Document(XMLObject):
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
-  def discoverMetadata(self, file_name=None, user_login=None):
+  def discoverMetadata(self, file_name, user_login=None):
     """
       This is the main metadata discovery function - controls the process
       of discovering data from various sources. The discovery itself is
@@ -789,10 +789,11 @@ class Document(XMLObject):
     # Start with everything until content
     content_index = order_list.index('content')
 
-    # XXX should be done in the reverse order
     # Start with everything until content - build a dictionnary according to the order
     kw = {}
-    for order_id in order_list[0:content_index-1]:
+    first_list = order_list[0:content_index-1]
+    first_list.reverse()
+    for order_id in first_list:
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
         raise AttributeError, "%s is not in valid order key list" % order_id
@@ -801,7 +802,7 @@ class Document(XMLObject):
       if order_id == 'file_name':
         result = method(file_name)
       elif order_id == 'user_login':
-        result = method(file_name)
+        result = method(user_login)
       else:
         result = method()
       if result is not None:
@@ -824,8 +825,7 @@ class Document(XMLObject):
       for later. It converts what needs conversion to base, and
       does things that can be done only after it is converted).
     """
-    if getattr(self, 'convertToBase', _MARKER) is not _MARKER:
-      self.convertToBase()
+    self.convertToBase()
     # Get the order from preferences
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
@@ -844,9 +844,14 @@ class Document(XMLObject):
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id == 'file_name':
-        result = method(file_name)
+        result = method(self.getSourceReference())
+      # XXX a problem - if user_login was explicitly supplied 
+      # we don't have it here (volatile attr would have been lost by now)
+      # so we can't have user_login after content
+      #elif order_id == 'user_login':
+        #result = method(user_login)
       elif order_id == 'user_login':
-        result = method(file_name)
+        raise AttributeError, "user_login can not be done in second stage"
       else:
         result = method()
       if result is not None:
@@ -868,5 +873,12 @@ class Document(XMLObject):
     """
     return self._getTypeBasedMethod('finishIngestion',
         fallback_script_id='Document_finishIngestion')
+
+  def convertToBase(self):
+    """
+      API method - some subclasses store data in a certain 'base' format
+      (e.g. OOoDocument uses ODF)
+    """
+    pass
 
 # vim: filetype=python syntax=python shiftwidth=2 
