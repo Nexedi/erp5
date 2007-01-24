@@ -2541,12 +2541,14 @@ class Base( CopyContainer,
   def getQuantityPrecisionFromResource(self, resource):
     """
       Provides a quick access to precision without accessing the resource
-      value in ZODB
+      value in ZODB. Here resource is the relative_url of the resource, such as
+      the result of self.getResource(). 
     """
     def cached_getQuantityPrecisionFromResource(resource):
-      resource_value = self.portal_categories.resolveCategory(resource)
-      if resource_value is not None:
-        return resource_value.getQuantityPrecision()
+      if resource:
+        resource_value = self.portal_categories.resolveCategory(resource)
+        if resource_value is not None:
+          return resource_value.getQuantityPrecision()
       return 0
 
     cached_getQuantityPrecisionFromResource = CachingMethod(
