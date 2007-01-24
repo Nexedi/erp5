@@ -106,7 +106,7 @@ CREATE TABLE `full_text` (\n
   `SearchableText` text,\n
   PRIMARY KEY  (`uid`),\n
   FULLTEXT `SearchableText` (`SearchableText`)\n
-);\n
+) ENGINE=MyISAM;\n
 </string> </value>
         </item>
         <item>
@@ -150,7 +150,7 @@ CREATE TABLE `full_text` (\n
   `SearchableText` text,\n
   PRIMARY KEY  (`uid`),\n
   FULLTEXT `SearchableText` (`SearchableText`)\n
-);\n
+) ENGINE=MyISAM;\n
 </string> </value>
                     </item>
                   </dictionary>
