@@ -72,7 +72,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
           try:
             skin_selection_mapping = portal_skins._v_skin_location_list
           except AttributeError:
-            LOG('Skinnable Monkeypatch __getattr__', 0, 'Initial skin cache fill. This should not happen often. %s' % (get_ident(), ))
+            LOG('Skinnable Monkeypatch __getattr__', 0, 'Initial skin cache fill. This should not happen often. Current thread id:%X' % (get_ident(), ))
             self.initializeCache()
             skin_selection_mapping = portal_skins._v_skin_location_list
           try:
