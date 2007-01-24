@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ContributionTool_viewMyContentList</string> </value>
+            <value> <string>ContributionTool_viewLatestContentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
