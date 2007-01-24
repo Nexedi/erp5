@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/DMS_getBaseCategoryList</string> </value>
+            <value> <string>here/Document_getBaseCategoryList</string> </value>
         </item>
       </dictionary>
     </pickle>

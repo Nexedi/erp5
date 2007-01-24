@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Document_getBaseCategoryList</string> </value>
+            <value> <string>here/portal_preferences/getPreferredDocumentBaseCategoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
