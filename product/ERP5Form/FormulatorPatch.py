@@ -1010,7 +1010,7 @@ class FloatWidget(TextWidget):
             percent=1
             value = float(value) * 100
           try :
-            value = str(float(value))
+            value = '%f' % (float(value))
           except ValueError:
             return value
           else:
