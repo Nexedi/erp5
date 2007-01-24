@@ -329,11 +329,11 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>Cache plugin type</string>
+                          <string>Cache Plugin Type</string>
                         </tuple>
                         <tuple>
                           <string>cache_expire_check_interval</string>
-                          <string>Expire check interval (s)</string>
+                          <string>Expire Check Interval (s)</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>
@@ -490,7 +490,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Cache plugins</string> </value>
+                    <value> <string>Cache Plugins</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

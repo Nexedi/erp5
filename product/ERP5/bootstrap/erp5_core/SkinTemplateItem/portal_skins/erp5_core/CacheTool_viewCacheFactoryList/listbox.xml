@@ -339,7 +339,7 @@
                         </tuple>
                         <tuple>
                           <string>cache_duration</string>
-                          <string>Cache duration</string>
+                          <string>Cache Duration</string>
                         </tuple>
                       </list>
                     </value>
