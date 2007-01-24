@@ -1100,7 +1100,19 @@ fieldset.bottom .field .input {\n
   border-left-width: 1px;\n
   border-right-width: 1px;\n
 }\n
-
+\n
+/* Web Page White Background */\n
+\n
+.document div.page {\n
+  background-color: white;\n
+  border-color: black;\n
+  border-width: 1px;\n
+  padding: 1em;\n
+}\n
+\n
+.document div.page div {\n
+  color: black;\n
+}
 
 ]]></string> </value>
         </item>
