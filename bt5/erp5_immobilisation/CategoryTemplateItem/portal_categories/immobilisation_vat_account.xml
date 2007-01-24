@@ -70,9 +70,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>python: []</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
