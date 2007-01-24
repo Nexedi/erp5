@@ -62,10 +62,14 @@ reserved_name_dict = { 'getApplicableLayout' : 1,
                        'getOrderedGlobalActionList' : 1,
                        'allow_discussion' : 1,
                        'im_func' : 1,
+                       'im_self' : 1,
+                       'ListBox_asHTML' : 1,
                        'id' : 1,
                        'method_id' : 1,
                        'role_map' : 1,
-                       'func_defaults': 1,  }
+                       'func_defaults': 1,
+                       '_v_section_webmaster': 1,
+                     }
 reserved_name_dict_init = 0
 
 class WebSection(Domain):

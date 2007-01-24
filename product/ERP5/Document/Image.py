@@ -113,13 +113,34 @@ class Image(File, OFSImage):
     content_type, width, height = getImageInfo(self.data)
     self.height = height
     self.width = width
+    self.size = len(self.data)
     self._setContentType(content_type)
+
+  def _upradeImage(self):
+    """
+      This method upgrades internal data structures is required
+    """
+    # Quick hack to maintain just enough compatibility for existing sites
+    # Convert to new BTreeFolder2 based class
+    if getattr(aq_base(self), '_count', None) is None:
+      self._initBTrees()
+
+    # Make sure old Image objects can still be accessed
+    if not hasattr(aq_base(self), 'data') and hasattr(self, '_original'):
+      self.data = self._original.data
+      self.height = self._original.height
+      self.width = self._original.width
+
+    # Make sure size is defined
+    if not hasattr(aq_base(self), 'size') or not self.size:
+      self.size = len(self.data)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWidth')
   def getWidth(self):
     """
       Tries to get the width from the image data. 
     """
+    self._upradeImage()
     if self.get_size() and not self.width: self._update_image_info()
     return self.width
 
@@ -128,12 +149,14 @@ class Image(File, OFSImage):
     """
       Tries to get the height from the image data.
     """
+    self._upradeImage()
     if self.get_size() and not self.height: self._update_image_info()
     return self.height
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
   def getContentType(self, format=''):
     """Original photo content_type."""
+    self._upradeImage()
     if format == '':
       return self._baseGetContentType()
     else:
@@ -148,13 +171,15 @@ class Image(File, OFSImage):
                 alt=None, css_class=None, format='', quality=75,
                 resolution=None, **kw):
       """Return HTML img tag."""
+      self._upradeImage()
 
       # Get cookie if display is not specified.
       if display is None:
           display = self.REQUEST.cookies.get('display', None)
 
       # display may be set from a cookie.
-      if display is not None and defaultdisplays.has_key(display):
+      if (display is not None or resolution is not None or quality!=75 or format!='')\
+                                               and defaultdisplays.has_key(display):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality, resolution=resolution):
               # Generate photo on-the-fly
@@ -250,19 +275,11 @@ class Image(File, OFSImage):
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, resolution=None):
       """Return the image data."""
-
-      # Quick hack to maintain just enough compatibility for existing sites
-      # Convert to new BTreeFolder2 based class
-      if getattr(aq_base(self), '_count', None) is None:
-        self._initBTrees()
-      # Make sure old Image objects can still be accessed
-      if not hasattr(aq_base(self), 'data') and hasattr(self, '_original'):
-        self.data = self._original.data
-        self.height = self._original.height
-        self.width = self._original.width
+      self._upradeImage()
 
       # display may be set from a cookie (?)
-      if (display is not None or resolution is not None or quality != 75) and defaultdisplays.has_key(display):
+      if (display is not None or resolution is not None or quality!=75 or format!='')\
+                                               and defaultdisplays.has_key(display):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality,resolution=resolution):
               # Generate photo on-the-fly
@@ -322,7 +339,10 @@ class Image(File, OFSImage):
 
   def _getDisplayData(self, display, format='', quality=75, resolution=None):
       """Return raw photo data for given display."""
-      (width, height) = defaultdisplays[display]
+      if display is None:
+          (width, height) = (self.getWidth(), self.getHeight())
+      else:
+          (width, height) = defaultdisplays[display]
       if width == 0 and height == 0:
           width = self.getWidth()
           height = self.getHeight()
