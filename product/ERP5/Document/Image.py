@@ -29,6 +29,12 @@
 #
 ##############################################################################
 
+import os
+import string
+import sys
+import time
+from cStringIO import StringIO
+
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
@@ -39,8 +45,6 @@ from Products.ERP5.Document.File import File
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from OFS.content_types import guess_content_type
-import string, time, sys
-from cStringIO import StringIO
 
 from zLOG import LOG
 
@@ -301,40 +305,30 @@ class Image(File, OFSImage):
   def _resize(self, display, width, height, quality=75, format='', resolution=None):
       """Resize and resample photo."""
       newimg = StringIO()
+      os.putenv('TMPDIR', '/tmp') # because if we run zope as root, we have /root/tmp here and convert goes crazy
 
       if sys.platform == 'win32':
           from win32pipe import popen2
-          from tempfile import mktemp
-          newimg_path = mktemp(suffix=format)
           if resolution is None:
-            imgin, imgout = popen2('convert -quality %s -geometry %sx%s - %s'
-                                  % (quality, width, height, newimg_path), 'b')
+            imgin, imgout = popen2('convert -quality %s -geometry %sx%s - -'
+                                  % (quality, width, height), 'b')
           else:
-            imgin, imgout = popen2('convert -density %sx%s -quality %s -geometry %sx%s - %s'
-                                  % (resolution, resolution, quality, width, height, newimg_path), 'b')
+            imgin, imgout = popen2('convert -density %sx%s -quality %s -geometry %sx%s - -'
+                                  % (resolution, resolution, quality, width, height), 'b')
 
       else:
           from popen2 import popen2
-          import tempfile
-          tempdir = tempfile.tempdir
-          tempfile.tempdir = '/tmp'
-          newimg_path = tempfile.mktemp(suffix='.' + format)
-          tempfile.tempdir = tempdir
           if resolution is None:
-            imgout, imgin = popen2('convert -quality %s -geometry %sx%s - %s'
-                                  % (quality, width, height, newimg_path))
+            imgout, imgin = popen2('convert -quality %s -geometry %sx%s - -'
+                                  % (quality, width, height))
           else:
             LOG('Resolution',0,str(resolution))
-            imgout, imgin = popen2('convert -density %sx%s -quality %s -geometry %sx%s - %s'
-                                  % (resolution, resolution, quality, width, height, newimg_path))
+            cmd = 'convert -density %sx%s -quality %s -geometry %sx%s - -' % (resolution, resolution, quality, width, height)
+            imgout, imgin = popen2(cmd)
 
       imgin.write(str(self.getData()))
       imgin.close()
-      imgout.read()
-      imgout.close()
-      newimg_file = open(newimg_path, 'r')
-      newimg.write(newimg_file.read())
-      newimg_file.close()
+      newimg.write(imgout.read())
       newimg.seek(0)
       return newimg
 
