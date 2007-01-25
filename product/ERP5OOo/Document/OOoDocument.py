@@ -112,16 +112,7 @@ class OOoDocument(File, ConversionCacheMixin):
                     , PropertySheet.Document
                     )
 
-   # XXX-JPS - this property has been put here temporarily
-   # However, it should be implemented as a workflow property in a workflow
-   # dedicated to format conversion handling so that we can see some history of
-   # conversion. Also, this is not really document contents but internal log
-   # so workflow variable for a dedicated "technical" workflow is best
   _properties =  (
-      { 'id'          : 'external_processing_status_message',
-        'description' : 'message about status',
-        'type'        : 'string',
-        'mode'        : 'w' },
    # XXX-JPS mime_type should be guessed is possible for the stored file
    # In any case, it should be named differently because the name
    # is too unclear. Moreover, the usefulness of this property is
@@ -178,7 +169,7 @@ class OOoDocument(File, ConversionCacheMixin):
       Returns OOo conversion server data from 
       preferences
     """
-    pref = getToolByName(self,'portal_preferences')
+    pref = getToolByName(self, 'portal_preferences')
     adr = pref.getPreferredOoodocServerAddress()
     nr = pref.getPreferredOoodocServerPortNumber()
     if adr is None or nr is None:
@@ -204,13 +195,19 @@ class OOoDocument(File, ConversionCacheMixin):
       communicates with the conversion server
       and gets converted file as well as metadata
     """
-    if force == 0 and self.hasOOFile():
-      return self.returnMessage('OOo file is up do date', 1)
-    try:
-      self._convertToBase()
-    except xmlrpclib.Fault, e:
-      return self.returnMessage('Problem: %s' % (str(e) or 'undefined'), 2)
-    return self.returnMessage('converted')
+    def doConvert(force):
+      if force == 0 and self.hasOOFile():
+        return self.returnMessage('OOo file is up do date', 1)
+      try:
+        self._convertToBase()
+      except xmlrpclib.Fault, e:
+        return self.returnMessage('Problem: %s' % (str(e) or 'undefined'), 2)
+      return self.returnMessage('converted to Open Document Format')
+    msg_ob = doConvert(force)
+    msg = str(msg_ob[1])
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    portal_workflow.doActionFor(self, 'process', comment=msg)
+    return msg_ob
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
   def getTargetFormatItemList(self):
@@ -243,10 +240,12 @@ class OOoDocument(File, ConversionCacheMixin):
     """
       make the object a non-converted one, as if it was brand new
     """
-    self.clearCache()
+    self.clearConversionCache()
     self.oo_data = None
     m = self.returnMessage('new')
-    self.setExternalProcessingStatusMessage(str(m[1]))
+    msg = str(m[1])
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    portal_workflow.doActionFor(self, 'process', comment=msg)
 
   security.declareProtected(Permissions.ModifyPortalContent,'isAllowed')
   def isAllowed(self, format):
@@ -271,7 +270,7 @@ class OOoDocument(File, ConversionCacheMixin):
     self._setMetaData(kw['meta'])
     return True # XXX why return ? - why not?
 
-  security.declarePrivate('_convert')
+  security.declarePrivate('_convertToBase')
   def _convertToBase(self):
     """
       Converts the original document into ODF
