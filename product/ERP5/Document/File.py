@@ -76,7 +76,6 @@ class File(Document, CMFFile, ConversionCacheMixin):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  __dav_collection__=0
 
   # Declarative security
   security = ClassSecurityInfo()
