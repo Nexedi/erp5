@@ -86,7 +86,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_viewDownloadDialog</string> </value>
+            <value> <string>Document_viewDownloadDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

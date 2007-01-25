@@ -141,7 +141,7 @@ return {}\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_getPropertyDictFromUser</string> </value>
+            <value> <string>Document_getPropertyDictFromUserLogin</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

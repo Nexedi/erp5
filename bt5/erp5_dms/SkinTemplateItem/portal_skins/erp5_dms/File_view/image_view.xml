@@ -336,7 +336,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPortalType()==\'ImageDocument\'</string> </value>
+            <value> <string>python: here.getPortalType()==\'Image\'</string> </value>
         </item>
       </dictionary>
     </pickle>
