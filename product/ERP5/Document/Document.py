@@ -296,6 +296,7 @@ class Document(XMLObject):
   isPortalContent = 1
   isRADContent = 1
   isDocument = 1
+  __dav_collection__=0
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -317,6 +318,7 @@ class Document(XMLObject):
                               'version', 'short_title', 'keyword',
                               'subject', 'source_reference', 'source_project_title')
 
+  data = '' # some day this will be in property sheets
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
@@ -782,6 +784,7 @@ class Document(XMLObject):
 
     # Get the order
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
+    self.setSourceReference(file_name)
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
