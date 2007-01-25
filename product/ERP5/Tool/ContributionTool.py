@@ -105,8 +105,10 @@ class ContributionTool(BaseTool):
         if len(portal_type_list)>1 and portal_type not in portal_type_list:
           raise TypeError('%s not in the list of %s' % (portal_type, str(portal_type_list)))
         return portal_type
-      # if not found but the candidate list is there, return the first
-      return portal_type_list[0]
+      else:
+        # if not found but the candidate list is there, return the first
+        if len(portal_type_list)>0:
+          return portal_type_list[0]
 
     if portal_type is None:
       # We can not do anything anymore
@@ -146,8 +148,6 @@ class ContributionTool(BaseTool):
     file = kw.get('file', None)
     if file is not None:
       file_name = file.filename
-      # we store it as source_reference
-      kw['source_reference'] = file_name
     else:
       file_name = None
 
@@ -160,7 +160,6 @@ class ContributionTool(BaseTool):
       # NOTE: we use the module ID generator rather than the provided ID
       document = module.newContent(portal_type=portal_type, **kw)
       if discover_metadata: document.discoverMetadata(file_name=file_name, user_login=user_login)
-      pdb.set_trace()
       return document
 
     # From here, there is no hope unless a file was provided    
@@ -222,7 +221,7 @@ class ContributionTool(BaseTool):
     property_dict = {}
     rx_src = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
     if rx_src:
-      rx_parse = re.compile()
+      rx_parse = re.compile(rx_src)
       if rx_parse is not None:
         try:
           property_dict = rx_parse.match(file_name).groupdict()
