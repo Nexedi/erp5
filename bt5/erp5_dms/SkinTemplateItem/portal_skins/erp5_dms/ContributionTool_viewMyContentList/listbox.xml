@@ -318,32 +318,36 @@
                           <string>id</string>
                         </tuple>
                         <tuple>
+                          <string>source_reference</string>
+                          <string>File name</string>
+                        </tuple>
+                        <tuple>
                           <string>portal_type</string>
-                          <string>portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
-                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>language</string>
-                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>creation_date</string>
+                          <string>Base_formatCreationDate</string>
+                          <string>Created</string>
                         </tuple>
                         <tuple>
-                          <string>modification_date</string>
-                          <string>modification_date</string>
+                          <string>Base_formatModificationDate</string>
+                          <string>Modified</string>
                         </tuple>
                       </list>
                     </value>
@@ -361,24 +365,28 @@
                           <string>id</string>
                         </tuple>
                         <tuple>
+                          <string>source_reference</string>
+                          <string>File name</string>
+                        </tuple>
+                        <tuple>
                           <string>portal_type</string>
-                          <string>portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
-                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>language</string>
-                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
                           <string>Base_formatCreationDate</string>
