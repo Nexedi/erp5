@@ -81,7 +81,7 @@ def getValueIfAvailable(category):\n
   ob = context.restrictedTraverse(category, None)\n
   return ob \n
 \n
-ob_list = [getValueIfAvailable(category) for category in category_list]\n
+object_list = [getValueIfAvailable(category) for category in category_list]\n
 return [o for o in object_list if o is not None]\n
 </string> </value>
         </item>
@@ -141,7 +141,6 @@ return [o for o in object_list if o is not None]\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>category</string>
-                            <string>ob_list</string>
                             <string>object_list</string>
                             <string>o</string>
                           </tuple>
