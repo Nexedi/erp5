@@ -381,11 +381,11 @@
                           <string>language</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatCreationDate</string>
+                          <string>creation_date</string>
                           <string>Created</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatModificationDate</string>
+                          <string>modification_date</string>
                           <string>Modified</string>
                         </tuple>
                       </list>
@@ -402,7 +402,12 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>limit</string>
+                          <string>10</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -426,7 +431,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>creation_date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>modification_date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -534,7 +548,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Recently added content</string> </value>
+                    <value> <string>10 newest items</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

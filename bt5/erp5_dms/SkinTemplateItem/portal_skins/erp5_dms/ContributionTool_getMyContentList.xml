@@ -76,17 +76,6 @@ from AccessControl import getSecurityManager\n
 sm = getSecurityManager()\n
 u = sm.getUser()\n
 \n
-# XXX what\'s the correct way to format date and allow sorting on it?\n
-new_sort = []\n
-if kw.has_key(\'sort_on\'):\n
-  for i in range(len(kw[\'sort_on\'])):\n
-    key = kw[\'sort_on\'][i]\n
-    if key[0] == \'Base_formatCreationDate\':\n
-      new_sort.append((\'creation_date\', key[1]))\n
-    if key[0] == \'Base_formatModificationDate\':\n
-      new_sort.append((\'modification_date\', key[1]))\n
-    kw[\'sort_on\'] = new_sort\n
-\n
 kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 res = context.portal_catalog(**kw)\n
 res = [r.getObject() for r in res]\n
@@ -142,19 +131,13 @@ return res\n
                             <string>sm</string>
                             <string>_getattr_</string>
                             <string>u</string>
-                            <string>new_sort</string>
-                            <string>_getiter_</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>i</string>
-                            <string>key</string>
-                            <string>_write_</string>
                             <string>context</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>res</string>
                             <string>append</string>
                             <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>r</string>
                             <string>o</string>
                           </tuple>

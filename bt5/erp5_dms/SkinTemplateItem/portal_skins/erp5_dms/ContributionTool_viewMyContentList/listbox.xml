@@ -342,11 +342,11 @@
                           <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatCreationDate</string>
+                          <string>creation_date</string>
                           <string>Created</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatModificationDate</string>
+                          <string>modification_date</string>
                           <string>Modified</string>
                         </tuple>
                       </list>
@@ -389,11 +389,11 @@
                           <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatCreationDate</string>
+                          <string>creation_date</string>
                           <string>Created</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatModificationDate</string>
+                          <string>modification_date</string>
                           <string>Modified</string>
                         </tuple>
                       </list>
@@ -434,7 +434,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>creation_date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>modification_date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -553,11 +562,11 @@
                           <string>language</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatCreationDate</string>
+                          <string>creation_date</string>
                           <string>Created</string>
                         </tuple>
                         <tuple>
-                          <string>Base_formatModificationDate</string>
+                          <string>modification_date</string>
                           <string>Modified</string>
                         </tuple>
                       </list>
