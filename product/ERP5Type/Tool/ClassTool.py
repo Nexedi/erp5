@@ -208,7 +208,7 @@ if allowClassTool():
         """
           Updates a Document with a new text
         """
-        text = """
+        text = """\
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -303,7 +303,7 @@ class %s(XMLObject):
         """
           Updates a PropertySheet with a new text
         """
-        text = """
+        text = """\
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -387,7 +387,7 @@ class PropertySheetTemplate:
         """
           Updates a Extension with a new text
         """
-        text = """
+        text = """\
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -444,7 +444,7 @@ def myExtensionMethod(self, param=None):
         """
           Updates a Test with a new text
         """
-        text = '''
+        text = '''\
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -550,7 +550,7 @@ class Test(ERP5TypeTestCase):
           if REQUEST is not None:
             REQUEST.RESPONSE.redirect('%s/manage_viewConstraintList?message=You+must+specify+a+class+name' % (self.absolute_url(),))
             return
-        text = """
+        text = """\
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -693,7 +693,7 @@ class ConstraintTemplate(Constraint):
         # Create an init file for this Product.
         init = os.path.join(base_path, '__init__.py')
         if not os.path.exists(init):
-          text = '''
+          text = '''\
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
