@@ -845,9 +845,9 @@ class AmortisationRule(Rule):
         if previous_period is None:
           build_unimmo = 0
           build_transfer = 0
-          build_optional_transfer = 0              
+          build_optional_transfer = 0
 
-        # Build previous period unimmobilisation    
+        # Build previous period unimmobilisation
         if build_unimmo:
           previous_initial_price = previous_period['initial_price']
           previous_start_date = previous_period['start_date']
@@ -1092,49 +1092,6 @@ class AmortisationRule(Rule):
                 cumulated_price_dict[(destination_section_value)] = cumulated_destination
           immo_period['cumulated_price_dict'] = cumulated_price_dict
       return returned_list
-
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-    def solve(self, applied_rule, solution_list):
-      """
-        Solve inconsistency according to a certain number of solutions
-        templates. This updates the
-
-        -> new status -> solved
-
-        This applies a solution to an applied rule. Once
-        the solution is applied, the parent movement is checked.
-        If it does not diverge, the rule is reexpanded. If not,
-        diverge is called on the parent movement.
-      """
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-    def diverge(self, applied_rule):
-      """
-        -> new status -> diverged
-
-        This basically sets the rule to "diverged"
-        and blocks expansion process
-      """
-
-    # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self, applied_rule):
-      """
-        Returns 1 if divergent rule
-      """
-
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self, applied_rule):
-      """
-        Returns a list Divergence descriptors
-      """
-
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self, applied_rule):
-      """
-        Returns a list Divergence solvers
-      """
 
     # Deliverability / orderability
     def isOrderable(self, m):
