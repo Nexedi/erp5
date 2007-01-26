@@ -81,7 +81,7 @@ Preferences decide if the notification is sent always, only if something is wron
 Notifcation contains url of the document, so that one can click and do something.\n
 """\n
 \n
-pref = context.portal_preferences.getPreferredDmsIngestEmailNotification()\n
+pref = context.portal_preferences.getPreferredDocumentIngestionEmailNotification()\n
 if pref is not None and len(pref) != 0:\n
   pref=pref[0]\n
   if pref == \'never\': return\n
