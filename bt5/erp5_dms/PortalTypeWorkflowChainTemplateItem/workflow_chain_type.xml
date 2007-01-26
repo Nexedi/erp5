@@ -13,11 +13,11 @@
  </chain>
  <chain>
   <type>File</type>
-  <workflow>dms_file_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, document_validation_workflow</workflow>
+  <workflow>dms_file_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, -document_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>edit_workflow, dms_file_interaction_workflow, document_validation_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>-document_validation_workflow, edit_workflow, dms_file_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>PDF</type>
