@@ -26,9 +26,10 @@
 #
 ##############################################################################
 
+import cStringIO
+import pdb
 import re
 import string
-import pdb
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
@@ -145,11 +146,21 @@ class ContributionTool(BaseTool):
       return BaseTool.newContent(self, id=id, portal_type=portal_type, temp_object=1, **kw)
 
     # Try to find the file_name
+    file_name = None
+    # check if file was provided
     file = kw.get('file', None)
     if file is not None:
       file_name = file.filename
     else:
-      file_name = None
+      # some channels supply data and file name separately
+      # we have to build an object
+      data = kw.get('data', None)
+      if data is not None:
+        file_name = kw.get('file_name', None)
+        if file_name is not None:
+          file = cStringIO.StringIO()
+          file.write(data)
+          file.seek(0)
 
     # If the portal_type was provided, we can go faster
     if portal_type is not None and portal_type != '':
