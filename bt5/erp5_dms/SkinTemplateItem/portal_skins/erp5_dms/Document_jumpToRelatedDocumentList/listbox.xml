@@ -489,7 +489,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>jump_to_related_document_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
