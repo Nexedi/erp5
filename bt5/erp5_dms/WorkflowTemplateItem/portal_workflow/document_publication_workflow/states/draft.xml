@@ -44,6 +44,7 @@
                 <string>cancel_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>embed</string>
                 <string>submit</string>
                 <string>submit_action</string>
               </tuple>
