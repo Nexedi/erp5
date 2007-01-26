@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object_url.replace(\'http\', \'webdav\').replace(\'https\', \'webdav\')</string> </value>
+            <value> <string>python:object_url.replace(\'https\', \'webdav\').replace(\'http\', \'webdav\')</string> </value>
         </item>
       </dictionary>
     </pickle>
