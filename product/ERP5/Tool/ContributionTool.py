@@ -30,7 +30,7 @@ import re
 import string
 import pdb
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -325,6 +325,21 @@ class ContributionTool(BaseTool):
           return
 
     return BaseTool._delOb(self, id)
+
+  def listDAVObjects(self):
+   """
+     Get all docs contributed by the current user
+     XXX you can only list them this way, but they're not accessible
+     to make it fully usable we should set their id's with module name
+     and possibly something nicer to display
+   """
+   sm = getSecurityManager()
+   u = sm.getUser()
+   kw = {}
+   res = self.portal_catalog(portal_type=self.getPortalDocumentTypeList())
+   res = [r.getObject() for r in res]
+   res = [o for o in res if u.allowed(o, ('Owner',))] # XXX terrible - needs to use portal_catalog
+   return res
 
 InitializeClass(ContributionTool)
 
