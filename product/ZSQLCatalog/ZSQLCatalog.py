@@ -413,7 +413,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       get_transaction().commit() # Should not have references to objects too long.
 
       # Start reindexing.
-      self.ERPSite_reindexAll(sql_catalog_id=destination_sql_catalog_id)
+      self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id)
       get_transaction().commit() # Should not have references to objects too long.
 
       # Now synchronize this new database with the current one.
