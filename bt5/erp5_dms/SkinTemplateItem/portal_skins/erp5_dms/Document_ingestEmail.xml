@@ -87,7 +87,6 @@ value means everything was fine.\n
 noSenderInHeaderMsg = "no sender in headers"\n
 noSenderMsg = "you are not in user database"\n
 manySendersMsg = "very serious error: your address has multiple entries"\n
-noSubordinationMsg = "you do not have properly set subordination (I could not find a group you are working in)"\n
 \n
 # get sender from headers\n
 fromraw = theMail[\'headers\'][\'from\']\n
@@ -111,31 +110,23 @@ senderm = r[0]\n
 person = senderm.getParent()\n
 context.log(script.getId(), \'ok, this address belongs to \' + person.getRelativeUrl())\n
 \n
-mailprops = context.Document_getPropertyListFromMail(theMail[\'body\'])\n
+mailprops = context.Document_getPropertyDictFromMail(theMail[\'body\'])\n
 context.log(mailprops)\n
 \n
 # create objects from attachments\n
 try:\n
   for fname, data in theMail[\'attachments\'].items():\n
-    obj  = context.Document_createObjectFromFile(fname, data, portal_type=mailprops.get(\'document_type\'), user_name=person.getReference())\n
-    # if some properties were in the mail, overwrite the content attrs\n
-    for k in mailprops:\n
-      atr = k\n
-      if k == \'programme\': atr = \'source_project\'\n
-      if k != \'document_type\':\n
-        obj.setProperty(atr, mailprops[k])\n
+    obj  = context.portal_contributions.newContent(file_name=fname, \n
+                                                       data=data, \n
+                                                       portal_type=mailprops.get(\'document_type\'), \n
+                                                       user_login=person.getReference(),\n
+                                                       **mailprops)\n
     gr = person.Person_getPrincipalGroup()\n
-    if gr is None:\n
-      print noSubordinationMsg\n
-      return printed\n
-    obj.setGroup(gr)\n
     obj.manage_setLocalRoles(person.getReference(), [\'Owner\',])\n
     context.Document_notifyByEmail(address=senderemail, event=\'ingest\', object=obj)\n
 except Exception, e:\n
-  # context.log_traceback(context) # what the *** was this?\n
   context.log(e)\n
   raise\n
-  #return str(e)\n
 return\n
 
 
@@ -187,7 +178,6 @@ return\n
                             <string>noSenderInHeaderMsg</string>
                             <string>noSenderMsg</string>
                             <string>manySendersMsg</string>
-                            <string>noSubordinationMsg</string>
                             <string>_getitem_</string>
                             <string>fromraw</string>
                             <string>_getattr_</string>
@@ -203,9 +193,8 @@ return\n
                             <string>_getiter_</string>
                             <string>fname</string>
                             <string>data</string>
+                            <string>_apply_</string>
                             <string>obj</string>
-                            <string>k</string>
-                            <string>atr</string>
                             <string>gr</string>
                             <string>Exception</string>
                             <string>e</string>
