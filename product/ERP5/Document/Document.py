@@ -510,15 +510,17 @@ class Document(XMLObject):
       for r in res:
         if lista.get(r) is None:
           lista[r] = True # we use dict keys to ensure uniqueness
-        if level != depth:
-          getRelatedList(r, level)
+          if level != depth:
+            getRelatedList(r, level)
 
     getRelatedList(self)
     lista_latest = {}
     for o in lista.keys():
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
-    if lista_latest.has_key(self): lista_latest.pop(self) # remove this document
-    if lista_latest.has_key(self.getLatestVersionValue()): lista_latest.pop(self()) # remove this document
+    if lista_latest.has_key(self): 
+      lista_latest.pop(self) # remove this document
+    if lista_latest.has_key(self.getLatestVersionValue()): 
+      lista_latest.pop(self()) # remove this document
 
     return lista_latest.keys()
 
@@ -546,6 +548,8 @@ class Document(XMLObject):
       in original language or in the user language if the version is
       the same.
     """
+    if not self.getReference():
+      return self
     catalog = getToolByName(self, 'portal_catalog', None)
     kw = dict(reference=self.getReference(), sort_on=(('version','descending'),('revision','descending'),))
     if language is not None: kw['language'] = language
@@ -556,7 +560,7 @@ class Document(XMLObject):
 
     # if language was given return it
     if language is not None:
-      return res[0]
+      return res[0].getObject()
     else:
       first = res[0]
       in_original = None
@@ -567,12 +571,12 @@ class Document(XMLObject):
         if ob.getVersion() != first.getVersion():
           # we are out of the latest version - return in_original or first
           if in_original is not None:
-            return in_original
+            return in_original.getObject()
           else:
-            return first # this shouldn't happen in real life
+            return first.getObject() # this shouldn't happen in real life
         if ob.getLanguage() == user_language:
           # we found it in the user language
-          return ob
+          return ob.getObject()
     # this is the only doc in this version
     return self
 
@@ -794,7 +798,7 @@ class Document(XMLObject):
 
     # Start with everything until content - build a dictionnary according to the order
     kw = {}
-    first_list = order_list[0:content_index-1]
+    first_list = order_list[:content_index]
     first_list.reverse()
     for order_id in first_list:
       if order_id not in VALID_ORDER_KEY_LIST:
