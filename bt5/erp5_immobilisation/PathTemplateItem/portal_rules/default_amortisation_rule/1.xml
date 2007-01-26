@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.Document.AmortisationRule</string>
-          <string>AmortisationRule</string>
+          <string>Products.ERP5Type.Document.QuantityDivergenceTester</string>
+          <string>QuantityDivergenceTester</string>
         </tuple>
         <none/>
       </tuple>
@@ -25,15 +25,26 @@
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
+            <key> <string>_local_properties</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>solver_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -43,26 +54,28 @@
             </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>default_amortisation_rule</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
-            <key> <string>notify_dict</string> </key>
+            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Amortisation Rule</string> </value>
+            <value> <string>Quantity Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>solver_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Amortisation Rule</string> </value>
+            <value> <string>default_quantity_tester</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
