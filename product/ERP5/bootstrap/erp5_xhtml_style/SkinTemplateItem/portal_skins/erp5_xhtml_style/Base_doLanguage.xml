@@ -71,10 +71,6 @@
             <value> <string># XXX Localizer-dependent\n
 portal = context.getPortalObject()\n
 portal.Localizer.changeLanguage(select_language)\n
-\n
-# XXX should invalidate cached data specific to current user\n
-from Products.ERP5Type.Cache import clearCache\n
-clearCache()\n
 </string> </value>
         </item>
         <item>
@@ -127,8 +123,6 @@ clearCache()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
                           </tuple>
                         </value>
                     </item>
