@@ -338,6 +338,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                        <tuple>
                           <string>role_name</string>
                           <string>Role</string>
                         </tuple>
