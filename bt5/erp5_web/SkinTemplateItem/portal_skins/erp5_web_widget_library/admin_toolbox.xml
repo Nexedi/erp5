@@ -113,32 +113,32 @@
 \n
           <div class="field">\n
             <label>Title</label>\n
-            <div class="input"><input class="input" size="15" type="text" name="title"\n
+            <div class="input"><input class="input" size="15" type="text" name="clone_title"\n
                                       tal:attributes="value here/getTitle | nothing"/></div>\n
           </div>\n
 \n
           <div class="field">\n
             <label>Reference</label>\n
-            <div class="input"><input class="input" size="15" type="text" name="reference"\n
+            <div class="input"><input class="input" size="15" type="text" name="clone_reference"\n
                                       tal:attributes="value here/getReference | nothing"/></div>\n
           </div>\n
 \n
           <div class="field">\n
             <label>Version</label>\n
-            <div class="input"><input class="input" size="5" type="text" name="version"\n
+            <div class="input"><input class="input" size="5" type="text" name="clone_version"\n
                                       tal:attributes="value here/getVersion | nothing"/></div>\n
           </div>\n
 \n
           <div class="field">\n
             <label>Language</label>\n
-            <div class="input"><input class="input" size="5"  type="text" name="language"\n
+            <div class="input"><input class="input" size="5"  type="text" name="clone_language"\n
                                       tal:attributes="value here/getLanguage | nothing"/></div>\n
           </div>\n
 \n
           <div class="field hiddenLabel">\n
             <label>Type</label>\n
             <div class="input">\n
-              <select class="input" name="new_portal_type" size="1" onchange="setCreationMode(this)">\n
+              <select class="input" name="clone_portal_type" size="1" onchange="setCreationMode(this)">\n
                 <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
                 <tal:block tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()">\n
                   <option tal:content="portal_type"\n

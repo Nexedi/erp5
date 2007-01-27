@@ -85,12 +85,12 @@ form_data = context.REQUEST.form\n
 \n
 # Define a list of field name to take into account in the cloning process\n
 ACCEPTABLE_FORM_ID_LIST = [ \\\n
-                         \'reference\'\n
-                       , \'language\'\n
-                       , \'version\'\n
-                       , \'revision\'\n
-                       , \'title\'\n
-                       , \'short_title\'\n
+                         \'clone_reference\'\n
+                       , \'clone_language\'\n
+                       , \'clone_version\'\n
+                       , \'clone_revision\'\n
+                       , \'clone_title\'\n
+                       , \'clone_short_title\'\n
 ]\n
 \n
 # First make sure that no document already exists with the\n
@@ -98,13 +98,13 @@ ACCEPTABLE_FORM_ID_LIST = [ \\\n
 if clone:\n
   portal_type = context.getPortalType()\n
 else:\n
-  portal_type = form_data[\'new_portal_type\']\n
+  portal_type = form_data[\'clone_portal_type\']\n
 \n
 # prepare query params\n
 kw = {\'portal_type\' : portal_type}\n
-if form_data.get(\'reference\'): kw[\'reference\'] = form_data[\'reference\']\n
-if form_data.get(\'version\'): kw[\'version\'] = form_data[\'version\']\n
-if form_data.get(\'language\'): kw[\'language\'] = form_data[\'language\']\n
+if form_data.get(\'clone_reference\'): kw[\'reference\'] = form_data[\'clone_reference\']\n
+if form_data.get(\'clone_version\'): kw[\'version\'] = form_data[\'clone_version\']\n
+if form_data.get(\'clone_language\'): kw[\'language\'] = form_data[\'clone_language\']\n
 \n
 # Count documents of same reference and prepare kw\n
 count = int(context.portal_catalog.countResults(**kw)[0][0])\n

@@ -124,8 +124,8 @@ current_section = context.getWebSectionValue()\n
 if not kw.has_key(\'validation_state\'):\n
   kw[\'validation_state\'] = [\'draft\', \'submitted\', \'shared\',\n
                             \'released\', \'published\', \'restricted\']\n
-if not kw.has_key(\'order_by\'):\n
-  kw[\'order_by\'] = [(\'int_index\', \'descending\')]\n
+if not kw.has_key(\'sort_on\'):\n
+  kw[\'sort_on\'] = [(\'int_index\', \'descending\')]\n
 if not kw.has_key(\'group_by\'):\n
   kw[\'group_by\'] = (\'reference\',)\n
 \n
