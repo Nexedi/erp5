@@ -40,6 +40,7 @@ from Acquisition import aq_base
 
 from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.CMFCore.utils import _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.File import File
 from OFS.Image import Image as OFSImage
@@ -281,6 +282,8 @@ class Image(File, OFSImage):
   def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, resolution=None):
       """Return the image data."""
       self._upradeImage()
+
+      _setCacheHeaders(self, dict(display=display, format=format, quality=quality, resolution=resolution))
 
       # display may be set from a cookie (?)
       if (display is not None or resolution is not None or quality!=75 or format!='')\
