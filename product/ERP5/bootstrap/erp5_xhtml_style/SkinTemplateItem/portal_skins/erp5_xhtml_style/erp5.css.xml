@@ -1099,6 +1099,8 @@ fieldset.bottom .field .input {\n
   border-bottom-width: 0;\n
   border-left-width: 1px;\n
   border-right-width: 1px;\n
+  padding-left: 1px;\n
+  padding-right: 1px;\n
 }\n
 \n
 /* Web Page White Background */\n
