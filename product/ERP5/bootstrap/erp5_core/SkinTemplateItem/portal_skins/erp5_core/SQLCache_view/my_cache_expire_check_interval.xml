@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Cache expire check interval</string> </value>
+                    <value> <string>Cache Expire Check Interval</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
