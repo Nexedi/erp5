@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts60048879.26</string> </value>
+            <value> <string>ts70003122.2</string> </value>
         </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
@@ -46,12 +46,30 @@
 \n
 \n
 /**\n
- * Checks a the element referenced by `locator` is a float equals to `text`.\n
+ * Checks the element referenced by `locator` is a float equals to `text`.\n
  * Values are converted to float, to be format-independant (ie. 1 000 = 1000.0)\n
  */\n
 Selenium.prototype.assertFloat = function(locator, text) {\n
     var actualValueText = getText(this.page().findElement(locator));\n
-    var actualValue = parseFloat(actualValueText.replace(/ /, "").replace(/&nbsp;/, ""));\n
+    var actualValue = parseFloat(actualValueText\n
+                          .replace(/ /, "").replace(/&nbsp;/, ""));\n
+    var expectedValue = parseFloat(text.replace(/ /, "").replace(/&nbsp;/, ""));\n
+\n
+    if (isNaN(actualValue)) {\n
+        Assert.fail("Actual value "+ actualValueText +\n
+                        " cannot be parsed as float");\n
+    }\n
+    Assert.matches(expectedValue.toString(), actualValue.toString());\n
+};\n
+\n
+\n
+/**\n
+ * like assertFloat, but for the value of <input elements.\n
+ */\n
+Selenium.prototype.assertFloatValue = function(locator, text) {\n
+    var actualValueText = getInputValue(this.page().findElement(locator));\n
+    var actualValue = parseFloat(actualValueText\n
+                            .replace(/ /, "").replace(/&nbsp;/, ""));\n
     var expectedValue = parseFloat(text.replace(/ /, "").replace(/&nbsp;/, ""));\n
 \n
     if (isNaN(actualValue)) {\n
@@ -81,7 +99,7 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1018</int> </value>
+            <value> <long>1671</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
