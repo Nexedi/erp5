@@ -152,4 +152,5 @@ Text | local_permission
 Text | metadata
 Text | print
 Text | related_document
+Text | suggest_reference
 Text | view

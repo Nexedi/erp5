@@ -177,29 +177,29 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>Creator</string>
-<string>Date</string>
-<string>PrincipiaSearchSource</string>
-<string>SearchableText</string>
-<string>CreationDate</string>
-<string>EffectiveDate</string>
-<string>ExpiresDate</string>
-<string>ModificationDate</string>
-<string>Type</string>
-<string>bobobase_modification_time</string>
-<string>created</string>
-<string>effective</string>
-<string>expires</string>
-<string>getIcon</string>
-<string>in_reply_to</string>
-<string>modified</string>
-<string>review_state</string>
-<string>summary</string>
-<string>language</string>
-<string>version</string>
-<string>revision</string>
-<string>short_title</string>
+                            <string>uid</string>
+                            <string>Creator</string>
+                            <string>Date</string>
+                            <string>PrincipiaSearchSource</string>
+                            <string>SearchableText</string>
+                            <string>CreationDate</string>
+                            <string>EffectiveDate</string>
+                            <string>ExpiresDate</string>
+                            <string>ModificationDate</string>
+                            <string>Type</string>
+                            <string>bobobase_modification_time</string>
+                            <string>created</string>
+                            <string>effective</string>
+                            <string>expires</string>
+                            <string>getIcon</string>
+                            <string>in_reply_to</string>
+                            <string>modified</string>
+                            <string>review_state</string>
+                            <string>summary</string>
+                            <string>language</string>
+                            <string>version</string>
+                            <string>revision</string>
+                            <string>short_title</string>
                           </list>
                         </value>
                     </item>
