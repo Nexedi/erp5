@@ -4127,6 +4127,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       if update_catalog:
         site.ERP5Site_reindexAll()
+      
+      # Update translation table, in case we added new portal types or
+      # workflow states.
+      site.ERP5Site_updateTranslationTable()
 
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
