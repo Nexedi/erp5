@@ -168,12 +168,12 @@ Test Simple view of an Accounting Transaction\n
   <td>account_module/stocks</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>10.0</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
   <td>20.0</td>\n
 </tr>\n
@@ -212,13 +212,12 @@ Test Simple view of an Accounting Transaction\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
-  <td>0.0</td> <!-- FIXME: precision is wrong, but assertFloat doesn\'t work for\n
-                           values -->\n
+  <td>0.0</td>\n
 </tr>          \n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']/td[5]/input</td>\n
   <td>0.0</td>\n
 </tr> \n
@@ -251,12 +250,12 @@ Test Simple view of an Accounting Transaction\n
   <td>account_module/stocks</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>10.0</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
   <td>20.0</td>\n
 </tr>\n

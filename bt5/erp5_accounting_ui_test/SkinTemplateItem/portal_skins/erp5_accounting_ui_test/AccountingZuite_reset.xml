@@ -71,16 +71,28 @@
             <value> <string>portal = context.getPortalObject()\n
 \n
 # open all accounts\n
-[ account.validate() for account in portal.account_module.objectValues()\n
-  if account.getValidationState() != \'validated\' ]\n
+for account in portal.account_module.objectValues():\n
+  if account.getValidationState() != \'validated\':\n
+    account.validate()\n
+\n
+# validate third parties and set them a dummy region, because it\'s required\n
+for entity in ( portal.organisation_module.objectValues() +\n
+                portal.person_module.objectValues() ):\n
+  if entity.getValidationState() != \'validated\':\n
+    entity.setRegion(\'region\')\n
+    entity.validate()\n
+\n
+# create accounting periods ?\n
+# XXX\n
 \n
 # enable preference\n
 pref = portal.portal_preferences.accounting_zuite_preference\n
 if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   # we have to \'own\' the preference for the test\n
   ptool = portal.portal_preferences\n
-  pref.setId(\'old_accounting_zuite_preference\')\n
-  cb = ptool.manage_copyObjects([\'old_accounting_zuite_preference\'])\n
+  # pref.setId(\'old_accounting_zuite_preference\')\n
+  cb = ptool.manage_copyObjects([\'accounting_zuite_preference\'])\n
+  # FIXME: how could this work ???\n
   ptool.manage_pasteObjects(cb)\n
   # as the preference changed, it\'s safer to clear the cache\n
   from Products.ERP5Type.Cache import clearCache\n
@@ -151,10 +163,9 @@ return "Reset Successfully."\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>_getiter_</string>
                             <string>account</string>
+                            <string>entity</string>
                             <string>pref</string>
                             <string>_getitem_</string>
                             <string>str</string>

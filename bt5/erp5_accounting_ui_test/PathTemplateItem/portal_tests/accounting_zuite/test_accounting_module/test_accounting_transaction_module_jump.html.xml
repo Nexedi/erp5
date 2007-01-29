@@ -75,7 +75,7 @@ Test jumps from Accounting Transaction Module\n
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>Transactions - Client 1</td>\n
+  <td>Transactions - Client 1*</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -97,7 +97,7 @@ Test jumps from Accounting Transaction Module\n
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>Transactions - Supplier</td>\n
+  <td>Transactions - Supplier*</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
