@@ -68,62 +68,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns all parameters from preferences or selection.\n
+            <value> <string>"""Returns the most suitable currency for a section.\n
 \n
-This script gives priority to selection, and if not found in selection, it\n
-tries to get the parameters from preference tool.\n
-All parameters are stored/retrieved in a REQUEST cache, unless ignore_cache\n
-argument is True.\n
-\n
-caveats:\n
-  * wants_from_date parameter is not taken into account in the cache.\n
+If the section is an organisation, returns this organisation\'s accounting\n
+currency.\n
+If the section is a category, if the category have a mapping organisation,\n
+return this organisation\'s currency.\n
 """\n
 \n
-# do we have a cache already?\n
-if not ignore_cache:\n
-  params_cache = context.REQUEST.other.get(\n
-          \'ERP5Accounting_getParams\', None)\n
-  if params_cache is not None:\n
-    # return a copy\n
-    return dict(params_cache)\n
+def getCurrencyForSection(section_url):\n
+  portal = context.getPortalObject()\n
+  section = portal.portal_categories.restrictedTraverse(section_url)\n
 \n
-params = {}\n
-selection_params = {}\n
-if selection is not None:\n
-  selection_params = selection.getParams()\n
-preference = context.getPortalObject().portal_preferences\n
+  if section.getPortalType() == \'Organisation\':\n
+    return section.getPriceCurrency()\n
 \n
-if wants_from_date:\n
-  from_date = selection_params.get(\'from_date\',\n
-                preference.getPreferredAccountingTransactionFromDate())\n
-  if from_date :\n
-    params[\'from_date\'] = from_date\n
+  if section.getPortalType() == \'Category\':\n
+    member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\')\n
+    if len(member_list) == 1:\n
+      return member_list[0].getPriceCurrency()\n
+    mapping = section.getMappingValue(portal_type=\'Organisation\')\n
+    if mapping is not None:\n
+      return mapping.getPriceCurrency()\n
 \n
-at_date = selection_params.get(\'at_date\',\n
-              preference.getPreferredAccountingTransactionAtDate())\n
-if at_date:\n
-  params[\'at_date\'] = at_date.latestTime()\n
+  # nothing found ... returns the currency from preferences.\n
+  return portal.portal_preferences.getPreferredAccountingTransactionCurrency()\n
 \n
-section_category = selection_params.get(\'section_category\',\n
-                 preference.getPreferredAccountingTransactionSectionCategory())\n
-if section_category:\n
-  params[\'section_category\'] = section_category\n
-  currency = context.Base_getCurrencyForSection(section_category)\n
-  # getQuantityPrecisionFromResource is defined on Base, but the portal is not \n
-  # an instance of Base, so we call it on account_module.\n
-  params[\'precision\'] = context.account_module\\\n
-                            .getQuantityPrecisionFromResource(currency)\n
-\n
-\n
-simulation_state = selection_params.get(\'simulation_state\',\n
-             preference.getPreferredAccountingTransactionSimulationStateList())\n
-if simulation_state:\n
-  params[\'simulation_state\'] = simulation_state\n
-\n
-\n
-if not ignore_cache:\n
-  context.REQUEST.other[\'ERP5Accounting_getParams\'] = params\n
-return dict(params)\n
+from Products.ERP5Type.Cache import CachingMethod\n
+getCurrencyForSection = CachingMethod(getCurrencyForSection,\n
+                                      id=script.getId())\n
+return getCurrencyForSection(section_url)\n
 </string> </value>
         </item>
         <item>
@@ -139,8 +113,14 @@ return dict(params)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, wants_from_date=0, ignore_cache=0</string> </value>
+            <value> <string>section_url</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,29 +140,18 @@ return dict(params)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection</string>
-                            <string>wants_from_date</string>
-                            <string>ignore_cache</string>
+                            <string>section_url</string>
+                            <string>getCurrencyForSection</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>params_cache</string>
-                            <string>dict</string>
-                            <string>params</string>
-                            <string>selection_params</string>
-                            <string>preference</string>
-                            <string>from_date</string>
-                            <string>_write_</string>
-                            <string>at_date</string>
-                            <string>section_category</string>
-                            <string>currency</string>
-                            <string>simulation_state</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -194,16 +163,12 @@ return dict(params)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <int>0</int>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Accounting_getParams</string> </value>
+            <value> <string>Base_getCurrencyForSection</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
