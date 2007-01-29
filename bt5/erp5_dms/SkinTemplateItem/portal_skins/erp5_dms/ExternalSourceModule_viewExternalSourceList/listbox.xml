@@ -350,7 +350,7 @@
                           <string>Index</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state</string>
+                          <string>translated_validation_state</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
@@ -407,7 +407,7 @@
                           <string>Index</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state</string>
+                          <string>translated_validation_state</string>
                           <string>State</string>
                         </tuple>
                       </list>

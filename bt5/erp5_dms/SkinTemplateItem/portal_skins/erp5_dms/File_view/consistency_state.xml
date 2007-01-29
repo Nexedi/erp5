@@ -13,14 +13,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_translated_validation_state_title</string> </value>
+            <value> <string>consistency_state</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -251,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Publication State</string> </value>
+                    <value> <string>Consistency</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -285,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getSimulationState</string> </value>
+            <value> <string>python: here.portal_workflow.getInfoFor(ob=here, name=\'consistency_state\', wf_id=\'document_publication_workflow\') or \'not checked\'</string> </value>
         </item>
       </dictionary>
     </pickle>

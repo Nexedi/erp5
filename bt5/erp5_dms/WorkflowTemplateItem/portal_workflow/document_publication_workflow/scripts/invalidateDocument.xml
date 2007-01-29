@@ -69,14 +69,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-invalidate document\n
-(when it is hidden)\n
+when a document is hidden\n
+we have to \'uncheck\' its consistency flag\n
+so that you know you have to check it again\n
 """\n
 \n
-ob=state_change.object\n
-\n
-if ob.getValidationState()==\'validated\':\n
-  ob.portal_workflow.doActionFor(ob, \'invalidate_action\')\n
+state_change.new_state.addVariable(\'consistency_state\', \'not checked\')\n
 </string> </value>
         </item>
         <item>
@@ -127,7 +125,6 @@ if ob.getValidationState()==\'validated\':\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>ob</string>
                           </tuple>
                         </value>
                     </item>

@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>state_var</string> </key>
-            <value> <string>simulation_state</string> </value>
+            <value> <string>validation_state</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

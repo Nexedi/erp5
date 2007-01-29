@@ -113,8 +113,8 @@
                         <string>my_short_title</string>
                         <string>my_int_index</string>
                         <string>my_source_reference</string>
-                        <string>my_translated_simulation_state_title</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>consistency_state</string>
                       </list>
                     </value>
                 </item>

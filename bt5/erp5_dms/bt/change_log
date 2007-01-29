@@ -1,3 +1,6 @@
+2007-01-29
+Reimplemented validation flag as publication workflow variable.
+
 2007-01-24
 Major refactoring - almost everything changed.
 

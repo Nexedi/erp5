@@ -11,12 +11,10 @@ External Web Page | edit_workflow
 External Web Page | external_document_interaction_workflow
 External Web Page | external_document_publication_workflow
 External Web Page | external_processing_workflow
-File | -document_validation_workflow
 File | dms_file_interaction_workflow
 File | document_publication_workflow
 File | edit_workflow
 File | local_permission_interaction_workflow
-Image | -document_validation_workflow
 Image | dms_file_interaction_workflow
 Image | document_publication_workflow
 Image | edit_workflow
