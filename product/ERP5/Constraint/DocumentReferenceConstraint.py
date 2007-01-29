@@ -41,7 +41,7 @@ class DocumentReferenceConstraint(Constraint):
   (although we could, e.g. by changing version number)
   """
 
-  def checkConsistency(self, object, fixit=0, throw=False): # XXX-JPS throw is not part of API - Please remove
+  def checkConsistency(self, object, fixit=0): # XXX-JPS throw is not part of API - Please remove
     """
       Implement here the consistency checker
     """
@@ -53,8 +53,6 @@ class DocumentReferenceConstraint(Constraint):
         message = '%s is not defined' % req # XXX-JPS Is translation required here with a Message class ?
         error_list.append(self._generateError(object, N_(message)))
     if error_list:
-      if throw: # XXX-JPS throw is not part of API - Please remove
-        raise Exception(str(error_list))
       return error_list
     res = object.portal_catalog(reference=object.getReference(), language=object.getLanguage(),
                                 version=object.getVersion(), portal_type=object.getPortalDocumentTypeList())
@@ -67,10 +65,7 @@ class DocumentReferenceConstraint(Constraint):
       raise Exception('Fatal error: multiple objects %s - %s - %s exist' % (object.getReference(),
                                                       object.getLanguage(), object.getVersion()))
       #error_list.append(self._generateError(object, N_(s)))
-    if hasattr(object, 'Document_additionalConsistencyCheck'):
-      message = object.Document_additionalConsistencyCheck()
-      if message not in (None, ''):
-        error_list.append(self._generateError(object, N_(message)))
-    if error_list and throw: # XXX-JPS throw is not part of API - Please remove
-      raise Exception(str(error_list))
-    return error_list
+    if error_list:
+      return error_list
+
+# vim: filetype=python syntax=python shiftwidth=2 
