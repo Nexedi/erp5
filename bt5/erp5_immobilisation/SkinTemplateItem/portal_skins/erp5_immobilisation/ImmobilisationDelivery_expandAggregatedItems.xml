@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -67,12 +69,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>item_list = []\n
-for movement in context.getImmobilisationMovementList():\n
+movement_list = context.getImmobilisationMovementList()\n
+#context.log(\'movement_list\',[(m.getUid(),m.getPath()) for m in movement_list])\n
+movement_uid_list = []\n
+for movement in movement_list:\n
+  movement_uid_list.append(\'%s\' % movement.getUid())\n
   for item in movement.getAggregateValueList():\n
     if item not in item_list:\n
       item_list.append(item)\n
 for item in item_list:\n
-  item.expandAmortisation()\n
+  #We need to expand after updating catalog\n
+  item.activate(activity=\'SQLQueue\',after_tag=movement_uid_list).expandAmortisation()\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +90,15 @@ for item in item_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/ImmobilisationDelivery_expandAggregatedItems</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -114,9 +129,11 @@ for item in item_list:\n
                         <value>
                           <tuple>
                             <string>item_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>movement_list</string>
+                            <string>movement_uid_list</string>
+                            <string>_getiter_</string>
                             <string>movement</string>
                             <string>item</string>
                           </tuple>
