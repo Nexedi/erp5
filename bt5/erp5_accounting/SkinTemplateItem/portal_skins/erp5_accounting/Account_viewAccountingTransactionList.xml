@@ -96,13 +96,14 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_debit</string>
                         <string>listbox_credit</string>
                         <string>listbox_total_price</string>
                         <string>listbox_running_total_price</string>
+                        <string>listbox_date</string>
                       </list>
                     </value>
                 </item>

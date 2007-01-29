@@ -442,6 +442,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>date</string>
+                          <string>date</string>
+                        </tuple>
+                        <tuple>
                           <string>debit</string>
                           <string>debit</string>
                         </tuple>
@@ -599,7 +603,12 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>sorting disabled</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

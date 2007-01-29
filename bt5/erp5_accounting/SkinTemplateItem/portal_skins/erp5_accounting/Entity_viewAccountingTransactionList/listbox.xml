@@ -380,11 +380,11 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>Movement_getDebitPrice</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>Movement_getCreditPrice</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -450,6 +450,26 @@
                         <tuple>
                           <string>grouping_reference</string>
                           <string>Grouping</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>date</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>total_price</string>
+                        </tuple>
+                        <tuple>
+                          <string>running_total_price</string>
+                          <string>running_total_price</string>
                         </tuple>
                       </list>
                     </value>
@@ -597,7 +617,12 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>sorting disabled</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -605,11 +630,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Movement_getDebitPrice</string>
+                          <string>debit</string>
                           <string>Entity_statDebit</string>
                         </tuple>
                         <tuple>
-                          <string>Movement_getCreditPrice</string>
+                          <string>credit</string>
                           <string>Entity_statCredit</string>
                         </tuple>
                         <tuple>

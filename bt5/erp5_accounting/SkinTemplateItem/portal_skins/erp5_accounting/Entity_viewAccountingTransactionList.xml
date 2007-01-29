@@ -100,6 +100,11 @@
                     <value>
                       <list>
                         <string>listbox_grouping_reference</string>
+                        <string>listbox_credit</string>
+                        <string>listbox_date</string>
+                        <string>listbox_debit</string>
+                        <string>listbox_running_total_price</string>
+                        <string>listbox_total_price</string>
                       </list>
                     </value>
                 </item>
