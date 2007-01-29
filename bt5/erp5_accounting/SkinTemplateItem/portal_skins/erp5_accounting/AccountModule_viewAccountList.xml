@@ -83,6 +83,10 @@
                     <value>
                       <list>
                         <string>listbox_preferred_gap_id</string>
+                        <string>listbox_debit</string>
+                        <string>listbox_credit</string>
+                        <string>listbox_credit_balance</string>
+                        <string>listbox_debit_balance</string>
                       </list>
                     </value>
                 </item>

@@ -82,6 +82,11 @@ if not id:\n
 \n
 kwd[\'select_expression\'] = "\'%s\' AS accounting_transaction_line_currency" % id\n
 \n
+# precision for editable fields\n
+params = context.ERP5Accounting_getParams(selection)\n
+if params.get(\'precision\', None) is not None:\n
+  context.REQUEST.set(\'precision\', params[\'precision\'])\n
+\n
 # XXX workaround for #458, we rewrite sort_on id to sort_on using\n
 # strict_membership.\n
 new_sort_on = []\n
@@ -112,7 +117,7 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sort_on=None, **kwd</string> </value>
+            <value> <string>sort_on=None, selection=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,13 +137,14 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>sort_on</string>
+                            <string>selection</string>
                             <string>kwd</string>
                             <string>_getitem_</string>
                             <string>currency</string>
@@ -146,12 +152,13 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
                             <string>id</string>
                             <string>KeyError</string>
                             <string>_write_</string>
-                            <string>new_sort_on</string>
+                            <string>context</string>
+                            <string>params</string>
                             <string>None</string>
+                            <string>new_sort_on</string>
                             <string>_getiter_</string>
                             <string>sort_on_item</string>
                             <string>_apply_</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -164,6 +171,7 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>

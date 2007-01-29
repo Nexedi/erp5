@@ -354,12 +354,12 @@
                           <string>Count</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceCredit</string>
-                          <string>Credit</string>
+                          <string>debit</string>
+                          <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceDebit</string>
-                          <string>Debit</string>
+                          <string>credit</string>
+                          <string>Credit</string>
                         </tuple>
                         <tuple>
                           <string>accounting_transaction_line_currency</string>
@@ -423,19 +423,19 @@
                           <string>Count</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceDebit</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceCredit</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getDebitBalance</string>
+                          <string>debit_balance</string>
                           <string>Debit Balance</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getCreditBalance</string>
+                          <string>credit_balance</string>
                           <string>Credit Balance</string>
                         </tuple>
                       </list>
@@ -495,7 +495,24 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>debit</string>
+                          <string>debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit_balance</string>
+                          <string>debit_balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit_balance</string>
+                          <string>credit_balance</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -647,11 +664,11 @@
                           <string>AccountModule_statAccountingTransactionCount</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceDebit</string>
+                          <string>debit</string>
                           <string>AccountModule_statTotalSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceCredit</string>
+                          <string>credit</string>
                           <string>AccountModule_statTotalSourceCredit</string>
                         </tuple>
                         <tuple>
@@ -688,11 +705,11 @@
                           <string>AccountModule_getTransactionListUrl</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceCredit</string>
+                          <string>debit</string>
                           <string>AccountModule_getTransactionListUrl</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getTotalSourceDebit</string>
+                          <string>credit</string>
                           <string>AccountModule_getTransactionListUrl</string>
                         </tuple>
                       </list>
