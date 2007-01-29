@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Vincent Pelletier <vincent@nexedi.com>\n
+                   Christophe Dumez  <christophe@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+\n
+XXX: each case must be handled separatelly in this precise representation :\n
+ - both top fields must be in the same div, so they must be identified\n
+   strictly by their name.\n
+ - the middle field is rendered like the two top ones, but outside of the\n
+   top block.\n
+ - the bottom block is rendered in another way (without its group name) so it\n
+   must be rendered separatelly.\n
+This leads to minor code duplication, but it\'s still code duplication.\n
+\n
+Breaks strict compatibility:\n
+  * Groups must be named one of "left", "right", "center", "bottom" otherwise they will not\n
+      be rendered.\n
+  * Group order doesn\'t matter. Case is sensitive.\n
+  * Groups names becomes "left_group", "right_group", "left1_group", "right1_group",\n
+      "bottom_group" for quad_form_view macro.\n
+\n
+It is possible to specify a group id and a group title by naming a group following the\n
+  "group id (Group Title)" pattern. In this case the group id will be used as fieldset css\n
+  class and as tag id. The group title will be used as a legend for the fieldset. If no group\n
+  title is found, we use group id as title.\n
+-->\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="master">\n
+  <tal:block\n
+    tal:define="field_errors python: request.get(\'field_errors\', {});\n
+                dummy        python: request.set(\'here\', here);\n
+                group_list   python: form.Form_getGroupTitleAndId();\n
+                gid_list     python: \' \'.join([x[\'gid\'] for x in group_list if x!=\'hidden\']);\n
+                field_render nocall: here/field_render/macros/field_render">\n
+\n
+    <tal:block tal:condition="preferred_html_style_developper_mode">\n
+      <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
+    </tal:block>\n
+\n
+    <tal:block tal:repeat="group group_list">\n
+      <tal:block tal:define="gid     group/gid;">\n
+        <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
+                  tal:attributes="class gid;\n
+                                  id    python: \'fieldset_%s\' % (gid.replace(\' \', \'_\'), );"\n
+                  tal:define="gtitle group/gtitle"\n
+                  class="border">\n
+          <legend tal:condition="python: gtitle != \'bottom\' and gtitle != \'left\' and gtitle != \'right\' and gtitle != \'center\'" tal:content="group/gtitle" class="group_title"/>\n
+          <div class="infield">\n
+            <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
+              <tal:block metal:use-macro="field_render"/>\n
+            </tal:block>\n
+          </div>\n
+        </fieldset>\n
+       <p tal:condition="python: gid.find(\'right\') >= 0 or (gid.find(\'left\') >= 0 and \'right\' not in gid_list)" class="clear"/>\n
+       <div class="div_gtt" align="middle">\n
+         <a class="link_white" tal:attributes="href python: \'%s%s%s%s\' % (context.REQUEST.URL0,\'?\', context.REQUEST.QUERY_STRING,\'#TOP\')">////////// Top of page \\\\\\\\\\\\\\\\\\\\</a>\n
+       </div>\n
+      </tal:block>\n
+    </tal:block>\n
+    <p class="clear"></p>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_render</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

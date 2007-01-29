@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>OFS.Image</string>
+          <string>Image</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>editcut.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dE
+AKkAzQDefGi8WAAAAAlwSFlzAAALEQAACxEBf2RfkQAAAAd0SU1FB9ALDwogL8KbC+UAAACpSURB
+VHic1ZS5EcQgDEWFN9lyqIuWlFAbkbr4mzAMli2vOBL/CAQ8XQDRmwUiwvf4oI6XFDpob4Na9wR1
+Yh6GozuHJhQAiQgx8+WMlf6/sgAARATMbO59gk9DNRxqvgS1HCCE0B+chpoOdkGbcs77oVUAgBjj
+NuilDESElNKe2tbmNXgpZek2kBq3PaPwkQfihs88aRf8NuWnSLxwbRxpjA8++dHrpr9QP53X9nr0
+F8+dAAAAAElFTkSuQmCC</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>22</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>300</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>22</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
