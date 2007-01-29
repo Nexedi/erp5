@@ -73,9 +73,11 @@
 else:\n
   site_uid = context.getSiteUid()\n
 operation_list = []\n
+exception_portal_type_list = [\'Paper Money Deposit\']\n
 if site_uid is not None:\n
   not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\')\n
-  portal_type_list = [x for x in context.getPortalDeliveryTypeList()]\n
+  portal_type_list = [x for x in context.getPortalDeliveryTypeList()\n
+                      if x not in exception_portal_type_list]\n
   document_list = context.Baobab_getRemainingOperationList(\n
                         site_uid=site_uid,\n
                         simulation_state=not_closed_state_list,\n
@@ -156,6 +158,7 @@ return operation_list\n
                             <string>site_uid</string>
                             <string>context</string>
                             <string>operation_list</string>
+                            <string>exception_portal_type_list</string>
                             <string>not_closed_state_list</string>
                             <string>append</string>
                             <string>$append0</string>

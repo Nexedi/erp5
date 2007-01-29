@@ -152,6 +152,8 @@ vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=v
 \n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n
+  if vault_inventory.total_quantity in (0.0,0,None):\n
+    continue\n
   #context.log(\'vault_inventory total_quantity\',vault_inventory.total_quantity)\n
   #context.log(\'vault_inventory total_price\',vault_inventory.total_price)\n
   resource = (vault_inventory.resource_uid, vault_inventory.variation_text or \'\')\n
