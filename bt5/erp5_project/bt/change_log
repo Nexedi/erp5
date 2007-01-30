@@ -1,3 +1,8 @@
+2007-01-30 rafael
+* Added back default task line support
+* Added more fields in BaseTrade Project
+* Started to use more proxy fields in Task and Task Report
+
 2006-10-30 rafael
 * Improved Navegability betwen Project and other Objects.
 

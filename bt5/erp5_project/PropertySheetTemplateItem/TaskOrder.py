@@ -37,11 +37,14 @@ class TaskOrder:
         'type'                : 'content',
         'portal_type'         : ( 'Task Line', ),
         'acquired_property_id': ( 'quantity', 'quantity_unit', 'price',
-                                  'quantity_unit_title',
-                                  'quantity_unit_logical_path'),
+                                  'quantity_unit_title', 
+				  'quantity_unit_logical_path', 
+				  'resource', 'resource_value', 
+				  'resource_title',
+				  'requirement', 'requirement_value_list',
+				  'requirement_value',
+				  'requirement_uid_list', 
+				  'requirement_logical_path' ),
         'mode'                : 'w',
       },
-
     )
-  
-

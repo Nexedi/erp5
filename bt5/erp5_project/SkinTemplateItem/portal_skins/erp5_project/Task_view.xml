@@ -85,6 +85,7 @@
                     <value>
                       <list>
                         <string>my_comment</string>
+                        <string>my_task_line_requirement_logical_path_list</string>
                       </list>
                     </value>
                 </item>
@@ -94,6 +95,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_predecessor_title_list</string>
+                        <string>my_task_line_resource_title</string>
                         <string>my_source_title</string>
                         <string>my_source_project_title</string>
                         <string>my_trade_condition_title</string>
@@ -107,9 +109,12 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_destination_decision_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_task_line_quantity</string>
+                        <string>my_task_line_quantity_unit</string>
+                        <string>my_task_line_price</string>
                         <string>total_price</string>
                       </list>
                     </value>
