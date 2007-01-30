@@ -315,7 +315,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       pl = sequence.get('packing_list_list', []) [-1]
       pl_in_list = 1
     pl_id = pl.getId()
-    LOG('deleting packing list', 0, pl_id)
     self.getPackingListModule().manage_delObjects([pl_id])
     if pl_in_list:
       sequence.set('packing_list_list', sequence.get('packing_list_list')[:-1])
@@ -867,15 +866,12 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       
       
   def _testImmobilisationPeriods(self,c_period_list,e_period_list):
-    LOG('c_period_list :', 0, c_period_list)
     e_period_cursor = 0
     for c_period in c_period_list:
-      LOG('c_period :', 0, c_period)
       if e_period_cursor >= len(e_period_list):
         LOG('More calculated periods than expected !', 0, '')
         self.assertEquals(len(c_period_list), len(e_period_list))
       e_period = e_period_list[e_period_cursor]
-      LOG('e_period :', 0, e_period)
       e_period_cursor += 1
       for key in e_period.keys():
         e_value = e_period[key]
@@ -916,7 +912,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
            ]
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
-      LOG('testing amortisation price at date', 0, date)
       self.assertEquals(round(c_price,2), e_price)
       
     
@@ -938,7 +933,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
            ]
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
-      LOG('testing amortisation price at date', 0, date)
       self.assertEquals(round(c_price,2), e_price)
       
     
@@ -960,7 +954,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
            ]
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
-      LOG('testing amortisation price at date', 0, date)
       self.assertEquals(round(c_price,2), e_price)
       
     
@@ -983,7 +976,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
            ]
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
-      LOG('testing amortisation price at date', 0, date)
       self.assertEquals(round(c_price,2), e_price)
       
     
@@ -1005,7 +997,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
            ]
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
-      LOG('testing amortisation price at date', 0, date)
       self.assertEquals(round(c_price,2), e_price)
       
   
@@ -1753,13 +1744,13 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
   
   def _testSimulationBuild(self, c_simulation_movement_list, e_simulation_movement_list):
     for c_movement in c_simulation_movement_list:
-      LOG('c_movement %s :' % c_movement, 0, 
-       'date=%s, source=%s, source_section=%s, destination=%s, destination_section=%s, quantity=%s, resource=%s, profit_quantity=%s' % (
-          (c_movement.getStopDate(), c_movement.getSource(), c_movement.getSourceSection(),
-           c_movement.getDestination(), c_movement.getDestinationSection(), c_movement.getQuantity(), 
-           c_movement.getResource(), c_movement.getProfitQuantity())
-         )
-      )
+#      LOG('c_movement %s :' % c_movement, 0, 
+#       'date=%s, source=%s, source_section=%s, destination=%s, destination_section=%s, quantity=%s, resource=%s, profit_quantity=%s' % (
+#          (c_movement.getStopDate(), c_movement.getSource(), c_movement.getSourceSection(),
+#           c_movement.getDestination(), c_movement.getDestinationSection(), c_movement.getQuantity(), 
+#           c_movement.getResource(), c_movement.getProfitQuantity())
+#         )
+#      )
       e_found_movement = None
       e_cursor = 0
       while e_cursor < len(e_simulation_movement_list) and e_found_movement is None:
@@ -2581,13 +2572,13 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
     
   def _testAccountingBuild(self, c_transaction_list, e_transaction_list):
     for c_transaction in c_transaction_list:
-      LOG('c_transaction %s :' % c_transaction, 0, 
-          'date=%s, source_section=%s, destination_section=%s, resource=%s, state=%s, causality_list=%s' % (
-          (c_transaction.getStopDate(), c_transaction.getSourceSection(),
-           c_transaction.getDestinationSection(), c_transaction.getResource(), c_transaction.getCausalityState(),
-           c_transaction.getCausalityList())
-         )
-      )
+#      LOG('c_transaction %s :' % c_transaction, 0, 
+#          'date=%s, source_section=%s, destination_section=%s, resource=%s, state=%s, causality_list=%s' % (
+#          (c_transaction.getStopDate(), c_transaction.getSourceSection(),
+#           c_transaction.getDestinationSection(), c_transaction.getResource(), c_transaction.getCausalityState(),
+#           c_transaction.getCausalityList())
+#         )
+#      )
       e_found_transaction = None
       e_cursor = 0
       while e_cursor < len(e_transaction_list) and e_found_transaction is None:
@@ -2629,11 +2620,11 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       e_line_list = e_transaction['line_list']
       c_line_list = c_transaction.contentValues()
       for c_line in c_line_list:
-        LOG('c_line %s :' % c_line, 0, 
-          'source=%s,destination=%s,quantity=%s' % (
-          (c_line.getSource(),c_line.getDestination(),c_line.getQuantity())
-         )
-      )
+#        LOG('c_line %s :' % c_line, 0, 
+#          'source=%s,destination=%s,quantity=%s' % (
+#          (c_line.getSource(),c_line.getDestination(),c_line.getQuantity())
+#         )
+#      )
         e_found_line = None
         e_line_cursor = 0
         while e_line_cursor < len(e_line_list) and e_found_line is None:
@@ -2714,7 +2705,7 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     sequence_list = SequenceList()
     sequence_string = 'SetTest02SequenceData \
-                       DeleteAllPackingLists \
+                       DeleteAllPackingLists Tic \
                        CreatePackingList \
                        AggregateItems \
                        CreatePackingList \
@@ -2745,7 +2736,7 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     sequence_list = SequenceList()
-    sequence_string = 'DeleteAllPackingLists \
+    sequence_string = 'DeleteAllPackingLists Tic \
                        CreateComplexPackingListStructure \
                        Tic \
                        UseSecondPackingList \
@@ -2810,7 +2801,7 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     sequence_list = SequenceList()
     sequence_string = 'SetTest04SequenceData \
-                       DeleteAllPackingLists \
+                       DeleteAllPackingLists Tic \
                        CreatePackingListsForContinuousAmortisationPeriodList \
                        Tic \
                        UseFirstPackingList \
