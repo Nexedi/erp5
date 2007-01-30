@@ -82,6 +82,24 @@
                         <string>my_source_project_title</string>
                         <string>my_destination_project_title</string>
                         <string>my_requirement_logical_path_list</string>
+                        <string>my_comment</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_predecessor_title_list</string>
+                        <string>my_source_title</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_title</string>
+                        <string>my_trade_condition_title</string>
+                        <string>my_resource_title</string>
+                        <string>my_source_administration_title</string>
+                        <string>my_source_section_title</string>
+                        <string>simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_description</string>
+                        <string>my_quantity</string>
+                        <string>my_quantity_unit</string>
                       </list>
                     </value>
                 </item>
