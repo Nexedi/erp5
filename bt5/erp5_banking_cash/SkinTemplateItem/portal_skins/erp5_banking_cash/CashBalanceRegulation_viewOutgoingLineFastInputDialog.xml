@@ -86,7 +86,7 @@ if currency != \'XOF\':\n
   emissionLetter = [\'not_defined\',]\n
   variation = [\'not_defined\',]\n
 else:\n
-  cashStatus = [\'valid\', \'cancelled\', \'to_sort\', \'new_emitted\']\n
+  cashStatus = [\'valid\', \'cancelled\', \'to_sort\', \'new_emitted\',\'error\']\n
   emissionLetter = None\n
   variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n

@@ -87,7 +87,7 @@ if source_section is None :\n
 if \'serre\' in context.getSource():\n
   cash_status = [\'retired\',]\n
 else:\n
-  cash_status = [\'cancelled\',\'mutilated\', \'maculated\']\n
+  cash_status = [\'cancelled\',\'mutilated\', \'maculated\',\'error\']\n
  \n
 #emission_letter = context.Baobab_getUserEmissionLetterList() \n
 #emission_letter =  list(context.getSourceSectionValue().getCodification()[0])\n
