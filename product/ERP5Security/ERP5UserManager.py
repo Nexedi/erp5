@@ -30,7 +30,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from ZODB.POSException import ConflictError
 import sys
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 try :
   from AccessControl.AuthEncoding import pw_validate
@@ -165,10 +165,9 @@ class ERP5UserManager(BasePlugin):
                                path=self.getPhysicalPath())
 
     def getUserByLogin(self, login):
-        """
-        Search the Catalog for login and return a list of person objects
-        login can be a string or a list of strings
-        """
+        # Search the Catalog for login and return a list of person objects
+        # login can be a string or a list of strings
+        # (no docstring to prevent publishing)
         if not login:
           return []
         # because we aren't logged in, we have to create our own
@@ -184,7 +183,7 @@ class ERP5UserManager(BasePlugin):
           except ConflictError:
             raise
           except:
-            LOG('ERP5Security', 0, 'getUserByLogin failed', error=sys.exc_info())
+            LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
             # Here we must raise an exception to prevent calers from caching
             # a result of a degraded situation.
             # The kind of exception does not matter as long as it's catched by
