@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change.object\n
+            <value> <string>order = state_change[\'object\']\n
 \n
 previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
 expand_tag = order.getPath() + \'_expand\'\n
@@ -126,8 +126,9 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(expl
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>order</string>
+                            <string>_getattr_</string>
                             <string>previous_tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>

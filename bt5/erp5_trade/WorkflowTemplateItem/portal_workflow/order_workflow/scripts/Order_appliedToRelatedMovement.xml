@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change.object\n
+            <value> <string>order = state_change[\'object\']\n
 \n
 order.applyToOrderRelatedMovement(method_id=\'expand\')\n
 </string> </value>
@@ -114,8 +114,9 @@ order.applyToOrderRelatedMovement(method_id=\'expand\')\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>order</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

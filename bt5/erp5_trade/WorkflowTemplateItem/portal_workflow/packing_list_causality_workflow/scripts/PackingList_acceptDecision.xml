@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = state_change.object\n
+            <value> <string>packing_list = state_change[\'object\']\n
 \n
 # Create Delivery Applied Rule (if required)\n
 packing_list.updateAppliedRule()\n
@@ -125,8 +125,9 @@ packing_list.activate().updateCausalityState()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>None</string>
                           </tuple>
                         </value>

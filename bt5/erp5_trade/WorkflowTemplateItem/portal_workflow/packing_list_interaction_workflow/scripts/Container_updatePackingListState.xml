@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = state_change.object\n
+            <value> <string>packing_list_content = state_change[\'object\']\n
 \n
 #packing_list_content.immediateReindexObject()\n
 #packing_list_content.getExplanationValue().edit()\n
@@ -116,8 +116,9 @@ packing_list_content.getExplanationValue().activate(after_path=packing_list_cont
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list_content</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

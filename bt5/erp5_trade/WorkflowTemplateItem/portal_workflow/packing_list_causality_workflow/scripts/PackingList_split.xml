@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = state_change.object\n
+            <value> <string>packing_list = state_change[\'object\']\n
 \n
 stop_date = state_change.kwargs[\'stop_date\']\n
 start_date = state_change.kwargs[\'start_date\']\n
@@ -148,9 +148,9 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
-                            <string>packing_list</string>
                             <string>_getitem_</string>
+                            <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>stop_date</string>
                             <string>start_date</string>
                             <string>tag</string>

@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>supply_line = state_change.object\n
+            <value> <string>supply_line = state_change[\'object\']\n
 price_parameter = \'base_price\'\n
 base_id = \'path\'\n
 supply_line.updateQuantityPredicate(price_parameter)\n
@@ -116,10 +116,11 @@ supply_line.updateCellRange(base_id=base_id)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>supply_line</string>
                             <string>price_parameter</string>
                             <string>base_id</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

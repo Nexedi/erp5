@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = state_change.object\n
+            <value> <string>packing_list_content = state_change[\'object\']\n
 if packing_list_content.getSimulationState()!=\'draft\':\n
   explanation_value = packing_list_content.getExplanationValue()\n
   explanation_value.edit()\n
@@ -116,8 +116,9 @@ if packing_list_content.getSimulationState()!=\'draft\':\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list_content</string>
+                            <string>_getattr_</string>
                             <string>explanation_value</string>
                           </tuple>
                         </value>

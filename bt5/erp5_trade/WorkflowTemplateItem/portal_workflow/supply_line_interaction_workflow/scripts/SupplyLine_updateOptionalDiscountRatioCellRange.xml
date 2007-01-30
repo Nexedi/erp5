@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>supply_line = state_change.object\n
+            <value> <string>supply_line = state_change[\'object\']\n
 base_id = \'path_optional_discount_ratio\'\n
 #supply_line.updateQuantityPredicate(base_id, option_variation=1)\n
 supply_line.updateCellRange(base_id=base_id, option_variation=1)\n
@@ -115,9 +115,10 @@ supply_line.updateCellRange(base_id=base_id, option_variation=1)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>supply_line</string>
                             <string>base_id</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
