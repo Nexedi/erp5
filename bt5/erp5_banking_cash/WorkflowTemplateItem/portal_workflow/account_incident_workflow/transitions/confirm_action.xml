@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>checkConsistency</string> </value>
+            <value> <string>checkConsistencyAndValidatePositionAccounting</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

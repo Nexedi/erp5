@@ -335,7 +335,7 @@
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
-                          <string encoding="base64">UsOpZsOpcmVuY2U=</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>

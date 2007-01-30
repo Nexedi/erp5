@@ -68,24 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change[\'object\']\n
-bank_account = transaction.getDestinationPaymentValue()\n
-price = transaction.getSourceTotalAssetPrice()\n
-line = transaction.get(\'movement\')\n
-\n
-in_list = transaction.objectValues(portal_type=\'Incoming Account Incident Line\')\n
-out_list = transaction.objectValues(portal_type=\'Outgoing Account Incident Line\')\n
-\n
-if (len(in_list)!= 0):  \n
-  if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
-    # This is a single currency operation, so it is not necessary to convert the price.\n
-    line.setSourceCredit(price)\n
-\n
-elif (len(out_list) != 0) :\n
-  line = transaction.get(\'movement\')\n
-  if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
-  # This is a single currency operation, so it is not necessary to convert the price.\n
-    line.setSourceDebit(price)\n
+            <value> <string>return None\n
 </string> </value>
         </item>
         <item>
@@ -108,15 +91,7 @@ elif (len(out_list) != 0) :\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -136,22 +111,14 @@ elif (len(out_list) != 0) :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getattr_</string>
-                            <string>bank_account</string>
-                            <string>price</string>
-                            <string>line</string>
-                            <string>in_list</string>
-                            <string>out_list</string>
-                            <string>len</string>
+                            <string>args</string>
+                            <string>kw</string>
                             <string>None</string>
                           </tuple>
                         </value>
@@ -169,7 +136,7 @@ elif (len(out_list) != 0) :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateBankingOperation</string> </value>
+            <value> <string>OutgoingCashIncidentLine_getBaobabSource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

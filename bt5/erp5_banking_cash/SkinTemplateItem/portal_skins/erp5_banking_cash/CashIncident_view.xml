@@ -108,6 +108,7 @@
                         <string>my_source_decision_title</string>
                         <string>my_responsible_title</string>
                         <string>my_source_total_asset_price</string>
+                        <string>my_resource_title</string>
                       </list>
                     </value>
                 </item>

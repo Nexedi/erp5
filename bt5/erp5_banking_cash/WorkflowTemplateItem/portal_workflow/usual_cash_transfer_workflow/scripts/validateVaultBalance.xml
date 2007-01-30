@@ -88,6 +88,11 @@ if not context.Baobab_checkCounterOpened(site):\n
   msg = Message(domain = "ui", message="Counter is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
+# use of the constraint : Test source and destination\n
+vliste = transaction.checkConsistency()\n
+transaction.log(\'vliste\', vliste)\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getMessage(),)\n
 \n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
 \n
@@ -166,6 +171,9 @@ elif resource <> 0 :\n
                             <string>msg</string>
                             <string>site</string>
                             <string>context</string>
+                            <string>vliste</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
