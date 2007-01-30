@@ -512,9 +512,17 @@ class TestERP5BankingMixin:
         caisse_courante.newContent(id='billets_mutiles', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
         # create counter for surface
         for s in ['banque_interne', 'gros_versement', 'gros_paiement']:
-          s = surface.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
+          vault_codification = c.getCodification()
+          if s == 'banque_interne':
+            vault_codification += 'BI'
+          elif s == 'gros_versement':
+            vault_codification += 'GV'
+          elif s == 'gros_paiement':
+            vault_codification += 'GP'
+          s = surface.newContent(id='%s' %(s,), portal_type='Category', codification=vault_codification,  vault_type='site/surface/%s' %(s,))
           for ss in ['guichet_1', 'guichet_2', 'guichet_3']:
-            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+            final_vault_codification = vault_codification + ss[-1]
+            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification=final_vault_codification,  vault_type='site/surface/%s/guichet' %(s.getId(),))
             for sss in ['encaisse_des_billets_et_monnaies',]:
               sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
               for ssss in ['entrante', 'sortante']:
