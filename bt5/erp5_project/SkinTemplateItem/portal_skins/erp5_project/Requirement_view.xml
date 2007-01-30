@@ -66,6 +66,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -107,6 +108,12 @@
                         <string>my_short_title</string>
                         <string>my_version</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
