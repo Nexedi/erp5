@@ -66,11 +66,11 @@ try:
                                         prefix=prefix + ( tcid, ) ) )
 
     # Override this method to produce ERP5-style reports.
-    security.declarePublic('postResults')
-    def postResults(self, REQUEST):
-        """ Record the results of a test run.
-        """
-        return self.TestTool_reportResult(REQUEST)
+    # security.declarePublic('postResults')
+    # def postResults(self, REQUEST):
+    #     """ Record the results of a test run.
+    #     """
+    #     return self.TestTool_reportResult(REQUEST)
 
 except ImportError:
   class TestTool (BaseTool):
