@@ -962,3 +962,20 @@ class Movement(XMLObject, Amount):
 #       For accounting, returns the quantity converted in a default unit
 #     """
 #     return self.getStandardInventoriatedQuantity()
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'asMovementList')
+  def asMovementList(self):
+    """
+    Placeholder method called when indexing a movement.
+
+    It can be overloaded to generate multiple movements 
+    from a single one.
+    It is used for cataloging a movement multiple time in 
+    the movement/stock tables.
+
+    Ex: a movement have multiple destinations.
+    asMovementList returns a list a movement context with different 
+    single destination.
+    """
+    return (self, )
