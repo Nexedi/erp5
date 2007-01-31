@@ -58,7 +58,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.DivergenceTester
-                     )
+  )
 
   
   def explain(self, simulation_movement):
@@ -68,6 +68,13 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
     """
     divergence_message_list = []
     tested_property = self.getTestedPropertyList()
+
+    # Get the solver script list
+    solver_script_list = self.getSolverScriptList()
+    if solver_script_list is None:
+      solver_script_list = []
+    solver_script_list=self._splitStringList(solver_script_list)
+
     for tested_property_id, tested_property_title in \
                                   self._splitStringList(tested_property):
       delivery_mvt = simulation_movement.getDeliveryValue()
@@ -103,19 +110,16 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
         delivery_mvt_property = ' , '.join(delivery_mvt_category_title_list)
         simulation_mvt_property = ' , '.join(simulation_category_title_list)
         
-        solver_script_list = self.getSolverScriptList()
-        if solver_script_list is None:
-          solver_script_list = []
-        
-        message = ObjectMessage(object_relative_url= delivery_mvt.getRelativeUrl(),   
+        message = ObjectMessage(
+                     object_relative_url= delivery_mvt.getRelativeUrl(),   
                      simulation_movement = simulation_movement,
                      decision_value = delivery_mvt_property ,
                      prevision_value = simulation_mvt_property,
                      tested_property=tested_property_id, 
                      message=tested_property_title,
-                     solver_script_list=self._splitStringList(solver_script_list)
-                     )
-        
+                     solver_script_list=solver_script_list
+        )
+
         divergence_message_list.append(message)  
         
     return divergence_message_list
