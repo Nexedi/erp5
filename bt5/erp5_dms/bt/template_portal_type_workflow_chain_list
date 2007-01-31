@@ -1,6 +1,5 @@
 Drawing | dms_file_interaction_workflow
 Drawing | document_publication_workflow
-Drawing | document_validation_workflow
 Drawing | edit_workflow
 Drawing | local_permission_interaction_workflow
 Drawing | ooo_interaction_workflow
@@ -21,12 +20,10 @@ Image | edit_workflow
 Image | local_permission_interaction_workflow
 PDF | dms_file_interaction_workflow
 PDF | document_publication_workflow
-PDF | document_validation_workflow
 PDF | edit_workflow
 PDF | local_permission_interaction_workflow
 Presentation | dms_file_interaction_workflow
 Presentation | document_publication_workflow
-Presentation | document_validation_workflow
 Presentation | edit_workflow
 Presentation | local_permission_interaction_workflow
 Presentation | ooo_interaction_workflow
@@ -34,13 +31,11 @@ Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Spreadsheet | dms_file_interaction_workflow
 Spreadsheet | document_publication_workflow
-Spreadsheet | document_validation_workflow
 Spreadsheet | edit_workflow
 Spreadsheet | local_permission_interaction_workflow
 Spreadsheet | ooo_interaction_workflow
 Text | dms_file_interaction_workflow
 Text | document_publication_workflow
-Text | document_validation_workflow
 Text | edit_workflow
 Text | external_processing_workflow
 Text | local_permission_interaction_workflow
