@@ -85,12 +85,16 @@ trail = 5\n
 # maximum lines to show\n
 maxlines = 5\n
 \n
-txt = brain.getObject().SearchableText()\n
+try:\n
+  txt = brain.getObject().getTextContent() or \'\'\n
+except AttributeError:\n
+  txt = \'\'\n
+\n
 search_string = selection.params.get(\'SearchableText\')\n
 if search_string is None:\n
   # if the searched text is empty (e.g. because the listbox uses its own method)\n
   # we return something\n
-  return txt[min(len(txt) - 300, 200) : 500] # a somewhat arbitrary choice to trim searchable attrs\n
+  return txt[:300]\n
 \n
 search_argument_list = context.parseSearchString(search_string)\n
 search_words = search_argument_list.get(\'SearchableText\')\n
@@ -152,14 +156,15 @@ return \' \'.join(map(str, res))\n
                             <string>maxlines</string>
                             <string>_getattr_</string>
                             <string>txt</string>
+                            <string>AttributeError</string>
                             <string>search_string</string>
                             <string>None</string>
                             <string>_getitem_</string>
-                            <string>min</string>
-                            <string>len</string>
                             <string>context</string>
                             <string>search_argument_list</string>
                             <string>search_words</string>
+                            <string>min</string>
+                            <string>len</string>
                             <string>res</string>
                             <string>map</string>
                             <string>str</string>
