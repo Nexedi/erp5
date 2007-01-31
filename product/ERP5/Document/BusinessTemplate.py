@@ -3689,9 +3689,6 @@ class BusinessTemplate(XMLObject):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
-
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
