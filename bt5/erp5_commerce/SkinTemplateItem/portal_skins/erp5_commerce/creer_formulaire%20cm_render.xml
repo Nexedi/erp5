@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="base_url context/absolute_url;\n
+                       TPE python: options.get(\'TPE\', \'my_merchant_key_location\');\n
+                       montant python: options.get(\'total\', here.SaleOrder_getShoppingCartTotalPrice(include_currency=True));\n
+                       reference python: options.get(\'reference\', here.SaleOrder_getShoppingCartId());                      \n
+                       url_retour  python: options.get(\'shop_url\', \'http://www.my-shop.com\');\n
+                       url_retour_ok python: \'%s/%s?payment_successful=1&portal_status_message=Payment accepted.\' \n
+                                              %(base_url, \n
+                                                options.get(\'url_return_ok\', \'Base_externalPaymentHandler\'));\n
+                       url_retour_err python: \'%s/%s?payment_successful=0&portal_status_message=Payment rejected.\' \n
+                                              %(base_url, \n
+                                                options.get(\'url_return_err\', \'Base_externalPaymentHandler\'));\n
+                       langue python: options.get(\'language\', \'en\');\n
+                       code_societe python: options.get(\'code_societe\', \'my_shop_code\');\n
+                       texte_bouton python: options.get(\'text_button\', \'Secure Online Payment\');\n
+                       texte_libre python: options.get(\'text_free\', \'\');">\n
+\n
+  <span tal:replace="structure python: here.payment.CreerFormulaireCM(TPE = TPE,\n
+                                                              montant = montant,\n
+                                                              reference = reference,\n
+                                                              texte_libre=texte_libre,\n
+                                                              url_retour = url_retour,\n
+                                                              url_retour_ok =url_retour_ok,\n
+                                                              url_retour_err = url_retour_err,\n
+                                                              langue = langue,\n
+                                                              texte_bouton= texte_bouton,\n
+                                                              code_societe = code_societe)"/>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>creer_formulaire cm_render</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CyberMut button for external payment</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

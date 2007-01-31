@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Vincent Pelletier <vincent@nexedi.com>\n
+                   Christophe Dumez <christophe@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+--></tal:block>\n
+\n
+<tal:block metal:define-macro="field_render">\n
+  <tal:block tal:condition="python: field.meta_type != \'HiddenStringField\'"\n
+             tal:define="field_id     field/id;\n
+                         dummy        python: request.set(\'editable_mode\',1);\n
+                         value        python: request.get(field_id, None);\n
+                         field_errors python: request.get(\'field_errors\', {});\n
+                         field_has_error  python: field_errors.has_key(field_id);\n
+                         global form_id form_id | python: form.id;\n
+                         field_description python: here.Base_getFieldDescription(form_id=form_id, field=field)">\n
+    <div tal:define="html_render  python: field.render_htmlgrid(value, request)"\n
+         tal:attributes="title field_description;\n
+                         class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
+         i18n:attributes="title" i18n:domain="ui">\n
+      <tal:block tal:repeat="html_tuple html_render">\n
+        <label>\n
+          <tal:block tal:content="structure python: html_tuple[0]"\n
+                    i18n:translate="" i18n:domain="ui"/>\n
+          <tal:block tal:condition="preferred_html_style_developper_mode">\n
+            <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
+          </tal:block>\n
+          <tal:block tal:condition="preferred_html_style_translator_mode">\n
+            <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
+          </tal:block>\n
+        </label>\n
+        <div class="input" tal:content="structure python: html_tuple[1]"/>\n
+        <span tal:condition="python: field_has_error"\n
+              class="error"\n
+              tal:content="python: field_errors[field_id].error_text"\n
+              i18n:translate="" i18n:domain="ui"/>\n
+        <p class="clear" tal:condition="not:is_web_mode"></p>\n
+      </tal:block>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>web_field_render</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
