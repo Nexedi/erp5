@@ -82,8 +82,7 @@ if packing_list.getSimulationState()==\'draft\':\n
     delivery_mode = related_order.getDeliveryMode(),\n
     incoterm = related_order.getIncoterm(),\n
     source_administration_value = related_order.getSourceAdministrationValue(),\n
-    title = related_order.getTitle(),\n
-    destination = related_order.getTitle()\n
+    title = related_order.getTitle()\n
   )\n
 \n
 \n
@@ -96,7 +95,10 @@ destination_decision_person = context.getDestinationDecisionValue(portal_type="P
 if destination_decision_person is None:\n
   destination_decision_person = context.getDestinationValue(portal_type="Person")\n
 if source_person is not None:\n
-  from_email = destination_decision_person.getDefaultEmailText()\n
+  if destination_decision_person is not None:\n
+    from_email = destination_decision_person.getDefaultEmailText()\n
+  else:\n
+    from_email = getattr(context,email_from_address, None)\n
   email = source_person.getDefaultEmailValue()\n
   if email is not None:\n
     msg = """\n
@@ -183,6 +185,8 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                             <string>destination_decision_person</string>
                             <string>None</string>
                             <string>from_email</string>
+                            <string>getattr</string>
+                            <string>email_from_address</string>
                             <string>email</string>
                             <string>msg</string>
                             <string>activity</string>
