@@ -84,7 +84,7 @@ def isSameSet(a, b):\n
   return 1\n
 \n
 # remove previous line\n
-old_line = [x.getObject().getId() for x in context.searchFolder(portal_type=[line_portal_type, container_line_portal_type])]\n
+old_line = [x.getId() for x in context.objectValues(portal_type=[line_portal_type, container_line_portal_type])]\n
 if len(old_line)>0:\n
   for line_id in old_line:\n
     r = context.deleteContent(line_id)\n
@@ -98,11 +98,11 @@ for listbox_line in listbox:\n
     container_dict["reference"] = container.getReference()\n
     container_dict["range_start"] = container.getCashNumberRangeStart()\n
     container_dict["range_stop"] = container.getCashNumberRangeStop()\n
-    container_lines = container.searchFolder(portal_type=\'Container Line\')\n
+    container_lines = container.objectValues(portal_type=\'Container Line\')\n
     if len(container_lines) == 0:\n
       context.log("Delivery_saveContainerFastInputLine", "No container line find for cash container %s" %(cash_container.getRelativeUrl(),))\n
       continue\n
-    container_line = container_lines[0].getObject()\n
+    container_line = container_lines[0]\n
     container_dict["resource"] = container_line.getResourceValue()\n
     container_dict["quantity"] = container_line.getQuantity()\n
     container_dict["variation_category"] = container_line.getVariationCategoryList()\n
@@ -134,6 +134,7 @@ for cash_container in cash_container_item_dict.keys():\n
   container_line.setResourceValue(container_dict[\'resource\'])\n
   container_line.setVariationCategoryList(container_dict[\'variation_category\'])\n
   container_line.updateCellRange(script_id=\'CashDetail_asCellRange\',base_id="movement")\n
+  resource_total_quantity = 0\n
   for key in container_line.getCellKeyList(base_id=\'movement\'):\n
     if isSameSet(key,container_dict[\'variation_category\']):\n
       cell = container_line.newCell(*key)\n
@@ -147,24 +148,23 @@ for cash_container in cash_container_item_dict.keys():\n
 \n
     resource_total_quantity += container_dict[\'quantity\']\n
 \n
-movement_line = context.newContent(id               = "movement"\n
-                                         , portal_type    = line_portal_type\n
-                                         , resource_value = container_dict[\'resource\']\n
-                                         , quantity_unit_value = context.portal_categories.quantity_unit.unit\n
-                                         )\n
-movement_line.setVariationBaseCategoryList(container_dict[\'base_variation_category\'])\n
-movement_line.setVariationCategoryList(container_dict[\'variation_category\'])\n
-movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")\n
-for key in movement_line.getCellKeyList(base_id=\'movement\'):\n
-  if isSameSet(key,container_dict[\'variation_category\']):\n
-    cell = movement_line.newCell(*key)\n
-    cell.setCategoryList(container_dict[\'variation_category\'])\n
-    cell.setQuantity(resource_total_quantity)\n
-    cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
-    cell.setMembershipCriterionBaseCategoryList(container_dict[\'base_variation_category\'])\n
-    cell.setMembershipCriterionCategoryList(container_dict[\'variation_category\'])\n
-    cell.edit(force_update = 1,\n
-                price = movement_line.getResourceValue().getBasePrice())\n
+  movement_line = context.newContent(      portal_type    = line_portal_type,\n
+                                           resource_value = container_dict[\'resource\'],\n
+                                           quantity_unit_value = context.portal_categories.quantity_unit.unit\n
+                                           )\n
+  movement_line.setVariationBaseCategoryList(container_dict[\'base_variation_category\'])\n
+  movement_line.setVariationCategoryList(container_dict[\'variation_category\'])\n
+  movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")\n
+  for key in movement_line.getCellKeyList(base_id=\'movement\'):\n
+    if isSameSet(key,container_dict[\'variation_category\']):\n
+      cell = movement_line.newCell(*key)\n
+      cell.setCategoryList(container_dict[\'variation_category\'])\n
+      cell.setQuantity(resource_total_quantity)\n
+      cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
+      cell.setMembershipCriterionBaseCategoryList(container_dict[\'base_variation_category\'])\n
+      cell.setMembershipCriterionCategoryList(container_dict[\'variation_category\'])\n
+      cell.edit(force_update = 1,\n
+                  price = movement_line.getResourceValue().getBasePrice())\n
 \n
 request  = context.REQUEST\n
 redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n

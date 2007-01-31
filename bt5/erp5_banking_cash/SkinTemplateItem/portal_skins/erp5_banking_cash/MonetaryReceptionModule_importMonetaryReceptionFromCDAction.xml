@@ -95,6 +95,7 @@ def isSameSet(a, b):\n
   if len(a) != len(b) : return 0\n
   return 1\n
 \n
+reference_currency_id = context.Baobab_getPortalReferenceCurrencyID()\n
 \n
 def create_movement(CD_head_dict, CD_line_list):\n
   # Head creation\n
@@ -213,6 +214,9 @@ def split_head(CD_file_line_list):\n
   except:\n
     return {\'error\':True, \'message\':message_dict[\'10\'], \'head_dict\':{}}\n
   head_variation = str(head_resource_variation)\n
+  # Bad hack because in the CD the variation used is the date of building\n
+  if head_variation==\'2005\':\n
+    head_variation=\'2003\'\n
 \n
   try:\n
     column_end_price = head_resource_string.find(\'F\')\n
@@ -234,7 +238,7 @@ def split_head(CD_file_line_list):\n
     context.log(\'i_resource.getTitle\',resource_object.getTitle())\n
     context.log(\'i_resource.getPath\',resource_object.getPath())\n
 \n
-    if      (resource_object.getPriceCurrency() == \'currency_module/XOF\')   \\\n
+    if      (resource_object.getPriceCurrency() == \'currency_module/%s\' % reference_currency_id)   \\\n
            and (resource_object.getBasePrice() == head_resource_price)  \\\n
            and (head_variation in resource_object.getVariationList()) :\n
 \n
@@ -428,14 +432,15 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>kw</string>
                             <string>message_dict</string>
                             <string>isSameSet</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>reference_currency_id</string>
                             <string>create_movement</string>
                             <string>split_head</string>
                             <string>split_lines</string>
                             <string>None</string>
                             <string>request</string>
                             <string>url_redirection</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>CD_file_line_list</string>
                             <string>_getitem_</string>
                             <string>split_head_result_dict</string>

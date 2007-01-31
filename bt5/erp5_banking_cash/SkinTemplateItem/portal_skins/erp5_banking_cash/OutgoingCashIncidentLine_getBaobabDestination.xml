@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#return None\n
-return context.getSource()\n
+            <value> <string>return None\n
 </string> </value>
         </item>
         <item>
@@ -120,8 +119,7 @@ return context.getSource()\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

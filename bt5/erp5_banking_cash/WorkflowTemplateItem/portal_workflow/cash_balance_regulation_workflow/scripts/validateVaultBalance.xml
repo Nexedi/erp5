@@ -76,7 +76,10 @@ transaction = state_change.object\n
 caisse = transaction.getSource()\n
 \n
 resource_one = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Incoming Cash Balance Regulation Line\')\n
-resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Outgoing Cash Balance Regulation Line\', same_source=1)\n
+resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, \n
+                               portal_type=\'Outgoing Cash Balance Regulation Line\', \n
+                               same_source=1,\n
+                               no_balance_check=1)\n
 #resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Outgoing Cash Balance Regulation Line\')\n
 \n
 #context.log(\'resource_one\', resource_one)\n
