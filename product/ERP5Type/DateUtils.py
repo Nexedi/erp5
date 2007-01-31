@@ -52,8 +52,7 @@ same_movement_interval = hour
 accountable_days_in_month = 30.
 accountable_months_in_year = 12.
 
-
-def addToDate(date,to_add=None, **kw):
+def addToDate(date, to_add=None, **kw):
   """
   Return a new DateTime object with the corresponding added values.
   Values can be negative.
@@ -65,7 +64,8 @@ def addToDate(date,to_add=None, **kw):
   for key in ('year', 'month', 'day', 'hour', 'minute', 'second'):
     method = getattr(date, key)
     return_value[key] = method()
-  larger_key_dict = { 'second':'minute', 'minute':'hour', 'hour':'day', 'month':'year' }
+  larger_key_dict = { 'second':'minute', 'minute':'hour', 
+                      'hour':'day', 'month':'year' }
   number_of_in_dict = { 'second' : number_of_seconds_in_minute,
                         'minute' : number_of_minutes_in_hour,
                         'hour'   : number_of_hours_in_day,
@@ -89,17 +89,18 @@ def addToDate(date,to_add=None, **kw):
   if to_add.get('day', None) is not None:
     day_to_add += to_add['day']
   return_value['day'] = 1
-  return_date = DateTime('%i/%i/%i %i:%i:%d' % (return_value['year'],
+  return_date = DateTime('%i/%i/%i %i:%i:%d %s' % (return_value['year'],
                                                 return_value['month'],
                                                 return_value['day'],
                                                 return_value['hour'],
                                                 return_value['minute'],
-                                                return_value['second']))
+                                                return_value['second'],
+                                                date.localZone()))
   return_date += day_to_add
   return return_date
   
-  
-def getClosestDate(date=None, target_date=None, precision='month', before=1, strict=1):
+def getClosestDate(date=None, target_date=None, 
+                   precision='month', before=1, strict=1):
   """
   Return the closest date from target_date, at the given precision.
   If date is set, the search is made by making steps of 'precision' duration.
@@ -140,7 +141,8 @@ def getClosestDate(date=None, target_date=None, precision='month', before=1, str
   return return_date
 
         
-def getIntervalBetweenDates(from_date=None, to_date=None, keys={'year':1, 'month':1, 'day':1}):
+def getIntervalBetweenDates(from_date=None, to_date=None, 
+                            keys={'year':1, 'month':1, 'day':1}):
   """
   Return the number of entire years, months and days (if each is equal to 1 in keys)
   between the both given dates.
@@ -187,7 +189,8 @@ def getMonthAndDaysBetween(from_date=None, to_date=None):
   return getIntervalBetweenDates(from_date=from_date, to_date=to_date, keys={'month':1, 'day':1} )
 
 
-def getCompletedMonthBetween(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
+def getCompletedMonthBetween(from_date=None, to_date=None, 
+                             reference_date=DateTime('2000/01/01')):
   """
   Return the number of months between the both given dates.
   An incomplete month (at the beginning or the end of the given period)
