@@ -322,6 +322,14 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
+                          <string>first_name</string>
+                          <string>First Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>last_name</string>
+                          <string>Last Name</string>
+                        </tuple>
+                        <tuple>
                           <string>subordination_title</string>
                           <string>Organisation</string>
                         </tuple>
@@ -354,8 +362,16 @@
                           <string>Role</string>
                         </tuple>
                         <tuple>
+                          <string>gender_title</string>
+                          <string>Gender</string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Birthday</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -540,6 +556,10 @@ Role & Region
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -571,7 +591,44 @@ Role & Region
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>subordination_title</string>
+                          <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>group_title</string>
+                          <string>Group</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_region_title</string>
+                          <string>Region</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_title</string>
+                          <string>Role</string>
+                        </tuple>
+                        <tuple>
+                          <string>gender_title</string>
+                          <string>Gender</string>
+                        </tuple>
+                        <tuple>
+                          <string>marital_status_title</string>
+                          <string>Marital Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

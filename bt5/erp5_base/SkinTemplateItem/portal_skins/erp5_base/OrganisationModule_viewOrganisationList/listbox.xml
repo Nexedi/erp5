@@ -322,6 +322,10 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
+                          <string>site_title</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
                           <string>role_title</string>
                           <string>Role</string>
                         </tuple>
@@ -332,6 +336,10 @@
                         <tuple>
                           <string>activity_title</string>
                           <string>Activity</string>
+                        </tuple>
+                        <tuple>
+                          <string>product_line_title</string>
+                          <string>Product Interest</string>
                         </tuple>
                         <tuple>
                           <string>default_email_text</string>
@@ -360,6 +368,30 @@
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>social_form_title</string>
+                          <string>Social Form</string>
+                        </tuple>
+                        <tuple>
+                          <string>vat_code</string>
+                          <string>VAT Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>economical_class_title</string>
+                          <string>Economical Class</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Birth Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                         <tuple>
                           <string>id</string>
@@ -568,7 +600,68 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>site_title</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_title</string>
+                          <string>Role</string>
+                        </tuple>
+                        <tuple>
+                          <string>group_title</string>
+                          <string>Group</string>
+                        </tuple>
+                        <tuple>
+                          <string>product_line_title</string>
+                          <string>Product Interest</string>
+                        </tuple>
+                        <tuple>
+                          <string>activity_title</string>
+                          <string>Activity</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_region_title</string>
+                          <string>Region</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>social_form_title</string>
+                          <string>Social Form</string>
+                        </tuple>
+                        <tuple>
+                          <string>vat_code</string>
+                          <string>VAT Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>economical_class_title</string>
+                          <string>Economical Class</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Birth Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
