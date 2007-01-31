@@ -71,6 +71,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.Formulator.Errors import FormValidationError\n
+from Products.CMFActivity.Errors import ActivityPendingError\n
 \n
 request=context.REQUEST\n
 portal = context.getPortalObject()\n
@@ -223,39 +224,42 @@ def parseField(f):\n
 kw = {}\n
 encapsulated_editor_list = []\n
 MARKER = []\n
+message = N_("Data+Updated.")\n
 \n
-# We process all the field in form and\n
-# we check if they are in the request,\n
-# then we edit them\n
-for field in form.get_fields():\n
-  parseField(field)\n
-  if(field.meta_type == \'ListBox\'):\n
-    editListBox(field, request.get(field.id))\n
-  elif(field.meta_type == \'MatrixBox\'):\n
-    editMatrixBox(field, request.get(field.id))\n
-  elif(field.meta_type == \'PlanningBox\'):\n
-    editPlanningBox(request.get(field.id))\n
+try:\n
+  # We process all the field in form and\n
+  # we check if they are in the request,\n
+  # then we edit them\n
+  for field in form.get_fields():\n
+    parseField(field)\n
+    if(field.meta_type == \'ListBox\'):\n
+      editListBox(field, request.get(field.id))\n
+    elif(field.meta_type == \'MatrixBox\'):\n
+      editMatrixBox(field, request.get(field.id))\n
+    elif(field.meta_type == \'PlanningBox\'):\n
+      editPlanningBox(request.get(field.id))\n
 \n
-# Maybe we should build a list of objects we need\n
-# Update basic attributes\n
-context.edit(REQUEST=request,**kw)\n
-for encapsulated_editor in encapsulated_editor_list:\n
-  encapsulated_editor.edit(context)\n
+  # Maybe we should build a list of objects we need\n
+  # Update basic attributes\n
+  context.edit(REQUEST=request,**kw)\n
+  for encapsulated_editor in encapsulated_editor_list:\n
+    encapsulated_editor.edit(context)\n
+except ActivityPendingError,e:\n
+  message = N_("%s" % e)\n
+\n
+if not(ignore_layout) and context.getApplicableLayout() :\n
+  redirect_url = \'%s/%s?editable_mode=1\' % (context.REQUEST.URL1, form_id)\n
+elif not selection_index:\n
+  redirect_url = \'%s/%s?portal_status_message=%s\' % (context.absolute_url(),\n
+                                                     form_id,\n
+                                                     message)\n
 else:\n
-  message = N_("Data+Updated.")\n
-  if not(ignore_layout) and context.getApplicableLayout() :\n
-    redirect_url = \'%s/%s?editable_mode=1\' % (context.REQUEST.URL1, form_id)\n
-  elif not selection_index:\n
-    redirect_url = \'%s/%s?portal_status_message=%s\' % (context.absolute_url(),\n
-                                                       form_id,\n
-                                                       message)\n
-  else:\n
-    redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % (\n
-                                context.absolute_url(),\n
-                                form_id,\n
-                                selection_index,\n
-                                selection_name,\n
-                                message)\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % (\n
+                              context.absolute_url(),\n
+                              form_id,\n
+                              selection_index,\n
+                              selection_name,\n
+                              message)\n
 \n
 return request[\'RESPONSE\'].redirect(redirect_url)\n
 
@@ -309,6 +313,8 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>ignore_layout</string>
                             <string>Products.Formulator.Errors</string>
                             <string>FormValidationError</string>
+                            <string>Products.CMFActivity.Errors</string>
+                            <string>ActivityPendingError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -333,10 +339,11 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>kw</string>
                             <string>encapsulated_editor_list</string>
                             <string>parseField</string>
+                            <string>message</string>
                             <string>field</string>
                             <string>_apply_</string>
                             <string>encapsulated_editor</string>
-                            <string>message</string>
+                            <string>e</string>
                           </tuple>
                         </value>
                     </item>
