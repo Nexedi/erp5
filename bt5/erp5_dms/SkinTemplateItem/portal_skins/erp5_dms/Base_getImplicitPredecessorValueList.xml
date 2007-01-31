@@ -90,7 +90,8 @@ if context.getLanguage() is not None:\n
 \n
 lst=[]\n
 for t in ss:\n
-  lst += context.portal_catalog(SearchableText=\'%\' + t + \'%\')\n
+  kw = {\'full_text.SearchableText\':\'%\' + t + \'%\'}\n
+  lst += context.portal_catalog(**kw)\n
 \n
 return lst\n
 </string> </value>
@@ -150,6 +151,7 @@ return lst\n
                             <string>lst</string>
                             <string>_getiter_</string>
                             <string>t</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
