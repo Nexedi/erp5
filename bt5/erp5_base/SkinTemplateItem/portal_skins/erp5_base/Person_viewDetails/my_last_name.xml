@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Surname</string> </value>
+                    <value> <string>Last Name</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
