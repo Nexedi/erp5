@@ -691,13 +691,14 @@ class Document(XMLObject):
       Returns a list of languages which this document is available in
       for the current user.
     """
+    if not self.getReference(): return []
     catalog = getToolByName(self, 'portal_catalog', None)
-    return map(lambda o:o.getLanguage(),
-                   catalog(portal_type=self.getPortalType(),
+    kw = dict(portal_type=self.getPortalType(),
                            reference=self.getReference(),
-                           version=version,
-                           group_by=('language',),
-                           ))
+                           group_by=('language',))
+    if version is not None:
+      kw['version'] = version
+    return map(lambda o:o.getLanguage(), catalog(**kw))
 
   security.declareProtected(Permissions.View, 'getOriginalLanguage')
   def getOriginalLanguage(self):
