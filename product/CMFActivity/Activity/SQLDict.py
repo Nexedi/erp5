@@ -32,6 +32,7 @@ from Products.CMFActivity.ActivityTool import registerActivity
 from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
 import sys
 import sha
@@ -54,8 +55,6 @@ priority_weight = \
   [4] * 5 + \
   [5] * 1
 
-class ActivityFlushError(Exception):
-    """Error during active message flush"""
 
 class SQLDict(RAMDict):
   """

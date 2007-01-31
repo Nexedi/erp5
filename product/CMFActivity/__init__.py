@@ -53,3 +53,6 @@ def initialize( context ):
 # This is used by a script (external method) that can be run
 # to set up CMFActivity in an existing CMF Site instance.
 cmfactivity_globals = globals()
+
+from AccessControl.SecurityInfo import allow_module
+allow_module('Products.CMFActivity.Errors')
