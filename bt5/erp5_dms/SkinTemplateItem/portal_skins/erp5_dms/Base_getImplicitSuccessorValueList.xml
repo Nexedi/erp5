@@ -103,7 +103,7 @@ for ref_dict in reference_list:\n
   if ob is not None:\n
     res.append(ob)\n
 \n
-return res\n
+return [r for r in res if r.getUid()!=context.getUid()]\n
 
 
 ]]></string> </value>
@@ -156,6 +156,10 @@ return res\n
                             <string>ob</string>
                             <string>None</string>
                             <string>_getattr_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>r</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
