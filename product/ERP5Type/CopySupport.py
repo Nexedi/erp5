@@ -27,6 +27,7 @@ from Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
+from Products.CMFActivity.Errors import ActivityPendingError
 
 from zLOG import LOG
 
@@ -134,7 +135,8 @@ class CopyContainer:
         portal_activities = None
       if portal_activities is not None:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise ValueError, 'Sorry, some message are pending'
+          raise ActivityPendingError, 'Sorry, pending activities prevent ' \
+                         +  'changing id at this current stage'
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)
