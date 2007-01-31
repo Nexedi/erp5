@@ -1006,16 +1006,18 @@ class FloatWidget(TextWidget):
         if value not in (None,''):
           input_style = field.get_value('input_style')
           percent = 0
+          original_value = value
           if input_style.find('%')>=0:
             percent=1
             value = float(value) * 100
           try :
-            value = '%f' % (float(value))
+            value = str(float(value))
           except ValueError:
             return value
           else:
-            if 'e' in value: # scientific notation hack
-              return value
+            if 'e' in value:
+              # %f will not use exponential format
+              return '%f' % float(original_value)
           value_list = value.split('.')
           integer = value_list[0]
           if input_style.find(' ')>=0:
