@@ -75,7 +75,7 @@
 \n
 kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 kw[\'sort_on\'] = ((\'creation_date\',\'descending\'),)\n
-res=context.portal_catalog(**kw)\n
+res = context.portal_catalog(**kw)\n
 \n
 \n
 return res\n
