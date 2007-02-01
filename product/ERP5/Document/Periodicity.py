@@ -34,6 +34,7 @@ from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
 from Products.ERP5Type.DateUtils import addToDate
+from Products.ERP5Type.Message import Message
 
 from zLOG import LOG
 
@@ -225,8 +226,24 @@ class Periodicity(Base):
       """
       returns something like ['Sunday','Monday',...]
       """
-      # XXX Currently, it's not translated in the UI
       return DateTime._days
+
+    security.declareProtected(Permissions.View, 'getWeekDayItemList')
+    def getWeekDayItemList(self):
+      """
+      returns something like [('Sunday', 'Sunday'), ('Monday', 'Monday'),...]
+      """
+      return [(Message(domain='erp5_ui', message=x), x) \
+              for x in self.getWeekDayList()]
+
+    security.declareProtected(Permissions.View, 'getWeekDayItemList')
+    def getMonthItemList(self):
+      """
+      returns something like [('January', 1), ('February', 2),...]
+      """
+      # DateTime._months return '' as first item
+      return [(Message(domain='erp5_ui', message=DateTime._months[i]), i) \
+              for i in range(1, len(DateTime._months))]
 
     # XXX This look like to not works, so override the getter
 #    security.declarePrivate('_setPeriodicityWeekDayList')
