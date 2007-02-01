@@ -75,6 +75,13 @@ class PropertyDivergenceTester(XMLObject):
     """
     divergence_message_list = []
     tested_property = self.getTestedPropertyList()     
+
+    # Get the list of solvers callable in this case
+    solver_script_list = self.getSolverScriptList()
+    if solver_script_list is None:
+      solver_script_list = [] 
+    solver_script_list = self._splitStringList(solver_script_list)
+
     for tested_property_id, tested_property_title in \
                        self._splitStringList(tested_property):
       
@@ -82,12 +89,7 @@ class PropertyDivergenceTester(XMLObject):
       delivery_mvt_property = delivery_mvt.getProperty(tested_property_id)
       simulation_mvt_property = simulation_movement.getProperty(tested_property_id)
       
-      message = None
- 
       if delivery_mvt_property != simulation_mvt_property:
-        solver_script_list = self.getSolverScriptList()
-        if solver_script_list is None:
-          solver_script_list = [] 
         message = ObjectMessage(
                    object_relative_url=delivery_mvt.getRelativeUrl(),
                    simulation_movement=simulation_movement,
@@ -95,8 +97,8 @@ class PropertyDivergenceTester(XMLObject):
                    prevision_value=simulation_mvt_property,
                    tested_property=tested_property_id,
                    message=tested_property_title,
-                   solver_script_list=self._splitStringList(solver_script_list)
-                   )
+                   solver_script_list=solver_script_list
+        )
         divergence_message_list.append(message)  
     
     return divergence_message_list
