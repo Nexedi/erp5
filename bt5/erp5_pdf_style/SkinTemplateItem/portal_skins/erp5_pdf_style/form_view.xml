@@ -98,7 +98,7 @@
                                tal:content="python: str(value)"\n
                                tal:condition="not:item_list" />\n
                             <para  style="TableStandard"\n
-                                   tal:content="python: [i[0] for i in item_list if i[1] == value][0]"\n
+                                   tal:content="python: [i[0].replace(\'&nbsp;\', \'\') for i in item_list if i[1] == value][0]"\n
                                    tal:condition="item_list" />\n
                       </tal:block>\n
                       <tal:block tal:condition="python: value == None">\n
