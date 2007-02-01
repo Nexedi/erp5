@@ -74,7 +74,7 @@ packing_list = sci.object\n
 delivery_tool = sci.getPortal().portal_deliveries\n
 LOG("Task Report : %s"%packing_list.getPath())\n
 \n
-if sci.getPortal().getDefaultModule(\'Accounting Module\') is not None:\n
+if hasattr(sci.getPortal(), \'accounting_module\'):\n
   if hasattr(delivery_tool, \'task_invoice_builder\'):\n
     delivery_tool.task_invoice_builder.activate(\n
           after_method_id = [ \'expand\', \n
@@ -132,7 +132,6 @@ if sci.getPortal().getDefaultModule(\'Accounting Module\') is not None:\n
                             <string>_getattr_</string>
                             <string>packing_list</string>
                             <string>delivery_tool</string>
-                            <string>None</string>
                             <string>hasattr</string>
                           </tuple>
                         </value>
