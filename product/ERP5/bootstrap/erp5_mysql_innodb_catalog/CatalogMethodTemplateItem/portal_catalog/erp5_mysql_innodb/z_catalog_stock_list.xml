@@ -177,29 +177,29 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>getResourceUid</string>
-                            <string>getInventoriatedQuantity</string>
-                            <string>getSourceUid</string>
-                            <string>getDestinationUid</string>
-                            <string>getSourceSectionUid</string>
-                            <string>getDestinationSectionUid</string>
-                            <string>isMovement</string>
-                            <string>getSourcePaymentUid</string>
-                            <string>getDestinationPaymentUid</string>
-                            <string>getSourceFunctionUid</string>
-                            <string>getDestinationFunctionUid</string>
-                            <string>getSourceProjectUid</string>
-                            <string>getDestinationProjectUid</string>
-                            <string>getSimulationState</string>
-                            <string>getSourceInventoriatedTotalAssetPrice</string>
-                            <string>getDestinationInventoriatedTotalAssetPrice</string>
-                            <string>getStartDate</string>
-                            <string>getStopDate</string>
-                            <string>isAccountable</string>
-                            <string>getPortalType</string>
-                            <string>getVariationText</string>
-                            <string>getSubVariationText</string>
+<string>uid</string>
+<string>getResourceUid</string>
+<string>getInventoriatedQuantity</string>
+<string>getSourceUid</string>
+<string>getDestinationUid</string>
+<string>getSourceSectionUid</string>
+<string>getDestinationSectionUid</string>
+<string>isMovement</string>
+<string>getSourcePaymentUid</string>
+<string>getDestinationPaymentUid</string>
+<string>getSourceFunctionUid</string>
+<string>getDestinationFunctionUid</string>
+<string>getSourceProjectUid</string>
+<string>getDestinationProjectUid</string>
+<string>getSimulationState</string>
+<string>getSourceInventoriatedTotalAssetPrice</string>
+<string>getDestinationInventoriatedTotalAssetPrice</string>
+<string>getStartDate</string>
+<string>getStopDate</string>
+<string>isAccountable</string>
+<string>getPortalType</string>
+<string>getVariationText</string>
+<string>getSubVariationText</string>
                           </list>
                         </value>
                     </item>
@@ -216,28 +216,28 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\n
-getResourceUid\n
-getInventoriatedQuantity\n
-getSourceUid\n
-getDestinationUid\n
-getSourceSectionUid\n
-getDestinationSectionUid\n
-isMovement\n
-getSourcePaymentUid\n
-getDestinationPaymentUid\n
-getSourceFunctionUid\n
-getDestinationFunctionUid\n
-getSourceProjectUid\n
-getDestinationProjectUid\n
-getSimulationState\n
-getSourceInventoriatedTotalAssetPrice\n
-getDestinationInventoriatedTotalAssetPrice\n
-getStartDate\n
-getStopDate\n
-isAccountable\n
-getPortalType\n
-getVariationText\n
+            <value> <string>uid\r\n
+getResourceUid\r\n
+getInventoriatedQuantity\r\n
+getSourceUid\r\n
+getDestinationUid\r\n
+getSourceSectionUid\r\n
+getDestinationSectionUid\r\n
+isMovement\r\n
+getSourcePaymentUid\r\n
+getDestinationPaymentUid\r\n
+getSourceFunctionUid\r\n
+getDestinationFunctionUid\r\n
+getSourceProjectUid\r\n
+getDestinationProjectUid\r\n
+getSimulationState\r\n
+getSourceInventoriatedTotalAssetPrice\r\n
+getDestinationInventoriatedTotalAssetPrice\r\n
+getStartDate\r\n
+getStopDate\r\n
+isAccountable\r\n
+getPortalType\r\n
+getVariationText\r\n
 getSubVariationText</string> </value>
         </item>
         <item>
@@ -293,12 +293,46 @@ WHERE\n
     <dtml-if "isMovement[loop_item]">\n
       <dtml-if "isAccountable[loop_item]">\n
         <dtml-if "getResourceUid[loop_item]">\n
-          <dtml-if "getDestinationUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getDestinationUid[loop_item], getDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getDestinationFunctionUid[loop_item], getDestinationProjectUid[loop_item], getSourceSectionUid[loop_item], getSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item],getSubVariationText[loop_item]])">\n
-          </dtml-if>\n
-          <dtml-if "getSourceUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getSourceUid[loop_item], getSourceSectionUid[loop_item], getSourcePaymentUid[loop_item], getSourceFunctionUid[loop_item], getSourceProjectUid[loop_item], getDestinationSectionUid[loop_item], getDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item], getSubVariationText[loop_item]])">\n
-          </dtml-if>\n
+            <dtml-if "getDestinationUid[loop_item]">\n
+                <dtml-call expr="row_list.append([\n
+                    uid[loop_item], \n
+                    getDestinationUid[loop_item],\n
+                    getDestinationSectionUid[loop_item],\n
+                    getDestinationPaymentUid[loop_item],\n
+                    getDestinationFunctionUid[loop_item],\n
+                    getDestinationProjectUid[loop_item], \n
+                    getSourceSectionUid[loop_item], \n
+                    getSourceUid[loop_item], \n
+                    getResourceUid[loop_item],\n
+                    getInventoriatedQuantity[loop_item],\n
+                    getStopDate[loop_item], \n
+                    getStartDate[loop_item], \n
+                    getDestinationInventoriatedTotalAssetPrice[loop_item], \n
+                    getPortalType[loop_item], \n
+                    getSimulationState[loop_item], \n
+                    getVariationText[loop_item],\n
+                    getSubVariationText[loop_item]])">\n
+            </dtml-if>\n
+            <dtml-if "getSourceUid[loop_item]">\n
+                <dtml-call expr="row_list.append([\n
+                    uid[loop_item], \n
+                    getSourceUid[loop_item],\n
+                    getSourceSectionUid[loop_item],\n
+                    getSourcePaymentUid[loop_item],\n
+                    getSourceFunctionUid[loop_item],\n
+                    getSourceProjectUid[loop_item], \n
+                    getDestinationSectionUid[loop_item], \n
+                    getDestinationUid[loop_item], \n
+                    getResourceUid[loop_item],\n
+                    -(getInventoriatedQuantity[loop_item] or 0), \n
+                    getStartDate[loop_item], \n
+                    getStopDate[loop_item],\n
+                    getSourceInventoriatedTotalAssetPrice[loop_item], \n
+                    getPortalType[loop_item], \n
+                    getSimulationState[loop_item], \n
+                    getVariationText[loop_item],\n
+                    getSubVariationText[loop_item]])">\n
+            </dtml-if>\n
         </dtml-if>\n
       </dtml-if>\n
     </dtml-if>\n
@@ -321,11 +355,12 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int">, \n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
@@ -384,12 +419,46 @@ WHERE\n
     <dtml-if "isMovement[loop_item]">\n
       <dtml-if "isAccountable[loop_item]">\n
         <dtml-if "getResourceUid[loop_item]">\n
-          <dtml-if "getDestinationUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getDestinationUid[loop_item], getDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getDestinationFunctionUid[loop_item], getDestinationProjectUid[loop_item], getSourceSectionUid[loop_item], getSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item],getSubVariationText[loop_item]])">\n
-          </dtml-if>\n
-          <dtml-if "getSourceUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getSourceUid[loop_item], getSourceSectionUid[loop_item], getSourcePaymentUid[loop_item], getSourceFunctionUid[loop_item], getSourceProjectUid[loop_item], getDestinationSectionUid[loop_item], getDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item], getSubVariationText[loop_item]])">\n
-          </dtml-if>\n
+            <dtml-if "getDestinationUid[loop_item]">\n
+                <dtml-call expr="row_list.append([\n
+                    uid[loop_item], \n
+                    getDestinationUid[loop_item],\n
+                    getDestinationSectionUid[loop_item],\n
+                    getDestinationPaymentUid[loop_item],\n
+                    getDestinationFunctionUid[loop_item],\n
+                    getDestinationProjectUid[loop_item], \n
+                    getSourceSectionUid[loop_item], \n
+                    getSourceUid[loop_item], \n
+                    getResourceUid[loop_item],\n
+                    getInventoriatedQuantity[loop_item],\n
+                    getStopDate[loop_item], \n
+                    getStartDate[loop_item], \n
+                    getDestinationInventoriatedTotalAssetPrice[loop_item], \n
+                    getPortalType[loop_item], \n
+                    getSimulationState[loop_item], \n
+                    getVariationText[loop_item],\n
+                    getSubVariationText[loop_item]])">\n
+            </dtml-if>\n
+            <dtml-if "getSourceUid[loop_item]">\n
+                <dtml-call expr="row_list.append([\n
+                    uid[loop_item], \n
+                    getSourceUid[loop_item],\n
+                    getSourceSectionUid[loop_item],\n
+                    getSourcePaymentUid[loop_item],\n
+                    getSourceFunctionUid[loop_item],\n
+                    getSourceProjectUid[loop_item], \n
+                    getDestinationSectionUid[loop_item], \n
+                    getDestinationUid[loop_item], \n
+                    getResourceUid[loop_item],\n
+                    -(getInventoriatedQuantity[loop_item] or 0), \n
+                    getStartDate[loop_item], \n
+                    getStopDate[loop_item],\n
+                    getSourceInventoriatedTotalAssetPrice[loop_item], \n
+                    getPortalType[loop_item], \n
+                    getSimulationState[loop_item], \n
+                    getVariationText[loop_item],\n
+                    getSubVariationText[loop_item]])">\n
+            </dtml-if>\n
         </dtml-if>\n
       </dtml-if>\n
     </dtml-if>\n
@@ -412,11 +481,12 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int">, \n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n

@@ -1,2 +1,5 @@
+2007-02-01 Romain
+* Add mirror_date column to the stock table.
+
 2006-12-27 vincent
 * Move catalog related things from erp5_core into this new BT.
