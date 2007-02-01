@@ -2703,7 +2703,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       if key in sql_search_result_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Result key %r not found in catalog' %(key,)
+        raise NotFound, 'Result key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'result_key_list'] = key_list
 
@@ -2794,7 +2794,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       if key in sql_search_related_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Related key %r not found in catalog' %(key,)
+        raise NotFound, 'Related key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'related_key_list'] = key_list
 
@@ -2888,7 +2888,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       if key in sql_search_result_tables:
         key_list.append(key)
       else:
-        raise NotFound, 'Result table %r not found in catalog' %(key,)
+        raise NotFound, 'Result table "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'result_table_list'] = key_list
 
@@ -2980,7 +2980,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
       if key in sql_keyword_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Keyword key %r not found in catalog' %(key,)
+        raise NotFound, 'Keyword key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'keyword_key_list'] = key_list
 
@@ -3072,7 +3072,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
       if key in sql_full_text_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Fulltext key %r not found in catalog' %(key,)
+        raise NotFound, 'Fulltext key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'full_text_key_list'] = key_list
 
@@ -3165,7 +3165,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
       if key in sql_request_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Request key %r not found in catalog' %(key,)
+        raise NotFound, 'Request key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'request_key_list'] = key_list
 
@@ -3257,7 +3257,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
       if key in sql_multivalue_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Multivalue key %r not found in catalog' %(key,)
+        raise NotFound, 'Multivalue key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'multivalue_key_list'] = key_list
 
@@ -3348,7 +3348,7 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
       if key in sql_catalog_topic_search_keys:
         key_list.append(key)
       else:
-        raise NotFound, 'Topic key %r not found in catalog' %(key,)
+        raise NotFound, 'Topic key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'topic_key_list'] = key_list
 
