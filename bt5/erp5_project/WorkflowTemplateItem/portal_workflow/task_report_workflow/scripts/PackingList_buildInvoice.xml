@@ -68,23 +68,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG=lambda msg:context.log("PackingList_buildInvoice", msg)\n
-LOG=lambda msg:\'DISABLED\'\n
+            <value> <string>LOG=lambda msg:context.log("TaskReport_buildInvoice", msg)\n
 \n
 packing_list = sci.object\n
 delivery_tool = sci.getPortal().portal_deliveries\n
-LOG("packing_list : %s"%packing_list.getPath())\n
+LOG("Task Report : %s"%packing_list.getPath())\n
 \n
-if hasattr(delivery_tool, \'task_invoice_builder\') :\n
-  delivery_tool.task_invoice_builder.activate(\n
-        after_method_id = [ \'expand\', \n
-                            \'recursiveImmediateReindexObject\',\n
-                            \'immediateReindexObject\' ],\n
-        ).build()\n
-else :\n
-  packing_list.log("ERP5 Simulation",\n
-              "Unable to build Invoice from packing list at %s "\\\n
-              ": no sale_invoice_builder" % packing_list.getPath())\n
+if sci.getPortal().getDefaultModule(\'Accounting Module\') is not None:\n
+  if hasattr(delivery_tool, \'task_invoice_builder\'):\n
+    delivery_tool.task_invoice_builder.activate(\n
+          after_method_id = [ \'expand\', \n
+                              \'recursiveImmediateReindexObject\',\n
+                              \'immediateReindexObject\' ],\n
+          ).build()\n
+  else :\n
+    packing_list.log("ERP5 Simulation",\n
+                "Unable to build Invoice from Task Report at %s "\\\n
+                ": no task_invoice_builder" % packing_list.getPath())\n
 </string> </value>
         </item>
         <item>
@@ -132,6 +132,7 @@ else :\n
                             <string>_getattr_</string>
                             <string>packing_list</string>
                             <string>delivery_tool</string>
+                            <string>None</string>
                             <string>hasattr</string>
                           </tuple>
                         </value>
