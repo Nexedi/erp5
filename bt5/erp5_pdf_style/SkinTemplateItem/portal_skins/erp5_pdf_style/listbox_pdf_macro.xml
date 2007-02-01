@@ -67,7 +67,7 @@
   <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
                  selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
                  editable_columns python:listbox.get_value(\'editable_columns\', REQUEST=request);\n
-                 editable_fields python:dict([(column[0], getattr(listbox.getParentValue(), \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
+                 editable_fields python:dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                  selection python:here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                  is_domain_tree_mode python:selection.domain_tree_mode;\n
                  is_report_tree_mode python:selection.report_tree_mode;" >\n
@@ -128,8 +128,16 @@
             <tal:block tal:condition="python: listboxline.isDataLine() ">\n
               <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                 <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">\n
-                  <tal:block tal:condition="python: column_property is not None">\n
+                                       column_id python: column_item[0];\n
+                                       is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
+                  <tal:block tal:condition="python: is_list">\n
+                    <td>\n
+                      <tal:block tal:repeat="item column_property">\n
+                        <para  style="TableStandard" tal:content="item"/>\n
+                      </tal:block>\n
+                    </td>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: column_property is not None and not is_list">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])"\n
                         tal:define="field python: editable_fields.get(column_id, None)" >\n
                       <para tal:condition="python: field is None"\n

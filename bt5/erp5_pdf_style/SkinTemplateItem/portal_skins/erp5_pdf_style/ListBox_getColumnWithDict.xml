@@ -73,7 +73,7 @@
 if listbox is not None:\n
   cache = context.REQUEST.other.get(\n
         \'%s/%s/ListBox_getColumnWithDict\' % (\n
-            listbox.getParentValue().getId(), listbox.getId()), None)\n
+            listbox.aq_parent.getId(), listbox.getId()), None)\n
   if cache is not None:\n
     return cache\n
 \n
