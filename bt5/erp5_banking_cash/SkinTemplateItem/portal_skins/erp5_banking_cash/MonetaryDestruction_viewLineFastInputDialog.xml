@@ -85,7 +85,7 @@ if source_section is None :\n
 \n
 \n
 if \'serre\' in context.getSource():\n
-  cash_status = [\'retired\',]\n
+  cash_status = [\'retired\',\'error\']\n
 else:\n
   cash_status = [\'cancelled\',\'mutilated\', \'maculated\',\'error\']\n
  \n

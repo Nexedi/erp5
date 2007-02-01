@@ -84,7 +84,7 @@ if \'auxiliaire/encaisse_des_billets_et_monnaies\' not in source:\n
                               )\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
  \n
-cash_status = [\'cancelled\',\'mutilated\']\n
+cash_status = [\'cancelled\',\'mutilated\',\'error\']\n
 emission_letter = context.Baobab_getUserEmissionLetterList() \n
 variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 cash_detail_dict = {\'line_portal_type\'           : \'Monetary Recall Line\'\n
