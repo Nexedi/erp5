@@ -191,3 +191,34 @@ class Person(XMLObject):
         self._setPassword(pw_encrypt(value))
         self.reindexObject()
     
+    # Time management
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableTime')
+    def getAvailableTime(self, *args, **kw):
+      """
+      Calculate available time for a person
+      """
+      assignment_list = self.contentValues(portal_type='Assignment')
+      calendar_uid_list = []
+      for assignment in assignment_list:
+        calendar_uid_list.extend(assignment.getCalendarUidList())
+      kw['node'] = [self.getUid()] + calendar_uid_list
+
+      portal_simulation = getToolByName(self, 'portal_simulation')
+      return portal_simulation.getAvailableTime(*args, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableTimeSequence')
+    def getAvailableTimeSequence(self, *args, **kw):
+      """
+      Calculate available time for a person in a sequence
+      """
+      assignment_list = self.contentValues(portal_type='Assignment')
+      calendar_uid_list = []
+      for assignment in assignment_list:
+        calendar_uid_list.extend(assignment.getCalendarUidList())
+      kw['node'] = [self.getUid()] + calendar_uid_list
+
+      # Call getSequence
+      portal_simulation = getToolByName(self, 'portal_simulation')
+      return portal_simulation.getAvailableTimeSequence(*args, **kw)

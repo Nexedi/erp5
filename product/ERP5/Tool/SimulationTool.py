@@ -44,8 +44,9 @@ from DateTime import DateTime
 
 from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
+from Products.PythonScripts.Utility import allow_class
 
-class SimulationTool (BaseTool):
+class SimulationTool(BaseTool):
     """
     The SimulationTool implements the ERP5
     simulation algorithmics.
@@ -1735,5 +1736,146 @@ class SimulationTool (BaseTool):
 
       return main_delivery
 
+    #######################################################
+    # Sequence
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getSequence')
+    def getSequence(self, **kw):
+      """
+      getSequence is take the same parameters as Sequence constructor,
+      and return a Sequence.
+      """
+      return Sequence(**kw)
+
+    #######################################################
+    # Time Management
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableTime')
+    def getAvailableTime(self, from_date=None, to_date=None, 
+                         portal_type=[], node=[], **kw):
+      """
+      Calculate available time for a node
+      Returns an inventory of a single or multiple resources on a single
+      node as a single float value
+
+      from_date (>=) - only take rows which mirror_date is >= from_date
+
+      to_date   (<)  - only take rows which date is < to_date
+
+      node           - only take rows in stock table which node_uid is
+                       equivalent to node
+
+      portal_type    - only take rows in stock table which portal_type
+                       is in portal_type parameter
+      """
+      # XXX For now, consider that from_date and to_date are required
+      if (from_date is None) or (to_date is None):
+        raise NotImplementedError, \
+              "getAvailableTime does not managed yet None values"
+      # Calculate portal_type
+      if portal_type == []:
+        portal_type = self.getPortalCalendarPeriodTypeList()
+
+      result = self.Person_zGetAvailableTime(
+                          from_date=from_date,
+                          to_date=to_date,
+                          portal_type=portal_type,
+                          node=node,
+                          **kw)[0].total_quantity
+      if (result is None) or (result < 0):
+        result = 0
+      return result
+
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableTimeSequence')
+    def getAvailableTimeSequence(self, from_date, to_date,  
+                                 portal_type=[], node=[],
+                                 src__=0,
+                                 **kw):
+      """
+      Calculate available time for a node in multiple period of time.
+      Each row is the available time for a specific period
+
+      node           - only take rows in stock table which node_uid is
+                       equivalent to node
+
+      portal_type    - only take rows in stock table which portal_type
+                       is in portal_type parameter
+
+      from_date (>=) - return period which start >= from_date
+
+      to_date   (<)  - return period which start < to_date
+
+      second, minute,
+      hour, day,
+      month, year   - duration of each time period (cumulative)
+      """
+      # Calculate portal_type
+      if portal_type == []:
+        portal_type = self.getPortalCalendarPeriodTypeList()
+
+      result_list = self.Person_zGetAvailableTimeSequence(
+                             period_list=Sequence(from_date, to_date, **kw),
+                             portal_type=portal_type,
+                             node=node,
+                             src__=src__)
+      return result_list
+
+from Products.ERP5Type.DateUtils import addToDate
+class Sequence:
+  """
+  Sequence is a iterable object, which calculate a range of time
+  period.
+  """
+  def __init__(self, from_date, to_date, 
+               second=None, minute=None, hour=None,
+               day=None, month=None, year=None):
+    """
+    Calculate a list of time period.
+    Time period is a 2-tuple of 2 DateTime, which represent the from date
+    and to date of the period.
+
+    The start date of a period is calculated with the rule
+        start_date of the previous + period duration
+
+    from_date (>=) - return period which start >= from_date
+
+    to_date   (<)  - return period which start < to_date
+
+    second, minute,
+    hour, day,
+    month, year   - duration of each time period (cumulative)
+
+    """
+    self.item_list = []
+    # Calculate all time period
+    current_from_date = from_date
+    while current_from_date < to_date:
+      current_to_date = addToDate(current_from_date, 
+                                  second=second,
+                                  minute=minute,
+                                  hour=hour,
+                                  day=day,
+                                  month=month,
+                                  year=year)
+      self.item_list.append((current_from_date, 
+                             current_to_date))
+      current_from_date = current_to_date
+
+  def __len__(self):
+    return len(self.item_list)
+
+  def __getitem__(self, key):
+    return self.item_list[key]
+
+  def __contains__(self, value):
+    return (value in self.item_list)
+
+  def __iter__(self):
+    for x in self.item_list:
+      yield x
+
+InitializeClass(Sequence)
+allow_class(Sequence)
 
 InitializeClass(SimulationTool)
