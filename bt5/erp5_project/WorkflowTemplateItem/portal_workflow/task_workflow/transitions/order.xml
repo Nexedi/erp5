@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>Order_createOrderRule</string> </value>
+            <value> <string>Task_createOrderRule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

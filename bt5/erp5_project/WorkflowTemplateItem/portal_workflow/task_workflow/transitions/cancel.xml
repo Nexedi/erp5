@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>Order_appliedToRelatedMovement</string> </value>
+            <value> <string>Task_appliedToRelatedMovement</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

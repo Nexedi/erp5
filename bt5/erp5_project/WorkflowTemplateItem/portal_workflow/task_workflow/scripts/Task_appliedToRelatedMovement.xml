@@ -68,22 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change.object\n
+            <value> <string>task = state_change.object\n
 \n
-previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_id = \'default_order_rule\',activate_kw=activate_kw)\n
-\n
-order_portal_type = order.getPortalType()\n
-if order_portal_type == \'Sale Order\':\n
-  delivery_builder = order.portal_deliveries.sale_packing_list_builder\n
-elif order_portal_type == \'Purchase Order\':\n
-  delivery_builder = order.portal_deliveries.purchase_packing_list_builder\n
-elif order_portal_type == \'Task\':\n
-  delivery_builder = order.portal_deliveries.task_report_builder\n
-\n
-delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(explanation_uid=order.getUid())\n
+task.applyToOrderRelatedMovement(method_id=\'expand\')\n
 </string> </value>
         </item>
         <item>
@@ -128,12 +115,7 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(expl
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>order</string>
-                            <string>previous_tag</string>
-                            <string>expand_tag</string>
-                            <string>activate_kw</string>
-                            <string>order_portal_type</string>
-                            <string>delivery_builder</string>
+                            <string>task</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,7 +132,7 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(expl
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_buildPackingList</string> </value>
+            <value> <string>Task_appliedToRelatedMovement</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

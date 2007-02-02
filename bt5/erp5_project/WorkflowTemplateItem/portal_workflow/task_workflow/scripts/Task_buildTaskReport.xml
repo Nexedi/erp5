@@ -68,9 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change.object\n
+            <value> <string>task = state_change.object\n
 \n
-order.applyToOrderRelatedMovement(method_id=\'expand\')\n
+previous_tag = task.getPath() + \'_firstUpdateAppliedRule\'\n
+expand_tag = task.getPath() + \'_expand\'\n
+activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
+task.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_id = \'default_order_rule\',activate_kw=activate_kw)\n
+\n
+delivery_builder = task.portal_deliveries.task_report_builder\n
+delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(explanation_uid=task.getUid())\n
 </string> </value>
         </item>
         <item>
@@ -115,7 +121,11 @@ order.applyToOrderRelatedMovement(method_id=\'expand\')\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>order</string>
+                            <string>task</string>
+                            <string>previous_tag</string>
+                            <string>expand_tag</string>
+                            <string>activate_kw</string>
+                            <string>delivery_builder</string>
                           </tuple>
                         </value>
                     </item>
@@ -132,7 +142,7 @@ order.applyToOrderRelatedMovement(method_id=\'expand\')\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_appliedToRelatedMovement</string> </value>
+            <value> <string>Task_buildTaskReport</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
