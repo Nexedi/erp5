@@ -1007,10 +1007,12 @@ class ImmobilisableItem(XMLObject, Amount):
       # are no more in 'calculating' immobilisation_state
       related_packing_list_list = self.getAggregateRelatedValueList()
       related_packing_list_path_list = [x.getPath() for x in related_packing_list_list]
+      related_packing_list_uid_list = ['%s' % x.getUid() for x in related_packing_list_list]
       self.activate(
           after_path_and_method_id=(
             related_packing_list_path_list,
-            ['immediateReindexObject', 'recursiveImmediateReindexObject', 'updateImmobilisationState'])
+            ['immediateReindexObject', 'recursiveImmediateReindexObject', 'updateImmobilisationState']),
+	    after_tag=related_packing_list_uid_list
           ).immediateExpandAmortisation()
 
 
@@ -1023,7 +1025,9 @@ class ImmobilisableItem(XMLObject, Amount):
       try:
         self._createAmortisationRule()
       except ImmobilisationValidityError:
-        self.expandAmortisation()
+        related_packing_list_list = self.getAggregateRelatedValueList()
+        related_packing_list_uid_list = ['%s' % x.getUid() for x in related_packing_list_list]
+        self.activate(tag=related_packing_list_uid_list).expandAmortisation()
 
     
     security.declareProtected(Permissions.View, 'getSectionMovementValueList')
@@ -1122,3 +1126,6 @@ class ImmobilisableItem(XMLObject, Amount):
         if k not in no_sql_list:
           sql_dict[k] = v
       return sql_dict
+
+
+
