@@ -88,6 +88,10 @@ class MailMessage(Event, CMFMailInMessage):
                     , PropertySheet.MailMessage
                     )
 
+  # default empty attributes
+  header = '{}'
+  body = ''
+
 ####### TODO: support attachments !!!!
 #   def __init__(self, *args, **kw):
 #     XMLObject.__init__(self, *args, **kw)
