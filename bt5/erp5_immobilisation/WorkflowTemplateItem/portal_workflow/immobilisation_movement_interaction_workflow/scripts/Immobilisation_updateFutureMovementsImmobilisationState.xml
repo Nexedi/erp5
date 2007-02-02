@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -67,14 +69,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context = state_change[\'object\']\n
+\n
 for movement in context.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculate_immobilisation_validity()\n
 \n
 movement_list = context.getImmobilisationMovementList()\n
-movement_path_list = [x.getPath() for x in movement_list]\n
-\n
-context.ImmobilisationDelivery_expandAggregatedItems()\n
+movement_uid_list = [\'%s\' % x.getUid() for x in movement_list]\n
+movement_uid_list.append(\'%s\' % context.getUid())\n
+context.activate(after_tag=movement_uid_list).ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
         <item>
@@ -85,7 +88,15 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/immobilisation_movement_interaction_workflow/scripts/Immobilisation_updateFutureMovementsImmobilisationState</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -127,15 +138,16 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>movement</string>
                             <string>movement_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
-                            <string>movement_path_list</string>
+                            <string>movement_uid_list</string>
                           </tuple>
                         </value>
                     </item>
