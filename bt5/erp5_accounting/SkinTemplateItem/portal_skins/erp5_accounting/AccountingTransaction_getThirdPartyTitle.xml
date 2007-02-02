@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if selection is None:\n
+            <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionTitle sounds more consistent\n
+if selection is None:\n
   # TODO: this should definitivly be REQUEST chached\n
   selection = context.portal_selections.getSelectionFor(\'accounting_selection\')\n
 \n

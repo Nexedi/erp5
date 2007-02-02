@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>section_category=selection.getParams().get(\'section_category\')\n
+            <value> <string># XXX bad name: AccountingTransaction_getMirrorSection sounds more consistent\n
+section_category=selection.getParams().get(\'section_category\')\n
 if not section_category:\n
   return\n
 \n
