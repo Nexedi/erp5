@@ -77,7 +77,7 @@ for movement in context.getAggregatedItemsNextImmobilisationMovementValueList():
 movement_list = context.getImmobilisationMovementList()\n
 movement_uid_list = [\'%s\' % x.getUid() for x in movement_list]\n
 movement_uid_list.append(\'%s\' % context.getUid())\n
-context.activate(after_tag=movement_uid_list).ImmobilisationDelivery_expandAggregatedItems()\n
+context.ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
         <item>
