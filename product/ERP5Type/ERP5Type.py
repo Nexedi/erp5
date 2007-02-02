@@ -154,7 +154,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       'order', 'order_movement', 'node', 'payment_node', 'payment_condition',
       'resource', 'supply', 'supply_path', 'transformation', 'variation',
       'sub_variation', 'event', 'ticket', 'document', 'web_document',
-      'divergence_tester'
+      'divergence_tester', 'calendar_period'
     )
     group_list = ()
 
