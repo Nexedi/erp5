@@ -853,6 +853,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('divergence_tester')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalCalendarPeriodTypeList')
+  def getPortalCalendarPeriodTypeList(self):
+    """
+    Return calendar period types.
+    """
+    return self._getPortalGroupedTypeList('calendar_period')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """
