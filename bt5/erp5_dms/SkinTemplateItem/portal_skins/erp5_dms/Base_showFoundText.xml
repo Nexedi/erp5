@@ -90,14 +90,17 @@ try:\n
 except AttributeError:\n
   txt = \'\'\n
 \n
-search_string = selection.params.get(\'SearchableText\')\n
-if search_string is None:\n
+argument_names = (\'SearchableText\', \'SearchableText_any\', \'SearchableText_all\', \'SearchableText_phrase\')\n
+search_string = \' \'.join(selection.params.get(name, \'\') for name in argument_names)\n
+\n
+if not search_string:\n
   # if the searched text is empty (e.g. because the listbox uses its own method)\n
   # we return something\n
   return txt[:300]\n
 \n
 search_argument_list = context.parseSearchString(search_string)\n
 search_words = search_argument_list.get(\'SearchableText\')\n
+\n
 if search_words is None or search_words == \'\':\n
   # if the searched text is empty (e.g. because we used only parameters without pure searchable text)\n
   # we return something\n
@@ -157,12 +160,13 @@ return \' \'.join(map(str, res))\n
                             <string>_getattr_</string>
                             <string>txt</string>
                             <string>AttributeError</string>
+                            <string>argument_names</string>
                             <string>search_string</string>
-                            <string>None</string>
                             <string>_getitem_</string>
                             <string>context</string>
                             <string>search_argument_list</string>
                             <string>search_words</string>
+                            <string>None</string>
                             <string>min</string>
                             <string>len</string>
                             <string>res</string>
