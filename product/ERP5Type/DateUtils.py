@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from zLOG import LOG
@@ -254,8 +256,8 @@ def getAccountableYearFraction(from_date=None, to_date=None):
   Returns a year fraction according to accounting rules,
   i.e. 30 days per month
   """
-  from_date = roundDate(from_date)
-  to_date = roundDate(to_date)
+  from_date = from_date.earliestTime()
+  to_date = to_date.earliestTime()
   
   months = getMonthAndDaysBetween(from_date, to_date)['month']
   days = getMonthAndDaysBetween(from_date, to_date)['day']
@@ -332,4 +334,6 @@ def roundDate(date):
   """
   Returns a date at 0:00
   """
-  return DateTime('%s/%s/%s' % (date.year(), date.month(), date.day()))
+  warnings.warn('ERP5Type.DateUtils.roundDate is deprecated, use'
+                ' DateTime.earliestTime instead', DeprecationWarning)
+  return date.earliestTime()
