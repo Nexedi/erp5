@@ -483,7 +483,7 @@ class OOoDocument(File, ConversionCacheMixin):
       try:
         mime, data = self._makeFile(format)
         self.setConversion(data, mime, format = format)
-        self._p_changed = 1 # XXX not sure it is necessary
+        #self._p_changed = 1 # XXX not sure it is necessary
       except xmlrpclib.Fault, e:
         if REQUEST is not None:
           return self.returnMessage('Problem: %s' % str(e), 2)
