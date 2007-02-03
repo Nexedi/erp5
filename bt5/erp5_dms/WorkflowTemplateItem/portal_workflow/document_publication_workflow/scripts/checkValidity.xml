@@ -68,22 +68,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
 called before submit to check if it is ok\n
 otherwise set a special variable and raise validation exception\n
 """\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 ob=state_change.object\n
-\n
 res = ob.checkConsistency()\n
 if res:\n
-  msg = str(res)\n
-  state_change.new_state.addVariable(\'consistency_state\', \'missing\')\n
+  msg= \'The document is not consistent:<br/>\'\n
+  msg += \'<br/>\'.join(\'- \' + str(r.message) for r in res)\n
+  #state_change.kwargs.set(\'consistency_state\',\'missing\')\n
   raise ValidationFailed(msg)\n
 else:\n
-  state_change.new_state.addVariable(\'consistency_state\', \'good\')\n
-</string> </value>
+  pass\n
+  #state_change.kwargs.set(\'consistency_state\',\'good\')\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -131,7 +136,6 @@ else:\n
                             <string>_getattr_</string>
                             <string>ob</string>
                             <string>res</string>
-                            <string>str</string>
                             <string>msg</string>
                           </tuple>
                         </value>
