@@ -89,8 +89,10 @@ TODO: use catalog to get only the user\'s docs - this implementation is slow.\n
 \n
 # SearchableText can be supplied in request or stored in selection\n
 sstr = context.REQUEST.get(\'SearchableText\')\n
+\n
 if not sstr:\n
   sstr = kw.get(\'SearchableText\')\n
+\n
 if not sstr: return []\n
 \n
 args = context.parseSearchString(sstr)\n
@@ -114,13 +116,11 @@ modemap = {\'natural\':0, \'boolean\':\'in_boolean_mode\', \'expanded\':\'with_q
 if mode and modemap.has_key(mode):\n
   args[\'search_mode\'] = modemap[mode]\n
 \n
-kw.update(args)\n
-\n
 # a hack because SQLCatalog wants table.key now \n
 # dunno if it is a bug or a feature\n
-if kw.has_key(\'SearchableText\'):\n
-  kw[\'full_text.SearchableText\'] = kw[\'SearchableText\']\n
-  kw.pop(\'SearchableText\')\n
+if args.has_key(\'SearchableText\'):\n
+  args[\'full_text.SearchableText\'] = args[\'SearchableText\']\n
+  args.pop(\'SearchableText\')\n
 \n
 cf = kw.get(\'creation_from\')\n
 ct = kw.get(\'creation_to\')\n
@@ -137,17 +137,16 @@ if mf:\n
 if mt:\n
   wheres.append(\'modification_date<"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
 if wheres != []:\n
-  kw[\'where_expression\'] = \' AND \'.join(wheres)\n
+  args[\'where_expression\'] = \' AND \'.join(wheres)\n
 \n
 # now we search\n
 # any language?\n
-if kw.get(\'language\') == \'0\': kw.pop(\'language\')\n
+if args.get(\'language\') == \'0\': args.pop(\'language\')\n
 context.log(\'SEARCH:\',args)\n
-res = context.portal_catalog(**kw)\n
+res = context.portal_catalog(**args)\n
 \n
 # user wants only his documents\n
 if args.get(\'mine\'): \n
-  context.log(\'mine\')\n
   from AccessControl import getSecurityManager\n
   sm = getSecurityManager()\n
   u = sm.getUser()\n
@@ -158,7 +157,6 @@ if args.get(\'mine\'): \n
 #...and now we check for only the newest versions\n
 # but we need to preserve order\n
 if args.get(\'newest\'):\n
-  context.log(\'newest\')\n
   idx = {} # for keeping the last version of every reference\n
   # this way we do reduce the number of docs very fast (without calling catalog)\n
   newest = [] # for keeping order as it was\n
