@@ -200,7 +200,7 @@ class OOoDocument(File, ConversionCacheMixin):
         return self.returnMessage('OOo file is up do date', 1)
       try:
         self._convertToBase()
-      except xmlrpclib.Fault, e:
+      except Exception, e:
         return self.returnMessage('Problem: %s' % (str(e) or 'undefined'), 2)
       return self.returnMessage('converted to Open Document Format')
     msg_ob = doConvert(force)
