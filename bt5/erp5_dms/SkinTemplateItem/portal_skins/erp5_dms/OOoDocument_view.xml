@@ -115,7 +115,6 @@
                         <string>my_translated_validation_state_title</string>
                         <string>my_source_reference</string>
                         <string>external_processing_status_message</string>
-                        <string>consistency_state</string>
                       </list>
                     </value>
                 </item>

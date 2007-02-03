@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_workflow.getInfoFor(ob=here, name=\'history\', wf_id=\'external_processing_workflow\')[-1][\'comment\']</string> </value>
+            <value> <string>python: here.portal_workflow.getInfoFor(ob=here, name=\'history\', wf_id=\'processing_status_workflow\')[-1][\'comment\']</string> </value>
         </item>
       </dictionary>
     </pickle>

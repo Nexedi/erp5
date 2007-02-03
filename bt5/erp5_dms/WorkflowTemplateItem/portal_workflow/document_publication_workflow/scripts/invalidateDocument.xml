@@ -74,7 +74,7 @@ we have to \'uncheck\' its consistency flag\n
 so that you know you have to check it again\n
 """\n
 \n
-state_change.new_state.addVariable(\'consistency_state\', \'not checked\')\n
+#state_change.new_state.addVariable(\'consistency_state\', \'not checked\')\n
 </string> </value>
         </item>
         <item>
@@ -124,7 +124,6 @@ state_change.new_state.addVariable(\'consistency_state\', \'not checked\')\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

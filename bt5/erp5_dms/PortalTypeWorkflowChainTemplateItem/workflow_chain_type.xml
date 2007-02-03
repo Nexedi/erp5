@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>External Web Page</type>
-  <workflow>edit_workflow, external_processing_workflow, external_document_publication_workflow, external_document_interaction_workflow</workflow>
+  <workflow>processing_status_workflow, edit_workflow, external_document_publication_workflow, external_document_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>File</type>
@@ -37,6 +37,6 @@
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>document_publication_workflow, ooo_interaction_workflow, dms_file_interaction_workflow, external_processing_workflow, local_permission_interaction_workflow, edit_workflow</workflow>
+  <workflow>processing_status_workflow, document_publication_workflow, ooo_interaction_workflow, dms_file_interaction_workflow, local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

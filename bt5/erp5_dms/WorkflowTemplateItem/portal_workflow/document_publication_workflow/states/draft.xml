@@ -163,16 +163,7 @@
         <item>
             <key> <string>_container</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>comment</string> </key>
-                    <value> <string>uuuuuuuuuuu</string> </value>
-                </item>
-                <item>
-                    <key> <string>consistency_state</string> </key>
-                    <value> <string>good</string> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
