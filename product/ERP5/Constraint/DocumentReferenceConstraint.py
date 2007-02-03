@@ -41,7 +41,7 @@ class DocumentReferenceConstraint(Constraint):
   (although we could, e.g. by changing version number)
   """
 
-  def checkConsistency(self, object, fixit=0): # XXX-JPS throw is not part of API - Please remove
+  def checkConsistency(self, object, fixit=0):
     """
       Implement here the consistency checker
     """
@@ -65,7 +65,6 @@ class DocumentReferenceConstraint(Constraint):
       raise Exception('Fatal error: multiple objects %s - %s - %s exist' % (object.getReference(),
                                                       object.getLanguage(), object.getVersion()))
       #error_list.append(self._generateError(object, N_(s)))
-    if error_list:
-      return error_list
+    return error_list
 
 # vim: filetype=python syntax=python shiftwidth=2 
