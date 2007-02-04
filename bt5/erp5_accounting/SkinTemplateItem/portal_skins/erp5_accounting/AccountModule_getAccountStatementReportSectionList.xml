@@ -78,10 +78,16 @@ Account is the combination of :\n
 from Products.ERP5Form.Report import ReportSection\n
 request = context.REQUEST\n
 \n
+# TODO:\n
+# s/transaction_section_category/section_category\n
+# s/transaction_simulation_state/simulation_sate\n
+#  ( also in dialog )\n
 \n
 at_date = request[\'at_date\']\n
 transaction_section_category = request[\'transaction_section_category\']\n
-account = request.get(\'account\', None)\n
+# XXX for now account is required (ie. we cannot display all transactions with\n
+# a third party regardless of the account).\n
+account = request[\'account\']\n
 destination_section = request.get(\'destination_section\', None)\n
 source_payment = request.get(\'source_payment\', None)\n
 transaction_simulation_state = request[\'transaction_simulation_state\']\n
@@ -107,34 +113,34 @@ else :\n
 if source_payment :\n
   params[\'payment_uid\'] = context.restrictedTraverse(source_payment).getUid()\n
 if destination_section :\n
-  params[\'mirror_section_uid\'] = context.restrictedTraverse(destination_section).getUid()\n
-if account:\n
-  params[\'node_uid\'] = context.restrictedTraverse(account).getUid()\n
+  params[\'mirror_section_uid\'] = context.restrictedTraverse(\n
+                                        destination_section).getUid()\n
+\n
+params[\'node_uid\'] = context.restrictedTraverse(account).getUid()\n
 \n
 result = []\n
 portal = context.portal_url.getPortalObject()\n
 \n
 account_columns = (\n
-  (\'delivery.start_date\', \'Accounting Operation Date\'),\n
-  (\'title\', \'Title\'),\n
+  (\'date\', \'Accounting Operation Date\'),\n
+  (\'Movement_getExplanationTitle\', \'Title\'),\n
+  (\'Movement_getSpecificReference\', \'Accounting Transaction Reference\'),\n
 #  (\'translated_portal_type\', \'Type\'),\n
 #  (\'third_party\', \'Third Party\'),\n
 #  (\'translated_simulation_state_title\', \'State\'),\n
   (\'debit\', \'Debit\'),\n
   (\'credit\', \'Credit\'),\n
-  (\'specific_reference\', \'Accounting Transaction Reference\'),\n
-  (\'net_balance\', \'Balance\'),\n
+  (\'running_total_price\', \'Net\'),\n
 )\n
 \n
 return [ReportSection(\n
-              path = context.getPhysicalPath(),\n
-              #title = \'Account Statement Report\',\n
+              path = account,\n
               form_id = \'Account_viewAccountingTransactionList\',\n
-              selection_name = \'acount_preference_selection\',\n
+              selection_name = \'account_preference_selection\',\n
               selection_params = params,\n
               selection_columns = account_columns,\n
               listbox_display_mode = \'FlatListMode\',\n
-              selection_sort_order = [(\'delivery.stop_date\',\n
+              selection_sort_order = [(\'stock.date\',\n
                                        \'ascending\')],)]\n
 # vim: syntax=python\n
 </string> </value>
@@ -187,8 +193,8 @@ return [ReportSection(\n
                             <string>_getitem_</string>
                             <string>at_date</string>
                             <string>transaction_section_category</string>
-                            <string>None</string>
                             <string>account</string>
+                            <string>None</string>
                             <string>destination_section</string>
                             <string>source_payment</string>
                             <string>transaction_simulation_state</string>
