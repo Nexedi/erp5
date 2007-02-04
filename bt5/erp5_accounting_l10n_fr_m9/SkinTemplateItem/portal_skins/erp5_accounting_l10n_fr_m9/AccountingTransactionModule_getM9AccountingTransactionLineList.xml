@@ -130,7 +130,7 @@ for brain in simtool.getMovementHistoryList(\n
              date=brain.date,\n
              causality_title="\\n".join(transaction.getCausalityTitleList() or []) ,\n
              debit=max(brain.total_price, 0),\n
-             credit=max(-brain.total_price, 0), )\n
+             credit=max(-(brain.total_price or 0), 0), )\n
   line_list.append(obj)\n
   \n
   if brain.node_relative_url:\n
