@@ -7,6 +7,7 @@ Invoice Transmission Sheet Module | view
 Invoice Transmission Sheet | add_invoice
 Invoice Transmission Sheet | history
 Invoice Transmission Sheet | metadata
+Invoice Transmission Sheet | print
 Invoice Transmission Sheet | process_action
 Invoice Transmission Sheet | related_payment_transactions
 Invoice Transmission Sheet | remove_invoice
