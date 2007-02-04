@@ -1866,8 +1866,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
       try:
         new_sort_index = []
-        for (key , so, as_type) in sort_index:
-          key = getNewKeyAndUpdateVariables(key)
+        for (original_key , so, as_type) in sort_index:
+          key = getNewKeyAndUpdateVariables(original_key)
           if key is not None:
             if as_type == 'int':
               key = 'CAST(%s AS SIGNED)' % key
@@ -1878,7 +1878,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             else:
               new_sort_index.append('%s' % key)
           else:
-            LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
+            LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build sort '
+                'index (%s -> %s)' % (original_key, key))
         sort_index = join(new_sort_index,',')
         sort_on = str(sort_index)
       except ConflictError:
