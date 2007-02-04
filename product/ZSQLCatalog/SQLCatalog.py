@@ -16,6 +16,7 @@ from Persistence import Persistent
 import Acquisition
 import ExtensionClass
 import Globals
+import OFS.History
 from Globals import DTMLFile, PersistentMapping
 from string import lower, split, join
 from thread import allocate_lock, get_ident
@@ -38,6 +39,7 @@ import time
 import sys
 import urllib
 import string
+import pprint
 from cStringIO import StringIO
 from xml.dom.minidom import parse, parseString, getDOMImplementation
 from xml.sax.saxutils import escape, quoteattr
@@ -387,7 +389,11 @@ class ComplexQuery(QueryMixin):
 
 allow_class(ComplexQuery)
 
-class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
+class Catalog( Folder,
+               Persistent,
+               Acquisition.Implicit,
+               ExtensionClass.Base,
+               OFS.History.Historical ):
   """ An Object Catalog
 
   An Object Catalog maintains a table of object metadata, and a
@@ -452,7 +458,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     {'label': 'Ownership',      # TAB: Ownership
      'action': 'manage_owner',
      'help': ('OFSP','Ownership.stx'),}
-    )
+    ) + OFS.History.Historical.manage_options
 
   __ac_permissions__=(
 
@@ -806,6 +812,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         doc.unlink()
     finally:
       f.close()
+  
+  def manage_historyCompare(self, rev1, rev2, REQUEST,
+                            historyComparisonResults=''):
+    return Catalog.inheritedAttribute('manage_historyCompare')(
+          self, rev1, rev2, REQUEST,
+          historyComparisonResults=OFS.History.html_diff(
+              pprint.pformat(rev1.__dict__),
+              pprint.pformat(rev2.__dict__)))
 
   def _clearSecurityCache(self):
     self.security_uid_dict = OIBTree()
