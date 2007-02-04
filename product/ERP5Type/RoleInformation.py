@@ -15,7 +15,7 @@
 $Id$
 """
 
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Acquisition import aq_inner, aq_parent
 from OFS.SimpleItem import SimpleItem
@@ -24,18 +24,16 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
 
 from Permissions import View
-from Permissions import ManagePortal
 
-from types import StringType
-
-ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT = 'ERP5Type_getSecurityCategoryFromAssignment'
+ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT = \
+                'ERP5Type_getSecurityCategoryFromAssignment'
 
 class RoleInformation( SimpleItem ):
 
-    """ Represent a single selectable role.
+    """ Represent a role definition.
 
-    Roles generate links to views of content, or to specific methods
-    of the site.  They can be filtered via their conditions.
+    Roles definitions defines local roles on ERP5Type documents. They are
+    applied by the updateLocalRolesOnSecurityGroups method.
     """
     _isRoleInformation = 1
     __allow_access_to_unprotected_subobjects__ = 1
@@ -90,7 +88,7 @@ class RoleInformation( SimpleItem ):
         else:
             return 1
 
-    security.declarePublic( 'getRole' )
+    security.declareProtected( View, 'getRole' )
     def getRole( self, ec ):
 
         """ Compute the role using context, 'ec'; return a mapping of
@@ -105,14 +103,14 @@ class RoleInformation( SimpleItem ):
         info['base_category_script'] = self.getBaseCategoryScript()
         return info
 
-    security.declarePublic( 'getCondition' )
+    security.declareProtected( View, 'getCondition' )
     def getCondition(self):
 
         """ Return the text of the TALES expression for our condition.
         """
         return getattr( self, 'condition', None ) and self.condition.text or ''
 
-    security.declarePublic( 'getCategory' )
+    security.declareProtected( View, 'getCategory' )
     def getCategory( self ):
 
         """ Return the category
@@ -120,9 +118,10 @@ class RoleInformation( SimpleItem ):
 
             Strip any return or ending space
         """
-        return tuple(map(lambda x: x.strip(), filter(lambda x: x, self.category))) or ()
+        return tuple(map(lambda x: x.strip(),
+                         filter(lambda x: x, self.category))) or ()
 
-    security.declarePublic( 'getBaseCategory' )
+    security.declareProtected( View, 'getBaseCategory' )
     def getBaseCategory( self ):
 
         """ Return the base_category
@@ -130,7 +129,7 @@ class RoleInformation( SimpleItem ):
         """
         return tuple(getattr(self, 'base_category', ()))
 
-    security.declarePublic( 'getBaseCategoryScript' )
+    security.declareProtected( View, 'getBaseCategoryScript' )
     def getBaseCategoryScript( self ):
 
         """ Return the base_category_script id
@@ -140,7 +139,7 @@ class RoleInformation( SimpleItem ):
           return base_category_script
         return ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT
 
-    security.declarePrivate( 'base_category' )
+    security.declarePrivate( 'clone' )
     def clone( self ):
 
         """ Return a newly-created RI just like us.
@@ -152,7 +151,8 @@ class RoleInformation( SimpleItem ):
                              , condition=self.getCondition()
                              , priority =self.priority
                              , base_category=self.base_category
-                             , base_category_script=getattr(self, 'base_category_script', '')
+                             , base_category_script=getattr(self,
+                                                   'base_category_script', '')
                              )
 
 InitializeClass( RoleInformation )
