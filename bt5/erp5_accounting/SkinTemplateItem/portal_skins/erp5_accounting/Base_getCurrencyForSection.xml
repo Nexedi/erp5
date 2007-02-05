@@ -80,15 +80,15 @@ def getCurrencyForSection(section_url):\n
   portal = context.getPortalObject()\n
   section = portal.portal_categories.restrictedTraverse(section_url)\n
 \n
-  if section.getPortalType() == \'Organisation\':\n
+  if section.getPortalType() == \'Organisation\' and section.getPriceCurrency():\n
     return section.getPriceCurrency()\n
 \n
   if section.getPortalType() == \'Category\':\n
     member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\')\n
-    if len(member_list) == 1:\n
+    if len(member_list) == 1 and member_list[0].getPriceCurrency():\n
       return member_list[0].getPriceCurrency()\n
     mapping = section.getMappingValue(portal_type=\'Organisation\')\n
-    if mapping is not None:\n
+    if mapping is not None and mapping.getPriceCurrency():\n
       return mapping.getPriceCurrency()\n
 \n
   # nothing found ... returns the currency from preferences.\n
