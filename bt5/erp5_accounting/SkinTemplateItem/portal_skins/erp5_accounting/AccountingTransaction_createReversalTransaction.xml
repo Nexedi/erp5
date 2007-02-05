@@ -75,30 +75,16 @@ accounting_module = context.getPortalObject().accounting_module\n
 is_source = context.AccountingTransaction_isSourceView()\n
 \n
 if is_source:\n
-  section = context.getSourceSection()\n
-  mirror_section = context.getDestinationSection()\n
-  payment = context.getSourcePayment()\n
-  mirror_payment = context.getDestinationPayment()\n
-  date = context.getStartDate()\n
-  mirror_date = context.getStopDate()\n
   specific_reference = context.getSourceReference()\n
 else:\n
-  section = context.getDestinationSection()\n
-  mirror_section = context.getSourceSection()\n
-  payment = context.getDestinationPayment()\n
-  mirror_payment = context.getSourcePayment()\n
-  date = context.getStopDate()\n
-  mirror_date = context.getStartDate()\n
   specific_reference = context.getDestinationReference()\n
 \n
 reversal = accounting_module.newContent (\n
-    portal_type=\'Accounting Transaction\',\n
-    source_section=section,\n
-    destination_section=mirror_section,\n
-    source_payment=payment,\n
-    destination_payment=mirror_payment,\n
-    start_date=date,\n
-    stop_date=mirror_date,\n
+    portal_type=context.getPortalType(),\n
+    source_section=context.getSourceSection(),\n
+    destination_section=context.getDestinationSection(),\n
+    source_payment=context.getSourcePayment(),\n
+    destination_payment=context.getDestinationPayment(),\n
     title = N_("Reversal Transaction for ${title}",\n
               mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\')}),\n
     description = N_(\n
@@ -111,35 +97,41 @@ reversal = accounting_module.newContent (\n
     created_by_builder=1 # XXX to prevent init script to create lines\n
   )\n
 \n
-# use AccountingTransaction_getInvoiceTransactionLineList to keep a consistent\n
-# ordering\n
-line_list = context.AccountingTransaction_getInvoiceTransactionLineList(\n
+# copy dates\n
+if context.getStartDate():\n
+  reversal.setStartDate(context.getStartDate())\n
+\n
+if context.getStopDate() != context.getStartDate():\n
+  # stop date is currently acquire from start date.\n
+  # we try not to set a stop date on the reversal if it wasn\'t set on the\n
+  # original\n
+  reversal.setStopDate(context.getStopDate())\n
+\n
+if context.getProperty(\'payment_mode\'):\n
+  reversal.setProperty(\'payment_mode\', context.getProperty(\'payment_mode\'))\n
+\n
+line_list = context.getMovementList(\n
                 portal_type=context.getPortalAccountingMovementTypeList())\n
-line_list.reverse()\n
+# guess portal_type to create lines\n
+if line_list:\n
+  line_portal_type = line_list[0].getPortalType()\n
+\n
 for line in line_list:\n
   new_line = reversal.newContent( portal_type=\'Accounting Transaction Line\', )\n
-  if is_source:\n
-    new_line.edit(\n
-      source=line.getSource(portal_type=\'Account\'),\n
-      destination=line.getDestination(portal_type=\'Account\'),\n
-      destination_section=line.getDestinationSection(),\n
-      source_payment=line.getSourcePayment(),\n
-      destination_payment=line.getDestinationPayment(),\n
-      quantity= -line.getQuantity(),\n
-      source_total_asset_price=line.getSourceTotalAssetPrice(),\n
-      destination_total_asset_price=line.getDestinationTotalAssetPrice()\n
-    )\n
-  else:\n
-    new_line.edit(\n
-      source=line.getDestination(portal_type=\'Account\'),\n
-      destination=line.getSource(portal_type=\'Account\'),\n
-      destination_section=line.getSourceSection(),\n
-      source_payment=line.getDestinationPayment(),\n
-      destination_payment=line.getSourcePayment(),\n
-      quantity=line.getQuantity(),\n
-      source_total_asset_price=line.getDestinationTotalAssetPrice(),\n
-      destination_total_asset_price=line.getSourceTotalAssetPrice()\n
-    )\n
+  new_line.edit(\n
+    id=line.getId(),\n
+    source=line.getSource(portal_type=\'Account\'),\n
+    destination=line.getDestination(portal_type=\'Account\'),\n
+    quantity= - line.getQuantity(),\n
+    source_total_asset_price= - (line.getSourceTotalAssetPrice() or 0),\n
+    destination_total_asset_price=\n
+                - (line.getDestinationTotalAssetPrice() or 0))\n
+  \n
+  # copy some values if they are defined explicitly on line\n
+  for prop in [ \'source_section\', \'destination_section\',\n
+                \'source_payment\', \'destination_payment\', ]:\n
+    if line.getProperty(prop) != context.getProperty(prop):\n
+      new_line.setProperty(prop, line.getProperty(prop))\n
 \n
 return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
               (reversal.getPath(),\n
@@ -192,19 +184,16 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
                             <string>N_</string>
                             <string>accounting_module</string>
                             <string>is_source</string>
-                            <string>section</string>
-                            <string>mirror_section</string>
-                            <string>payment</string>
-                            <string>mirror_payment</string>
-                            <string>date</string>
-                            <string>mirror_date</string>
                             <string>specific_reference</string>
                             <string>unicode</string>
                             <string>reversal</string>
                             <string>line_list</string>
+                            <string>_getitem_</string>
+                            <string>line_portal_type</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>new_line</string>
+                            <string>prop</string>
                           </tuple>
                         </value>
                     </item>

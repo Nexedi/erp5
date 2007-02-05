@@ -495,7 +495,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>accounting_transaction_line_selection</string> </value>
+                    <value> <string>accounting_transaction_source_asset_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
