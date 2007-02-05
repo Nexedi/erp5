@@ -1007,12 +1007,12 @@ class ImmobilisableItem(XMLObject, Amount):
       # are no more in 'calculating' immobilisation_state
       related_packing_list_list = self.getAggregateRelatedValueList()
       related_packing_list_path_list = [x.getPath() for x in related_packing_list_list]
-      related_packing_list_uid_list = ['%s' % x.getUid() for x in related_packing_list_list]
+      related_packing_list_uid_list = ['%i' % x.getUid() for x in related_packing_list_list]
       self.activate(
           after_path_and_method_id=(
             related_packing_list_path_list,
             ['immediateReindexObject', 'recursiveImmediateReindexObject', 'updateImmobilisationState']),
-	    after_tag=related_packing_list_uid_list
+            after_tag=related_packing_list_uid_list
           ).immediateExpandAmortisation()
 
 
@@ -1026,10 +1026,10 @@ class ImmobilisableItem(XMLObject, Amount):
         self._createAmortisationRule()
       except ImmobilisationValidityError:
         related_packing_list_list = self.getAggregateRelatedValueList()
-        related_packing_list_uid_list = ['%s' % x.getUid() for x in related_packing_list_list]
+        related_packing_list_uid_list = ['%i' % x.getUid() for x in related_packing_list_list]
         self.activate(tag=related_packing_list_uid_list).expandAmortisation()
 
-    
+
     security.declareProtected(Permissions.View, 'getSectionMovementValueList')
     def getSectionMovementValueList(self,
                                     include_to_date=0,
