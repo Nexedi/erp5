@@ -32,23 +32,29 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
 class CalendarException(XMLObject):
-    """
-    Exception of Calendar Period
-    """
-    # CMF Type Definition
-    meta_type = 'ERP5 Calendar Exception'
-    portal_type = 'Calendar Exception'
-    isPortalContent = 1
-    isRADContent = 1
+  """
+  Exception of Calendar Period
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Calendar Exception'
+  portal_type = 'Calendar Exception'
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.CalendarException
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.CalendarException
+                    )
+
+  def reindexObject(self, *args, **kw):
+    """
+    Make sure to reindex the parent period
+    """
+    self.getParentValue().recursiveReindexObject()
