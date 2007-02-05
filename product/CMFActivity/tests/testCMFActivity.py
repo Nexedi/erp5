@@ -27,13 +27,6 @@
 ##############################################################################
 
 
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
 import os, sys
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -47,12 +40,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+from Products.CMFActivity.Errors import ActivityPendingError
 from Products.ERP5Type.Document.Organisation import Organisation
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-import time
 from ZODB.POSException import ConflictError
 
 try:
@@ -391,7 +382,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     self.assertEquals(self.title1,organisation.getTitle())
-    self.assertRaises(ValueError,organisation.edit,id=self.company_id2)
+    self.assertRaises(ActivityPendingError,organisation.edit,id=self.company_id2)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
 
