@@ -68,93 +68,94 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Create a related payment transaction, using the account `node`, the payment\n
-`payment`, and setting the payment mode `payment_mode`. An optional `date` can\n
-be provided, but by default the transaction is created at the system date.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Returns the difference between the original total payable price of this\n
+invoice and all payments that have been made on this invoice.\n
+For this, we use both causality relation between transactions and grouping\n
+reference for lines.\n
+If `detailed` argument is set to a true value, instead of returning the price\n
+as a float value, it returns a mapping (node, mirror_section) -> total_price.\n
 """\n
-from DateTime import DateTime\n
-# translate with Base_translateString which is a bit more robust during\n
-# activities, because it doesn\'t rely on REQUEST[\'PARENTS\']\n
-N_ = context.Base_translateString\n
-\n
-date = DateTime()\n
 portal = context.getPortalObject()\n
-payment_dict = {}\n
-is_source = context.AccountingTransaction_isSourceView()\n
-line_portal_type = \'Accounting Transaction Line\'\n
+total_payable_price_per_node_section = dict()\n
 \n
-# update selection params, because it\'ll be used in the selection dialog.\n
-portal.portal_selections.setSelectionParamsFor(\n
-          \'accounting_create_related_payment_selection\',\n
-          params=dict(node_for_related_payment=node,\n
-                      payment_mode_for_related_payment=payment_mode,\n
-                      payment_for_related_payment=payment))\n
-\n
-related_payment = portal.accounting_module.newContent(\n
-  portal_type="Payment Transaction",\n
-  title=str(N_("Payment of ${invoice_title}",\n
-          mapping=dict(invoice_title=unicode((context.getReference() or\n
-                                              context.getTitle() or \'\'),\n
-                                              \'utf8\', \'repr\')))),\n
-  source_section=context.getSourceSection(),\n
-  destination_section=context.getDestinationSection(),\n
-  stop_date=date,\n
-  start_date=date,\n
-  resource=context.getResource(),\n
-  causality_value=context,\n
-  created_by_builder=1, # XXX this prevent init script from creating lines.\n
-  payment_mode=payment_mode,\n
-)\n
-if is_source:\n
-  related_payment.edit(destination_payment=context.getDestinationPayment(),\n
-                       source_payment=payment)\n
+if context.AccountingTransaction_isSourceView():\n
+  is_source = 1\n
   section = context.getSourceSection()\n
-  mirror_section = context.getDestinationSection()\n
 else:\n
-  related_payment.edit(destination_payment=payment,\n
-              source_payment=context.getSourcePayment())\n
+  is_source = 0\n
   section = context.getDestinationSection()\n
-  mirror_section = context.getSourceSection()\n
 \n
-bank = related_payment.newContent(\n
-   portal_type=line_portal_type,\n
-   id=\'bank\',\n
-)\n
-bank_quantity = 0\n
 \n
-# Calculate the payable/receivable quantity, using\n
-# Invoice_getRemainingTotalPayablePrice script.\n
-total_payable_price_details = \\\n
-          context.Invoice_getRemainingTotalPayablePrice(detailed=True)\n
-for (line_node, line_mirror_section), quantity in\\\n
-                        total_payable_price_details.items():\n
-  if line_mirror_section == mirror_section:\n
-    bank_quantity += quantity\n
-    if is_source:\n
-      line = related_payment.newContent(\n
-        portal_type=line_portal_type,\n
-        source=line_node,\n
-        quantity=quantity)\n
+# calculate the total price of this invoice (according to accounting\n
+# transaction lines)\n
+groupped_line_list = []\n
+for line in context.getMovementList(\n
+          portal_type=portal.getPortalAccountingMovementTypeList()):\n
+  \n
+  if line.getGroupingReference():\n
+    continue\n
+\n
+  if is_source:\n
+    node_value = line.getSourceValue(portal_type=\'Account\')\n
+    line_section = line.getSourceSection()\n
+    mirror_section = line.getDestinationSection()\n
+    amount = line.getSourceInventoriatedTotalAssetPrice() or 0\n
+  else:\n
+    node_value = line.getDestinationValue(portal_type=\'Account\')\n
+    line_section = line.getDestinationSection()\n
+    mirror_section = line.getSourceSection()\n
+    amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+  \n
+  if node_value is not None and \\\n
+      node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+    key = (node_value.getRelativeUrl(), mirror_section)\n
+    total_payable_price_per_node_section[key] =\\\n
+          total_payable_price_per_node_section.get(key, 0) + amount\n
+    if line.getGroupingReference():\n
+      # we rememeber this line to check if there is any line grouped with it\n
+      groupped_line_list.append(line)\n
+\n
+\n
+# substract all causalities\n
+for related_transaction in context.getCausalityRelatedValueList(\n
+      portal_type=context.getPortalAccountingTransactionTypeList()):\n
+  if related_transaction.getSimulationState() in (\n
+              \'draft\', \'cancelled\', \'deleted\'):\n
+    continue\n
+  related_transaction_is_source = related_transaction.\\\n
+                                        AccountingTransaction_isSourceView()\n
+  for line in related_transaction.getMovementList(\n
+            portal_type=portal.getPortalAccountingMovementTypeList()):\n
+    \n
+    if line.getGroupingReference():\n
+      continue\n
+    \n
+    if related_transaction_is_source:\n
+      node_value = line.getSourceValue(portal_type=\'Account\')\n
+      line_section = line.getSourceSection()\n
+      mirror_section = line.getDestinationSection()\n
+      amount = line.getSourceInventoriatedTotalAssetPrice() or 0\n
     else:\n
-      line = related_payment.newContent(\n
-        portal_type=line_portal_type,\n
-        destination=line_node,\n
-        quantity=-quantity)\n
+      node_value = line.getDestinationValue(portal_type=\'Account\')\n
+      line_section = line.getDestinationSection()\n
+      mirror_section = line.getSourceSection()\n
+      amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+    \n
+    if node_value is not None and \\\n
+        node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+      key = (node_value.getRelativeUrl(), mirror_section)\n
+      total_payable_price_per_node_section[key] =\\\n
+            total_payable_price_per_node_section.get(key, 0) + amount\n
 \n
-if is_source:\n
-  bank.edit( source=node,\n
-             quantity=-bank_quantity )\n
+if detailed:\n
+  return total_payable_price_per_node_section\n
 else:\n
-  bank.edit( destination=node,\n
-             quantity=bank_quantity )\n
-\n
-if not batch_mode:\n
-  return context.REQUEST.RESPONSE.redirect(\n
-    "%s/view?portal_status_message=%s" % (\n
-        related_payment.absolute_url(), N_(\'Related Payment Created\')))\n
-else:\n
-  return related_payment\n
-</string> </value>
+  return sum(total_payable_price_per_node_section.values())\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -176,7 +177,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>node, payment_mode, payment, date=None, batch_mode=0</string> </value>
+            <value> <string>detailed=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -196,40 +197,33 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>node</string>
-                            <string>payment_mode</string>
-                            <string>payment</string>
-                            <string>date</string>
-                            <string>batch_mode</string>
-                            <string>DateTime</string>
+                            <string>detailed</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
                             <string>portal</string>
-                            <string>payment_dict</string>
-                            <string>is_source</string>
-                            <string>line_portal_type</string>
                             <string>dict</string>
-                            <string>str</string>
-                            <string>unicode</string>
-                            <string>related_payment</string>
+                            <string>total_payable_price_per_node_section</string>
+                            <string>is_source</string>
                             <string>section</string>
-                            <string>mirror_section</string>
-                            <string>bank</string>
-                            <string>bank_quantity</string>
-                            <string>True</string>
-                            <string>total_payable_price_details</string>
+                            <string>groupped_line_list</string>
                             <string>_getiter_</string>
-                            <string>line_node</string>
-                            <string>line_mirror_section</string>
-                            <string>quantity</string>
                             <string>line</string>
+                            <string>node_value</string>
+                            <string>line_section</string>
+                            <string>mirror_section</string>
+                            <string>amount</string>
+                            <string>None</string>
+                            <string>key</string>
+                            <string>_write_</string>
+                            <string>related_transaction</string>
+                            <string>related_transaction_is_source</string>
+                            <string>sum</string>
                           </tuple>
                         </value>
                     </item>
@@ -242,14 +236,13 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
                 <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Invoice_createRelatedPaymentTransaction</string> </value>
+            <value> <string>Invoice_getRemainingTotalPayablePrice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
