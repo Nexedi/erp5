@@ -60,6 +60,7 @@ class CalendarPeriod(Movement, Periodicity):
                     , PropertySheet.Arrow
                     , PropertySheet.Periodicity
                     , PropertySheet.Path
+                    , PropertySheet.SortIndex
                     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -197,3 +198,18 @@ class CalendarPeriod(Movement, Periodicity):
       else:
         next_start_date += 1
     return next_start_date
+
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getIntIndex')
+  def getIntIndex(self, default=None, *args, **kw):
+    """
+    Return a default value of the int index, based on the ID 
+    """
+    # XXX This method may be defined on a higher level document
+    result = self._baseGetIntIndex(*args, **kw)
+    if result in [None, '']:
+      try:
+        result = int(self.getId())
+      except ValueError:
+        result = default
+    return result

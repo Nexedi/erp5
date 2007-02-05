@@ -57,6 +57,7 @@ class LeavePeriod(CalendarPeriod):
                     , PropertySheet.Arrow
                     , PropertySheet.Periodicity
                     , PropertySheet.Path
+                    , PropertySheet.SortIndex
                     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
