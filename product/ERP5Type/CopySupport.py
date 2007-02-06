@@ -81,31 +81,43 @@ class CopyContainer:
           return self.manage_main(self, REQUEST)
       return cp
 
-  def _updateInternalRelatedContent(self, local_self, path, new_id):
+  def _updateInternalRelatedContent(self, object, path_item_list, new_id):
       """
-       Search for categories starting with path in local_self and its
-       subobjects, and replaces the last common item in category paths
-       by new_id.
+       Search for categories starting with path_item_list in object and its
+       subobjects, and replace the last item of path_item_list by new_id
+       in matching category path.
+
+       object
+         Object to recursively check in.
+       path_item_list
+         Path to search for.
+         Should correspond to path_item_list when the function is initially
+         called - but remains identical among all recursion levels under the
+         same call.
+       new_id
+         Id replacing the last item in path_item_list.
 
        Example :
-        category : "a/b/c/d/e"
-        path : "a/b/c"
-        new_id : "z"
-        result : "a/b/z/d/e"
+        previous category value : 'a/b/c/d/e'
+        path_item_list : ['a', 'b', 'c']
+        new_id : 'z'
+        final category value    : 'a/b/z/d/e'
       """
-      #      if getattr(self,'_v_is_renamed',0):
-      for object in local_self.objectValues():
-          self._updateInternalRelatedContent(local_self=object, path=path, new_id=new_id)
-      changed=0
-      categories=local_self.getCategoryList()
-      for pos in range(len(categories)):
-          catname=categories[pos].split("/")
-          if catname[1:len(path)+1]==path: # XXX Should be possible to do this in a cleaner way
-              catname[len(path)]=new_id
-              categories[pos]="/".join(catname)
-              changed=1
-      if changed:
-          local_self.setCategoryList(categories)
+      for subobject in object.objectValues():
+          self._updateInternalRelatedContent(object=subobject,
+                                             path_item_list=path_item_list,
+                                             new_id=new_id)
+      changed = 0
+      category_list = object.getCategoryList()
+      path_len = len(path_item_list)
+      for position in xrange(len(category_list)):
+          category_name = category_list[position].split('/')
+          if category_name[1:path_len + 1] == path_item_list: # XXX Should be possible to do this in a cleaner way
+              category_name[path_len] = new_id
+              category_list[position] = '/'.join(category_name)
+              changed = 1
+      if changed != 0:
+          object.setCategoryList(category_list)
 
   def _recursiveSetActivityAfterTag(self,object):
       """
@@ -140,8 +152,8 @@ class CopyContainer:
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)
-      self._updateInternalRelatedContent(local_self=ob, 
-                                         path=ob.getRelativeUrl().split("/"), 
+      self._updateInternalRelatedContent(object=ob,
+                                         path_item_list=ob.getRelativeUrl().split("/"),
                                          new_id=new_id)
       #ob._v_is_renamed = 1
       # Rename the object
