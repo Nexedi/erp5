@@ -106,15 +106,13 @@ cats = []\n
 bases = context.portal_categories.getBaseCategoryList()\n
 for k,v in args.items():\n
   if k in bases:\n
-    cats.append(\'/\'.join((k, v)))\n
-if cats != []:\n
-  args[\'category\'] = cats\n
+    args[k+\'_relative_url\'] = k + \'/\' + v\n
 \n
 # expand simplified notation of search mode\n
 mode = args.get(\'mode\')\n
 modemap = {\'natural\':0, \'boolean\':\'in_boolean_mode\', \'expanded\':\'with_query_expansion\'}\n
 if mode and modemap.has_key(mode):\n
-  args[\'search_mode\'] = modemap[mode]\n
+  args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=modemap[mode])\n
 \n
 # a hack because SQLCatalog wants table.key now \n
 # dunno if it is a bug or a feature\n
@@ -245,6 +243,7 @@ return res\n
                             <string>v</string>
                             <string>mode</string>
                             <string>modemap</string>
+                            <string>dict</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>
