@@ -427,12 +427,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Cache factory</string>
-                          <string>Cache factory</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -461,7 +456,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>cache_tool_cache_list_selection</string> </value>
+                    <value> <string>session_tool_session_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

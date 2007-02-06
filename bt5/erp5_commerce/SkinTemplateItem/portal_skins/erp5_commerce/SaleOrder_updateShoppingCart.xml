@@ -208,7 +208,7 @@
 
 translateString = context.Base_translateString\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
-shopping_cart = shopping_cart_items\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
 quantity = field_my_buy_quantity \n
 \n
 ## when we have one item in shoppping cart we get \n
@@ -220,10 +220,10 @@ counter = 0\n
 for order_line in shopping_cart_items:\n
   new_quantity = int(quantity[counter])\n
   if new_quantity>=1:\n
-    order_line[\'quantity\'] = new_quantity\n
+    order_line.setQuantity(new_quantity)\n
   else:\n
     ## remove it from shopping cart\n
-    del shopping_cart_items[counter]\n
+    shopping_cart.manage_delObjects(order_line.getId())\n
   counter += 1\n
 \n
 ## update back cache so we have consistent results between cache plugins\n
@@ -300,7 +300,6 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>int</string>
                             <string>_getitem_</string>
                             <string>new_quantity</string>
-                            <string>_write_</string>
                             <string>dict</string>
                           </tuple>
                         </value>

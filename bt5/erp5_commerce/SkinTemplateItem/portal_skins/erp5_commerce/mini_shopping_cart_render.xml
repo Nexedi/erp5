@@ -48,36 +48,51 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<div>\n
+<p class="headlinkred">SHOPPING CART</p>\n
+\n
+<table>\n
 <tal:block tal:define="shopping_cart_items here/SaleOrder_getShoppingCartItemList;\n
                        empty_cart python: len(shopping_cart_items)==0;\n
                        website python: here.getWebSiteValue();">\n
 \n
-  <ul tal:repeat="order_line shopping_cart_items">\n
-    <li tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
-                    quantity python: int(order_line[\'quantity\']);\n
+  <tr tal:repeat="order_line shopping_cart_items">\n
+    <td tal:define="resource python: website.restrictedTraverse(order_line.getResource());\n
+                    quantity python: int(order_line.getQuantity());\n
                     price    python: resource.getPrice();\n
                     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
 \n
-       <a href="" tal:attributes="href resource/absolute_url">\n
-         <b tal:content="resource/getTitle"/> \n
-       </a>\n
-       <br/>\n
-       Price: <span tal:replace="price"/> <span tal:replace="currency"/>\n
-       <br/>\n
-       - quantity: <span tal:replace="quantity"/>\n
-    </li>\n
-  </ul> \n
+          <a class="articlelink" href="" tal:attributes="href resource/absolute_url">\n
+            <b tal:content="resource/getTitle"/>\n
+          </a>\n
+          <p class="article">\n
+            Price: <span tal:replace="price"/> <span tal:replace="currency"/><br/>\n
+            - quantity: <span tal:replace="quantity"/>\n
+          </p>\n
+        \n
+ \n
+    </td>\n
+  </tr> \n
 \n
   <tal:block tal:condition = "not: empty_cart">\n
-    <br/>\n
-    <b>Total price: <span tal:replace="python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True)"/> \n
-    </b>\n
-    <br/>\n
-    <a href="SaleOrder_viewAsWeb">Edit Shopping Cart</a><br/>\n
-    <a href="SaleOrder_confirmShopping">Proceed to checkout</a>\n
+    <tr><td><br/>\n
+        <p class="article">\n
+          <b>Total price: <span tal:replace="python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True)"/></b>\n
+        </p> \n
+    </td></tr>\n
+    <tr>\n
+        <td><a class="articlelink" href="SaleOrder_viewAsWeb">Edit Shopping Cart</a></td>\n
+    </tr>\n
+    <tr>\n
+        <td><a class="articlelink" href="SaleOrder_confirmShopping">Proceed to checkout</a></td>\n
+    </tr>\n
+    \n
   </tal:block>\n
 \n
-</tal:block>
+</tal:block>\n
+</table>\n
+\n
+</div>
 
 ]]></string> </value>
         </item>

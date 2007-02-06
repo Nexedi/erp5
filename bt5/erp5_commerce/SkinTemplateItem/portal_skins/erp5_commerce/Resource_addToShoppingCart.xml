@@ -70,31 +70,32 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ERP5Type.Document import newTempOrderLine\n
 quantity = int(context.REQUEST.get(\'field_my_buy_quantity\', 1))\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
 if product is None:\n
   product = context\n
 \n
 ## check if we don\'t have already such a product in cart\n
 line_found=False\n
-for order_line in shopping_cart:\n
-  if order_line[\'resource\'] == product.getRelativeUrl():\n
-    new_quantity = int(order_line[\'quantity\']) + quantity\n
+for order_line in shopping_cart_items:\n
+  if order_line.getResource() == product.getRelativeUrl():\n
+    new_quantity = int(order_line.getQuantity()) + quantity\n
     if new_quantity<=0:\n
       ## remove items with zero quantity\n
-      del shopping_cart[indexof(order_line)]\n
+      shopping_cart.manage_delObjects(order_line)\n
     else:\n
-      order_line[\'quantity\'] = new_quantity\n
+      order_line.setQuantity(new_quantity)\n
     line_found=True\n
     break\n
 \n
 if line_found == False:\n
   ## new Resource so add it to shopping cart\n
-  tmp = {}\n
-  tmp[\'resource\'] = product.getRelativeUrl()\n
-  tmp[\'quantity\'] = quantity\n
-  shopping_cart.append(tmp)\n
+  order_line = shopping_cart.newContent(portal_type=\'Sale Order Line\')\n
+  order_line.setResource(product.getRelativeUrl())\n
+  order_line.setQuantity(quantity)\n
 \n
 translateString = context.Base_translateString\n
 context.Base_redirect(\'view\', \\\n
@@ -144,22 +145,21 @@ context.Base_redirect(\'view\', \\\n
                         <value>
                           <tuple>
                             <string>product</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempOrderLine</string>
                             <string>int</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>quantity</string>
                             <string>shopping_cart</string>
+                            <string>shopping_cart_items</string>
                             <string>None</string>
                             <string>False</string>
                             <string>line_found</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
-                            <string>_getitem_</string>
                             <string>new_quantity</string>
-                            <string>_write_</string>
-                            <string>indexof</string>
                             <string>True</string>
-                            <string>tmp</string>
                             <string>translateString</string>
                             <string>dict</string>
                           </tuple>

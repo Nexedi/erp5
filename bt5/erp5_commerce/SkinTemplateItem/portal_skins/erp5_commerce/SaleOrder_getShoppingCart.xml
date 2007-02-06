@@ -68,9 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string>""" Add resource to current (or to be created shopping cart). """\n
 \n
-now = DateTime()\n
 request = context.REQUEST\n
 expire_timeout_days = 90\n
 session_id = request.get(\'session_id\', None)\n
@@ -78,6 +77,8 @@ portal_sessions = context.portal_sessions\n
 \n
 if session_id is None:\n
   ## first call so generate session_id and send back via cookie\n
+  from DateTime import DateTime\n
+  now = DateTime()\n
   session_id = context.Base_generateSessionID(max_long=20)\n
   request.RESPONSE.setCookie(\'session_id\', session_id, expires=(now +expire_timeout_days).fCommon(), path=\'/\')\n
 \n
@@ -91,10 +92,17 @@ else:\n
   ## take shopping cart for this customer\n
   shopping_cart_id = \'shopping_cart\'\n
   session = portal_sessions[session_id]\n
-  if not portal_sessions.has_key(session_id, shopping_cart_id):\n
-    session[shopping_cart_id] = []\n
+  temp_container = portal_sessions #context.getPortalObject().temp_shopping_cart\n
+  if not shopping_cart_id in session.keys():\n
+    from Products.ERP5Type.Document import newTempOrder\n
+    shopping_cart = newTempOrder(temp_container, shopping_cart_id)\n
+    shopping_cart = portal_sessions.removeAq(shopping_cart)\n
+    session[shopping_cart_id] = shopping_cart\n
+\n
   ## return just a part of session for shopping cart\n
-  return session[shopping_cart_id]\n
+  shopping_cart = session[shopping_cart_id]\n
+  shopping_cart = portal_sessions.addAq(session[shopping_cart_id], temp_container)\n
+  return shopping_cart\n
 </string> </value>
         </item>
         <item>
@@ -112,6 +120,14 @@ else:\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>action = \'\', new_shopping_cart=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,8 +155,6 @@ else:\n
                           <tuple>
                             <string>action</string>
                             <string>new_shopping_cart</string>
-                            <string>DateTime</string>
-                            <string>now</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -148,9 +162,15 @@ else:\n
                             <string>None</string>
                             <string>session_id</string>
                             <string>portal_sessions</string>
+                            <string>DateTime</string>
+                            <string>now</string>
                             <string>shopping_cart_id</string>
                             <string>_getitem_</string>
                             <string>session</string>
+                            <string>temp_container</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempOrder</string>
+                            <string>shopping_cart</string>
                             <string>_write_</string>
                           </tuple>
                         </value>

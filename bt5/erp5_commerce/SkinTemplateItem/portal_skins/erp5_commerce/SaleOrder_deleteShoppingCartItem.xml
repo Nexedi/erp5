@@ -206,10 +206,10 @@
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
-shopping_cart = shopping_cart_items\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
 if field_my_order_line_id is not None:\n
-  del shopping_cart_items[int(field_my_order_line_id)]\n
+  shopping_cart.manage_delObjects(field_my_order_line_id)\n
   portal_status_message = "Successfully removed from shopping cart."\n
 else:\n
   portal_status_message = "Please select an item."\n
@@ -278,8 +278,6 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>shopping_cart_items</string>
                             <string>shopping_cart</string>
                             <string>None</string>
-                            <string>_write_</string>
-                            <string>int</string>
                             <string>portal_status_message</string>
                             <string>dict</string>
                           </tuple>

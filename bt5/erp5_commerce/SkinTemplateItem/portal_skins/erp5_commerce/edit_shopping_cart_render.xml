@@ -67,18 +67,17 @@
     </thead>\n
     <tbody>  \n
       <tal:block tal:repeat="order_line shopping_cart_items">\n
-      <tr tal:define="resource python: website.restrictedTraverse(order_line[\'resource\']);\n
-                      quantity python: int(order_line[\'quantity\']);\n
+      <tr tal:define="resource python: website.restrictedTraverse(order_line.getResource());\n
+                      quantity python: int(order_line.getQuantity());\n
                       price    python: resource.getPrice();\n
-                      order_line_id python: shopping_cart_items.index(order_line);\n
+                      order_line_id python: order_line.getId();\n
                       currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
          <td align="right">\n
            <a href="" tal:attributes="href resource/absolute_url">\n
              <b tal:content="resource/getTitle"/> <br/>\n
              <a  tal:condition="not: confirm_mode"\n
-                 tal:attributes="href python: \'%s?field_my_order_line_id=%s\' \n
-                                              %(website.SaleOrder_deleteShoppingCartItem.absolute_url(), \n
-                                                order_line_id)"> \n
+                 tal:attributes="href python: \'%s/SaleOrder_deleteShoppingCartItem?field_my_order_line_id=%s\' \n
+                                              %(here.absolute_url(), order_line_id)"> \n
               Delete \n
              </a>\n
            </a>\n
@@ -92,10 +91,10 @@
            <span tal:condition="confirm_mode" tal:content="quantity"/>\n
          </td>\n
          <td align="right">\n
-           <span tal:replace="price"/><br/><span tal:replace="currency"/>\n
+           <span tal:replace="price"/> <span tal:replace="currency"/>\n
          </td>\n
          <td align="right">\n
-           <span tal:replace="python: price*quantity"/><br/><span tal:replace="currency"/>\n
+           <span tal:replace="python: price*quantity"/> <span tal:replace="currency"/>\n
          </td>\n
       </tr>\n
     </tal:block>\n
