@@ -891,7 +891,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # this key.
     logged_errors = [ logrecord for logrecord in self.logged
                        if logrecord[0] == 'SQLCatalog' ]
-    self.failUnless( 'could not build the sort index' in logged_errors[0][2])
+    self.failUnless( 'could not build sort index' in logged_errors[0][2])
     
     # of course, in that case, it's possible to prefix with table name
     self.assertEquals('delivery.start_date',
