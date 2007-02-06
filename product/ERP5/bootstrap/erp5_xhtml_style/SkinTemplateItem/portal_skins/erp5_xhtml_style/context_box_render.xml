@@ -95,8 +95,10 @@ XXX: Folder_filter accesses selection directly\n
       <tal:block tal:condition="preferred_html_style_developper_mode">\n
         <tal:block tal:condition="python: here.getPortalTypeName() in here.portal_types.objectIds() and here.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
           <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types.getTypeInfo(here).absolute_url(),)"\n
-                  tal:content="python: \'Edit Portal Type \\\'%s\\\'\' % (here.getPortalTypeName(),)"\n
-                  i18n:translate="" i18n:domain="ui"/>\n
+                  i18n:translate="" i18n:domain="ui">\n
+            Edit Portal Type \'<tal:block tal:content="python: here.getPortalTypeName()"\n
+                  i18n:name="portal_type" i18n:translate="" i18n:domain="ui"/>\'\n
+          </option>\n
         </tal:block>\n
         <tal:block tal:condition="here/portal_workflow/Base_getSourceVisibility">\n
           <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
