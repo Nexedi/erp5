@@ -1880,7 +1880,7 @@ class Catalog( Folder,
 
       try:
         new_sort_index = []
-        for (original_key , so, as_type) in sort_index:
+        for (original_key, so, as_type) in sort_index:
           key = getNewKeyAndUpdateVariables(original_key)
           if key is not None:
             if as_type == 'int':
