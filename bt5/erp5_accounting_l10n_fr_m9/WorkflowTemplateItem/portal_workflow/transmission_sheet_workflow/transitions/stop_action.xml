@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>InvoiceTransmissionSheet_viewAffectActionWorkflowDialog?workflow_action=affect_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=stop_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
