@@ -76,7 +76,6 @@ method.\n
 """\n
 \n
 req = context.REQUEST\n
-\n
 # words to search in \'any of the words\' form - left intact\n
 search_string = req.get(\'SearchableText_any\',\'\')\n
 \n
@@ -128,8 +127,8 @@ if lng and lng != \'0\':\n
   search_string += \' language:%s\' % lng\n
 \n
 # category search\n
-for category in context.Document_getBaseCategoryList():\n
-  category_value = req.get(\'search_\' + category)\n
+for category in context.portal_preferences.getPreferredDocumentBaseCategoryList():\n
+  category_value = req.get(\'subfield_field_your_category_list_\' + category)\n
   if category_value:\n
     search_string += \' %s:%s\' % (category, category_value)\n
 \n
