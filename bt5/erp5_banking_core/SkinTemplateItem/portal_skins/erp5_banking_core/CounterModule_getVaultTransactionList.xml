@@ -166,7 +166,6 @@ for vault_inventory in vault_inventory_list:\n
     if total_quantity is None:\n
       total_quantity = 0\n
     total_price = vault_inventory.total_price\n
-    context.log(\'total_price from sql\',total_price)\n
     if total_price is None:\n
       total_price = 0\n
     if only_positive:\n
@@ -233,8 +232,6 @@ for resource in resource_dict.keys():\n
     if vault_report_type==\'history\':\n
       tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
-  context.log(\'total_quantity\',tmp_dict[\'total_quantity\'])\n
-  context.log(\'total_price\',tmp_dict[\'total_price\'])\n
   tmp_dict[\'general_total_price\'] = general_total_price\n
   total_inventory_list.append(newTempBase(context, "new_%3i" % i, **tmp_dict))\n
   i += 1\n

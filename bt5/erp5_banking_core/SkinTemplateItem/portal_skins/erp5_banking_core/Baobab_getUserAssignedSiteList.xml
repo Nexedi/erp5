@@ -82,6 +82,8 @@ def getSiteList(user_id=user_id):\n
   site_list = []\n
   for a in valid_assignment_list:\n
     new_site = a.getSite()\n
+    if not new_site.startswith(\'site\'):\n
+      new_site=\'site/%s\' % new_site\n
     if new_site not in (\'\', None):\n
       site_list.append(new_site)\n
   return site_list\n
