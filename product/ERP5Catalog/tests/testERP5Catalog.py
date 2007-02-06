@@ -62,9 +62,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   # Different variables used for this test
   run_all_test = 1
-  quiet = 0
+  quiet = 1
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.login()
     # make sure there is no message any more
     self.tic()
@@ -78,7 +78,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.getPortal().portal_activities.manageClearActivities()
     get_transaction().commit()
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
@@ -552,8 +552,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                               result[0]['modification_date'].ISO())
     self.assertTrue(organisation.getModificationDate()>now)
     self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
-    
-  def test_18_buildSQLQuery(self, quiet=quiet, run=0) :#run_all_test):
+  
+  # TODO: this test is disabled (and maybe not complete), because this feature
+  # is not implemented
+  def test_18_buildSQLQueryAnotherTable(self, quiet=quiet, run=0):
     """Tests that buildSQLQuery works with another query_table than 'catalog'"""
     if not run: return
     if not quiet:
@@ -864,6 +866,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
   def test_27_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
+    # XXX This *describes* the current behaviour, which might be
+    # non optimal, but at least we have a test to make sure that bugs are not
+    # introduced here.
     if not run: return
     if not quiet:
       message = 'Test Sort On Ambigous Keys'
@@ -883,11 +888,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           sort_on=(('start_date', 'ascending'),))['order_by_expression'])
     self._ignore_log_errors()
     # buildSQLQuery will simply put a warning in the error log and ignore
-    # this key
+    # this key.
     logged_errors = [ logrecord for logrecord in self.logged
                        if logrecord[0] == 'SQLCatalog' ]
-    self.failUnless(
-        'could not build the new sort index' in logged_errors[0][2])
+    self.failUnless( 'could not build the sort index' in logged_errors[0][2])
     
     # of course, in that case, it's possible to prefix with table name
     self.assertEquals('delivery.start_date',
@@ -939,7 +943,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     return organisation
-    
+  
   def test_30_SimpleQueryDict(self, quiet=quiet, run=run_all_test):
     """use a dict as a keyword parameter.
     """
@@ -1309,4 +1313,5 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failIfDifferentSet([org_a.getPath(), org_f.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
+    
     
