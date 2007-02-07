@@ -70,7 +70,7 @@ class TestERP5BankingMixin:
       # we use PAS
       self.PAS_installed = 1
 
-  def updateRoleMappings(self, portal_type_list=''):
+  def updateRoleMappings(self, portal_type_list=None):
     """Update the local roles in existing objects.
     """
     portal_catalog = self.portal.portal_catalog
@@ -105,14 +105,16 @@ class TestERP5BankingMixin:
     for user_login, user_data in user_dict.items():
       user_roles = user_data[0]
       # Create the Person.
+      main_site = '/'.join(user_data[4].split('/')[0:2])
       person = self.person_module.newContent(id=user_login,
-          portal_type='Person', reference=user_login, career_role="internal")
+          portal_type='Person', reference=user_login, career_role="internal",
+          site=main_site)
       # Create the Assignment.
       assignment = person.newContent( portal_type       = 'Assignment'
                                     , destination_value = user_data[1]
                                     , function          = "function/%s" %user_data[2]
                                     , group             = "group/%s" %user_data[3]
-                                    , site              = "site/%s" %user_data[4]
+                                    , site              = "%s" %user_data[4]
                                     , start_date        = '01/01/1900'
                                     , stop_date         = '01/01/2900'
                                     )
@@ -645,14 +647,17 @@ class TestERP5BankingMixin:
     doc.Baobab_getUniqueReference()
 
 
-  def createPerson(self, id, first_name, last_name):
+  def createPerson(self, id, first_name, last_name,site=None):
     """
     Create a person
     """
+    if site is None:
+      site="testsite/paris"
     return self.person_module.newContent(id = id,
                                          portal_type = 'Person',
                                          first_name = first_name,
-                                         last_name = last_name)
+                                         last_name = last_name,
+                                         site=site)
 
 
   def createBankAccount(self, person, account_id, currency, amount, **kw):
