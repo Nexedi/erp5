@@ -127,7 +127,7 @@ if lng and lng != \'0\':\n
   search_string += \' language:%s\' % lng\n
 \n
 # category search\n
-for category in context.portal_preferences.getPreferredDocumentBaseCategoryList():\n
+for category in (context.portal_preferences.getPreferredDocumentBaseCategoryList() or ()):\n
   category_value = req.get(\'subfield_field_your_category_list_\' + category)\n
   if category_value:\n
     search_string += \' %s:%s\' % (category, category_value)\n
