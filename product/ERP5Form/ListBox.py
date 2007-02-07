@@ -817,7 +817,7 @@ class ListBoxRenderer:
   def getListActionUrl(self):
     """Return the URL of the list action.
     """
-    list_action_part_list = [self.getContext().getUrl(), '/', self.field.get_value('list_action')]
+    list_action_part_list = [self.getContext().absolute_url(), '/', self.field.get_value('list_action')]
     if '?' in list_action_part_list[-1]:
       list_action_part_list.append('&reset=1')
     else:
@@ -2149,8 +2149,11 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       except AttributeError:
         return getattr(context.getPortalObject(), method_id).__of__(context)
       return aq_base(getattr(self.getContext(), method_id)).__of__(context)
-    # Try to get a page template from acquisition and fallback on default page template.
-    return getattr(context.getPortalObject(), 'ListBox_asHTML', context.asHTML).__of__(context)
+    # Try to get a page template from acquisition context then portal object
+    # and fallback on default page template.
+    return getattr(self.getContext(), 'ListBox_asHTML',
+           getattr(context.getPortalObject(), 'ListBox_asHTML', context.asHTML)
+           ).__of__(context)
 
   def render(self, **kw):
     """Render the data in HTML.
