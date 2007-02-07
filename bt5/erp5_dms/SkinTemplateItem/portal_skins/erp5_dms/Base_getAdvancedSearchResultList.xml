@@ -74,7 +74,7 @@
 The main search script. Receives one big string - a SearchableText, in\n
 the search syntax, parses the string using external method parseSearchString,\n
 then does the following:\n
-- processes arguments for searching by any category (this requires SQLCatalog patch)\n
+- processes arguments for searching by any category\n
 - selects search mode\n
 - adds creation and modification date clauses\n
 - searches\n
@@ -90,9 +90,14 @@ TODO: use catalog to get only the user\'s docs - this implementation is slow.\n
 # SearchableText can be supplied in request or stored in selection\n
 sstr = context.REQUEST.get(\'SearchableText\')\n
 \n
-if not sstr:\n
-  sstr = kw.get(\'SearchableText\')\n
+if sstr:\n
+  context.portal_selections.setSelectionParamsFor(\'search_params_selection\', dict(SearchableText=sstr))\n
+else:\n
+  params = context.portal_selections.getSelectionParamsFor(\'search_params_selection\')\n
+  if params:\n
+    sstr = params.get(\'SearchableText\')\n
 \n
+context.log(sstr)\n
 if not sstr: return []\n
 \n
 args = context.parseSearchString(sstr)\n
@@ -233,6 +238,8 @@ return res\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>sstr</string>
+                            <string>dict</string>
+                            <string>params</string>
                             <string>args</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
@@ -243,7 +250,6 @@ return res\n
                             <string>v</string>
                             <string>mode</string>
                             <string>modemap</string>
-                            <string>dict</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>
