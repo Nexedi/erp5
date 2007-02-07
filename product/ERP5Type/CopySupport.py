@@ -414,8 +414,8 @@ class CopyContainer:
       previous_path = self.getRelativeUrl().split('/')
       previous_path[-1] = self._v_previous_id
       
-      self._updateInternalRelatedContent(local_self=self, 
-                                         path=previous_path, 
+      self._updateInternalRelatedContent(object=self, 
+                                         path_item_list=previous_path, 
                                          new_id=self.id)
 
 #### Helper methods
