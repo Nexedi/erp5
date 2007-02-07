@@ -60,7 +60,6 @@ class ProxyWidget(Widget.Widget):
     'form_id',
     'field_id',
     'target',
-    'extra_context',
   ]
 
   form_id = fields.StringField(
@@ -79,15 +78,6 @@ class ProxyWidget(Widget.Widget):
                                 default="",
                                 required=1)
 
-  # XXX FIXME This seems against the definition of proxy field...
-  # Remove it as soon as possible
-  extra_context = fields.ListTextAreaField(
-                                'extra_context', 
-                                title='Extra Context (deprecated)', 
-                                description='Additional context variables.',
-                                default=(), 
-                                required=0)
-
   target = fields.HyperLinkField(
                                 'target',
                                 title='Proxy Target',
@@ -103,7 +93,6 @@ class ProxyWidget(Widget.Widget):
     result = ''
     proxy_field = field.getRecursiveTemplateField()
     if proxy_field is not None:
-      REQUEST = field.updateContext(REQUEST)
       result = proxy_field.widget.render(field, key, value, REQUEST)
     return result
 
@@ -114,7 +103,6 @@ class ProxyWidget(Widget.Widget):
     result = ''
     proxy_field = field.getRecursiveTemplateField()
     if proxy_field is not None:
-      REQUEST = field.updateContext(REQUEST)
       result = proxy_field.widget.render_htmlgrid(field, key, value, REQUEST)
     return result
 
@@ -136,7 +124,6 @@ class ProxyValidator(Validator.Validator):
 
   def validate(self, field, key, REQUEST):
     proxy_field = field.getTemplateField()
-    REQUEST = field.updateContext(REQUEST)
     try:
       result = proxy_field.validator.validate(field, key, REQUEST)
     except ValidationError, error:
@@ -432,15 +419,6 @@ class ProxyField(ZMIField):
       else:
         return ZMIField.get_error_message(self, name)
 
-  def updateContext(self, REQUEST):
-    """
-    Update the REQUEST
-    """
-    extra_context = REQUEST.other.get('erp5_extra_context', {})
-    for k, v in self.get_value('extra_context'):
-      extra_context[k] = v
-    REQUEST.other['erp5_extra_context'] = extra_context
-    return REQUEST
 
   security.declareProtected('Edit target', 'manage_edit_target')
   def manage_edit_target(self, REQUEST):
