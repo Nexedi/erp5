@@ -71,7 +71,7 @@
             <value> <string>def getResourceVariationCategory():\n
   pass\n
 \n
-if variation != \'variation/not_defined\' and variation.lstrip(\'variation/\') not in resource_object.getVariationList():\n
+if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
   variation_not_defined = 1\n
   break\n
 </string> </value>
@@ -102,7 +102,7 @@ if variation != \'variation/not_defined\' and variation.lstrip(\'variation/\') n
             <key> <string>errors</string> </key>
             <value>
               <tuple>
-                <string>\'break\' outside loop (/baobab/portal_skins/erp5_banking_core/CashDetail_checkResourceCategoryList, 6)</string>
+                <string>\'break\' outside loop (Script (Python), 6)</string>
               </tuple>
             </value>
         </item>

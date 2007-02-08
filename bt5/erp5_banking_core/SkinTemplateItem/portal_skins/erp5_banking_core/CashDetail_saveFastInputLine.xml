@@ -195,11 +195,11 @@ for resource_id in per_resource_dict.keys():\n
     variation = variation[\'variation\']\n
     # check if variation exist for the resource\n
     if column_base_category == "variation":\n
-      if variation != \'variation/not_defined\' and variation.lstrip(\'variation/\') not in resource_object.getVariationList():\n
+      if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
         variation_not_defined = 1\n
         break\n
     # for the letter, if coin, must always be not_defined\n
-    if letter != \'emission_letter/not_defined\' and letter.lstrip(\'emission_letter/\') not in resource_object.getEmissionLetterList():\n
+    if letter != \'emission_letter/not_defined\' and letter.replace(\'emission_letter/\',\'\') not in resource_object.getEmissionLetterList():\n
       old_letter = letter\n
       letter = \'emission_letter/not_defined\'\n
       # replace key in per_resource_dict\n
@@ -288,7 +288,7 @@ if variation_not_defined:\n
   if len(old_line)>0:\n
     for object_list in old_line:\n
       context.deleteContent(object_list.getId())\n
-  message = N_("$title doesn\'t exist for $variation", mapping = {\'title\':resource_object.getTranslatedTitle(), \'variation\':variation.lstrip(\'variation/\')})\n
+  message = N_("$title doesn\'t exist for $variation", mapping = {\'title\':resource_object.getTranslatedTitle(), \'variation\':variation.replace(\'variation/\',\'\')})\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                   , "portal_status_message=%s" %message\n
                                   )\n

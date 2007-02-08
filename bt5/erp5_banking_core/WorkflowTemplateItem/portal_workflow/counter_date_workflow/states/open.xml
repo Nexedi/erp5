@@ -76,7 +76,7 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Member</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
@@ -84,7 +84,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -95,7 +94,7 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Member</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
