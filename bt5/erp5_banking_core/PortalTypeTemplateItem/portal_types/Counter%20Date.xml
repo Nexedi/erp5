@@ -96,7 +96,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>CounterDate_init</string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

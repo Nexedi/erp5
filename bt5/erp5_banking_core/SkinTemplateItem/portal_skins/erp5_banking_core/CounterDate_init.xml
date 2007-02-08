@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setProperty(\'isDelivery\', 1)\n
+            <value> <string>site = context.Baobab_getVaultSite(context.Baobab_getUserAssignedSiteList()[0])\n
+site_url = site.getRelativeUrl()\n
+context.setSite(site_url)\n
+\n
+from DateTime import DateTime\n
+context.setStartDate(DateTime())\n
 </string> </value>
         </item>
         <item>
@@ -120,6 +125,10 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_getitem_</string>
+                            <string>site</string>
+                            <string>site_url</string>
+                            <string>DateTime</string>
                           </tuple>
                         </value>
                     </item>
