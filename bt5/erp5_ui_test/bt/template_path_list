@@ -7,6 +7,8 @@ portal_tests/check_box_field_zuite
 portal_tests/check_box_field_zuite/**
 portal_tests/document_zuite
 portal_tests/document_zuite/**
+portal_tests/duration_field_zuite
+portal_tests/duration_field_zuite/**
 portal_tests/integer_field_zuite
 portal_tests/integer_field_zuite/**
 portal_tests/listbox_zuite
