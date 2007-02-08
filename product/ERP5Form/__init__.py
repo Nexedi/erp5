@@ -42,7 +42,7 @@ document_classes = updateGlobals( this_module, globals(),
 # Define object classes and tools
 import Form, FSForm, ListBox, MatrixBox, SelectionTool
 import ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
-import PlanningBox, POSBox, FormBox, EditorField, ProxyField
+import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
 import ZPyChart
 import PreferenceTool
@@ -81,6 +81,8 @@ def initialize( context ):
     FieldRegistry.registerField(ZPyChart.ZPyChart,
                                 'www/StringField.gif')
     FieldRegistry.registerField(ProxyField.ProxyField,
+                                'www/StringField.gif')
+    FieldRegistry.registerField(DurationField.DurationField,
                                 'www/StringField.gif')
     FieldRegistry.registerField(EditorField.EditorField,
                                 'www/TextAreaField.gif')
