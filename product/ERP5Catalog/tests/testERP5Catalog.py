@@ -1268,7 +1268,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject() for x in self.getCatalogTool()(
                parent_title=person_module.getTitle())])
     
-  def test_46_QueryAndComplexQuery(self,quiet=quiet, run=1):
+  def test_45_QueryAndComplexQuery(self,quiet=quiet, run=1):
     """
     """
     if not run: return
@@ -1313,5 +1313,19 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failIfDifferentSet([org_a.getPath(), org_f.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
+  
+  def test_46_TestLimit(self,quiet=quiet, run=1):
+    """
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Limit'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    #Create 1002 Organisations
+    for i in xrange(1002):
+      self._makeOrganisation(title='abc%s' % (i),description='abc')
+    self.assertEqual(1000,len(self.getCatalogTool()(portal_type='Organisation')))
+    self.assertEqual(1002,len(self.getCatalogTool()(portal_type='Organisation',limit=None)))
     
     
