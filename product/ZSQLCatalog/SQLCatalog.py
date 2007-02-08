@@ -304,6 +304,9 @@ class Query(QueryMixin):
                 select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
           else:
             where_expression.append("%s = '%s'" % (key, value))
+    
+    elif value is None:
+      where_expression.append("%s is NULL" % (key))
     else:
       where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
 
