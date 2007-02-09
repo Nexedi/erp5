@@ -68,13 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>site = context.Baobab_getVaultSite(context.Baobab_getUserAssignedSiteList()[0])\n
-site_url = site.getRelativeUrl()\n
-context.setSite(site_url)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+user_site_list = context.Baobab_getUserAssignedSiteList()\n
+if len(user_site_list)>0:\n
+  site = context.Baobab_getVaultSite(user_site_list[0])\n
+  site_url = site.getRelativeUrl()\n
+  context.setSite(site_url)\n
 \n
 from DateTime import DateTime\n
-context.setStartDate(DateTime())\n
-</string> </value>
+context.setStartDate(DateTime(DateTime().Date()))\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -125,6 +131,8 @@ context.setStartDate(DateTime())\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>user_site_list</string>
+                            <string>len</string>
                             <string>_getitem_</string>
                             <string>site</string>
                             <string>site_url</string>

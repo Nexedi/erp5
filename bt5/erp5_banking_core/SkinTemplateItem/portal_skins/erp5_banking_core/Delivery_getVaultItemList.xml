@@ -91,6 +91,7 @@
 #                         utilis\xc3\xa9 en m\xc3\xaame temps que leaf_node\n
 # with_base = 1 : D\xc3\xa9finie si on renvoie la base categorie \'site\' dans la liste de valeur\n
 # all = 0 : Affiche aussi entrante/sortante, utile pour les inventaires\n
+# user_vault = 0 : Display only subvaults that corresponds to the user assigned vault\n
 # first_level = 0 : Ne prend que le premier niveau pour un vault type, meme si les sous categories\n
 #                   ont le meme vault_type\n
 \n
@@ -217,14 +218,15 @@ if vault_type is None:\n
 else:\n
   assignment_list = None\n
 \n
+user_site_list = []\n
 if user_site == 1 or owner_site==1:\n
   if owner_site:\n
-    site_list = context.Baobab_getUserAssignedSiteList(user_id=context.owner_info()[\'id\'])\n
+    user_site_list = context.Baobab_getUserAssignedSiteList(user_id=context.owner_info()[\'id\'])\n
   elif user_site:\n
-    site_list = context.Baobab_getUserAssignedSiteList()\n
+    user_site_list = context.Baobab_getUserAssignedSiteList()\n
   # even if we are on a counter, we can see every thing in the same agency\n
   new_site_list = []\n
-  for site in site_list:\n
+  for site in user_site_list:\n
     if "guichet" in  site:\n
       site = context.Baobab_getVaultSite(vault=site)\n
       new_site_list.append(site.getRelativeUrl())\n
@@ -239,7 +241,8 @@ else:\n
 \n
 exclude_site_list = None\n
 if exclude_user_site:\n
-  user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  if len(user_site_list)==0:\n
+    user_site_list = context.Baobab_getUserAssignedSiteList()\n
   new_list = []\n
   for user_site in user_site_list:\n
     root_site_url = context.Baobab_getVaultSite(vault=user_site).getRelativeUrl()\n
@@ -252,6 +255,14 @@ vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
   assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all,\n
   first_level=first_level,main_agency=main_agency,exclude_site_list=exclude_site_list)\n
+\n
+if user_vault == 1:\n
+  if len(user_site_list)==0:\n
+    user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  user_site = user_site_list[0]\n
+  if user_site.find(\'guichet\')>=0:\n
+    new_vault_list = [x for x in vault_list if x[1].startswith(user_site)]\n
+    vault_list = new_vault_list\n
 \n
 if current_url != None :\n
   if \'site\' not in current_url:\n
@@ -290,7 +301,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0,exclude_user_site=0</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0,exclude_user_site=0,user_vault=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -318,7 +329,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>13</int> </value>
+                        <value> <int>14</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -337,6 +348,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>first_level</string>
                             <string>main_agency</string>
                             <string>exclude_user_site</string>
+                            <string>user_vault</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -344,22 +356,23 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>assignment_list</string>
+                            <string>user_site_list</string>
                             <string>_getitem_</string>
-                            <string>site_list</string>
                             <string>new_site_list</string>
                             <string>_getiter_</string>
                             <string>site</string>
+                            <string>site_list</string>
                             <string>exclude_site_list</string>
-                            <string>user_site_list</string>
+                            <string>len</string>
                             <string>new_list</string>
                             <string>root_site_url</string>
                             <string>vault_list</string>
-                            <string>current_category</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
+                            <string>new_vault_list</string>
+                            <string>current_category</string>
                             <string>logical_path_list</string>
-                            <string>len</string>
                             <string>title</string>
                             <string>list</string>
                           </tuple>
@@ -383,6 +396,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>1</int>
                 <int>0</int>
                 <none/>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
                 <int>0</int>
