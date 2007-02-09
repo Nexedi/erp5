@@ -66,13 +66,13 @@ def initializeInstanceHome(tests_framework_home,
     dst = os.path.join(instance_home, d)
     if not os.path.exists(dst):
       if os.path.lexists(dst):
-        raise RuntimeError, '%s is a broken symlink' % dst
+        os.unlink(dst)
       os.symlink(src, dst)
   src = os.path.join(tests_framework_home, 'custom_zodb.py')
   dst = os.path.join(instance_home, 'custom_zodb.py')
   if not os.path.exists(dst):
     if os.path.lexists(dst):
-      raise RuntimeError, '%s is a broken symlink' % dst
+      os.unlink(dst)
     os.symlink(src, dst)
   sys.path.append(os.path.join(zope_home, "bin"))
   import copyzopeskel
