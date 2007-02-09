@@ -26,9 +26,15 @@ Globals.get_request = get_request
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import getLocalPropertySheetList, removeLocalPropertySheet
-from Products.ERP5Type.Utils import getLocalDocumentList, removeLocalDocument
-from Products.ERP5Type.Utils import getLocalConstraintList, removeLocalConstraint
+from Products.ERP5Type.Utils import getLocalPropertySheetList, \
+                                    removeLocalPropertySheet, \
+                                    importLocalPropertySheet
+from Products.ERP5Type.Utils import getLocalDocumentList, \
+                                    removeLocalDocument, \
+                                    importLocalDocument
+from Products.ERP5Type.Utils import getLocalConstraintList, \
+                                    removeLocalConstraint, \
+                                    importLocalConstraint
 from zLOG import LOG, DEBUG
 
 try:
@@ -37,7 +43,7 @@ except ImportError:
   pass
 
 # Quiet messages when installing products
-install_product_quiet = 0
+install_product_quiet = 1
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
 
@@ -142,6 +148,7 @@ import os
 from cStringIO import StringIO
 from urllib import urlretrieve
 from glob import glob
+import pysvn
 
 from Products.ERP5.ERP5Site import ERP5Site
 
@@ -175,6 +182,15 @@ def _getConnectionStringDict():
   return connection_string_dict
 
 class ERP5TypeTestCase(PortalTestCase):
+
+    def dummy_test(self):
+      ZopeTestCase._print('All tests are skipped with --save option.')
+
+    def getRevision(self):
+      try:
+        return pysvn.Client().info('%s/Products/ERP5' % os.environ['INSTANCE_HOME']).revision.number
+      except:
+        return None
 
     def getTitle(self):
       """Returns the title of the test, for test reports.
@@ -515,18 +531,29 @@ def setupERP5Site( business_template_list=(),
           get_transaction().commit()
           portal = app[portal_name]
 
-          # Remove all local PropertySheets, Documents
-          for id_ in getLocalPropertySheetList():
-            removeLocalPropertySheet(id_)
-          for id_ in getLocalDocumentList():
-            removeLocalDocument(id_)
-          for id_ in getLocalConstraintList():
-            removeLocalConstraint(id_)
+          if os.environ.get('erp5_load_data_fs'):
+            # Import local PropertySheets, Documents
+            for id_ in getLocalPropertySheetList():
+              importLocalPropertySheet(id_)
+            for id_ in getLocalDocumentList():
+              importLocalDocument(id_)
+            for id_ in getLocalConstraintList():
+              importLocalConstraint(id_)
+          else:
+            # Remove all local PropertySheets, Documents
+            for id_ in getLocalPropertySheetList():
+              removeLocalPropertySheet(id_)
+            for id_ in getLocalDocumentList():
+              removeLocalDocument(id_)
+            for id_ in getLocalConstraintList():
+              removeLocalConstraint(id_)
 
           # Disable reindexing before adding templates
           # VERY IMPORTANT: Add some business templates
           for url, id_ in business_template_list:
             start = time.time()
+            if id_ in portal.portal_templates.objectIds():
+              continue
             if not quiet:
               ZopeTestCase._print('Adding %s business template ... ' % id_)
             portal.portal_templates.download(url, id=id_)
@@ -562,6 +589,26 @@ def setupERP5Site( business_template_list=(),
           from Products.ERP5Type.Base import _aq_reset
           _aq_reset()
           
+          if os.environ.get('erp5_save_data_fs'):
+            # Quit the test in order to get a clean site
+            if not quiet:
+              ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
+            get_transaction().commit()
+            ZopeTestCase.close(app)
+            if not quiet:
+              ZopeTestCase._print('Data.fs created\n')
+            get_transaction().commit()
+            ZopeTestCase.close(app)
+            if not quiet:
+              ZopeTestCase._print('Dumping MySQL database ... ')
+            instance_home = os.environ['INSTANCE_HOME']
+            os.system('mysqldump -u test test > %s/dump.sql' % instance_home)
+            if not quiet:
+              ZopeTestCase._print('Dumping static files ... ')
+            for dir in ('Constraint', 'Document', 'PropertySheet'):
+              os.system('rm -rf %s/%s.bak' % (instance_home, dir))
+              os.system('cp -ar %s/%s %s/%s.bak' % (instance_home, dir, instance_home, dir))
+
           # Log out
           if not quiet:
             ZopeTestCase._print('Logout ... \n')
@@ -584,6 +631,11 @@ def setupERP5Site( business_template_list=(),
       ZopeTestCase._print('Ran Unit test of %s (installation failed)\n'
                           % title) # run_unit_test depends on this string.
       raise
+
+from unittest import _makeLoader, TestSuite
+
+def dummy_makeSuite(testCaseClass, prefix='dummy_test', sortUsing=cmp, suiteClass=TestSuite):
+  return _makeLoader(prefix, sortUsing, suiteClass).loadTestsFromTestCase(testCaseClass)
 
 def optimize():
   '''Significantly reduces portal creation time.'''

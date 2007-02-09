@@ -20,6 +20,11 @@ Options:
   --recreate_catalog=0 or 1  recreate the content of the sql catalog. Defaults
                              is to recreate, when using an existing Data.fs
   
+  --save                     add erp5 sites and business templates in Data.fs
+                             and exit without invoking any tests
+  --load                     load Data.fs and skip adding erp5 sites and
+                             business templates
+  
   --erp5_sql_connection_string=STRING
                              ZSQL Connection string for erp5_sql_connection, by
                              default, it will use "test test"                            
@@ -52,11 +57,11 @@ def initializeInstanceHome(tests_framework_home,
                            instance_home):
   if not os.path.exists(instance_home):
     os.mkdir(instance_home)
-  for d in ('Constraint', 'Document', 'PropertySheet', 'tests', 'var'):
+  for d in ('Constraint', 'Document', 'PropertySheet', 'bin', 'etc', 'tests', 'var', 'log'):
     path = os.path.join(instance_home, d)
     if not os.path.exists(path):
       os.mkdir(path)
-  for d in ('Extensions', 'Products', 'bt5'):
+  for d in ('Extensions', 'Products', 'bt5', 'svn'):
     src = os.path.join(real_instance_home, d)
     dst = os.path.join(instance_home, d)
     if not os.path.exists(dst):
@@ -69,13 +74,25 @@ def initializeInstanceHome(tests_framework_home,
     if os.path.lexists(dst):
       raise RuntimeError, '%s is a broken symlink' % dst
     os.symlink(src, dst)
+  sys.path.append(os.path.join(zope_home, "bin"))
+  import copyzopeskel
+  kw = {
+    "PYTHON":sys.executable,
+    "INSTANCE_HOME": instance_home,
+    "SOFTWARE_HOME": software_home,
+    "ZOPE_HOME": zope_home,
+    }
+  skelsrc = os.path.abspath(os.path.join(os.path.dirname(__file__), "skel"))
+  copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
 # handle 64bit architecture
 if os.path.isdir('/usr/lib64/zope/lib/python'):
   software_home = '/usr/lib64/zope/lib/python'
+  zope_home = '/usr/lib64/zope'
 else:
   software_home = '/usr/lib/zope/lib/python'
+  zope_home = '/usr/lib/zope'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -152,7 +169,12 @@ def runUnitTestList(test_list) :
   # this allows to bypass psyco by creating a dummy psyco module
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
   sys.path.insert(0, tests_framework_home)
- 
+
+  # override unittest.makeSuite to skip all tests in save mode
+  if os.environ.get('erp5_save_data_fs'):
+    from Products.ERP5Type.tests.ERP5TypeTestCase import dummy_makeSuite
+    unittest.makeSuite = dummy_makeSuite
+
   filtered_tests_class_names = 0
   for test in test_list:
     if ':' in test:
@@ -196,6 +218,8 @@ def main():
         "cmf_activity_sql_connection_string=",
         "erp5_sql_deferred_connection_string=",
         "erp5_catalog_storage=",
+        "save",
+        "load",
         "email_from_address="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -232,6 +256,10 @@ def main():
       os.environ["erp5_sql_deferred_connection_string"] = arg
     elif opt == "--email_from_address":
       os.environ["email_from_address"] = arg
+    elif opt == "--save":
+      os.environ["erp5_save_data_fs"] = "1"
+    elif opt == "--load":
+      os.environ["erp5_load_data_fs"] = "1"
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
 
@@ -239,7 +267,7 @@ def main():
   if not test_list:
     print "No test to run, exiting immediately."
     sys.exit(1)
-  
+
   result = runUnitTestList(test_list=test_list)
   from Testing.ZopeTestCase import profiler
   profiler.print_stats()
