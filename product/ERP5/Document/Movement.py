@@ -205,8 +205,8 @@ class Movement(XMLObject, Amount):
   def _getTotalPrice(self, default=None, context=None):
     price = self.getPrice(context=context)
     quantity = self.getQuantity()
-    if type(price) in (type(1.0), type(1)) and \
-        type(quantity) in (type(1.0), type(1)):
+    if isinstance(price, (int, float)) and \
+      isinstance(quantity, (int, float)):
       return quantity * price
     else:
       return default
