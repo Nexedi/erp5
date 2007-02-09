@@ -69,11 +69,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This does the same as ERP5Type_getSecurityCategoryFromAssignment, but we use it if we want\n
+  This does the same as ERP5Type_getSecurityCategoryFromAssignmentTree, but we use it if we want\n
 only the group the user is directly assigned to (not the whole group hierarchy path).\n
 """\n
 \n
-return context.ERP5Type_getSecurityCategoryFromAssignment(base_category_list, user_name, object, portal_type, strict=True)\n
+return context.ERP5Type_getSecurityCategoryFromAssignmentTree(base_category_list, user_name, object, portal_type, strict=True)\n
 </string> </value>
         </item>
         <item>

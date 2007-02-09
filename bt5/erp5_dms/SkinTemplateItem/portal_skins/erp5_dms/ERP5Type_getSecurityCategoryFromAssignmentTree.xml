@@ -239,7 +239,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+            <value> <string>ERP5Type_getSecurityCategoryFromAssignmentTree</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

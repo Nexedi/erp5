@@ -69,14 +69,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This is the same as ERP5Type_getSecurityCategoryFromAssignment\n
+This is the same as ERP5Type_getSecurityCategoryFromAssignmentTree\n
 only it returns only the first part of category\n
 It is used e.g. to figure out if the user is working anywhere\n
 in the certain organisation - for this, all we need is the first part\n
 of the group category.\n
 """\n
 \n
-return context.ERP5Type_getSecurityCategoryFromAssignment(base_category_list, user_name, object, portal_type, strict=True, root=True)\n
+return context.ERP5Type_getSecurityCategoryFromAssignmentTree(base_category_list, user_name, object, portal_type, strict=True, root=True)\n
 </string> </value>
         </item>
         <item>

@@ -75,10 +75,10 @@ Core security script - defines the way to get security groups of the current use
 # XXX-JPS This code is quite frightening. I wonder really what it is for.\n
 \n
 return (\n
-(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
-(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'source_project\'] ),\n
-(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\', \'source_project\'] ),\n
-(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'group\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentTree\', [\'function\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentTree\', [\'source_project\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentTree\', [\'function\', \'source_project\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentTree\', [\'group\'] ),\n
 (\'ERP5Type_getSecurityCategoryRoot\', [\'group\']),\n
 )\n
 </string> </value>

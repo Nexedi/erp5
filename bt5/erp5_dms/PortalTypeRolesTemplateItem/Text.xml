@@ -4,8 +4,9 @@
    <property id='description'>Policy: */project
 Rule: all project members have a right to access document once it has been shared or released</property>
    <property id='condition'>python:object.Document_policyApplies('*/project')</property>
-   <property id='priority'>10.0</property>
+   <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromArrow</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>source_project</multi_property>
   </role>
   <role id='Assignor'>
@@ -13,7 +14,7 @@ Rule: all project members have a right to access document once it has been share
    <property id='description'>Policy: */project
 Rule: project director is an Assignor (has management rights to the doc - can review it, release, publish, add local roles)</property>
    <property id='condition'>python:object.Document_policyApplies('*/project')</property>
-   <property id='priority'>10.0</property>
+   <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromArrow</property>
    <multi_property id='category'>function/knowledge/manager</multi_property>
    <multi_property id='base_category'>function</multi_property>
@@ -23,8 +24,9 @@ Rule: project director is an Assignor (has management rights to the doc - can re
    <property id='title'>Owner</property>
    <property id='description'>Policy: */*
 Rule: the creator is Assignee - can edit the doc and submit it</property>
-   <property id='priority'>10.0</property>
+   <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromUser</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>reference</multi_property>
   </role>
   <role id='Auditor'>
@@ -33,8 +35,9 @@ Rule: the creator is Assignee - can edit the doc and submit it</property>
 Rule: all people working for the same organisation are Auditors (we identify the organisation by the first part of the "group" path)
 This does not apply if it is a project document and does not have a project</property>
    <property id='condition'>python: not object.Document_policyApplies('*/restricted') and (object.Document_policyApplies('*/project') or not object.Document_policyApplies('*/project',True) )</property>
-   <property id='priority'>10.0</property>
+   <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryRoot</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>group</multi_property>
   </role>
   <role id='Assignee'>
@@ -42,8 +45,9 @@ This does not apply if it is a project document and does not have a project</pro
    <property id='description'>Policy: collaborative/project
 Rule: all members of project team can edit the document before it is submitted, and can submit it</property>
    <property id='condition'>python:object.Document_policyApplies('collaborative/project')</property>
-   <property id='priority'>10.0</property>
+   <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromArrow</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>source_project</multi_property>
   </role>
   <role id='Assignor'>
@@ -51,8 +55,8 @@ Rule: all members of project team can edit the document before it is submitted, 
    <property id='description'>Policy: */team
 Rule: team manager is an Assignor (has management rights to the doc - can review it, release, publish, add local roles)</property>
    <property id='condition'>python:object.Document_policyApplies('*/team')</property>
-   <property id='priority'>10.0</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignmentTree</property>
    <multi_property id='category'>function/auc/department/director_of_department</multi_property>
    <multi_property id='base_category'>group</multi_property>
    <multi_property id='base_category'>function</multi_property>
@@ -62,8 +66,8 @@ Rule: team manager is an Assignor (has management rights to the doc - can review
    <property id='description'>Policy: */team
 Rule: team manager is an Assignor (has management rights to the doc - can review it, release, publish, add local roles)</property>
    <property id='condition'>python:object.Document_policyApplies('*/team')</property>
-   <property id='priority'>10.0</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignmentTree</property>
    <multi_property id='category'>function/auc/department/deputy_director_of_department</multi_property>
    <multi_property id='base_category'>group</multi_property>
    <multi_property id='base_category'>function</multi_property>
@@ -73,8 +77,9 @@ Rule: team manager is an Assignor (has management rights to the doc - can review
    <property id='description'>Policy: */team
 Rule: all team members have a right to access document once it has been shared or released</property>
    <property id='condition'>python:object.Document_policyApplies('*/team')</property>
-   <property id='priority'>10.0</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignmentTree</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>group</multi_property>
   </role>
   <role id='Assignee'>
@@ -82,8 +87,9 @@ Rule: all team members have a right to access document once it has been shared o
    <property id='description'>Policy: collaborative/team
 Rule: all members of the team can edit the document before it is submitted, and can submit it</property>
    <property id='condition'>python:object.Document_policyApplies('collaborative/team')</property>
-   <property id='priority'>10.0</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignmentTree</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>group</multi_property>
   </role>
   <role id='Assignee'>
@@ -91,8 +97,9 @@ Rule: all members of the team can edit the document before it is submitted, and 
    <property id='description'>Policy: collaborative/public
 Rule: everyone in the organisation (root group) can edit the doc before it is submitted, and can suggest its publication</property>
    <property id='condition'>python:object.Document_policyApplies('collaborative/public')</property>
-   <property id='priority'>10.0</property>
+   <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryRoot</property>
+   <multi_property id='category'></multi_property>
    <multi_property id='base_category'>group</multi_property>
   </role>
   <role id='Assignor'>
@@ -100,8 +107,8 @@ Rule: everyone in the organisation (root group) can edit the doc before it is su
    <property id='description'>Policy: collaborative/public
 Rule: any person with knowledge/manager role can publish the document and manage access rights to it</property>
    <property id='condition'>python:object.Document_policyApplies('collaborative/public')</property>
-   <property id='priority'>10.0</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignmentTree</property>
    <multi_property id='category'>function/knowledge/manager</multi_property>
    <multi_property id='base_category'>function</multi_property>
   </role>
