@@ -87,7 +87,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>DMS_library</string> </value>
+                    <value> <string>Document_library</string> </value>
                 </item>
               </dictionary>
             </value>

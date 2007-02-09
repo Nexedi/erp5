@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ExternalWebPage_viewSubpages</string> </value>
+            <value> <string>string:${object_url}/ExternalWebPage_viewWebPageList</string> </value>
         </item>
       </dictionary>
     </pickle>
