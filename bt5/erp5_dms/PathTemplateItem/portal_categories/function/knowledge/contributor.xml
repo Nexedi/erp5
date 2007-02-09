@@ -40,13 +40,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>function/publication/reviewer</string>
+                <string>function/knowledge/contributor</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>codification</string> </key>
-            <value> <string>REVIEWER</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,13 +52,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>reviewer</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>contributor</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -70,7 +60,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reviewer</string> </value>
+            <value> <string>Contributor</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
