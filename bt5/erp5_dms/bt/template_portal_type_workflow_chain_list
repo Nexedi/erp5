@@ -3,6 +3,7 @@ Drawing | document_publication_workflow
 Drawing | edit_workflow
 Drawing | local_permission_interaction_workflow
 Drawing | ooo_interaction_workflow
+Drawing | processing_status_workflow
 External Library File | edit_workflow
 External Library File | external_document_interaction_workflow
 External Library File | external_document_publication_workflow
@@ -14,19 +15,23 @@ File | dms_file_interaction_workflow
 File | document_publication_workflow
 File | edit_workflow
 File | local_permission_interaction_workflow
+File | processing_status_workflow
 Image | dms_file_interaction_workflow
 Image | document_publication_workflow
 Image | edit_workflow
 Image | local_permission_interaction_workflow
+Image | processing_status_workflow
 PDF | dms_file_interaction_workflow
 PDF | document_publication_workflow
 PDF | edit_workflow
 PDF | local_permission_interaction_workflow
+PDF | processing_status_workflow
 Presentation | dms_file_interaction_workflow
 Presentation | document_publication_workflow
 Presentation | edit_workflow
 Presentation | local_permission_interaction_workflow
 Presentation | ooo_interaction_workflow
+Presentation | processing_status_workflow
 Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Spreadsheet | dms_file_interaction_workflow
@@ -34,6 +39,7 @@ Spreadsheet | document_publication_workflow
 Spreadsheet | edit_workflow
 Spreadsheet | local_permission_interaction_workflow
 Spreadsheet | ooo_interaction_workflow
+Spreadsheet | processing_status_workflow
 Text | dms_file_interaction_workflow
 Text | document_publication_workflow
 Text | edit_workflow
