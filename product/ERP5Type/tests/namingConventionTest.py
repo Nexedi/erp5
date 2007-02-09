@@ -26,6 +26,12 @@
 #
 ##############################################################################
 
+#
+# ERP5 Naming Convention Test script.
+#
+# usage: python runUnitTest.py [OPTION]... namingConventionTest.py
+#
+
 import os
 import sys
 import re
@@ -43,10 +49,29 @@ class TestNamingConvention(ERP5TypeTestCase):
         """
           Return the list of business templates.
         """
+        # include all standard Business Templates, i.e. erp5_*
         return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
                 'erp5_apparel', 'erp5_mrp', 'erp5_project', 'erp5_dms',
                 'erp5_web', 'erp5_csv_style', 'erp5_pdf_style', 'erp5_crm',
-                'erp5_budget', 'erp5_item',)
+                'erp5_budget', 'erp5_item', 'erp5_ui_test',
+                'erp5_accounting_l10n_fr', 'erp5_accounting_ui_test',
+                'erp5_banking_core', 'erp5_banking_cash', 'erp5_banking_check',
+                'erp5_banking_inventory', 'erp5_commerce', 'erp5_consulting',
+                'erp5_dummy_movement', 'erp5_forge', 'erp5_html_style',
+                'erp5_immobilisation', 'erp5_mobile', 'erp5_payroll',
+                'erp5_payroll_ui_test', 'erp5_pdf_editor', 'erp5_publication',
+                'erp5_sxc_style',
+                # skip l10n templates to save time.
+                # 'erp5_l10n_fr', 'erp5_l10n_ja',
+                # 'erp5_l10n_pl_PL', 'erp5_l10n_pt-BR',
+                # 'erp5_accounting_l10n_fr_m14', 'erp5_accounting_l10n_fr_m9',
+                # 'erp5_accounting_l10n_pl',
+                # 'erp5_accounting_l10n_sn',
+                # 'erp5_accounting_l10n_in',
+                )
+
+    def getTitle(self):
+        return "Naming Convention"
 
     def testNamingConvention(self):
         result = 'installed templates: %s\n' % repr(self.getBusinessTemplateList())
