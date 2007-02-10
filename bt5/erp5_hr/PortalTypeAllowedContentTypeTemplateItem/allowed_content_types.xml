@@ -1,0 +1,24 @@
+<allowed_content_type_list>
+ <portal_type id="Position">
+  <item>Career</item>
+ </portal_type>
+ <portal_type id="Position Announcement">
+  <item>Image</item>
+  <item>File</item>
+ </portal_type>
+ <portal_type id="Position Announcement Module">
+  <item>Position Announcement</item>
+ </portal_type>
+ <portal_type id="Position Module">
+  <item>Position</item>
+ </portal_type>
+ <portal_type id="Position Opportunity">
+  <item>File</item>
+  <item>Image</item>
+  <item>Link</item>
+  <item>Document</item>
+ </portal_type>
+ <portal_type id="Position Opportunity Module">
+  <item>Position Opportunity</item>
+ </portal_type>
+</allowed_content_type_list>

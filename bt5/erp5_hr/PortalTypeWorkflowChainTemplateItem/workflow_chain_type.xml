@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Position</type>
+  <workflow>edit_workflow, position_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Position Announcement</type>
+  <workflow>publication_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Position Opportunity</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

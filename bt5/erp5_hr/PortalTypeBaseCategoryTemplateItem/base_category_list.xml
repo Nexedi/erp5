@@ -1,0 +1,19 @@
+<base_category_list>
+ <portal_type id="Position Announcement">
+  <item>site</item>
+  <item>source</item>
+  <item>successor</item>
+  <item>predecessor</item>
+  <item>destination</item>
+  <item>function</item>
+  <item>aggregate</item>
+  <item>group</item>
+  <item>classification</item>
+  <item>publication_section</item>
+  <item>source_project</item>
+  <item>similar</item>
+ </portal_type>
+ <portal_type id="Position Opportunity">
+  <item>referral</item>
+ </portal_type>
+</base_category_list>

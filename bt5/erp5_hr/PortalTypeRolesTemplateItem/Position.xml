@@ -1,0 +1,44 @@
+<type_roles>
+  <role id='Assignor'>
+   <property id='title'>Director of dept</property>
+   <property id='description'>Director of the department this person is working in to is the Assignor</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromObjectAssignment</property>
+   <multi_property id='category'>function/auc/department/director_of_department</multi_property>
+   <multi_property id='base_category'>function</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Deputy director</property>
+   <property id='description'>Deputy director, too</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromObjectAssignment</property>
+   <multi_property id='category'>function/auc/department/deputy_director_of_department</multi_property>
+   <multi_property id='base_category'>function</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>HR people</property>
+   <property id='description'>anybody working in Administration & HRD/Human Ressources Services</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>group/au/auc/odc/dahrd/hrsd</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Director of directorate</property>
+   <property id='description'>For all persons in the whole organisation.</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/auc/directorate/director_of_directorate</multi_property>
+   <multi_property id='base_category'>function</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Deputy director of directorate</property>
+   <property id='description'>For all persons in the whole organisation.</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/auc/directorate/deputy_director_of_directorate</multi_property>
+   <multi_property id='base_category'>function</multi_property>
+  </role>
+</type_roles>
