@@ -75,12 +75,16 @@ item_list = [[\'\', \'\']]\n
 \n
 entity = context.getSourceSectionValue()\n
 if entity is not None:\n
-  bank_account_list = entity.contentValues(filter={\'portal_type\':\n
-                        entity.getPortalPaymentNodeTypeList()})\n
-  for bank_account in bank_account_list:\n
-    url = bank_account.getRelativeUrl()\n
-    label = bank_account.getReference() or bank_account.getTitle()\n
-    item_list.append([label, url])\n
+  bank_account_id_list = entity.contentIds(filter={\'portal_type\':\n
+                 entity.getPortalPaymentNodeTypeList()})\n
+  for bank_account_id in bank_account_id_list:\n
+    # skip objects we are not allowed to access\n
+    bank_account = entity.restrictedTraverse(bank_account_id, None)\n
+    if bank_account is not None and \\\n
+              bank_account.getValidationState() != \'invalidated\':\n
+      url = bank_account.getRelativeUrl()\n
+      label = bank_account.getReference() or bank_account.getTitle()\n
+      item_list.append([label, url])\n
 \n
 item_list.sort(sort)\n
 return item_list\n
@@ -132,8 +136,9 @@ return item_list\n
                             <string>context</string>
                             <string>entity</string>
                             <string>None</string>
-                            <string>bank_account_list</string>
+                            <string>bank_account_id_list</string>
                             <string>_getiter_</string>
+                            <string>bank_account_id</string>
                             <string>bank_account</string>
                             <string>url</string>
                             <string>label</string>
