@@ -170,7 +170,7 @@
                     <value> <string>BaseTradeProject_FieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
