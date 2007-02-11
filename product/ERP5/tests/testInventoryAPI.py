@@ -66,7 +66,16 @@ class InventoryAPITestCase(ERP5TypeTestCase):
   
   def getTitle(self):
     """Title of the test."""
-    return self.__class__.__doc__
+    return 'Inventory API'
+
+  def getPortalName(self):
+    """ID of the portal. """
+    forced_portal_id = os.environ.get('erp5_tests_portal_id')
+    if forced_portal_id:
+      return str(forced_portal_id)
+    # all test methods here cleanup correctly, so we can use the same portal
+    # for all those tests.
+    return 'inventory_api_test'
 
   def afterSetUp(self):
     """set up """
