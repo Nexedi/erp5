@@ -23,6 +23,7 @@
 
 from Products.Formulator.Field import Field
 from Products.Formulator.Widget import Widget
+from Products.Formulator.Widget import render_element
 from AccessControl import ClassSecurityInfo
 from cgi import escape
 import types
@@ -282,29 +283,6 @@ def CheckBoxWidget_render(self, field, key, value, REQUEST):
 
 CheckBoxWidget.render = CheckBoxWidget_render
 
-# Patch the render_view of a TextAreaWidget so that
-# it is rendered as a nice box, it is using the tag
-# readonly understood by most browsers for a text area
-
-from Products.Formulator.Widget import TextAreaWidget
-from Products.Formulator.Widget import render_element
-from DocumentTemplate.DT_Util import html_quote
-
-def TextAreaWidget_render_view(self, field, value): # Probably useless
-    width = field.get_value('width')
-    height = field.get_value('height')
-
-    return render_element("textarea",
-                          name='',
-                          css_class=field.get_value('css_class'),
-                          cols=width,
-                          rows=height,
-                          contents=html_quote(value),
-                          extra='readonly')
-
-# TextAreaWidget.render_view = TextAreaWidget_render_view
-# See bellow TextWidget_patched_render_view
-
 # Patch the render_view of LinkField so that it is clickable in read-only mode.
 from Products.Formulator.Widget import TextWidget
 from Products.Formulator.StandardFields import LinkField
@@ -355,7 +333,9 @@ def TextWidget_patched_render_view(self, field, value):
 
 from Products.Formulator.Widget import TextWidget
 TextWidget.render_view = TextWidget_patched_render_view
-TextAreaWidget.render_view = TextWidget_patched_render_view # Use a standard span rendering
+from Products.Formulator.Widget import TextAreaWidget
+# Use a standard span rendering
+TextAreaWidget.render_view = TextWidget_patched_render_view
 
 class IntegerWidget(TextWidget) :
   def render(self, field, key, value, REQUEST) :
@@ -975,8 +955,6 @@ class PatchedDateTimeValidator(DateTimeValidator):
         return result
 
 DateTimeField.validator = PatchedDateTimeValidator()
-
-from Products.Formulator.Widget import TextWidgetInstance
 
 class FloatWidget(TextWidget):
 
