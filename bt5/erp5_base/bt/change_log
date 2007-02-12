@@ -1,3 +1,9 @@
+2007-02-12 Kevin
+* Fix precision display in currency module  list.
+* Increase version number.
+* Update BT5 description.
+* Update copyright.
+
 2006-09-12 Romain
 * Display translated state of Assignement.
 

@@ -350,7 +350,7 @@
                           <string>Symbol</string>
                         </tuple>
                         <tuple>
-                          <string>precision</string>
+                          <string>base_unit_quantity</string>
                           <string>Precision</string>
                         </tuple>
                       </list>
