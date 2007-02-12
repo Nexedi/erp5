@@ -183,7 +183,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def __init__(self):
         ZCatalog.__init__(self, self.getId())
 
-    # Explicite Inheritance
+    # Explicit Inheritance
     __url = CMFCoreCatalogTool.__url
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
 
@@ -440,14 +440,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        
-        if not kw.has_key('limit'):
-          kw['limit'] = 1000
-
-        #LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
-        return apply(ZCatalog.searchResults, (self, REQUEST), kw)
+        kw.setdefault('limit', 1000)
+        return ZCatalog.searchResults(self, REQUEST, **kw)
 
     __call__ = searchResults
+
+    security.declarePrivate('unrestrictedSearchResults')
+    def unrestrictedSearchResults(self, REQUEST=None, **kw):
+        """Calls ZSQLCatalog.searchResults directly without restrictions.
+        """
+        kw.setdefault('limit', 1000)
+        return ZCatalog.searchResults(self, REQUEST, **kw)
 
     def countResults(self, REQUEST=None, **kw):
         """
@@ -468,7 +471,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        return apply(ZCatalog.countResults, (self, REQUEST), kw)
+        return ZCatalog.countResults(self, REQUEST, **kw)
+    
+    security.declarePrivate('unrestrictedCountResults')
+    def unrestrictedCountResults(self, REQUEST=None, **kw):
+        """Calls ZSQLCatalog.countResults directly without restrictions.
+        """
+        return ZCatalog.countResults(self, REQUEST, **kw)
 
     def wrapObject(self, object, sql_catalog_id=None, **kw):
         """

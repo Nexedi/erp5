@@ -1328,4 +1328,38 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(1000,len(self.getCatalogTool()(portal_type='Organisation')))
     self.assertEqual(1002,len(self.getCatalogTool()(portal_type='Organisation',limit=None)))
     
+  def test_47_Unrestricted(self, quiet=quiet, run=run_all_test):
+    """test unrestricted search/count results.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Unrestricted queries'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    login = PortalTestCase.login
+
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
+    uf._doAddUser('bob', '', ['Member'], [])
     
+    # create a document that only alice can view
+    login(self, 'alice')
+    folder = self.getOrganisationModule()
+    ob = folder.newContent(title='Object Title')
+    ob.manage_permission('View', ['Manager'], 0)
+    get_transaction().commit()
+    self.tic()
+    
+    # bob cannot see the document
+    login(self, 'bob')
+    ctool = self.getCatalogTool()
+    self.assertEquals(0, len(ctool.searchResults(title='Object Title')))
+    self.assertEquals(0, ctool.countResults(title='Object Title')[0][0])
+    
+    # unless using unrestricted searches
+    self.assertEquals(1,
+                len(ctool.unrestrictedSearchResults(title='Object Title')))
+    self.assertEquals(1,
+                ctool.unrestrictedCountResults(title='Object Title')[0][0])
+
+
