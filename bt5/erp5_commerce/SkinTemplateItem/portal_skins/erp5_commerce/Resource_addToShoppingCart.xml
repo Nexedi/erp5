@@ -71,7 +71,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.Document import newTempOrderLine\n
-quantity = int(context.REQUEST.get(\'field_my_buy_quantity\', 1))\n
+quantity = int(context.REQUEST.get(\'field_your_buy_quantity\', 1))\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
