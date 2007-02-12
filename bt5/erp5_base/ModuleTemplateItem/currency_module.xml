@@ -20,9 +20,6 @@
    <name>Access session data</name>
   </permission>
   <permission type='list'>
-   <name>AccessContentsInformation</name>
-  </permission>
-  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
   <permission type='list'>
@@ -167,19 +164,10 @@
    <name>Add Page Templates</name>
   </permission>
   <permission type='list'>
-   <name>Add Photo Folders</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Photos</name>
-  </permission>
-  <permission type='list'>
    <name>Add Pluggable Index</name>
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Portal ZSyncer Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Python Scripts</name>
@@ -221,7 +209,7 @@
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
@@ -234,9 +222,6 @@
   </permission>
   <permission type='list'>
    <name>Add ZODB Mount Points</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ZSyncers</name>
   </permission>
   <permission type='list'>
    <name>Add Zope Tutorials</name>
@@ -291,9 +276,6 @@
   </permission>
   <permission type='list'>
    <name>Change Page Templates</name>
-  </permission>
-  <permission type='list'>
-   <name>Change Photo</name>
   </permission>
   <permission type='list'>
    <name>Change Python Scripts</name>
@@ -360,6 +342,9 @@
   </permission>
   <permission type='list'>
    <name>Edit ReStructuredText</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='list'>
    <name>FTP access</name>
@@ -513,15 +498,6 @@
   </permission>
   <permission type='list'>
    <name>WebDAV access</name>
-  </permission>
-  <permission type='list'>
-   <name>ZSyncer: Use ZSyncer</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Currency Module</portal_type>

@@ -44,10 +44,6 @@
    <role>Owner</role>
   </permission>
   <permission type='tuple'>
-   <name>AccessContentsInformation</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
   </permission>
@@ -228,22 +224,11 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Portal ZSyncer Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -298,7 +283,7 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
@@ -315,9 +300,6 @@
   <permission type='tuple'>
    <name>Add ZODB Mount Points</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add ZSyncers</name>
   </permission>
   <permission type='tuple'>
    <name>Add Zope Tutorials</name>
@@ -391,10 +373,6 @@
   </permission>
   <permission type='tuple'>
    <name>Change Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change Photo</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -488,6 +466,9 @@
   <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>
@@ -712,15 +693,6 @@
   <permission type='tuple'>
    <name>WebDAV access</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>ZSyncer: Use ZSyncer</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: manage</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Person Module</portal_type>
