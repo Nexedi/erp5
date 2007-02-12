@@ -104,16 +104,16 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>where_expression</string>
-                            <string>select_expression</string>
-                            <string>group_by_expression</string>
-                            <string>from_table_list</string>
-                            <string>sort_on</string>
-                            <string>limit_expression</string>
-                            <string>search_mode</string>
+<string>selection</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>where_expression</string>
+<string>select_expression</string>
+<string>group_by_expression</string>
+<string>from_table_list</string>
+<string>sort_on</string>
+<string>limit_expression</string>
+<string>search_mode</string>
                           </list>
                         </value>
                     </item>
@@ -130,15 +130,15 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>selection\n
-selection_domain\n
-selection_report\n
-where_expression\n
-select_expression\n
-group_by_expression\n
-from_table_list:list\n
-sort_on\n
-limit_expression\n
+            <value> <string>selection\r\n
+selection_domain\r\n
+selection_report\r\n
+where_expression\r\n
+select_expression\r\n
+group_by_expression\r\n
+from_table_list:list\r\n
+sort_on\r\n
+limit_expression\r\n
 search_mode</string> </value>
         </item>
         <item>
@@ -211,18 +211,16 @@ WHERE \n
     <dtml-if expression> AND <dtml-var expression> </dtml-if>\n
   </dtml-let>\n
 </dtml-if>\n
-<dtml-if sort_on>\n
-ORDER BY\n
-  <dtml-var sort_on>\n
-</dtml-if>\n
 <dtml-if group_by_expression>\n
 GROUP BY\n
   <dtml-var group_by_expression>\n
 </dtml-if>\n
+<dtml-if sort_on>\n
+ORDER BY\n
+  <dtml-var sort_on>\n
+</dtml-if>\n
 <dtml-if limit_expression>\n
 LIMIT <dtml-var "limit_expression">\n
-<dtml-else>\n
-LIMIT 1000\n
 </dtml-if>\n
 
 
@@ -304,8 +302,6 @@ ORDER BY\n
 </dtml-if>\n
 <dtml-if limit_expression>\n
 LIMIT <dtml-var "limit_expression">\n
-<dtml-else>\n
-LIMIT 1000\n
 </dtml-if>\n
 
 
