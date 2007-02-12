@@ -75,9 +75,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -85,6 +83,7 @@
                     <value>
                       <list>
                         <string>my_comment</string>
+                        <string>my_task_line_requirement_logical_path_list</string>
                       </list>
                     </value>
                 </item>
@@ -94,11 +93,12 @@
                       <list>
                         <string>my_title</string>
                         <string>my_predecessor_title_list</string>
-                        <string>my_destination_decision_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_destination_section</string>
+                        <string>my_task_line_resource_title</string>
+                        <string>my_source_title</string>
+                        <string>my_source_project_title</string>
                         <string>my_trade_condition_title</string>
-                        <string>state</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -108,10 +108,10 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_source_title</string>
-                        <string>my_resource</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_decision_title</string>
                         <string>my_task_line_quantity</string>
-                        <string>total_quantity</string>
                         <string>my_task_line_quantity_unit</string>
                         <string>my_task_line_price</string>
                         <string>total_price</string>
