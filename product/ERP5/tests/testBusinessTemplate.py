@@ -1910,6 +1910,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           if hasattr(aq_base(data), 'uid'):
             self.failUnless(data.uid is None)
 
+  def stepCheckUnindexActivityPresence(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if we have activity for unindex
+    """
+    sql_connection = self.getSQLConnection()
+    sql = "select uid from message_queue where method_id='unindexObject'" # where id='unindexObject'"
+    r = sql_connection.manage_test(sql)
+    self.failUnless(len(r) == 0)
+
+  def stepCheckPathNotUnindexAfterBuild(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that after a build, not unindex has been done
+    """
+    bc_id = sequence.get('bc_id')
+    bt = sequence.get('current_bt')
+    path = 'portal_categories/'+bc_id
+    category_id_list = sequence.get('category_id_list')
+    portal = self.getPortal()
+    ob = portal.unrestrictedTraverse(path)
+    self.failUnless(ob is not None)
+    for id_ in category_id_list:
+      cat = ob[id_]
+      catalog_ob_list = [x.getObject() for x in portal.portal_catalog(uid=cat.getUid())]
+      self.failUnless(len(catalog_ob_list) > 0)
+
   def stepSetUpdateWorkflowFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
     """
     Set flag for update in Business Template
@@ -2469,6 +2494,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_091_BusinessTemplateDoNotUnindexObject(self, quiet=quiet, run=un_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template Do Not Unindex Object At Build'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    # a simple path
+    sequence_string = '\
+                       CreateBaseCategory \
+                       CreateCategories \
+                       CreateNewBusinessTemplate \
+                       Tic \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddBaseCategoryAsPathToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckUnindexActivityPresence \
+                       Tic \
+                       CheckPathNotUnindexAfterBuild \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       RemoveBaseCategory \
+                       '
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
   def test_10_BusinessTemplateWithPathAndJoker1(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -2515,7 +2570,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self, quiet=quiet, run=1): #run_all_test):
+  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template Uninstall With Path And Joker * Removed'

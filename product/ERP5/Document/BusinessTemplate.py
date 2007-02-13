@@ -435,6 +435,9 @@ class BaseTemplateItem(Implicit, Persistent):
     elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
       if not obj.getProperty('business_template_include_content', 1) :
         obj.deletePdfContent()
+    if getattr(aq_base(obj), 'isIndexable', None) == 1:
+      # prevent from unindexing copy of object
+      setattr(obj, 'isIndexable', 0)
     return obj
 
 class ObjectTemplateItem(BaseTemplateItem):
@@ -898,6 +901,12 @@ class PathTemplateItem(ObjectTemplateItem):
         if len(id_list) > 0:
           if include_subobjects:
             self.build_sub_objects(context, id_list, relative_url)
+          else:
+            for id_ in id_list:
+              subobj = obj[id_]
+              if getattr(aq_base(subobj), 'isIndexable', None) == 1:
+                # prevent from unindexing copy of object
+                setattr(subobj, 'isIndexable', 0)
           for id_ in list(id_list):
             obj._delObject(id_)
         if hasattr(aq_base(obj), 'groups'):
@@ -978,6 +987,10 @@ class CategoryTemplateItem(ObjectTemplateItem):
           obj._delObject(id_)
       else:
         for id_ in list(id_list):
+          subobj = obj[id_]
+          if getattr(aq_base(subobj), 'isIndexable', None) == 1:
+            # prevent from unindexing copy of object
+            setattr(subobj, 'isIndexable', 0)
           obj._delObject(id_)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
