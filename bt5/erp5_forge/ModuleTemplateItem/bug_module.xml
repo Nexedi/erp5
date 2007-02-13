@@ -225,14 +225,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
@@ -385,10 +377,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change Photo</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -475,6 +463,9 @@
   <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>

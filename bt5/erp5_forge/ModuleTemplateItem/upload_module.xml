@@ -164,12 +164,6 @@
    <name>Add Page Templates</name>
   </permission>
   <permission type='list'>
-   <name>Add Photo Folders</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Photos</name>
-  </permission>
-  <permission type='list'>
    <name>Add Pluggable Index</name>
   </permission>
   <permission type='list'>
@@ -284,9 +278,6 @@
    <name>Change Page Templates</name>
   </permission>
   <permission type='list'>
-   <name>Change Photo</name>
-  </permission>
-  <permission type='list'>
    <name>Change Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -351,6 +342,9 @@
   </permission>
   <permission type='list'>
    <name>Edit ReStructuredText</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='list'>
    <name>FTP access</name>
