@@ -32,8 +32,6 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowAction
 
-from Products.CMFPhoto.CMFPhoto import CMFPhoto
-
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
@@ -78,14 +76,14 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
 
     def manage_afterClone(self, item):
       XMLObject.manage_afterClone(self, item)
-      CMFPhoto.manage_afterClone(self, item)
+      Image.manage_afterClone(self, item)
 
     def manage_afterAdd(self, item, container):
       XMLObject.manage_afterAdd(self, item, container)
-      CMFPhoto.manage_afterAdd(self, item, container)
+      Image.manage_afterAdd(self, item, container)
 
     def manage_beforeDelete(self, item, container):
-      CMFPhoto.manage_beforeDelete(self, item, container)
+      Image.manage_beforeDelete(self, item, container)
 
     security.declareProtected(Permissions.ModifyPortalContent, '_setMeasureList')
     def _setMeasureList(self,value):
