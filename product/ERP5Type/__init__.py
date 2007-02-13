@@ -60,7 +60,7 @@ def allowMemcachedTool():
 
 def initialize( context ):
   # Import Product Components
-  from Tool import ClassTool, CacheTool, MemcachedTool
+  from Tool import ClassTool, CacheTool, MemcachedTool, SessionTool
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
@@ -70,7 +70,8 @@ def initialize( context ):
   content_classes = ( Base.Base, XMLObject.XMLObject, )
   portal_tools = ( ClassTool.ClassTool,
                    CacheTool.CacheTool,
-                   MemcachedTool.MemcachedTool, )
+                   MemcachedTool.MemcachedTool,
+		   SessionTool.SessionTool )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
