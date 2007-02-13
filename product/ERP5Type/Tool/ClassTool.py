@@ -33,8 +33,9 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from App.config import getConfiguration
+from Products.ERP5Type.TM import VTM as TM
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import os
+import os, tempfile
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
@@ -65,14 +66,18 @@ from zLOG import LOG
   ClassTool.
 """
 
+COPYRIGHT = "Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved."
+LOCAL_DIRECTORY_LIST = ('Document', 'Extensions', 'Constraint', 'tests', 'PropertySheet')
+
 if allowClassTool():
 
-  class ClassTool(BaseTool):
+  class ClassTool(TM, BaseTool):
       """
         This is the full-featured version of ClassTool.
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
+      _use_TM = _transactions = 1
   
       # Declarative Security
       security = ClassSecurityInfo()
@@ -211,7 +216,7 @@ if allowClassTool():
         text = """\
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# %s
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -258,8 +263,8 @@ class %s(XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      )""" % class_id
-        writeLocalDocument(class_id, text)
+                      )""" % (COPYRIGHT, class_id)
+        self.writeLocalDocument(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Created' % (self.absolute_url(), class_id))
   
@@ -269,7 +274,7 @@ class %s(XMLObject):
           Updates a Document with a new text
         """
         previous_text = readLocalDocument(class_id)
-        writeLocalDocument(class_id, text, create=0)
+        self.writeLocalDocument(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Saved' % (self.absolute_url(), class_id))
   
@@ -306,7 +311,7 @@ class %s(XMLObject):
         text = """\
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# %s
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -344,8 +349,8 @@ class PropertySheetTemplate:
     )
   
 
-"""
-        writeLocalPropertySheet(class_id, text)
+""" % COPYRIGHT
+        self.writeLocalPropertySheet(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Created' % (self.absolute_url(), class_id))
   
@@ -355,7 +360,7 @@ class PropertySheetTemplate:
           Updates a PropertySheet with a new text
         """
         previous_text = readLocalPropertySheet(class_id)
-        writeLocalPropertySheet(class_id, text, create=0)
+        self.writeLocalPropertySheet(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Saved' % (self.absolute_url(), class_id))
   
@@ -390,7 +395,7 @@ class PropertySheetTemplate:
         text = """\
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# %s
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -417,8 +422,8 @@ class PropertySheetTemplate:
 
 def myExtensionMethod(self, param=None):
   pass
-"""
-        writeLocalExtension(class_id, text)
+""" % COPYRIGHT
+        self.writeLocalExtension(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Created' % (self.absolute_url(), class_id))
   
@@ -428,7 +433,7 @@ def myExtensionMethod(self, param=None):
           Updates a Extension with a new text
         """
         previous_text = readLocalExtension(class_id)
-        writeLocalExtension(class_id, text, create=0)
+        self.writeLocalExtension(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Saved' % (self.absolute_url(), class_id))
   
@@ -447,7 +452,7 @@ def myExtensionMethod(self, param=None):
         text = '''\
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# %s
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -519,8 +524,8 @@ class Test(ERP5TypeTestCase):
     are defined in /usr/lib/python/unittest.py.
     """
     self.assertEqual(0, 1)
-'''
-        writeLocalTest(class_id, text)
+''' % COPYRIGHT
+        self.writeLocalTest(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Created' % (self.absolute_url(), class_id))
   
@@ -530,7 +535,7 @@ class Test(ERP5TypeTestCase):
           Updates a Test with a new text
         """
         previous_text = readLocalTest(class_id)
-        writeLocalTest(class_id, text, create=0)
+        self.writeLocalTest(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Saved' % (self.absolute_url(), class_id))
   
@@ -553,7 +558,7 @@ class Test(ERP5TypeTestCase):
         text = """\
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# %s
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -597,8 +602,8 @@ class ConstraintTemplate(Constraint):
       # Do the job here
       
       return errors
-"""
-        writeLocalConstraint(class_id, text)
+""" % COPYRIGHT
+        self.writeLocalConstraint(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Created' % (self.absolute_url(), class_id))
 
@@ -608,7 +613,7 @@ class ConstraintTemplate(Constraint):
           Updates a Constraint with a new text
         """
         previous_text = readLocalConstraint(class_id)
-        writeLocalConstraint(class_id, text, create=0)
+        self.writeLocalConstraint(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Saved' % (self.absolute_url(), class_id))
 
@@ -696,7 +701,7 @@ class ConstraintTemplate(Constraint):
           text = '''\
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# %s
 #                    Yoshinori Okuji <yo@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -741,7 +746,7 @@ def initialize( context ):
                          portal_tools = (),
                          content_constructors = (),
                          content_classes = ())
-'''
+''' % s
           f = open(init, 'w')
           try:
             f.write(text)
@@ -840,6 +845,85 @@ def initialize( context ):
         dochelper.setStaticPropertyList(property_list)
         return dochelper
 
+      # Transaction Management
+      def createTemporaryInstanceHome(self):
+        """
+        """
+        self._register()
+        # Make a new instance home
+        if not getattr(self, '_v_instance_home', None):
+          self._v_instance_home = tempfile.mkdtemp()
+          instance_home = self._v_instance_home
+          for name in LOCAL_DIRECTORY_LIST:
+            os.mkdir(os.sep.join((instance_home, name)))
+
+      def deleteTemporaryInstanceHome(self):
+        """
+        """
+        # Delete the whole instance home
+        if getattr(self, '_v_instance_home', None):
+          tmp_instance_home = self._v_instance_home
+          for name in LOCAL_DIRECTORY_LIST:
+            source_dir = os.sep.join((tmp_instance_home, name))
+            for fname in os.listdir(source_dir):
+              source_file = os.sep.join((source_dir,fname))
+              os.remove(source_file)
+            os.rmdir(source_dir)
+          os.rmdir(tmp_instance_home)
+        self._v_instance_home = None
+
+      def renameTemporaryInstanceHome(self):
+        """
+        """
+        # Delete temporary instance home
+        tmp_instance_home = self._v_instance_home
+        instance_home = getConfiguration().instancehome
+        for name in LOCAL_DIRECTORY_LIST:
+          source_dir = os.sep.join((tmp_instance_home, name))
+          destination_dir = os.sep.join((instance_home, name))
+          for fname in os.listdir(source_dir):
+            source_file = os.sep.join((source_dir,fname))
+            destination_file = os.sep.join((destination_dir,fname))
+            try:
+              os.remove(destination_file)
+            except OSError:
+              pass
+            os.rename(source_file, destination_file)
+        self.deleteTemporaryInstanceHome()
+
+      security.declareProtected( Permissions.ManageExtensions, 'writeLocalPropertySheet' )
+      def writeLocalPropertySheet(self, class_id, text, create=1):
+        self.createTemporaryInstanceHome()
+        writeLocalPropertySheet(class_id, text, create=create, instance_home=self._v_instance_home)
+
+      security.declareProtected( Permissions.ManageExtensions, 'writeLocalExtension' )
+      def writeLocalExtension(self, class_id, text, create=1):
+        self.createTemporaryInstanceHome()
+        writeLocalExtension(class_id, text, create=create, instance_home=self._v_instance_home)
+
+      security.declareProtected( Permissions.ManageExtensions, 'writeLocalTest' )
+      def writeLocalTest(self, class_id, text, create=1):
+        self.createTemporaryInstanceHome()
+        writeLocalTest(class_id, text, create=create, instance_home=self._v_instance_home)
+
+      security.declareProtected( Permissions.ManageExtensions, 'writeLocalDocument' )
+      def writeLocalDocument(self, class_id, text, create=1):
+        self.createTemporaryInstanceHome()
+        writeLocalDocument(class_id, text, create=create, instance_home=self._v_instance_home)
+
+      security.declareProtected( Permissions.ManageExtensions, 'writeLocalConstraint' )
+      def writeLocalConstraint(self, class_id, text, create=1):
+        self.createTemporaryInstanceHome()
+        writeLocalConstraint(class_id, text, create=create, instance_home=self._v_instance_home)
+
+      def _finish(self):
+        # Move all temp files we created
+        self.renameTemporaryInstanceHome()
+
+      def _abort(self):
+        # Delete all temp files we created
+        self.deleteTemporaryInstanceHome()
+
 else:
 
   class ClassTool(BaseTool):
@@ -856,3 +940,4 @@ else:
       manage_overview = DTMLFile( 'explainDummyClassTool', _dtmldir )
 
 InitializeClass(ClassTool)
+
