@@ -71,7 +71,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     """
       Return the list of business templates.
 
-      the business template crm give the following things :
+      the business template base give the following things :
       modules:
         - person
         - organisation
@@ -81,7 +81,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
       /organisation
     """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_trade')
 
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
@@ -102,21 +102,30 @@ class TestCMFCategory(ERP5TypeTestCase):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
+    # Make persons.
     person_module = self.getPersonModule()
     if self.id1 not in person_module.objectIds():
-      p1 = person_module.newContent(id=self.id1)
+      p1 = person_module.newContent(id=self.id1, title=self.id1)
     else:
       p1 = person_module._getOb(self.id1)
     if self.id1 not in p1.objectIds():
       sub_person = p1.newContent(id=self.id1,portal_type='Person')
     if self.id2 not in person_module.objectIds():
-      p2 = person_module.newContent(id=self.id2)
+      p2 = person_module.newContent(id=self.id2, title=self.id2)
+    # Make organisations.
     organisation_module = self.getOrganisationModule()
     if self.id1 not in organisation_module.objectIds():
       o1 = organisation_module.newContent(id=self.id1)
     if self.id2 not in organisation_module.objectIds():
       o2 = organisation_module.newContent(id=self.id2)
     portal_categories = self.getCategoriesTool()
+    # Make a sale order and a sale packing list.
+    sale_order_module = portal.sale_order_module
+    if self.id1 not in sale_order_module.objectIds():
+        sale_order_module.newContent(id=self.id1)
+    sale_packing_list_module = portal.sale_packing_list_module
+    if self.id1 not in sale_packing_list_module.objectIds():
+        sale_packing_list_module.newContent(id=self.id1)
     # This set the acquisition for region
     for bc in ('region', ):
       if not hasattr(portal_categories, bc):
@@ -726,12 +735,43 @@ class TestCMFCategory(ERP5TypeTestCase):
   def test_20_CategoryChildTitleAndIdItemList(self, quiet=quiet,
                                               run=run_all_test):
     """Tests getCategoryChildTitleAndIdItemList."""
+    if not run : return
+    if not quiet:
+      message = 'Test Category Child Title And Id Item List'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ',0,message)
     base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
     cat = base_cat.newContent(portal_type='Category',
                               id='the_id', title='The Title')
     self.assertEquals([['', ''], ['The Title (the_id)', 'the_id']],
                        base_cat.getCategoryChildTitleAndIdItemList())
     
+  def test_21_AcquiredPortalType(self, quiet=quiet, run=run_all_test):
+    """Test if acquired_portal_type works correctly."""
+    if not run : return
+    if not quiet:
+      message = 'Test Acquired Portal Type'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ',0,message)
+
+    portal = self.getPortal()
+    order = portal.sale_order_module[self.id1]
+    packing_list = portal.sale_packing_list_module[self.id1]
+    person = self.getPersonModule()[self.id1]
+
+    person.setTitle('toto')
+    self.assertEquals(person.getTitle(), 'toto')
+
+    order.setDestinationAdministrationValue(person)
+    self.assertEquals(order.getDestinationAdministrationPersonTitle(), 'toto')
+
+    packing_list.setDestinationAdministrationValue(None)
+    packing_list.setCausalityValue(None)
+    self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), None)
+
+    packing_list.setCausalityValue(order)
+    self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
+
 if __name__ == '__main__':
     framework()
 else:
