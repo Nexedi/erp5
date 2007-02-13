@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This scripts browses recursively a selected list of base categories\n
+  to generate a mirror structure at the Web Site level in the for\n
+  of Web Sections.\n
+\n
+  category_list -- list of categories to use\n
+"""\n
+translateString = context.Base_translateString\n
+category_tool = context.portal_categories\n
+global section_count\n
+section_count = 0\n
+\n
+valid_char = "abcdefghijklmnopqrstuvwxyz0123456789-_"\n
+\n
+def getNiceID(s):\n
+  if not s: return None\n
+  s = s.lower()\n
+  s = s.split()\n
+  s = \'-\'.join(s)\n
+  s = filter(lambda c: c in valid_char, s)\n
+  s = s.replace(\'_\', \'-\')\n
+  return s\n
+\n
+def createWebSectionFromCategoryValue(container, category):\n
+  global section_count\n
+  # Create a nice URI\n
+  # If the ID is a number, use the title\n
+  if category.hasCodification():\n
+    section_id = getNiceID(category.getCodification())\\\n
+            or getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+  else:\n
+    section_id = getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+  # Create a new Web Section if necessary\n
+  if section_id not in container.contentIds():\n
+    section_count += 1\n
+    new_section = container.newContent( portal_type = \'Web Section\'\n
+                                      , id          = section_id\n
+                                      , title       = category.getTitle()\n
+                                      , description = category.getDescription()\n
+                                      , visible     = True\n
+                                      , membership_criterion_base_category = (category.getBaseCategory().getId(),)\n
+                                      , membership_criterion_category      = (category.getRelativeUrl(),)\n
+                                      )\n
+  else:\n
+    new_section = container[section_id]\n
+    if update_existing:\n
+      new_section.edit(title       = category.getTitle()\n
+                     , description = category.getDescription()\n
+                     , visible     = True\n
+                     , membership_criterion_base_category = (category.getBaseCategory().getId(),)\n
+                     , membership_criterion_category      = (category.getRelativeUrl(),)\n
+                     )\n
+  # Call the function recursively\n
+  for sub_category in category.contentValues():\n
+    createWebSectionFromCategoryValue(new_section, sub_category)\n
+  # Remove sections which have no counterpart in categories\n
+  if remove_missing:\n
+    # XXX Not implemented yet\n
+    pass\n
+\n
+# Call the recursive section generator for each category\n
+for my_category in category_list:\n
+  createWebSectionFromCategoryValue(context, category_tool[my_category])\n
+\n
+return context.Base_redirect(form_id,\n
+  keep_items = dict(portal_status_message = translateString("Generated ${section_count} sections for the Web Site.",\n
+  mapping = dict(section_count = section_count))))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>category_list, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>category_list</string>
+                            <string>update_existing</string>
+                            <string>remove_missing</string>
+                            <string>form_id</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>translateString</string>
+                            <string>category_tool</string>
+                            <string>section_count</string>
+                            <string>valid_char</string>
+                            <string>getNiceID</string>
+                            <string>createWebSectionFromCategoryValue</string>
+                            <string>_getiter_</string>
+                            <string>my_category</string>
+                            <string>_getitem_</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+                <string>view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_generateSectionFromCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
