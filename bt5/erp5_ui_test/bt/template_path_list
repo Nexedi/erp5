@@ -5,6 +5,8 @@ portal_tests/business_template_zuite
 portal_tests/business_template_zuite/**
 portal_tests/check_box_field_zuite
 portal_tests/check_box_field_zuite/**
+portal_tests/datetime_field_zuite
+portal_tests/datetime_field_zuite/**
 portal_tests/document_zuite
 portal_tests/document_zuite/**
 portal_tests/duration_field_zuite
