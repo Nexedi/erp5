@@ -210,7 +210,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           return cache[key]
         except KeyError:
           pass
-          
+
       try:
         relative_url = str(relative_url)
         if base_category is not None:
@@ -219,12 +219,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
         value = node
       except (TypeError, KeyError, NotFound):
         value = None
-        
+
       if cache is not None:
         cache[key] = value
 
       return value
-        
+
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValue')
 #     def getCategoryValue(self, relative_url, base_category = None):
 #       """
@@ -608,16 +608,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
       portal_type = kw.get('portal_type', ())
       if isinstance(portal_type, str):
         portal_type = (portal_type,)
-      if spec is (): 
+      if spec is ():
         spec = portal_type
-      #LOG("set Category",0,str(category_list))
-
       default_dict = {}
       self._cleanupCategories(context)
       if isinstance(category_list, str):
         category_list = (category_list,)
       elif category_list is None:
         category_list = ()
+      elif not isinstance(category_list, list):
+          raise TypeError, 'Category must be a string.'
       if isinstance(base_category_list, str):
         base_category_list = [base_category_list]
       new_category_list = []
@@ -783,23 +783,23 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                          spec=(), filter=None, acquired_object_dict = None, **kw ):
       cache = getReadOnlyTransactionCache(self)
       if cache is not None:
-        key = ('getSingleCategoryAcquiredMembershipList', context._p_oid, base_category, base, spec, 
+        key = ('getSingleCategoryAcquiredMembershipList', context._p_oid, base_category, base, spec,
                filter, str(kw))
         try:
           return cache[key]
         except KeyError:
           pass
-          
+
       result = self._getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
-                                                             spec=spec, filter=filter, 
+                                                             spec=spec, filter=filter,
                                                              acquired_object_dict = acquired_object_dict,
                                                              **kw)
       if cache is not None:
         cache[key] = result
-        
+
       return result
-      
-                                      
+
+
     def _getSingleCategoryAcquiredMembershipList(self, context, base_category,
                                          base = 0, spec = (), filter = None,
                                          acquired_portal_type = (),
@@ -878,7 +878,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw ) # Not acquired because this is the first try
                                                              # to get a local defined category
-      
+
       base_category_value = self.getCategoryValue(base_category)
       #LOG("result", 0, str(result))
       if base_category_value is not None:
@@ -1027,7 +1027,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
       return result
-      
+
     security.declareProtected( Permissions.AccessContentsInformation,
                                                'getAcquiredCategoryMembershipList' )
     def getAcquiredCategoryMembershipList(self, context, base_category = None, base=1,
@@ -1057,12 +1057,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
-        
-        Keywords parameters : 
+
+        Keywords parameters :
          - strict_membership:  if we want strict membership checking
-         - strict : alias for strict_membership (deprecated but still here for 
+         - strict : alias for strict_membership (deprecated but still here for
                     skins backward compatibility. )
- 
+
         XXX - there should be 2 different methods, one which acuiqred
         and the other which does not. A complete review of
         the use of isMemberOf is required
@@ -1077,7 +1077,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           if c == category:
             return 1
       else:
-        for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category): 
+        for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
           if c.find(category) == 0:
             # The names begin with the same string
             c_right_split = c.split(category)[1]
@@ -1218,7 +1218,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     def updateRelatedContent(self, context,
                              previous_category_url, new_category_url):
       """Updates related object when an object have moved.
-      
+
           o context: the moved object
           o previous_category_url: the related url of this object before
             the move
@@ -1273,7 +1273,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       portal_type = kw.get('portal_type')
-      
+
       if isinstance(portal_type, str):
         portal_type = [portal_type]
       if spec is (): spec = None # We do not want to care about spec
@@ -1289,12 +1289,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
         category_list = []
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
-      
+
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
                            category_list = category_list,
                            portal_type = portal_type,
                            strict_membership = strict_membership )
-      
+
       result = []
       for b in brain_result:
         o = b.getObject()
@@ -1305,7 +1305,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                   # XXX missing filter and **kw stuff
       #return self.search_category(category_list = category_list, portal_type = spec)
       # future implementation with brains, much more efficient
-    
+
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedPropertyList' )
     def getRelatedPropertyList(self, context, base_category_list=None,
@@ -1320,7 +1320,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                           filter=filter, base=base, **kw) :
         result.append(o.getProperty(property_name, None))
       return result
-      
+
     # SQL Expression Building
     security.declareProtected(Permissions.AccessContentsInformation, 'buildSQLSelector')
     def buildSQLSelector(self, category_list, query_table='category'):
@@ -1395,7 +1395,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         catalog_search = self.portal_catalog(portal_type = portal_type,
                            selection_domain = selection_domain)
-      
+
       return catalog_search
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
@@ -1404,7 +1404,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       This returns a list of items belonging to a category.
       The following parameters are accepted :
         portal_type       : returns only objects from the given portal_type
-        strict_membership : returns only object belonging to this category, not 
+        strict_membership : returns only object belonging to this category, not
                             objects belonging to child categories.
         strict            : a deprecated alias for strict_membership
       """
@@ -1418,14 +1418,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                 'getCategoryMemberTitleItemList' )
     def getCategoryMemberTitleItemList(self, context, base_category = None,
-                                      spec = (), filter=None, portal_type=(), strict_membership = 0, 
+                                      spec = (), filter=None, portal_type=(), strict_membership = 0,
                                       strict="DEPRECATED"):
       """
       This returns a title list of items belonging to a category
 
       """
       return self.getCategoryMemberItemList(self, context, base_category = base_category,
-                                spec = spec, filter=filter, portal_type=portal_type, 
+                                spec = spec, filter=filter, portal_type=portal_type,
                                 strict_membership = strict_membership, strict = strict,
                                 display_id = 'getTitle')
 
@@ -1443,7 +1443,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             return cache[key]
           except KeyError:
             pass
-            
+
         try:
           obj = self.restrictedTraverse(relative_url)
           if obj is None:
@@ -1456,10 +1456,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
         except (KeyError, AttributeError) :
           LOG("CMFCategory WARNING",0,"Could not access object relative_url %s" % relative_url )
           value = None
-          
+
         if cache is not None:
           cache[key] = value
-          
+
         return value
 
 InitializeClass( CategoryTool )

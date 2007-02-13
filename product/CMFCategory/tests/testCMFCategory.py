@@ -187,7 +187,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       LOG('Testing... ',0,'testSingleCategory')
     o1 = self.getOrganisationModule()._getOb(self.id1)
     LOG('SingleCategory,',0,o1.getGenderRelatedValueList())
-    
+
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
     self.assertEqual(p1.getRegion(),self.region1)
@@ -283,7 +283,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
-  
+
   def test_listAcquisitionIsMemberOf(self):
     o1 = self.getOrganisationModule()._getOb(self.id1)
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -351,7 +351,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     parent_uid_list2 = cat2.getCategoryParentUidList(relative_url = cat2.getRelativeUrl())
     parent_uid_list2.sort()
     self.assertEqual(parent_uid_list2, parent_uid_list)
-    
+
   def test_10_FallBackBaseCategory(self, quiet=quiet, run=run_all_test):
     # Test if we can use an alternative base category
     if not run: return
@@ -365,7 +365,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getGenderValue(),None)
     p1.setSubordinationValue(o1)
     self.assertEqual(p1.getGenderValue(),o1)
-  
+
   def test_FallBackAcquisitionIsMemberOf(self):
     p1 = self.getPersonModule()._getOb(self.id1)
     o1 = self.getOrganisationModule()._getOb(self.id1)
@@ -386,7 +386,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion(self.region1)
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(sub_person.getRegion(),self.region1)
-  
+
   def test_parentAcquisitionIsMemberOf(self):
     p1 = self.getPersonModule()._getOb(self.id1)
     sub_person = p1._getOb(self.id1)
@@ -401,7 +401,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.failUnless(p1.isMemberOf('region/%s' % self.region1))
     sub_person.setRegion(self.region2)
     self.failUnless(sub_person.isMemberOf('region/%s' % self.region2))
-    
+
   def test_12_GetRelatedValueAndValueList(self, quiet=quiet, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
@@ -415,7 +415,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     o1 = self.getOrganisationModule()._getOb(self.id1)
     p1.setGenderValue(o1)
     get_transaction().commit()
-    self.tic() # This is required 
+    self.tic() # This is required
 
     self.assertEqual(p1.getGenderValue(),o1)
     self.assertEqual(o1.getGenderRelatedValueList(),[p1])
@@ -430,22 +430,22 @@ class TestCMFCategory(ERP5TypeTestCase):
     if not quiet:
       ZopeTestCase._print('\n Test Category Renaming')
       LOG('Testing... ',0,'Category Renaming')
-    
+
     portal = self.getPortal()
     france = portal.portal_categories.resolveCategory(
                                             'region/europe/west/france')
     self.assertNotEqual(france, None)
-    
+
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france')
     get_transaction().commit()
     self.tic()
-   
+
     west = portal.portal_categories.resolveCategory('region/europe/west')
     west.setId("ouest")
     get_transaction().commit()
     self.tic()
-    
+
     self.assertEqual(west,
       portal.portal_categories.resolveCategory('region/europe/ouest'))
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
@@ -456,29 +456,29 @@ class TestCMFCategory(ERP5TypeTestCase):
     if not quiet:
       ZopeTestCase._print('\n Test Category Renaming with cut n paste')
       LOG('Testing... ',0,'Category Renaming')
-    
+
     portal = self.getPortal()
     france = portal.portal_categories.resolveCategory(
                                             'region/europe/west/france')
     self.assertNotEqual(france, None)
-    
+
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france')
     get_transaction().commit()
     self.tic()
-   
+
     europe = portal.portal_categories.resolveCategory('region/europe')
     west = europe.west
     cb_data = europe.manage_cutObjects(['west'])
     portal.portal_categories.region.manage_pasteObjects(cb_data)
     get_transaction().commit()
     self.tic()
-    
+
     self.assertEqual(west,
       portal.portal_categories.resolveCategory('region/west'))
     self.assertEqual(p1.getRegion(), 'west/france')
     self.failUnless(p1 in west.getRegionRelatedValueList())
-    
+
   def test_13c_RenameCategoryUsingCutAndPasteButNotCopy(
                                         self, quiet=quiet, run=run_all_test) :
     if not run: return
@@ -486,31 +486,31 @@ class TestCMFCategory(ERP5TypeTestCase):
       ZopeTestCase._print('\n Test Category Renaming with cut n paste, '
                           'copy n paste doesnt change')
       LOG('Testing... ',0,'Category Renaming')
-    
+
     portal = self.getPortal()
     france = portal.portal_categories.resolveCategory(
                                     'region/europe/west/france')
     self.assertNotEqual(france, None)
-    
+
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france')
     get_transaction().commit()
     self.tic()
-   
+
     europe = portal.portal_categories.resolveCategory('region/europe')
     west = europe.west
     cb_data = europe.manage_copyObjects(['west'])
     portal.portal_categories.region.manage_pasteObjects(cb_data)
     get_transaction().commit()
     self.tic()
-    
+
     self.assertEqual(west,
       portal.portal_categories.resolveCategory('region/europe/west'))
     self.assertEqual(p1.getRegion(), 'europe/west/france')
     # we are not member of the copy
     self.failUnless('west/france' not in p1.getRegionList())
     self.failUnless(p1 in west.getRegionRelatedValueList())
-    
+
 
   def test_14_MultiplePortalTypes(self, quiet=quiet, run=run_all_test) :
     """ Checks that categories support different value per portal_type,
@@ -522,16 +522,16 @@ class TestCMFCategory(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     portal = self.getPortal()
     folder = self.getOrganisationModule()
-    
+
     org_a = folder.newContent(portal_type='Organisation', id="org_a")
     org_b = folder.newContent(portal_type='Organisation', id="org_b")
-    
+
     org_a.setDestinationValue(org_b)
     self.assertEqual(org_a.getDestinationValue(), org_b)
 
     pers_a = self.getPersonModule().newContent(
                   portal_type='Person', id='pers_a')
- 
+
     for loop in range(3) :
       org_a.setDestinationValue(pers_a, portal_type='Person')
       self.assertEquals(
@@ -539,7 +539,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.assertEquals(
           org_a.getDestinationValue(portal_type='Organisation'), org_b)
       self.assertEquals(len(org_a.getDestinationValueList()), 2)
-      
+
       org_a.setDestinationValue(org_b, portal_type='Organisation')
       self.assertEquals(
           org_a.getDestinationValue(portal_type='Person'), pers_a)
@@ -554,7 +554,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       message = 'Test Sort Child Values'
       ZopeTestCase._print('\n '+message)
       LOG('Testing... ', 0, message)
-    
+
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='sort_test')
     self.failUnless(bc is not None)
@@ -562,7 +562,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     bc.newContent(portal_type='Category', id='2', title='b', int_index=1)
     bc.newContent(portal_type='Category', id='3', title='c', int_index=1)
 
-    # simple sorting    
+    # simple sorting
     category_list = bc.getCategoryChildValueList(sort_on='title')
     self.assertEquals(len(category_list), 3)
     self.assertEquals(category_list[0].getId(), '1')
@@ -596,7 +596,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals(category_list[0].getId(), '1')
     self.assertEquals(category_list[1].getId(), '2')
     self.assertEquals(category_list[2].getId(), '3')
-    
+
   def test_16_GetRelatedValues(self, quiet=quiet, run=run_all_test) :
     """ Checks on getting related values"""
     if not run: return
@@ -604,7 +604,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       message = 'Test Get Related Values'
       ZopeTestCase._print('\n '+message)
       LOG('Testing... ', 0, message)
-    
+
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='related_value_test')
     self.failUnless(bc is not None)
@@ -613,7 +613,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # A newly created base category should be referred to only by itself
     value_list = pc.getRelatedValueList(bc)
     self.assertEquals(len(value_list), 1)
-    
+
     c = bc.newContent(portal_type='Category', id='1')
     self.failUnless(c is not None)
     get_transaction().commit()
@@ -624,7 +624,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # This sub category should be referred to only by itself
     value_list = pc.getRelatedValueList(c)
     self.assertEquals(len(value_list), 1)
-    
+
     #test _getDefaultRelatedProperty Accessor
     person = self.getPortal().person_module.newContent(id='person_test')
     org = self.getPortal().organisation_module.newContent(id='organisation_test',destination='person_module/person_test')
@@ -640,7 +640,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       message = 'Test Domain Selection and Categories'
       ZopeTestCase._print('\n '+message)
       LOG('Testing... ', 0, message)
-      
+
     category_tool = self.getCategoryTool()
     base = category_tool.newContent(portal_type = 'Base Category',
                                    id='test_base_cat')
@@ -696,36 +696,36 @@ class TestCMFCategory(ERP5TypeTestCase):
       message = 'Test strict_membership and Category Member Value List'
       ZopeTestCase._print('\n '+message)
       LOG('Testing... ',0,message)
-      
+
       portal_categories = self.getCategoryTool()
       organisation = self.getOrganisationModule().newContent(
                 portal_type='Organisation', region='west/france')
 
       get_transaction().commit()
       self.tic()
-      
-      self.assertEquals([x.getObject() for x in 
+
+      self.assertEquals([x.getObject() for x in
                           portal_categories.getCategoryMemberValueList(
                             portal_categories.region.west.france,
                             base_category='region',
                             strict_membership=0,
                             portal_type='Organisation')], [organisation])
 
-      self.assertEquals([x.getObject() for x in 
+      self.assertEquals([x.getObject() for x in
                          portal_categories.getCategoryMemberValueList(
                             portal_categories.region.west.france,
                             base_category='region',
                             strict_membership=1,
                             portal_type='Organisation')], [organisation])
 
-      self.assertEquals([x.getObject() for x in 
+      self.assertEquals([x.getObject() for x in
                          portal_categories.getCategoryMemberValueList(
                             portal_categories.region.west,
                             base_category='region',
                             strict_membership=0,
                             portal_type='Organisation')], [organisation])
 
-      self.assertEquals([x.getObject() for x in 
+      self.assertEquals([x.getObject() for x in
                         portal_categories.getCategoryMemberValueList(
                             portal_categories.region.west,
                             base_category='region',
@@ -745,7 +745,7 @@ class TestCMFCategory(ERP5TypeTestCase):
                               id='the_id', title='The Title')
     self.assertEquals([['', ''], ['The Title (the_id)', 'the_id']],
                        base_cat.getCategoryChildTitleAndIdItemList())
-    
+
   def test_21_AcquiredPortalType(self, quiet=quiet, run=run_all_test):
     """Test if acquired_portal_type works correctly."""
     if not run : return
@@ -771,6 +771,33 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     packing_list.setCausalityValue(order)
     self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
+
+  def test_22_UserFriendlyException(self, quiet=quiet, run=run_all_test):
+    """Test message raise if bad use of setter."""
+    if not run : return
+    if not quiet:
+      message = 'Test User Friendly Exception'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ',0,message)
+    person_module = self.getPersonModule()
+    portal = self.getPortal()
+    person_module = self.getPersonModule()
+    if self.id1 not in person_module.objectIds():
+      p1 = person_module.newContent(id=self.id1, title=self.id1)
+    else:
+      p1 = person_module._getOb(self.id1)
+    organisation_module = self.getOrganisationModule()
+    organisation_module = self.getOrganisationModule()
+    if self.id1 not in organisation_module.objectIds():
+      o1 = organisation_module.newContent(id=self.id1)
+    else:
+      o1 = organisation_module._getOb(self.id1)
+
+    try:
+      p1.setCareerSubordination(o1)
+    except Exception, e:
+      self.failUnless(isinstance(e, TypeError))
+      self.assertEqual(e.args[0], 'Category must be a string.')
 
 if __name__ == '__main__':
     framework()
