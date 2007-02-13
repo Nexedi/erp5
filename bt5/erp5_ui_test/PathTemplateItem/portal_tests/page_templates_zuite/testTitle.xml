@@ -61,7 +61,7 @@
 <title>Test title</title>\n
 </head>\n
 <body>\n
-<table cellpadding="1" cellspacing="1" border="1">\n
+<table cellpadding="1" cellspacing="1" border="1" tal:define="site_title python:here.getPortalObject().getTitle()">\n
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test title</td></tr>\n
 </thead><tbody>\n
@@ -95,7 +95,7 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>Foo - Title 0</td>\n
+  <td tal:content="python:\'Foo - Title 0 | %s\' % site_title">Foo - Title 0 | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -108,7 +108,7 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>Foos</td>\n
+  <td tal:content="python:\'Foos | %s\' % site_title">Foos | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -125,7 +125,7 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>Validate Workflow Action</td>\n
+  <td tal:content="python:\'Validate Workflow Action | %s\' % site_title">Validate Workflow Action | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -137,7 +137,7 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>History - Title 0</td>\n
+  <td tal:content="python:\'History - Title 0 | %s\' % site_title">History - Title 0 | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -150,7 +150,7 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>Business Template Definition - Title 0</td>\n
+  <td tal:content="python:\'Business Template Definition - Title 0 | %s\' % site_title">Business Template Definition - Title 0 | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -162,14 +162,13 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td>ERP5</td>\n
+  <td tal:content="python:\'ERP5 | %s\' % site_title">ERP5 | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></string> </value>
         </item>
