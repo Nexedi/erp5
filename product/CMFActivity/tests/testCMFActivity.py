@@ -708,6 +708,51 @@ class TestCMFActivity(ERP5TypeTestCase):
       del Queue.current_num_conflict_errors
       del Queue.conflict_errors_limit
 
+  def TryErrorsWhileFinishingCommitDB(self, activity):
+    """Try to execute active objects which may throw conflict errors
+    while validating, and check if they are still executed."""
+    # Make sure that no active object is installed.
+    activity_tool = self.getPortal().portal_activities
+    activity_tool.manageClearActivities(keep=0)
+
+    # Need an object.
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = organisation_module._getOb(self.company_id)
+    get_transaction().commit()
+    self.flushAllActivities(silent = 1, loop_size = 10)
+    self.assertEquals(len(activity_tool.getMessageList()), 0)
+
+    from _mysql_exceptions import OperationalError
+
+    # Monkey patch Queue to induce conflict errors artificially.
+    def query(self, query_string,*args, **kw):
+      # No so nice, this is specific to zsql method
+      if query_string.find("REPLACE INTO")>=0:
+        raise OperationalError
+      else:
+        return self.original_query(query_string,*args, **kw)
+    from Products.ZMySQLDA.db import DB
+    portal = self.getPortal()
+
+    try:
+      # Test some range of conflict error occurences.
+      organisation_module.recursiveReindexObject()
+      get_transaction().commit()
+      self.assertEquals(len(activity_tool.getMessageList()), 1)
+      DB.original_query = DB.query
+      DB.query = query
+      portal.portal_activities.distribute()
+      portal.portal_activities.tic()
+      get_transaction().commit()
+      DB.query = DB.original_query
+      message_list = portal.portal_activities.getMessageList()
+      self.assertEquals(len(message_list),1)
+    finally:
+      DB.query = DB.original_query
+      del DB.original_query
+
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1517,6 +1562,26 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
     self.TryConflictErrorsWhileValidating('SQLQueue')
+
+  def test_72_TestErrorsWhileFinishingCommitDBWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Errors While Finishing Commit DB With SQLDict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.TryErrorsWhileFinishingCommitDB('SQLDict')
+
+  def test_73_TestErrorsWhileFinishingCommitDBWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Errors While Finishing Commit DB With SQLQueue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    self.TryErrorsWhileFinishingCommitDB('SQLQueue')
 
 
 if __name__ == '__main__':
