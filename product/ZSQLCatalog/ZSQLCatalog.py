@@ -84,7 +84,6 @@ class ZCatalog(Folder, Persistent, Implicit):
      'help': ('OFSP','ObjectManager_Contents.stx')},
     {'label': 'Catalog',      # TAB: Cataloged Objects
      'action': 'manage_catalogView',
-     'target': 'manage_main',
      'help':('ZCatalog','ZCatalog_Cataloged-Objects.stx')},
     {'label' : 'Filter',        # TAB: Filter
      'action' : 'manage_catalogFilter' },
@@ -93,15 +92,13 @@ class ZCatalog(Folder, Persistent, Implicit):
      'help': ('OFSP','Properties.stx')},
     {'label': 'Find Objects',     # TAB: Find Objects
      'action': 'manage_catalogFind',
-     'target':'manage_main',
      'help':('ZCatalog','ZCatalog_Find-Items-to-ZCatalog.stx')},
     {'label': 'Advanced',       # TAB: Advanced
      'action': 'manage_catalogAdvanced',
-     'target':'manage_main',
      'help':('ZCatalog','ZCatalog_Advanced.stx')},
     {'label': 'Hot Reindexing',       # TAB: Hot Reindex
      'action': 'manage_catalogHotReindexing',
-     'target':'manage_main', },
+     },
     {'label': 'Undo',         # TAB: Undo
      'action': 'manage_UndoForm',
      'help': ('OFSP','Undo.stx')},
