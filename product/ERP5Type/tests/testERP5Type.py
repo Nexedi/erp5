@@ -801,6 +801,7 @@ class TestPropertySheet:
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet.
       """
+      if not run: return
       self._addProperty('Person', '''{'id': 'dummy_ps_prop',
                                       'type': 'string',
                                       'mode': 'w',
@@ -830,6 +831,7 @@ class TestPropertySheet:
     def test_16_SimpleStringAccessor(self,quiet=quiet, run=run_all_test):
       """Tests a simple string accessor.
       This is also a way to test _addProperty method """
+      if not run: return
       self._addProperty('Person', '''{'id': 'dummy_ps_prop',
                                       'type': 'string',
                                       'mode': 'w',}''')
@@ -846,6 +848,7 @@ class TestPropertySheet:
       the Person portal type and that this workflow has 'validation_state' as
       state_variable.
       """
+      if not run: return
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       wf = self.getWorkflowTool().validation_workflow
       # those are assumptions for this test.
@@ -909,6 +912,7 @@ class TestPropertySheet:
     def test_18_SimpleContentAccessor(self,quiet=quiet, run=run_all_test):
       """Tests a simple content accessor.
       """
+      if not run: return
       # For testing purposes, we add a default_organisation inside a person, 
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title.
@@ -969,6 +973,7 @@ class TestPropertySheet:
     def test_19_AcquiredContentAccessor(self,quiet=quiet, run=run_all_test):
       """Tests an acquired content accessor.
       """
+      if not run: return
       # For testing purposes, we add a default_organisation inside a person, 
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title. If this is not
@@ -1005,6 +1010,7 @@ class TestPropertySheet:
       that may have the same id, using same scenario as test_19
       Note that we only test Setter for now.
       """
+      if not run: return
       self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
@@ -1034,6 +1040,7 @@ class TestPropertySheet:
       """asContext method return a temporary copy of an object.
       Any modification made to the copy does not change the original object.
       """
+      if not run: return
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.setTitle('obj title')
       copy = obj.asContext()
@@ -1056,6 +1063,7 @@ class TestPropertySheet:
     def test_21_ActionCondition(self, quiet=quiet, run=run_all_test):
       """Tests action conditions
       """
+      if not run: return
       type_tool = self.getTypeTool()
       portal_type_object = type_tool['Organisation']
       def addCustomAction(name,condition):
@@ -1086,6 +1094,28 @@ class TestPropertySheet:
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
       self.failUnless('action3' in action_id_list)
+
+    def test_22_securityReindex(self, quiet=quiet, run=run_all_test):
+      """
+      Tests that the security is reindexed when a role is changed on an object
+      """
+      if not run: return
+      from AccessControl import getSecurityManager
+      user = getSecurityManager().getUser()
+      portal = self.getPortal()
+      person_module = self.getPersonModule()
+      person = person_module.newContent(portal_type='Person', title='foo')
+      person.manage_permission('View', roles=['Auditor'], acquire=0)
+
+      get_transaction().commit() ; self.tic()
+      self.assertTrue('Auditor' not in user.getRolesInContext(person))
+      self.assertEquals(len(person_module.searchFolder()), 0)
+
+      person_module.manage_addLocalRoles(user.getId(), ['Auditor'])
+
+      get_transaction().commit() ; self.tic()
+      self.assertTrue('Auditor' in user.getRolesInContext(person))
+      self.assertEquals(len(person_module.searchFolder()), 1)
 
 if __name__ == '__main__':
   framework()
