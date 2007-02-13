@@ -613,7 +613,8 @@ class ActivityTool (Folder, UniqueObject):
           return 1
       return 0
 
-    def activate(self, object, activity, active_process, **kw):
+    security.declarePrivate('activateObject')
+    def activateObject(self, object, activity, active_process, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
       if getattr(self, '_v_activity_buffer', None) is None:

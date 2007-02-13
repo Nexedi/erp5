@@ -111,7 +111,7 @@ class ActiveObject(ExtensionClass.Base):
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
     try:
-      return activity_tool.activate(self, activity, active_process, **kw)
+      return activity_tool.activateObject(self, activity, active_process, **kw)
     except ConflictError:
       raise
     except:
