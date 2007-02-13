@@ -95,7 +95,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <tal:block metal:define-slot="main" />\n
           <tal:block metal:define-slot="bottom" />\n
         </div>\n
-        <input tal:attributes="value python: here.Base_translateString(\'Cancel\')"\n
+        <input tal:attributes="value python: here.Base_translateString(\'Cancel Action\')"\n
                id="dialog_cancel_button" name="Base_cancel:method" type="submit"\n
                onclick="this.onclick=function(event) { return false; };" />\n
         <input tal:condition="python: form.update_action!=\'\'"\n
