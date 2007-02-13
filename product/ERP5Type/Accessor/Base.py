@@ -149,7 +149,7 @@ class Getter(Method):
           return evaluateTales(instance, value)
         else:
           return value
-      if default is not None and self._is_tales_type and kw.get('evaluate', 1):
+      if self._is_tales_type and default is not None and kw.get('evaluate', 1):
         return evaluateTales(instance, default)
       return default
 
