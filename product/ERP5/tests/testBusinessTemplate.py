@@ -108,7 +108,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pw.manage_changeWorkflows('', props=props)
     get_transaction().commit()
     self._ignore_log_errors()
-    
+
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
@@ -168,7 +168,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('export_bt')
     sequence.edit(current_bt=bt)
-    
+
   def stepUseDependencyBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
@@ -323,7 +323,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_portal_type_id_list=ptype_ids)
     self.stepFillPortalTypesFields(sequence=sequence, sequence_list=sequence_list, **kw)
 
-  def stepAddDuplicatedPortalTypeToBusinessTemplate(self, sequence=None, 
+  def stepAddDuplicatedPortalTypeToBusinessTemplate(self, sequence=None,
                                                     sequence_list=None, **kw):
     """
     Add duplicated portal type to business template
@@ -376,7 +376,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
-  def stepCheckDuplicatedPortalTypeRemoved(self, sequence=None, 
+  def stepCheckDuplicatedPortalTypeRemoved(self, sequence=None,
                                            sequence_list=None, **kw):
     """
     Check non presence of portal type
@@ -552,7 +552,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     subskin_id = sequence.get('skin_subfolder_id')
     skin_subfolder = skin_folder._getOb(subskin_id, None)
     self.failUnless(skin_subfolder is not None)
-    
+
   def stepCreateNewObjectInSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
     """
     Create a new object in skin subfolder
@@ -568,7 +568,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     zsql_method = skin_subfolder._getOb(method_id, None)
     self.failUnless(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
-    
+
   def stepRemoveSkinFolder(self, sequence=None, sequence_list=None, **kw):
     """
     Remove Skin folder
@@ -612,7 +612,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     wf_ids.append(sequence.get('skin_folder_id', ''))
     self.assertEqual(len(wf_ids), 1)
     bt.edit(template_skin_id_list=wf_ids)
-    
+
   def stepAddPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add a path to business template
@@ -1264,7 +1264,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # table related configuration
     self.failUnless('translation' in catalog.sql_search_tables)
     # column related configuration
-    self.failUnless('catalog.reference' 
+    self.failUnless('catalog.reference'
                     in catalog.sql_search_result_keys)
 
   def stepRemoveCatalogLocalConfiguration(self, sequence, **kw):
@@ -1647,7 +1647,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     f = file(ps_path, 'r')
     data = f.read()
     self.assertEqual(data, ps_data)
-    
+
   def stepCheckPropertySheetRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
     Check presence of Property Sheet
@@ -1736,7 +1736,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     f = file(ct_path, 'r')
     data = f.read()
     self.assertEqual(data, ct_data)
-    
+
   def stepCheckConstraintRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
     Check presence of Constraint
@@ -1807,7 +1807,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
 
-  def stepInstallDuplicatedBusinessTemplate(self, sequence=None, 
+  def stepInstallDuplicatedBusinessTemplate(self, sequence=None,
                                             sequence_list=None, **kw):
     """
     Install importzed business template
@@ -1841,7 +1841,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(export_bt=template)
 
-  def stepCreateDuplicatedBusinessTemplate(self, sequence=None, 
+  def stepCreateDuplicatedBusinessTemplate(self, sequence=None,
                                            sequence_list=None, **kw):
     """
     Create a new Business Template which will duplicate
@@ -1865,7 +1865,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     template = sequence.get('current_bt')
     self.assertRaises(AttributeError,
                       template.build)
-  
+
   def stepBuildBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Build Business Template
@@ -1947,7 +1947,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('current_bt')
     bt.uninstall()
 
-  def stepUninstallPreviousBusinessTemplate(self, sequence=None, 
+  def stepUninstallPreviousBusinessTemplate(self, sequence=None,
                                             sequence_list=None, **kw):
     """
     Uninstall current Business Template
@@ -2000,7 +2000,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         'portal_categories/%s' % base_category_id)
     self.failUnless(base_category_obj is not None)
     self.assertEquals(len(base_category_obj.objectIds()), 0)
-    
+
   def stepCheckInitialRevision(self, sequence=None, sequence_list=None, **kw):
     """ Check if revision of a new bt is an empty string
     """
@@ -2012,13 +2012,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '1')
-    
+
   def stepCheckSecondRevision(self, sequence=None, sequence_list=None, **kw):
     """ Check if revision of the bt is 2
     """
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '2')
-    
+
   def stepCheckNoMissingDependencies(self, sequence=None, sequence_list=None, **kw):
     """ Check if bt has no missing dependency
     """
@@ -2029,7 +2029,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     except:
       missing_dep = True
     self.failUnless(not missing_dep)
-    
+
   def stepCheckMissingDependencies(self, sequence=None, sequence_list=None, **kw):
     """ Check if bt has missing dependency
     """
@@ -2040,13 +2040,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     except:
       missing_dep = True
     self.failUnless(missing_dep)
-    
+
   def stepAddDependency(self, sequence=None, sequence_list=None, **kw):
     """ Add a dependency to the business template
     """
     bt = sequence.get('current_bt')
     bt.setDependencyList(['dependency_bt',])
-    
+
   def stepCreateDependencyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
       Create a new Business Template
@@ -2059,7 +2059,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   version='1.0',
                   description='bt for unit_test')
     sequence.edit(dependency_bt=template)
-    
+
   # tests
   def test_Title(self):
     """Tests the Title of the Template Tool."""
@@ -2506,6 +2506,53 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckCategoriesExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckCategoriesRemoved \
+                       RemoveBaseCategory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self, quiet=quiet, run=1): #run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template Uninstall With Path And Joker * Removed'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    # path with subobjects
+    sequence_string = '\
+                       CreateBaseCategory \
+                       CreateCategories \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddCategoriesAsPathToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveCategories \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckCategoriesExists \
+                       RemoveCategories \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -3477,7 +3524,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
   def test_24_CheckMissingDependency(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -3496,7 +3543,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
   def test_25_CheckNoMissingDependency(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -3730,7 +3777,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self, quiet=quiet, 
+  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self, quiet=quiet,
                                                         run=run_all_test):
     if not run: return
     if not quiet:

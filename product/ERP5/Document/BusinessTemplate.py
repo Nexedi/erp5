@@ -628,7 +628,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           container_ids = container.objectIds()
           subobjects_dict = {}
           # Object already exists
-          if object_id in container_ids:     
+          if object_id in container_ids:
             old_obj = container._getOb(object_id)
             if hasattr(aq_base(old_obj), 'groups'):
               # we must keep original order groups
@@ -706,7 +706,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       # we remove object not added in forms
       # we put old objects we have kept
       for path in groups.keys():
-        new_groups_dict = groups[path]        
+        new_groups_dict = groups[path]
         if not old_groups.has_key(path):
           # installation of a new form
           obj = portal.unrestrictedTraverse(path)
@@ -716,13 +716,13 @@ class ObjectTemplateItem(BaseTemplateItem):
           old_groups_dict = old_groups[path]
           obj = portal.unrestrictedTraverse(path)
           # first check that all widgets are in new order
-          # excetp the one that had to be removed          
+          # excetp the one that had to be removed
           widget_id_list = obj.objectIds()
           for widget_id in widget_id_list:
             widget_path = path+'/'+widget_id
             if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
-              continue              
-            widget_in_form = 0            
+              continue
+            widget_in_form = 0
             for group_id in new_groups_dict.keys():
               group_values = new_groups_dict[group_id]
               if widget_id in group_values:
@@ -827,7 +827,11 @@ class PathTemplateItem(ObjectTemplateItem):
     object_keys.reverse()
     p = context.getPortalObject()
     for path in object_keys:
-      path_list = self._resolvePath(p, [], path.split('/'))
+      try:
+        path_list = self._resolvePath(p, [], path.split('/'))
+      except AttributeError:
+        # path seems to not exist anymore
+        continue
       path_list.sort()
       path_list.reverse()
       for relative_url in path_list:
@@ -2209,7 +2213,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         setattr(obj, '_roles', [])
       except (NotFound, KeyError):
         pass
-      
+
 class SitePropertyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
@@ -4124,7 +4128,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       if update_catalog:
         site.ERP5Site_reindexAll()
-      
+
       # Update translation table, in case we added new portal types or
       # workflow states.
       site.ERP5Site_updateTranslationTable()
@@ -4518,7 +4522,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if item is not None:
           items_list.extend(item.getKeys())
       return items_list
-    
+
     #By christophe Dumez <christophe@nexedi.com>
     def checkDependencies(self):
       """
@@ -4540,7 +4544,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
           if (not self.portal_templates.IsOneProviderInstalled(dependency)) \
              and ((installed_bt is None) \
-                  or (version_restriction not in (None, '') and 
+                  or (version_restriction not in (None, '') and
                      (not self.portal_templates.compareVersionStrings(installed_bt.getVersion(), version_restriction)))):
             missing_dep_list.append((dependency, version_restriction or ''))
       if len(missing_dep_list) != 0:
@@ -4887,7 +4891,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 # Block acquisition on all _item_name_list properties by setting
 # a default class value to None
 for key in BusinessTemplate._item_name_list:
-  setattr(BusinessTemplate, key, None) 
+  setattr(BusinessTemplate, key, None)
 
 # Transaction Manager used for update of business template workflow
 # XXX update seems to works without it
