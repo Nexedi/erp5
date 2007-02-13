@@ -83,6 +83,16 @@ class TestPerson(ERP5TypeTestCase):
       ## because we copy/paste Person object in the same ERP5 
       ## instance its reference must be resetted
       self.assertEquals(person_copy_obj.getReference(), None)
+      
+      ## set object as if installed from bt5 (simulate it)
+      request = self.app.REQUEST
+      request.set('is_business_template_installation', 1)
+      person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
+      person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
+      person_copy_obj = person_module[person_copy_id]
+      ## because we copy/paste Person object in the same ERP5 
+      ## instance its reference must be resetted
+      self.assertEquals(person_copy_obj.getReference(), person.getReference())
 
 if __name__ == '__main__':
     framework()
@@ -92,4 +102,3 @@ else:
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(TestPerson))
         return suite
-
