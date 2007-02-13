@@ -71,8 +71,11 @@
             <value> <string>"""Hook called when a person object is closed.\n
 \n
 We want to reset the reference, which is the user login in ERP5Security.\n
+One exception is when a person object is installed from business template.\n
 """\n
-context.setReference(None)\n
+is_business_template_installation = context.REQUEST.get(\'is_business_template_installation\', 0)\n
+if not is_business_template_installation:\n
+  context.setReference(None)\n
 </string> </value>
         </item>
         <item>
@@ -131,6 +134,7 @@ context.setReference(None)\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>is_business_template_installation</string>
                             <string>None</string>
                           </tuple>
                         </value>

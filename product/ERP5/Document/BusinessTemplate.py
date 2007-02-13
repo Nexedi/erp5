@@ -652,6 +652,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj = obj._getCopy(container)
           container._setObject(object_id, obj)
           obj = container._getOb(object_id)
+          # mark a business template installation so in 'PortalType_afterClone' scripts  
+          # we can implement logical for reseting or not attributes (i.e reference). 
+          self.REQUEST.set('is_business_template_installation', 1)
           obj.manage_afterClone(obj)
           obj.wl_clearLocks()
           # if portal types upgrade, set backup properties
