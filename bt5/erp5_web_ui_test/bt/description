@@ -1,0 +1,1 @@
+A test which creates a new site in ERP5. This test is destructive in the sense that it uses real modules. It can not be run on a production system.

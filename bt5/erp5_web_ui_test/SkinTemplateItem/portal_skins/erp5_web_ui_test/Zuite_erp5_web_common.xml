@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <tal:block metal:define-macro="init">\n
+    <tr>\n
+      <td>store</td>\n
+      <td tal:content="python: \'/\' + here.getPortalObject().getId()">erp5</td>\n
+      <td>base_url</td>\n
+    </tr>\n
+    <tr>\n
+      <td>open</td>\n
+      <td>${base_url}/web_site_module/WebSiteModule_resetWebZuite</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>assertTextPresent</td>\n
+      <td>Reset Successfully.</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>open</td>\n
+      <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>assertTextPresent</td>\n
+      <td>Done.</td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_erp5_web_common</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
