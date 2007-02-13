@@ -1371,7 +1371,7 @@ class Catalog( Folder,
             # We will check if there is an filter on this
             # method, if so we may not call this zsqlMethod
             # for this object
-	    portal_type = object.getPortalType()
+            portal_type = object.getPortalType()
             if type_list and portal_type not in type_list:
               continue
             elif expression is not None:
