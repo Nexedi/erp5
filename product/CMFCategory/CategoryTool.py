@@ -47,6 +47,8 @@ import re
 
 from zLOG import LOG, PROBLEM
 
+_marker = object()
+
 class CategoryError( Exception ):
     pass
 
@@ -186,7 +188,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if context is None:
         return self.objectValues()
       else:
-        return map(lambda x:self[x], context._categories) # XXX Incompatible with ERP5Type per portal type categories
+        return [self[x] for x in context._categories] # XXX Incompatible with ERP5Type per portal type categories
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                          'getBaseCategoryValues')
@@ -269,7 +271,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if base_category is not None:
         return base_category
       try:
-        return relative_url.split('/')[0]
+        return relative_url.split('/', 1)[0]
       except KeyError :
         return None
 
@@ -303,7 +305,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                         relative_url
       """
       uid_dict = {}
-      if type(relative_url) is type('a'): relative_url = (relative_url,)
+      if isinstance(relative_url, str):
+        relative_url = (relative_url,)
       for path in relative_url:
         try:
           o = self.getCategoryValue(path, base_category=base_category)
@@ -362,7 +365,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       if base_category is None:
         base_category_list = self.getBaseCategoryList()
-      elif type(base_category) == type('a'):
+      elif isinstance(base_category, str):
         base_category_list = [base_category]
       else:
         base_category_list = base_category
@@ -370,7 +373,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       for base_category in base_category_list:
         category = self[base_category]
         if category is not None:
-          result += category.getCategoryChildRelativeUrlList(base=base,recursive=recursive)
+          result.extend(category.getCategoryChildRelativeUrlList(base=base,recursive=recursive))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPathList')
@@ -444,11 +447,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       for base_category in base_category_list:
         category = self[base_category]
         if category is not None:
-          result += category.getCategoryChildItemList(
+          result.extend(category.getCategoryChildItemList(
                                base=base,
                                recursive=recursive,
                                display_id=display_id,
-                               **kw )
+                               **kw ))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -501,13 +504,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
     # Convert a list of membership to path
     security.declareProtected(Permissions.View, 'asPathList')
     def asPathList(self, base_category, category_list):
-      if type(category_list) == type('a'):
+      if isinstance(category_list, str):
         category_list = [category_list]
-      if category_list == None:
+      if category_list is None:
         category_list = []
       new_list = []
       for v in category_list:
-        new_list += ['%s/%s' % (base_category,v)]
+        new_list.append('%s/%s' % (base_category, v))
       return new_list
 
     # Alias for compatibility
@@ -541,45 +544,45 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # LOG('getCategoryMembershipList',0,str(spec))
       # LOG('getCategoryMembershipList',0,str(base_category))
       membership = []
-      if type(base_category) not in (type(()), type([])):
+      if not isinstance(base_category, (tuple, list)):
         category_list = [base_category]
       else:
         category_list = base_category
-      if type(spec) is not type([]) and type(spec) is not type(()):
+      if not isinstance(spec, (tuple, list)):
         spec = [spec]
       for path in self._getCategoryList(context):
         # LOG('getCategoryMembershipList',0,str(path))
-        my_base_category = path.split('/')[0]
+        my_base_category = path.split('/', 1)[0]
         for my_category in category_list:
-          if type(my_category) is type('a'):
+          if isinstance(my_category, str):
             category = my_category
           else:
             category = my_category.getRelativeUrl()
           if my_base_category == category:
             if spec is ():
               if base:
-                membership += [path]
+                membership.append(path)
               else:
-                membership += [path[len(category)+1:]]
+                membership.append(path[len(category)+1:])
             else:
               try:
                o = self.unrestrictedTraverse(path)
                # LOG('getCategoryMembershipList',0,str(o.portal_type))
                if o.portal_type in spec:
                 if base:
-                  membership += [path]
+                  membership.append(path)
                 else:
-                  membership += [path[len(category)+1:]]
-              except (KeyError, ):
+                  membership.append(path[len(category)+1:])
+              except KeyError:
                 LOG('WARNING: CategoriesTool',0, 'Unable to find object for path %s' % path)
       # We must include parent if specified explicitely
       if 'parent' in category_list:
         parent = context.aq_parent
         if parent.portal_type in spec:
           if base:
-            membership += ['parent/' + parent.getRelativeUrl()]
+            membership.append('parent/' + parent.getRelativeUrl())
           else:
-            membership += [parent.getRelativeUrl()]
+            membership.append(parent.getRelativeUrl())
       return membership
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setCategoryMembership' )
@@ -603,7 +606,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
-      if type(portal_type) == type(''):
+      if isinstance(portal_type, str):
         portal_type = (portal_type,)
       if spec is (): 
         spec = portal_type
@@ -611,16 +614,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       default_dict = {}
       self._cleanupCategories(context)
-      if type(category_list) is type('a'):
+      if isinstance(category_list, str):
         category_list = (category_list,)
       elif category_list is None:
         category_list = ()
-      if type(base_category_list) is type('a'):
+      if isinstance(base_category_list, str):
         base_category_list = [base_category_list]
       new_category_list = []
       for path in self._getCategoryList(context):
         my_base_id = self.getBaseCategoryId(path)
-        if not my_base_id in base_category_list:
+        if my_base_id not in base_category_list:
           # Keep each membership which is not in the
           # specified list of base_category ids
           new_category_list.append(path)
@@ -664,7 +667,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 default_path_found[path] = 1
                 new_category_list.append(path)
           else:
-            new_path = '/'.join((base_category_list[0], path))
+            new_path = base_category_list[0] + '/' + path
             if new_path not in default_new_category_list:
               new_category_list.append(new_path)
       #LOG("set Category",0,str(new_category_list))
@@ -689,7 +692,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       """
       self._cleanupCategories(context)
-      if type(default_category) is type([]) or type(default_category) is type(()):
+      if isinstance(default_category, (tuple, list)):
         default_category = default_category[0]
       category_list = self.getCategoryMembershipList(context, base_category,
                            spec=spec, filter=filter, portal_type=portal_type, base=base)
@@ -702,7 +705,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if category == default_category:
           found_one = 1
         elif category != default_category or found_one:
-          new_category_list += [category]
+          new_category_list.append(category)
       self.setCategoryMembership(context, base_category, new_category_list,
            spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default = 0)
 
@@ -746,10 +749,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # where_expression = self._buildQuery(spec, filter, kw)
       spec = kw.get('portal_type', ())
       # Make sure spec is a list or tuple
-      if type(spec) is type('a'):
+      if isinstance(spec, str):
         spec = [spec]
       # Filter categories
-      if hasattr(aq_base(context), 'categories'):
+      if getattr(aq_base(context), 'categories', _marker) is not _marker:
         for category_url in self._getCategoryList(context):
           try:
             index = category_url.index('/')
@@ -837,10 +840,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
 
-      if type(spec) is type('a'):
+      if isinstance(spec, str):
         spec = [spec]
 
-      if type(acquired_portal_type) == type(''):
+      if isinstance(acquired_portal_type, str):
         acquired_portal_type = [acquired_portal_type]
 
       if acquired_object_dict is None:
@@ -918,7 +921,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           # We implement here special keywords
           if my_base_category == 'parent':
             parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
-            if not hasattr(aq_base(parent), 'portal_type'):
+            if getattr(aq_base(parent), 'portal_type', _marker) is _marker:
               my_acquisition_object_list = []
             else:
               #LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
@@ -1037,7 +1040,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       extend = result.extend
       if base_category is None:
         base_category_list = context._categories # XXX incompatible with ERP5Type per portal categories
-      elif type(base_category) is type('a'):
+      elif isinstance(base_category, str):
         base_category_list = [base_category]
       else:
         base_category_list = base_category
@@ -1142,14 +1145,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryList' )
     def _getCategoryList(self, context):
-      if hasattr(aq_base(context), 'categories'):
-        if type(context.categories) == type((1,)):
+      if getattr(aq_base(context), 'categories', _marker) is not _marker:
+        if isinstance(context.categories, tuple):
           result = list(context.categories)
-        elif type(context.categories) == type([]):
+        elif isinstance(context.categories, list):
           result = context.categories
         else:
           result = []
-      elif type(context) is type({}):
+      elif isinstance(context, dict):
         result = list(context.get('categories', []))
       else:
         result = []
@@ -1192,9 +1195,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       requires_update = 0
       categories = []
       append = categories.append
-      if hasattr(context, 'categories'):
+      if getattr(context, 'categories', _marker) is not _marker:
         for cat in self._getCategoryList(context):
-          if type(cat) == type('a'):
+          if isinstance(cat, str):
             append(cat)
           else:
             requires_update = 1
@@ -1232,7 +1235,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             new_category = self.updateRelatedCategory(category,
                                                       previous_category_url,
                                                       new_category_url)
-            category_list += [new_category]
+            category_list.append(new_category)
           self._setCategoryList(o, category_list)
 
           if getattr(aq_base(o),
@@ -1271,7 +1274,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       portal_type = kw.get('portal_type')
       
-      if type(portal_type) is type('a'):
+      if isinstance(portal_type, str):
         portal_type = [portal_type]
       if spec is (): spec = None # We do not want to care about spec
 
@@ -1279,7 +1282,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if context.getPortalType() == 'Base Category':
         category_list = [context.getRelativeUrl()]
       else:
-        if type(base_category_list) is type('a'):
+        if isinstance(base_category_list, str):
           base_category_list = [base_category_list]
         elif base_category_list is () or base_category_list is None:
           base_category_list = self.getBaseCategoryList()
@@ -1329,14 +1332,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         List of lists
       """
-      if type(category_list) == type('a'):
+      if isinstance(category_list, str):
         category_list = [category_list]
       sql_expr = []
       for category in category_list:
         if category is None:
           pass
-        elif type(category) == type('a'):
-          if category != '':
+        elif isinstance(category, str):
+          if category:
             category_uid = self.getCategoryUid(category)
             base_category_uid = self.getBaseCategoryUid(category)
             expression = ''
