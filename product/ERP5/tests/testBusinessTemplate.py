@@ -48,6 +48,7 @@ from urllib import pathname2url
 from Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.Document.BusinessTemplate import removeAll
 import os
 
 class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
@@ -167,6 +168,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Define export_bt as current bt
     """
     bt = sequence.get('export_bt')
+    sequence.edit(current_bt=bt)
+
+  def stepUseSecondBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Define second_export_bt as current bt
+    """
+    bt = sequence.get('second_export_bt')
     sequence.edit(current_bt=bt)
 
   def stepUseDependencyBusinessTemplate(self, sequence=None,
@@ -1807,6 +1816,26 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
 
+  def stepInstallWithoutForceBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    import_bt = sequence.get('import_bt')
+    object_list = import_bt.preinstall()
+    install_object_dict = {}
+    for obj in object_list.keys():
+      state = object_list[obj][0]
+      if state == 'Removed':
+        install_state = 'save_and_remove'
+      elif state == 'Modified':
+        install_state = 'backup'
+      elif state == 'New':
+        install_state = 'install'
+      else:
+        install_state = ""
+      install_object_dict[obj] = install_state
+    import_bt.install(force=0, object_to_update=install_object_dict)
+
   def stepInstallDuplicatedBusinessTemplate(self, sequence=None,
                                             sequence_list=None, **kw):
     """
@@ -1840,6 +1869,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   version='1.0',
                   description='bt for unit_test')
     sequence.edit(export_bt=template)
+
+  def stepCreateSecondBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a second Business Template
+    """
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    template.edit(title='geek template',
+                  version='2.0',
+                  description='bt for unit_test')
+    sequence.edit(second_export_bt=template)
 
   def stepCreateDuplicatedBusinessTemplate(self, sequence=None,
                                            sequence_list=None, **kw):
@@ -1881,6 +1923,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     cfg = getConfiguration()
     bt_title = pathname2url(template.getTitle())
     template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bt_title,))
+    # remove previous version of bt it exists
+    removeAll(template_path)
     template.export(path=template_path, local=1)
     sequence.edit(template_path=template_path)
     self.failUnless(os.path.exists(template_path))
@@ -2242,6 +2286,73 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_041_BusinessTemplateWithWorkflowRemoved(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Remove Of Workflow'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckWorkflowExists \
+                       CheckWorkflowChainExists \
+                       CreateSecondBusinessTemplate \
+                       UseSecondBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckSkinsLayers \
+                       CheckWorkflowRemoved \
+                       CheckWorkflowChainRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+
   # test of module
   def test_05_BusinessTemplateWithModule(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -2494,7 +2605,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_091_BusinessTemplateDoNotUnindexObject(self, quiet=quiet, run=un_all_test):
+  def test_091_BusinessTemplateDoNotUnindexObject(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template Do Not Unindex Object At Build'
