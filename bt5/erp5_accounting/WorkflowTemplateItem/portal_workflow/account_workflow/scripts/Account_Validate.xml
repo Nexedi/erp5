@@ -72,10 +72,13 @@
 from Products.ERP5Type.Message import Message\n
 \n
 account = sci[\'object\']\n
-N_ = lambda msgid: Message(\'erp5_uid\', msgid)\n
+N_ = lambda msgid: Message(\'erp5_ui\', msgid)\n
 \n
-if account.getGap() in (None, \'\') : \n
+if not account.getGap():\n
   raise ValidationFailed(N_("GAP is unset."))\n
+\n
+for err in account.checkConsistency():\n
+  raise ValidationFailed(N(err[4]))\n
 </string> </value>
         </item>
         <item>
@@ -127,7 +130,9 @@ if account.getGap() in (None, \'\') : \n
                             <string>account</string>
                             <string>N_</string>
                             <string>_getattr_</string>
-                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>err</string>
+                            <string>N</string>
                           </tuple>
                         </value>
                     </item>
