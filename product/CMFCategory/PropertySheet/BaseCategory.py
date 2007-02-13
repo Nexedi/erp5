@@ -45,7 +45,7 @@ class BaseCategory:
         {   'id'          : 'acquisition_portal_type',
             'description' : 'The portal types to browse',
             'type'        : 'tales',
-            'default'     : [],
+            'default'     : 'python:[]',
             'multivalued' : 1,
             'mode'        : 'w' },
         {   'id'          : 'fallback_base_category',
