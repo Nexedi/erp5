@@ -63,7 +63,7 @@ class DomainTool(BaseTool):
       context.
       
       - The sort_method parameter allows to give a method which will be
-        used in order to sort the list of predicates founds. The most
+        used in order to sort the list of predicates found. The most
         important predicate is the first one in the list.
 
       - ignored_category_list:  this is the list of category that we do
