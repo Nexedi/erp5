@@ -437,7 +437,6 @@ class Catalog( Folder,
      'help': ('OFSP','ObjectManager_Contents.stx')},
     {'label': 'Catalog',      # TAB: Catalogged Objects
      'action': 'manage_catalogView',
-     'target': 'manage_main',
      'help':('ZCatalog','ZCatalog_Cataloged-Objects.stx')},
     {'label': 'Properties',     # TAB: Properties
      'action': 'manage_propertiesForm',
@@ -446,11 +445,9 @@ class Catalog( Folder,
      'action': 'manage_catalogFilter',},
     {'label': 'Find Objects',     # TAB: Find Objects
      'action': 'manage_catalogFind',
-     'target':'manage_main',
      'help':('ZCatalog','ZCatalog_Find-Items-to-ZCatalog.stx')},
     {'label': 'Advanced',       # TAB: Advanced
      'action': 'manage_catalogAdvanced',
-     'target':'manage_main',
      'help':('ZCatalog','ZCatalog_Advanced.stx')},
     {'label': 'Undo',         # TAB: Undo
      'action': 'manage_UndoForm',
