@@ -57,6 +57,44 @@ class XMLObject( Folder ):
     isPortalContent = 1
     isRADContent = 1
 
+    # The only declarative factory_type_information in ERP5
+    factory_type_information = \
+      {    'id'             : portal_type
+         , 'meta_type'      : meta_type
+         , 'description'    : "ERP5 default document. Supports synchronisation and XML."
+         , 'icon'           : 'document.gif'
+         , 'product'        : 'ERP5Type'
+         , 'factory'        : 'addXMLObject'
+         , 'immediate_view' : 'XMLObject_view'
+         , 'actions'        :
+        ( { 'id'            : 'view'
+          , 'name'          : 'View'
+          , 'category'      : 'object_view'
+          , 'action'        : 'XMLObject_view'
+          , 'permissions'   : ( Permissions.View, )
+          }
+        , { 'id'            : 'history'
+          , 'name'          : 'History'
+          , 'category'      : 'object_view'
+          , 'action'        : 'Base_viewHistory'
+          , 'permissions'   : ( Permissions.View, )
+          }
+        , { 'id'            : 'metadata'
+          , 'name'          : 'Metadata'
+          , 'category'      : 'object_view'
+          , 'action'        : 'Base_viewMetadata'
+          , 'permissions'   : ( Permissions.ManageProperties, )
+          }
+        )
+      }
+
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.Folder
+                      )
+
     # Declarative security
     security = ClassSecurityInfo()
 
