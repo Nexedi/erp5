@@ -150,7 +150,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'close_action')
-    self.assertEquals(bug.getValidationState(), 'close')
+    self.assertEquals(bug.getValidationState(), 'closed')
 
 
   def stepCancelBug(self, sequence=None, sequence_list=None, **kw):
@@ -159,7 +159,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'cancel_action')
-    self.assertEquals(bug.getValidationState(), 'cancel')
+    self.assertEquals(bug.getValidationState(), 'cancelled')
 
 
   def stepFollowBug(self, sequence=None, sequence_list=None, **kw):
@@ -168,7 +168,6 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'follow_action', comment="Your Bug report is bad. You don't know how to report a bug. Please read http://www.chiark.greenend.org.uk/~sgtatham/bugs.html and resubmit your bug.")
-    self.assertEquals(bug.getValidationState(), 'follow')
 
 
   def stepSetTestedBug(self, sequence=None, sequence_list=None, **kw):
@@ -212,6 +211,7 @@ class TestBug(ERP5TypeTestCase):
                 , 'stepOpenBug'
                 , 'stepTic'
                 , 'stepSetOldClosedDate'
+                , 'stepSetTestedBug'
                 , 'stepCloseBug'
                 , 'stepTic'
                 , 'stepCheckClosedDate'
