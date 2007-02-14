@@ -528,14 +528,14 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     self.recursiveReindexObject()
 
   security.declarePublic( 'recursiveReindexObject' )
-  def recursiveReindexObject(self, *args, **kw):
+  def recursiveReindexObject(self, activate_kw={}, *args, **kw):
     """
       Fixes the hierarchy structure (use of Base class)
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
     if self.isIndexable:
-      self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', alternate_method_id='alternateReindexObject', **kw).recursiveImmediateReindexObject(*args, **kw)
+      self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', alternate_method_id='alternateReindexObject', **activate_kw).recursiveImmediateReindexObject(*args, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
   def getIndexableChildValueList(self):

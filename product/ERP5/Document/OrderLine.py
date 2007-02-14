@@ -79,12 +79,12 @@ class OrderLine(DeliveryLine):
           getattr(my_simulation_movement, method_id)()
     
     security.declarePublic('recursiveReindexObject')    
-    def recursiveReindexObject(self, *k, **kw):
+    def recursiveReindexObject(self, activate_kw={}, *k, **kw):
       """
         Reindex children and simulation
       """
-      self.getExplanationValue().expandAppliedRuleRelatedToOrder(**kw)
-      DeliveryLine.recursiveReindexObject(self, *k, **kw)
+      self.getExplanationValue().expandAppliedRuleRelatedToOrder(activate_kw=activate_kw, **kw)
+      DeliveryLine.recursiveReindexObject(self, activate_kw=activate_kw, *k, **kw)
       #self.activate().applyToOrderLineRelatedMovement(method_id = 'expand')
       # We do it at Order level through edit
       # This logic should actually be put in worklow

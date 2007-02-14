@@ -150,7 +150,7 @@ class Order(Delivery):
       Reindex children and simulation
       """
       # Now the applied rule is expanded
-      Delivery.recursiveReindexObject(self, *k, **kw)
+      Delivery.recursiveReindexObject(self, activate_kw=activate_kw, *k, **kw)
       self.expandAppliedRuleRelatedToOrder(activate_kw=activate_kw, **kw)
 
     def expandAppliedRuleRelatedToOrder(self, activate_kw=None,**kw):
