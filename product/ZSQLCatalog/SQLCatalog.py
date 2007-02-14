@@ -1265,7 +1265,7 @@ class Catalog( Folder,
     self.catalogObjectList([object])
 
   def catalogObjectList(self, object_list, method_id_list=None, disable_cache=0,
-                              check_uid=1):
+                              check_uid=1, idxs=None):
     """
       Add objects to the Catalog by calling
       all SQL methods and providing needed arguments.
@@ -1287,6 +1287,9 @@ class Catalog( Folder,
     """
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_list))
     #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
+
+    if idxs not in (None, []):
+      LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', 0, 'Warning: idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
 
     if not self.isIndexable():
       return None
