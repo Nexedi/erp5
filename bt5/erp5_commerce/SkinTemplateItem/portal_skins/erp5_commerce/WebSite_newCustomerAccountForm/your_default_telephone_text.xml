@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_fax_text</string> </value>
+            <value> <string>your_default_telephone_text</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>FAX</string> </value>
+                    <value> <string>Telephone</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

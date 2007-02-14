@@ -77,7 +77,7 @@ form = context.WebSite_newCustomerAccountForm\n
 \n
 ## extract customer details\n
 person_kw = {}\n
-field_prefix = \'field_my_\'\n
+field_prefix = \'field_your_\'\n
 person_kw[\'career_role\'] = \'internal\'\n
 for key in form_kw.keys():\n
   if key.startswith(field_prefix):\n
@@ -96,7 +96,8 @@ if validated == False:\n
   return form(validation_errors)\n
 \n
 ## save customer\n
-person_module = context.person_module\n
+person_module = context.getPortalObject().person_module\n
+\n
 person = person_module.newContent(portal_type=\'Person\', **person_kw)\n
 person.validate()\n
 \n

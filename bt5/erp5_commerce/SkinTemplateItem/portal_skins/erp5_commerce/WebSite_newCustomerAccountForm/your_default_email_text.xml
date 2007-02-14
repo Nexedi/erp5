@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
+          <string>EmailField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_first_name</string> </value>
+            <value> <string>your_default_email_text</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -23,6 +23,10 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>not_email</string> </key>
+                    <value> <string>You did not enter an email address.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -195,7 +199,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>visible_label</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -211,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>15</int> </value>
+                    <value> <int>30</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -243,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>First Name</string> </value>
+                    <value> <string>Email</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

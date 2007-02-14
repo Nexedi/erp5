@@ -49,7 +49,6 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block tal:define="customer here/SaleOrder_getShoppingCartCustomer">\n
-\n
 <!-- TO BE IMPLEMENTED\n
  Person id:   <span tal:content="customer/getId"/>  <br/>\n
  Name:   <span tal:content="customer/getTitle"/>  <br/>\n

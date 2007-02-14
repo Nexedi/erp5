@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_telephone_text</string> </value>
+            <value> <string>your_default_address_city</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -239,11 +239,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Telephone</string> </value>
+                    <value> <string>City</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

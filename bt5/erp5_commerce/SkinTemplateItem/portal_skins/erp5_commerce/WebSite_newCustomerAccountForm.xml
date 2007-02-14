@@ -81,12 +81,7 @@
                 <item>
                     <key>                 <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_bank_account_holder_name</string>
-                        <string>my_bank_account_number</string>
-                        <string>my_bank_code</string>
-                        <string>my_stop_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -94,17 +89,17 @@
                     <value>
                       <list>
                         <string>Title</string>
-                        <string>my_first_name</string>
-                        <string>my_last_name</string>
-                        <string>my_default_email_text</string>
-                        <string>my_default_telephone_text</string>
-                        <string>my_default_fax_text</string>
-                        <string>my_default_address_street_address</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_address_zip_code</string>
-                        <string>my_default_address_region</string>
-                        <string>my_reference</string>
-                        <string>my_password</string>
+                        <string>your_first_name</string>
+                        <string>your_last_name</string>
+                        <string>your_default_email_text</string>
+                        <string>your_default_telephone_text</string>
+                        <string>your_default_fax_text</string>
+                        <string>your_default_address_street_address</string>
+                        <string>your_default_address_city</string>
+                        <string>your_default_address_zip_code</string>
+                        <string>your_default_address_region</string>
+                        <string>your_reference</string>
+                        <string>your_password</string>
                         <string>password_confirm</string>
                         <string>submit</string>
                       </list>
