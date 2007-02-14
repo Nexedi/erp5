@@ -92,12 +92,13 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\
 \n
 # check between letter and destination site codification\n
 # Make sure objects are Banknotes\n
-first_movement = object.Delivery_getMovementList(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'])[0]\n
-if first_movement.getResourceValue().getPortalType()==\'Banknote\':\n
-  line_letter = first_movement.getEmissionLetter()\n
-  if line_letter.lower() != dest.getCodification()[0].lower():\n
-    msg = Message(domain="ui", message="Letter defined on line do not correspond to destination site.")\n
-    raise ValidationFailed, (msg,)\n
+if \'transit\' not in dest.getRelativeUrl():\n
+  first_movement = object.Delivery_getMovementList(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'])[0]\n
+  if first_movement.getResourceValue().getPortalType()==\'Banknote\':\n
+    line_letter = first_movement.getEmissionLetter()\n
+    if line_letter.lower() != dest.getCodification()[0].lower():\n
+      msg = Message(domain="ui", message="Letter defined on line do not correspond to destination site.")\n
+      raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>

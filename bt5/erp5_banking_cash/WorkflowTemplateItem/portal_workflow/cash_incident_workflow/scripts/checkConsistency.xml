@@ -73,12 +73,13 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 txn = state_change[\'object\']\n
-in_list = txn.searchFolder(portal_type=\'Incoming Cash Incident Line\')\n
-out_list = txn.searchFolder(portal_type=\'Outgoing Cash Incident Line\')\n
+in_list = txn.objectValues(portal_type=\'Incoming Cash Incident Line\')\n
+out_list = txn.objectValues(portal_type=\'Outgoing Cash Incident Line\')\n
 \n
 price = txn.getSourceTotalAssetPrice()\n
 in_price = txn.getTotalPrice(portal_type=[\'Incoming Cash Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 out_price = txn.getTotalPrice(portal_type=[\'Outgoing Cash Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
+\n
 \n
 if len(in_list) != 0 and len(out_list) != 0:\n
   msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n

@@ -460,6 +460,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -496,7 +500,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>account_incident_module_selection</string> </value>
+                    <value> <string>account_incident_module_account_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

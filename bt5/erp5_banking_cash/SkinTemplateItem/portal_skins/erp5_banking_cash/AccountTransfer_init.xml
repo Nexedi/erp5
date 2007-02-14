@@ -68,23 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getSource() is None:\n
-  return None\n
-\n
-site_letter = context.getSourceValue().getCodification()[0].lower()\n
-site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
-\n
-emission_letter = context.getEmissionLetter()\n
-if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-elif context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and emission_letter in site_letter:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
-  \n
-elif emission_letter in site_letter:\n
-  return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
-else:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+user_site_list = context.Baobab_getUserAssignedSiteList()\n
+if len(user_site_list)>0:\n
+  site = context.Baobab_getVaultSite(user_site_list[0])\n
+  site_url = site.getRelativeUrl()\n
+  context.setSite(site_url)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -106,7 +99,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,15 +125,14 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
+<string>context</string>
+                            <string>user_site_list</string>
+                            <string>len</string>
                             <string>_getitem_</string>
-                            <string>site_letter</string>
                             <string>site</string>
-                            <string>emission_letter</string>
+                            <string>site_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,7 +149,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OutgoingCashSortingCell_getBaobabDestination</string> </value>
+            <value> <string>AccountTransfer_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

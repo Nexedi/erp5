@@ -40,8 +40,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>archive</string>
-                <string>post_dialog_action</string>
+                <string>deliver</string>
+                <string>deliver_action</string>
               </tuple>
             </value>
         </item>

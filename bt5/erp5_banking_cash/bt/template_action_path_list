@@ -8,7 +8,7 @@ Account Incident | incoming_view
 Account Incident | metadata
 Account Incident | outgoing_input
 Account Incident | outgoing_view
-Account Incident | print_pdf
+Account Incident | print
 Account Incident | view
 Cash Balance Regulation Module | list
 Cash Balance Regulation Module | list_ui

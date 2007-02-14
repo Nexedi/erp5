@@ -74,6 +74,7 @@ from Products.ERP5Type.Message import Message\n
 # Purchase Transaction .\n
 transaction = state_change.object\n
 \n
+\n
 # use of the constraint : Test if quantity is multiple of 1000\n
 vliste = transaction.checkConsistency()\n
 transaction.log(\'vliste\', vliste)\n

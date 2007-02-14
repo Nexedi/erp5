@@ -73,6 +73,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 object = state_change.object\n
 \n
+\n
 # use of the constraint\n
 vliste = object.checkConsistency()\n
 object.log(\'vliste\', vliste)\n

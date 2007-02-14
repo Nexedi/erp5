@@ -104,6 +104,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>DestinationAssignee</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

@@ -82,6 +82,7 @@ price = transaction.getSourceTotalAssetPrice()\n
 input_cash = transaction.getTotalPrice(portal_type=[\'Incoming Classification Survey Line\',\'Cash Delivery Cell\'],fast=0)\n
 output_cash = transaction.getTotalPrice(portal_type=[\'Outgoing Classification Survey Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
+\n
 if input_cash != output_cash :\n
   msg=Message(domain="ui", message="Incoming cash amount is different from outgoing cash amount.")\n
   raise ValidationFailed, (msg,)\n

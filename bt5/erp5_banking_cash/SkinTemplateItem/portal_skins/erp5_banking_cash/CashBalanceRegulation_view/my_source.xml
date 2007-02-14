@@ -308,7 +308,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getSource(), vault_type=(\'site/surface\', \'site/caveau\'), all=1)</string> </value>
+            <value> <string>python:here.Base_sortItemList(here.Delivery_getVaultItemList(current_url=here.getSource(), vault_type=(\'site/surface\', \'site/caveau\'), all=1)+here.Delivery_getVaultItemList(vault_type = (\'site/caveau/auxiliaire/encaisse_des_externes\',),user_site=1,strict_membership=1,leaf_node=0))</string> </value>
         </item>
       </dictionary>
     </pickle>

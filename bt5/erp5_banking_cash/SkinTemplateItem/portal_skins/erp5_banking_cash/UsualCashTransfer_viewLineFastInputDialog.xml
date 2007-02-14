@@ -82,8 +82,8 @@ if currency != context.Baobab_getPortalReferenceCurrencyID():\n
   emission_letter = [\'not_defined\']\n
   variation = [\'not_defined\']\n
 else:\n
-  cash_status = None\n
-  emission_letter = None\n
+  cash_status = [\'valid\',\'new_emitted\']\n
+  emission_letter = [\'not_defined\'] + context.Baobab_getUserEmissionLetterList()\n
   variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n

@@ -82,6 +82,11 @@ vaultDestination = transaction.getDestination()\n
 portal_type_with_no_space = transaction.getPortalType().replace(\' \',\'\')\n
 check_path_script = getattr(transaction,\'%s_checkPath\' % portal_type_with_no_space,None)\n
 \n
+# check again that we are in the good accounting date\n
+if not transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate()):\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
 if check_path_script is not None:\n
   message = check_path_script()\n
   transaction.log(\'check_path_script\',\'found\')\n
@@ -162,11 +167,11 @@ elif resource <> 0 :\n
                             <string>getattr</string>
                             <string>None</string>
                             <string>check_path_script</string>
+                            <string>msg</string>
                             <string>message</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

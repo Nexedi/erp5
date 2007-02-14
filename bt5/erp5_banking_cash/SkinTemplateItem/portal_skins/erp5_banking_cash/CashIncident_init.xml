@@ -68,22 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getSource() is None:\n
-  return None\n
+            <value> <string>reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
+context.setPriceCurrency(\'currency_module/%s\' %(reference_currency,))\n
+context.setCurrencyExchangeType(\'incident\')\n
 \n
-site_letter = context.getSourceValue().getCodification()[0].lower()\n
-site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
+transaction = context\n
 \n
-emission_letter = context.getEmissionLetter()\n
-if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-elif context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and emission_letter in site_letter:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
-  \n
-elif emission_letter in site_letter:\n
-  return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
-else:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+# XXX it might be better to set resource according to source_payment.\n
+#transaction.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurrencyID())\n
+\n
+movement = transaction.newContent(portal_type=\'Banking Operation Line\',\n
+                       id=\'movement\',\n
+                       source=\'account_module/bank_account\', # Set default source\n
+                       destination=\'account_module/bank_account\', # Set default destination\n
+                       )\n
+# Source and destination will be updated automaticaly based on the category of bank account\n
+# The default account chosen should act as some kind of *temp* account or *parent* account\n
 </string> </value>
         </item>
         <item>
@@ -136,11 +136,9 @@ else:\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
-                            <string>site_letter</string>
-                            <string>site</string>
-                            <string>emission_letter</string>
+                            <string>reference_currency</string>
+                            <string>transaction</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,7 +155,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OutgoingCashSortingCell_getBaobabDestination</string> </value>
+            <value> <string>CashIncident_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deliver Action</string> </value>
+            <value> <string>Deliver</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

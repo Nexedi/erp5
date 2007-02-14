@@ -72,6 +72,7 @@
 from Products.ERP5Type.Message import Message\n
 \n
 ob = state_change[\'object\']\n
+\n
 # check presence of banknote\n
 if len(ob.objectValues()) == 0:\n
   msg = Message(domain = "ui", message="No mutilated banknotes defined.")\n

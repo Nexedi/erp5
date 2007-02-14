@@ -68,22 +68,50 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getSource() is None:\n
-  return None\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
-site_letter = context.getSourceValue().getCodification()[0].lower()\n
-site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
+transaction = state_change[\'object\']\n
+# Compute the source form the vault choosen by\n
+# the accountant and find the counter with the\n
+# user logged in\n
+user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+# context.log(\'validateVaultBalance site_list\',site_list)\n
+source = transaction.getSource()\n
+baobab_source = None\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
+    baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
+    break\n
+source = baobab_source\n
+source_object = context.portal_categories.getCategoryValue(source)\n
 \n
-emission_letter = context.getEmissionLetter()\n
-if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-elif context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\' and emission_letter in site_letter:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
-  \n
-elif emission_letter in site_letter:\n
-  return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
-else:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+# check again that we are in the good accounting date\n
+if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate()):\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
+resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\', same_source=1)\n
+#transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
+\n
+# Get price and total_price.\n
+price = transaction.getSourceTotalAssetPrice()\n
+cash_detail = transaction.getTotalPrice(portal_type = (\'Cash Delivery Line\',\'Cash Delivery Cell\'), fast=0)\n
+#transaction.log("price vs cash detail", str((price, cash_detail)))\n
+if resource == 3:\n
+  msg = Message(domain="ui", message="No banknote or coin defined.")\n
+  raise ValidationFailed, (msg,)\n
+elif resource == 2:\n
+  msg = Message(domain="ui", message="No resource defined.")\n
+  raise ValidationFailed, (msg,)\n
+elif price != cash_detail:\n
+  msg = Message(domain="ui", message="Amount differs from input.")\n
+  raise ValidationFailed, (msg,)\n
+elif resource == 1:\n
+  msg = Message(domain="ui", message="Insufficient Balance in counter.")\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -106,7 +134,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,21 +154,34 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getitem_</string>
-                            <string>site_letter</string>
+                            <string>transaction</string>
+                            <string>_getattr_</string>
+                            <string>user_id</string>
+                            <string>context</string>
+                            <string>site_list</string>
+                            <string>source</string>
+                            <string>None</string>
+                            <string>baobab_source</string>
+                            <string>_getiter_</string>
                             <string>site</string>
-                            <string>emission_letter</string>
+                            <string>site_value</string>
+                            <string>source_object</string>
+                            <string>msg</string>
+                            <string>resource</string>
+                            <string>price</string>
+                            <string>cash_detail</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,7 +198,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OutgoingCashSortingCell_getBaobabDestination</string> </value>
+            <value> <string>validateVaultBalance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

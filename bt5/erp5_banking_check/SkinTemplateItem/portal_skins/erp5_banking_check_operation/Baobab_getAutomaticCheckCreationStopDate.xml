@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
 \n
-return DateTime(\'2006-12-31\')\n
+return DateTime(\'2007-12-31\')\n
 </string> </value>
         </item>
         <item>
