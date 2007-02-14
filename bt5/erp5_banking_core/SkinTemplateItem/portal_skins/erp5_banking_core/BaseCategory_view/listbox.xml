@@ -460,6 +460,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -545,7 +549,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Category_getSortedCategoryChildValueList</string> </value>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

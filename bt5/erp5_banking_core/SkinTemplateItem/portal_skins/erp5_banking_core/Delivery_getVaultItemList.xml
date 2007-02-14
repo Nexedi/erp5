@@ -98,7 +98,7 @@
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
-    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, \n
+    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None,\n
     site_list=None, with_base=1, all=0, first_level=0,main_agency=0,\n
     exclude_site_list=None):\n
 \n
@@ -144,7 +144,7 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
   get_cat_value = context.portal_categories.getCategoryValue\n
   for site in site_list:\n
     site_object = get_cat_value(site, base_category=\'site\')\n
-    \n
+\n
     vault_type_value_list = [context.portal_categories.restrictedTraverse(\'vault_type/%s\' % x) for x in vault_type]\n
     vault_type_uid_list = [x.getUid() for x in vault_type_value_list]\n
     catalog_kw = {}\n
@@ -187,7 +187,15 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
   vault_dict = {}\n
   # Transform each line of the vault list\n
   keep_level = []\n
+  erp5_site = context.getPortalObject()\n
+  mode_test = 0\n
+  if hasattr(erp5_site, \'functionnal_test_mode\'):\n
+    if getattr(erp5_site,  \'functionnal_test_mode\') == 1:\n
+      mode_test = 1\n
   for vault_item in vault_list:\n
+    # do not include testsite if not in test mode\n
+    if mode_test == 0 and \'testsite\' in vault_item[1]:\n
+      continue\n
     title_path_list = vault_item[0].split(\'/\')\n
     id_path_list    = vault_item[1].split(\'/\')[1:] # exclude the base category\n
     path_len      = len(id_path_list)\n
