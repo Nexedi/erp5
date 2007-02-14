@@ -867,17 +867,23 @@ class Catalog( Folder,
     self.clearReserved()
 
     # Add a dummy item so that SQLCatalog will not use existing uids again.
-    if self._max_uid is not None and self._max_uid() != 0:
-      method_id = self.sql_catalog_reserve_uid
-      method = getattr(self, method_id)
-      self._max_uid.change(1)
-      method(uid = [self._max_uid()])
+    self.insertMaxUid()
 
     # Remove the cache of catalog schema.
     if hasattr(self, '_v_catalog_schema_dict') :
       del self._v_catalog_schema_dict
 
     self._clearSecurityCache()
+
+  def insertMaxUid(self):
+    """
+      Add a dummy item so that SQLCatalog will not use existing uids again.
+    """
+    if self._max_uid is not None and self._max_uid() != 0:
+      method_id = self.sql_catalog_reserve_uid
+      method = getattr(self, method_id)
+      self._max_uid.change(1)
+      method(uid = [self._max_uid()])
 
   def clearReserved(self):
     """
