@@ -46,7 +46,7 @@ from Products.ERP5Form.Selection import Selection
 
 class TestSelectionTool(ERP5TypeTestCase):
   quiet = 1
-  run_all_tests = 1
+  run_all_test = 1
   
   def getTitle(self):
     return "SelectionTool"
