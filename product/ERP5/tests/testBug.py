@@ -84,7 +84,7 @@ class TestBug(ERP5TypeTestCase):
     self.login()
     self.datetime      = DateTime()  # Save today at initialisation to "freeze" the time
     self.portal        = self.getPortal()
-    self.workflow_tool = self.portal.getWorkflowTool()
+    self.workflow_tool = self.portal.portal_workflow
 
 
   ##################################
