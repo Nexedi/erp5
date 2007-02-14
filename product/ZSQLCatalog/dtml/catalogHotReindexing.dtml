@@ -7,13 +7,6 @@ Hot Reindexing allows you to recreate a new SQL Catalog without stopping your sy
 This requires at least two SQL Catalogs.
 </p>
 
-<dtml-if "_.hasattr(getPortalObject(), 'portal_activities')">
-<p class="form-help">
-Note that hot reindexing might not be finished even when you get a successful response,
-because portal_activities delays the real operations. You can check the real state in properties.
-</p>
-</dtml-if>
-
 <table cellspacing="0" cellpadding="2" border="0">
 <tr class="list-header">
   <td colspan="2" align="left">
