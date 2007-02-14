@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># look in the catalog to all inventory movement sort on date\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# look in the catalog to all inventory movement sort on date\n
 count = 1\n
 \n
 # We have to reindex all inventory in the order of the date\n
@@ -85,7 +87,14 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
                  , passive_commit=passive_commit\n
                  )\n
   count += 1\n
-</string> </value>
+\n
+if final_activity_tag is not None and count > 1:\n
+  # Dummy activity used to determine if the previously started activities are over.\n
+  context.activate(tag=final_activity_tag\n
+                  ,after_tag=\'inventory_%i\' % (count - 1, )).getId()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -101,7 +110,7 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, passive_commit=1, **kw</string> </value>
+            <value> <string>sql_catalog_id=None, passive_commit=1, final_activity_tag=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +130,7 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -129,6 +138,7 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
                           <tuple>
                             <string>sql_catalog_id</string>
                             <string>passive_commit</string>
+                            <string>final_activity_tag</string>
                             <string>kw</string>
                             <string>count</string>
                             <string>_getiter_</string>
@@ -153,6 +163,7 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
               <tuple>
                 <none/>
                 <int>1</int>
+                <none/>
               </tuple>
             </value>
         </item>

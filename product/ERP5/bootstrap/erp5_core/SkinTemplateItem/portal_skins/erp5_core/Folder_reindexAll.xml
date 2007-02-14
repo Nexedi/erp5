@@ -68,22 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>folder = context\n
+            <value> <string encoding="cdata"><![CDATA[
+
+folder = context\n
 \n
-# Reindex folder\n
-folder_kw = {\n
+activate_kw = {\n
   \'tag\': folder_tag,\n
   \'after_tag\': folder_after_tag,\n
-  \'sql_catalog_id\': sql_catalog_id,\n
   \'passive_commit\': passive_commit\n
 }\n
-for key, value in folder_kw.items():\n
+for key, value in activate_kw.items():\n
   if value is None:\n
-    folder_kw.pop(key)\n
+    activate_kw.pop(key)\n
 \n
-folder.reindexObject(**folder_kw)\n
+# Reindex folder immediately\n
+folder.reindexObject(sql_catalog_id=sql_catalog_id)\n
 \n
-# Reindex folder content\n
 group_tag = None\n
 group_after_tag = object_after_tag\n
 if object_tag is not None:\n
@@ -93,45 +93,33 @@ if object_tag is not None:\n
   else:\n
     group_after_tag = (object_tag, )\n
 \n
-object_kw = {\n
-  \'tag\': folder_tag,\n
-  \'after_tag\': folder_after_tag,\n
-  \'sql_catalog_id\': sql_catalog_id,\n
-  \'passive_commit\': passive_commit\n
-}\n
-for key, value in object_kw.items():\n
-  if value is None:\n
-    object_kw.pop(key)\n
+# Spawn activities for bundles of content objects.\n
+# Bundle size, in object count\n
+BUNDLE_ITEM_COUNT=100\n
 \n
+def Folder_reindexObjectList(id_list):\n
+  """\n
+    Create an activity calling Folder_reindexObjectList.\n
+  """\n
+  folder.activate(activity=\'SQLQueue\', priority=object_priority, **activate_kw).Folder_reindexObjectList(\n
+     id_list=id_list,\n
+     object_priority=object_priority,\n
+     object_tag=object_tag,\n
+     object_after_tag=object_after_tag,\n
+     sql_catalog_id=sql_catalog_id,\n
+     passive_commit=passive_commit,\n
+  )\n
 \n
-id_list = []\n
-len = 0\n
-for obj in folder.objectValues():\n
-  id_list.append(obj.getId())\n
-  len += 1\n
-  if len==100:\n
+id_list = [x for x in folder.objectIds()]\n
+for bundle_index in xrange(len(id_list) / BUNDLE_ITEM_COUNT):\n
+  Folder_reindexObjectList(id_list=id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
 \n
-    folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Folder_reindexObjectList(\n
-       id_list,\n
-       object_priority=object_priority,\n
-       object_tag=object_tag,\n
-       object_after_tag=object_after_tag,\n
-       sql_catalog_id=sql_catalog_id,\n
-       passive_commit=passive_commit,\n
-    )\n
-    id_list = []\n
-    len = 0\n
-\n
-\n
-folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Folder_reindexObjectList(\n
-       id_list,\n
-       object_priority=object_priority,\n
-       object_tag=object_tag,\n
-       object_after_tag=object_after_tag,\n
-       sql_catalog_id=sql_catalog_id,\n
-       passive_commit=passive_commit,\n
-    )\n
-</string> </value>
+remaining_object_id_count = len(id_list) % BUNDLE_ITEM_COUNT\n
+if remaining_object_id_count > 0:\n
+  Folder_reindexObjectList(id_list=id_list[-remaining_object_id_count:])\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -188,19 +176,25 @@ folder.activate(activity=\'SQLQueue\', priority=object_priority, **object_kw).Fo
                             <string>passive_commit</string>
                             <string>context</string>
                             <string>folder</string>
-                            <string>folder_kw</string>
+                            <string>activate_kw</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>key</string>
                             <string>value</string>
                             <string>None</string>
-                            <string>_apply_</string>
                             <string>group_tag</string>
                             <string>group_after_tag</string>
-                            <string>object_kw</string>
+                            <string>BUNDLE_ITEM_COUNT</string>
+                            <string>Folder_reindexObjectList</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>id_list</string>
+                            <string>xrange</string>
                             <string>len</string>
-                            <string>obj</string>
+                            <string>bundle_index</string>
+                            <string>_getitem_</string>
+                            <string>remaining_object_id_count</string>
                           </tuple>
                         </value>
                     </item>

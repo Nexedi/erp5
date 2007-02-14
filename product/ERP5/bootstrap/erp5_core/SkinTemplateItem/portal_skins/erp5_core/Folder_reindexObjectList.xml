@@ -70,20 +70,21 @@
             <key> <string>_body</string> </key>
             <value> <string>folder = context\n
 \n
-object_kw = {\n
+activate_kw = {\n
   \'tag\': object_tag,\n
   \'after_tag\': object_after_tag,\n
-  \'sql_catalog_id\': sql_catalog_id,\n
-  \'passive_commit\': passive_commit\n
+  \'passive_commit\': passive_commit,\n
+  \'priority\': object_priority\n
 }\n
-for key, value in object_kw.items():\n
+for key, value in activate_kw.items():\n
   if value is None:\n
-    object_kw.pop(key)\n
+    activate_kw.pop(key)\n
 \n
 for id in id_list:\n
-  obj = folder.restrictedTraverse(id)\n
-  obj.recursiveReindexObject(priority=object_priority,\n
-                           **object_kw)\n
+  obj = getattr(folder, id, None)\n
+  if obj is not None:\n
+    obj.recursiveReindexObject(activate_kw=activate_kw,\n
+                               sql_catalog_id=sql_catalog_id)\n
 </string> </value>
         </item>
         <item>
@@ -138,17 +139,17 @@ for id in id_list:\n
                             <string>object_priority</string>
                             <string>sql_catalog_id</string>
                             <string>passive_commit</string>
-<string>context</string>
+                            <string>context</string>
                             <string>folder</string>
-                            <string>object_kw</string>
+                            <string>activate_kw</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>key</string>
                             <string>value</string>
                             <string>None</string>
                             <string>id</string>
+                            <string>getattr</string>
                             <string>obj</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -170,7 +171,7 @@ for id in id_list:\n
             </value>
         </item>
         <item>
-            <key>                             <string>id</string> </key>
+            <key> <string>id</string> </key>
             <value> <string>Folder_reindexObjectList</string> </value>
         </item>
         <item>
