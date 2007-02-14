@@ -252,8 +252,8 @@ class RoleProviderBase:
                                 , base_category_script=base_category_script
                                 )
 
-    security.declareProtected( ManagePortal, 'updateRoleMappings' )
-    def updateRoleMappings( self, REQUEST, manage_tabs_message=None ):
+    security.declareProtected( ManagePortal, 'updateRoleMapping' )
+    def updateRoleMapping( self, REQUEST=None, manage_tabs_message=None ):
       """Update the local roles in existing objects.
       """
       portal_catalog = self.portal_catalog
@@ -267,7 +267,8 @@ class RoleProviderBase:
         obj.updateLocalRolesOnSecurityGroups(user_name = user_id)
         i += 1
 
-      return self.manage_editRolesForm(REQUEST, manage_tabs_message='%d objects updated' % (i,))
+      if REQUEST is not None:
+        return self.manage_editRolesForm(REQUEST, manage_tabs_message='%d objects updated' % (i,))
 
 
 InitializeClass(RoleProviderBase)
