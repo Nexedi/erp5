@@ -56,21 +56,12 @@ from Products.ERP5Type import PropertySheet
 
 from zLOG import LOG, BLATHER, PROBLEM
 
-#####################################################
-# Global Switches
-#####################################################
-
-INITIALIZE_PRODUCT_RAD = 0 # If set to 0, product documents are not
-                           # initialized this will divide by two memory
-                           # usage taken by getters and setters 0 value
-                           # is suggested for new ERP5 projetcs
 
 #####################################################
 # Compatibility - XXX - BAD
 #####################################################
 
 from Accessor.TypeDefinition import *
-
 
 #####################################################
 # Generic sort method
@@ -405,8 +396,9 @@ def readLocalPropertySheet(class_id):
   f.close()
   return text
 
-def writeLocalPropertySheet(class_id, text, create=1):
-  instance_home = getConfiguration().instancehome
+def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
+  if instance_home is None:
+    instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
@@ -418,6 +410,7 @@ def writeLocalPropertySheet(class_id, text, create=1):
 def importLocalPropertySheet(class_id, path = None):
   from Products.ERP5Type import PropertySheet
   if path is None:
+    # We should save a copy in ZODB here XXX
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
@@ -534,8 +527,9 @@ def readLocalConstraint(class_id):
   f.close()
   return text
 
-def writeLocalExtension(class_id, text, create=1):
-  instance_home = getConfiguration().instancehome
+def writeLocalExtension(class_id, text, create=1, instance_home=None):
+  if instance_home is None:
+    instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
@@ -544,8 +538,9 @@ def writeLocalExtension(class_id, text, create=1):
   f = open(path, 'w')
   f.write(text)
 
-def writeLocalTest(class_id, text, create=1):
-  instance_home = getConfiguration().instancehome
+def writeLocalTest(class_id, text, create=1, instance_home=None):
+  if instance_home is None:
+    instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "tests")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
@@ -554,8 +549,9 @@ def writeLocalTest(class_id, text, create=1):
   f = open(path, 'w')
   f.write(text)
 
-def writeLocalConstraint(class_id, text, create=1):
-  instance_home = getConfiguration().instancehome
+def writeLocalConstraint(class_id, text, create=1, instance_home=None):
+  if instance_home is None:
+    instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Constraint")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
@@ -596,8 +592,9 @@ def readLocalDocument(class_id):
   f.close()
   return text
 
-def writeLocalDocument(class_id, text, create=1):
-  instance_home = getConfiguration().instancehome
+def writeLocalDocument(class_id, text, create=1, instance_home=None):
+  if instance_home is None:
+    instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
@@ -823,50 +820,22 @@ def initializeProduct( context,
   if content_classes is None: content_classes = []
   product_name = this_module.__name__.split('.')[-1]
 
-  # Define content classes from document_classes
-  extra_content_classes = []
-  #if document_module is not None:
-  if 0:
-    for module_name in document_classes:
-      #LOG('Inspecting %s %s' % (document_module, module_name),0,'')
-      candidate = getattr(document_module, module_name)
-      candidate = getattr(candidate, module_name)
-      #LOG('Found %s' % candidate,0,'')
-      if hasattr(candidate, 'isPortalContent'):
-        if candidate.isPortalContent == 1:
-          extra_content_classes += [candidate]
-
-  # Initialize Default Properties and Constructors for RAD classes
-  if INITIALIZE_PRODUCT_RAD:
-    #initializeDefaultProperties(content_classes)
-    #initializeDefaultProperties(extra_content_classes)
-    initializeDefaultProperties(object_classes)
-    #initializeDefaultConstructors(content_classes) #Does not work yet
-
-
   # Define content constructors for Document content classes (RAD)
+  initializeDefaultConstructors(content_classes)
   extra_content_constructors = []
-  for content_class in extra_content_classes:
+  for content_class in content_classes:
     if hasattr(content_class, 'add' + content_class.__name__):
       extra_content_constructors += [
                 getattr(content_class, 'add' + content_class.__name__)]
-    else:
-      extra_content_constructors += [
-                getattr(document_module, 'add' + content_class.__name__)]
 
   # Define FactoryTypeInformations for all content classes
   contentFactoryTypeInformations = []
   for content in content_classes:
     if hasattr(content, 'factory_type_information'):
       contentFactoryTypeInformations.append(content.factory_type_information)
-  for content in extra_content_classes:
-    if hasattr(content, 'factory_type_information'):
-      contentFactoryTypeInformations.append(content.factory_type_information)
 
   # Aggregate
-  content_classes = list(content_classes) + list(extra_content_classes)
-  content_constructors = list(content_constructors)\
-                          + list(extra_content_constructors)
+  content_constructors = list(content_constructors) + list(extra_content_constructors)
 
   # Begin the initialization steps
   bases = tuple(content_classes)
@@ -909,6 +878,7 @@ def initializeProduct( context,
     if hasattr(klass, 'permission_type'):
       klass_permission=klass.permission_type
 
+    #LOG("ContentInit", 0, str(content_constructors))
     utils.ContentInit( klass.meta_type,
                        content_types=[klass],
                        permission=klass_permission,
@@ -971,7 +941,11 @@ def setDefaultConstructor(klass):
       Create the default content creation method
     """
     if not hasattr(klass, 'add' + klass.__name__):
-      setattr(klass, 'add' + klass.__name__, Constructor(klass))
+      document_constructor = DocumentConstructor(klass)
+      document_constructor_name = "add%s" % klass.__name__
+      setattr(klass, document_constructor_name, document_constructor)
+      document_constructor.__name__ = document_constructor_name
+
 
 # Creation of default property accessors and values
 def initializeDefaultProperties(property_holder_list, object=None):
