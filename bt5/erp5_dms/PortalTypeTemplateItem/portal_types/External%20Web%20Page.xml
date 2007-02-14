@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document.gif</string> </value>
+            <value> <string>icon_www</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
