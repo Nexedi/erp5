@@ -7,7 +7,7 @@
 	   )">
 <p class="form-help">
 This page show the active selections for the current user.
- It is only usefull for debug purposes.
+ It is only useful for debug purposes.
 </p>
 
 <table cellspacing="0" cellpadding="2" border="1">

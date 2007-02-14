@@ -3,7 +3,7 @@
 
 <h3> <code>portal_selection</code> Tool </h3>
 
-<p> This tool allows to manage persistant selections for listbox in ERP5.
+<p> This tool allows to manage persistent selections for listbox in ERP5.
 </p>
 
 <dtml-var manage_page_footer>

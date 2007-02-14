@@ -4,10 +4,10 @@
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -120,14 +120,17 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
     def getSelectionNames(self, context=None, REQUEST=None):
+      """
+        Returns the selection names
+      """
       if context is None: context = self
       if not REQUEST:
         REQUEST = get_request()
-        if hasattr(self, 'selection_data'):
-          user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      if hasattr(self, 'selection_data'):
+        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
         if user_id is not None and self.selection_data.has_key(user_id):
           return self.selection_data[user_id].keys()
-      return ()
+      return []
 
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
     def callSelectionFor(self, selection_name, context=None, REQUEST=None):
@@ -237,7 +240,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'setSelectionCheckedUidsFor')
     def setSelectionCheckedUidsFor(self, selection_name, checked_uids, REQUEST=None):
       """
-        Sets the selection params for a given selection_name
+        Sets the checked uids for a given selection_name
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
@@ -248,7 +251,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     def updateSelectionCheckedUidList(self, selection_name, listbox_uid, uids, REQUEST=None):
       """
-        Sets the selection params for a given selection_name
+        Updates the checked uids for a given selection_name
       """
       if listbox_uid is None:
         listbox_uid = []
@@ -260,7 +263,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedUidsFor')
     def getSelectionCheckedUidsFor(self, selection_name, REQUEST=None):
       """
-        Sets the selection params for a given selection_name
+        Returns the checked uids for a given selection_name
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
@@ -272,7 +275,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     def checkAll(self, selection_name, listbox_uid=[], REQUEST=None,
                  query_string=None, form_id=None):
       """
-        Sets the selection params for a given selection_name
+        Check uids in a given listbox_uid list for a given selection_name
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
@@ -293,7 +296,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     def uncheckAll(self, selection_name, listbox_uid=[], REQUEST=None,
                    query_string=None, form_id=None):
       """
-        Sets the selection params for a given selection_name
+        Uncheck uids in a given listbox_uid list for a given selection_name
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
@@ -476,7 +479,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'viewLast')
     def viewLast(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
-        Access first item in a selection
+        Access last item in a selection
       """
       if not REQUEST:
         REQUEST = get_request()
@@ -592,9 +595,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'setPage')
     def setPage(self, list_selection_name, listbox_uid, query_string=None, uids=None, REQUEST=None):
-      """
-        Access the previous page of a list
-      """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
@@ -701,9 +701,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
     def unfoldDomain(self, REQUEST, form_id=None, query_string=None):
-      """
-        Sets the root domain for the current selection
-      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       domain_url = REQUEST.form.get('domain_url',None)
@@ -719,9 +716,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'foldDomain')
     def foldDomain(self, REQUEST, form_id=None, query_string=None):
-      """
-        Sets the root domain for the current selection
-      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       domain_url = REQUEST.form.get('domain_url',None)
@@ -737,9 +731,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'setReportRoot')
     def setReportRoot(self, REQUEST, form_id=None, query_string=None):
-      """
-        Sets the root domain for the current selection
-      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       root_url = REQUEST.form.get('report_root_url','portal_categories')
@@ -751,11 +742,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'unfoldReport')
     def unfoldReport(self, REQUEST, form_id=None, query_string=None):
-      """
-        Sets the root domain for the current selection
-
-        report_list is a list of relative_url of category, domain, etc.
-      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       report_url = REQUEST.form.get('report_url',None)
@@ -768,9 +754,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'foldReport')
     def foldReport(self, REQUEST, form_id=None, query_string=None):
-      """
-        Sets the root domain for the current selection
-      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       report_url = REQUEST.form.get('report_url',None)
@@ -799,7 +782,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
                               selection_name=None, redirect=0,
                               form_id=None, query_string=None):
       """
-        Toogle display of the listbox
+        Toggle display of the listbox
       """
       request = REQUEST
       # XXX FIXME
@@ -941,7 +924,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     def getPickle(self,**kw):
       """
       we give many keywords and we will get the corresponding
-      pickle string and signature
+      pickle string
       """
       #LOG('getPickle kw',0,kw)
       # XXX Remove DateTime, This is really bad, only use for zope 2.6
@@ -973,7 +956,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'getObjectFromPickle')
     def getObjectFromPickle(self,pickle_string):
       """
-      we give a pickle string and a signature
+      get object from a pickle string
       """
       object = None
       pickle_string = pickle_string.replace('@@@','\n')
@@ -987,7 +970,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'getObjectFromPickleAndSignature')
     def getObjectFromPickleAndSignature(self,pickle_string,signature):
       """
-      we give a pickle string and a signature
+      get object from a pickle string only when a signature maches
       """
       cookie_password = self._getCookiePassword()
       object = None
@@ -1010,7 +993,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'registerCookieInfo')
     def setCookieInfo(self,request,cookie_name,**kw):
       """
-      regiter info directly in cookie
+      register info directly in cookie
       """
       cookie_name = cookie_name + '_cookie'
       (pickle_string,signature) = self.getPickleAndSignature(**kw)
@@ -1021,7 +1004,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'registerCookieInfo')
     def getCookieInfo(self,request,cookie_name):
       """
-      regiter info directly in cookie
+      get info directly from cookie
       """
       cookie_name = cookie_name + '_cookie'
       object = None
@@ -1363,4 +1346,3 @@ for property_id in candidate_method_id_list:
   security_property = getattr(SelectionTool, security_property_id, None)
   if security_property is not None:
     setattr(FolderMixIn, security_property_id, security_property)
-
