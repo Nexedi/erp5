@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ordered</string> </value>
+            <value> <string>started</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -40,8 +40,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>confirm</string>
-                <string>confirm_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>

@@ -42,8 +42,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>plan</string>
-                <string>plan_action</string>
+                <string>confirm</string>
+                <string>confirm_action</string>
               </tuple>
             </value>
         </item>

@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign To Vault Controler Site Destination</string> </value>
+            <value> <string>Assign To Vault Controler</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assign To Vault Controler Site Destination</string> </value>
+            <value> <string>Assign To Vault Controler</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
