@@ -70,25 +70,24 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     - create an invalid Line (quantity > available at source)
     - check that the system behaves correctly
 
-    - pass "plan_action" transition
-    - check that the new state is planned
-    - check that the source has been debited correctly (current < future)
-    - check amount, lines, ...
-
-    - pass "order_action" transition
-    - check that the new state is ordered
-    - check that the source has been debited correctly (current < future)
-    - check amount, lines, ...
-
-
     - pass "confirm_action" transition
+    - check that the new state is planned
+    - check amount, lines, ...
+
+    - pass "start_action" transition
+    - check that the new state is ordered
+    - check that the source has been debited correctly
+    - check that the destination has not been credited yet
+    - check amount, lines, ...
+
+
+    - pass "stop_action" transition
     - check that the new state is confirmed
-    - check that the source has been debited correctly (current < future)
+    - check that the destination has been credited correctly
     - check amount, lines, ...
 
     - pass "deliver_action" transition
     - check that the new state is delivered
-    - check that the destination has been credited correctly (current == future)
 
   """
 
@@ -368,15 +367,15 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_movement.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
-  def stepTryConfirmCashMovementWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepTryStopCashMovementWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Try to confirm the cash_movement with a bad cash_movement line and
     check the try of confirm the cash_movement with the invalid line has failed
     """
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.cash_movement.setSourceTotalAssetPrice('172400.0')
-    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_movement, 'confirm_action', wf_id='cash_movement_workflow')
+    # try to do the workflow action "stop_action', cath the exception ValidationFailed raised by workflow transition
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_movement, 'stop_action', wf_id='cash_movement_workflow')
     # execute tic
     self.stepTic()
     # get state of the cash_movement
@@ -392,7 +391,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertTrue('Insufficient balance' in "%s" %(msg,))
 
 
-  def stepTryPlanCashMovementWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepTryConfirmCashMovementWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Try to plan the cash_movement with a bad cash_movement line and
     check the try of confirm the cash_movement with the invalid line has failed
@@ -401,8 +400,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
     self.cash_movement.setSourceTotalAssetPrice('172400.0')
-    # try to do the workflow action "plan_action', cath the exception ValidationFailed raised by workflow transition
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_movement, 'plan_action', wf_id='cash_movement_workflow')
+    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_movement, 'confirm_action', wf_id='cash_movement_workflow')
     # execute tic
     self.stepTic()
     # get state of the cash_movement
@@ -442,14 +441,14 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_movement.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
 
 
-  def stepConfirmCashMovement(self, sequence=None, sequence_list=None, **kwd):
+  def stepStopCashMovement(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash_movement and check it
     """
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.cash_movement.setSourceTotalAssetPrice('52400.0')
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_movement, 'confirm_action', wf_id='cash_movement_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'stop_action', wf_id='cash_movement_workflow')
     # execute tic
     self.stepTic()
     # get state
@@ -462,14 +461,14 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 8)
 
 
-  def stepPlanCashMovement(self, sequence=None, sequence_list=None, **kwd):
+  def stepConfirmCashMovement(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash_movement and check it
     """
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.cash_movement.setSourceTotalAssetPrice('52400.0')
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_movement, 'plan_action', wf_id='cash_movement_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'confirm_action', wf_id='cash_movement_workflow')
     # execute tic
     self.stepTic()
     # get state
@@ -481,14 +480,14 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # check len of workflow history is 4
     self.assertEqual(len(workflow_history), 4)
 
-  def stepOrderCashMovement(self, sequence=None, sequence_list=None, **kwd):
+  def stepStartCashMovement(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash_movement and check it
     """
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.cash_movement.setSourceTotalAssetPrice('52400.0')
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_movement, 'order_action', wf_id='cash_movement_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'start_action', wf_id='cash_movement_workflow')
     # execute tic
     self.stepTic()
     # get state
@@ -500,26 +499,22 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # check len of workflow history is 4
     self.assertEqual(len(workflow_history), 6)
 
-  def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
+  def stepCheckSourceDebitStarted(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault vault_source is right after confirm and before deliver
+    Check that computaion of inventory at vault vault_source is right after start and before stop
     """
-    # check we have 5 banknotes of 10000 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we have 0 banknotes of 10000 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we will have 0 banknote of 10000 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    # check we have 12 coins of 200 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    # check we have 0 coins of 200 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     # check we will have 0 coin of 200 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
-
-
-
-
-  def stepCheckDestinationCreditPlanned(self, sequence=None, sequence_list=None, **kwd):
+  def stepCheckDestinationCreditStarted(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault vault_destination is right after confirm and before deliver
+    Check that compution of inventory at vault vault_destination is right after start and before stop
     """
     # check we have 0 banknote of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
@@ -607,13 +602,12 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
                     + 'CreateInvalidLine ' \
-                    + 'TryPlanCashMovementWithBadInventory ' \
+                    + 'TryConfirmCashMovementWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
-                    + 'PlanCashMovement ' \
-                    + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
-                    + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
-                    + 'OrderCashMovement ' \
                     + 'ConfirmCashMovement ' \
+                    + 'StartCashMovement ' \
+                    + 'CheckSourceDebitStarted CheckDestinationCreditStarted ' \
+                    + 'StopCashMovement ' \
                     + 'DeliverCashMovement ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
 
