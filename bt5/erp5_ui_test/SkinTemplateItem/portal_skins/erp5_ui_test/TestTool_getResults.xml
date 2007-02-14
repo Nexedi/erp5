@@ -69,9 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_tests = container.portal_tests\n
-results = [portal_tests.absolute_url() + "/" + e for e in portal_tests.objectIds() if e.startswith("result_")]\n
+results = [portal_tests.absolute_url() + \'/\' + e for e in portal_tests.objectIds(\'Zuite Results\')]\n
 results.reverse()\n
-return "\\n".join(results) + "\\n"\n
+return \'\\n\'.join(results) + \'\\n\'\n
 </string> </value>
         </item>
         <item>
