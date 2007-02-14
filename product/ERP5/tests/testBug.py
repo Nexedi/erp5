@@ -32,7 +32,7 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, DummyMailHost
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
@@ -85,6 +85,11 @@ class TestBug(ERP5TypeTestCase):
     self.datetime      = DateTime()  # Save today at initialisation to "freeze" the time
     self.portal        = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
+    # Use a dummy mailhost to not send mail notification to the guy how run unit test
+    if 'MailHost' in self.portal.objectIds():
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
 
 
   ##################################
@@ -125,7 +130,7 @@ class TestBug(ERP5TypeTestCase):
                                , title             = 'This is an important bug'
                                , description       = 'This %µ&~#^@! bug always happend on ERP5 start. The solution consist to kill the developper.'
                                , start_date        = self.datetime  # Today
-                               , stop_date         = self.datetime  # Today XXXXXXXXXXXXXXXXXXXXXX
+                               , stop_date         = self.datetime  # Today
                                )
     sequence.edit(bug = bug)
 
