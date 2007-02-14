@@ -723,11 +723,10 @@ class ActivityTool (Folder, UniqueObject):
       try:
         if len(expanded_object_list) > 0:
           method = self.unrestrictedTraverse(method_id)
-          # FIXME: how to pass parameters?
           # FIXME: how to apply security here?
           # NOTE: expanded_object_list must be set to failed objects by the callee.
           #       If it fully succeeds, expanded_object_list must be empty when returning.
-          result = method(expanded_object_list)
+          result = method(expanded_object_list, **m.kw)
         else:
           result = None
       except:
