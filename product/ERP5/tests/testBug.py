@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -186,7 +188,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     bug.setStopDate(self.datetime - 10)
-    self.assertEquals(bug.getStopDate(), self.datetime - 10) # Check that datetime is fixed
+    self.assertEquals(bug.getStopDate().Date(), (self.datetime - 10).Date()) # Check that datetime is fixed
 
 
   def stepCheckClosedDate(self, sequence=None, sequence_list=None, **kw):
@@ -194,7 +196,7 @@ class TestBug(ERP5TypeTestCase):
       Check that the closed date is set as today.
     """
     bug = sequence.get('bug')
-    self.assertEquals(bug.getStopDate(), self.datetime)
+    self.assertEquals(bug.getStopDate().Date(), self.datetime.Date())
 
 
 
