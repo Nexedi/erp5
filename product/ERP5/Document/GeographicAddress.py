@@ -66,7 +66,7 @@ class GeographicAddress(Coordinate, Base):
     # Declarative interfaces
     __implements__ = ( Interface.Coordinate )
 
-    security.declareProtected(Permissions.View, 'asText')
+    security.declareProtected(Permissions.AccessContentsInformation, 'asText')
     def asText(self, country=''):
         """
           Returns the address as a complete formatted string
@@ -80,9 +80,8 @@ class GeographicAddress(Coordinate, Base):
           else :
             result = ('%s\n%s %s') % (self.getStreetAddress() or '', 
                           self.getCity() or '', self.getZipCode() or '')
-        # XXX Not very clean
-        if result == "\n ":
-          result = ""
+        if not result.strip():
+          return ''
         return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
@@ -106,9 +105,9 @@ class GeographicAddress(Coordinate, Base):
           self.setZipCode(zip_city[0])
           if len(zip_city) > 1:
             self.setCity(string.join(zip_city[1:]))
-#         self.reindexObject()
 
-    security.declareProtected(Permissions.View, 'standardTextFormat')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'standardTextFormat')
     def standardTextFormat(self):
         """
           Returns the standard text format for geographic addresses
