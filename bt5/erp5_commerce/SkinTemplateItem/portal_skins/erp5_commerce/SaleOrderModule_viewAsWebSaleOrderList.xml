@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,9 +61,6 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -75,37 +72,10 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
                       <list>
-                        <string>shopping_cart</string>
-                        <string>my_first_name</string>
-                        <string>my_last_name</string>
-                        <string>my_default_email_text</string>
-                        <string>my_default_telephone_text</string>
-                        <string>my_default_address_street_address</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_address_zip_code</string>
-                        <string>my_default_address_region</string>
-                        <string>submit</string>
-                        <string>fake_payment</string>
+                        <string>label_header</string>
+                        <string>listbox</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -113,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewAsWebConfirm</string> </value>
+            <value> <string>SaleOrderModule_viewAsWebSaleOrderList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,11 +91,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Product_view</string> </value>
+            <value> <string>SaleOrderModule_viewSaleOrderList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>web_form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -137,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm order</string> </value>
+            <value> <string>Sale Orders</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

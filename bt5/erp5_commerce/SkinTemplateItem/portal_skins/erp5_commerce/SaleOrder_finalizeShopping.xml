@@ -207,6 +207,8 @@
             <value> <string>request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
+customer = context.SaleOrder_getShoppingCartCustomer()\n
 \n
 if isAnon:\n
   ## create first an account for user\n
@@ -214,8 +216,25 @@ if isAnon:\n
                       keep_items={\'portal_status_message\': translateString("You need to create an account.", mapping = dict())})\n
   return\n
 \n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-sale_order = context.SaleOrder_createPersistentSaleOrder(shopping_cart)\n
+## XXX: Implement check if payment is sucessfull\n
+\n
+order_module = context.getPortalObject().sale_order_module\n
+sale_order = order_module.newContent(portal_type=\'Sale Order\')\n
+sale_order.setDestination(customer.getRelativeUrl())\n
+\n
+## set order default currency\n
+sale_order.setDefaultPriceCurrency(context.SaleOrder_getShoppingCartDefaultCurrency().getRelativeUrl())\n
+\n
+for order_line in shopping_cart_items:\n
+  resource = context.restrictedTraverse(order_line.getResource())\n
+  sale_order.newContent(portal_type = \'Sale Order Line\',\n
+                        resource = order_line.getResource(),\n
+                        quantity = order_line.getQuantity(),\n
+                        price = resource.getPrice(),\n
+                        title = resource.getTitle())\n
+\n
+## order it\n
+sale_order.order()\n
 \n
 ## clean up shopping cart\n
 context.SaleOrder_getShoppingCart(action=\'reset\')\n
@@ -242,10 +261,7 @@ context.Base_redirect(\'%s/SaleOrder_viewThankYouMessage\' %sale_order.absolute_
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -277,9 +293,14 @@ context.Base_redirect(\'%s/SaleOrder_viewThankYouMessage\' %sale_order.absolute_
                             <string>request</string>
                             <string>isAnon</string>
                             <string>translateString</string>
+                            <string>shopping_cart_items</string>
+                            <string>customer</string>
                             <string>dict</string>
-                            <string>shopping_cart</string>
+                            <string>order_module</string>
                             <string>sale_order</string>
+                            <string>_getiter_</string>
+                            <string>order_line</string>
+                            <string>resource</string>
                           </tuple>
                         </value>
                     </item>

@@ -77,9 +77,17 @@
 \n
   </tal:block>\n
 \n
-  <tal:block tal:condition="not: isAnon">\n
-    <p class="article">Hello, <span tal:replace="here/portal_membership/getAuthenticatedMember"/></p>\n
-    <a class="articlelink" href="WebSite_logout"> Log out</a><br/>\n
+  <tal:block tal:condition="not: isAnon"\n
+             tal:define="customer here/SaleOrder_getShoppingCartCustomer;\n
+                         website here/getWebSiteValue">\n
+\n
+    <p class="article">Hello, <span tal:replace="customer/getTitle"/></p>\n
+    <a class="articlelink" \n
+      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' %website.absolute_url()">My orders</a>\n
+    <a class="articlelink" \n
+       tal:attributes="href python: \'%s/%s/Person_viewAsWeb\' %(website.absolute_url(), customer.getRelativeUrl())"> My account </a> \n
+    <a class="articlelink" \n
+      tal:attributes="href python: \'%s/WebSite_logout\' %website.absolute_url()"> Log out</a><br/>\n
   </tal:block>\n
 \n
 </tal:block>

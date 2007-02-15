@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_default_address_region</string> </value>
+            <value> <string>my_nationality</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -251,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Country</string> </value>
+                    <value> <string>Nationality</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/region/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>here/portal_categories/nationality/getCategoryChildLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

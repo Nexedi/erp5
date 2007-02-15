@@ -1,0 +1,8 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>Customer</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/customer</multi_property>
+  </role>
+</type_roles>

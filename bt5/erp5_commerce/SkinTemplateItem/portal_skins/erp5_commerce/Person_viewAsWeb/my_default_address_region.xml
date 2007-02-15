@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_default_address_region</string> </value>
+            <value> <string>my_default_address_region</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

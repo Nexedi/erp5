@@ -68,17 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>total = 0.0\n
-currency = None\n
+            <value> <string>""" Calculate total price of temporary RAM based Sale Order. \n
+    XXX: Include shipping costs as a resource.\n
+"""\n
 \n
+total = 0.0\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 for order_line in shopping_cart_items:\n
   resource = context.restrictedTraverse(order_line.getResource())\n
   total += resource.getPrice() * order_line.getQuantity()\n
-  if currency is None:\n
-    ## calculate currency only once for Sale Order\n
-    currency = context.restrictedTraverse(resource.getSupplyLinePriceCurrency())\n
-\n
+    \n
+currency = context.SaleOrder_getShoppingCartDefaultCurrency()\n
 if include_currency:\n
   return \'%s %s\' %(total, currency.getTitle())\n
 else:\n
@@ -135,14 +135,13 @@ else:\n
                           <tuple>
                             <string>include_currency</string>
                             <string>total</string>
-                            <string>None</string>
-                            <string>currency</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>shopping_cart_items</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
                             <string>resource</string>
+                            <string>currency</string>
                             <string>str</string>
                           </tuple>
                         </value>

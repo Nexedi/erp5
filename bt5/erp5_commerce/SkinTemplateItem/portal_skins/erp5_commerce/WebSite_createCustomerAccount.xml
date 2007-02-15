@@ -83,7 +83,6 @@ for key in form_kw.keys():\n
   if key.startswith(field_prefix):\n
     person_kw[key.replace(field_prefix, \'\')] = form_kw[key]\n
 \n
-\n
 ## validate form to request\n
 try:\n
   kw = form.validate_all_to_request(request)\n
@@ -97,12 +96,20 @@ if validated == False:\n
 \n
 ## save customer\n
 person_module = context.getPortalObject().person_module\n
-\n
 person = person_module.newContent(portal_type=\'Person\', **person_kw)\n
 person.validate()\n
 \n
+## add assignment\n
+assignment = person.newContent(portal_type="Assignment", title="Commerce customer")\n
+assignment.setFunction(\'customer\')\n
+assignment.open()\n
+\n
 ## reindex customer so it becomes available as site member\n
 person.immediateReindexObject()\n
+\n
+## set local role to Owner for new user \n
+## so he can view/modify ONLY this object\n
+person.manage_addLocalRoles(person_kw[\'reference\'], (\'Owner\',)) \n
 \n
 context.Base_redirect(\'WebSite_login\', \\\n
                       keep_items={\'portal_status_message\': translateString("Your account was created.", mapping = dict()),\n
@@ -182,6 +189,7 @@ context.Base_redirect(\'WebSite_login\', \\\n
                             <string>person_module</string>
                             <string>_apply_</string>
                             <string>person</string>
+                            <string>assignment</string>
                             <string>dict</string>
                           </tuple>
                         </value>

@@ -68,30 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Cache import CachingMethod\n
+            <value> <string>""" This script will be used for module-level based security policy.\n
+Do NOT remove it unless you know what you\'re doing! """\n
 \n
-user_id = context.portal_membership.getAuthenticatedMember().getId()\n
-if context.portal_membership.isAnonymousUser():\n
-  return None\n
-\n
-def getFoundUserRelativeUrl(user_id):\n
-  """ Find Person object by login name. """\n
-  user_list = context.person_module.portal_catalog(reference=user_id, \\\n
-                                                 portal_type="Person")\n
-  if len(user_list)>0:\n
-    user_object = user_list[0].getObject()\n
-    return user_object.getRelativeUrl()\n
-\n
-user_relative_url = CachingMethod(getFoundUserRelativeUrl, script.id)(user_id)\n
-#user_relative_url = getFoundUserRelativeUrl(user_id)\n
-\n
-if user_relative_url is not None:\n
-  return context.getPortalObject().restrictedTraverse(user_relative_url)\n
-
-
-]]></string> </value>
+return ((\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -106,17 +87,14 @@ if user_relative_url is not None:\n
             </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,17 +119,7 @@ if user_relative_url is not None:\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>user_id</string>
-                            <string>None</string>
-                            <string>getFoundUserRelativeUrl</string>
-                            <string>script</string>
-                            <string>user_relative_url</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -167,11 +135,11 @@ if user_relative_url is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartCustomer</string> </value>
+            <value> <string>ERP5Type_getSecurityCategoryMapping</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get shopping cart customer object</string> </value>
+            <value> <string>Assignment lookup policy</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

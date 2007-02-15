@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -65,6 +65,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -75,7 +76,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -85,20 +88,18 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>shopping_cart</string>
-                        <string>my_first_name</string>
-                        <string>my_last_name</string>
-                        <string>my_default_email_text</string>
-                        <string>my_default_telephone_text</string>
-                        <string>my_default_address_street_address</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_address_zip_code</string>
-                        <string>my_default_address_region</string>
-                        <string>submit</string>
-                        <string>fake_payment</string>
+                        <string>total_price</string>
+                        <string>my_price_currency</string>
+                        <string>my_creation_date</string>
                       </list>
                     </value>
                 </item>
@@ -113,7 +114,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewAsWebConfirm</string> </value>
+            <value> <string>SaleOrder_viewAsWebDetails</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,11 +122,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Product_view</string> </value>
+            <value> <string>SaleOrder_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>web_form_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -137,7 +138,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm order</string> </value>
+            <value> <string>Sale Order</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
