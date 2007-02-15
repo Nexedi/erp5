@@ -29,6 +29,8 @@
 """Utility functions and classes for unit testing
 """
 
+import os
+
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 
@@ -107,6 +109,18 @@ def _recreateMemcachedTool(portal):
   reload(MemcachedTool)
   portal.manage_delObjects(['portal_memcached'])
   portal._setObject('portal_memcached', MemcachedTool.MemcachedTool())
+
+# test runner shared functions
+def getMySQLArguments():
+  """Returns arguments to pass to mysql by heuristically converting the
+  connection string.
+  Only simple cases are coverred for now.
+  """
+  connection_string = os.environ.get('erp5_sql_connection_string')
+  if not connection_string:
+    return '-u test test'
+  db, user = connection_string.split()
+  return '-u %s %s' % (user, db)
 
 # decorators
 class reindex(object):

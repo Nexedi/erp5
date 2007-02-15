@@ -25,6 +25,7 @@ Globals.get_request = get_request
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
+from Products.ERP5Type.tests.utils import getMySQLArguments
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import getLocalPropertySheetList, \
                                     removeLocalPropertySheet, \
@@ -137,20 +138,16 @@ from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
 initializeProductDocumentRegistry()
 
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from AccessControl.User import User
 
 from Acquisition import aq_base
 import time
 import md5
 import traceback
-import sys
 import os
 from cStringIO import StringIO
 from urllib import urlretrieve
 from glob import glob
 import pysvn
-
-from Products.ERP5.ERP5Site import ERP5Site
 
 portal_name = 'erp5_portal'
 
@@ -188,7 +185,8 @@ class ERP5TypeTestCase(PortalTestCase):
 
     def getRevision(self):
       try:
-        return pysvn.Client().info('%s/Products/ERP5' % os.environ['INSTANCE_HOME']).revision.number
+        return pysvn.Client().info('%s/Products/ERP5'
+                    % os.environ['INSTANCE_HOME']).revision.number
       except:
         return None
 
@@ -602,7 +600,8 @@ def setupERP5Site( business_template_list=(),
             if not quiet:
               ZopeTestCase._print('Dumping MySQL database ... ')
             instance_home = os.environ['INSTANCE_HOME']
-            os.system('mysqldump -u test test > %s/dump.sql' % instance_home)
+            os.system('mysqldump %s > %s/dump.sql' % (
+                      getMySQLArguments(), instance_home))
             if not quiet:
               ZopeTestCase._print('Dumping static files ... ')
             for dir in ('Constraint', 'Document', 'PropertySheet'):
