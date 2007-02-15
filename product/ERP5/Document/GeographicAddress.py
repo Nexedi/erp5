@@ -67,19 +67,15 @@ class GeographicAddress(Coordinate, Base):
     __implements__ = ( Interface.Coordinate )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'asText')
-    def asText(self, country=''):
+    def asText(self):
         """
           Returns the address as a complete formatted string
           with street address, zip, city and region
         """
         result = Coordinate.asText(self)
         if result is None:
-          if country=='France' or country=='france' or country=='fr' :
-            result = ('%s\n%s %s') % (self.getStreetAddress() or '', 
-                            self.getZipCode() or '', self.getCity() or '')
-          else :
-            result = ('%s\n%s %s') % (self.getStreetAddress() or '', 
-                          self.getCity() or '', self.getZipCode() or '')
+          result = ('%s\n%s %s') % (self.getStreetAddress() or '',
+                      self.getCity() or '', self.getZipCode() or '')
         if not result.strip():
           return ''
         return result
