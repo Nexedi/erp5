@@ -373,7 +373,8 @@ class ProxyField(ZMIField):
     """
     if include and \
       ((id in self.widget.property_names) or \
-       not self.is_delegated(id)):
+       ((not self.is_delegated(id)) and \
+       (self.values.has_key(id)))):
       return self.get_orig_value(id)
     else:
       proxied_field = self.getTemplateField()
