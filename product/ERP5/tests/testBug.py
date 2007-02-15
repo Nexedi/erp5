@@ -32,9 +32,10 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import convertToUpperCase, DummyMailHost
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.utils import DummyMailHost
 from AccessControl.SecurityManagement import newSecurityManager
 
 
