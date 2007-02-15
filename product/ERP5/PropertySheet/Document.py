@@ -44,12 +44,14 @@ class Document:
                  # and removed from here
                  'publication_section', 'function', 'group', 'site')
 
-  _constraints = (
-      {
-      'id'          :   'unique_reference',
-      'description' :   'The reference, language and version should be unique',
-      'type'        :   'DocumentReferenceConstraint'},
-    )
+  # XXX Romain: constraint should be used by default only if
+  # it is necessary from a system point of view
+#   _constraints = (
+#       {
+#       'id'          :   'unique_reference',
+#       'description' :   'The reference, language and version should be unique',
+#       'type'        :   'DocumentReferenceConstraint'},
+#     )
  
 
 # vim: shiftwidth=2
