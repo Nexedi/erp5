@@ -19,12 +19,10 @@ Options:
                              only
   --recreate_catalog=0 or 1  recreate the content of the sql catalog. Defaults
                              is to recreate, when using an existing Data.fs
-  
   --save                     add erp5 sites and business templates in Data.fs
                              and exit without invoking any tests
   --load                     load Data.fs and skip adding erp5 sites and
                              business templates
-  
   --erp5_sql_connection_string=STRING
                              ZSQL Connection string for erp5_sql_connection, by
                              default, it will use "test test"                            
