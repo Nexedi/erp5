@@ -26,6 +26,10 @@
 #
 ##############################################################################
 
+import os
+import shutil
+import tempfile
+
 from Products.CMFCore.utils import UniqueObject
 
 from zExceptions import BadRequest
@@ -35,7 +39,6 @@ from Globals import InitializeClass, DTMLFile
 from App.config import getConfiguration
 from Products.ERP5Type.TM import VTM as TM
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import os, tempfile
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
@@ -888,7 +891,7 @@ def initialize( context ):
               os.remove(destination_file)
             except OSError:
               pass
-            os.rename(source_file, destination_file)
+            shutil.move(source_file, destination_file)
         self.deleteTemporaryInstanceHome()
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalPropertySheet' )

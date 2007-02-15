@@ -78,7 +78,11 @@ class %(property_sheet_name)s:
     class_tool = self.getClassTool()
 
     class_tool.newPropertySheet(property_sheet_name)
+    # XXX need to commit the transaction at this point, because class tool
+    # files are no longer available to the current transaction.
+    get_transaction().commit()
     class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
+    get_transaction().commit()
     class_tool.importPropertySheet(property_sheet_name)
     
     # We set the property sheet on the portal type
