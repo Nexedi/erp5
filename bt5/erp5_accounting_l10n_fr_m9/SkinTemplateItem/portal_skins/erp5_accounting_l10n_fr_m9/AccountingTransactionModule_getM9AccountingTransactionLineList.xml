@@ -103,7 +103,9 @@ for brain in simtool.getMovementHistoryList(\n
         where_expression="catalog.parent_uid IN (%s)" %\n
                                  stool.callSelectionFor(selection_name),\n
         section_category=selection.getParams().get(\'section_category\'),\n
-        sort_on=\'parent_int_index\'):\n
+        sort_on=((\'parent_int_index\', \'asc\'),\n
+                 (\'date\', \'asc\'),\n
+                 (\'parent_title\', \'asc\'))):\n
 \n
   movement = brain.getObject()\n
   transaction = movement.getParentValue()\n
@@ -123,12 +125,11 @@ for brain in simtool.getMovementHistoryList(\n
              section_uid=brain.section_uid,\n
              node_relative_url=brain.node_relative_url,\n
              getObject=brain.getObject,\n
-             asContext=movement.asContext,\n
+#             asContext=movement.asContext,\n
 #             asContext=lambda *args, **kw: movement, # optim ?\n
 #             Movement_getExplanationUrl=movement.Movement_getExplanationUrl,\n
 \n
              date=brain.date,\n
-             causality_title="\\n".join(transaction.getCausalityTitleList() or []) ,\n
              debit=max(brain.total_price, 0),\n
              credit=max(-(brain.total_price or 0), 0), )\n
   line_list.append(obj)\n
