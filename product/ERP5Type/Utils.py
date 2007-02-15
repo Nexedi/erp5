@@ -383,9 +383,10 @@ def getLocalPropertySheetList():
 def removeLocalPropertySheet(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
-  path = os.path.join(path, "%s.py" % class_id)
-  if os.path.exists(path):
-    os.remove(path)
+  for ext in ('py', 'pyc', 'pyo'):
+    f = os.path.join(path, "%s.%s" % (class_id, ext))
+    if os.path.exists(f):
+      os.remove(f)
 
 def readLocalPropertySheet(class_id):
   instance_home = getConfiguration().instancehome
@@ -491,8 +492,10 @@ def getLocalConstraintList():
 def removeLocalExtension(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
-  path = os.path.join(path, "%s.py" % class_id)
-  os.remove(path)
+  for ext in ('py', 'pyc', 'pyo'):
+    f = os.path.join(path, "%s.%s" % (class_id, ext))
+    if os.path.exists(f):
+      os.remove(f)
 
 def readLocalExtension(class_id):
   instance_home = getConfiguration().instancehome
@@ -506,8 +509,10 @@ def readLocalExtension(class_id):
 def removeLocalTest(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "tests")
-  path = os.path.join(path, "%s.py" % class_id)
-  os.remove(path)
+  for ext in ('py', 'pyc', 'pyo'):
+    f = os.path.join(path, "%s.%s" % (class_id, ext))
+    if os.path.exists(f):
+      os.remove(f)
 
 def readLocalTest(class_id):
   instance_home = getConfiguration().instancehome
@@ -563,8 +568,10 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
 def removeLocalConstraint(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Constraint")
-  path = os.path.join(path, "%s.py" % class_id)
-  os.remove(path)
+  for ext in ('py', 'pyc', 'pyo'):
+    f = os.path.join(path, "%s.%s" % (class_id, ext))
+    if os.path.exists(f):
+      os.remove(f)
 
 def getLocalDocumentList():
   instance_home = getConfiguration().instancehome
@@ -580,8 +587,10 @@ def getLocalDocumentList():
 def removeLocalDocument(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
-  path = os.path.join(path, "%s.py" % class_id)
-  os.remove(path)
+  for ext in ('py', 'pyc', 'pyo'):
+    f = os.path.join(path, "%s.%s" % (class_id, ext))
+    if os.path.exists(f):
+      os.remove(f)
 
 def readLocalDocument(class_id):
   instance_home = getConfiguration().instancehome
