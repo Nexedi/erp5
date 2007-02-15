@@ -120,12 +120,15 @@ class Coordinate(Base):
         return self()
 
     security.declareProtected( Permissions.AccessContentsInformation,
-                               'SearchableText' )
+                               'getSearchableText' )
     def getSearchableText(self):
         """
             text for indexing
         """
         return "%s %s %s" % (self.title, self.description, self.asText())
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'SearchableText' )
     SearchableText = getSearchableText
 
     security.declareProtected( Permissions.AccessContentsInformation,
