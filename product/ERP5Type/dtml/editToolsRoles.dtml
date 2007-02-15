@@ -262,7 +262,7 @@ Add a role
 Click the button below to update the role settings of all
 objects with this portal type.
 
-<form action="updateRoleMappings" method="GET">
+<form action="updateRoleMapping" method="GET">
 <input type="submit" name="submit" value="Update role settings" />
 </form>
 </p>
