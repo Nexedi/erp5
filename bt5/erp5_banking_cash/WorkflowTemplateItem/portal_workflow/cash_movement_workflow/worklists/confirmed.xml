@@ -36,7 +36,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Cash Movement
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cash Movement To Validate</string> </value>
+            <value> <string>Cash Movements To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -74,7 +74,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Cash Movement
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>

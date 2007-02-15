@@ -30,13 +30,13 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Cash Movement
+Base_viewWorklist?simulation_state=stopped&reset=1&portal_type=Cash Movement
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cash Movements To Validate</string> </value>
+            <value> <string>Cash Movement To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +46,7 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Cash Movement
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ordered</string> </value>
+            <value> <string>stopped</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -74,7 +74,7 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Cash Movement
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignor</string>
+                <string>DestinationAssignee</string>
               </tuple>
             </value>
         </item>
@@ -109,7 +109,7 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Cash Movement
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>ordered</string>
+                        <string>stopped</string>
                       </tuple>
                     </value>
                 </item>
