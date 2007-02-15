@@ -88,7 +88,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
                          local_parameter_list local_parameter_list | python: {};\n
                          dummy python: local_parameter_list.update({\'dialog_id\': dialog_id, \'dialog_method\': dialog_method, \'update_method\': update_action, \'dialog_category\': dialog_category, \'cancel_url\': request.get(\'cancel_url\'), \'form_id\': form_id});\n
-                         title form/title">\n
+                         title python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form))">\n
     <tal:block metal:use-macro="here/main_template/macros/master">\n
       <tal:block metal:fill-slot="main">\n
         <div class="list_dialog">\n
