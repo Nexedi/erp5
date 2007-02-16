@@ -70,7 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>""" Decide which ERP UI to show to current user. """\n
 portal_membership = context.portal_membership\n
-if portal_membership.isAnonymousUser() or portal_membership.getAuthenticatedMember().has_role((\'Member\', )):\n
+if portal_membership.isAnonymousUser() or \\\n
+  portal_membership.getAuthenticatedMember().has_role((\'Member\', )):\n
   ## Anonymous/Member is likely to be an website visitor\n
   return True\n
 else:\n

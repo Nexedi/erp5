@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="shipping_method here/SaleOrder_getSelectedShippingResource;">\n
+  \n
+  <h2>Shipping</h2>\n
+  <br/> \n
+  <tal:block tal:condition="python:   shipping_method is not None"\n
+             tal:define="shipping_obj python: here.restrictedTraverse(shipping_method);">\n
+    <span tal:replace="shipping_obj/getTitle"/> - \n
+    <b>\n
+      <span tal:replace="shipping_obj/getPrice"/>\n
+      <span tal:replace="python: here.SaleOrder_getShoppingCartDefaultCurrency().getTitle()"/>\n
+    </b>\n
+    <p> Total cost of order (including shipping) will be \n
+       <b tal:content="python: here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True, include_currency=True)"/>\n
+    </p>\n
+  </tal:block>\n
+\n
+  <tal:block tal:condition="python: shipping_method is None">\n
+    <h3> You haven\'t selected shipping.</h3>\n
+    <p> Your current cart selection requires shipping service. \n
+        Please select preferred shipping service from <a href="SaleOrder_viewAsWeb"> here</a>.\n
+    </p>\n
+  </tal:block>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_viewShippingRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Shipping method custom renderer</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

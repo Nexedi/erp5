@@ -204,18 +204,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
-\n
-if isAnon:\n
-  ## create first an account for user\n
-  context.Base_redirect(\'WebSite_joinForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please use it to login.", mapping = dict())})\n
-  return\n
-else:\n
-  ## redirect to final confirmation form\n
-  context.Base_redirect(\'SaleOrder_viewAsWebConfirm\')\n
+            <value> <string>shopping_cart = context.SaleOrder_getShoppingCart()\n
+shipping_method = getattr(shopping_cart, \'shipping_method\', None)\n
+if shipping_method is not None:\n
+  return shipping_method.getResource()\n
 </string> </value>
         </item>
         <item>
@@ -269,10 +261,10 @@ else:\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>isAnon</string>
-                            <string>translateString</string>
-                            <string>dict</string>
+                            <string>shopping_cart</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>shipping_method</string>
                           </tuple>
                         </value>
                     </item>
@@ -289,11 +281,11 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>SaleOrder_getSelectedShippingResource</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Redirect to appropriate form</string> </value>
+            <value> <string>Get selected shipping method from shopping cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

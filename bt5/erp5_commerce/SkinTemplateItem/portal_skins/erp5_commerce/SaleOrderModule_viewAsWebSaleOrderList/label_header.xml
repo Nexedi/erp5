@@ -112,7 +112,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<h3> My Orders </h3>
+<h1> My Orders </h1>
 
 ]]></string> </value>
                 </item>

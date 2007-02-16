@@ -68,7 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.SaleOrder_getShoppingCart().objectValues()\n
+            <value> <string>shopping_cart_order_lines = context.SaleOrder_getShoppingCart().contentValues()\n
+if include_shipping:\n
+  return shopping_cart_order_lines\n
+else:\n
+  return filter(lambda x: x.getId()!=\'shipping_method\', shopping_cart_order_lines)\n
 </string> </value>
         </item>
         <item>
@@ -85,7 +89,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>include_shipping = False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -105,14 +109,17 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>include_shipping</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>shopping_cart_order_lines</string>
+                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
@@ -124,7 +131,9 @@
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

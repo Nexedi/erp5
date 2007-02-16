@@ -68,18 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Calculate total price of temporary RAM based Sale Order. \n
-    XXX: Include shipping costs as a resource.\n
-"""\n
-\n
+            <value> <string>""" Calculate total price of temporary RAM based Sale Order. """\n
 total = 0.0\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping)\n
 for order_line in shopping_cart_items:\n
   resource = context.restrictedTraverse(order_line.getResource())\n
   total += resource.getPrice() * order_line.getQuantity()\n
     \n
-currency = context.SaleOrder_getShoppingCartDefaultCurrency()\n
 if include_currency:\n
+  currency = context.SaleOrder_getShoppingCartDefaultCurrency()\n
   return \'%s %s\' %(total, currency.getTitle())\n
 else:\n
   return str(total)\n
@@ -99,7 +96,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_currency = False</string> </value>
+            <value> <string>include_currency = False, include_shipping=False</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -127,13 +124,14 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>include_currency</string>
+                            <string>include_shipping</string>
                             <string>total</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -155,6 +153,7 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>

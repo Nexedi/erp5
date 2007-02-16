@@ -207,7 +207,7 @@
             <value> <string>request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
 customer = context.SaleOrder_getShoppingCartCustomer()\n
 \n
 if isAnon:\n
@@ -239,7 +239,7 @@ sale_order.order()\n
 ## clean up shopping cart\n
 context.SaleOrder_getShoppingCart(action=\'reset\')\n
 \n
-context.Base_redirect(\'%s/SaleOrder_viewThankYouMessage\' %sale_order.absolute_url())\n
+context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
 </string> </value>
         </item>
         <item>
@@ -293,6 +293,7 @@ context.Base_redirect(\'%s/SaleOrder_viewThankYouMessage\' %sale_order.absolute_
                             <string>request</string>
                             <string>isAnon</string>
                             <string>translateString</string>
+                            <string>True</string>
                             <string>shopping_cart_items</string>
                             <string>customer</string>
                             <string>dict</string>

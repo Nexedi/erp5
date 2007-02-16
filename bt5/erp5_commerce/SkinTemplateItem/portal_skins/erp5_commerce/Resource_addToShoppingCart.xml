@@ -70,18 +70,17 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Type.Document import newTempOrderLine\n
-quantity = int(context.REQUEST.get(\'field_your_buy_quantity\', 1))\n
+quantity = int(context.REQUEST.get(\'field_your_buy_quantity\', 0))\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
-if product is None:\n
-  product = context\n
+if resource is None:\n
+  resource = context\n
 \n
-## check if we don\'t have already such a product in cart\n
+## check if we don\'t have already such a resource in cart\n
 line_found=False\n
 for order_line in shopping_cart_items:\n
-  if order_line.getResource() == product.getRelativeUrl():\n
+  if order_line.getResource() == resource.getRelativeUrl():\n
     new_quantity = int(order_line.getQuantity()) + quantity\n
     if new_quantity<=0:\n
       ## remove items with zero quantity\n
@@ -94,7 +93,7 @@ for order_line in shopping_cart_items:\n
 if line_found == False:\n
   ## new Resource so add it to shopping cart\n
   order_line = shopping_cart.newContent(portal_type=\'Sale Order Line\')\n
-  order_line.setResource(product.getRelativeUrl())\n
+  order_line.setResource(resource.getRelativeUrl())\n
   order_line.setQuantity(quantity)\n
 \n
 translateString = context.Base_translateString\n
@@ -118,7 +117,7 @@ context.Base_redirect(\'view\', \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>product=None</string> </value>
+            <value> <string>resource=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,9 +143,7 @@ context.Base_redirect(\'view\', \\\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>product</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOrderLine</string>
+                            <string>resource</string>
                             <string>int</string>
                             <string>_getattr_</string>
                             <string>context</string>

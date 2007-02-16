@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<p class="headlinkred">LOGIN STATUS</p>\n
+\n
+<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">\n
+  <tal:block tal:condition="isAnon">\n
+   <p class="article">You\'re not logged in.</p>\n
+   <p class="article">I have an account:</p>\n
+   <form action="WebSite_login">\n
+     <table>\n
+       <tr>\n
+         <td class="article">Username:</td>\n
+         <td><input name="__ac_name" size="10" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></td>\n
+       </tr>\n
+       <tr>\n
+         <td class="article">Password:</td>\n
+         <td><input type="password" name="__ac_password" size="10"/></td>\n
+       </tr>\n
+       <tr>\n
+         <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>\n
+             <input type="hidden" name="__ac_persistent" value="1"/>\n
+             <input type="submit" value="Login" />\n
+         </td>\n
+       </tr>\n
+     </table>\n
+   </form>\n
+   \n
+   <a class="articlelink" href="WebSite_joinForm"> I want to create an account</a><br/>\n
+\n
+  </tal:block>\n
+\n
+  <tal:block tal:condition="not: isAnon"\n
+             tal:define="customer here/SaleOrder_getShoppingCartCustomer;\n
+                         website here/getWebSiteValue">\n
+\n
+    <p class="article">Hello, <span tal:replace="customer/getTitle"/></p>\n
+    <a class="articlelink" \n
+      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' %website.absolute_url()">My orders</a>\n
+    <a class="articlelink" \n
+       tal:attributes="href python: \'%s/%s/Person_viewAsWeb\' %(website.absolute_url(), customer.getRelativeUrl())"> My account </a> \n
+    <a class="articlelink" \n
+      tal:attributes="href python: \'%s/WebSite_logout\' %website.absolute_url()"> Log out</a><br/>\n
+  </tal:block>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewStandardLoginWidgetRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Login/Logout widget</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

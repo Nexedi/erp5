@@ -204,18 +204,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
-\n
-if isAnon:\n
-  ## create first an account for user\n
-  context.Base_redirect(\'WebSite_joinForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please use it to login.", mapping = dict())})\n
-  return\n
-else:\n
-  ## redirect to final confirmation form\n
-  context.Base_redirect(\'SaleOrder_viewAsWebConfirm\')\n
+            <value> <string>\'\'\' This will return all Products that have set product_line=\'shipping\'. \'\'\'\n
+result = [r.getObject() for r in context.portal_catalog(portal_type=\'Product\')]\n
+return [o for o in result if o.getProductLine() in (\'shipping\',)]\n
 </string> </value>
         </item>
         <item>
@@ -267,12 +258,14 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>isAnon</string>
-                            <string>translateString</string>
-                            <string>dict</string>
+                            <string>r</string>
+                            <string>result</string>
+                            <string>o</string>
                           </tuple>
                         </value>
                     </item>
@@ -289,11 +282,11 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>SaleOrder_getAvailableShippingResourceList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Redirect to appropriate form</string> </value>
+            <value> <string>Get list of available shipping methods</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

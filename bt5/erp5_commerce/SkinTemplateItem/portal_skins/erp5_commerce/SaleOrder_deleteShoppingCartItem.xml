@@ -205,7 +205,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
 if field_my_order_line_id is not None:\n
@@ -213,10 +212,6 @@ if field_my_order_line_id is not None:\n
   portal_status_message = "Successfully removed from shopping cart."\n
 else:\n
   portal_status_message = "Please select an item."\n
-\n
-## update back cache so we have consistent results between cache plugins\n
-context.SaleOrder_getShoppingCart(action=\'update\', \\\n
-                                      new_shopping_cart = shopping_cart)\n
 \n
 context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                       keep_items={\'portal_status_message\': translateString(portal_status_message, mapping = dict())})\n
@@ -275,7 +270,6 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
-                            <string>shopping_cart_items</string>
                             <string>shopping_cart</string>
                             <string>None</string>
                             <string>portal_status_message</string>

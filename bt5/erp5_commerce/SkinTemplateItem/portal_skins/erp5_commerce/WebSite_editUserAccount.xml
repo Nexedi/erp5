@@ -23,142 +23,6 @@
             <value> <int>3</int> </value>
         </item>
         <item>
-            <key> <string>_Change_Python_Scripts_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_bindings_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_cache_settings_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_permissions_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_proxy_roles_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Copy_or_Move_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Delete_objects_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Manage_WebDAV_Locks_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Manage_properties_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Take_ownership_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Undo_changes_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_History_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_management_screens_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_WebDAV_Lock_items_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_WebDAV_Unlock_items_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_WebDAV_access_Permission</string> </key>
-            <value>
-              <list>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
@@ -204,18 +68,43 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
+            <value> <string>from Products.Formulator.Errors import FormValidationError\n
 \n
-if isAnon:\n
-  ## create first an account for user\n
-  context.Base_redirect(\'WebSite_joinForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please use it to login.", mapping = dict())})\n
-  return\n
-else:\n
-  ## redirect to final confirmation form\n
-  context.Base_redirect(\'SaleOrder_viewAsWebConfirm\')\n
+request = context.REQUEST\n
+form_kw = request.form\n
+translateString = context.Base_translateString\n
+form = context.Person_viewAsWeb\n
+customer = context.SaleOrder_getShoppingCartCustomer()\n
+\n
+## extract customer details\n
+person_kw = {}\n
+field_prefix = \'field_my_\'\n
+for key in form_kw.keys():\n
+  if key.startswith(field_prefix):\n
+    person_kw[key.replace(field_prefix, \'\')] = form_kw[key]\n
+\n
+## validate form to request\n
+try:\n
+  kw = form.validate_all_to_request(request)\n
+  validated = True\n
+except FormValidationError, validation_errors:\n
+  validated = False\n
+\n
+if validated == False:\n
+  context.REQUEST.set(\'field_errors\', form.ErrorFields(validation_errors))\n
+  return form(validation_errors)\n
+\n
+## if pasword field is empty remove it\n
+if person_kw[\'password\'].strip()==\'\':\n
+  person_kw.pop(\'password\', None)\n
+  person_kw.pop(\'password_confirm\', None)\n
+\n
+## edit customer\n
+customer.edit(**person_kw)\n
+\n
+context.Base_redirect(\'Person_viewAsWeb\', \\\n
+                      keep_items={\'portal_status_message\': translateString("Your account was changed.", mapping = dict()),\n
+                                 })\n
 </string> </value>
         </item>
         <item>
@@ -267,11 +156,28 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.Formulator.Errors</string>
+                            <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>isAnon</string>
+                            <string>form_kw</string>
                             <string>translateString</string>
+                            <string>form</string>
+                            <string>customer</string>
+                            <string>person_kw</string>
+                            <string>field_prefix</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>kw</string>
+                            <string>True</string>
+                            <string>validated</string>
+                            <string>validation_errors</string>
+                            <string>False</string>
+                            <string>None</string>
+                            <string>_apply_</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -289,11 +195,11 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>WebSite_editUserAccount</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Redirect to appropriate form</string> </value>
+            <value> <string>Edit user account</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

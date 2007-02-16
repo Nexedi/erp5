@@ -154,7 +154,7 @@
                 </item>
                 <item>
                     <key> <string>name</string> </key>
-                    <value> <string>SaleOrder_updateShoppingCart:method</string> </value>
+                    <value> <string>SaleOrder_editShoppingCart:method</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

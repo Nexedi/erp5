@@ -73,32 +73,40 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>form_label</string>
-                        <string>shopping_cart</string>
-                        <string>shipping</string>
-                        <string>customer</string>
+                        <string>Title</string>
+                        <string>your_first_name</string>
+                        <string>your_last_name</string>
+                        <string>your_default_email_text</string>
+                        <string>your_default_telephone_text</string>
+                        <string>your_default_fax_text</string>
+                        <string>your_default_address_street_address</string>
+                        <string>your_default_address_city</string>
+                        <string>your_default_address_zip_code</string>
+                        <string>your_default_address_region</string>
+                        <string>your_reference</string>
+                        <string>your_password</string>
+                        <string>password_confirm</string>
                         <string>submit</string>
-                        <string>fake_payment</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -108,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewAsWebConfirm</string> </value>
+            <value> <string>WebSite_joinForm</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -116,7 +124,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Product_view</string> </value>
+            <value> <string>newCustomerForm</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -132,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm Order</string> </value>
+            <value> <string>New Account</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

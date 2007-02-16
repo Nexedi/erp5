@@ -89,6 +89,7 @@
                     <value>
                       <list>
                         <string>shopping_cart</string>
+                        <string>my_shipping_method</string>
                         <string>submit</string>
                       </list>
                     </value>
@@ -128,7 +129,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Edit shopping cart</string> </value>
+            <value> <string>Edit Shopping Cart</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

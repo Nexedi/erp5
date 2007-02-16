@@ -85,9 +85,6 @@ if session_id is None:\n
 if action==\'reset\':\n
   ## reset cart \n
   portal_sessions.manage_delObjects(session_id)\n
-elif action==\'update\':\n
-  ## update back to cache\n
-  pass \n
 else:\n
   ## take shopping cart for this customer\n
   shopping_cart_id = \'shopping_cart\'\n

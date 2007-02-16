@@ -204,18 +204,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
+            <value> <string>\'\'\' XXX: implement this check based on shopping cart content\n
+for example if we sell online products there\'s no shipping. \'\'\'\n
 \n
-if isAnon:\n
-  ## create first an account for user\n
-  context.Base_redirect(\'WebSite_joinForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please use it to login.", mapping = dict())})\n
-  return\n
-else:\n
-  ## redirect to final confirmation form\n
-  context.Base_redirect(\'SaleOrder_viewAsWebConfirm\')\n
+return 1\n
 </string> </value>
         </item>
         <item>
@@ -266,14 +258,7 @@ else:\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>isAnon</string>
-                            <string>translateString</string>
-                            <string>dict</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -289,11 +274,11 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_confirmShopping</string> </value>
+            <value> <string>SaleOrder_isShippingRequired</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Redirect to appropriate form</string> </value>
+            <value> <string>Is shipping required for current shopping cart?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

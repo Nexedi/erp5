@@ -68,11 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Return default currency used in shopping_cart.\n
-    Please update accordingly relative path. \n
-    XXX: there must be an way to do this better?\n
-"""\n
-return context.restrictedTraverse(\'currency_module/1\')\n
+            <value> <string>user_list = context.acl_users.searchUsers(id=editor, exact_match=True)\n
+return len(user_list)==0\n
 </string> </value>
         </item>
         <item>
@@ -88,8 +85,23 @@ return context.restrictedTraverse(\'currency_module/1\')\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>editor, request</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,14 +121,19 @@ return context.restrictedTraverse(\'currency_module/1\')\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>editor</string>
+                            <string>request</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>True</string>
+                            <string>user_list</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,11 +150,11 @@ return context.restrictedTraverse(\'currency_module/1\')\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartDefaultCurrency</string> </value>
+            <value> <string>WebSite_validateUserID</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get default currency for shop</string> </value>
+            <value> <string>Is valid user ID provided?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

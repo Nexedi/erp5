@@ -265,7 +265,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Shopping cart</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+&nbsp;
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +303,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/edit_shopping_cart_render</string> </value>
+            <value> <string>here/SaleOrder_viewShoppingCartRenderer</string> </value>
         </item>
       </dictionary>
     </pickle>

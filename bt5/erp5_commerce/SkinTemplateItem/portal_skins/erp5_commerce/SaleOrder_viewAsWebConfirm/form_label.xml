@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.InputButtonField</string>
-          <string>InputButtonField</string>
+          <string>Products.Formulator.StandardFields</string>
+          <string>LabelField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>submit</string> </value>
+            <value> <string>form_label</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -26,10 +26,6 @@
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -56,10 +52,6 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -74,10 +66,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -106,10 +94,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -121,16 +105,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Save</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<h1> My Order </h1>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -151,10 +135,6 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>name</string> </key>
-                    <value> <string>WebSite_editUserAccount:method</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

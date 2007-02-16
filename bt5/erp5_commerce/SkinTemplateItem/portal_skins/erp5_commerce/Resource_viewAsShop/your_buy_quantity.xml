@@ -238,28 +238,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>1</string>
-                          <string>1</string>
-                        </tuple>
-                        <tuple>
-                          <string>2</string>
-                          <string>2</string>
-                        </tuple>
-                        <tuple>
-                          <string>3</string>
-                          <string>3</string>
-                        </tuple>
-                        <tuple>
-                          <string>4</string>
-                          <string>4</string>
-                        </tuple>
-                        <tuple>
-                          <string>5</string>
-                          <string>5</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

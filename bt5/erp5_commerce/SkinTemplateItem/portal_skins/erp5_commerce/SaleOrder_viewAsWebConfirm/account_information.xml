@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.InputButtonField</string>
-          <string>InputButtonField</string>
+          <string>Products.Formulator.StandardFields</string>
+          <string>LabelField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>submit</string> </value>
+            <value> <string>account_information</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -26,10 +26,6 @@
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -56,10 +52,6 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -74,16 +66,14 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -106,10 +96,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -121,16 +107,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Save</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -153,10 +135,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string>WebSite_editUserAccount:method</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
@@ -166,6 +144,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/shopping_cart_customer_render</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -130,7 +130,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Save</string> </value>
+                    <value> <string>Submit</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -154,15 +154,11 @@
                 </item>
                 <item>
                     <key> <string>name</string> </key>
-                    <value> <string>WebSite_editUserAccount:method</string> </value>
+                    <value> <string>WebSite_createUserAccount:method</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-&nbsp;
-
-]]></string> </value>
+                    <value> <string>Submit</string> </value>
                 </item>
               </dictionary>
             </value>
