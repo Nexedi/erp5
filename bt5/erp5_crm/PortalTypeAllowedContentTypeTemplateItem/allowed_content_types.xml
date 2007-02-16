@@ -1,5 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Event Module">
+  <item>Internal Request</item>
   <item>Phone Call</item>
   <item>Mail Message</item>
   <item>Incoming Letter</item>
@@ -12,6 +13,10 @@
  <portal_type id="Incoming Letter">
   <item>Image</item>
   <item>File</item>
+ </portal_type>
+ <portal_type id="Internal Request">
+  <item>File</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Mail Message">
   <item>Document</item>
@@ -29,8 +34,8 @@
   <item>Sale Opportunity</item>
  </portal_type>
  <portal_type id="Support Request">
-  <item>Image</item>
   <item>File</item>
+  <item>Image</item>
   <item>Link</item>
   <item>Document</item>
  </portal_type>

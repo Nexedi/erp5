@@ -1,11 +1,14 @@
 Event Module | Incoming Fax
 Event Module | Incoming Letter
+Event Module | Internal Request
 Event Module | Mail Message
 Event Module | Phone Call
 Incoming Fax | File
 Incoming Fax | Image
 Incoming Letter | File
 Incoming Letter | Image
+Internal Request | File
+Internal Request | Image
 Mail Message | Document
 Mail Message | File
 Mail Message | Image
