@@ -79,7 +79,7 @@ from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def cached_DMSGetItemList(base_category):\n
     basecatobject = context.portal_categories.resolveCategory(base_category)\n
-    return basecatobject.Category_childShortTitleOrIdItemList()\n
+    return basecatobject.Category_childTitleOrIdItemList()\n
 \n
 cached_DMSGetItemList = CachingMethod(cached_DMSGetItemList, id=\'DMGetItemListCachedMethodWhatever\')\n
 \n

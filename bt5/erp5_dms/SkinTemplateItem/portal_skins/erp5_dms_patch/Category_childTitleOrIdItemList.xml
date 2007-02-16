@@ -78,7 +78,7 @@ use with care and caching, may be expensive\n
 labelcache = {} # so that we do not resolve all items in every path\n
 \n
 def getLabel(c):\n
-  return c.getShortTitle() or c.getId()\n
+  return c.getTitleOrId()\n
 \n
 def makeLogicalPathItem(o):\n
   retval = []\n
@@ -174,7 +174,7 @@ return children\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Category_childShortTitleOrIdItemList</string> </value>
+            <value> <string>Category_childTitleOrIdItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
