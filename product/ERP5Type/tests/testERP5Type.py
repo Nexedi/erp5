@@ -113,6 +113,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def afterSetUp(self):
       self.login()
+      # all those tests does strange things with Person type, so we won't
+      # filter content types to add inside Person.
+      self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
 
     def beforeTearDown(self):
       for module in [ self.getPersonModule(),
