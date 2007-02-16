@@ -1958,10 +1958,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Check if we have activity for unindex
     """
-    sql_connection = self.getSQLConnection()
-    sql = "select uid from message_queue where method_id='unindexObject'" # where id='unindexObject'"
-    r = sql_connection.manage_test(sql)
-    self.failUnless(len(r) == 0)
+    message_list = [ m for m in self.portal.portal_activities.getMessageList()
+                     if m.method_id == 'unindexObject'
+                     and m.kw.get('uid') is not None ]
+    self.assertEquals(len(message_list), 0)
 
   def stepCheckPathNotUnindexAfterBuild(self, sequence=None, sequence_list=None, **kw):
     """

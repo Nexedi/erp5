@@ -116,6 +116,15 @@ def _getCatalogValue(acquisition_context):
   except KeyError:
     return None
 
+def _recursiveRemoveUid(obj):
+  """Recusivly set uid to None, to prevent (un)indexing.
+  This is used to prevent unindexing real objects when we delete subobjects on
+  a copy of this object.
+  """
+  obj.uid = None
+  for subobj in obj.objectValues():
+    _recursiveRemoveUid(subobj)
+
 def removeAll(entry):
   '''
     Remove all files and directories under 'entry'.
@@ -435,9 +444,6 @@ class BaseTemplateItem(Implicit, Persistent):
     elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
       if not obj.getProperty('business_template_include_content', 1) :
         obj.deletePdfContent()
-    if getattr(aq_base(obj), 'isIndexable', None) == 1:
-      # prevent from unindexing copy of object
-      setattr(obj, 'isIndexable', 0)
     return obj
 
 class ObjectTemplateItem(BaseTemplateItem):
@@ -509,6 +515,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj = obj._getCopy(context)
       except AttributeError:
         raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
+      _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj)
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'):
@@ -893,6 +900,7 @@ class PathTemplateItem(ObjectTemplateItem):
         obj = p.unrestrictedTraverse(relative_url)
         obj = obj._getCopy(context)
         obj = obj.__of__(context)
+        _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
         obj = self.removeProperties(obj)
         if hasattr(aq_base(obj), 'groups'):
@@ -901,12 +909,6 @@ class PathTemplateItem(ObjectTemplateItem):
         if len(id_list) > 0:
           if include_subobjects:
             self.build_sub_objects(context, id_list, relative_url)
-          else:
-            for id_ in id_list:
-              subobj = obj[id_]
-              if getattr(aq_base(subobj), 'isIndexable', None) == 1:
-                # prevent from unindexing copy of object
-                setattr(subobj, 'isIndexable', 0)
           for id_ in list(id_list):
             obj._delObject(id_)
         if hasattr(aq_base(obj), 'groups'):
@@ -978,6 +980,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
+      _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
@@ -987,10 +990,6 @@ class CategoryTemplateItem(ObjectTemplateItem):
           obj._delObject(id_)
       else:
         for id_ in list(id_list):
-          subobj = obj[id_]
-          if getattr(aq_base(subobj), 'isIndexable', None) == 1:
-            # prevent from unindexing copy of object
-            setattr(subobj, 'isIndexable', 0)
           obj._delObject(id_)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
