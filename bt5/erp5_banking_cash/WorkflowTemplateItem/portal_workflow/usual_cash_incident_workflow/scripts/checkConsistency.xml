@@ -108,11 +108,7 @@ elif len(in_list) == 0 and len(out_list) == 0:\n
   msg = Message(domain = "ui", message="No resource.")\n
   raise ValidationFailed, (msg,)\n
 \n
-elif len(out_list) !=0:\n
-  resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Usual Cash Incident Line\')\n
-  if resource <> 0 :\n
-    msg = Message(domain="ui", message="Insufficient Balance.")\n
-    raise ValidationFailed, (msg,)\n
+\n
 \n
 elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != price):\n
   msg = Message(domain = "ui", message="Price differs between document and resource.")\n
@@ -183,7 +179,6 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>len</string>
-                            <string>resource</string>
                           </tuple>
                         </value>
                     </item>
