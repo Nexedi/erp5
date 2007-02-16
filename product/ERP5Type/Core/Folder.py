@@ -94,7 +94,7 @@ class FolderMixIn(ExtensionClass.Base):
       from Products.ERP5Type import Document
       # we get an object from factory only for first temp container object
       # otherwise we get an id so we can use the classic way
-      if getattr(container, 'isTempObject', lambda: 0)():
+      if not getattr(container, 'isTempObject', lambda: 0)():
         factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
         m = getattr(Document, factory_name)
         return m(container, new_id)
