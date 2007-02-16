@@ -77,6 +77,7 @@ class FolderMixIn(ExtensionClass.Base):
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
     """
+    pt = self._getTypesTool()
     if container is None:
       container = self
     if id is None:
@@ -98,14 +99,19 @@ class FolderMixIn(ExtensionClass.Base):
         factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
         m = getattr(Document, factory_name)
         return m(container, new_id)
+    
+    myType = pt.getTypeInfo(self)
+    if myType is not None:
+      if not myType.allowType( portal_type ):
+        raise ValueError('Disallowed subobject type: %s' % portal_type)
 
-    self.portal_types.constructContent(type_name=portal_type,
-                                       container=container,
-                                       id=new_id,
-                                       created_by_builder=created_by_builder,
-                                       activate_kw=activate_kw,
-                                       is_indexable=is_indexable
-                                       ) # **kw) removed due to CMF bug
+    pt.constructContent( type_name=portal_type,
+                         container=container,
+                         id=new_id,
+                         created_by_builder=created_by_builder,
+                         activate_kw=activate_kw,
+                         is_indexable=is_indexable
+                         ) # **kw) removed due to CMF bug
     # TODO :the **kw makes it impossible to create content not based on
     # ERP5TypeInformation, because factory method often do not support
     # keywords arguments.

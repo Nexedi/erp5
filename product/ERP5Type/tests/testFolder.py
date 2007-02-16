@@ -146,6 +146,11 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                     'Add portal content', roles=[], acquire=0)
       self._assertAllowedContentTypes(self.other_folder, [])
       self._assertAllowedContentTypes(self.folder, type_list)
+    
+    def test_NewContentAndAllowedContentTypes(self):
+      self._setAllowedContentTypesForFolderType(('Folder', ))
+      self.assertRaises(ValueError, self.folder.newContent,
+                        portal_type='Category')
 
 if __name__ == '__main__':
     framework()
