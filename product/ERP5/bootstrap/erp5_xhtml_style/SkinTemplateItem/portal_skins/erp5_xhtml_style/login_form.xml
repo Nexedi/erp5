@@ -98,8 +98,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
         <h1 i18n:translate="" i18n:domain="ui">You don\'t have enough permissions to access this page</h1>\n
         <p i18n:translate="" i18n:domain="ui">You can log in with another user name or\n
-          <a href="javascript:history.back();"\n
-              i18n:translate="" i18n:domain="ui">go back</a>.\n
+          <a href="javascript:history.back();">go back</a>.\n
         </p>\n
       </tal:block>\n
 \n
