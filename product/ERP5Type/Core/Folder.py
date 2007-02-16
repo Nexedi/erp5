@@ -548,7 +548,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if self.isIndexable:
       value_list.append(self)
       for c in self.objectValues():
-        if hasattr(aq_base(c), 'getIndexableChildValueList'):
+        if getattr(aq_base(c), 'getIndexableChildValueList', None) is not None:
           value_list.extend(c.getIndexableChildValueList())
     return value_list
 
@@ -566,7 +566,8 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       # Reindex contents
       #LOG('recursiveImmediateReindexObject', 0, 'self = %r, self.objectValues = %r' % (self, self.objectValues()))
       for c in self.objectValues():
-        if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
+        if getattr(aq_base(c),
+                   'recursiveImmediateReindexObject', None) is not None:
           c.recursiveImmediateReindexObject(*args, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
