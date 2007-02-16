@@ -616,6 +616,7 @@ class TestERP5BankingMixin:
       self.portal.manage_addProperty('reference_currency_id', 'EUR', type='string')
     else:
       self.portal._updateProperty('reference_currency_id', "EUR")
+    setattr(self.portal,'functionnal_test_mode',1)
     # the person module
     self.person_module = self.getPersonModule()
     # the organisation module
