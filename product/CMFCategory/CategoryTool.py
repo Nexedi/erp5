@@ -616,8 +616,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
         category_list = (category_list,)
       elif category_list is None:
         category_list = ()
-      elif not isinstance(category_list, list):
-          raise TypeError, 'Category must be a string.'
+      elif isinstance(category_list, (list, tuple)):
+        pass
+      else:
+        raise TypeError, 'Category must be of string, tuple of string or list of string type.'
       if isinstance(base_category_list, str):
         base_category_list = [base_category_list]
       new_category_list = []
