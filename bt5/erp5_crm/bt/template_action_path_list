@@ -10,15 +10,15 @@ Incoming Letter | history
 Incoming Letter | metadata
 Incoming Letter | print
 Incoming Letter | view
-Internal Request | document_view
-Internal Request | history
-Internal Request | metadata
-Internal Request | print
-Internal Request | view
 Mail Message | history
 Mail Message | metadata
 Mail Message | print
 Mail Message | view
+Note | document_view
+Note | history
+Note | metadata
+Note | print
+Note | view
 Person | jump_to_opportunity
 Person | jump_to_support_request
 Phone Call | history

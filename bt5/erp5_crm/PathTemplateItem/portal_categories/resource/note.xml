@@ -47,7 +47,8 @@
             <value>
               <tuple>
                 <string>resource/incoming_letter</string>
-                <string>resource/internal_request</string>
+                <string>resource/note</string>
+                <string>resource/note</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>internal_request</string> </value>
+            <value> <string>note</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -67,7 +68,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Internal Request</string> </value>
+            <value> <string>Note</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

@@ -8,11 +8,11 @@
   <workflow>edit_workflow, event_workflow</workflow>
  </chain>
  <chain>
-  <type>Internal Request</type>
+  <type>Mail Message</type>
   <workflow>edit_workflow, event_workflow</workflow>
  </chain>
  <chain>
-  <type>Mail Message</type>
+  <type>Note</type>
   <workflow>edit_workflow, event_workflow</workflow>
  </chain>
  <chain>

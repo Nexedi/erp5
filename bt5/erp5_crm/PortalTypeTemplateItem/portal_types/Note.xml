@@ -95,7 +95,7 @@ an event.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Internal Request</string> </value>
+            <value> <string>Note</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -113,7 +113,7 @@ an event.</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Internal Request</string> </value>
+            <value> <string>Note </string> </value>
         </item>
       </dictionary>
     </pickle>
