@@ -128,7 +128,7 @@ if not check_number:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n
   raise ValidationFailed, (msg,)\n
 \n
-result = context.portal_catalog(portal_type = \'Check\', reference = check_number)\n
+result = context.portal_catalog(portal_type = \'Check\', title = check_number,simulation_state=\'confirmed\')\n
 if len(result) == 0:\n
   # Until a certain date, ERP5 allows the user to generate a check automatically.\n
   from DateTime import DateTime\n

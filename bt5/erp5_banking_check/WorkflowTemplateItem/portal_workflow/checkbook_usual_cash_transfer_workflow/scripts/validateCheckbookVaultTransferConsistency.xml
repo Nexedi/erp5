@@ -73,8 +73,10 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
 \n
+\n
 source = transaction.getSource()\n
 destination = transaction.getDestination()\n
+\n
 msg = None\n
 if source == destination:\n
   msg = Message(domain="ui", message="Sorry, the source and the destination must be different")\n
@@ -82,6 +84,17 @@ if source == destination:\n
 line_list = transaction.objectValues()\n
 if len(line_list)==0:\n
   msg = Message(domain="ui", message="Sorry, you must select at least one check or checkbook")\n
+\n
+baobab_source = transaction.getBaobabSource()\n
+reference_date = transaction.getStartDate()\n
+current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
+                         at_date=reference_date, node=baobab_source,\n
+                         where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
+aggregate_uid_list = [x.uid for x in current_tracking_list]\n
+for line in transaction.getMovementList(portal_type=\'Checkbook Delivery Line\'):\n
+  for aggregate_uid in line.getAggregateUidList():\n
+    if aggregate_uid not in aggregate_uid_list:\n
+      msg = Message(domain="ui", message="Sorry, an item is not available any more")\n
 \n
 if msg is not None:\n
   raise ValidationFailed, (msg,)\n
@@ -140,6 +153,17 @@ if msg is not None:\n
                             <string>msg</string>
                             <string>line_list</string>
                             <string>len</string>
+                            <string>baobab_source</string>
+                            <string>reference_date</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>getCurrentTrackingList</string>
+                            <string>x</string>
+                            <string>current_tracking_list</string>
+                            <string>aggregate_uid_list</string>
+                            <string>line</string>
+                            <string>aggregate_uid</string>
                           </tuple>
                         </value>
                     </item>
