@@ -80,8 +80,9 @@ class FolderMixIn(ExtensionClass.Base):
     if container is None:
       container = self
     if id is None:
-      new_id = str(container.generateNewId(id_group = id_group,
-                                           default=default, method=method))
+      new_id = str(container.generateNewId( id_group=id_group,
+                                            default=default,
+                                            method=method))
     else:
       new_id = str(id)
     if portal_type is None:
@@ -93,8 +94,7 @@ class FolderMixIn(ExtensionClass.Base):
       from Products.ERP5Type import Document
       # we get an object from factory only for first temp container object
       # otherwise we get an id so we can use the classic way
-      if not hasattr(container, 'isTempObject') or \
-             (hasattr(container, 'isTempObject') and not container.isTempObject()):
+      if getattr(container, 'isTempObject', lambda: 0)():
         factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
         m = getattr(Document, factory_name)
         return m(container, new_id)
@@ -172,9 +172,13 @@ class FolderMixIn(ExtensionClass.Base):
     if id_group in (None, 'None'):
       id_generator = self.getIdGenerator()
       if not isinstance(id_generator, str):
-        LOG('Folder.generateNewId', 0, '%s.id_generator is not a string. Falling back on default behaviour.' % (self.absolute_url(), ))
+        LOG('Folder.generateNewId', 0, '%s.id_generator is not a string.'
+            ' Falling back on default behaviour.' % (self.absolute_url(), ))
         id_generator = ''
-      if id_generator != '': # Custom aq_dynamic function (like the one defined on WebSite objects) can find an object which has no name. So we must recognise the default value of id_generator and force safe fallback in this case.
+      if id_generator != '':
+        # Custom aq_dynamic function (like the one defined on WebSite objects)
+        # can find an object which has no name. So we must recognise the
+        # default value of id_generator and force safe fallback in this case.
         idGenerator = getattr(self, id_generator, None)
         if idGenerator is None:
           idGenerator = self._generateNextId
@@ -184,7 +188,9 @@ class FolderMixIn(ExtensionClass.Base):
       while self.hasContent(my_id):
         my_id = self._generateNextId()
     else:
-      my_id = str(self.portal_ids.generateNewId(id_group=id_group,default=default,method=method))
+      my_id = str(self.portal_ids.generateNewId( id_group=id_group,
+                                                 default=default,
+                                                 method=method ))
     return my_id
 
   security.declareProtected(Permissions.View, 'hasContent')
@@ -518,7 +524,8 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     """
     return Base.reindexObject(self, *args, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'reindexObjectSecurity')
   def reindexObjectSecurity(self):
     """
         Reindex security-related indexes on the object
@@ -537,9 +544,13 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if self.isIndexable:
       if activate_kw is None:
         activate_kw = {}
-      self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', alternate_method_id='alternateReindexObject', **activate_kw).recursiveImmediateReindexObject(*args, **kw)
+      self.activate(group_method_id='portal_catalog/catalogObjectList',
+                    expand_method_id='getIndexableChildValueList',
+                    alternate_method_id='alternateReindexObject',
+                    **activate_kw).recursiveImmediateReindexObject(*args, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getIndexableChildValueList' )
   def getIndexableChildValueList(self):
     """
       Get indexable childen recursively.
@@ -560,17 +571,19 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       # Reindex self
       root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
       if self.isIndexable and root_indexable:
-        self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
-        self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
+        # This might create a recursive lock
+        self.flushActivity(invoke=0, method_id='immediateReindexObject')
+        # This might create a recursive lock
+        self.flushActivity(invoke=0, method_id='recursiveImmediateReindexObject')
         self.immediateReindexObject(*args, **kw)
       # Reindex contents
-      #LOG('recursiveImmediateReindexObject', 0, 'self = %r, self.objectValues = %r' % (self, self.objectValues()))
       for c in self.objectValues():
         if getattr(aq_base(c),
                    'recursiveImmediateReindexObject', None) is not None:
           c.recursiveImmediateReindexObject(*args, **kw)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'recursiveMoveObject' )
   def recursiveMoveObject(self):
     """
       Called when the base of a hierarchy is renamed
@@ -580,11 +593,12 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       self.moveObject()
     # Reindex contents
     for c in self.objectValues():
-      if hasattr(aq_base(c), 'recursiveMoveObject'):
+      if getattr(aq_base(c), 'recursiveMoveObject', None) is not None:
         c.recursiveMoveObject()
 
   # Special Relation keyword : 'content' and 'container'
-  security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipList' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             '_getCategoryMembershipList' )
   def _getCategoryMembershipList(self, category,
                           spec=(), filter=None, portal_type=(), base=0 ):
     if category == 'content':
@@ -592,7 +606,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       return map(lambda x: x.relative_url, content_list)
     else:
       return Base.getCategoryMembershipList(self, category,
-          spec=spec, filter=filter, portal_type=portal_type,  base=base)
+          spec=spec, filter=filter, portal_type=portal_type, base=base)
 
   # Alias - class inheritance resolution
   security.declareProtected( Permissions.View, 'Title' )
@@ -657,17 +671,19 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     portal = self.getPortalObject()
 
     def _getVisibleAllowedContentTypeList():
-      hidden_type_list = portal.portal_types.getTypeInfo(self).getHiddenContentTypeList()
-      return [type.id for type in CMFBTreeFolder.allowedContentTypes(self) if type.id not in hidden_type_list]
+      hidden_type_list = portal.portal_types.getTypeInfo(self)\
+                                              .getHiddenContentTypeList()
+      return [ ti.id for ti in CMFBTreeFolder.allowedContentTypes(self)
+               if ti.id not in hidden_type_list ]
 
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
     portal_path = portal.getPhysicalPath()
 
-    _getVisibleAllowedContentTypeList = CachingMethod(_getVisibleAllowedContentTypeList,
-                                                      id=("_getAllowedContentTypeTitleList",
-                                                          user, portal_path, portal_type),
-                                                      cache_duration=None)
+    _getVisibleAllowedContentTypeList = CachingMethod(
+        _getVisibleAllowedContentTypeList,
+        id=("_getAllowedContentTypeTitleList", user, portal_path, portal_type),
+        cache_duration=None)
     return _getVisibleAllowedContentTypeList()
   
   security.declarePublic('allowedContentTypes')
@@ -729,18 +745,23 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   getObjectIds = CMFBTreeFolder.objectIds
 
   # Overloading
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentSQLExpression' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentSQLExpression' )
   def getParentSQLExpression(self, table = 'catalog', strict_membership = 0):
     """
       Builds an SQL expression to search children and subclidren
     """
     if strict_membership:
-      return Base.getParentSQLExpression(self, table=table, strict_membership=strict_membership)
+      return Base.getParentSQLExpression(self,
+                                         table=table,
+                                         strict_membership=strict_membership)
     result = "%s.parent_uid = %s" % (table, self.getUid())
     for o in self.objectValues():
       if hasattr(aq_base(o), 'objectValues'):
         # Do not consider non folder objects
-        result = "%s OR %s" % (result, o.getParentSQLExpression(table=table, strict_membership=strict_membership))
+        result = "%s OR %s" % ( result,
+                                o.getParentSQLExpression(table=table,
+                                          strict_membership=strict_membership))
     return "( %s )" % result
 
 
@@ -755,7 +776,8 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if from_object is None or to_object is None:
       return
 
-    from_object_related_object_list = self.portal_categories.getRelatedValueList(from_object)
+    from_object_related_object_list = self.portal_categories\
+                                          .getRelatedValueList(from_object)
     to_object_url = to_object.getRelativeUrl()
     from_object_url = from_object.getRelativeUrl()
     corrected_list = []
@@ -804,7 +826,8 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if portal_type is not None:
       if type(portal_type) == type(''):
         portal_type = (portal_type,)
-      object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
+      object_list = filter(lambda x: x.getPortalType() in portal_type,
+                           object_list)
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
@@ -830,8 +853,11 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'manage_copyObjects' ) # XXX Why this one doesn't work in CopySupport ?
-  security.declareProtected( Permissions.AddPortalContent, 'manage_pasteObjects' ) # XXX Why this one doesn't work in CopySupport ?
+  # XXX Why this one doesn't work in CopySupport ?
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'manage_copyObjects' )
+  security.declareProtected( Permissions.AddPortalContent,
+                             'manage_pasteObjects' )
 
   # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
@@ -840,9 +866,10 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       Returns the list of allowed templates for this folder
       by calling the preference tool
     """
-    return self.getPortalObject().portal_preferences.getDocumentTemplateList(self)
+    return self.getPortalObject().portal_preferences\
+                              .getDocumentTemplateList(self)
   
-  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplate')
+  security.declareProtected(Permissions.ModifyPortalContent, 'makeTemplate')
   def makeTemplate(self):
     """
       Make document behave as a template.
@@ -853,16 +880,19 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     """
     Base.makeTemplate(self)
     for o in self.objectValues():
-      if hasattr(aq_base(o), 'makeTemplate'): o.makeTemplate()
+      if getattr(aq_base(o), 'makeTemplate', None) is not None:
+        o.makeTemplate()
 
-  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplateInstance')
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'makeTemplateInstance' )
   def makeTemplateInstance(self):
     """
       Make document behave as standard document (indexable)
     """
     Base.makeTemplateInstance(self)
     for o in self.objectValues():
-      if hasattr(aq_base(o), 'makeTemplateInstance'): o.makeTemplateInstance()
+      if getattr(aq_base(o), 'makeTemplateInstance', None) is not None:
+        o.makeTemplateInstance()
   
   def _delObject(self, id, dp=1):
     """
