@@ -87,7 +87,7 @@ if len(line_list)==0:\n
 \n
 baobab_source = transaction.getBaobabSource()\n
 reference_date = transaction.getStartDate()\n
-current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
+current_tracking_list = [x.getObject() for x in transaction.portal_simulation.getCurrentTrackingList(\n
                          at_date=reference_date, node=baobab_source,\n
                          where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
 aggregate_uid_list = [x.uid for x in current_tracking_list]\n
@@ -158,7 +158,6 @@ if msg is not None:\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>getCurrentTrackingList</string>
                             <string>x</string>
                             <string>current_tracking_list</string>
                             <string>aggregate_uid_list</string>
