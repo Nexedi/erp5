@@ -4,10 +4,6 @@
   <workflow>local_permission_interaction_workflow, edit_workflow, processing_status_workflow, dms_file_interaction_workflow, document_publication_workflow, ooo_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>External Library File</type>
-  <workflow>edit_workflow, external_document_publication_workflow, external_document_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>External Web Page</type>
   <workflow>processing_status_workflow, edit_workflow, external_document_publication_workflow, external_document_interaction_workflow</workflow>
  </chain>
@@ -37,6 +33,6 @@
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>processing_status_workflow, document_publication_workflow, ooo_interaction_workflow, dms_file_interaction_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>processing_status_workflow, local_permission_interaction_workflow, document_publication_workflow, ooo_interaction_workflow, dms_file_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
