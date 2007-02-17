@@ -876,16 +876,16 @@ class ERP5Site(FolderMixIn, CMFSite):
     if hasattr(portal_object, module_name):
       return module_name
     # then look for module where the type is allowed
-    module_name=MARKER
+    module_name=None
     modlist=[m for m in self.objectIds() if m.endswith('module')]
     for mod in modlist:
-      module=self.restrictedTraverse(mod,MARKER)
-      if module is MARKER: # we can't access this one
+      module=self.restrictedTraverse(mod,None)
+      if module is None: # we can't access this one
         continue
       if portal_type in self.portal_types[module.getPortalType()].allowed_content_types:
        module_name=mod 
        break
-    if module_name is not MARKER:
+    if module_name is not None:
       return module_name
     if default is not MARKER:
       return default
