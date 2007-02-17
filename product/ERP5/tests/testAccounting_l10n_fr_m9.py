@@ -123,10 +123,10 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     invoice = self.getAccountingModule().newContent(
                       portal_type='Purchase Invoice Transaction',
                       created_by_builder=1)
-    invoice.newContent(portal_type='Accounting Transaction Line',
+    invoice.newContent(portal_type='Purchase Invoice Transaction Line',
                        source_value=expense_account,
                        quantity=amount)
-    invoice.newContent(portal_type='Accounting Transaction Line',
+    invoice.newContent(portal_type='Purchase Invoice Transaction Line',
                        source_value=payable_account,
                        quantity=-amount)
     invoice.edit(**kw)
@@ -157,7 +157,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     invoice.recursiveImmediateReindexObject()
     self.getWorkflowTool().doActionFor(
                             transmission_sheet,
-                            'emit_action') # XXX is this transition name good?
+                            'emit_action')
     self.assertEquals(transmission_sheet.getValidationState(),
                             'new')
 
