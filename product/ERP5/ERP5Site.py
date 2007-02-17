@@ -876,25 +876,25 @@ class ERP5Site(FolderMixIn, CMFSite):
     if hasattr(portal_object, module_name):
       return module_name
     # then look for module where the type is allowed
-    module_name=None
-    modlist=[m for m in self.objectIds() if m.endswith('module')]
+    module_name = None
+    modlist = [m for m in self.objectIds() if m.endswith('module')]
     for mod in modlist:
-      module=self.restrictedTraverse(mod,None)
+      module = self.restrictedTraverse(mod, None)
       if module is None: # we can't access this one
         continue
       if portal_type in self.portal_types[module.getPortalType()].allowed_content_types:
-       module_name=mod 
+       module_name = mod 
        break
     if module_name is not None:
       return module_name
     if default is not MARKER:
       return default
+    # now we fail
     LOG('ERP5Site, getDefaultModuleId', 0,
         'Unable to find default module for portal_type: %s' % \
          portal_type)
     raise ValueError, 'Unable to find module for portal_type: %s' % \
            portal_type
-    return module_name
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModule')
