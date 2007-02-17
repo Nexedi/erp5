@@ -26,14 +26,6 @@
 #
 ##############################################################################
 
-
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -42,16 +34,9 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
-from Products.ERP5.Document.Organisation import Organisation
-from Products.ERP5Type.Tool.ClassTool import _aq_reset
-from DateTime import DateTime
-from Products.ERP5.Document.Person import Person
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from zLOG import LOG
-import time
+from AccessControl.SecurityManagement import newSecurityManager
 
 class TestERP5Category(ERP5TypeTestCase):
 
@@ -69,7 +54,6 @@ class TestERP5Category(ERP5TypeTestCase):
     """
     """
     return "ERP5 Categories"
-
 
   def getBusinessTemplateList(self):
     """
@@ -109,7 +93,6 @@ class TestERP5Category(ERP5TypeTestCase):
     portal_type = self.getTypeTool()[self.portal_type]
     portal_type.base_category_list = [self.base_cat, self.base_cat2]
     # Reset aq dynamic
-    from Products.ERP5Type.Base import _aq_reset
     _aq_reset()
     organisation_module = self.getOrganisationModule()
     self.organisation = organisation_module.newContent(id='1',portal_type=self.portal_type)
@@ -134,7 +117,7 @@ class TestERP5Category(ERP5TypeTestCase):
     portal = self.getPortal()
     type_tool = self.getTypeTool()
     module_type = type_tool['%s Module' % self.portal_type]
-    module_type.allowed_content_types += ('Predicate Group',)
+    module_type.allowed_content_types += ('Mapped Value',)
     module = self.getOrganisationModule()
     predicate = module.newContent(id='predicate',portal_type='Mapped Value')
     predicate.setCriterion('quantity',identity=None,min=None,max=None)
