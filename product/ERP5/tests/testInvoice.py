@@ -220,7 +220,7 @@ class TestInvoice(TestPackingListMixin,
     for line_id, line_source_id, line_destination_id, line_ratio in \
         self.transaction_line_definition_list:
       line = cell.newContent(id=line_id,
-          portal_type=self.sale_invoice_transaction_portal_type)
+                             portal_type='Accounting Transaction Line')
       line.setQuantity(line_ratio)
       line.setSourceValue(account_module[line_source_id])
       line.setDestinationValue(account_module[line_destination_id])
