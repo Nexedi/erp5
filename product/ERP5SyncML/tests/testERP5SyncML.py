@@ -1,5 +1,6 @@
 ##############################################################################
-#
+# vim: set fileencoding=utf-8
+# 
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #
@@ -26,14 +27,6 @@
 #
 ##############################################################################
 
-
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -44,13 +37,10 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from DateTime import DateTime
-from Products.ERP5.Document.Person import Person
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
-import time
 
 class TestERP5SyncML(ERP5TypeTestCase):
 
@@ -102,6 +92,17 @@ class TestERP5SyncML(ERP5TypeTestCase):
     """
     return "ERP5 SyncML"
 
+  def afterSetUp(self):
+    """Setup."""
+    self.login()
+    # This test creates Person inside Person, so we modifiy type information to
+    # allow anything inside Person (we'll cleanup on teardown)
+    self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+
+  def beforeTearDown(self):
+    """Clean up."""
+    # type informations
+    self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
 
   def getBusinessTemplateList(self):
     """
