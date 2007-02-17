@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_jump</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>profile_view</string> </value>
+            <value> <string>jump_to_related_task_report</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -54,11 +54,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>7.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Profile</string> </value>
+            <value> <string>Related Task Report(s)</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -81,7 +81,11 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Task_viewProfile</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type=Task+Report
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

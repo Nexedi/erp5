@@ -20,4 +20,6 @@ Requirement | Requirement
 Task Module | Task
 Task Report Module | Task Report
 Task Report | Task Report Line
+Task | Discount
+Task | Payment Condition
 Task | Task Line
