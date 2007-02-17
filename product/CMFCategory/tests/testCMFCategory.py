@@ -26,14 +26,6 @@
 #
 ##############################################################################
 
-
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -44,9 +36,8 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-import time
 
 try:
   from transaction import get as get_transaction
@@ -90,7 +81,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     return self.getPortal().getId()
 
   def test_00_HasEverything(self, quiet=quiet, run=run_all_test):
-    # Test if portal_synchronizations was created
     if not run: return
     if not quiet:
       ZopeTestCase._print('\n Test Has Everything ')
@@ -102,6 +92,13 @@ class TestCMFCategory(ERP5TypeTestCase):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
+
+    # This test creates Person inside Person and Organisation inside
+    # Organisation, so we modifiy type informations to allow anything inside
+    # Person and Organisation (we'll cleanup on teardown)
+    self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+    self.getTypesTool().getTypeInfo('Organisation').filter_content_types = 0
+
     # Make persons.
     person_module = self.getPersonModule()
     if self.id1 not in person_module.objectIds():
@@ -172,6 +169,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     for bc in ('region', 'subordination', 'gender'):
       bc_obj = self.getPortal().portal_categories[bc]
       bc_obj.manage_delObjects()
+    # type informations
+    self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
+    self.getTypesTool().getTypeInfo('Organisation').filter_content_types = 1
 
   def login(self, quiet=quiet, run=run_all_test):
     uf = self.getPortal().acl_users
