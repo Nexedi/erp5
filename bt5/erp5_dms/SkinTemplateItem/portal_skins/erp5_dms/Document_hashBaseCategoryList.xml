@@ -69,17 +69,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Used by parellel list field\n
-Document_library/my_dms_category_list\n
-(see http://wiki.erp5.org/HowToConfigureParallelListField)\n
-To produce a tree we use Category_childShortTitleOrIdItemList\n
-to display short title or id\n
+  Used by parellel list field\n
+  Document_library/my_dms_category_list\n
+  (see http://wiki.erp5.org/HowToConfigureParallelListField)\n
+  To produce a tree we use getCategoryChildLogicalPathItemList\n
+  and we cache\n
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def cached_DMSGetItemList(base_category):\n
     basecatobject = context.portal_categories.resolveCategory(base_category)\n
-    return basecatobject.Category_childTitleOrIdItemList()\n
+    return basecatobject.getCategoryChildLogicalPathItemList()\n
 \n
 cached_DMSGetItemList = CachingMethod(cached_DMSGetItemList, id=\'DMGetItemListCachedMethodWhatever\')\n
 \n
