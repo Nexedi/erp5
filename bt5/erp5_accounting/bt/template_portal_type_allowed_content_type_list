@@ -2,6 +2,7 @@ Account Module | Account
 Accounting Rule Cell | Accounting Transaction Line
 Accounting Transaction Module | Accounting Transaction
 Accounting Transaction Module | Balance Transaction
+Accounting Transaction Module | Closing Transaction
 Accounting Transaction Module | Payment Transaction
 Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
@@ -23,6 +24,7 @@ Invoicing Rule | Category Divergence Tester
 Invoicing Rule | Property Divergence Tester
 Invoicing Rule | Quantity Divergence Tester
 Organisation | Accounting Period
+Organisation | Cash Register
 Payment Rule | Category Divergence Tester
 Payment Rule | Property Divergence Tester
 Payment Rule | Quantity Divergence Tester

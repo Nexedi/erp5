@@ -10,6 +10,7 @@
  </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Purchase Invoice Transaction</item>
+  <item>Closing Transaction</item>
   <item>Accounting Transaction</item>
   <item>Sale Invoice Transaction</item>
   <item>Payment Transaction</item>
@@ -47,6 +48,7 @@
  </portal_type>
  <portal_type id="Organisation">
   <item>Accounting Period</item>
+  <item>Cash Register</item>
  </portal_type>
  <portal_type id="Payment Rule">
   <item>Property Divergence Tester</item>

@@ -3,6 +3,7 @@
   <item>Accounting Transaction Line</item>
  </portal_type>
  <portal_type id="Accounting Transaction Module">
+  <item>Closing Transaction</item>
   <item>Balance Transaction</item>
  </portal_type>
  <portal_type id="Balance Transaction">
