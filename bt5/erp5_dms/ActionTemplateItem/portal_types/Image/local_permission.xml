@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewLocalPermission</string> </value>
+            <value> <string>string:${object_url}/Base_viewLocalPermissionList</string> </value>
         </item>
       </dictionary>
     </pickle>
