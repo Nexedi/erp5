@@ -393,7 +393,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Task Title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
@@ -596,7 +596,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Listbox</string> </value>
+                    <value> <string>Project Lines</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

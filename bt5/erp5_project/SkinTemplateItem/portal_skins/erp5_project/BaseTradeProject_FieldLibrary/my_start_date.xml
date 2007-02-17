@@ -284,6 +284,14 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>hidden_day_is_last_day</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>input_order</string> </key>
                     <value> <string>ymd</string> </value>
                 </item>
@@ -307,7 +315,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Starting</string> </value>
+                    <value> <string>Start Date</string> </value>
                 </item>
               </dictionary>
             </value>

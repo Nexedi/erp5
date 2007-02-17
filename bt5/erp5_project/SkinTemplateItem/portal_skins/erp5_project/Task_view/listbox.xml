@@ -480,6 +480,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -549,7 +553,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>purchase_order_line_selection</string> </value>
+                    <value> <string>Task_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

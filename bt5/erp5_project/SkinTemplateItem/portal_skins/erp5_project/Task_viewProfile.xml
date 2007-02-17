@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -76,9 +82,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -97,7 +101,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
+                        <string>my_source_title</string>
+                        <string>my_source_section_title</string>
+                        <string>my_source_decision_title</string>
+                        <string>my_source_administration_title</string>
+                        <string>my_source_payment_title</string>
+                        <string>my_source_project_title</string>
                       </list>
                     </value>
                 </item>
@@ -105,7 +114,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_destination_administration_title</string>
+                        <string>my_destination_payment_title</string>
+                        <string>my_destination_project_title</string>
                       </list>
                     </value>
                 </item>
@@ -114,7 +128,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Requirement_viewProjectList</string> </value>
+            <value> <string>Task_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -122,7 +136,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Project_view</string> </value>
+            <value> <string>TradeCondition_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -138,7 +152,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Project</string> </value>
+            <value> <string>Profile</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

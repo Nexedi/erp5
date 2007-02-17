@@ -398,6 +398,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>calendar_view</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>color_script</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -452,6 +456,10 @@
                 <item>
                     <key> <string>info_topright</string> </key>
                     <value> <string>getStopDate</string> </value>
+                </item>
+                <item>
+                    <key> <string>js_enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -553,7 +561,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>planning_box</string> </value>
+                    <value> <string>Planning Box</string> </value>
                 </item>
                 <item>
                     <key> <string>title_line</string> </key>
@@ -565,7 +573,7 @@
                 </item>
                 <item>
                     <key> <string>x_axis_position</string> </key>
-                    <value> <string>bottom</string> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>x_start_bloc</string> </key>
@@ -577,7 +585,7 @@
                 </item>
                 <item>
                     <key> <string>y_axis_position</string> </key>
-                    <value> <string>left</string> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>y_size_block</string> </key>

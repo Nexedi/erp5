@@ -84,7 +84,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -98,6 +100,10 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -105,7 +111,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
+                        <string>my_start_date</string>
+                        <string>my_requirement_title</string>
+                        <string>my_stop_date</string>
+                        <string>my_source_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -114,7 +123,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Requirement_viewProjectList</string> </value>
+            <value> <string>ProjectLine_viewDocumentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
