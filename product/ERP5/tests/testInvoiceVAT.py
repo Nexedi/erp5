@@ -415,7 +415,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     self._checkInvoiceVAT(invoice, total_price, vat_ratio,
                           total_vat_amount)
     # ... or an empty accouting line
-    invoice.newContent(portal_type='Accounting Transaction Line')
+    invoice.newContent(portal_type='Sale Invoice Transaction Line')
     self._checkInvoiceVAT(invoice, total_price, vat_ratio,
                           total_vat_amount)
 
