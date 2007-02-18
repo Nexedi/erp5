@@ -106,6 +106,8 @@ class OOoTemplate(ZopePageTemplate):
     - add preprocessing option to handle explicit macros in
       OOo in any language. Include debugging options in this case
       (on preprocessed source rather than pure source)
+
+    - add interface for Cache (http/RAM)
   """
   meta_type = "ERP5 OOo Template"
   icon = "www/OOo.png"
@@ -229,7 +231,8 @@ class OOoTemplate(ZopePageTemplate):
       options_dict = dict( style="fr1", x="0cm", y="0cm" )
       options_dict.update( dict(arguments_re.findall( match.group(1) )) )
       document = self._resolvePath( options_dict['path'] )
-      document_text = document.read()
+      #document_text = document.read()
+      document_text = ZopePageTemplate.pt_render(document) # extra_context is missing
 
       if 'type' not in options_dict:
         options_dict['type'] = document.content_type
@@ -256,8 +259,10 @@ class OOoTemplate(ZopePageTemplate):
       try:
         ooo_stylesheet = getattr(here, document.ooo_stylesheet)
         # If style is dynamic, call it
-        if callable(ooo_stylesheet):
+        try:
           ooo_stylesheet = ooo_stylesheet()
+        except AttributeError:
+          pass
         temp_builder = OOoBuilder(ooo_stylesheet)
         stylesheet = temp_builder.extract('styles.xml')
       except AttributeError:
@@ -401,8 +406,10 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     # Retrieve master document
     ooo_document = getattr(here, self.ooo_stylesheet)
     # If style is dynamic, call it
-    if callable(ooo_stylesheet):
-      ooo_stylesheet = ooo_stylesheet()
+    try:
+      ooo_document = ooo_document()
+    except AttributeError:
+      pass
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
     # Pass builder instance as extra_context
