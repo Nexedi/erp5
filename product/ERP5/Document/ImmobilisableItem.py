@@ -997,7 +997,7 @@ class ImmobilisableItem(XMLObject, Amount):
 
 
     security.declareProtected(Permissions.View, 'expandAmortisation')
-    def expandAmortisation(self):
+    def expandAmortisation(self,**kw):
       """
       Calculate the amortisation annuities for the item
       in an activity
@@ -1007,12 +1007,11 @@ class ImmobilisableItem(XMLObject, Amount):
       # are no more in 'calculating' immobilisation_state
       related_packing_list_list = self.getAggregateRelatedValueList()
       related_packing_list_path_list = [x.getPath() for x in related_packing_list_list]
-      related_packing_list_uid_list = ['%i' % x.getUid() for x in related_packing_list_list]
       self.activate(
           after_path_and_method_id=(
             related_packing_list_path_list,
             ['immediateReindexObject', 'recursiveImmediateReindexObject', 'updateImmobilisationState']),
-            after_tag=related_packing_list_uid_list
+          after_tag='expand_amortisation'
           ).immediateExpandAmortisation()
 
 
@@ -1022,12 +1021,12 @@ class ImmobilisableItem(XMLObject, Amount):
       Calculate the amortisation annuities for the item
       SHOULD BE RUN AS MANAGER
       """
+      activate_kw = {'tag':'expand_amortisation'}
       try:
         self._createAmortisationRule()
       except ImmobilisationValidityError:
         related_packing_list_list = self.getAggregateRelatedValueList()
-        related_packing_list_uid_list = ['%i' % x.getUid() for x in related_packing_list_list]
-        self.activate(tag=related_packing_list_uid_list).expandAmortisation()
+        self.activate().expandAmortisation(activate_kw=activate_kw)
 
 
     security.declareProtected(Permissions.View, 'getSectionMovementValueList')
