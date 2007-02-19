@@ -112,7 +112,7 @@ class TestAmount(ERP5TypeTestCase):
     module = portal.getDefaultModule(self.amount_parent_portal_type)
     amount_parent = module.newContent(
                       portal_type=self.amount_parent_portal_type)
-    amount = module.newContent(
+    amount = amount_parent.newContent(
                       portal_type=self.amount_portal_type)
     sequence.edit(
        amount=amount,
