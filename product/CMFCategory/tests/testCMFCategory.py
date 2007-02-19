@@ -787,7 +787,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     else:
       p1 = person_module._getOb(self.id1)
     organisation_module = self.getOrganisationModule()
-    organisation_module = self.getOrganisationModule()
     if self.id1 not in organisation_module.objectIds():
       o1 = organisation_module.newContent(id=self.id1)
     else:
@@ -797,7 +796,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       p1.setCareerSubordination(o1)
     except Exception, e:
       self.failUnless(isinstance(e, TypeError))
-      self.assertEqual(e.args[0], 'Category must be a string.')
+      self.assertEqual(e.args[0], 'Category must be of string, tuple of string or list of string type.')
 
 if __name__ == '__main__':
     framework()
