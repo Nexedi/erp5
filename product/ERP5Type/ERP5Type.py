@@ -470,8 +470,6 @@ class ERP5TypeInformation( FactoryTypeInformation,
               # instead of a dict or list of dicts
               if category_result is None:
                 continue
-              elif isinstance(category_result, dict):
-                category_result = [category_result]
             else:
               raise RuntimeError, 'Script %s was not found to fetch values for'\
                       ' base categories : %s' % (base_category_script_id,
@@ -484,19 +482,24 @@ class ERP5TypeInformation( FactoryTypeInformation,
             category_result = [{}]
 
           for role in role_text.split(';'):
-            # category_result is a list of dicts that represents the resolved
-            # categories we create a category_value_dict from each of these
-            # dicts aggregated with category_order and statically defined
-            # categories
             role = role.strip()
-            role_category_list = role_category_list_dict.setdefault(role, [])
-            for category_dict in category_result:
-              category_value_dict = {'category_order':category_order_list}
-              category_value_dict.update(category_dict)
-              for c in definition['category']:
-                bc, value = c.split('/', 1)
-                category_value_dict[bc] = value
-              role_category_list.append(category_value_dict)
+            if isinstance(category_result, dict):
+              # category_result is a dict (which provide group IDs directly)
+              # which represents of mapping of roles, security group IDs
+              role_category_list_dict.setdefault(role, category_result)
+            else:
+              # category_result is a list of dicts that represents the resolved
+              # categories we create a category_value_dict from each of these
+              # dicts aggregated with category_order and statically defined
+              # categories
+              role_category_list = role_category_list_dict.setdefault(role, [])
+              for category_dict in category_result:
+                category_value_dict = {'category_order':category_order_list}
+                category_value_dict.update(category_dict)
+                for c in definition['category']:
+                  bc, value = c.split('/', 1)
+                  category_value_dict[bc] = value
+                role_category_list.append(category_value_dict)
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
@@ -507,6 +510,11 @@ class ERP5TypeInformation( FactoryTypeInformation,
         raise RuntimeError, '%s script was not found' % \
                               ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
       for role, value_list in role_category_list_dict.items():
+        if isinstance(value_list, dict):
+          # value_list is a dict (which provide group IDs directly)
+          # This is used by acquisition scripts
+          role_group_id_dict.setdefault(role, []).extend(value_list.get(role, []))
+          continue
         role_group_dict = {}
         for category_dict in value_list:
           group_id = group_id_generator(**category_dict)
