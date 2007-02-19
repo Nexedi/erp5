@@ -87,6 +87,8 @@ else:\n
   is_source = 0\n
   section = context.getDestinationSection()\n
 \n
+# rememeber payable / receivable lines in context.\n
+accounts_in_context = []\n
 \n
 # calculate the total price of this invoice (according to accounting\n
 # transaction lines)\n
@@ -113,6 +115,7 @@ for line in context.getMovementList(\n
     key = (node_value.getRelativeUrl(), mirror_section)\n
     total_payable_price_per_node_section[key] =\\\n
           total_payable_price_per_node_section.get(key, 0) + amount\n
+    accounts_in_context.append(line)\n
     if line.getGroupingReference():\n
       # we rememeber this line to check if there is any line grouped with it\n
       groupped_line_list.append(line)\n
@@ -124,6 +127,26 @@ for related_transaction in context.getCausalityRelatedValueList(\n
   if related_transaction.getSimulationState() in (\n
               \'draft\', \'cancelled\', \'deleted\'):\n
     continue\n
+  \n
+  # if we have a payment related to multiple invoices, we cannot say the\n
+  # remaining price on those invoices.\n
+  for other_invoice in [ tr for tr in related_transaction.getCausalityValueList(\n
+                         portal_type=context.getPortalAccountingTransactionTypeList())\n
+                         if tr != context ]:\n
+    other_invoice_is_source = \\\n
+                    other_invoice.AccountingTransaction_isSourceView()\n
+    for other_line in other_invoice.getMovementList(\n
+            portal_type=portal.getPortalAccountingMovementTypeList()):\n
+      if other_line.getGroupingReference():\n
+        continue\n
+      if other_invoice_is_source:\n
+        other_invoice_line_account = other_line.getSourceValue()\n
+      else:\n
+        other_invoice_line_account = other_line.getDestinationValue()\n
+        \n
+      if other_invoice_line_account in accounts_in_context:\n
+        raise ValueError(\'Unable to calculate\')\n
+  \n
   related_transaction_is_source = related_transaction.\\\n
                                         AccountingTransaction_isSourceView()\n
   for line in related_transaction.getMovementList(\n
@@ -211,6 +234,7 @@ else:\n
                             <string>total_payable_price_per_node_section</string>
                             <string>is_source</string>
                             <string>section</string>
+                            <string>accounts_in_context</string>
                             <string>groupped_line_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
@@ -222,6 +246,14 @@ else:\n
                             <string>key</string>
                             <string>_write_</string>
                             <string>related_transaction</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>tr</string>
+                            <string>other_invoice</string>
+                            <string>other_invoice_is_source</string>
+                            <string>other_line</string>
+                            <string>other_invoice_line_account</string>
+                            <string>ValueError</string>
                             <string>related_transaction_is_source</string>
                             <string>sum</string>
                           </tuple>
