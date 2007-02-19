@@ -89,9 +89,10 @@
             <value>
               <tuple>
                 <list>
+                  <string>baobab</string>
                   <string>acl_users</string>
                 </list>
-                <string>zope</string>
+                <string>seb</string>
               </tuple>
             </value>
         </item>
@@ -721,8 +722,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-business_template = state_change.object\n
+business_template = state_change[\'object\']\n
 listbox = state_change.kwargs.get(\'listbox\')\n
+update_catalog = state_change.kwargs.get(\'update_catalog\')\n
+update_translation = state_change.kwargs.get(\'update_translation\')\n
 workflow_action = state_change.kwargs.get(\'workflow_action\')\n
 \n
 object_to_update = {}\n
@@ -732,32 +735,39 @@ if listbox is not None and len(listbox) > 0:\n
       object_to_update[item[\'listbox_key\']] = item[\'choice\']\n
 \n
 if workflow_action == \'install_action\':\n
-  business_template.install(force=0, object_to_update=object_to_update)\n
+  business_template.install(force=0, object_to_update=object_to_update, \\\n
+                            update_catalog=update_catalog, update_translation=update_translation)\n
 elif workflow_action == \'reinstall_action\':\n
-  business_template.reinstall(force=0, object_to_update=object_to_update)\n
+  business_template.reinstall(force=0, object_to_update=object_to_update, \\\n
+                              update_catalog=update_catalog, update_translation=update_translation)\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAwAAAAMAAAAQwAA
-AHMgAQAAdAAAfAAAZAEAgwIAfQIAdAAAdAAAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQMAdAAAdAAA
-fAAAZAIAgwIAZAMAgwIAZAUAgwEAfQQAaAAAfQUAfAMAdAYAagkAbxAAAXQHAHwDAIMBAGQGAGoE
-AG9RAAF4SgB0CAB8AwCDAQBEXTwAfQkAdAoAfAkAZAcAgwIAbyYAAXQKAHwJAGQHAIMCAHQLAHwF
-AIMBAHQKAHwJAGQIAIMCADxuAQABcX4AV24BAAF8BABkCQBqAgBvIAABdAAAfAIAZAoAgwIAZAsA
-ZAYAZAwAfAUAgwACAW4uAAF8BABkDQBqAgBvIAABdAAAfAIAZA4AgwIAZAsAZAYAZAwAfAUAgwAC
-AW4BAAFkAABTKA8AAABOdAYAAABvYmplY3R0BgAAAGt3YXJnc3QDAAAAZ2V0dAcAAABsaXN0Ym94
-dA8AAAB3b3JrZmxvd19hY3Rpb25pAAAAAHQGAAAAY2hvaWNldAsAAABsaXN0Ym94X2tleXQOAAAA
-aW5zdGFsbF9hY3Rpb250BwAAAGluc3RhbGx0BQAAAGZvcmNldBAAAABvYmplY3RfdG9fdXBkYXRl
-dBAAAAByZWluc3RhbGxfYWN0aW9udAkAAAByZWluc3RhbGwoDAAAAHQJAAAAX2dldGF0dHJfdAwA
-AABzdGF0ZV9jaGFuZ2V0EQAAAGJ1c2luZXNzX3RlbXBsYXRlUgMAAABSBAAAAFIKAAAAdAQAAABO
-b25ldAMAAABsZW50CQAAAF9nZXRpdGVyX3QEAAAAaXRlbXQJAAAAX2dldGl0ZW1fdAcAAABfd3Jp
-dGVfKAwAAABSDgAAAFINAAAAUg8AAABSAwAAAFIEAAAAUgoAAABSEAAAAFIRAAAAUhIAAABSEwAA
-AFIUAAAAUhUAAAAoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbil0GAAAAEJ1c2luZXNzVGVt
-cGxhdGVfaW5zdGFsbAEAAABzGAAAAA8BHgEeAgYBIAENAAkBDQEuAg0BIAENASgBAAAAUhYAAAAo
-AQAAAFIWAAAAKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAAB0
-AAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA4AAAAPAAAAQwAA
+AHN0AQAAdAAAfAAAZAEAgwIAfQIAdAMAdAMAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQQAdAMAdAMA
+fAAAZAIAgwIAZAMAgwIAZAUAgwEAfQUAdAMAdAMAfAAAZAIAgwIAZAMAgwIAZAYAgwEAfQYAdAMA
+dAMAfAAAZAIAgwIAZAMAgwIAZAcAgwEAfQcAaAAAfQgAfAQAdAkAagkAbxAAAXQKAHwEAIMBAGQI
+AGoEAG9RAAF4SgB0CwB8BACDAQBEXTwAfQwAdAAAfAwAZAkAgwIAbyYAAXQAAHwMAGQJAIMCAHQN
+AHwIAIMBAHQAAHwMAGQKAIMCADxuAQABcboAV24BAAF8BwBkCwBqAgBvLAABdAMAfAIAZAwAgwIA
+ZA0AZAgAZA4AfAgAZAUAfAUAZAYAfAYAgwAEAW46AAF8BwBkDwBqAgBvLAABdAMAfAIAZBAAgwIA
+ZA0AZAgAZA4AfAgAZAUAfAUAZAYAfAYAgwAEAW4BAAFkAABTKBEAAABOdAYAAABvYmplY3R0BgAA
+AGt3YXJnc3QDAAAAZ2V0dAcAAABsaXN0Ym94dA4AAAB1cGRhdGVfY2F0YWxvZ3QSAAAAdXBkYXRl
+X3RyYW5zbGF0aW9udA8AAAB3b3JrZmxvd19hY3Rpb25pAAAAAHQGAAAAY2hvaWNldAsAAABsaXN0
+Ym94X2tleXQOAAAAaW5zdGFsbF9hY3Rpb250BwAAAGluc3RhbGx0BQAAAGZvcmNldBAAAABvYmpl
+Y3RfdG9fdXBkYXRldBAAAAByZWluc3RhbGxfYWN0aW9udAkAAAByZWluc3RhbGwoDgAAAHQJAAAA
+X2dldGl0ZW1fdAwAAABzdGF0ZV9jaGFuZ2V0EQAAAGJ1c2luZXNzX3RlbXBsYXRldAkAAABfZ2V0
+YXR0cl9SAwAAAFIEAAAAUgUAAABSBgAAAFIMAAAAdAQAAABOb25ldAMAAABsZW50CQAAAF9nZXRp
+dGVyX3QEAAAAaXRlbXQHAAAAX3dyaXRlXygOAAAAUhAAAABSDwAAAFIRAAAAUhIAAABSAwAAAFIE
+AAAAUgUAAABSBgAAAFIMAAAAUhMAAABSFAAAAFIVAAAAUhYAAABSFwAAACgAAAAAKAAAAABzYAAA
+AC9iYW9iYWIvcG9ydGFsX3dvcmtmbG93L2J1c2luZXNzX3RlbXBsYXRlX2luc3RhbGxhdGlvbl93
+b3JrZmxvdy9zY3JpcHRzL0J1c2luZXNzVGVtcGxhdGVfaW5zdGFsbHQYAAAAQnVzaW5lc3NUZW1w
+bGF0ZV9pbnN0YWxsAQAAAHMgAAAADwEeAR4BHgEeAgYBIAENAAkBDQEuAg0BGwERAQ0BGwEoAQAA
+AFIYAAAAKAEAAABSGAAAACgAAAAAKAAAAABzYAAAAC9iYW9iYWIvcG9ydGFsX3dvcmtmbG93L2J1
+c2luZXNzX3RlbXBsYXRlX2luc3RhbGxhdGlvbl93b3JrZmxvdy9zY3JpcHRzL0J1c2luZXNzVGVt
+cGxhdGVfaW5zdGFsbHMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -792,16 +802,18 @@ AAAAAA==</string> </value>
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>business_template</string>
+                            <string>_getattr_</string>
                             <string>listbox</string>
+                            <string>update_catalog</string>
+                            <string>update_translation</string>
                             <string>workflow_action</string>
                             <string>object_to_update</string>
                             <string>None</string>
                             <string>len</string>
                             <string>_getiter_</string>
                             <string>item</string>
-                            <string>_getitem_</string>
                             <string>_write_</string>
                           </tuple>
                         </value>
