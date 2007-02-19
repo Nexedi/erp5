@@ -697,40 +697,40 @@ class TestCMFCategory(ERP5TypeTestCase):
       ZopeTestCase._print('\n '+message)
       LOG('Testing... ',0,message)
 
-      portal_categories = self.getCategoryTool()
-      organisation = self.getOrganisationModule().newContent(
-                portal_type='Organisation', region='west/france')
+    portal_categories = self.getCategoryTool()
+    organisation = self.getOrganisationModule().newContent(
+              portal_type='Organisation', region='west/france')
 
-      get_transaction().commit()
-      self.tic()
+    get_transaction().commit()
+    self.tic()
 
-      self.assertEquals([x.getObject() for x in
-                          portal_categories.getCategoryMemberValueList(
-                            portal_categories.region.west.france,
-                            base_category='region',
-                            strict_membership=0,
-                            portal_type='Organisation')], [organisation])
-
-      self.assertEquals([x.getObject() for x in
-                         portal_categories.getCategoryMemberValueList(
-                            portal_categories.region.west.france,
-                            base_category='region',
-                            strict_membership=1,
-                            portal_type='Organisation')], [organisation])
-
-      self.assertEquals([x.getObject() for x in
-                         portal_categories.getCategoryMemberValueList(
-                            portal_categories.region.west,
-                            base_category='region',
-                            strict_membership=0,
-                            portal_type='Organisation')], [organisation])
-
-      self.assertEquals([x.getObject() for x in
+    self.assertEquals([x.getObject() for x in
                         portal_categories.getCategoryMemberValueList(
-                            portal_categories.region.west,
-                            base_category='region',
-                            strict_membership=1,
-                            portal_type='Organisation')], [])
+                          portal_categories.region.west.france,
+                          base_category='region',
+                          strict_membership=0,
+                          portal_type='Organisation')], [organisation])
+
+    self.assertEquals([x.getObject() for x in
+                       portal_categories.getCategoryMemberValueList(
+                          portal_categories.region.west.france,
+                          base_category='region',
+                          strict_membership=1,
+                          portal_type='Organisation')], [organisation])
+
+    self.assertEquals([x.getObject() for x in
+                       portal_categories.getCategoryMemberValueList(
+                          portal_categories.region.west,
+                          base_category='region',
+                          strict_membership=0,
+                          portal_type='Organisation')], [organisation])
+
+    self.assertEquals([x.getObject() for x in
+                      portal_categories.getCategoryMemberValueList(
+                          portal_categories.region.west,
+                          base_category='region',
+                          strict_membership=1,
+                          portal_type='Organisation')], [])
 
   def test_20_CategoryChildTitleAndIdItemList(self, quiet=quiet,
                                               run=run_all_test):
