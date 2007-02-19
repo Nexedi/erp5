@@ -3947,6 +3947,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self.portal_templates.update(self)
 
+    def isCatalogUpdatable(self):
+      """
+      Return if catalog will be updated or not by business template installation
+      """
+      catalog_method = getattr(self, '_catalog_method_item', None)
+      if catalog_method is not None and self.getTemplateFormatVersion() == 1 \
+             and _getCatalogValue(self) is self.getPortalObject().portal_catalog.getSQLCatalog():
+        # It is needed to update the catalog only if the default SQLCatalog is modified.
+        for method_id in catalog_method._objects.keys():
+          if 'related' not in method_id:
+            # must update catalog
+            return True
+      return False
+
     def preinstall(self, check_dependencies=1, **kw):
       """
         Return the list of modified/new/removed object between a Business Template
@@ -4085,21 +4099,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
 
       # update catalog if necessary
-      update_catalog=0
-      catalog_method = getattr(self, '_catalog_method_item', None)
-      if catalog_method is not None and self.getTemplateFormatVersion() == 1 \
-        and _getCatalogValue(self) is self.getPortalObject().portal_catalog.getSQLCatalog():
-        # It is needed to update the catalog only if the default SQLCatalog is modified.
-        for id in catalog_method._objects.keys():
-          if id in object_to_update.keys() or force:
-            if not force:
-              action = object_to_update[id]
-              if action == 'nothing':
-                continue
-            if 'related' not in id:
-              # must update catalog
-              update_catalog = 1
-              break
+      update_catalog = kw.get('update_catalog', 0)
       if update_catalog:
         catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):
@@ -4149,7 +4149,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Update translation table, in case we added new portal types or
       # workflow states.
-      site.ERP5Site_updateTranslationTable()
+      update_translation = kw.get('update_translation', 0)
+      if update_translation:
+        site.ERP5Site_updateTranslationTable()
 
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
