@@ -54,7 +54,7 @@ from DateTime import DateTime
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from SelectionTool import makeTreeList,TreeListLine
-from Selection import Selection, DomainSelection
+from Selection import Selection
 import OFS
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
