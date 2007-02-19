@@ -40,7 +40,7 @@ from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName, _getViewFor
 
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
@@ -121,6 +121,19 @@ class WorkflowMethod(Method):
       res = wf.wrapWorkflowMethod(instance, self._id, self.__dict__['_m'],
                                   (instance,) + args, kw)
     return res
+
+class ActionMethod(Method):
+
+  def __init__(self, method, action_id, reindex=1):
+    self._m = method
+    self._id = action_id
+
+  def __call__(self, instance, *args, **kw):
+    """
+      Invoke the wrapped method, and deal with the results.
+    """
+    wf = getToolByName(instance, 'portal_workflow', None)
+    return wf.doActionFor(instance, self._id)
 
 def _aq_reset():
   Base.aq_method_generated = {}
@@ -265,7 +278,32 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
     if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
       for tr_id in wf.transitions.objectIds():
         tdef = wf.transitions.get(tr_id, None)
-        if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+        if tdef.trigger_type == TRIGGER_USER_ACTION:
+          method_id = convertToMixedCase(tr_id)
+          # We have to make a difference between a method which is on
+          # the prop_holder or on the klass, if the method is on the
+          # klass, then the WorkflowMethod created also need to be on the klass
+          if (not hasattr(prop_holder, method_id)) and \
+             (not hasattr(klass, method_id)):
+            method = ActionMethod(klass._doNothing, tr_id)
+            # Attach to portal_type
+            setattr(prop_holder, method_id, method)
+            prop_holder.security.declareProtected(
+                                     Permissions.AccessContentsInformation,
+                                     method_id )
+          else:
+            # Wrap method into WorkflowMethod is needed
+            try:
+              method = getattr(klass, method_id)
+            except AttributeError:
+              method = getattr(prop_holder, method_id)
+              work_method_holder = prop_holder
+            else:
+              work_method_holder = klass
+            LOG('initializePortalTypeDynamicWorkflowMethods', 100,
+                  'WARNING! Can not initialize %s on %s' % \
+                    (method_id, str(work_method_holder)))
+        elif tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
           method_id = convertToMixedCase(tr_id)
           # We have to make a difference between a method which is on
           # the prop_holder or on the klass, if the method is on the
@@ -840,6 +878,9 @@ class Base( CopyContainer,
     defined on this object.
     If an accessor exists for this property, the accessor will be called,
     default value will be passed to the accessor as first positional argument.
+
+    XXX Usage of getProperty is BAD. It should either be removed
+    or reused
     """
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
