@@ -60,9 +60,11 @@ class TestResource(ERP5TypeTestCase):
   resource_portal_type = 'Apparel Model'
   product_portal_type = 'Product'
   node_portal_type = 'Organisation'
-  supply_portal_type = 'Sale Supply'
-  supply_line_portal_type = 'Sale Supply Line'
-  supply_cell_portal_type = 'Sale Supply Cell'
+  sale_supply_portal_type = 'Sale Supply'
+  sale_supply_line_portal_type = 'Sale Supply Line'
+  sale_supply_cell_portal_type = 'Sale Supply Cell'
+  supply_line_portal_type = 'Supply Line'
+  supply_cell_portal_type = 'Supply Cell'
   variation_base_category_list = ['colour', 'size', 'morphology',
                                   'industrial_phase']
   size_list = ['size/Child','size/Man']
@@ -674,20 +676,20 @@ class TestResource(ERP5TypeTestCase):
     test_case_list = []
     # Create product
     product_module = self.portal.getDefaultModule(self.product_portal_type)
-    supply_module = self.portal.getDefaultModule(self.supply_portal_type)
+    supply_module = self.portal.getDefaultModule(self.sale_supply_portal_type)
     currency_module = self.portal.getDefaultModule("Currency")
-    currency = supply_module.newContent(
+    currency = currency_module.newContent(
                      portal_type="Currency",
                      title='A great currency')
     # Create generic supply
     self.logMessage("Creating generic fake supply ...", tab=1)
     generic_supply = supply_module.newContent(
-                     portal_type=self.supply_portal_type,
+                     portal_type=self.sale_supply_portal_type,
                      title='FakeGenericSupply',
                      price_currency_value=currency)
     # Create empty supply line
     supply_line = generic_supply.newContent(
-          portal_type=self.supply_line_portal_type)
+          portal_type=self.sale_supply_line_portal_type)
     supply_line.setProperty('base_price', 0)
     for j in range(33, 35):
       self.logMessage("Creating fake product %s..." % j, tab=1)
@@ -704,13 +706,13 @@ class TestResource(ERP5TypeTestCase):
         # Create a supply
         self.logMessage("Creating fake supply %s..." % i, tab=1)
         supply = supply_module.newContent(
-                                     portal_type=self.supply_portal_type,
+                                     portal_type=self.sale_supply_portal_type,
                                      title='FakeSupply%s' % i,
                                      price_currency_value=currency,
                                      destination_value=node)
         self.logMessage("Creating fake supply line %s..." % i, tab=1)
         supply_line = supply.newContent(
-              portal_type=self.supply_line_portal_type,
+              portal_type=self.sale_supply_line_portal_type,
               resource_value=product)
         # Set pricing parameter
         base_price = i*j
@@ -720,7 +722,7 @@ class TestResource(ERP5TypeTestCase):
       # Create generic supply line
       self.logMessage("Creating generic fake supply line ...", tab=1)
       supply_line = generic_supply.newContent(
-            portal_type=self.supply_line_portal_type,
+            portal_type=self.sale_supply_line_portal_type,
             resource_value=product)
       supply_line.setProperty('base_price', j)
       test_case_list.append((product, None, j))
