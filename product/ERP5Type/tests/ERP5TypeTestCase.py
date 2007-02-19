@@ -14,6 +14,7 @@ warnings.simplefilter('ignore', DeprecationWarning, append=1)
 current_app = None
 import Products.ERP5Type.Utils
 import Globals
+
 # store a copy of the original method
 original_get_request = Globals.get_request
 
@@ -22,6 +23,13 @@ def get_request():
 
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
+
+import itools.zope
+
+def get_context():
+  return current_app
+
+itools.zope.get_context = get_context
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
@@ -79,7 +87,7 @@ try:
       if isinstance(s, UnicodeType):
         s = s.encode('utf8', 'repr')
       OrigStringIO.write(self, s)
-  # iHotFix will patch PageTemplate StringIO with 
+  # iHotFix will patch PageTemplate StringIO with
   iHotfix.iHotfixStringIO = UnicodeSafeStringIO
 except ImportError:
   pass
@@ -344,7 +352,7 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing ... ', DEBUG, message)
-    
+
     def _updateConnectionStrings(self):
       """Update connection strings with values passed by the testRunner
       """
@@ -381,10 +389,10 @@ class ERP5TypeTestCase(PortalTestCase):
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
       return getToolByName(self.getPortal(), 'portal_templates', None)
-    
+
     def getPreferenceTool(self) :
       return getToolByName(self.getPortal(), 'portal_preferences', None)
-      
+
     def getTrashTool(self):
       return getToolByName(self.getPortal(), 'portal_trash', None)
 
@@ -436,7 +444,7 @@ class ERP5TypeTestCase(PortalTestCase):
     def getCurrencyModule(self):
       return getattr(self.getPortal(), 'currency_module',
           getattr(self.getPortal(), 'currency', None))
-    
+
     def tic(self):
       """
       Start all messages
@@ -510,7 +518,7 @@ def setupERP5Site( business_template_list=(),
             reindex = 0
           if not quiet:
             ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
-          
+
           extra_constructor_kw = _getConnectionStringDict()
           email_from_address = os.environ.get('email_from_address')
           if email_from_address is not None:
@@ -586,7 +594,7 @@ def setupERP5Site( business_template_list=(),
           # Reset aq dynamic, so all unit tests will start again
           from Products.ERP5Type.Base import _aq_reset
           _aq_reset()
-          
+
           if os.environ.get('erp5_save_data_fs'):
             # Quit the test in order to get a clean site
             if not quiet:
