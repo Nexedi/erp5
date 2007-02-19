@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_quantity_unit</string> </value>
         </item>
