@@ -111,7 +111,7 @@ return cash_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category=None, base_id=\'movement\', matrixbox=0</string> </value>
+            <value> <string>base_category=None, base_id=\'movement\', matrixbox=0,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,6 +140,7 @@ return cash_line_list\n
                             <string>base_category</string>
                             <string>base_id</string>
                             <string>matrixbox</string>
+                            <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
