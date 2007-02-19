@@ -82,7 +82,9 @@ new_decision = decision.newContent(portal_type=\'Publication Decision\')\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/decision_workflow/scripts/DecisionWorkflow_forwardDecision</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -73,7 +73,7 @@
 \n
         Document inherits from XMLObject and can\n
         be synchronized accross multiple sites.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

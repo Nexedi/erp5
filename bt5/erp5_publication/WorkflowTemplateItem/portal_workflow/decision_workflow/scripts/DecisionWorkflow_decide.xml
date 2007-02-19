@@ -87,7 +87,9 @@ if parent_decision.getValidationState() == \'forwarded\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/decision_workflow/scripts/DecisionWorkflow_decide</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
