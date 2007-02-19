@@ -68,6 +68,7 @@
   <item>Purchase Invoice Transaction Line</item>
   <item>Invoice Line</item>
   <item>Trade Condition</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Invoice Rule</item>
@@ -76,6 +77,7 @@
   <item>Invoice Transaction Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
+  <item>Payment Condition</item>
   <item>Sale Invoice Transaction Line</item>
   <item>Trade Condition</item>
   <item>Invoice Line</item>

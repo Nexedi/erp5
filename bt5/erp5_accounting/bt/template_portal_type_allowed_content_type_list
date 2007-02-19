@@ -34,6 +34,7 @@ Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
 Purchase Invoice Transaction | Invoice Line
+Purchase Invoice Transaction | Payment Condition
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
 Purchase Invoice Transaction | Trade Condition
 Rule Tool | Invoice Rule
@@ -41,5 +42,6 @@ Rule Tool | Invoice Transaction Rule
 Rule Tool | Invoicing Rule
 Rule Tool | Payment Rule
 Sale Invoice Transaction | Invoice Line
+Sale Invoice Transaction | Payment Condition
 Sale Invoice Transaction | Sale Invoice Transaction Line
 Sale Invoice Transaction | Trade Condition
