@@ -1,7 +1,7 @@
 Event Module | Incoming Fax
 Event Module | Incoming Letter
-Event Module | Internal Request
 Event Module | Mail Message
+Event Module | Note
 Event Module | Phone Call
 Incoming Fax | File
 Incoming Fax | Image

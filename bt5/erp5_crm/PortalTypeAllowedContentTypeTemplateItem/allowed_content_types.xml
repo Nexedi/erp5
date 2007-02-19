@@ -1,7 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Event Module">
+  <item>Note</item>
   <item>Mail Message</item>
-  <item>Internal Request</item>
   <item>Phone Call</item>
   <item>Incoming Letter</item>
   <item>Incoming Fax</item>
