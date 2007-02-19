@@ -90,6 +90,20 @@ portal.portal_selections.setSelectionParamsFor(\n
                       payment_mode_for_related_payment=payment_mode,\n
                       payment_for_related_payment=payment))\n
 \n
+\n
+# Calculate the payable/receivable quantity, using\n
+# Invoice_getRemainingTotalPayablePrice script.\n
+total_payable_price_details = \\\n
+          context.Invoice_getRemainingTotalPayablePrice(detailed=True)\n
+\n
+# if there\'s nothing more to pay, don\'t create an empty transaction\n
+if sum(total_payable_price_per_node_section.values()) == 0:\n
+  if not batch_mode:\n
+    return context.REQUEST.RESPONSE.redirect(\n
+      "%s/view?portal_status_message=%s" % (\n
+        context.absolute_url(), N_(\'Nothing more to pay\')))\n
+  return None\n
+\n
 related_payment = portal.accounting_module.newContent(\n
   portal_type="Payment Transaction",\n
   title=str(N_("Payment of ${invoice_title}",\n
@@ -122,10 +136,6 @@ bank = related_payment.newContent(\n
 )\n
 bank_quantity = 0\n
 \n
-# Calculate the payable/receivable quantity, using\n
-# Invoice_getRemainingTotalPayablePrice script.\n
-total_payable_price_details = \\\n
-          context.Invoice_getRemainingTotalPayablePrice(detailed=True)\n
 for (line_node, line_mirror_section), quantity in\\\n
                         total_payable_price_details.items():\n
   if line_mirror_section == mirror_section:\n
@@ -216,6 +226,11 @@ else:\n
                             <string>is_source</string>
                             <string>line_portal_type</string>
                             <string>dict</string>
+                            <string>True</string>
+                            <string>total_payable_price_details</string>
+                            <string>sum</string>
+                            <string>total_payable_price_per_node_section</string>
+                            <string>None</string>
                             <string>str</string>
                             <string>unicode</string>
                             <string>related_payment</string>
@@ -223,8 +238,6 @@ else:\n
                             <string>mirror_section</string>
                             <string>bank</string>
                             <string>bank_quantity</string>
-                            <string>True</string>
-                            <string>total_payable_price_details</string>
                             <string>_getiter_</string>
                             <string>line_node</string>
                             <string>line_mirror_section</string>

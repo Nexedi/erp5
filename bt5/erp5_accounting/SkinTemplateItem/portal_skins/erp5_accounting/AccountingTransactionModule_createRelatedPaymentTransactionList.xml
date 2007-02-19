@@ -74,6 +74,7 @@ from Products.ERP5Type.Message import Message\n
 portal = context.getPortalObject()\n
 stool = portal.portal_selections\n
 getObject = portal.portal_catalog.getObject\n
+countMessage = portal.portal_activities.countMessage\n
 invoice_type_list = portal.getPortalInvoiceTypeList()\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
@@ -92,17 +93,23 @@ stool.setSelectionParamsFor(\'accounting_create_related_payment_selection\',\n
                       payment_for_related_payment=payment))\n
 \n
 # XXX prevent to call this on the whole module:\n
-if len(object_list) > 100:\n
+if len(object_list) >= 1000:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
         context.absolute_url(), N_(\n
-         \'Refusing to process more than 100 objects, check your selection\')))\n
+         \'Refusing to process more than 1000 objects, check your selection\')))\n
 \n
 tag = \'payment_creation_%s\' % portal.portal_ids.generateNewLongId()\n
 activated = 0\n
 for obj in object_list:\n
   if obj.portal_type in invoice_type_list:\n
-    obj.getObject().activate(tag=tag).Invoice_createRelatedPaymentTransaction(\n
+    obj = obj.getObject()\n
+    if countMessage(path=obj.getPath(),\n
+                    method_id=\'Invoice_createRelatedPaymentTransaction\'):\n
+      raise \'Redirect\', "%s/view?portal_status_message=%s" % (\n
+                context.absolute_url(), N_(\'Payment Creation already in\'\n
+                \' progress, abandon\'))\n
+    obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(\n
                                                   node=node,\n
                                                   payment_mode=payment_mode,\n
                                                   payment=payment,\n
@@ -182,6 +189,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>portal</string>
                             <string>stool</string>
                             <string>getObject</string>
+                            <string>countMessage</string>
                             <string>invoice_type_list</string>
                             <string>N_</string>
                             <string>selection_uid_list</string>
