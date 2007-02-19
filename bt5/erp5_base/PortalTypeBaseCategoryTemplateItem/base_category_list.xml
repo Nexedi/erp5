@@ -6,4 +6,7 @@
  <portal_type id="Currency Exchange Line">
   <item>price_currency</item>
  </portal_type>
+ <portal_type id="Query">
+  <item>agent</item>
+ </portal_type>
 </base_category_list>

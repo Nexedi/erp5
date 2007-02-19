@@ -106,9 +106,17 @@ Person | profile
 Person | report
 Person | terminate_career
 Person | view
+Query Module | list_ui
+Query Module | sort_on
+Query Module | view
+Query | history
+Query | metadata
+Query | view
 Telephone | call
 Telephone | history
 Telephone | metadata
 Telephone | previous_call
 Telephone | print
 Telephone | view
+portal_actions | jump_query
+portal_actions | post_query

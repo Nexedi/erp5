@@ -64,6 +64,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Query</type>
+  <workflow>edit_workflow, query_workflow</workflow>
+ </chain>
+ <chain>
   <type>Telephone</type>
   <workflow>edit_workflow</workflow>
  </chain>

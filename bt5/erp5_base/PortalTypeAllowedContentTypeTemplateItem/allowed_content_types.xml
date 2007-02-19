@@ -47,4 +47,7 @@
  <portal_type id="Person Module">
   <item>Person</item>
  </portal_type>
+ <portal_type id="Query Module">
+  <item>Query</item>
+ </portal_type>
 </allowed_content_type_list>
