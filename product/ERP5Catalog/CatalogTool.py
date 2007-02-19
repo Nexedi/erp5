@@ -134,10 +134,18 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
                 allowed[user] = 1
               else:
                 allowed['user:' + user] = 1
-            if withnuxgroups:
-              allowed[user + ':' + role] = 1
-            else:
-              allowed['user:' + user + ':' + role] = 1
+            # Added for ERP5 project by JP Smets
+            # The reason why we do not want to keep Owner is because we are
+            # trying to reduce the number of security definitions
+            # However, this could be a bad idea if we start to use Owner role
+            # as a kind of Assignee and if we need it for worklists.
+            if role != 'Owner': 
+              if withnuxgroups:
+                allowed[user + ':' + role] = 1
+              else:
+                allowed['user:' + user + ':' + role] = 1
+        if allowed.has_key('Owner'):
+          del allowed['Owner']
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
@@ -407,7 +415,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           # Local roles now has precedence (since it comes from a WorkList)
           for user_or_group in allowedRolesAndUsers:
             for role in local_roles:
-              new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
+              if role == "Owner":
+                # This is for now only a placeholder to handle the case of Owner
+                # which may not be supported (see above comment arround line 135
+                new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
+              else:
+                new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
           allowedRolesAndUsers = new_allowedRolesAndUsers
 
       return allowedRolesAndUsers
