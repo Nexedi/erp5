@@ -145,7 +145,7 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
                              'quantity': self.quantity_200}
     
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
-    self.diff_vault = self.paris.surface.salle_tri.encaisse_des_differences
+    self.diff_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.diff_vault, currency=self.currency_1,
                              line_list=line_list)
 
@@ -164,6 +164,11 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.logout()
     self.login('super_user')
 
+  def stepDeleteCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Set the debit required
+    """
+    self.cash_sorting_incident_module.manage_delObjects(['cash_sorting_incident_1',])
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -343,6 +348,11 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     self.cash_sorting_incident.deleteContent('valid_line_2')
 
+  def stepDelIncomingLine(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Delete the invalid cash transfer line previously create
+    """
+    self.cash_sorting_incident.deleteContent('valid_line_1')
 
   def stepTryPlanCashSortingIncidentWithBadPrice(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -366,7 +376,7 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual("Price differs between document and resource.", "%s" %(msg,))
 
 
-  def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
+  def stepCheckTotalIncoming(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash transfer lines
     """
@@ -377,13 +387,27 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     # check the total price
     self.assertEqual(self.cash_sorting_incident.getTotalPrice(), 10000 * 5.0)
 
+  def stepCheckTotalOutgoing(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the total after the creation of the two cash transfer lines
+    """
+    # Check number of lines (line1 + line2)
+    self.assertEqual(len(self.cash_sorting_incident.objectValues()), 1)
+    # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
+    self.assertEqual(self.cash_sorting_incident.getTotalQuantity(), 12.0)
+    # check the total price
+    self.assertEqual(self.cash_sorting_incident.getTotalPrice(), 200 * 12.0)
+
+  def stepSetIncomingTotalAssetPrice(self, sequence=None, sequence_list=None, **kwd):
+    self.cash_sorting_incident.setSourceTotalAssetPrice('50000.0')
+
+  def stepSetOutgoingTotalAssetPrice(self, sequence=None, sequence_list=None, **kwd):
+    self.cash_sorting_incident.setSourceTotalAssetPrice('2400.0')
 
   def stepPlanCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash transfer and check it
     """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.cash_sorting_incident.setSourceTotalAssetPrice('50000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_sorting_incident, 'plan_action', wf_id='cash_sorting_incident_workflow')
     # execute tic
@@ -417,26 +441,38 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(len(workflow_history), 7)
 
 
-  def stepArchiveCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeliverCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Archive the cash transfer with a good user
     and check that the archive of a cash tranfer have achieved
     """
     # do the workflow transition "archive_action"
-    self.cash_sorting_incident.archive()
+    self.cash_sorting_incident.deliver()
     # execute tic
     self.stepTic()
     # get state of cash transfer
     state = self.cash_sorting_incident.getSimulationState()
     # check that state is archiveed
-    self.assertEqual(state, 'archived')
+    self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting_incident, name='history', wf_id='cash_sorting_incident_workflow')
     # check len of len workflow history is 6
     self.assertEqual(len(workflow_history), 8)
     
 
-  def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepCheckFinalIncomingInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the final, nothing should have changed
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in usual_cash
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
+    # check we have 12 coin of 200 in usual_cash
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+
+  def stepCheckFinalOutgoingInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the final, nothing should have changed
     """
@@ -445,8 +481,8 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200 in usual_cash
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
   ##################################
@@ -459,18 +495,35 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     if not run: return
     sequence_list = SequenceList()
-    # define the sequence
+    # define the sequence with incoming line
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateCashSortingIncident ' \
                     + 'CreateIncomingLine CheckSubTotal ' \
                     + 'CreateOutgoingLine ' \
                     + 'TryPlanCashSortingIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
                     + 'TryPlanCashSortingIncidentWithBadPrice ' \
-                    + 'Tic CheckTotal ' \
+                    + 'Tic CheckTotalIncoming ' \
+                    + 'SetIncomingTotalAssetPrice ' \
                     + 'PlanCashSortingIncident ' \
                     + 'ConfirmCashSortingIncident ' \
-                    + 'ArchiveCashSortingIncident ' \
-                    + 'CheckFinalInventory '
+                    + 'DeliverCashSortingIncident ' \
+                    + 'Tic ' \
+                    + 'CheckFinalIncomingInventory '
+    sequence_list.addSequenceString(sequence_string)
+    # define the sequence with outgoing line
+    sequence_string = 'Tic DeleteCashSortingIncident Tic CheckInitialInventory ' \
+                    + 'CreateCashSortingIncident ' \
+                    + 'CreateIncomingLine CheckSubTotal ' \
+                    + 'CreateOutgoingLine ' \
+                    + 'TryPlanCashSortingIncidentWithTwoDifferentLines DelIncomingLine Tic ' \
+                    + 'TryPlanCashSortingIncidentWithBadPrice ' \
+                    + 'Tic CheckTotalOutgoing ' \
+                    + 'SetOutgoingTotalAssetPrice ' \
+                    + 'PlanCashSortingIncident ' \
+                    + 'ConfirmCashSortingIncident ' \
+                    + 'DeliverCashSortingIncident ' \
+                    + 'Tic ' \
+                    + 'CheckFinalOutgoingInventory '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
