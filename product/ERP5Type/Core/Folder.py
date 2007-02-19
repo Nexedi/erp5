@@ -100,7 +100,7 @@ class FolderMixIn(ExtensionClass.Base):
         m = getattr(Document, factory_name)
         return m(container, new_id)
     
-    myType = pt.getTypeInfo(self)
+    myType = pt.getTypeInfo(container)
     if myType is not None:
       if not myType.allowType( portal_type ):
         raise ValueError('Disallowed subobject type: %s' % portal_type)
