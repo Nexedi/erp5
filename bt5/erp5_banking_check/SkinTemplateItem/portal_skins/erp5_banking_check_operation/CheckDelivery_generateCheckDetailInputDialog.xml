@@ -179,7 +179,10 @@ if batch_mode:\n
   return error_value\n
 else:\n
   context.Base_updateDialogForm(listbox=listbox\n
-                                ,empty_line_number=0 )\n
+                             , portal_type = context.getPortalType()\n
+                             , resource=resource\n
+                             , previous_resource=resource\n
+                             ,empty_line_number=0 )\n
   if field_error_dict != {}:\n
     request.set(\'field_errors\', field_error_dict)\n
     kw[\'REQUEST\'] = request\n

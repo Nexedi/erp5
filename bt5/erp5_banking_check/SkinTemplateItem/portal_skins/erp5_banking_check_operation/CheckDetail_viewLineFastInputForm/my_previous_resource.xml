@@ -247,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>my_previous_item_portal_type</string> </value>
+                    <value> <string>my_previous_resource</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getProperty(\'resource\')</string> </value>
+            <value> <string>python: here.getProperty(\'previous_resource\', \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -300,7 +300,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'\'</string> </value>
+            <value> <string>python: None</string> </value>
         </item>
       </dictionary>
     </pickle>
