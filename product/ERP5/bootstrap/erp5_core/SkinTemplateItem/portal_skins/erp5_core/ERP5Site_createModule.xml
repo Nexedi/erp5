@@ -168,7 +168,7 @@ form_view_object.manage_addProduct[\'Formulator\'].manage_addField(\n
 \n
 # Then add the portal_type corresponding to the new object\n
 portal_types.manage_addTypeInformation(\'ERP5 Type Information\'\n
-                                      , typeinfo_name = \'ERP5Type: ERP5 Document\'\n
+                                      , typeinfo_name = \'ERP5Type: XML Object (ERP5 XML Object)\'\n
                                       , id            = object_portal_type_id\n
                                       )\n
 object_portal_type_value = portal_types[object_portal_type_id]\n
