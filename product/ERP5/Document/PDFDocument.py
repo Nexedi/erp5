@@ -68,12 +68,15 @@ class PDFDocument(File, ConversionCacheMixin):
                     )
 
 
-  def index_html(self, REQUEST, RESPONSE, format, force=0):
+  def index_html(self, REQUEST, RESPONSE, format=None, force=0):
     """
       Returns data in the appropriate format (graphical)
       it is always a zip because multi-page pdfs are converted into a zip
       file of many images
     """
+    if format is None:
+      RESPONSE.setHeader('Content-Type', 'application/pdf')
+      return self._unpackData(self.data)
     if format == 'html':
       RESPONSE.setHeader('Content-Type', 'text/html;charset=UTF-8')
       return self.getHtmlRepresentation(force)
