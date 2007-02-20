@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Using PAS removes the need of this script\n
-if state_change.object.acl_users.meta_type == \'Pluggable Auth Service\':\n
+if state_change.getPortal().acl_users.meta_type == \'Pluggable Auth Service\':\n
   return\n
 \n
 # Get the assignment object and its parent\n
@@ -104,6 +104,12 @@ if person_security_script is not None:\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
