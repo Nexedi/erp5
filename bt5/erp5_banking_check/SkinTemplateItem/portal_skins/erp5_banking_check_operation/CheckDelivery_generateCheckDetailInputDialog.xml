@@ -120,7 +120,7 @@ else:\n
     check_amount = line.get(\'check_amount\',None)\n
     quantity = int(line.get(\'quantity\',0))\n
     if item_model.isFixedPrice():\n
-      if quantity != 1:\n
+      if quantity > 1:\n
         message = \'You must define one by one in this case\'\n
         generate_error(line,\'quantity\',message)\n
     if destination_payment_reference not in (None,\'\'):\n

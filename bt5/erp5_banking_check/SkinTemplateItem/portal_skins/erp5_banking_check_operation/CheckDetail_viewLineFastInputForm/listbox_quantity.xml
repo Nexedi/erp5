@@ -195,7 +195,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>0</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
