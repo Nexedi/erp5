@@ -148,17 +148,6 @@ class File(Document, CMFFile, ConversionCacheMixin):
 
   getcontentlength = get_size
 
-  # File management virtual accessor
-  security.declareProtected(Permissions.View, 'hasFile')
-  def hasFile(self):
-    """
-    Checks whether we have an initial file
-    """
-    _marker = []
-    if getattr(self,'data', _marker) is not _marker: # XXX-JPS - use propertysheet accessors
-      return getattr(self,'data') is not None
-    return False
-
   def _setFile(self, data, precondition=None):
     self.clearConversionCache()
     CMFFile._edit(self, precondition=precondition, file=data)
