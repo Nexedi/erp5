@@ -122,7 +122,8 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.encaisse_tri = self.paris.surface.salle_tri.encaisse_des_billets_recus_pour_ventilation.madrid
     self.encaisse_reserve = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.encaisse_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
-    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
+    #self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
+    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
 
     self.createCashInventory(source=None, destination=self.encaisse_tri, currency=self.currency_1,
                              line_list=line_list)
