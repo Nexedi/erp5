@@ -76,7 +76,7 @@ XXX: this page is just for backward compatibility. The log_out action sould lead
 </tal:block>\n
 <tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
-    <tal:block tal:define="dummy python:request.RESPONSE.redirect(\'%s/login_form?portal_status_message=You have been logged out.\' % (url, ))" />\n
+    <tal:block tal:define="dummy python:request.RESPONSE.redirect(\'%s/login_form?portal_status_message=%s\' % (url, here.Base_translateString(\'You have been logged out.\')))" />\n
   </tal:block>\n
 </tal:block>
 
