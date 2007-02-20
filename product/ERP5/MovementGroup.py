@@ -347,17 +347,24 @@ class PathMovementGroup(RootMovementGroup):
   """ Group movements that have the same source and the same destination."""
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.source = movement.getSource()
-    self.destination = movement.getDestination()
+    source_list = movement.getSourceList()
+    destination_list = movement.getDestinationList()
+    source_list.sort() ; destination_list.sort()
+
+    self.source_list = source_list
+    self.destination_list = destination_list
 
     self.setGroupEdit(
-        source_value=movement.getSourceValue(),
-        destination_value=movement.getDestinationValue(),
+        source_list=source_list,
+        destination_list=destination_list
     )
 
   def test(self, movement):
-    return movement.getSource() == self.source and \
-      movement.getDestination() == self.destination
+    source_list = movement.getSourceList()
+    destination_list = movement.getDestinationList()
+    source_list.sort() ; destination_list.sort()
+    return source_list == self.source_list and \
+        destination_list == self.destination_list
 
 allow_class(PathMovementGroup)
 
@@ -377,16 +384,24 @@ class SectionPathMovementGroup(RootMovementGroup):
   destination_section."""
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.source_section = movement.getSourceSection()
-    self.destination_section = movement.getDestinationSection()
+    source_section_list = movement.getSourceSectionList()
+    destination_section_list = movement.getDestinationSectionList()
+    source_section_list.sort() ; destination_section_list.sort()
+
+    self.source_section_list = source_section_list
+    self.destination_section_list = destination_section_list
+
     self.setGroupEdit(
-        source_section = movement.getSourceSection(),
-        destination_section = movement.getDestinationSection(),
+        source_section_list=source_section_list,
+        destination_section_list=destination_section_list
     )
 
   def test(self, movement):
-    return movement.getSourceSection() == self.source_section and \
-       movement.getDestinationSection() == self.destination_section
+    source_section_list = movement.getSourceSectionList()
+    destination_section_list = movement.getDestinationSectionList()
+    source_section_list.sort() ; destination_section_list.sort()
+    return source_section_list == self.source_section_list and \
+        destination_section_list == self.destination_section_list
 
 allow_class(SectionPathMovementGroup)
 
@@ -397,17 +412,24 @@ class TradePathMovementGroup(RootMovementGroup):
   """
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.source_trade = movement.getSourceTrade()
-    self.destination_trade = movement.getDestinationTrade()
+    source_trade_list = movement.getSourceTradeList()
+    destination_trade_list = movement.getDestinationTradeList()
+    source_trade_list.sort() ; destination_trade_list.sort()
+
+    self.source_trade_list = source_trade_list
+    self.destination_trade_list = destination_trade_list
 
     self.setGroupEdit(
-        source_trade_value=movement.getSourceTradeValue(),
-        destination_trade_value=movement.getDestinationTradeValue(),
+        source_trade_list=source_trade_list,
+        destination_trade_list=destination_trade_list
     )
 
   def test(self, movement):
-    return movement.getSourceTrade() == self.source_trade and \
-      movement.getDestinationTrade() == self.destination_trade
+    source_trade_list = movement.getSourceTradeList()
+    destination_trade_list = movement.getDestinationTradeList()
+    source_trade_list.sort() ; destination_trade_list.sort()
+    return source_trade_list == self.source_trade_list and \
+        destination_trade_list == self.destination_trade_list
 
 allow_class(TradePathMovementGroup)
 
