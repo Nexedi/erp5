@@ -531,7 +531,8 @@ class Document(XMLObject):
     """
     _marker = []
     if getattr(self,'data', _marker) is not _marker: # XXX-JPS - use propertysheet accessors
-      return getattr(self, 'data') is not None
+      d = getattr(self, 'data')
+      return d is not None and d != ''
     return False
 
   ### Version and language getters - might be moved one day to a mixin class in base
