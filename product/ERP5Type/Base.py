@@ -66,14 +66,10 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 
 from string import join
 import sys
-import pickle
-import copy
 import psyco
 import traceback
 
 from cStringIO import StringIO
-from email.MIMEBase import MIMEBase
-from email import Encoders
 from socket import gethostname, gethostbyaddr
 import random
 
@@ -97,7 +93,7 @@ class WorkflowMethod(Method):
   def __init__(self, method, id=None, reindex=1):
     self._m = method
     if id is None:
-        id = method.__name__
+      id = method.__name__
     self._id = id
 
   def _setId(self, id) :
