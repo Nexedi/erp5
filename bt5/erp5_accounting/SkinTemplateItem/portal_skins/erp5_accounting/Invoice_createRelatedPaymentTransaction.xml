@@ -97,7 +97,7 @@ total_payable_price_details = \\\n
           context.Invoice_getRemainingTotalPayablePrice(detailed=True)\n
 \n
 # if there\'s nothing more to pay, don\'t create an empty transaction\n
-if sum(total_payable_price_per_node_section.values()) == 0:\n
+if sum(total_payable_price_details.values()) == 0:\n
   if not batch_mode:\n
     return context.REQUEST.RESPONSE.redirect(\n
       "%s/view?portal_status_message=%s" % (\n
@@ -229,7 +229,6 @@ else:\n
                             <string>True</string>
                             <string>total_payable_price_details</string>
                             <string>sum</string>
-                            <string>total_payable_price_per_node_section</string>
                             <string>None</string>
                             <string>str</string>
                             <string>unicode</string>
