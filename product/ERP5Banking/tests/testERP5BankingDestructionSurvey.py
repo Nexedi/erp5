@@ -124,6 +124,7 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     self.cash = self.paris.caveau.auxiliaire.encaisse_des_billets_a_ventiler_et_a_detruire
     self.counter = self.paris.caveau.auxiliaire.encaisse_des_billets_ventiles_et_detruits
     self.createCashInventory(source=None, destination=self.cash, currency=self.currency_1, line_list=line_list)
+    self.openCounterDate(site=self.paris)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
