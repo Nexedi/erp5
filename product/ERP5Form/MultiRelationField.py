@@ -785,5 +785,5 @@ class MultiRelationStringField(ZMIField):
       # relation_item_list is not editable for the RelationField
       result = REQUEST.get('relation_item_list', None)
     else:
-      result = ZMIField.get_value(self, id, **kw)
+      result = ZMIField.get_value(self, id, REQUEST=REQUEST, **kw)
     return result
