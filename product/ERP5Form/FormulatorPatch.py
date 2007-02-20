@@ -806,7 +806,10 @@ class PatchedDateTimeWidget(DateTimeWidget):
             return date_result
     
     def format_value(self, field, value, mode='html'):
-        if value is None:
+        # Is it still usefull to test the None value,
+        # as DateTimeField should be considerer as the other field
+        # and get an empty string as default value?
+        if value in (None, ''):
             return ''
 
         use_ampm = field.get_value('ampm_time_style')
@@ -1121,6 +1124,7 @@ def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
   value = self._get_default(widget_key, value, REQUEST)
   __traceback_info__ = ('key=%s value=%r' % (key, value))
   return self.widget.render_htmlgrid(self, widget_key, value, REQUEST)
+
 Field.render_htmlgrid = Field_render_htmlgrid
 
 def Widget_render_htmlgrid(self, field, key, value, REQUEST):

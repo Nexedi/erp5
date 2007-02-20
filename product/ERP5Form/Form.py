@@ -142,12 +142,11 @@ def get_value(self, id, **kw):
         #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
 
     if id == 'default':
-        if self.meta_type != 'DateTimeField':
-          # We make sure we convert values to empty strings
-          # for most fields (so that we do not get a 'value'
-          # message on screeen)
-          # This can be overriden by useing TALES in the field
-          if value is None: value = ''
+        # We make sure we convert values to empty strings
+        # for most fields (so that we do not get a 'value'
+        # message on screen)
+        # This can be overriden by using TALES in the field
+        if value is None: value = ''
 
     return value
 
