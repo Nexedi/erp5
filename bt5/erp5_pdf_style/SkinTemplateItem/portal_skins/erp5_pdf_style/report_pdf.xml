@@ -69,7 +69,7 @@
 \n
     <paragraphstyle name="Normal" fontname="Helvetica" fontsize="9" align="LEFT" firstLineIndent="0"/>\n
     <paragraphstyle name="Bullet" fontname="Helvetica" fontsize="9" bulletFontName="Symbol" bulletFontSize="8" leftIndent="20"  firstLineIndent="0" parent="Normal"/>\n
-    <paragraphstyle name="Title" parent="Normal" fontname="Helvetica-Bold" fontsize="32" align="CENTER"/>\n
+    <paragraphstyle name="Title" parent="Normal" fontname="Helvetica-Bold" fontsize="32" leading="30"/>\n
     <paragraphstyle name="Heading1" parent="Normal" fontname="Helvetica-Bold" fontsize="16" spacebefore="20"/>\n
     <paragraphstyle name="Heading2" parent="Normal" fontname="Helvetica-Bold" fontsize="15" spacebefore="15"/>\n
     <paragraphstyle name="Heading3" parent="Normal" fontname="Helvetica-Bold" fontsize="14" spacebefore="10"/>\n
