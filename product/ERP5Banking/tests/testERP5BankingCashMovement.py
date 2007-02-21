@@ -165,6 +165,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createCashInventory(source=None, destination=self.vault_source, currency=self.currency_1,
                              line_list=line_list)
 
+    self.openCounterDate(site=self.paris)
 
 
 
@@ -453,8 +454,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.stepTic()
     # get state
     state = self.cash_movement.getSimulationState()
-    # check state is confirmed
-    self.assertEqual(state, 'confirmed')
+    # check state is stopped
+    self.assertEqual(state, 'stopped')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
     # check len of workflow history is 8
@@ -473,8 +474,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.stepTic()
     # get state
     state = self.cash_movement.getSimulationState()
-    # check state is planned
-    self.assertEqual(state, 'planned')
+    # check state is confirmed
+    self.assertEqual(state, 'confirmed')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
     # check len of workflow history is 4
@@ -492,8 +493,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.stepTic()
     # get state
     state = self.cash_movement.getSimulationState()
-    # check state is ordered
-    self.assertEqual(state, 'ordered')
+    # check state is started
+    self.assertEqual(state, 'started')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
     # check len of workflow history is 4
