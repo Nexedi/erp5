@@ -68,11 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getCashStatus() == \'to_sort\':\n
-  # in this case, resource do not change\n
-  return context.getSource()\n
-else:\n
-  return None\n
+            <value> <string>return None\n
 </string> </value>
         </item>
         <item>
@@ -123,8 +119,6 @@ else:\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>None</string>
                           </tuple>
                         </value>
