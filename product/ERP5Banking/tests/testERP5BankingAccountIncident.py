@@ -177,6 +177,12 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # open counter date
     self.openCounterDate(site=self.paris)
 
+  def stepCleanupObjects(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Cleanup account_incident_module after a sequence execution so that
+    stepCheckObjects can succeed.
+    """
+    self.account_incident_module.manage_delObjects(ids=[x for x in self.account_incident_module.objectIds()])
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
