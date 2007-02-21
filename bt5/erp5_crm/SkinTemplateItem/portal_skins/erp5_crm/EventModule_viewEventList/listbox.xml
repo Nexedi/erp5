@@ -492,8 +492,8 @@
                           <string>Incoming Letter</string>
                         </tuple>
                         <tuple>
-                          <string>Internal Request</string>
-                          <string>Internal Request</string>
+                          <string>Note</string>
+                          <string>Note</string>
                         </tuple>
                       </list>
                     </value>
