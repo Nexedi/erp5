@@ -154,12 +154,20 @@ class TestERP5BankingTravelerCheckSaleMixin:
     # in the source
     self.traveler_check_model = self.createTravelerCheckModel('traveler_check_model')
     self.createCheckbookReceptionWithTravelerCheck()
+    get_transaction().commit()
+    self.tic()
     self.checkItemsCreatedWithTravelerCheck()
+    get_transaction().commit()
+    self.tic()
     self.createCheckbookVaultTransferWithTravelerCheck()
+    get_transaction().commit()
+    self.tic()
     # open counter date and counter
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.destination_site)
     self.createCheckbookUsualCashTransferWithTravelerCheck()
+    get_transaction().commit()
+    self.tic()
 
   def stepCreateTravelerCheckLineList(self, sequence=None, sequence_list=None, **kwd):
     """
