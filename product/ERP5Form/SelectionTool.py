@@ -1177,8 +1177,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
               """
                 viewSearchRelatedDocumentDialog Wrapper
               """
-              LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw',
-                  0, kw)
+#               LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw',
+#                   0, kw)
               return self.viewSearchRelatedDocumentDialog(
                                    method_count, form_id,
                                    REQUEST=REQUEST, sub_index=sub_index, **kw)
@@ -1186,13 +1186,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
                     viewSearchRelatedDocumentDialogWrapper)
 
             klass = aq_base(self).__class__
-            if hasattr(klass, 'security'):
-              from Products.ERP5Type import Permissions as ERP5Permissions
-              klass.security.declareProtected(ERP5Permissions.View, name)
-            else:
-              # XXX security declaration always failed....
-              LOG('WARNING ERP5Form SelectionTool, security not defined on',
-                  0, klass.__name__)
+            security_property_id = '%s__roles__' % (name, )
+            # Declare method as public
+            setattr(klass, security_property_id, None)
+
             return getattr(self, name)
         else:
           return aq_base_name
