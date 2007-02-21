@@ -77,7 +77,7 @@ Differences to the stock implementation:\n
 \n
 *  if category is source_project, we look for destination_project\n
 \n
-* if category is group, we return not only the group, but also all its parents\n
+* if category not strict, we return not only the category, but also all its parents\n
   (unless we say it is strict)\n
 """\n
 \n
@@ -118,13 +118,13 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
         else:\n
           raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
       category_list.append(category_dict)\n
-      # if it is group, we go up the hierarchy (because if you work in group/a/b/c, chances are you \n
+      # if not strict, we go up the hierarchy (because if you work in group/a/b/c, chances are you \n
       # are working in group/a/b, too :)\n
-      if base_category == \'group\' and not strict:\n
+      if not strict:\n
         grouplist = category_value.split(\'/\')\n
         for i in range(1,len(grouplist)):\n
           cdict = category_dict.copy()\n
-          cdict[\'group\'] = \'/\'.join(grouplist[:-i])\n
+          cdict[base_category] = \'/\'.join(grouplist[:-i])\n
           category_list.append(cdict)\n
     except RuntimeError,e:\n
       context.log(str(e))\n
