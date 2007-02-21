@@ -99,7 +99,7 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>name=Base_cancel:method</td>\n
-  <td>Cancel</td> <!-- XXX \'Cancel\' is probably not appropriate here; see #265 -->\n
+  <td>Cancel Action</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
