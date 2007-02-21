@@ -73,12 +73,19 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 object = state_change.object\n
 \n
+transaction = state_change.object\n
 \n
 # use of the constraint\n
 vliste = object.checkConsistency()\n
 object.log(\'vliste\', vliste)\n
 if len(vliste) != 0:\n
   raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
+dest = object.getDestination()\n
+# check again that we are in the good accounting date\n
+if not transaction.Baobab_checkCounterDateOpen(site=dest, date=transaction.getStartDate()):\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
 \n
 if not \'encaisse_des_devises\' in object.getDestination():\n
   msg = Message(domain="ui", message="Wrong Destination Selected.")\n
@@ -139,9 +146,11 @@ if object_price != line_price:\n
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>object</string>
+                            <string>transaction</string>
                             <string>vliste</string>
                             <string>len</string>
                             <string>_getitem_</string>
+                            <string>dest</string>
                             <string>msg</string>
                             <string>validationFailed</string>
                             <string>object_price</string>

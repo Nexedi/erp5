@@ -48,6 +48,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>order</string>
                 <string>order_action</string>
               </tuple>

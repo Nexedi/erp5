@@ -84,6 +84,11 @@ if len(vliste) != 0:\n
 vault = transaction.getSource()\n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Monetary Issue Line\')\n
 \n
+# check again that we are in the good accounting date\n
+if not transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate()):\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
 total_price = transaction.getTotalPrice(portal_type=[\'Monetary Issue Line\',\'Cash Delivery Cell\'],fast=0)\n
@@ -159,9 +164,9 @@ elif resource <> 0 :\n
                             <string>_getitem_</string>
                             <string>vault</string>
                             <string>resource</string>
+                            <string>msg</string>
                             <string>amount</string>
                             <string>total_price</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

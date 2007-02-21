@@ -40,6 +40,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>plan</string>
                 <string>plan_action</string>
               </tuple>

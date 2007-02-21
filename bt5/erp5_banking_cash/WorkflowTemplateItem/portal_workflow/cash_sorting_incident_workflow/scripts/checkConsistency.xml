@@ -76,6 +76,12 @@ txn = state_change[\'object\']\n
 in_list = txn.objectValues(portal_type=\'Incoming Cash Sorting Incident Line\')\n
 out_list = txn.objectValues(portal_type=\'Outgoing Cash Sorting Incident Line\')\n
 \n
+# check again that we are in the good accounting date\n
+if not transaction.Baobab_checkCounterDateOpen():\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
 price = txn.getSourceTotalAssetPrice()\n
 in_price = txn.getTotalPrice(portal_type=[\'Incoming Cash Sorting Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 out_price = txn.getTotalPrice(portal_type=[\'Outgoing Cash Sorting Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
@@ -149,12 +155,13 @@ if len(out_list) !=0:\n
                             <string>_getattr_</string>
                             <string>in_list</string>
                             <string>out_list</string>
+                            <string>transaction</string>
+                            <string>msg</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>vault</string>
                             <string>len</string>
-                            <string>msg</string>
                             <string>resource</string>
                           </tuple>
                         </value>

@@ -76,6 +76,10 @@ from Products.ERP5Type.Message import Message\n
 ob = state_change[\'object\']\n
 state = ob.getSimulationState()\n
 \n
+if not transaction.Baobab_checkCounterDateOpen():\n
+  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+  raise ValidationFailed, (msg,)\n
+\n
 if  state == "planned":\n
   if len(ob.objectValues(portal_type=\'Exchanged Mutilated Banknote Line\')) == 0:\n
     msg = Message(domain = "ui", message="You must defined exchanged banknote line.")\n
@@ -147,8 +151,9 @@ elif state == "ordered":\n
                             <string>ob</string>
                             <string>_getattr_</string>
                             <string>state</string>
-                            <string>len</string>
+                            <string>transaction</string>
                             <string>msg</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
