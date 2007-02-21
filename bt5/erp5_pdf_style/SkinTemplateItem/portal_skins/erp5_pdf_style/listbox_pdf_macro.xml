@@ -69,15 +69,15 @@
                  editable_columns python:listbox.get_value(\'editable_columns\', REQUEST=request);\n
                  editable_fields python:dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                  selection python:here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
-                 is_domain_tree_mode python:selection.domain_tree_mode;\n
-                 is_report_tree_mode python:selection.report_tree_mode;" >\n
+                 is_domain_tree_mode selection/domain_tree_mode | nothing;\n
+                 is_report_tree_mode selection/report_tree_mode | nothing;" >\n
 \n
 \n
     <tal:block tal:condition="python: len(listboxline_list) > 1" >\n
 \n
-      <tal:block tal:condition="python: is_domain_tree_mode"\n
-                 tal:define="domain_list python: selection.getDomainList()">\n
-        <tal:block tal:condition="python: len(domain_list) > 0" >\n
+      <tal:block tal:condition="python: is_domain_tree_mode">\n
+        <tal:block tal:define="domain_list python: selection.getDomainList()"\n
+                   tal:condition="python: len(domain_list) > 0" >\n
         <table style="StandardTableWithGrid">\n
           <tr>\n
             <td tal:attributes="colwidth python:\'%.2fcm\' % float(frame_width)">\n
