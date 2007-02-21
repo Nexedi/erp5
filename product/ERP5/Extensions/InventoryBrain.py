@@ -160,70 +160,75 @@ class InventoryListBrain(ZSQLBrain):
       return ''
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
-    # XXX FIXME can catch to many exceptions
-    try:
-      if cname_id in ('getExplanationText', 'getExplanation', ):
-        o = self.getObject()
-        if o is not None:
-          if not getattr(o, 'isDelivery', 0):
-            explanation = o.getExplanationValue()
-          else:
-            # Additional inventory movements are catalogged in stock table
-            # with the inventory's uid. Then they are their own explanation.
-            explanation = o
-          if explanation is not None:
-            return '%s/%s/view' % (
-                    self.portal_url.getPortalObject().absolute_url(),
-                    explanation.getRelativeUrl())
+    """Returns the URL for column `cname_id`. Used by ListBox
+    """
+    if cname_id in ('getExplanationText', 'getExplanation', ):
+      o = self.getObject()
+      if o is not None:
+        if not getattr(o, 'isDelivery', 0):
+          explanation = o.getExplanationValue()
         else:
-          return ''
-      elif (self.resource_relative_url is not None):
-        # A resource is defined, so try to display the movement list
-        resource = self.portal_categories.unrestrictedTraverse(
-                                self.resource_relative_url)
-        form_name = 'Resource_viewMovementHistory'
-        query_kw = {
-          'variation_text': self.variation_text,
-          'selection_name': selection_name,
-          'selection_index': selection_index,
-          'domain_name': selection_name,
+          # Additional inventory movements are catalogged in stock table
+          # with the inventory's uid. Then they are their own explanation.
+          explanation = o
+        if explanation is not None:
+          return '%s/%s/view' % (
+                  self.portal_url.getPortalObject().absolute_url(),
+                  explanation.getRelativeUrl())
+      else:
+        return ''
+    elif getattr(self, 'resource_relative_url', None) is not None:
+      # A resource is defined, so try to display the movement list
+      resource = self.portal_categories.unrestrictedTraverse(
+                              self.resource_relative_url)
+      form_name = 'Resource_viewMovementHistory'
+      query_kw = {
+        'variation_text': self.variation_text,
+        'selection_name': selection_name,
+        'selection_index': selection_index,
+        'domain_name': selection_name,
+      }
+      # Add parameters to query_kw
+      query_kw_update = {}
+      if cname_id in ('getCurrentInventory', ):
+        query_kw_update = {
+          'simulation_state': list(self.getPortalCurrentInventoryStateList())
         }
-        # Add parameters to query_kw
-        query_kw_update = {}
-        if cname_id in ('getCurrentInventory', ):
-          query_kw_update = {
-            'simulation_state': list(self.getPortalCurrentInventoryStateList())
-          }
-        elif cname_id in ('getAvailableInventory', ):
-          query_kw_update = {
-            'simulation_state': \
-              list(self.getPortalReservedInventoryStateList()) + \
-              list(self.getPortalCurrentInventoryStateList())
-          }
-        elif cname_id in ('getFutureInventory', 'inventory', ):
-          query_kw_update = {
-            'simulation_state': \
-              list(self.getPortalFutureInventoryStateList()) + \
-              list(self.getPortalReservedInventoryStateList()) + \
-              list(self.getPortalCurrentInventoryStateList())
-          }
-        elif cname_id in ('getInventoryAtDate', ):
-          query_kw_update = {
-            'to_date': self.at_date,
-            'simulation_state': \
-              list(self.getPortalFutureInventoryStateList()) + \
-              list(self.getPortalReservedInventoryStateList())
-          }
-        query_kw.update(query_kw_update)
-        # Return result
-        return '%s/%s?%s&reset=1' % (
-          resource.absolute_url(),
-          form_name,
-          make_query(**query_kw))
-    except (AttributeError, KeyError), e:
-      LOG('InventoryListBrain', PROBLEM,
-        'exception caught in getListItemUrl', e)
-      return ''
+      elif cname_id in ('getAvailableInventory', ):
+        query_kw_update = {
+          'simulation_state': \
+            list(self.getPortalReservedInventoryStateList()) + \
+            list(self.getPortalCurrentInventoryStateList())
+        }
+      elif cname_id in ('getFutureInventory', 'inventory', ):
+        query_kw_update = {
+          'simulation_state': \
+            list(self.getPortalFutureInventoryStateList()) + \
+            list(self.getPortalReservedInventoryStateList()) + \
+            list(self.getPortalCurrentInventoryStateList())
+        }
+      elif cname_id in ('getInventoryAtDate', ):
+        query_kw_update = {
+          'to_date': self.at_date,
+          'simulation_state': \
+            list(self.getPortalFutureInventoryStateList()) + \
+            list(self.getPortalReservedInventoryStateList())
+        }
+      query_kw.update(query_kw_update)
+      return '%s/%s?%s&reset=1' % ( resource.absolute_url(),
+                                    form_name,
+                                    make_query(**query_kw) )
+
+    # default case, if it's a movement, return link to the explanation of this
+    # movement.
+    o = self.getObject()
+    if getattr(o, 'isMovement', 0):
+      explanation = o.getExplanationValue()
+      if explanation is not None:
+        return '%s/%s/view' % (
+                self.portal_url.getPortalObject().absolute_url(),
+                explanation.getRelativeUrl())
+    return ''
 
   def getAggregateListText(self):
     aggregate_list = self.Resource_zGetAggregateList(
