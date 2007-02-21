@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+N_ = context.Base_translateString\n
+\n
+listbox = request.get(\'listbox\')\n
+start_date = context.getStartDate()\n
+stop_date = context.getStopDate()\n
+tag = context.getPath() + \'_split\'\n
+\n
+split_and_defer = 0\n
+\n
+if listbox is not None:\n
+  context.updateAppliedRule("default_delivery_rule")\n
+  for line in listbox.values():\n
+      url = line[\'listbox_key\']\n
+      quantity = line[\'quantity\']\n
+      movement = context.restrictedTraverse(url)\n
+      movement.edit(quantity=str(quantity))\n
+      choice = line[\'choice\']\n
+      if choice == \'SplitAndDefer\':\n
+        split_and_defer = 1\n
+        context.portal_simulation.solveMovement(movement, None, "SplitAndDefer", \n
+                                                start_date=start_date, stop_date=stop_date, \n
+                                                activate_kw={\'tag\':tag})\n
+      elif choice == \'CopyToTarget\':\n
+        context.portal_simulation.solveMovement(movement, None,"CopyToTarget", activate_kw={\'tag\':tag})\n
+\n
+  context.activate(after_tag=tag).updateCausalityState()\n
+\n
+  if split_and_defer:\n
+    context_portal_type = context.getPortalType()\n
+    explanation_uid_list = [context.getUid()]\n
+    # Create delivery\n
+    if context_portal_type == \'Internal Packing List\':\n
+      delivery_builder = context.portal_deliveries.serp_internal_packing_list_builder\n
+    elif context_portal_type == \'Purchase Packing List\':\n
+      order = context.getCausalityValue()\n
+      explanation_uid_list.append(order.getUid())\n
+      delivery_builder = context.portal_deliveries.purchase_packing_list_builder\n
+\n
+    delivery_builder.activate(activity=\'SQLQueue\', after_tag=tag).build(explanation_uid=explanation_uid_list)\n
+   \n
+message = N_("${obj_portal_type} updated.", mapping={\'obj_portal_type\' : context.getTranslatedPortalType()})\n
+message = message.replace(\' \', \'+\')\n
+\n
+redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id, \n
+                               \'portal_status_message=%s\' % message)\n
+context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, dialog_id=\'\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>dialog_id</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>N_</string>
+                            <string>listbox</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>tag</string>
+                            <string>split_and_defer</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>url</string>
+                            <string>quantity</string>
+                            <string>movement</string>
+                            <string>str</string>
+                            <string>choice</string>
+                            <string>context_portal_type</string>
+                            <string>explanation_uid_list</string>
+                            <string>delivery_builder</string>
+                            <string>order</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AmortisationTransaction_doSolveActions</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
