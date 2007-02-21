@@ -746,7 +746,10 @@ class PatchedDateTimeWidget(DateTimeWidget):
         if not hasattr(field, 'sub_form'):
             field.sub_form = create_datetime_text_sub_form()
 
-        if value is None and field.get_value('default_now'):
+        # Is it still usefull to test the None value,
+        # as DateTimeField should be considerer as the other field
+        # and get an empty string as default value?
+        if value in (None, '') and field.get_value('default_now'):
             value = DateTime()
         year   = None
         month  = None
