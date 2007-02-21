@@ -475,7 +475,29 @@ class Movement(XMLObject, Amount):
       Returns the object explanation of this movement.
     """
     return self.getDeliveryValue()
-  
+ 
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanationTitle')
+  def getExplanationTitle(self, default=''):
+    """
+      Returns the title of the explanation of this movement.
+    """
+    explanation_value = self.getExplanationValue()
+    if explanation_value is not None:
+      return explanation_value.getTitle()
+    return default
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanationReference')
+  def getExplanationReference(self, default=''):
+    """
+      Returns the reference of the explanation of this movement.
+    """
+    explanation_value = self.getExplanationValue()
+    if explanation_value is not None:
+      return explanation_value.getReference()
+    return default
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getRootCausalityValueList')
   def getRootCausalityValueList(self):
