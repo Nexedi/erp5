@@ -322,36 +322,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Purchase Order Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -374,7 +345,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Task Item</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
@@ -491,10 +462,6 @@
                           <string>Task Line</string>
                           <string>Task Line</string>
                         </tuple>
-                        <tuple>
-                          <string>Task Report Line</string>
-                          <string>Task Report Line</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -515,36 +482,7 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Purchase Order Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -553,52 +491,18 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>Task_line_selection</string> </value>
+                    <value> <string>task_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Purchase Order Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -613,7 +517,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Task Items</string> </value>
+                    <value> <string>Task Lines</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
