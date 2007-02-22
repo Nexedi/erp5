@@ -286,7 +286,7 @@ class TestERP5BankingUsualCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       # check the source vault is usual_cash
-      self.assertEqual(cell.getBaobabSource(), self.usual_cash.getRelativeUrl())
+      self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is counter
       self.assertEqual(cell.getBaobabDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
