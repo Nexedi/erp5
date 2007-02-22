@@ -141,6 +141,8 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
 
 
 

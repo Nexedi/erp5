@@ -163,6 +163,8 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    # open counter date
+    self.openCounterDate(site=self.paris)
 
   def stepDeleteCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
     """
