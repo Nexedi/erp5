@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
 Core security script - defines the way to get security groups of the current user.\n
+\n
+WARNING: providing such script in erp5_dms could be dangerous\n
+if this conflicts with an existing production site which uses\n
+deprecated ERP5Type_asSecurityGroupIdList\n
 """\n
 \n
 return (\n
