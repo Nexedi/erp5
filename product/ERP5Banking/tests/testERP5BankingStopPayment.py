@@ -300,6 +300,9 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     self.assertEqual(self.simulation_tool.getCurrentInventory(
                      payment=self.bank_account_2.getRelativeUrl()
                      ,resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(
+                     payment=self.bank_account_2.getRelativeUrl()
+                     ,resource=self.currency_1.getRelativeUrl()), 80000)
     self.assertEqual(self.simulation_tool.getFutureInventory(
                      payment=self.bank_account_2.getRelativeUrl()
                      ,resource=self.currency_1.getRelativeUrl()), 80000)
