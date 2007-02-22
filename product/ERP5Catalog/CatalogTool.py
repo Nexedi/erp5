@@ -45,7 +45,7 @@ from Products.CMFCore.Expression import Expression
 from Products.PageTemplates.Expressions import getEngine
 from MethodObject import Method
 
-import os, time, urllib
+import os, time, urllib, warnings
 from zLOG import LOG
 
 SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
@@ -69,7 +69,7 @@ try:
   from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
 except ImportError:
   pass
-    
+
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
   (NuxUserGroup, ERP5Security, or None if anything else).
@@ -139,7 +139,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             # trying to reduce the number of security definitions
             # However, this could be a bad idea if we start to use Owner role
             # as a kind of Assignee and if we need it for worklists.
-            if role != 'Owner': 
+            if role != 'Owner':
               if withnuxgroups:
                 allowed[user + ':' + role] = 1
               else:
@@ -237,7 +237,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # Make this the default.
       self.default_sql_catalog_id = config_id
-     
+
     security.declareProtected( 'Import/Export objects', 'exportSQLMethods' )
     def exportSQLMethods(self, sql_catalog_id=None, config_id='erp5'):
       """
@@ -258,7 +258,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                          'z_create_record', 'z_related_security', 'z_delete_recorded_object_list',
                          'z_reserve_uid', 'z_getitem_by_path', 'z_show_columns', 'z_getitem_by_path',
                          'z_show_tables', 'z_getitem_by_uid', 'z_unique_values', 'z_produce_reserved_uid_list',)
-    
+
       msg = ''
       for id in catalog.objectIds(spec=('Z SQL Method',)):
         if id in common_sql_list:
@@ -275,7 +275,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           f.write(text)
         finally:
           f.close()
-          
+
       properties = self.manage_catalogExportProperties(sql_catalog_id=sql_catalog_id)
       name = os.path.join(config_sql_dir, 'properties.xml')
       msg += 'Writing %s\n' % (name,)
@@ -284,9 +284,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         f.write(properties)
       finally:
         f.close()
-        
+
       return msg
-        
+
     def _listAllowedRolesAndUsers(self, user):
       security_product = getSecurityProduct(self.acl_users)
       if security_product == SECURITY_USING_PAS:
@@ -425,13 +425,32 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers
 
+    security.declarePrivate('getSecurityUid')
+    def getSecurityUid(self, **kw):
+      """
+      Return list of security oid for given roles list
+      """
+      catalog = self.getSQLCatalog()
+      method = getattr(catalog, catalog.sql_search_security, '')
+      if method in ('', None):
+        # XXX old way, should not be used anylonger
+        warnings.warn("The usage of allowedRolesAndUsers is deprecated.\n"
+                      "Please update your business template erp5_mysql_innodb.",
+                      DeprecationWarning)
+        kw['allowedRolesAndUsers'] = self.getAllowedRolesAndUsers(**kw)
+      else:
+        allowedRolesAndUsers = ["'%s'" % (role, ) for role in self.getAllowedRolesAndUsers(**kw)]
+        security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+        kw['security_uid'] = security_uid_list
+      return kw
+
     # searchResults has inherited security assertions.
     def searchResults(self, REQUEST=None, **kw):
         """
             Calls ZCatalog.searchResults with extra arguments that
             limit the results to what the user is allowed to see.
         """
-        kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
+        kw = self.getSecurityUid(**kw)
 
         if not _checkPermission(
             CMFCorePermissions.AccessInactivePortalContent, self ):
@@ -457,11 +476,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             Calls ZCatalog.countResults with extra arguments that
             limit the results to what the user is allowed to see.
         """
-        kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
-        
-        # Forget about permissions in statistics
-        # (we should not count lines more than once with statistic expressions)
-        if kw.has_key('select_expression'): del kw[ 'allowedRolesAndUsers' ]
+        kw = self.getSecurityUid(**kw)
 
         # XXX This needs to be set again
         #if not _checkPermission(
@@ -472,7 +487,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         return ZCatalog.countResults(self, REQUEST, **kw)
-    
+
     security.declarePrivate('unrestrictedCountResults')
     def unrestrictedCountResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.countResults directly without restrictions.
@@ -664,7 +679,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             base_category_id = name[len(DYNAMIC_METHOD_NAME):]
             method = RelatedBaseCategory(base_category_id)
-          setattr(self.__class__, name, 
+          setattr(self.__class__, name,
                   method)
           klass = aq_base(self).__class__
           if hasattr(klass, 'security'):
