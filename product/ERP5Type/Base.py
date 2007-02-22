@@ -54,6 +54,7 @@ from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
+from Products.ERP5Type.Log import log as unrestrictedLog
 
 from ZopePatch import ERP5PropertyManager
 
@@ -2208,16 +2209,6 @@ class Base( CopyContainer,
     #  LOG('Base.setBinaryData',0,'data for : %s' % str(self))
     #  self.data = data
 
-  security.declarePublic('commitTransaction')
-  def commitTransaction(self):
-    # Commit a zope transaction (to reduce locks)
-    get_transaction().commit()
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'abortTransaction')
-  def abortTransaction(self):
-    # Abort a zope transaction (to reduce locks)
-    get_transaction().abort()
-
   # Hash method
   def __hash__(self):
     return hash(self.getUid())
@@ -2393,19 +2384,10 @@ class Base( CopyContainer,
   security.declarePublic('log')
   def log(self, description, content='', level=INFO):
     """Put a log message """
-    if content=='': # allow for content only while keeping interface
-        description,content=content,description
-    st=traceback.extract_stack()
-    head=[]
-    for frame in st[-2:-6:-1]: # assume no deep nesting in Script (Python)
-        if frame[3] is not None and frame[3].startswith('self.log'): # called from class
-            head.append('%s, %d' % (frame[2],frame[1]))
-            break
-        if frame[0]=='Script (Python)': # does anybody log from ZPT or dtml?
-            head.append('%s, %d' % (frame[2],frame[1]))
-    head=' -> '.join(head)
-    description='%s: %s' % (head,description)
-    LOG(description, level, content)
+    warnings.warn("The usage of Base.log is deprecated.\n"
+                  "Please use Products.ERP5Type.Log.log instead.",
+                  DeprecationWarning)
+    unrestrictedLog(description, content = content, level = leve)
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility
