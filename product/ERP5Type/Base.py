@@ -2387,7 +2387,7 @@ class Base( CopyContainer,
     warnings.warn("The usage of Base.log is deprecated.\n"
                   "Please use Products.ERP5Type.Log.log instead.",
                   DeprecationWarning)
-    unrestrictedLog(description, content = content, level = leve)
+    unrestrictedLog(description, content = content, level = level)
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility
