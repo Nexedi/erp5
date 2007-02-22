@@ -47,6 +47,8 @@ from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import HTTPRequest
+from Products.ERP5Type.patches import Connection
+from Products.ERP5Type.patches import copy_reg_patch
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
