@@ -644,6 +644,20 @@ from unittest import _makeLoader, TestSuite
 def dummy_makeSuite(testCaseClass, prefix='dummy_test', sortUsing=cmp, suiteClass=TestSuite):
   return _makeLoader(prefix, sortUsing, suiteClass).loadTestsFromTestCase(testCaseClass)
 
+def dummy_setUp(self):
+  '''
+  This one is overloaded so that it dos not execute beforeSetUp and afterSetUp
+  from the original tests, which would write to the FileStorage when --save is
+  enabled
+  '''
+  try:
+      self.app = self._app()
+      self.portal = self._portal()
+      self._setup()
+  except:
+      self._clear()
+      raise
+
 def optimize():
   '''Significantly reduces portal creation time.'''
   def __init__(self, text):

@@ -169,9 +169,13 @@ def runUnitTestList(test_list) :
   sys.path.insert(0, tests_framework_home)
 
   # override unittest.makeSuite to skip all tests in save mode
+  # and PortalTestCase.setUp to skip beforeSetUp and afterSetUp
   if os.environ.get('erp5_save_data_fs'):
-    from Products.ERP5Type.tests.ERP5TypeTestCase import dummy_makeSuite
+    from Products.ERP5Type.tests.ERP5TypeTestCase import \
+        dummy_makeSuite, dummy_setUp
+    from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
     unittest.makeSuite = dummy_makeSuite
+    PortalTestCase.setUp = dummy_setUp
 
   filtered_tests_class_names = 0
   for test in test_list:
