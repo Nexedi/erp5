@@ -98,6 +98,7 @@ erp5_mysql_innodb/z_related_uid_or_parent_uid
 erp5_mysql_innodb/z_reserve_uid
 erp5_mysql_innodb/z_search_folder
 erp5_mysql_innodb/z_search_results
+erp5_mysql_innodb/z_search_security
 erp5_mysql_innodb/z_show_category_columns
 erp5_mysql_innodb/z_show_columns
 erp5_mysql_innodb/z_show_tables
