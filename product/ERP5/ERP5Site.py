@@ -29,12 +29,14 @@ from Products.ERP5Type import allowClassTool
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
+from Products.ERP5Type.Log import log as unrestrictedLog
 
 import ERP5Defaults
 
 from zLOG import LOG, INFO
 from string import join
 import os, traceback
+import warnings
 MARKER = []
 
 
@@ -924,21 +926,12 @@ class ERP5Site(FolderMixIn, CMFSite):
       new_instance.immediateReindexObject()
     return new_instance
 
-  def log(self,description,content=''):
-    """
-    Put a log message
-    """
-    if content=='': # allow for content only while keeping interface
-        description,content=content,description
-    st=traceback.extract_stack()
-    head=[]
-    for frame in st[-2:-6:-1]: # assume no deep nesting in Script (Python)
-        if frame[0]=='Script (Python)': # does anybody log from ZPT or dtml?
-            head.append('%s, %d' % (frame[2],frame[1]))
-    head=' -> '.join(head)
-    description='%s: %s' % (head,description)
-    LOG(description, 0, content)
-
+  def log(self, description, content='', level=INFO):
+    """Put a log message """
+    warnings.warn("The usage of ERP5Site.log is deprecated.\n"
+                  "Please use Products.ERP5Type.Log.log instead.",
+                  DeprecationWarning)
+    unrestrictedLog(description, content = content, level = level)
 
 Globals.InitializeClass(ERP5Site)
 
