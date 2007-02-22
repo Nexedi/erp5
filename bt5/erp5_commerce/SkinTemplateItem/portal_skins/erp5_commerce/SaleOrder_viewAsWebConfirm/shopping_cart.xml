@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>adminToolbox</string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -265,11 +265,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-&nbsp;
-
-]]></string> </value>
+                    <value> <string>Shopping Cart</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

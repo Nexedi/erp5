@@ -52,45 +52,57 @@
 \n
 <tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">\n
   <tal:block tal:condition="isAnon">\n
-   <p class="article">You\'re not logged in.</p>\n
-   <p class="article">I have an account:</p>\n
-   <form action="WebSite_login">\n
+   <p class="article">\n
+     <span tal:replace="python: here.Base_translateString(\'You are not logged in\')"/>\n
+   </p>\n
+   <p class="article">\n
+     <a class="articlelink" href="product_module/WebSite_joinForm">\n
+       &#149; <span tal:replace="python: here.Base_translateString(\'I want to create an account\')"/>\n
+     </a>\n
+   </p>\n
+\n
      <table>\n
        <tr>\n
-         <td class="article">Username:</td>\n
+         <td class="article"><span tal:replace="python: here.Base_translateString(\'Username\')"/>:</td>\n
          <td><input name="__ac_name" size="10" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></td>\n
        </tr>\n
        <tr>\n
-         <td class="article">Password:</td>\n
-         <td><input type="password" name="__ac_password" size="10"/></td>\n
+         <td class="article"><span tal:replace="python: here.Base_translateString(\'Password\')"/>:</td>\n
+         <td><input type="password" name="__ac_password" size="10" class="input"/></td>\n
        </tr>\n
        <tr>\n
          <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>\n
              <input type="hidden" name="__ac_persistent" value="1"/>\n
-             <input type="submit" value="Login" />\n
+             <input type="submit" value="Login" name="WebSite_login:method"/>\n
          </td>\n
        </tr>\n
      </table>\n
-   </form>\n
-   \n
-   <a class="articlelink" href="WebSite_joinForm"> I want to create an account</a><br/>\n
-\n
-  </tal:block>\n
+   </tal:block>\n
 \n
   <tal:block tal:condition="not: isAnon"\n
              tal:define="customer here/SaleOrder_getShoppingCartCustomer;\n
                          website here/getWebSiteValue">\n
 \n
-    <p class="article">Hello, <span tal:replace="customer/getTitle"/></p>\n
+    <p class="article">\n
+    <b><span tal:replace="python: here.Base_translateString(\'Hello\')"/>, <span tal:replace="customer/getTitle"/></b>\n
+    </p>\n
     <a class="articlelink" \n
-      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' %website.absolute_url()">My orders</a>\n
+      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' %website.sale_order_module.absolute_url()">\n
+      <span tal:replace="python: here.Base_translateString(\'My Orders\')"/>\n
+    </a> &nbsp;\n
     <a class="articlelink" \n
-       tal:attributes="href python: \'%s/%s/Person_viewAsWeb\' %(website.absolute_url(), customer.getRelativeUrl())"> My account </a> \n
+       tal:attributes="href python: \'%s/%s/view?editable_mode:int=1\' %(website.absolute_url(), customer.getRelativeUrl())"> \n
+       <span tal:replace="python: here.Base_translateString(\'My Account\')"/>\n
+    </a> &nbsp;\n
     <a class="articlelink" \n
-      tal:attributes="href python: \'%s/WebSite_logout\' %website.absolute_url()"> Log out</a><br/>\n
+      tal:attributes="href python: \'%s/WebSite_logout\' %website.absolute_url()">\n
+      <span tal:replace="python: here.Base_translateString(\'Logout\')"/>\n
+    </a>\n
+    <br/>\n
   </tal:block>\n
 \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

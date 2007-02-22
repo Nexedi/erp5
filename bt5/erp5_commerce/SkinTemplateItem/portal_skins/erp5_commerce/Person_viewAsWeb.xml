@@ -94,7 +94,6 @@
                         <string>my_reference</string>
                         <string>my_password</string>
                         <string>password_confirm</string>
-                        <string>submit</string>
                       </list>
                     </value>
                 </item>
@@ -142,7 +141,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>web_form_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

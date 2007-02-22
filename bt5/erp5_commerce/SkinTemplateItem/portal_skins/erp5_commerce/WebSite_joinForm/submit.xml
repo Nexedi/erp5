@@ -130,7 +130,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Submit</string> </value>
+                    <value> <string>Create</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

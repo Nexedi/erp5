@@ -50,7 +50,9 @@
 
 <tal:block tal:define="base_url context/absolute_url;\n
                        TPE python: options.get(\'TPE\', \'my_merchant_key_location\');\n
-                       montant python: options.get(\'total\', here.SaleOrder_getShoppingCartTotalPrice(include_currency=True));\n
+                       montant python: options.get(\'total\', here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,\n
+                                                                                                     include_taxes=True,\n
+                                                                                                     include_currency=True));\n
                        reference python: options.get(\'reference\', here.SaleOrder_getShoppingCartId());                      \n
                        url_retour  python: options.get(\'shop_url\', \'http://www.my-shop.com\');\n
                        url_retour_ok python: \'%s/%s?payment_successful=1&portal_status_message=Payment accepted.\' \n
@@ -61,7 +63,7 @@
                                                 options.get(\'url_return_err\', \'Base_externalPaymentHandler\'));\n
                        langue python: options.get(\'language\', \'en\');\n
                        code_societe python: options.get(\'code_societe\', \'my_shop_code\');\n
-                       texte_bouton python: options.get(\'text_button\', \'Secure Online Payment\');\n
+                       texte_bouton python: options.get(\'text_button\', \'Secure Online Payment of %s\' %montant);\n
                        texte_libre python: options.get(\'text_free\', \'\');">\n
 \n
   <span tal:replace="structure python: here.payment.CreerFormulaireCM(TPE = TPE,\n

@@ -211,7 +211,7 @@ translateString = context.Base_translateString\n
 if isAnon:\n
   ## create first an account for user\n
   context.Base_redirect(\'WebSite_joinForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please use it to login.", mapping = dict())})\n
+                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please login.", mapping = dict())})\n
   return\n
 else:\n
   ## redirect to final confirmation form\n

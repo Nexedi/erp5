@@ -330,24 +330,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>getTotalQuantity</string>
-                          <string>Total Quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>SaleOrder_getFormattedTotalPrice</string>
                           <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>getPriceCurrencyTitle</string>
-                          <string>Currency</string>
                         </tuple>
                       </list>
                     </value>
@@ -358,7 +350,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -511,24 +503,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>getTotalQuantity</string>
-                          <string>Total Quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>SaleOrder_getFormattedTotalPrice</string>
                           <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>getPriceCurrencyTitle</string>
-                          <string>Currency</string>
                         </tuple>
                       </list>
                     </value>

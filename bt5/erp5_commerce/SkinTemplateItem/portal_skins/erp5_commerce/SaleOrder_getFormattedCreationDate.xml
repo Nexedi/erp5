@@ -68,43 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.Formulator.Errors import FormValidationError\n
-\n
-request = context.REQUEST\n
-form_kw = request.form\n
-translateString = context.Base_translateString\n
-form = context.Person_viewAsWeb\n
-customer = context.SaleOrder_getShoppingCartCustomer()\n
-\n
-## extract customer details\n
-person_kw = {}\n
-field_prefix = \'field_my_\'\n
-for key in form_kw.keys():\n
-  if key.startswith(field_prefix):\n
-    person_kw[key.replace(field_prefix, \'\')] = form_kw[key]\n
-\n
-## validate form to request\n
-try:\n
-  kw = form.validate_all_to_request(request)\n
-  validated = True\n
-except FormValidationError, validation_errors:\n
-  validated = False\n
-\n
-if validated == False:\n
-  context.REQUEST.set(\'field_errors\', form.ErrorFields(validation_errors))\n
-  return form(validation_errors)\n
-\n
-## if pasword field is empty remove it\n
-if person_kw[\'password\'].strip()==\'\':\n
-  person_kw.pop(\'password\', None)\n
-  person_kw.pop(\'password_confirm\', None)\n
-\n
-## edit customer\n
-customer.edit(**person_kw)\n
-\n
-context.Base_redirect(\'Person_viewAsWeb\', \\\n
-                      keep_items={\'portal_status_message\': translateString("Your account was changed.", mapping = dict()),\n
-                                 })\n
+            <value> <string>creation_date = context.getCreationDate()\n
+return creation_date.strftime(\'%a, %b %Y %H:%M %p\')\n
 </string> </value>
         </item>
         <item>
@@ -122,15 +87,6 @@ context.Base_redirect(\'Person_viewAsWeb\', \\\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,29 +112,9 @@ context.Base_redirect(\'Person_viewAsWeb\', \\\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.Formulator.Errors</string>
-                            <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>form_kw</string>
-                            <string>translateString</string>
-                            <string>form</string>
-                            <string>customer</string>
-                            <string>person_kw</string>
-                            <string>field_prefix</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>kw</string>
-                            <string>True</string>
-                            <string>validated</string>
-                            <string>validation_errors</string>
-                            <string>False</string>
-                            <string>None</string>
-                            <string>_apply_</string>
-                            <string>dict</string>
+                            <string>creation_date</string>
                           </tuple>
                         </value>
                     </item>
@@ -195,11 +131,11 @@ context.Base_redirect(\'Person_viewAsWeb\', \\\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_editUserAccount</string> </value>
+            <value> <string>SaleOrder_getFormattedCreationDate</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Edit user account</string> </value>
+            <value> <string>Format creation date</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

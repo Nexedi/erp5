@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>form_label</string> </value>
+            <value> <string>form_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -106,13 +106,13 @@
               <dictionary>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<h1> My Order </h1>
+<h2> Register your new account </h2>
 
 ]]></string> </value>
                 </item>
@@ -138,11 +138,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-&nbsp;
-
-]]></string> </value>
+                    <value> <string>Title</string> </value>
                 </item>
               </dictionary>
             </value>

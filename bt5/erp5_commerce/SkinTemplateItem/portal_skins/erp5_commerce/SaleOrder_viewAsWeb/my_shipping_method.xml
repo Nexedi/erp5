@@ -251,15 +251,11 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-&nbsp;
-
-]]></string> </value>
+                    <value> <string>Shipping Service</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -308,7 +304,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not here.SaleOrder_isShippingRequired()</string> </value>
+            <value> <string>python: not here.SaleOrder_isShippingRequired() or here.SaleOrder_isShoppingCartEmpty()</string> </value>
         </item>
       </dictionary>
     </pickle>

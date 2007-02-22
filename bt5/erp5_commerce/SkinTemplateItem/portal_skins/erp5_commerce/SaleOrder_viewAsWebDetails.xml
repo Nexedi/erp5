@@ -98,8 +98,7 @@
                     <value>
                       <list>
                         <string>total_price</string>
-                        <string>my_price_currency</string>
-                        <string>my_creation_date</string>
+                        <string>creation_date</string>
                       </list>
                     </value>
                 </item>

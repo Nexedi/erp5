@@ -48,30 +48,18 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;">\n
+<tal:block tal:define="discount_info here/Person_getApplicableDiscountInformation;">\n
+\n
   <h2>\n
-    <span tal:replace="python: here.Base_translateString(\'Shipping\')"/>\n
+    <span tal:replace="python: here.Base_translateString(\'Discounts\')"/>\n
   </h2>\n
 \n
-  <tal:block tal:condition="python: shipping is None">\n
-    <h3> <span tal:replace="python: here.Base_translateString(\'You have not selected shipping\')"/></h3>\n
-    <p> \n
-      <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
-      <a href="SaleOrder_viewAsWeb">here</a>.\n
-    </p>\n
-  </tal:block>\n
+  <p tal:condition="python: discount_info is not None"> \n
+    <!-- Render discount information -->\n
+  </p>\n
 \n
-  <tal:block tal:condition="python: shipping is not None"\n
-             tal:define="shipping_obj python: here.restrictedTraverse(shipping);">\n
-    <p>\n
-      <span tal:replace="shipping_obj/getTitle"/> : \n
-      <b>\n
-        <span tal:replace="shipping_obj/getPrice"/>\n
-        <span tal:replace="python: here.SaleOrder_getShoppingCartDefaultCurrency().getTitle()"/>\n
-      </b>\n
-    </p>\n
-  </tal:block>\n
-  \n
+  <p tal:condition="python: discount_info is None">No discounts.</p>\n
+\n
 </tal:block>\n
 
 
@@ -87,11 +75,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewShippingRenderer</string> </value>
+            <value> <string>SaleOrder_viewDiscountsRenderer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Shipping method custom renderer</string> </value>
+            <value> <string>Discounts custom renderer</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -51,7 +51,7 @@
 <tal:block tal:define="customer here/SaleOrder_getShoppingCartCustomer">\n
 \n
   <h2>Customer</h2>\n
-  <br/>\n
+\n
   <table>\n
     <tr>\n
       <td>Name:</td>\n

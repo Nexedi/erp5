@@ -204,49 +204,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Document import newTempOrderLine\n
-\n
-request = context.REQUEST\n
-translateString = context.Base_translateString \n
-quantity = field_my_buy_quantity\n
-shipping_method =  field_my_shipping_method\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping = True)\n
-shopping_cart_products_items = filter(lambda x: x.getId()!=\'shipping_method\', shopping_cart_items)\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-\n
-## when we have one item in shoppping cart we get \n
-## quantity as a string rather as a list\n
-if isinstance(quantity, str):\n
-  quantity = [quantity]\n
-\n
-counter = 0\n
-for order_line in shopping_cart_products_items:\n
-  new_quantity = int(quantity[counter])\n
-  if new_quantity>=1:\n
-    order_line.setQuantity(new_quantity)\n
-  else:\n
-    ## remove it from shopping cart\n
-    shopping_cart.manage_delObjects(order_line.getId())\n
-  counter += 1\n
-\n
-## handle shipping\n
-if shipping_method is not None:\n
-  shipping = context.getPortalObject().restrictedTraverse(shipping_method)\n
-  order_line = getattr(shopping_cart, \'shipping_method\', None)\n
-  if order_line is None:\n
-    ## create new shipping method order line\n
-    order_line = shopping_cart.newContent(id=\'shipping_method\', portal_type=\'Sale Order Line\')\n
-  ## .. and update it\n
-  order_line.setResource(shipping.getRelativeUrl())\n
-  order_line.setQuantity(1)\n
-\n
-context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
-                       keep_items={\'portal_status_message\': translateString("Your cart was successfuly updated.", mapping = dict())})\n
-
-
-]]></string> </value>
+            <value> <string>\'\'\' This script will find applicable taxes for customer based on his/hers location for example.\n
+    - B2B in EU in same country, tax \n
+    - B2B in EU in different country, no tax \n
+    - B2B and B2P from EU to outside EU, no tax \n
+    - B2P in EU, tax\n
+\'\'\'\n
+#customer = context.SaleOrder_getShoppingCartCustomer()\n
+return {context.Base_translateString(\'VAT\'): 20.0,}\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -262,7 +228,7 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_my_buy_quantity=None, field_my_shipping_method=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -291,39 +257,14 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>field_my_buy_quantity</string>
-                            <string>field_my_shipping_method</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOrderLine</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>translateString</string>
-                            <string>quantity</string>
-                            <string>shipping_method</string>
-                            <string>True</string>
-                            <string>shopping_cart_items</string>
-                            <string>filter</string>
-                            <string>shopping_cart_products_items</string>
-                            <string>shopping_cart</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>counter</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
-                            <string>int</string>
-                            <string>_getitem_</string>
-                            <string>new_quantity</string>
-                            <string>None</string>
-                            <string>shipping</string>
-                            <string>getattr</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -335,19 +276,16 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_editShoppingCart</string> </value>
+            <value> <string>Person_getApplicableTaxList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update shopping cart</string> </value>
+            <value> <string>Get applicable tax information</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

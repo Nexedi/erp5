@@ -88,7 +88,7 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>Title</string>
+                        <string>form_title</string>
                         <string>your_first_name</string>
                         <string>your_last_name</string>
                         <string>your_default_email_text</string>

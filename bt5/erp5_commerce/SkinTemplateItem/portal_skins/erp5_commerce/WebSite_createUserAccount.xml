@@ -138,7 +138,6 @@ context.Base_redirect(\'WebSite_login\', \\\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>

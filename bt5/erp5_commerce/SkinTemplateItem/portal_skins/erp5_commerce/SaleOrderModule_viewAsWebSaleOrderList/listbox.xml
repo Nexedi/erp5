@@ -334,16 +334,12 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>SaleOrder_getFormattedTotalPrice</string>
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>getPriceCurrencyTitle</string>
-                          <string>Currency</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Date</string>
+                          <string>SaleOrder_getFormattedCreationDate</string>
+                          <string>Order Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -354,7 +350,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -373,36 +369,7 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>source_section</string>
-                          <string>Source Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>order</string>
-                          <string>Order type</string>
-                        </tuple>
-                        <tuple>
-                          <string>origin</string>
-                          <string>Origin</string>
-                        </tuple>
-                        <tuple>
-                          <string>incoterm</string>
-                          <string>Incoterm</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_mode</string>
-                          <string>Delivery Mode</string>
-                        </tuple>
-                        <tuple>
-                          <string>segmentation</string>
-                          <string>Segmentation</string>
-                        </tuple>
-                        <tuple>
-                          <string>group</string>
-                          <string>Group</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -475,36 +442,7 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>source_section</string>
-                          <string>Source Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>order</string>
-                          <string>Order type</string>
-                        </tuple>
-                        <tuple>
-                          <string>origin</string>
-                          <string>Origin</string>
-                        </tuple>
-                        <tuple>
-                          <string>incoterm</string>
-                          <string>Incoterm</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_mode</string>
-                          <string>Delivery Mode</string>
-                        </tuple>
-                        <tuple>
-                          <string>segmentation</string>
-                          <string>Segmentation</string>
-                        </tuple>
-                        <tuple>
-                          <string>group</string>
-                          <string>Group</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -535,7 +473,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                       </list>
                     </value>
@@ -549,11 +487,11 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>SaleOrder_getFormattedTotalPrice</string>
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>creation_date</string>
+                          <string>SaleOrder_getFormattedCreationDate</string>
                           <string>Date</string>
                         </tuple>
                       </list>
@@ -578,7 +516,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>creation_date</string>
+                          <string>SaleOrder_getFormattedCreationDate</string>
                           <string>Date</string>
                         </tuple>
                       </list>

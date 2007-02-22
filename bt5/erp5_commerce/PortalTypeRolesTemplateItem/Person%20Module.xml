@@ -1,5 +1,5 @@
 <type_roles>
-  <role id='Auditor'>
+  <role id='Author'>
    <property id='title'>Customer</property>
    <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>

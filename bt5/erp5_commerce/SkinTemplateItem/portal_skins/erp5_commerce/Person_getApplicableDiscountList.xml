@@ -23,6 +23,142 @@
             <value> <int>3</int> </value>
         </item>
         <item>
+            <key> <string>_Change_Python_Scripts_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_bindings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_cache_settings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_permissions_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_proxy_roles_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_WebDAV_Locks_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_properties_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Take_ownership_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Undo_changes_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_History_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_management_screens_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Lock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Unlock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
@@ -68,25 +204,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Calculate total price of temporary RAM based Sale Order. """\n
-total = 0.0\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping)\n
-for order_line in shopping_cart_items:\n
-  resource = context.restrictedTraverse(order_line.getResource())\n
-  total += resource.getPrice() * order_line.getQuantity()\n
-\n
-# XXX: CHECK if we have to include taxes on shipping service\n
-if include_taxes:\n
-  tax_info = context.Person_getApplicableTaxList()\n
-  if tax_info is not None:\n
-    for tax_name, tax_percent in tax_info.items():\n
-      total += total*(tax_percent/100)\n
-    \n
-if include_currency:\n
-  currency = context.SaleOrder_getShoppingCartDefaultCurrency()\n
-  return \'%s %s\' %(total, currency.getTitle())\n
-else:\n
-  return str(total)\n
+            <value> <string>\'\'\' This script is a sceleton for implementing discounts per customer basis.\n
+    Because it\'s specific for every shop it needs to be implemented accordingly. \n
+    See also SaleOrder_viewDiscountRenderer.    \n
+\'\'\'\n
+#customer = context.SaleOrder_getShoppingCartCustomer()\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -103,12 +226,13 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_shipping=False, include_taxes=False, include_currency = False</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -131,28 +255,13 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>include_shipping</string>
-                            <string>include_taxes</string>
-                            <string>include_currency</string>
-                            <string>total</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>shopping_cart_items</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
-                            <string>resource</string>
-                            <string>tax_info</string>
                             <string>None</string>
-                            <string>tax_name</string>
-                            <string>tax_percent</string>
-                            <string>currency</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -164,20 +273,16 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-                <int>0</int>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartTotalPrice</string> </value>
+            <value> <string>Person_getApplicableDiscountList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Calculate total price for items in shopping cart</string> </value>
+            <value> <string>Get applicable discount information</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

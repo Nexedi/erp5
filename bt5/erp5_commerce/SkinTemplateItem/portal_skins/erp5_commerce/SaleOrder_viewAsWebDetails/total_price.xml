@@ -149,6 +149,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -251,7 +259,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice()</string> </value>
+            <value> <string>here/SaleOrder_getFormattedTotalPrice</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -88,9 +88,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>form_label</string>
                         <string>shopping_cart</string>
+                        <string>discounts</string>
                         <string>shipping</string>
+                        <string>taxes</string>
                         <string>customer</string>
                         <string>submit</string>
                         <string>fake_payment</string>

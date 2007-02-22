@@ -48,30 +48,33 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;">\n
+<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
+                       tax_info here/Person_getApplicableTaxList;\n
+                       total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True, \n
+                                                                                    include_taxes=True,\n
+                                                                                    include_currency=True);">\n
   <h2>\n
-    <span tal:replace="python: here.Base_translateString(\'Shipping\')"/>\n
+    <span tal:replace="python: here.Base_translateString(\'Taxes\')"/>\n
   </h2>\n
 \n
-  <tal:block tal:condition="python: shipping is None">\n
-    <h3> <span tal:replace="python: here.Base_translateString(\'You have not selected shipping\')"/></h3>\n
-    <p> \n
-      <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
-      <a href="SaleOrder_viewAsWeb">here</a>.\n
-    </p>\n
-  </tal:block>\n
-\n
-  <tal:block tal:condition="python: shipping is not None"\n
-             tal:define="shipping_obj python: here.restrictedTraverse(shipping);">\n
-    <p>\n
-      <span tal:replace="shipping_obj/getTitle"/> : \n
+    <p tal:condition="python: tax_info is not None">\n
+      <span tal:replace="python: here.Base_translateString(\'For your location the following taxes are applicable\')"/> :\n
       <b>\n
-        <span tal:replace="shipping_obj/getPrice"/>\n
-        <span tal:replace="python: here.SaleOrder_getShoppingCartDefaultCurrency().getTitle()"/>\n
+        <tal:block tal:repeat="tax_name python: tax_info.keys()">\n
+           <li tal:content="python: \'%s (%s %s)\' %(tax_name, tax_info[tax_name], \'%\')">item </li>\n
+        </tal:block>\n
       </b>\n
     </p>\n
-  </tal:block>\n
-  \n
+\n
+    <p tal:condition="python: tax_info is None"> \n
+      <span tal:replace="python: here.Base_translateString(\'You do not have to pay any taxes.\')"/>  \n
+    </p>\n
+\n
+    <p tal:condition="python: tax_info is not None and shipping is not None"> \n
+      <span tal:replace="python: here.Base_translateString(\'Total cost of order (including shipping and taxes)\')"/> :\n
+      <b tal:content="total_price"/>\n
+    </p>\n
+\n
 </tal:block>\n
 
 
@@ -87,11 +90,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewShippingRenderer</string> </value>
+            <value> <string>SaleOrder_viewTaxesRenderer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Shipping method custom renderer</string> </value>
+            <value> <string>Taxes custom renderer</string> </value>
         </item>
       </dictionary>
     </pickle>

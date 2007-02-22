@@ -160,11 +160,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-&nbsp;
-
-]]></string> </value>
+                    <value> <string>Fake Payment</string> </value>
                 </item>
               </dictionary>
             </value>

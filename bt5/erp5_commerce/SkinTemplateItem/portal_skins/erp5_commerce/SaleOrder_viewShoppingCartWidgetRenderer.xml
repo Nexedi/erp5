@@ -48,12 +48,14 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<div>\n
-<p class="headlinkred">SHOPPING CART</p>\n
+<p class="headlinkred">\n
+  <span tal:replace="python: here.Base_translateString(\'SHOPPING CART\')"/>\n
+</p>\n
 \n
 <table>\n
-<tal:block tal:define="shopping_cart_items here/SaleOrder_getShoppingCartItemList;\n
-                       empty_cart python: len(shopping_cart_items)==0;\n
+  <tal:block tal:define="shopping_cart_items here/SaleOrder_getShoppingCartItemList;\n
+                       empty_cart python: here.SaleOrder_isShoppingCartEmpty();\n
+                       total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True);\n
                        website python: here.getWebSiteValue();">\n
 \n
   <tr tal:repeat="order_line shopping_cart_items">\n
@@ -63,36 +65,47 @@
                     currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
 \n
           <a class="articlelink" href="" tal:attributes="href resource/absolute_url">\n
-            <b tal:content="resource/getTitle"/>\n
+            &#149; <b tal:content="resource/getTitle"/>\n
           </a>\n
           <p class="article">\n
-            Price: <span tal:replace="price"/> <span tal:replace="currency"/><br/>\n
-            - quantity: <span tal:replace="quantity"/>\n
-          </p>\n
-        \n
- \n
+            <span tal:replace="python: here.Base_translateString(\'Price\')"/> : <span tal:replace="price"/> <span tal:replace="currency"/> &nbsp;\n
+            <span tal:replace="python: here.Base_translateString(\'Quantity\')"/> : <span tal:replace="quantity"/>\n
+          </p>       \n
     </td>\n
   </tr> \n
 \n
+  <tal:block tal:condition = "empty_cart">\n
+      <tr><td>\n
+        <p class="article"> \n
+          <span tal:replace="python: here.Base_translateString(\'You shopping cart is empty.\')"/>\n
+        </p>\n
+      </td></tr>\t\t      \n
+   </tal:block>\n
+\n
   <tal:block tal:condition = "not: empty_cart">\n
-    <tr><td><br/>\n
+    <tr><td>\n
         <p class="article">\n
-          <b>Total price: <span tal:replace="python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True)"/></b>\n
+          <b><span tal:replace="python: here.Base_translateString(\'Total price\')"/>: \n
+             <span tal:replace="total_price"/>\n
+          </b>\n
         </p> \n
     </td></tr>\n
     <tr>\n
-        <td><a class="articlelink" href="SaleOrder_viewAsWeb">Edit Shopping Cart</a></td>\n
+        <td><a class="articlelink" \n
+              tal:attributes="href python: \'%s/product_module/SaleOrder_viewAsWeb\' %website.absolute_url()">\n
+              <span tal:replace="python: here.Base_translateString(\'Edit Shopping Cart\')"/>\n
+           </a> &nbsp; \n
+           <a class="articlelink"\n
+              tal:attributes="href python: \'%s/product_module/SaleOrder_confirmShopping\' %website.absolute_url()">\n
+              <span tal:replace="python: here.Base_translateString(\'Proceed to checkout\')"/>\n
+            </a>\n
+        </td>\n
     </tr>\n
-    <tr>\n
-        <td><a class="articlelink" href="SaleOrder_confirmShopping">Proceed to checkout</a></td>\n
-    </tr>\n
-    \n
   </tal:block>\n
-\n
-</tal:block>\n
+  </tal:block>\n
 </table>\n
 \n
-</div>
+
 
 ]]></string> </value>
         </item>
