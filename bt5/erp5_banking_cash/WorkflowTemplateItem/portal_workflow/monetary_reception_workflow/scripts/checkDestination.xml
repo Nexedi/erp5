@@ -91,7 +91,7 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\
   raise ValidationFailed, (msg,)\n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=dest, date=transaction.getStartDate()):\n
+if not object.Baobab_checkCounterDateOpen(site=dest, date=object.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
@@ -159,7 +159,6 @@ if \'transit\' not in dest.getRelativeUrl():\n
                             <string>_getitem_</string>
                             <string>msg</string>
                             <string>dest</string>
-                            <string>transaction</string>
                             <string>first_movement</string>
                             <string>line_letter</string>
                           </tuple>

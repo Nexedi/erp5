@@ -77,7 +77,7 @@ site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
 emission_letter = context.getEmissionLetter()\n
 if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-elif (context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\') and emission_letter in site_letter:\n
+elif emission_letter==\'not_defined\':\n
   # remaining banknote which are not sorted yet, or cancelled one\n
   if not \'ventilation\' in context.getSource():\n
     return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
@@ -85,6 +85,8 @@ elif (context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'can
     # take classification into account here\n
     source_list = context.getSource().split(\'/\')\n
     return \'%s/caveau/auxiliaire/%s\' %(site,\'/\'.join(source_list[-2:]))\n
+elif (context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\') and emission_letter in site_letter:\n
+  return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
 elif emission_letter in site_letter:\n
   return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
 else:\n
