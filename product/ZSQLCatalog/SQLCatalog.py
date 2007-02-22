@@ -30,7 +30,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
-from zLOG import LOG, WARNING, INFO, TRACE, DEBUG
+from zLOG import LOG, WARNING, INFO, TRACE, DEBUG, ERROR
 from ZODB.POSException import ConflictError
 from DocumentTemplate.DT_Var import sql_quote
 from Products.PythonScripts.Utility import allow_class
@@ -304,13 +304,13 @@ class Query(QueryMixin):
                 select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
           else:
             where_expression.append("%s = '%s'" % (key, value))
-    
+
     elif value is None:
       where_expression.append("%s is NULL" % (key))
     else:
       where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
 
-    
+
     if len(where_expression)>0:
       if len(where_expression)==1:
         where_expression = where_expression[0]
@@ -319,7 +319,7 @@ class Query(QueryMixin):
     else: where_expression = ''
     return {'where_expression':where_expression,
             'select_expression_list':select_expression}
-  
+
   def getKey(self):
     return self.key
 
@@ -562,6 +562,11 @@ class Catalog( Folder,
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_search_security',
+      'description' : 'Main method to search security',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_search_tables',
       'description' : 'Tables to join in the result',
       'type'    : 'multiple selection',
@@ -651,6 +656,7 @@ class Catalog( Folder,
   sql_read_recorded_object_list = ''
   sql_delete_recorded_object_list = ''
   sql_search_results = ''
+  sql_search_security = ''
   sql_count_results = ''
   sql_getitem_by_path = ''
   sql_getitem_by_uid = ''
@@ -812,7 +818,7 @@ class Catalog( Folder,
         doc.unlink()
     finally:
       f.close()
-  
+
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
     return Catalog.inheritedAttribute('manage_historyCompare')(
@@ -1091,7 +1097,7 @@ class Catalog( Folder,
     if not (root_indexable and site_indexable):
       return False
     return True
- 
+
   def getSiteRoot(self):
     """
     Returns the root of the site
@@ -1679,8 +1685,8 @@ class Catalog( Folder,
     keyword_search_keys = list(self.sql_catalog_keyword_search_keys)
     topic_search_keys = self.sql_catalog_topic_search_keys
     multivalue_keys = self.sql_catalog_multivalue_keys
-    
-    
+
+
     # Compute "sort_index", which is a sort index, or none:
     if kw.has_key('sort-on'):
       sort_index=kw['sort-on']
@@ -1762,7 +1768,7 @@ class Catalog( Folder,
         if sort_key not in key_list:
           key_list.append(sort_key)
     related_tuples = self.getSQLCatalogRelatedKeyList(key_list=key_list)
-    
+
     # Define related maps
     # each tuple from `related_tuples` has the form (key,
     # 'table1,table2,table3/column/where_expression')
@@ -1815,7 +1821,7 @@ class Catalog( Folder,
           if not related_methods.has_key((table_list,method_id)):
             related_methods[(table_list,method_id)] = 1
           # Prepend renamed table name
-          new_key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], 
+          new_key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1],
                                related_column[key])
         elif key_is_acceptable:
           if key.find('.') < 0:
@@ -1833,7 +1839,7 @@ class Catalog( Folder,
             new_key = key
           if new_key is not None:
             # Add table to table dict, we use catalog by default
-            from_table_dict[acceptable_key_map[new_key][0]] = acceptable_key_map[new_key][0] 
+            from_table_dict[acceptable_key_map[new_key][0]] = acceptable_key_map[new_key][0]
       key_alias_dict[key] = new_key
       return new_key
 
@@ -1924,7 +1930,7 @@ class Catalog( Folder,
         if query_result['where_expression'] not in ('',None):
           where_expression_list.append(query_result['where_expression'])
         select_expression_list.extend(query_result['select_expression_list'])
-      
+
     # Calculate extra where_expression based on required joins
     for k, tid in from_table_dict.items():
       if k != query_table:
@@ -2177,4 +2183,4 @@ class CatalogError(Exception): pass
 
 
 
-# vim: filetype=python syntax=python shiftwidth=2 
+# vim: filetype=python syntax=python shiftwidth=2
