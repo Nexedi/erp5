@@ -20,11 +20,15 @@
   <workflow>task_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Task Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Task Report</type>
   <workflow>task_report_interaction_workflow, edit_workflow, task_report_causality_workflow, task_report_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report Line</type>
-  <workflow>task_report_interaction_workflow</workflow>
+  <workflow>task_report_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
