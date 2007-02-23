@@ -303,7 +303,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return parameter_dict
 
       
-  security.declareProtected(Permissions.View, 'getActualAmortisationMethod')
+  security.declareProtected(Permissions.View, 'getActualAmortisationMethodForItem')
   def getActualAmortisationMethodForItem(self, item, **kw):
     """
     Returns the actual amortisation method by getting the previous

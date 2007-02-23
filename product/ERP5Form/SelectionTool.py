@@ -992,7 +992,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         self.cookie_password = cookie_password
       return cookie_password
 
-    security.declareProtected(ERP5Permissions.View, 'registerCookieInfo')
+    security.declareProtected(ERP5Permissions.View, 'setCookieInfo')
     def setCookieInfo(self,request,cookie_name,**kw):
       """
       register info directly in cookie

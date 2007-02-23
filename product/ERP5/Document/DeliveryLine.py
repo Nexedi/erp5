@@ -223,7 +223,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       else:
         return 1
   
-    security.declareProtected(Permissions.View, 'getDivergentList')
+    security.declareProtected(Permissions.View, 'getDivergenceList')
     def getDivergenceList(self):
       """
       Return a list of messages that contains the divergences

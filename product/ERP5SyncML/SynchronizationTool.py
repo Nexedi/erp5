@@ -653,7 +653,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
             directory._delObject(copy_id)
         signature.setStatus(self.PUB_CONFLICT_MERGE)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manageLocalValue')
+  security.declareProtected(Permissions.ModifyPortalContent, 'managePublisherValue')
   def managePublisherValue(self, subscription_url, property_id, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the local value on

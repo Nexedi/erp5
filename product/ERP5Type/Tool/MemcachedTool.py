@@ -249,7 +249,7 @@ if allowMemcachedTool():
         self._v_memcached_dict = dictionary
       return dictionary
   
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMemcacheDict')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
     def getMemcachedDict(self, key_prefix):
       """
         Returns an object which can be used as a dict and which gets from/stores
