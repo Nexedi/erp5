@@ -102,9 +102,43 @@ if listbox is None:\n
   if variation_list is None :\n
     variation_list = list(context.portal_categories.variation.objectIds())\n
 \n
+  def generic_prioritized_sort(a, b, priority_list):\n
+    if a == b:\n
+      return 0\n
+    a_in_list = a in priority_list\n
+    b_in_list = b in priority_list\n
+    if a_in_list and (not b_in_list):\n
+      return -1\n
+    elif (not a_in_list) and b_in_list:\n
+      return 1\n
+    elif (not b_in_list) or (a > b):\n
+      return -1\n
+    elif (not a_in_list) or (a < b):\n
+      return 1\n
+\n
+  prioritized_banknote_emission_letter_list = context.Baobab_getUserEmissionLetterList()\n
+  prioritized_coin_cash_status_list = prioritized_coin_emission_letter_list = [\'not_defined\']\n
+\n
+  def banknote_emission_letter_sort(a, b):\n
+    return generic_prioritized_sort(a, b, prioritized_banknote_emission_letter_list)\n
+\n
+  def coin_emission_letter_sort(a, b):\n
+    return  generic_prioritized_sort(a, b, prioritized_coin_emission_letter_list)\n
+\n
+  def coin_cash_status_sort(a, b):\n
+    return  generic_prioritized_sort(a, b, prioritized_coin_cash_status_list)\n
+\n
+  # Make sure to use separate instances of the lists.\n
+  banknote_cash_status_list = cash_status_list\n
+  coin_cash_status_list = [x for x in cash_status_list]\n
+  banknote_emission_letter_list = emission_letter_list\n
+  coin_emission_letter_list = [x for x in emission_letter_list]\n
+\n
   # Sort the lists for consistency.\n
-  cash_status_list.sort()\n
-  emission_letter_list.sort()\n
+  banknote_cash_status_list.sort()\n
+  banknote_emission_letter_list.sort(banknote_emission_letter_sort)\n
+  coin_cash_status_list.sort(coin_cash_status_sort)\n
+  coin_emission_letter_list.sort(coin_emission_letter_sort)\n
   variation_list.sort()\n
 \n
   # Get the currency cash objects for a given currency.\n
@@ -167,6 +201,12 @@ if listbox is None:\n
   listbox = []\n
 \n
   for currency_cash in currency_cash_list:\n
+    if currency_cash.getPortalType() == \'Coin\':\n
+      cash_status_list = coin_cash_status_list\n
+      emission_letter_list = coin_emission_letter_list\n
+    else:\n
+      cash_status_list = banknote_cash_status_list\n
+      emission_letter_list = banknote_emission_letter_list\n
     # Search if the current object contains a line with a given portal type.\n
     cash_delivery_line = context.CashDelivery_searchLineByResource(currency_cash.getId(), line_portal_type)\n
     # This variable counts the number of lines added for this currency cash.\n
@@ -427,12 +467,23 @@ else :\n
                             <string>list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>currency</string>
-                            <string>result</string>
+                            <string>generic_prioritized_sort</string>
+                            <string>prioritized_banknote_emission_letter_list</string>
+                            <string>prioritized_coin_cash_status_list</string>
+                            <string>prioritized_coin_emission_letter_list</string>
+                            <string>banknote_emission_letter_sort</string>
+                            <string>coin_emission_letter_sort</string>
+                            <string>coin_cash_status_sort</string>
+                            <string>banknote_cash_status_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
+                            <string>coin_cash_status_list</string>
+                            <string>banknote_emission_letter_list</string>
+                            <string>coin_emission_letter_list</string>
+                            <string>currency</string>
+                            <string>result</string>
                             <string>len</string>
                             <string>currency_cash_list</string>
                             <string>new_currency_cash_list</string>
