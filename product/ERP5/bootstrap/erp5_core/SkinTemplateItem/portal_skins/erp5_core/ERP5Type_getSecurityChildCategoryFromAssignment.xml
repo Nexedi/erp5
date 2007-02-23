@@ -120,15 +120,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
       category_value_list = assignment.getValueList(base_category)\n
       if category_value_list:\n
         for category_value in category_value_list:\n
-          if child:\n
-            if category_value.getPortalType() == \'Category\':\n
-              while category_value.getPortalType() == \'Category\':\n
-                category_dict.setdefault(base_category, []).append(\'%s*\' % category_value.getRelativeUrl())\n
-                category_value = category_value.getParentValue()\n
-            else:\n
-              category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
-          else:\n
-            category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
+          category_dict.setdefault(base_category, []).append(\'%s*\' % category_value.getRelativeUrl())\n
     category_list.append(category_dict)\n
 \n
 return category_list\n
@@ -150,15 +142,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type, child=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -178,7 +162,7 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -188,7 +172,6 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>child</string>
                             <string>category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -218,14 +201,12 @@ return category_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+            <value> <string>ERP5Type_getSecurityChildCategoryFromAssignment</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

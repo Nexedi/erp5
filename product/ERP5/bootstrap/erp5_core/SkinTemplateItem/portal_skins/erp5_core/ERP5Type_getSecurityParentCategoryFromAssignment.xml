@@ -73,14 +73,14 @@
 """\n
 This script returns a list of dictionaries which represent\n
 the security groups which a person is member of. It extracts\n
-the categories from the current user assignment.\n
-It is useful in the following cases:\n
+the categories from the current user assignment and from\n
+all its parent assignments. It is useful in the following cases:\n
 \n
 - associate a document (ex. an accounting transaction)\n
   to the division which the user was assigned to\n
-  at the time it was created\n
-\n
-- calculate security membership of a user\n
+  at the time it was created and to all the\n
+  parent divisions. This is useful to get\n
+  a document reviewed by the managers of user\n
 \n
 The parameters are\n
 \n
@@ -120,13 +120,10 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
       category_value_list = assignment.getValueList(base_category)\n
       if category_value_list:\n
         for category_value in category_value_list:\n
-          if child:\n
-            if category_value.getPortalType() == \'Category\':\n
-              while category_value.getPortalType() == \'Category\':\n
-                category_dict.setdefault(base_category, []).append(\'%s*\' % category_value.getRelativeUrl())\n
-                category_value = category_value.getParentValue()\n
-            else:\n
-              category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
+          if category_value.getPortalType() == \'Category\':\n
+            while category_value.getPortalType() == \'Category\':\n
+              category_dict.setdefault(base_category, []).append(\'category_value.getRelativeUrl())\n
+              category_value = category_value.getParentValue()\n
           else:\n
             category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
     category_list.append(category_dict)\n
@@ -150,20 +147,14 @@ return category_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type, child=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>EOL while scanning single-quoted string (Script (Python), line 53)</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -178,36 +169,12 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>base_category_list</string>
-                            <string>user_name</string>
-                            <string>object</string>
-                            <string>portal_type</string>
-                            <string>child</string>
-                            <string>category_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>person_module</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>person_object_list</string>
-                            <string>len</string>
-                            <string>ConsistencyError</string>
-                            <string>_getitem_</string>
-                            <string>person_object</string>
-                            <string>assignment</string>
-                            <string>category_dict</string>
-                            <string>base_category</string>
-                            <string>category_value_list</string>
-                            <string>category_value</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -218,14 +185,12 @@ return category_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+            <value> <string>ERP5Type_getSecurityParentCategoryFromAssignment</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

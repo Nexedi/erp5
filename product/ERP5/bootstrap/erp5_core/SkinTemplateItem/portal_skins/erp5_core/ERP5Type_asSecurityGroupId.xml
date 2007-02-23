@@ -104,9 +104,6 @@ to a Person instance. This is useful to implement user based local role assignme
 instead of abstract security based local roles.\n
 """\n
 \n
-code_list = []\n
-user_list = []\n
-\n
 # sort the category list lexicographically\n
 # this prevents us to choose the exact order we want,\n
 # but also prevents some human mistake to break everything by creating site_function instead of function_site\n
@@ -116,34 +113,51 @@ if category_order not in (None, \'\'):\n
 else:\n
   category_order = []\n
 \n
+# Prepare a cartesian product\n
+from Products.ERP5Type.Utils import cartesianProduct\n
+list_of_list = []\n
+user_list = []\n
 for base_category in category_order:\n
-  category_list   = kw[base_category]\n
-  if same_type(category_list, \'\'):\n
-    category_list = [category_list]\n
-  for category in category_list:\n
-    category_path   = \'%s/%s\' % (base_category, category)\n
-    category_object = context.portal_categories.getCategoryValue(category_path)\n
-    if category_object in (None, \'\'):\n
-      raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
-    if category_object.getPortalType() == \'Person\':\n
-      # We define a person here\n
-      user_name = category_object.getReference()\n
-      if user_name is not None: user_list.append(user_name)\n
-    else:\n
-      # We define a group item here based on codification or reference is possible\n
-      # ID, else\n
-      try:\n
-        category_code   = category_object.getCodification() or category_object.getId()\n
-      except AttributeError:\n
-        try:\n
-          category_code   = category_object.getReference() or category_object.getId()\n
-        except AttributeError:\n
-          category_code   = category_object.getId()\n
-      code_list.append(category_code)\n
+  # It is acceptable for a category not to be defined\n
+  if kw.has_key(base_category):\n
+    category_list = kw[base_category]\n
+    associative_list = []\n
+    if same_type(category_list, \'\'):\n
+      category_list = [category_list]\n
+    for category in category_list:\n
+      if category.endswith(\'*\'):\n
+        category = category[:-1]\n
+        is_child_category = 1\n
+      else:\n
+        is_child_category = 0\n
+      category_path = \'%s/%s\' % (base_category, category)\n
+      category_object = context.portal_categories.getCategoryValue(category_path)\n
+      if category_object in (None, \'\'):\n
+        raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
+      portal_type = category_object.getPortalType()\n
+      if portal_type == \'Person\':\n
+        # We define a person here\n
+        user_name = category_object.getReference()\n
+        if user_name is not None: user_list.append(user_name)\n
+      else:\n
+        if portal_type == \'Category\':\n
+          category_code  = category_object.getCodification() or category_object.getId()\n
+        else:\n
+          try:\n
+            category_code   = category_object.getReference() or category_object.getId()\n
+          except AttributeError:\n
+            category_code   = category_object.getId()\n
+        if is_child_category: category_code += \'*\'\n
+        associative_list.append(category_code)\n
+    # Prevent making a cartesian product with an empty set\n
+    if associative_list:\n
+      list_of_list.append(associative_list)\n
 \n
-# Return a list of users or a single group\n
+# Return a list of users if any was defined\n
 if user_list: return user_list\n
-return \'_\'.join(code_list)\n
+\n
+# Compute the cartesian product and return the codes\n
+return filter(lambda x: x, map(lambda x: \'_\'.join(x), cartesianProduct(list_of_list)))\n
 </string> </value>
         </item>
         <item>
@@ -188,23 +202,30 @@ return \'_\'.join(code_list)\n
                           <tuple>
                             <string>category_order</string>
                             <string>kw</string>
-                            <string>code_list</string>
-                            <string>user_list</string>
                             <string>None</string>
                             <string>list</string>
                             <string>_getattr_</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>cartesianProduct</string>
+                            <string>list_of_list</string>
+                            <string>user_list</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>_getitem_</string>
                             <string>category_list</string>
+                            <string>associative_list</string>
                             <string>same_type</string>
                             <string>category</string>
+                            <string>is_child_category</string>
                             <string>category_path</string>
                             <string>context</string>
                             <string>category_object</string>
+                            <string>portal_type</string>
                             <string>user_name</string>
                             <string>category_code</string>
                             <string>AttributeError</string>
+                            <string>filter</string>
+                            <string>map</string>
                           </tuple>
                         </value>
                     </item>

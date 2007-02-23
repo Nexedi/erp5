@@ -68,19 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
 This script returns a list of dictionaries which represent\n
 the security groups which a person is member of. It extracts\n
-the categories from the current user assignment.\n
-It is useful in the following cases:\n
+the categories from the current content. It is useful in the\n
+following cases:\n
 \n
-- associate a document (ex. an accounting transaction)\n
-  to the division which the user was assigned to\n
-  at the time it was created\n
+- calculate a security group based on a given\n
+  category of the current object (ex. group). This\n
+  is used for example in ERP5 DMS to calculate\n
+  document security.\n
 \n
-- calculate security membership of a user\n
+- assign local roles to a document based on\n
+  the person which the object related to through\n
+  a given base category (ex. destination). This\n
+  is used for example in ERP5 Project to calculate\n
+  Task / Task Report security.\n
 \n
 The parameters are\n
 \n
@@ -94,47 +97,23 @@ NOTE: for now, this script requires proxy manager\n
 \n
 category_list = []\n
 \n
-# Get the Person module\n
-person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
+if object is None:\n
+  return []\n
 \n
-# It is better to keep getObject(), in this script this\n
-# prevent a very strange bug, sometimes without getObject the\n
-# assignment is not found\n
-person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type=\'Person\', reference=user_name)]\n
-\n
-if len(person_object_list) != 1:\n
-  if len(person_object_list) > 1:\n
-    raise ConsistencyError, "Error: There is more than one Person with reference \'%s\'" % user_name\n
-  else:\n
-    # if a person_object was not found in the module, we do nothing more\n
-    # this happens for example when a manager with no associated person object\n
-    # creates a person_object for a new user\n
-    return []\n
-person_object = person_object_list[0]\n
-\n
-# We look for every valid assignments of this user\n
-for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
-  if assignment.getValidationState() == \'open\':\n
-    category_dict = {}\n
-    for base_category in base_category_list:\n
-      category_value_list = assignment.getValueList(base_category)\n
-      if category_value_list:\n
-        for category_value in category_value_list:\n
-          if child:\n
-            if category_value.getPortalType() == \'Category\':\n
-              while category_value.getPortalType() == \'Category\':\n
-                category_dict.setdefault(base_category, []).append(\'%s*\' % category_value.getRelativeUrl())\n
-                category_value = category_value.getParentValue()\n
-            else:\n
-              category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
-          else:\n
-            category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
-    category_list.append(category_dict)\n
+# Consider all parents of all categories\n
+for base_category in base_category_list:\n
+  member_list = []\n
+  for category in object.getValueList(base_category):\n
+    if category.getPortalType() == \'Category\':\n
+      while category.getPortalType() == \'Category\':\n
+        member_list.append(category.getRelativeUrl())\n
+        category = category.getParentValue()\n
+    else:\n
+      member_list.append(category.getRelativeUrl())\n
+  category_list.append({base_category: member_list})\n
 \n
 return category_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -150,15 +129,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type, child=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -178,7 +149,7 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -188,25 +159,13 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>child</string>
                             <string>category_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>person_module</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>None</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>person_object_list</string>
-                            <string>len</string>
-                            <string>ConsistencyError</string>
-                            <string>_getitem_</string>
-                            <string>person_object</string>
-                            <string>assignment</string>
-                            <string>category_dict</string>
                             <string>base_category</string>
-                            <string>category_value_list</string>
-                            <string>category_value</string>
+                            <string>member_list</string>
+                            <string>_getattr_</string>
+                            <string>category</string>
                           </tuple>
                         </value>
                     </item>
@@ -218,14 +177,12 @@ return category_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+            <value> <string>ERP5Type_getSecurityParentCategoryFromContent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
