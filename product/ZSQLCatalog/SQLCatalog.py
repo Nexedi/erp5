@@ -201,7 +201,7 @@ class Query(QueryMixin):
     self.range = range
     self.search_mode = search_mode
     key_list = kw.keys()
-    if len(key_list)!=1:
+    if len(key_list) != 1:
       raise KeyError, 'Query must have only one key'
     self.key = key_list[0]
     self.value = kw[self.key]
@@ -218,9 +218,10 @@ class Query(QueryMixin):
   def getSearchMode(self):
     return self.search_mode
 
-  def asSQLExpression(self,key_alias_dict=None,keyword_search_keys=None,
-                           full_text_search_keys=None,
-                           ignore_empty_string=1,stat__=0):
+  def asSQLExpression(self, key_alias_dict=None,
+                            keyword_search_keys=None,
+                            full_text_search_keys=None,
+                            ignore_empty_string=1,stat__=0):
     """
     Build the sql string
     """
@@ -1736,6 +1737,14 @@ class Catalog( Folder,
           new_kw[k]['query'] = v
     kw = new_kw
 
+    # Initialise Scriptable Dict
+    scriptable_key_dict = {}
+    for t in self.sql_catalog_scriptable_keys:
+      t = t.split('|')
+      key = t[0].strip()
+      method_id = t[1].strip()
+      scriptable_key_dict[key] = method_id
+
     # Build the list of Queries and ComplexQueries
     query_dict = {}
     key_list = [] # the list of column keys
@@ -1745,19 +1754,23 @@ class Catalog( Folder,
         value = kw[key]
         current_query = None
         new_query_dict = {}
-        if isinstance(value,(Query,ComplexQuery)):
-          current_query=value
+        if isinstance(value, (Query, ComplexQuery)):
+          current_query = value
+        elif scriptable_key_dict.has_key(key):
+          # Turn this key into a query by invoking a script
+          method = getattr(self, scriptable_key_dict[key])
+          current_query = method(value)
         else:
-          if isinstance(value,dict):
+          if isinstance(value, dict):
             for value_key in value.keys():
-              if value_key=='query':
-                new_query_dict[key]=value['query']
+              if value_key == 'query':
+                new_query_dict[key] = value['query']
               else:
-                new_query_dict[value_key]=value[value_key]
+                new_query_dict[value_key] = value[value_key]
           else:
-            new_query_dict[key]=value
+            new_query_dict[key] = value
           current_query = Query(**new_query_dict)
-        query_dict[key]=current_query
+        query_dict[key] = current_query
         key_list.extend(current_query.getSQLKeyList())
 
     if query is not None:
@@ -1772,6 +1785,7 @@ class Catalog( Folder,
         sort_key = sort_info[0]
         if sort_key not in key_list:
           key_list.append(sort_key)
+
     related_tuples = self.getSQLCatalogRelatedKeyList(key_list=key_list)
 
     # Define related maps

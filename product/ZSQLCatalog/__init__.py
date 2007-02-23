@@ -41,3 +41,5 @@ def initialize(context):
     context.registerHelp()
     context.registerHelpTitle('Zope Help')
 
+from AccessControl import ModuleSecurityInfo, ClassSecurityInfo
+ModuleSecurityInfo('Products.ZSQLCatalog.SQLCatalog').declarePublic('ComplexQuery', 'Query')
