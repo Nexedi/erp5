@@ -8,6 +8,9 @@
   <item>origin</item>
   <item>recovery_status</item>
  </portal_type>
+ <portal_type id="Invoice Transmission Sheet">
+  <item>origin</item>
+ </portal_type>
  <portal_type id="Payment Transaction">
   <item>origin</item>
   <item>aggregate</item>

@@ -3,6 +3,7 @@ Accounting Transaction | origin
 Accounting Transaction | recovery_status
 Balance Transaction | origin
 Balance Transaction | recovery_status
+Invoice Transmission Sheet | origin
 Payment Transaction | aggregate
 Payment Transaction | origin
 Purchase Invoice Transaction Line | intervention
