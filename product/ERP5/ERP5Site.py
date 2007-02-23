@@ -50,8 +50,6 @@ def manage_addERP5SiteForm(*args, **kw):
   kw['getCatalogStorageList'] = getCatalogStorageList
   return manage_addERP5SiteFormDtml(*args, **kw)
 
-manage_addERP5SiteForm.__name__ = 'addERP5Site'
-
 # ERP5Site Constructor
 def manage_addERP5Site(self,
                        id,
@@ -184,7 +182,7 @@ class ERP5Site(FolderMixIn, CMFSite):
   of a new ERP5.  It should not assist in the functionality at all.
   """
   meta_type = 'ERP5 Site'
-  constructors = (manage_addERP5SiteForm, manage_addERP5Site, )
+  constructors = (('addERP5Site', manage_addERP5SiteForm), manage_addERP5Site, )
   uid = 0
   last_id = 0
   icon = 'portal.gif'
