@@ -55,7 +55,10 @@ class DurationWidget(FormulatorPatch.FloatWidget):
     sub_field_render_list = []
     for title, sub_key, convertion in (('Hour', 'hour', HOUR_IN_SECOND),
                                 ('Minute', 'minute', MINUTE_IN_SECOND)):
-      sub_value, value = divmod(value, convertion)
+      if value == '':
+        sub_value = ''
+      else:
+        sub_value, value = divmod(value, convertion)
       sub_field_render_list.append((title, self.render_sub_field(
                         field, key,
                         sub_value, REQUEST, sub_key)))
