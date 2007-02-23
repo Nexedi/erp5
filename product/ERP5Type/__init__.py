@@ -97,6 +97,7 @@ from AccessControl.SecurityInfo import allow_module
 
 allow_module('Products.ERP5Type.Cache')
 allow_module('Products.ERP5Type.Utils') # XXX this looks dangerous
+                                        # selected methods only should be allowed eg. cartesianProduct
 allow_module('Products.ERP5Type.Message')
 allow_module('Products.ERP5Type.Log')
 
