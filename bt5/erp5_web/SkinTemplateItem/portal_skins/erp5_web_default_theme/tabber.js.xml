@@ -1,0 +1,573 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>OFS.DTMLDocument</string>
+          <string>DTMLDocument</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tabber.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*==================================================\n
+  $Id: tabber.js,v 1.9 2006/04/27 20:51:51 pat Exp $\n
+  tabber.js by Patrick Fitzgerald pat@barelyfitz.com\n
+\n
+  Documentation can be found at the following URL:\n
+  http://www.barelyfitz.com/projects/tabber/\n
+\n
+  License (http://www.opensource.org/licenses/mit-license.php)\n
+\n
+  Copyright (c) 2006 Patrick Fitzgerald\n
+\n
+  Permission is hereby granted, free of charge, to any person\n
+  obtaining a copy of this software and associated documentation files\n
+  (the "Software"), to deal in the Software without restriction,\n
+  including without limitation the rights to use, copy, modify, merge,\n
+  publish, distribute, sublicense, and/or sell copies of the Software,\n
+  and to permit persons to whom the Software is furnished to do so,\n
+  subject to the following conditions:\n
+\n
+  The above copyright notice and this permission notice shall be\n
+  included in all copies or substantial portions of the Software.\n
+\n
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,\n
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\n
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\n
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS\n
+  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN\n
+  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n
+  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n
+  SOFTWARE.\n
+  ==================================================*/\n
+\n
+function tabberObj(argsObj)\n
+{\n
+  var arg; /* name of an argument to override */\n
+\n
+  /* Element for the main tabber div. If you supply this in argsObj,\n
+     then the init() method will be called.\n
+  */\n
+  this.div = null;\n
+\n
+  /* Class of the main tabber div */\n
+  this.classMain = "tabber";\n
+\n
+  /* Rename classMain to classMainLive after tabifying\n
+     (so a different style can be applied)\n
+  */\n
+  this.classMainLive = "tabberlive";\n
+\n
+  /* Class of each DIV that contains a tab */\n
+  this.classTab = "tabbertab";\n
+\n
+  /* Class to indicate which tab should be active on startup */\n
+  this.classTabDefault = "tabbertabdefault";\n
+\n
+  /* Class for the navigation UL */\n
+  this.classNav = "tabbernav";\n
+\n
+  /* When a tab is to be hidden, instead of setting display=\'none\', we\n
+     set the class of the div to classTabHide. In your screen\n
+     stylesheet you should set classTabHide to display:none.  In your\n
+     print stylesheet you should set display:block to ensure that all\n
+     the information is printed.\n
+  */\n
+  this.classTabHide = "tabbertabhide";\n
+\n
+  /* Class to set the navigation LI when the tab is active, so you can\n
+     use a different style on the active tab.\n
+  */\n
+  this.classNavActive = "tabberactive";\n
+\n
+  /* Elements that might contain the title for the tab, only used if a\n
+     title is not specified in the TITLE attribute of DIV classTab.\n
+  */\n
+  this.titleElements = [\'h2\',\'h3\',\'h4\',\'h5\',\'h6\'];\n
+\n
+  /* Should we strip out the HTML from the innerHTML of the title elements?\n
+     This should usually be true.\n
+  */\n
+  this.titleElementsStripHTML = true;\n
+\n
+  /* If the user specified the tab names using a TITLE attribute on\n
+     the DIV, then the browser will display a tooltip whenever the\n
+     mouse is over the DIV. To prevent this tooltip, we can remove the\n
+     TITLE attribute after getting the tab name.\n
+  */\n
+  this.removeTitle = true;\n
+\n
+  /* If you want to add an id to each link set this to true */\n
+  this.addLinkId = false;\n
+\n
+  /* If addIds==true, then you can set a format for the ids.\n
+     <tabberid> will be replaced with the id of the main tabber div.\n
+     <tabnumberzero> will be replaced with the tab number\n
+       (tab numbers starting at zero)\n
+     <tabnumberone> will be replaced with the tab number\n
+       (tab numbers starting at one)\n
+     <tabtitle> will be replaced by the tab title\n
+       (with all non-alphanumeric characters removed)\n
+   */\n
+  this.linkIdFormat = \'<tabberid>nav<tabnumberone>\';\n
+\n
+  /* You can override the defaults listed above by passing in an object:\n
+     var mytab = new tabber({property:value,property:value});\n
+  */\n
+  for (arg in argsObj) { this[arg] = argsObj[arg]; }\n
+\n
+  /* Create regular expressions for the class names; Note: if you\n
+     change the class names after a new object is created you must\n
+     also change these regular expressions.\n
+  */\n
+  this.REclassMain = new RegExp(\'\\\\b\' + this.classMain + \'\\\\b\', \'gi\');\n
+  this.REclassMainLive = new RegExp(\'\\\\b\' + this.classMainLive + \'\\\\b\', \'gi\');\n
+  this.REclassTab = new RegExp(\'\\\\b\' + this.classTab + \'\\\\b\', \'gi\');\n
+  this.REclassTabDefault = new RegExp(\'\\\\b\' + this.classTabDefault + \'\\\\b\', \'gi\');\n
+  this.REclassTabHide = new RegExp(\'\\\\b\' + this.classTabHide + \'\\\\b\', \'gi\');\n
+\n
+  /* Array of objects holding info about each tab */\n
+  this.tabs = new Array();\n
+\n
+  /* If the main tabber div was specified, call init() now */\n
+  if (this.div) {\n
+\n
+    this.init(this.div);\n
+\n
+    /* We don\'t need the main div anymore, and to prevent a memory leak\n
+       in IE, we must remove the circular reference between the div\n
+       and the tabber object. */\n
+    this.div = null;\n
+  }\n
+}\n
+\n
+\n
+/*--------------------------------------------------\n
+  Methods for tabberObj\n
+  --------------------------------------------------*/\n
+\n
+\n
+tabberObj.prototype.init = function(e)\n
+{\n
+  /* Set up the tabber interface.\n
+\n
+     e = element (the main containing div)\n
+\n
+     Example:\n
+     init(document.getElementById(\'mytabberdiv\'))\n
+   */\n
+\n
+  var\n
+  childNodes, /* child nodes of the tabber div */\n
+  i, i2, /* loop indices */\n
+  t, /* object to store info about a single tab */\n
+  defaultTab=0, /* which tab to select by default */\n
+  DOM_ul, /* tabbernav list */\n
+  DOM_li, /* tabbernav list item */\n
+  DOM_a, /* tabbernav link */\n
+  aId, /* A unique id for DOM_a */\n
+  headingElement; /* searching for text to use in the tab */\n
+\n
+  /* Verify that the browser supports DOM scripting */\n
+  if (!document.getElementsByTagName) { return false; }\n
+\n
+  /* If the main DIV has an ID then save it. */\n
+  if (e.id) {\n
+    this.id = e.id;\n
+  }\n
+\n
+  /* Clear the tabs array (but it should normally be empty) */\n
+  this.tabs.length = 0;\n
+\n
+  /* Loop through an array of all the child nodes within our tabber element. */\n
+  childNodes = e.childNodes;\n
+  for(i=0; i < childNodes.length; i++) {\n
+\n
+    /* Find the nodes where class="tabbertab" */\n
+    if(childNodes[i].className &&\n
+       childNodes[i].className.match(this.REclassTab)) {\n
+\n
+      /* Create a new object to save info about this tab */\n
+      t = new Object();\n
+\n
+      /* Save a pointer to the div for this tab */\n
+      t.div = childNodes[i];\n
+\n
+      /* Add the new object to the array of tabs */\n
+      this.tabs[this.tabs.length] = t;\n
+\n
+      /* If the class name contains classTabDefault,\n
+   then select this tab by default.\n
+      */\n
+      if (childNodes[i].className.match(this.REclassTabDefault)) {\n
+  defaultTab = this.tabs.length-1;\n
+      }\n
+    }\n
+  }\n
+\n
+  /* Create a new UL list to hold the tab headings */\n
+  DOM_ul = document.createElement("ul");\n
+  DOM_ul.className = this.classNav;\n
+\n
+  /* Loop through each tab we found */\n
+  for (i=0; i < this.tabs.length; i++) {\n
+\n
+    t = this.tabs[i];\n
+\n
+    /* Get the label to use for this tab:\n
+       From the title attribute on the DIV,\n
+       Or from one of the this.titleElements[] elements,\n
+       Or use an automatically generated number.\n
+     */\n
+    t.headingText = t.div.title;\n
+\n
+    /* Remove the title attribute to prevent a tooltip from appearing */\n
+    if (this.removeTitle) { t.div.title = \'\'; }\n
+\n
+    if (!t.headingText) {\n
+\n
+      /* Title was not defined in the title of the DIV,\n
+   So try to get the title from an element within the DIV.\n
+   Go through the list of elements in this.titleElements\n
+   (typically heading elements [\'h2\',\'h3\',\'h4\'])\n
+      */\n
+      for (i2=0; i2<this.titleElements.length; i2++) {\n
+  headingElement = t.div.getElementsByTagName(this.titleElements[i2])[0];\n
+  if (headingElement) {\n
+    t.headingText = headingElement.innerHTML;\n
+    if (this.titleElementsStripHTML) {\n
+      t.headingText.replace(/<br>/gi," ");\n
+      t.headingText = t.headingText.replace(/<[^>]+>/g,"");\n
+    }\n
+    break;\n
+  }\n
+      }\n
+    }\n
+\n
+    if (!t.headingText) {\n
+      /* Title was not found (or is blank) so automatically generate a\n
+         number for the tab.\n
+      */\n
+      t.headingText = i + 1;\n
+    }\n
+\n
+    /* Create a list element for the tab */\n
+    DOM_li = document.createElement("li");\n
+\n
+    /* Save a reference to this list item so we can later change it to\n
+       the "active" class */\n
+    t.li = DOM_li;\n
+\n
+    /* Create a link to activate the tab */\n
+    DOM_a = document.createElement("a");\n
+    DOM_a.appendChild(document.createTextNode(t.headingText));\n
+    DOM_a.href = "javascript:void(null);";\n
+    DOM_a.title = t.headingText;\n
+    DOM_a.onclick = this.navClick;\n
+\n
+    /* Add some properties to the link so we can identify which tab\n
+       was clicked. Later the navClick method will need this.\n
+    */\n
+    DOM_a.tabber = this;\n
+    DOM_a.tabberIndex = i;\n
+\n
+    /* Do we need to add an id to DOM_a? */\n
+    if (this.addLinkId && this.linkIdFormat) {\n
+\n
+      /* Determine the id name */\n
+      aId = this.linkIdFormat;\n
+      aId = aId.replace(/<tabberid>/gi, this.id);\n
+      aId = aId.replace(/<tabnumberzero>/gi, i);\n
+      aId = aId.replace(/<tabnumberone>/gi, i+1);\n
+      aId = aId.replace(/<tabtitle>/gi, t.headingText.replace(/[^a-zA-Z0-9\\-]/gi, \'\'));\n
+\n
+      DOM_a.id = aId;\n
+    }\n
+\n
+    /* Add the link to the list element */\n
+    DOM_li.appendChild(DOM_a);\n
+\n
+    /* Add the list element to the list */\n
+    DOM_ul.appendChild(DOM_li);\n
+  }\n
+\n
+  /* Add the UL list to the beginning of the tabber div */\n
+  e.insertBefore(DOM_ul, e.firstChild);\n
+\n
+  /* Make the tabber div "live" so different CSS can be applied */\n
+  e.className = e.className.replace(this.REclassMain, this.classMainLive);\n
+\n
+  /* Activate the default tab, and do not call the onclick handler */\n
+  this.tabShow(defaultTab);\n
+\n
+  /* If the user specified an onLoad function, call it now. */\n
+  if (typeof this.onLoad == \'function\') {\n
+    this.onLoad({tabber:this});\n
+  }\n
+\n
+  return this;\n
+};\n
+\n
+\n
+tabberObj.prototype.navClick = function(event)\n
+{\n
+  /* This method should only be called by the onClick event of an <A>\n
+     element, in which case we will determine which tab was clicked by\n
+     examining a property that we previously attached to the <A>\n
+     element.\n
+\n
+     Since this was triggered from an onClick event, the variable\n
+     "this" refers to the <A> element that triggered the onClick\n
+     event (and not to the tabberObj).\n
+\n
+     When tabberObj was initialized, we added some extra properties\n
+     to the <A> element, for the purpose of retrieving them now. Get\n
+     the tabberObj object, plus the tab number that was clicked.\n
+  */\n
+\n
+  var\n
+  rVal, /* Return value from the user onclick function */\n
+  a, /* element that triggered the onclick event */\n
+  self, /* the tabber object */\n
+  tabberIndex, /* index of the tab that triggered the event */\n
+  onClickArgs; /* args to send the onclick function */\n
+\n
+  a = this;\n
+  if (!a.tabber) { return false; }\n
+\n
+  self = a.tabber;\n
+  tabberIndex = a.tabberIndex;\n
+\n
+  /* Remove focus from the link because it looks ugly.\n
+     I don\'t know if this is a good idea...\n
+  */\n
+  a.blur();\n
+\n
+  /* If the user specified an onClick function, call it now.\n
+     If the function returns false then do not continue.\n
+  */\n
+  if (typeof self.onClick == \'function\') {\n
+\n
+    onClickArgs = {\'tabber\':self, \'index\':tabberIndex, \'event\':event};\n
+\n
+    /* IE uses a different way to access the event object */\n
+    if (!event) { onClickArgs.event = window.event; }\n
+\n
+    rVal = self.onClick(onClickArgs);\n
+    if (rVal === false) { return false; }\n
+  }\n
+\n
+  self.tabShow(tabberIndex);\n
+\n
+  return false;\n
+};\n
+\n
+\n
+tabberObj.prototype.tabHideAll = function()\n
+{\n
+  var i; /* counter */\n
+\n
+  /* Hide all tabs and make all navigation links inactive */\n
+  for (i = 0; i < this.tabs.length; i++) {\n
+    this.tabHide(i);\n
+  }\n
+};\n
+\n
+\n
+tabberObj.prototype.tabHide = function(tabberIndex)\n
+{\n
+  var div;\n
+\n
+  if (!this.tabs[tabberIndex]) { return false; }\n
+\n
+  /* Hide a single tab and make its navigation link inactive */\n
+  div = this.tabs[tabberIndex].div;\n
+\n
+  /* Hide the tab contents by adding classTabHide to the div */\n
+  if (!div.className.match(this.REclassTabHide)) {\n
+    div.className += \' \' + this.classTabHide;\n
+  }\n
+  this.navClearActive(tabberIndex);\n
+\n
+  return this;\n
+};\n
+\n
+\n
+tabberObj.prototype.tabShow = function(tabberIndex)\n
+{\n
+  /* Show the tabberIndex tab and hide all the other tabs */\n
+\n
+  var div;\n
+\n
+  if (!this.tabs[tabberIndex]) { return false; }\n
+\n
+  /* Hide all the tabs first */\n
+  this.tabHideAll();\n
+\n
+  /* Get the div that holds this tab */\n
+  div = this.tabs[tabberIndex].div;\n
+\n
+  /* Remove classTabHide from the div */\n
+  div.className = div.className.replace(this.REclassTabHide, \'\');\n
+\n
+  /* Mark this tab navigation link as "active" */\n
+  this.navSetActive(tabberIndex);\n
+\n
+  /* If the user specified an onTabDisplay function, call it now. */\n
+  if (typeof this.onTabDisplay == \'function\') {\n
+    this.onTabDisplay({\'tabber\':this, \'index\':tabberIndex});\n
+  }\n
+\n
+  return this;\n
+};\n
+\n
+tabberObj.prototype.navSetActive = function(tabberIndex)\n
+{\n
+  /* Note: this method does *not* enforce the rule\n
+     that only one nav item can be active at a time.\n
+  */\n
+\n
+  /* Set classNavActive for the navigation list item */\n
+  this.tabs[tabberIndex].li.className = this.classNavActive;\n
+\n
+  return this;\n
+};\n
+\n
+\n
+tabberObj.prototype.navClearActive = function(tabberIndex)\n
+{\n
+  /* Note: this method does *not* enforce the rule\n
+     that one nav should always be active.\n
+  */\n
+\n
+  /* Remove classNavActive from the navigation list item */\n
+  this.tabs[tabberIndex].li.className = \'\';\n
+\n
+  return this;\n
+};\n
+\n
+\n
+/*==================================================*/\n
+\n
+\n
+function tabberAutomatic(tabberArgs)\n
+{\n
+  /* This function finds all DIV elements in the document where\n
+     class=tabber.classMain, then converts them to use the tabber\n
+     interface.\n
+\n
+     tabberArgs = an object to send to "new tabber()"\n
+  */\n
+  var\n
+    tempObj, /* Temporary tabber object */\n
+    divs, /* Array of all divs on the page */\n
+    i; /* Loop index */\n
+\n
+  if (!tabberArgs) { tabberArgs = {}; }\n
+\n
+  /* Create a tabber object so we can get the value of classMain */\n
+  tempObj = new tabberObj(tabberArgs);\n
+\n
+  /* Find all DIV elements in the document that have class=tabber */\n
+\n
+  /* First get an array of all DIV elements and loop through them */\n
+  divs = document.getElementsByTagName("div");\n
+  for (i=0; i < divs.length; i++) {\n
+    /* Is this DIV the correct class? */\n
+    if (divs[i].className &&\n
+  divs[i].className.match(tempObj.REclassMain)) {\n
+\n
+      /* Now tabify the DIV */\n
+      tabberArgs.div = divs[i];\n
+      divs[i].tabber = new tabberObj(tabberArgs);\n
+    }\n
+  }\n
+\n
+  return this;\n
+}\n
+\n
+\n
+/*==================================================*/\n
+\n
+\n
+function tabberAutomaticOnLoad(tabberArgs)\n
+{\n
+  /* This function adds tabberAutomatic to the window.onload event,\n
+     so it will run after the document has finished loading.\n
+  */\n
+  var oldOnLoad;\n
+\n
+  if (!tabberArgs) { tabberArgs = {}; }\n
+\n
+  /* Taken from: http://simon.incutio.com/archive/2004/05/26/addLoadEvent */\n
+  oldOnLoad = window.onload;\n
+  if (typeof window.onload != \'function\') {\n
+    window.onload = function() {\n
+      tabberAutomatic(tabberArgs);\n
+    };\n
+  } else {\n
+    window.onload = function() {\n
+      oldOnLoad();\n
+      tabberAutomatic(tabberArgs);\n
+    };\n
+  }\n
+}\n
+\n
+\n
+/*==================================================*/\n
+\n
+\n
+/* Run tabberAutomaticOnload() unless the "manualStartup" option was specified */\n
+\n
+if (typeof tabberOptions == \'undefined\') {\n
+\n
+    tabberAutomaticOnLoad();\n
+\n
+} else {\n
+\n
+  if (!tabberOptions[\'manualStartup\']) {\n
+    tabberAutomaticOnLoad(tabberOptions);\n
+  }\n
+\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

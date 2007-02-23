@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!--\n
+    Description:\n
+    This macro render a contribution upload panel.\n
+    -->\n
+\n
+<tal:block metal:define-macro="main">\n
+\n
+<div class="tabber" id="mytabber2">\n
+  <div class="tabbertab">\n
+    <h2>Contribute</h2>\n
+    <div class="fieldset">\n
+      <div tal:define="search_type_list here/WebSite_getSearchableTypeList">\n
+        <label for="doctype" i18n:translate="" i18n:domain="ui">Type</label>\n
+        <select size="1" name="doctype" id="doctype" onchange="toggleMakeTemplateButton(this);">\n
+          <option value="" i18n:translate="" i18n:domain="ui">-- Select Document Type --</option>\n
+          <option value="Memo" value="" i18n:translate="" i18n:domain="ui">Memo</option>\n
+          <option value="Report" value="" i18n:translate="" i18n:domain="ui">Report</option>\n
+        </select>\n
+        <input type="file" name="datafile" size="30" />\n
+      </div>\n
+      <!--<a onclick="setMailString();" id="mail_contribute_button" href="mailto:dms@dms.nexedi.com?subject=Contribution&body=">\n
+        <img src="au_icons/kmail.png" align="right" alt="contribute by mail" title="contribute by mail"/>\n
+      </a>-->\n
+      <div style="float:left">\n
+      <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
+        Theme\n
+      </div>\n
+      </div>\n
+      \n
+      <div style="float:right; margin-top:10px;">\n
+      <a onclick="setMailString();"  id="mail_contribute_button"\n
+         href="mailto:dms@dms.nexedi.com?subject=Contribution&body=">\n
+        <img src="send_by_mail" border="0"/>\n
+        <tal:block  i18n:translate="" i18n:domain="ui">Click here to contribute by Email</tal:block></a>\n
+      &nbsp;\n
+      <input type="submit" name="Memo_makeOOoTemplate:method" value="Make Template" id="maketemplatebutton" disabled="disabled"\n
+             style="width:100px;background-image:none;"/>\n
+      &nbsp;\n
+      <input type="submit" name="WebSite_contributeFile:method" value="Contribute"/>\n
+    </div>\n
+      \n
+      \n
+    </div>\n
+    \n
+    <div class="clear"></div>\n
+  </div>\n
+  \n
+  <div class="tabbertab">\n
+    <h2>Link</h2>\n
+    <div class="fieldset">\n
+      <div>\n
+        <label for="url" value="" i18n:translate="" i18n:domain="ui">Url</label>\n
+        <input type="text" name="url" id="url" size="80" value="http://" />\n
+        <a href="" target="_blank" onclick="return setLink(this)" value="" i18n:translate="" i18n:domain="ui">preview</a>\n
+      </div>\n
+      <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
+        Theme\n
+      </div>\n
+    </div>\n
+    <input style="float:right" type="submit" name="WebSite_contributeLink:method" value="Contribute"/>\n
+    <div class="clear"></div>\n
+  </div>\n
+  \n
+  <div class="tabbertab"\n
+    tal:define="user here/ERP5Site_getCurrentUserValue"\n
+    >\n
+    <h2 value="" i18n:translate="" i18n:domain="ui">File</h2>\n
+    \n
+    <div class="filebox" id="administration">\n
+      <ul>\n
+        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Administration:</li>\n
+        <ul>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Medical Claim\', user)">\n
+            <span tal:define="impl python:False; title string:Medical Claim;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Leave Request\', user)">\n
+            <span tal:define="impl python:False; title string:Leave Request;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Travel Request\', user)">\n
+            <span tal:define="impl python:False; title string:Travel Request;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Passport Request\', user)">\n
+            <span tal:define="impl python:False; title string:Passport Request;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'External Library File\', user)">\n
+            <a href="Base_createContent?portal_type=External Library File" value="" i18n:translate="" i18n:domain="ui">Library File</a>\n
+          </li>\n
+        </ul>\n
+      </ul>\n
+    </div>\n
+    \n
+    <div class="filebox" id="conference">\n
+      <ul>\n
+        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Conference:</li>\n
+        <ul>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Conference\', user)">\n
+            <span tal:define="impl python:True; title string:Conference;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Event\', user)">\n
+            <span tal:define="impl python:False; title string:Event;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Participant\', user)">\n
+            <span tal:define="impl python:False; title string:Participant;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+        </ul>\n
+      </ul>\n
+    </div>\n
+    \n
+    <div class="filebox" id="web">\n
+      <ul>\n
+        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Web:</li>\n
+        <ul>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'News\', user)">\n
+            <span tal:define="impl python:True; title string:News;">\n
+              <span metal:use-macro="here/au_macros/macros/file_feature">\n
+              </span>\n
+            </span>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Web Page\', user)">\n
+            <a href="WebPage_createNewForGroup" value="" i18n:translate="" i18n:domain="ui">Web Page</a>\n
+          </li>\n
+        </ul>\n
+      </ul>\n
+    </div>\n
+    \n
+    <div class="filebox" id="contacs">\n
+      <ul>\n
+        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Contacts:</li>\n
+        <ul>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Organisation\', user)">\n
+            <a href="Base_createContent?portal_type=Organisation" value="" i18n:translate="" i18n:domain="ui">Organisation</a>\n
+          </li>\n
+          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Person\', user)">\n
+            <a href="Base_createContent?portal_type=Person" value="" i18n:translate="" i18n:domain="ui">Person</a>\n
+          </li>\n
+        </ul>\n
+      </ul>\n
+    </div>\n
+    \n
+    <div class="clear"></div>\n
+  </div>\n
+</div>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewContributeRenderer</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

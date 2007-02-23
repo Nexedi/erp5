@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="act">\n
+  <tal:block tal:define="tasks here/WebSite_getPendingEventInfoList">\n
+    <div class="boxHeader" >\n
+      <a  i18n:translate="" i18n:domain="ui"\n
+        tal:attributes="href string: searches/WebSite_viewPendingEventList">\n
+        Act <span class="details">(<span class="newItem" tal:content="python:len(tasks)"/>\n
+        <tal:block i18n:translate="" i18n:domain="ui">total</tal:block>)</span>\n
+      </a>\n
+    </div>\n
+    <div class="boxContent">\n
+      <ul>\n
+        <li tal:repeat="doc python: tasks[:TASK_LEN]">\n
+          <a tal:define="url python: \'%s/view\' % doc.absolute_url()"\n
+            tal:attributes="href url">\n
+            <span tal:replace="doc/portal_type"/>:\n
+            <span tal:replace="doc/getTitleOrId"/>\n
+            <span tal:condition="python: hasattr(doc, \'getVersion\') and doc.getVersion()" \n
+                        tal:replace="python: \'ver. %s\' % doc.getVersion()"/>\n
+            (<span tal:content="python: doc.getValidationStateTitle()" \n
+                    tal:attributes="class python:doc.getTranslatedValidationStateTitle()"/>)\n
+          </a>\n
+        </li>\n
+      </ul>\n
+      <a tal:condition="python: len(tasks) > TASK_LEN" \n
+        tal:attributes="href string: searches/WebSite_viewPendingEventList" value="" i18n:translate="" i18n:domain="ui">More tasks...</a>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="learn">\n
+  <tal:block tal:define="news_list python: here.WebSite_getLatestContentValueList(limit=NEWS_LEN)">\n
+    <div class="boxHeader">\n
+      <a  i18n:translate="" i18n:domain="ui"\n
+        tal:attributes="href string: searches/WebSite_viewLatestContentList">\n
+        Learn\n
+      </a>\n
+    </div>\n
+    <div class="boxContent">\n
+      <ul>\n
+        <li tal:repeat="newsitem python: news_list">\n
+          <a tal:define="url python: \'%s/view\' % newsitem.absolute_url()"\n
+            tal:attributes="href url">\n
+            <tal:block tal:replace="python: here.WebSite_getFancyRelativeDate(newsitem.getCreationDate())"/>&mdash;\n
+            <tal:block tal:replace="newsitem/getTitleOrId"/>\n
+          </a>\n
+          <tal:block tal:replace="python: \'(%s)\' % newsitem.getPortalType()"/>\n
+        </li>\n
+      </ul>\n
+      <tal:block tal:replace="nothing">this is a dummy</tal:block>\n
+      <a tal:condition="python: len(news_list) > NEWS_LEN-1"\n
+              tal:attributes="href string: searches/WebSite_viewLatestContentList" value="" i18n:translate="" i18n:domain="ui">More news...</a>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="evaluate">\n
+  <tal:block>\n
+    <div class="boxHeader" value="" i18n:translate="" i18n:domain="ui">\n
+      Evaluate\n
+    </div>\n
+    <div class="boxContent">\n
+      Some nice evaluation parameters.\n
+    </div>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewDashboardRenderer</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

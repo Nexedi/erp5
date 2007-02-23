@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Owner(s):</span>\n
+<tal:block tal:replace="options/owner|nothing"/>\n
+<br/>\n
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Last modified:</span>\n
+<tal:block tal:replace="options/moddate|nothing"/>\n
+<br/>\n
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Released:</span>\n
+<tal:block tal:replace="options/reldate|nothing"/>\n
+<br/>\n
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Published:</span>\n
+<tal:block tal:replace="options/publdate|nothing"/>\n
+<br/>\n
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Status:</span>\n
+<tal:block tal:replace="options/status|nothing"/>\n
+<br/>\n
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Group:</span>\n
+<tal:block tal:replace="options/group|nothing"/>\n
+<br/>\n
+<span class="popup_label" i18n:translate="" i18n:domain="ui">Project:</span>\n
+<tal:block tal:replace="options/project|nothing"/>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_viewPopupTemplate</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<table id="document_profile">\n
+  <tr>\n
+    <td class="left" i18n:translate="" i18n:domain="ui">\n
+      Title:\n
+    </td>\n
+    <td class="right">\n
+      <span tal:replace="here/getTitle"/>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td class="left" i18n:translate="" i18n:domain="ui">\n
+      Reference:\n
+    </td>\n
+    <td class="right">\n
+      <span tal:replace="here/getReference"/>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td class="left" i18n:translate="" i18n:domain="ui">\n
+      Author(s):\n
+    </td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td class="right" colspan="2">\n
+      <ul class="authors">\n
+        <li tal:repeat="owner here/Base_getOwnerInfoList">\n
+          <a tal:attributes="href owner/url" tal:content="owner/title"/>\n
+          (<a tal:attributes="href python: \'mailto:\'+str(owner.get(\'email\',\'\'))" tal:content="owner/email"/>)\n
+        </li>\n
+      </ul>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td class="left" i18n:translate="" i18n:domain="ui">\n
+      Status:\n
+    </td>\n
+    <td class="right">\n
+      <span tal:attributes="class here/getValidationState" tal:content="here/getTranslatedValidationState"/>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td class="left" i18n:translate="" i18n:domain="ui">\n
+      Version:\n
+    </td>\n
+    <td class="right">\n
+      <span tal:replace="here/getVersion"/>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td class="left" i18n:translate="" i18n:domain="ui">\n
+      Language:\n
+    </td>\n
+    <td class="right">\n
+      <span tal:replace="here/getLanguage"/>\n
+    </td>\n
+  </tr>\n
+  <tal:block tal:define="other_lang_list python:[here.getLatestVersionValue(language=lng) for lng in here.getLanguageList() if lng!=here.getLanguage()]">\n
+    <tr tal:condition="other_lang_list">\n
+      <td i18n:translate="" i18n:domain="ui">\n
+        Also in:\n
+      </td>\n
+      <td>\n
+        <span tal:repeat="doc other_lang_list">\n
+          <a tal:attributes="href python:doc.absolute_url()+\'/view\'" tal:content="doc/getLanguage"/>\n
+        </span>\n
+      </td>\n
+    </tr>\n
+  </tal:block>\n
+  <tr>\n
+    <td i18n:translate="" i18n:domain="ui">\n
+      Word count:\n
+    </td>\n
+    <td>\n
+      <span tal:replace="python: int(round(len(here.getSearchableText().split()),-2))"/>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td i18n:translate="" i18n:domain="ui">\n
+      Size:\n
+    </td>\n
+    <td>\n
+      <span tal:replace="python: \'%d kB\' % (here.getSize()/1000)"/>\n
+    </td>\n
+  </tr>\n
+  <tr>\n
+    <td i18n:translate="" i18n:domain="ui">\n
+      File format:\n
+    </td>\n
+    <td>\n
+      <span tal:replace="python: here.getSourceReference() is not None and here.getSourceReference().rfind(\'.\')>-1 and here.getSourceReference()[here.getSourceReference().rfind(\'.\')+1:] or \'\'"/>\n
+    </td>\n
+  </tr>\n
+</table>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_viewProfileWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>XXX - Use layout and fields instead </string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

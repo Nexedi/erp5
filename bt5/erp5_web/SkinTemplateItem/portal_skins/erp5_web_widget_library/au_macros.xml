@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  This is used in contribute tab to distinguish implemented/not implemented "file" features\n
+</tal:block>\n
+<span metal:define-macro="file_feature">\n
+  <a tal:condition="impl" href="javascript:void 0" onclick="fileImplemented()" tal:content="title"/>\n
+  <a tal:condition="python:not impl" href="javascript:void 0" onclick="fileNotImplemented()" tal:content="title" style="color:grey"/>\n
+</span>\n
+\n
+<tal:block replace="nothing">\n
+  This is used in main panel to fill properties for contributing document or external resource\n
+</tal:block>\n
+<div metal:define-macro="contribute_properties">\n
+  <div>\n
+    <label for="classification" value="" i18n:translate="" i18n:domain="ui">Classification</label>\n
+    <select size="1" name="classification" id="classification">\n
+      <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Classification --</option>\n
+      <option tal:repeat="item python:[c for c in here.portal_categories.classification.getCategoryChildLogicalPathItemList()[1:] if len(c[1].split(\'/\'))>1]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+        Agricultural Development\n
+      </option>\n
+    </select>\n
+  </div>\n
+  <div>\n
+    <label for="project" value="" i18n:translate="" i18n:domain="ui">Programme</label>\n
+    <select size="1" id="project" name="project">\n
+      <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Programme --</option>\n
+      <option tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in here.project_module.searchFolder()]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+        Agricultural Development\n
+      </option>\n
+    </select>\n
+  </div>\n
+</div>    \n
+\n
+\n
+<!-- \n
+# vim: filetype=html syntax=html shiftwidth=2 \n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>au_macros</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>XXX - Integrate in wherever appropriate</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
