@@ -145,39 +145,27 @@ class ERP5GroupManager(BasePlugin):
         # Get group names from category values
         group_id_list_generator = getattr(self,
                                       'ERP5Type_asSecurityGroupIdList', None)
-        if group_id_list_generator is not None:
-          for base_category_list, category_value_list in \
-              security_category_dict.items():
-            for category_dict in category_value_list:
-              try:
-                security_group_list.extend(
-                  group_id_list_generator(category_order=base_category_list,
-                                          **category_dict)
-                )
-              except ConflictError:
-                raise
-              except:
-                LOG('ERP5GroupManager', WARNING,
-                    'could not get security groups from '
-                    'ERP5Type_asSecurityGroupIdList',
-                    error = sys.exc_info())
+        if group_id_list_generator is None:
+          group_id_list_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
+          generator_name = "ERP5Type_asSecurityGroupId"
         else:
-          group_id_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
-          for base_category_list, category_value_list in \
-              security_category_dict.items():
-            for category_dict in category_value_list:
-              try:
-                security_group_list.append(
-                  group_id_generator(category_order=base_category_list,
-                                      **category_dict)
-                )
-              except ConflictError:
-                raise
-              except:
-                LOG('ERP5GroupManager', WARNING,
-                    'could not get security groups from '
-                    'ERP5Type_asSecurityGroupId',
-                    error = sys.exc_info())
+          generator_name = 'ERP5Type_asSecurityGroupIdList'
+        for base_category_list, category_value_list in \
+            security_category_dict.items():
+          for category_dict in category_value_list:
+            try:
+              group_id_list = group_id_list_generator(category_order=base_category_list,
+                                        **category_dict)
+              LOG('group_id_list', 0, str(group_id_list))
+              if isinstance(group_id_list, str): group_id_list = [group_id_list]
+              security_group_list.extend(group_id_list)
+            except ConflictError:
+              raise
+            except:
+              LOG('ERP5GroupManager', WARNING,
+                  'could not get security groups from %s' %
+                  generator_name,
+                  error = sys.exc_info())
       finally:
         setSecurityManager(sm)
       return tuple(security_group_list)
@@ -187,7 +175,6 @@ class ERP5GroupManager(BasePlugin):
     return _getGroupsForPrincipal(
                 user_name=principal.getId(),
                 path=self.getPhysicalPath())
-
 
 
 classImplements( ERP5GroupManager
