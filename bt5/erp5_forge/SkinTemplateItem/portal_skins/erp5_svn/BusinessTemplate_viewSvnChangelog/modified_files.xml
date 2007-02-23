@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>TextAreaField</string>
+          <string>LinesField</string>
         </tuple>
         <none/>
       </tuple>
@@ -112,6 +112,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -193,6 +197,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -217,7 +225,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -265,11 +275,19 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Modified files</string> </value>
+                    <value> <string>Modified Files</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -299,7 +317,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:\'\\n\'.join(here.modified.split(\',\'))</string> </value>
+            <value> <string>python: here.modified.split(\',\')</string> </value>
         </item>
       </dictionary>
     </pickle>

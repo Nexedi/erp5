@@ -82,6 +82,11 @@
                     <key>                 <string>center</string> </key>
                     <value>
                       <list>
+                        <string>your_changelog</string>
+                        <string>reminder</string>
+                        <string>added_files</string>
+                        <string>modified_files</string>
+                        <string>removed_files</string>
                         <string>your_added</string>
                         <string>your_modified</string>
                         <string>your_removed</string>
@@ -91,13 +96,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_changelog</string>
-                        <string>reminder</string>
-                        <string>added_files</string>
-                        <string>modified_files</string>
-                        <string>removed_files</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
