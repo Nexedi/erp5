@@ -62,12 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -102,7 +96,7 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_destination_person</string> </value>
+            <value> <string>z_related_source_person</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -117,7 +111,7 @@ table_1</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination.getUid()">\n
+AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.source.getUid()">\n
 AND <dtml-var table_0>.uid = catalog.uid\n
 AND <dtml-var table_1>.portal_type = \'Person\'\n
 \n
@@ -160,7 +154,7 @@ AND <dtml-var table_1>.portal_type = \'Person\'\n
                         <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination.getUid()">\n
+AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.source.getUid()">\n
 AND <dtml-var table_0>.uid = catalog.uid\n
 AND <dtml-var table_1>.portal_type = \'Person\'\n
 \n
