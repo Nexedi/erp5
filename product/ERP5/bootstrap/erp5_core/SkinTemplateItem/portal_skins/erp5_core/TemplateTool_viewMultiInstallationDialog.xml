@@ -99,6 +99,8 @@
                     <value>
                       <list>
                         <string>your_form_title</string>
+                        <string>your_update_catalog</string>
+                        <string>your_update_translation</string>
                       </list>
                     </value>
                 </item>
