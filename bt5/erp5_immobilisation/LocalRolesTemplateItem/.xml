@@ -1,9 +1,0 @@
-<local_roles_item>
- <local_roles>
-  <role id='admin'>
-   <item>Owner</item>
-  </role>
- </local_roles>
- <group_local_roles>
- </group_local_roles>
-</local_roles_item>
