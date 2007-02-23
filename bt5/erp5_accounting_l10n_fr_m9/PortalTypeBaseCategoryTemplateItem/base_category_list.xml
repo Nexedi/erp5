@@ -1,14 +1,27 @@
 <base_category_list>
  <portal_type id="Accounting Transaction">
   <item>aggregate</item>
+  <item>recovery_status</item>
  </portal_type>
- <portal_type id="Invoice Transmission Sheet">
-  <item>origin</item>
+ <portal_type id="Balance Transaction">
+  <item>recovery_status</item>
+ </portal_type>
+ <portal_type id="Payment Transaction">
+  <item>aggregate</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>aggregate</item>
  </portal_type>
+ <portal_type id="Purchase Invoice Transaction Line">
+  <item>intervention</item>
+  <item>market</item>
+  <item>order</item>
+ </portal_type>
  <portal_type id="Sale Invoice Transaction">
+  <item>recovery_status</item>
   <item>aggregate</item>
+ </portal_type>
+ <portal_type id="Transfer">
+  <item>causality</item>
  </portal_type>
 </base_category_list>

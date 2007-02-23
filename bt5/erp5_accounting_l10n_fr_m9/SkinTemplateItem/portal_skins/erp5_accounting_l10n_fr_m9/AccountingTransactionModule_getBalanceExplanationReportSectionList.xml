@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+from Products.PythonScripts.standard import Object\n
+portal = context.getPortalObject()\n
+request = portal.REQUEST\n
+\n
+account = request.get(\'account\', \'\')\n
+at_date = request[\'at_date\']\n
+section_category = request[\'section_category\']\n
+section_uid = [x.uid for x in portal.portal_categories.restrictedTraverse(\n
+                 section_category).getGroupRelatedValueList(\n
+                 portal_type=\'Organisation\')]\n
+\n
+\n
+mirror_section_title_cache = dict()\n
+def getMirrorSectionTitle(relative_url):\n
+  if not relative_url:\n
+    return \'\'\n
+  try:\n
+    return mirror_section_title_cache[relative_url]\n
+  except KeyError:\n
+    value = portal.restrictedTraverse(relative_url).getTitle()\n
+    mirror_section_title_cache[relative_url] = value\n
+    return value\n
+\n
+\n
+mirror_section_reference_cache = dict()\n
+def getMirrorSectionReference(relative_url):\n
+  if not relative_url:\n
+    return \'\'\n
+  try:\n
+    return mirror_section_reference_cache[relative_url]\n
+  except KeyError:\n
+    value = portal.restrictedTraverse(relative_url).getStringIndex()\n
+    mirror_section_reference_cache[relative_url] = value\n
+    return value\n
+\n
+\n
+invalid_ids = portal.getPortalAccountingTransactionTypeList()\n
+def getOriginId(transaction):\n
+  """returns origin_id, unless it\'s the same as the portal type.\n
+  """\n
+  origin_id = transaction.getOriginId()\n
+  if origin_id in invalid_ids:\n
+    return \'\'\n
+  return origin_id\n
+\n
+\n
+def getIntIndex(transaction):\n
+  """returns int_index on 5 digits, without errors.\n
+  """\n
+  int_index = transaction.getIntIndex()\n
+  if int_index is None:\n
+    return \'\'\n
+  return \'%05d\' % int_index\n
+\n
+\n
+if account:\n
+  account_value_list = [portal.restrictedTraverse(account)]\n
+else:\n
+  account_value_list = [a for a in portal.account_module.objectValues()\n
+        if a.getAccountType() in (\'asset/receivable\', \'liability/payable\')]\n
+\n
+report_section_list = []\n
+for account_value in account_value_list:\n
+  movement_list = []\n
+  total_debit = 0\n
+  total_credit = 0\n
+  account_id = account_value.getId()\n
+\n
+  for brain in portal.Base_zGetNotGroupedMovementList(\n
+                                        at_date=at_date,\n
+                                        simulation_state=[\'delivered\'],\n
+                                        node_uid=account_value.getUid(),\n
+                                        section_uid=section_uid):\n
+                          \n
+    transaction = brain.getObject().getParentValue()\n
+    dunning_info = transaction.SaleInvoiceTransaction_getDunningInfo()\n
+    \n
+    debit = max(brain.total_price, 0)\n
+    total_debit += debit\n
+    credit = max(-brain.total_price, 0)\n
+    total_credit += credit\n
+\n
+    movement_list.append(\n
+          Object(uid=\'new_\',\n
+                 emit_date=transaction.getEmitDate() or brain.date,\n
+                 date=brain.date,\n
+                 explanation_portal_type=transaction.getTranslatedPortalType(),\n
+                 explanation_int_index=getIntIndex(transaction),\n
+                 explanation_origin_id=getOriginId(transaction),\n
+                 explanation_title=transaction.getTitle(),\n
+                 explanation_causality_title=\',\'.join(\n
+                                transaction.getCausalityTitleList() or []),\n
+                 nopaye=getMirrorSectionReference(\n
+                               brain.mirror_section_relative_url),\n
+                 mirror_section_title=getMirrorSectionTitle(\n
+                               brain.mirror_section_relative_url),\n
+                 debit=debit,\n
+                 credit=credit,\n
+                 absolute_url=lambda:transaction.absolute_url_path(),\n
+                 dunning_code=dunning_info[\'code\'],\n
+                 dunning_date=dunning_info[\'date\'],\n
+                 dunning_comment=dunning_info[\'comment\'],\n
+                ))\n
+\n
+  if movement_list:\n
+    # only add a report section if we have something to display for this\n
+    # account.\n
+    request.set(\'%s/Account_getBalanceExplanationMovementList\'\n
+                 % account_id, movement_list)\n
+    request.set(\'%s/Account_statBalanceExplanationMovementList/credit\'\n
+                 % account_id, total_credit)\n
+    request.set(\'%s/Account_statBalanceExplanationMovementList/debit\' \n
+                 % account_id, total_debit)\n
+\n
+    \n
+    report_section_list.append( ReportSection(\n
+                        path=account_value.getPhysicalPath(), level=1,\n
+                        title=account_value.Account_getFormattedTitle(),\n
+                        form_id=\'Account_viewBalanceExplanationMovementList\',\n
+                        selection_name=\'account_balance_explanation_\'\n
+                                       \'movement_list_selection\',\n
+                        selection_params=dict(at_date=at_date,\n
+                                              account_id=account_id,\n
+                                              section_uid=section_uid),))\n
+\n
+return report_section_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>request</string>
+                            <string>account</string>
+                            <string>_getitem_</string>
+                            <string>at_date</string>
+                            <string>section_category</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>section_uid</string>
+                            <string>dict</string>
+                            <string>mirror_section_title_cache</string>
+                            <string>getMirrorSectionTitle</string>
+                            <string>mirror_section_reference_cache</string>
+                            <string>getMirrorSectionReference</string>
+                            <string>invalid_ids</string>
+                            <string>getOriginId</string>
+                            <string>getIntIndex</string>
+                            <string>account_value_list</string>
+                            <string>a</string>
+                            <string>report_section_list</string>
+                            <string>account_value</string>
+                            <string>movement_list</string>
+                            <string>total_debit</string>
+                            <string>total_credit</string>
+                            <string>account_id</string>
+                            <string>brain</string>
+                            <string>transaction</string>
+                            <string>dunning_info</string>
+                            <string>max</string>
+                            <string>debit</string>
+                            <string>credit</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getBalanceExplanationReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

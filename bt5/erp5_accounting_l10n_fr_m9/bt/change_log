@@ -1,3 +1,11 @@
+2007-02-23 jerome
+* Added Opposition module
+* Added Transfer module
+* Added workflows for invoice accounting with m9 rules and payment
+* Default classification for m9 invoices
+* Add new references to accounting transaction (many forms overloaded)
+* Simple dunning implementation
+
 2006-11-15 jerome
 * Added a print action for selected accounting transaction, showing summary by type and transmission sheet
 

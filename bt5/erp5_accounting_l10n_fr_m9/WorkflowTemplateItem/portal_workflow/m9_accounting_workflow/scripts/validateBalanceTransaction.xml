@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+error_message = \'\'\n
+\n
+# Balance Transaction.\n
+transaction = state_change.object\n
+module = transaction.aq_parent\n
+\n
+# Get sections and a currency.\n
+source_section = transaction.getSourceSection()\n
+\n
+if source_section in (None, \'\'):\n
+  error_message = \'source_section is not defined\'\n
+else:\n
+  for t in module.contentValues(filter={\'portal_type\':\'Balance Transaction\'}):\n
+    if t.getSimulationState() == \'delivered\':\n
+      error_message = \'another balance transaction is already defined\'\n
+      break\n
+  else:\n
+    dict = {}\n
+    for line in transaction.contentValues(filter={\'portal_type\':\'Balance Transaction Line\'}):\n
+      key_list = (line.getSource(), line.getDestinationSection(), line.getSourcePayment())\n
+      if key_list in dict:\n
+        error_message = \'More than one lines are defined for the account %s, the third party %s and the bank account %s\' % key_list\n
+        break\n
+      dict[key_list] = 1\n
+\n
+  \n
+if error_message != \'\':\n
+  raise ValidationFailed, \'Action impossible : \'+error_message\n
+\n
+# if it\'s ok, validate the lines\n
+container.validateTransactionLines(state_change)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>error_message</string>
+                            <string>_getattr_</string>
+                            <string>transaction</string>
+                            <string>module</string>
+                            <string>source_section</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>t</string>
+                            <string>dict</string>
+                            <string>line</string>
+                            <string>key_list</string>
+                            <string>_write_</string>
+                            <string>container</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateBalanceTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

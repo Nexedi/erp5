@@ -1,7 +1,11 @@
 Accounting Transaction | aggregate
-Invoice Transmission Sheet | origin
-Purchase Invoice Transaction | aggregate
-Sale Invoice Transaction | aggregate
+Accounting Transaction | recovery_status
+Balance Transaction | recovery_status
+Payment Transaction | aggregate
 Purchase Invoice Transaction Line | intervention
 Purchase Invoice Transaction Line | market
 Purchase Invoice Transaction Line | order
+Purchase Invoice Transaction | aggregate
+Sale Invoice Transaction | aggregate
+Sale Invoice Transaction | recovery_status
+Transfer | causality

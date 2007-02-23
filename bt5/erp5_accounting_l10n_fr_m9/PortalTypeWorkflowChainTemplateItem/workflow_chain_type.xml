@@ -1,10 +1,42 @@
 <workflow_chain>
  <chain>
+  <type>Accounting Transaction</type>
+  <workflow>invoice_payment_workflow, -accounting_workflow, m9_accounting_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Balance Transaction</type>
+  <workflow>-accounting_workflow, m9_accounting_workflow, invoice_payment_workflow</workflow>
+ </chain>
+ <chain>
   <type>Invoice Transmission Sheet</type>
   <workflow>edit_workflow, transmission_sheet_workflow</workflow>
  </chain>
  <chain>
   <type>Opposition</type>
   <workflow>edit_workflow, opposition_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Payment Transaction</type>
+  <workflow>-accounting_workflow, payment_transaction_transfer_workflow, m9_accounting_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Invoice Transaction</type>
+  <workflow>m9_accounting_workflow, -invoice_causality_workflow, -accounting_workflow, -delivery_edit_workflow, invoice_payment_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Invoice Transaction Line</type>
+  <workflow>-delivery_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Invoice Transaction</type>
+  <workflow>m9_accounting_workflow, -accounting_workflow, -invoice_causality_workflow, -delivery_edit_workflow, invoice_payment_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Invoice Transaction Line</type>
+  <workflow>-delivery_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transfer</type>
+  <workflow>transfer_workflow</workflow>
  </chain>
 </workflow_chain>

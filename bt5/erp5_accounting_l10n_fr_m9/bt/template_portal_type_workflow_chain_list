@@ -1,4 +1,26 @@
+Accounting Transaction | -accounting_workflow
+Accounting Transaction | invoice_payment_workflow
+Accounting Transaction | m9_accounting_workflow
+Balance Transaction | -accounting_workflow
+Balance Transaction | invoice_payment_workflow
+Balance Transaction | m9_accounting_workflow
 Invoice Transmission Sheet | edit_workflow
 Invoice Transmission Sheet | transmission_sheet_workflow
 Opposition | edit_workflow
 Opposition | opposition_workflow
+Payment Transaction | -accounting_workflow
+Payment Transaction | m9_accounting_workflow
+Payment Transaction | payment_transaction_transfer_workflow
+Purchase Invoice Transaction Line | -delivery_edit_workflow
+Purchase Invoice Transaction | -accounting_workflow
+Purchase Invoice Transaction | -delivery_edit_workflow
+Purchase Invoice Transaction | -invoice_causality_workflow
+Purchase Invoice Transaction | invoice_payment_workflow
+Purchase Invoice Transaction | m9_accounting_workflow
+Sale Invoice Transaction Line | -delivery_edit_workflow
+Sale Invoice Transaction | -accounting_workflow
+Sale Invoice Transaction | -delivery_edit_workflow
+Sale Invoice Transaction | -invoice_causality_workflow
+Sale Invoice Transaction | invoice_payment_workflow
+Sale Invoice Transaction | m9_accounting_workflow
+Transfer | transfer_workflow

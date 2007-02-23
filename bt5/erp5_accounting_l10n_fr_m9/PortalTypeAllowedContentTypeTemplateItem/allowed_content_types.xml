@@ -1,8 +1,19 @@
 <allowed_content_type_list>
+ <portal_type id="Accounting Transaction">
+  <item>Payment Condition</item>
+  <item>Invoice Line</item>
+ </portal_type>
+ <portal_type id="Balance Transaction">
+  <item>Payment Condition</item>
+  <item>Invoice Line</item>
+ </portal_type>
  <portal_type id="Invoice Transmission Sheet Module">
   <item>Invoice Transmission Sheet</item>
  </portal_type>
  <portal_type id="Opposition Module">
   <item>Opposition</item>
+ </portal_type>
+ <portal_type id="Transfer Module">
+  <item>Transfer</item>
  </portal_type>
 </allowed_content_type_list>

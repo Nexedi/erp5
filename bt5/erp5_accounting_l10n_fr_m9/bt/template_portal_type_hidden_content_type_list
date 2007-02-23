@@ -1,0 +1,7 @@
+Accounting Transaction | Invoice Line
+Accounting Transaction | Payment Condition
+Balance Transaction | Invoice Line
+Balance Transaction | Payment Condition
+Purchase Invoice Transaction | Invoice Line
+Sale Invoice Transaction | Invoice Line
+Transfer Module | Transfer

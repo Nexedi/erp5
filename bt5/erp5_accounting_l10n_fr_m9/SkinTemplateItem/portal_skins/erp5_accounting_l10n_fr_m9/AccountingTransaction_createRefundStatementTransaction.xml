@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from DateTime import DateTime\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+causality = context.getCausalityValue() or context\n
+\n
+is_source = context.AccountingTransaction_isSourceView()\n
+\n
+if is_source:\n
+  section = context.getSourceSection()\n
+  mirror_section = context.getDestinationSection()\n
+  qty = sum([l.getSourceInventoriatedTotalAssetCredit() or 0\n
+             for l in context.getMovementList() if l.getSourceId() == \'4664\'])\n
+else:\n
+  section = context.getDestinationSection()\n
+  mirror_section = context.getSourceSection()\n
+  qty = sum([l.getDestinationInventoriatedTotalAssetCredit() or 0\n
+             for l in context.getMovementList() if l.getDestinationId() == \'4664\'])\n
+             \n
+tr = portal.accounting_module.newContent(\n
+                   portal_type=\'Payment Transaction\',\n
+                   origin=\'Payment Transaction/OP\',\n
+                   created_by_builder=1, # XXX prevent init script\n
+                   source_section=section,\n
+                   destination_section=mirror_section,\n
+                   resource=context.getResource(),\n
+                   start_date=DateTime().earliestTime(),\n
+                   causality_value=causality )\n
+\n
+# Add a custom property to make a condition for the action\n
+tr.manage_addProperty(\'is_refund_statement\', True, type=\'boolean\')\n
+\n
+tr.newContent( portal_type=\'Accounting Transaction Line\',\n
+\t       source=\'account_module/4664\',\n
+\t       source_debit=qty )\n
+tr.newContent( portal_type=\'Accounting Transaction Line\',\n
+\t       source=\'account_module/5151\',\n
+\t       source_credit=qty )\n
+\n
+portal.portal_workflow.m9_accounting_workflow.scripts.setReferences(\n
+          state_change=dict(object=tr))\n
+tr.plan()\n
+\n
+context.REQUEST.RESPONSE.redirect(\'%s/view?portal_status_message=%s\' % (\n
+                                  tr.absolute_url(), N_(\'Refund Created.\')))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>DateTime</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>causality</string>
+                            <string>is_source</string>
+                            <string>section</string>
+                            <string>mirror_section</string>
+                            <string>sum</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>l</string>
+                            <string>qty</string>
+                            <string>tr</string>
+                            <string>True</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_createRefundStatementTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

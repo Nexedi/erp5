@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.PythonScripts.standard import Object\n
+\n
+object_list = []\n
+movement_urls = {}\n
+\n
+def getListItemUrl(alias, idx, selection_name):\n
+  return movement_urls[idx]\n
+\n
+idx = -1\n
+for movement in movement_list:\n
+  idx += 1\n
+  if node_relative_url == movement.getSource():\n
+    debit = movement.getSourceInventoriatedTotalAssetDebit() or 0\n
+    credit = movement.getSourceInventoriatedTotalAssetCredit() or 0\n
+    node = movement.getSourceValue()\n
+  else:\n
+    debit = movement.getDestinationInventoriatedTotalAssetDebit() or 0\n
+    credit = movement.getDestinationInventoriatedTotalAssetCredit() or 0\n
+    node = movement.getDestinationValue()\n
+  int_index = movement.getParentValue().getIntIndex() and (\n
+                "%05d" % movement.getParentValue().getIntIndex()) or ""\n
+\n
+  movement_urls[idx] = movement.getParentValue().absolute_url() + \'/view\'\n
+  object_list.append(Object(id=\'%s\' % kw,\n
+                         uid=movement.getUid(),\n
+                         getListItemUrl=getListItemUrl,\n
+                         delivery_title=movement.getParentTitle(),\n
+                         delivery_portal_type=movement\\\n
+                              .getParentValue().getTranslatedPortalType(),\n
+                         delivery_int_index=int_index,\n
+                         grouping_reference=movement.getGroupingReference(),\n
+                         debit=debit, credit=credit, net=abs(debit-credit),\n
+                         net_side=(debit > credit and \'D\' or \'C\')))\n
+\n
+if stat:\n
+  precision = context.getQuantityPrecisionFromResource(context.getResource())\n
+  debit = round(sum([x.debit for x in object_list]), precision) or 0\n
+  credit = round(sum([x.credit for x in object_list]), precision) or 0\n
+  net = abs(round(sum([(x.debit - x.credit)\n
+                  for x in object_list]), precision)) or 0\n
+  net_side = \'\'\n
+  if debit > credit:\n
+    net_side = \'D\'\n
+  elif credit > debit:\n
+    net_side = \'C\'\n
+  return [Object( debit=debit, credit=credit, net=net, net_side=net_side)]\n
+return object_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection, stat=0, node_relative_url=\'\', movement_list=\'\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>stat</string>
+                            <string>node_relative_url</string>
+                            <string>movement_list</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>object_list</string>
+                            <string>movement_urls</string>
+                            <string>getListItemUrl</string>
+                            <string>idx</string>
+                            <string>_getiter_</string>
+                            <string>movement</string>
+                            <string>_getattr_</string>
+                            <string>debit</string>
+                            <string>credit</string>
+                            <string>node</string>
+                            <string>int_index</string>
+                            <string>_write_</string>
+                            <string>abs</string>
+                            <string>context</string>
+                            <string>precision</string>
+                            <string>round</string>
+                            <string>sum</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>net</string>
+                            <string>net_side</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <string></string>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_getExplanationLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

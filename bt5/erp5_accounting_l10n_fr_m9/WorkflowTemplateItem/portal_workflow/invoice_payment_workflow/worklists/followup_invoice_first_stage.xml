@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Worklists</string>
+          <string>WorklistDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>global</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>First Followup Invoices (%(count)s)</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+accounting_module/view?reset:int=1&simulation_state=delivered&payment_state=current&origin_id:list=OR&origin_id:list=RV&recovery_status_id=R1
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>followup_invoice_first_stage</string> </value>
+        </item>
+        <item>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>origin_id</string> </key>
+                    <value>
+                      <tuple>
+                        <string>OR</string>
+                        <string>RV</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>payment_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>current</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>recovery_status_id</string> </key>
+                    <value>
+                      <tuple>
+                        <string>R1</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>delivered</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

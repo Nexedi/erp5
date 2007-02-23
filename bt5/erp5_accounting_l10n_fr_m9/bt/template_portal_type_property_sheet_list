@@ -1,4 +1,10 @@
 Account | M9Account
+Accounting Transaction | Order
+Accounting Transaction | SortIndex
+Accounting Transaction | TradeCondition
+Balance Transaction | Order
+Balance Transaction | SortIndex
+Balance Transaction | TradeCondition
 Invoice Transmission Sheet | Arrow
 Invoice Transmission Sheet | PurchaseInvoiceTransmissionSheet
 Invoice Transmission Sheet | SortIndex
@@ -6,3 +12,10 @@ Invoice Transmission Sheet | Task
 Opposition | Amount
 Opposition | Arrow
 Opposition | Opposition
+Organisation | Reference
+Payment Transaction | Order
+Payment Transaction | SortIndex
+Purchase Invoice Transaction | Order
+Purchase Invoice Transaction | SortIndex
+Sale Invoice Transaction | Order
+Sale Invoice Transaction | SortIndex

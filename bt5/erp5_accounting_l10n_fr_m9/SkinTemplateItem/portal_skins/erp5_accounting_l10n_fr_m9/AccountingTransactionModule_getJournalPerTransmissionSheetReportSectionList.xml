@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+"""\n
+from Products.ERP5Form.Report import ReportSection\n
+request = context.REQUEST\n
+cache_storage = request.other\n
+portal = context.portal_url.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+at_date = request[\'at_date\']\n
+from_date = request.get(\'from_date\', None) or at_date\n
+section_category = request[\'section_category\']\n
+portal_type = request[\'portal_type\']\n
+\n
+payment_mode_url = None\n
+if portal_type == \'Payment Transaction\':\n
+  payment_mode = request.get(\'payment_mode\')\n
+  if payment_mode:\n
+    payment_mode_value = portal.portal_categories.payment_mode\\\n
+                                .restrictedTraverse(payment_mode)\n
+    payment_mode_url = payment_mode_value.getRelativeUrl().split(\'/\', 1)[1]\n
+\n
+simulation_state = [\'delivered\']\n
+\n
+selection_name = \'accounting_selection\'\n
+simtool = context.portal_simulation\n
+\n
+per_account_and_origin_cache = cache_storage.setdefault(\n
+                          \'m9_report_per_account_and_origin_summary\', {})\n
+per_origin_and_sheet_cache = cache_storage.setdefault(\n
+                          \'m9_report_per_origin_and_sheet_summary\', {})\n
+\n
+per_account_cache = cache_storage.setdefault(\n
+                          \'m9_report_per_account_summary\', {\'1\': {},\n
+                                                            \'2\': {},\n
+                                                            \'3\': {},\n
+                                                            \'4\': {},\n
+                                                            \'5\': {},\n
+                                                            \'6\': {},\n
+                                                            \'7\': {},\n
+                                                            \'8\': {},\n
+                                                            \'9\': {}})\n
+\n
+account_class_cache = {}\n
+def getAccountClass(account_url):\n
+  try:\n
+    return account_class_cache[account_url]\n
+  except KeyError:\n
+    account = portal.restrictedTraverse(account_url)\n
+    # fr / m9 / ${classe} / ...\n
+    classe = account.getGap().split(\'/\')[2]\n
+    # XXX this can raise with bad account. add a constraint checker on accounts\n
+    account_class_cache[account_url] = classe\n
+    return classe\n
+\n
+for brain in simtool.getMovementHistoryList(\n
+        from_date=from_date.earliestTime(),\n
+        at_date=at_date.latestTime(),\n
+        section_category=section_category,\n
+        parent_portal_type=portal_type,\n
+        simulation_state=simulation_state):\n
+\n
+  mvt = brain.getObject()\n
+  if payment_mode_url and not \\\n
+        mvt.getPaymentMode(\'\').startswith(payment_mode_url):\n
+    continue\n
+  origin = mvt.getOriginId()\n
+  sheet = mvt.getParentValue().getAggregateTitle(portal_type=\'Invoice Transmission Sheet\')\n
+  if brain.node_relative_url:\n
+    # per account and origin\n
+    account = per_account_and_origin_cache.setdefault(\n
+                                      brain.node_relative_url, {})\n
+    qty = brain.total_price or 0\n
+    total = account.setdefault(origin, 0)\n
+    account[origin] = total + qty\n
+    # per origin and sheet\n
+    origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
+    total = origin_cache.get((sheet, brain.node_relative_url), 0)\n
+    origin_cache[(sheet, brain.node_relative_url)] = total + qty\n
+    # per account class\n
+    cache = per_account_cache[getAccountClass(brain.node_relative_url)]\n
+    total = cache.get(brain.node_relative_url, 0)\n
+    cache[brain.node_relative_url] = total + qty\n
+\n
+report_section_list = [ ReportSection(\n
+      title=N_(\'Transactions\'),\n
+      path=context.getPhysicalPath(),\n
+      form_id=\'AccountingTransactionModule_viewPerOriginAndSheetSummary\',\n
+      selection_name=\'accounting_transaction_module_m9_\'\n
+                     \'accounting_transaction_list_report_selection\',\n
+      selection_params={},\n
+      selection_columns=[(\'sheet\', \'Transmission Sheet\'),\n
+                         (\'account_id\', \'Account\'),\n
+                         (\'account_title\', \'Account Name\'),\n
+                         (\'debit\', \'Debit\'),\n
+                         (\'credit\', \'Credit\')],\n
+      listbox_display_mode=\'FlatListMode\', )]\n
+\n
+for account_class in range(1, 10):\n
+  account_class = str(account_class)\n
+  if per_account_cache[account_class]:\n
+    report_section_list.append(ReportSection(\n
+        path=context.getPhysicalPath(),\n
+        level=3,\n
+        title=N_(\'Summary for account class ${classe}\',\n
+                  mapping=dict(classe=account_class)),\n
+        form_id=\'AccountingTransactionModule_viewPerAccountClassSummary\',\n
+        selection_name=\'accounting_transaction_module_m9_\'\n
+                        \'accounting_transaction_list_report_selection\',\n
+        selection_params=dict(classe=account_class),\n
+        selection_columns={},\n
+        listbox_display_mode=\'FlatListMode\', ))\n
+\n
+return report_section_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>cache_storage</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>_getitem_</string>
+                            <string>at_date</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>section_category</string>
+                            <string>portal_type</string>
+                            <string>payment_mode_url</string>
+                            <string>payment_mode</string>
+                            <string>payment_mode_value</string>
+                            <string>simulation_state</string>
+                            <string>selection_name</string>
+                            <string>simtool</string>
+                            <string>per_account_and_origin_cache</string>
+                            <string>per_origin_and_sheet_cache</string>
+                            <string>per_account_cache</string>
+                            <string>account_class_cache</string>
+                            <string>getAccountClass</string>
+                            <string>_getiter_</string>
+                            <string>brain</string>
+                            <string>mvt</string>
+                            <string>origin</string>
+                            <string>sheet</string>
+                            <string>account</string>
+                            <string>qty</string>
+                            <string>total</string>
+                            <string>_write_</string>
+                            <string>origin_cache</string>
+                            <string>cache</string>
+                            <string>report_section_list</string>
+                            <string>range</string>
+                            <string>account_class</string>
+                            <string>str</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getJournalPerTransmissionSheetReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

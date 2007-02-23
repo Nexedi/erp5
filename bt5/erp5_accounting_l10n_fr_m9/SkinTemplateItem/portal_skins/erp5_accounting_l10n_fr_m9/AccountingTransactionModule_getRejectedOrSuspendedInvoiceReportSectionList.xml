@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+request = context.REQUEST\n
+N_ = context.Base_translateString\n
+\n
+section_category = request.get(\'section_category\')\n
+origin = request.get(\'origin\')\n
+origin_cat = context.getPortalObject().portal_categories.origin\n
+if origin == \'Depenses\':\n
+  origin_list = [origin_cat.restrictedTraverse(url) for url in (\n
+                     \'Purchase Invoice Transaction\',\n
+                     \'Accounting Transaction/RC\'  ) ]\n
+else:\n
+  assert origin == \'Recettes\'\n
+  origin_list = [origin_cat.restrictedTraverse(url) for url in (\n
+                     \'Sale Invoice Transaction\',\n
+                     \'Accounting Transaction/RV\'  ) ]\n
+\n
+origin_uid = [x.getUid() for x in origin_list]\n
+\n
+return [ReportSection(\n
+          title=N_(\'Suspended Invoices\'),\n
+          path=context.getPhysicalPath(),\n
+          form_id=\'AccountingTransactionModule_viewRejectedOrSuspendedInvoiceReportSection\',\n
+          selection_params=dict(simulation_state=\'suspended\',\n
+                                origin_uid=origin_uid,\n
+                                section_category=section_category)),\n
+        ReportSection(\n
+          title=N_(\'Rejected Invoices\'),\n
+          path=context.getPhysicalPath(),\n
+          form_id=\'AccountingTransactionModule_viewRejectedOrSuspendedInvoiceReportSection\',\n
+          selection_params=dict(simulation_state=\'rejected\',\n
+                                origin_uid=origin_uid,\n
+                                section_category=section_category))]\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>N_</string>
+                            <string>section_category</string>
+                            <string>origin</string>
+                            <string>origin_cat</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>url</string>
+                            <string>origin_list</string>
+                            <string>AssertionError</string>
+                            <string>x</string>
+                            <string>origin_uid</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getRejectedOrSuspendedInvoiceReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

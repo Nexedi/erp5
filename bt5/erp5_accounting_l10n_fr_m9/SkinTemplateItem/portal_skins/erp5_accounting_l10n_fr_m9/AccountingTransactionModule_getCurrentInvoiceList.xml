@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+\n
+portal = context.getPortalObject()\n
+recovery_status_uid = portal.portal_categories.recovery_status.\\\n
+                          restrictedTraverse(recovery_status).getUid()\n
+\n
+accounting_transaction_line_portal_type = \\\n
+            portal.getPortalAccountingMovementTypeList()\n
+def getLineWithIncomeAccountList(transaction, is_source):\n
+  \'\'\'Returns a list of account, total_price for all lines inside this\n
+  transaction, if the line uses an income account.\n
+  \'\'\'\n
+  account_amount_list = []\n
+  for line in transaction.getMovementList(portal_type=\n
+                  accounting_transaction_line_portal_type):\n
+    if is_source:\n
+      if line.getSource():\n
+       account = line.getSourceValue()\n
+       if account.getAccountTypeId() == \'income\' or \\\n
+             account.isMemberOf(\'gap/fr/m9/2\'):\n
+          account_amount_list.append(( account.getId(),\n
+                line.getSourceInventoriatedTotalAssetPrice() or 0 ))\n
+    elif line.getDestination():\n
+     account = line.getDestinationValue()\n
+     if account.getAccountTypeId() == \'income\' or\\\n
+             account.isMemberOf(\'gap/fr/m9/2\'):\n
+       account_amount_list.append(( account.getId(),\n
+              line.getDestinationInventoriatedTotalAssetPrice() or 0 ))\n
+  return account_amount_list\n
+\n
+# sorting could be possible in SQL ?\n
+transaction_list = portal.portal_catalog.searchResults(\n
+          payment_state=\'suspended\',\n
+          recovery_status_uid=recovery_status_uid,\n
+          portal_type=portal.getPortalAccountingTransactionTypeList(),)\n
+\n
+transaction_per_section = dict()\n
+\n
+# we sort per mirror_section_title\n
+for transaction in transaction_list:\n
+  transaction = transaction.getObject()\n
+  is_source = transaction.AccountingTransaction_isSourceView()\n
+  if is_source:\n
+    mirror_section = transaction.getDestinationSectionValue()\n
+  else:\n
+    mirror_section = transaction.getSourceSectionValue()\n
+  \n
+  transaction_per_section.setdefault(mirror_section.getTitle(), []).append(\n
+                                                  (transaction, is_source))\n
+\n
+\n
+object_list = []\n
+section_keys = transaction_per_section.keys()\n
+section_keys.sort()\n
+\n
+general_total = 0\n
+for section in section_keys:\n
+  total_per_section = 0\n
+  first = 1\n
+  for transaction, is_source in transaction_per_section[section]:\n
+    if is_source:\n
+      mirror_section = transaction.getDestinationSectionValue()\n
+      emit_date = transaction.getEmitDate() or transaction.getStartDate()\n
+      year = transaction.getStartDate().year()\n
+    else:\n
+      mirror_section = transaction.getSourceSectionValue()\n
+      emit_date = transaction.getEmitDate() or transaction.getStopDate()\n
+      year = transaction.getStopDate().year()\n
+    \n
+    for account, amount in getLineWithIncomeAccountList(transaction, is_source):\n
+      amount = -amount\n
+      if first:\n
+        nopaye=mirror_section.getStringIndex()\n
+        mirror_section_title = mirror_section.getTitle()\n
+        mirror_section_default_address_text = \\\n
+            mirror_section.getDefaultAddressText()\n
+      else:\n
+        nopaye = \'\'\n
+        mirror_section_title = \'\'\n
+        mirror_section_default_address_text = \'\'\n
+\n
+      object_list.append(Object(uid=\'new_\',\n
+              nopaye=nopaye,\n
+              mirror_section_title=mirror_section_title,\n
+              mirror_section_default_address_text=\n
+                      mirror_section_default_address_text,\n
+              year=year,\n
+              emit_date=emit_date,\n
+              int_index=\'%05d\' % (transaction.getIntIndex() or 0),\n
+              account=account,\n
+              amount=amount))\n
+      total_per_section += amount\n
+      general_total += amount\n
+\n
+      first = 0 # XXX\n
+  if total_per_section:\n
+    object_list.append(Object(uid_=\'new\',\n
+                              account=\'TOTAL\',\n
+                              amount=total_per_section))\n
+    object_list.append(Object(uid_=\'new\',))\n
+                            \n
+object_list.append(Object(uid_=\'new\',\n
+                    mirror_section_default_address_text=\'TOTAL GENERAL\',\n
+                    amount=general_total))\n
+\n
+return object_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection=None, recovery_status=None, at_date=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>recovery_status</string>
+                            <string>at_date</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>recovery_status_uid</string>
+                            <string>accounting_transaction_line_portal_type</string>
+                            <string>getLineWithIncomeAccountList</string>
+                            <string>transaction_list</string>
+                            <string>dict</string>
+                            <string>transaction_per_section</string>
+                            <string>_getiter_</string>
+                            <string>transaction</string>
+                            <string>is_source</string>
+                            <string>mirror_section</string>
+                            <string>object_list</string>
+                            <string>section_keys</string>
+                            <string>general_total</string>
+                            <string>section</string>
+                            <string>total_per_section</string>
+                            <string>first</string>
+                            <string>_getitem_</string>
+                            <string>emit_date</string>
+                            <string>year</string>
+                            <string>account</string>
+                            <string>amount</string>
+                            <string>nopaye</string>
+                            <string>mirror_section_title</string>
+                            <string>mirror_section_default_address_text</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getCurrentInvoiceList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

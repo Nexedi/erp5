@@ -1,0 +1,19 @@
+<hidden_content_type_list>
+ <portal_type id="Accounting Transaction">
+  <item>Payment Condition</item>
+  <item>Invoice Line</item>
+ </portal_type>
+ <portal_type id="Balance Transaction">
+  <item>Payment Condition</item>
+  <item>Invoice Line</item>
+ </portal_type>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>Invoice Line</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>Invoice Line</item>
+ </portal_type>
+ <portal_type id="Transfer Module">
+  <item>Transfer</item>
+ </portal_type>
+</hidden_content_type_list>

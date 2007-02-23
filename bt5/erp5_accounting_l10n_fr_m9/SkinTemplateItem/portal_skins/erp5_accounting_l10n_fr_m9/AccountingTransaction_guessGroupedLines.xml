@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Guess a grouping references for lines whose uids are passed as\n
+accounting_transaction_line_uid_list.\n
+If accounting_transaction_line_uid_list is not passed, this script assumes that\n
+it\'s called on the context of an accounting transaction and it guess the group\n
+of accounting transaction using causality relations.\n
+"""\n
+\n
+# this dict associates (node, section, mirror_section) to a list of\n
+# accounting lines info (ie total_price and path).\n
+lines_per_node = {}\n
+\n
+portal = context.getPortalObject()\n
+ctool = portal.portal_catalog\n
+\n
+def isSource(accounting_transaction):\n
+  section_cat = portal.portal_preferences\\\n
+                .getPreferredAccountingTransactionSectionCategory()\n
+  section = accounting_transaction.getSourceSectionValue(\n
+                                      portal_type=\'Organisation\')\n
+  return section is not None and section.isMemberOf(section_cat)\n
+\n
+accounting_transaction_line_value_list = []\n
+if accounting_transaction_line_uid_list is None:\n
+  for accounting_transaction in context\\\n
+        .AccountingTransaction_getCausalityGroupedAccountingTransactionList():\n
+    if accounting_transaction.getSimulationState() != \'delivered\' and\\\n
+                          accounting_transaction.getUid() != context.getUid():\n
+      continue\n
+    for line in accounting_transaction.getMovementList(\n
+                            portal.getPortalAccountingMovementTypeList()):\n
+      if line.getGroupingReference():\n
+        continue\n
+      accounting_transaction_line_value_list.append(line)\n
+else:\n
+  accounting_transaction_line_value_list = [ctool.getObject(uid) for uid in \n
+                                        accounting_transaction_line_uid_list]\n
+\n
+currency_precision = None\n
+\n
+for line in accounting_transaction_line_value_list:\n
+  accounting_transaction = line.getParentValue()\n
+  if isSource(accounting_transaction):\n
+    lines_per_node.setdefault(\n
+                  (line.getSource(portal_type=\'Account\'),\n
+                   line.getSourceSection(),\n
+                   line.getDestinationSection(), ), []).append(\n
+      dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,\n
+           path=line.getRelativeUrl()))\n
+  else:\n
+    lines_per_node.setdefault(\n
+              (line.getDestination(portal_type=\'Account\'),\n
+               line.getDestinationSection(),\n
+               line.getSourceSection(), ), []).append(\n
+    dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,\n
+         path=line.getRelativeUrl()))\n
+\n
+changed_lines = []\n
+for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
+  total_price = sum([l[\'total_price\'] for l in line_info_list])\n
+  # get the currency rounding for this section\n
+  section_obj = portal.restrictedTraverse(section)\n
+  default_currency = section_obj.getPriceCurrencyValue()\n
+  if default_currency is not None:\n
+    total_price = round(total_price, default_currency.getQuantityPrecision())\n
+  if total_price == 0:\n
+    # get a grouping reference id\n
+    grouping_reference = portal.portal_ids.generateNewId(\n
+          (\'grouping_reference\', node, section, mirror_section))\n
+    \n
+    # convert from int to letters\n
+    d, m = divmod(grouping_reference, 26)\n
+    string_reference = \'A\' * d\n
+    string_reference += (chr(m + ord(\'A\')))\n
+\n
+    for line in line_info_list:\n
+      line_obj = portal.restrictedTraverse(line[\'path\'])\n
+      line_obj.AccountingTransactionLine_setGroupingReference(string_reference)\n
+      changed_lines.append(line[\'path\'])\n
+\n
+return changed_lines\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>accounting_transaction_line_uid_list=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>accounting_transaction_line_uid_list</string>
+                            <string>lines_per_node</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>ctool</string>
+                            <string>isSource</string>
+                            <string>accounting_transaction_line_value_list</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>accounting_transaction</string>
+                            <string>line</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>uid</string>
+                            <string>currency_precision</string>
+                            <string>dict</string>
+                            <string>changed_lines</string>
+                            <string>node</string>
+                            <string>section</string>
+                            <string>mirror_section</string>
+                            <string>line_info_list</string>
+                            <string>sum</string>
+                            <string>l</string>
+                            <string>_getitem_</string>
+                            <string>total_price</string>
+                            <string>section_obj</string>
+                            <string>default_currency</string>
+                            <string>round</string>
+                            <string>grouping_reference</string>
+                            <string>divmod</string>
+                            <string>d</string>
+                            <string>m</string>
+                            <string>string_reference</string>
+                            <string>chr</string>
+                            <string>ord</string>
+                            <string>line_obj</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_guessGroupedLines</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

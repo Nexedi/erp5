@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Validate Transaction Lines for source and destination section.\n
+"""\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+SOURCE, DESTINATION = (\'source\', \'destination\')\n
+transaction = state_change[\'object\']\n
+portal = transaction.getPortalObject()\n
+valid_section_portal_type_list = [\'Person\', \'Organisation\']\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+\n
+# first of all, validate the transaction itself\n
+container.validateTransaction(state_change)\n
+\n
+# Get sections.\n
+source_section = transaction.getSourceSectionValue(\n
+                           portal_type=valid_section_portal_type_list)\n
+destination_section = transaction.getDestinationSectionValue(\n
+                           portal_type=valid_section_portal_type_list)\n
+\n
+# do we want to check validity for destination as well?\n
+check_for_destination = 0\n
+if source_section is not None and destination_section is not None:\n
+  source_section_group = source_section.getGroup(\'\').lstrip(\'group/\').split(\'/\')\n
+  destination_section_group = destination_section\\\n
+                                  .getGroup(\'\').lstrip(\'group/\').split(\'/\')\n
+  if destination_section_group and source_section_group and \\\n
+      destination_section_group[0] == source_section_group[0]:\n
+    check_for_destination = 1\n
+\n
+source_sum = 0\n
+destination_sum = 0\n
+\n
+# Check transaction lines\n
+if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
+  accounting_transaction_line_list = transaction.contentValues(\n
+         filter={ \'portal_type\':\n
+               transaction.getPortalAccountingMovementTypeList()})\n
+  for transaction_line in accounting_transaction_line_list:\n
+    # XXX would source_section != destination_section work here ?\n
+    if source_section is not None and destination_section is not None and\\\n
+            source_section.getUid() == destination_section.getUid():\n
+      destination_quantity = source_quantity = ((transaction_line\\\n
+                  .getSourceInventoriatedTotalAssetPrice() or 0) + \\\n
+          (transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0))\n
+    else:\n
+      source_quantity = transaction_line\\\n
+                            .getSourceInventoriatedTotalAssetPrice() or 0\n
+      destination_quantity = transaction_line\\\n
+                          .getDestinationInventoriatedTotalAssetPrice() or 0\n
+\n
+    source_sum      += source_quantity\n
+    destination_sum += destination_quantity\n
+\n
+    if transaction_line.getSource(     portal_type = \'Account\') is None and \\\n
+       transaction_line.getDestination(portal_type = \'Account\') is None and \\\n
+       transaction_line.getQuantity() != 0:\n
+      raise ValidationFailed, N_(\n
+            "Action failed: no account defined for line \'${line_id}\'.",\n
+             mapping = {\'line_id\': transaction_line.getId()} )\n
+\n
+    for side in (SOURCE, DESTINATION) :\n
+      if side == SOURCE:\n
+        account = transaction_line.getSourceValue(portal_type=\'Account\')\n
+        section = transaction_line.getSourceSectionValue()\n
+        payment = transaction_line.getSourcePaymentValue(\n
+                           portal_type=portal.getPortalPaymentNodeTypeList())\n
+        mirror_payment = transaction_line.getDestinationPaymentValue(\n
+                           portal_type=portal.getPortalPaymentNodeTypeList())\n
+        third_party = transaction_line.getDestinationSectionValue(\n
+                           portal_type=valid_section_portal_type_list)\n
+        quantity = source_quantity\n
+        date = transaction_line.getStartDate()\n
+      else:\n
+        account = transaction_line.getDestinationValue(portal_type=\'Account\')\n
+        section = transaction_line.getDestinationSectionValue()\n
+        payment = transaction_line.getDestinationPaymentValue(\n
+                           portal_type=portal.getPortalPaymentNodeTypeList())\n
+        mirror_payment = transaction_line.getSourcePaymentValue(\n
+                           portal_type=portal.getPortalPaymentNodeTypeList())\n
+        third_party = transaction_line.getSourceSectionValue(\n
+                           portal_type=valid_section_portal_type_list)\n
+        quantity = destination_quantity\n
+        date = transaction_line.getStopDate()\n
+\n
+      if account is None:\n
+        continue\n
+\n
+      # if this line have an opposition, check the opposition is well applied\n
+      # to the line.\n
+      opposition = transaction_line.getAggregateValue(portal_type=\'Opposition\')\n
+      if opposition is not None:\n
+        if transaction.AccountingTransaction_isSourceView():\n
+          mirror_section_url = transaction_line.getDestinationSection()\n
+          node_url = transaction_line.getSource()\n
+        else:\n
+          mirror_section_url = transaction_line.getSourceSection()\n
+          node_url = transaction_line.getDestination()\n
+        \n
+        if opposition.getDestinationSection() != mirror_section_url:\n
+          raise ValidationFailed, N_(\n
+              "Action failed: Third party for Opposition on line ${line_id}"\n
+              " does not match (must be set to the factor).",\n
+                   mapping = {\'line_id\': transaction_line.getId()})\n
+\n
+        if opposition.getDestination() != node_url:\n
+          raise ValidationFailed, N_(\n
+              "Action failed: Accounts for Opposition on line ${line_id} "\n
+              "does not match", mapping={\'line_id\': transaction_line.getId()})\n
+\n
+      if account.getValidationState() != \'validated\':\n
+        raise ValidationFailed, N_(\n
+                  "Action failed: account \'${account_title}\' is not opened.",\n
+                   mapping = {\'account_title\':\n
+                              unicode(account.getTranslatedTitle(), \'utf8\')})\n
+      \n
+      if mirror_payment is not None and mirror_payment.getProperty(\n
+                       \'validation_state\', \'validated\') != \'validated\':\n
+        raise ValidationFailed, N_(\n
+                  "Action failed: Bank Account \'${RIB}\' is not validated.",\n
+                  mapping = dict(RIB=mirror_payment.getReference()))\n
+\n
+      # Test third party related-data\n
+      if account.getAccountTypeId() in ("receivable", "payable"):\n
+        # Test existence\n
+        if third_party is None:\n
+          raise ValidationFailed, N_(\n
+               "Action failed: no third party defined for line \'${line}\'.",\n
+               mapping = {\'line\': transaction_line.getId()} )\n
+        if third_party is not None and third_party.getPortalType() \\\n
+                                          in [\'Person\', \'Organisation\']:\n
+          # Test state :(\n
+          if third_party.getValidationState() in (\'invalidated\', \'draft\'):\n
+            raise ValidationFailed, N_(\n
+                "Action failed: third party \'${third_party_name}\' is invalidated.",\n
+                 mapping = {\'third_party_name\':\n
+                        unicode(third_party.getTranslatedTitle(), \'utf8\')} )\n
+\n
+      if (side == SOURCE) and account.isMemberOf(\n
+                                  "account_type/asset/cash/bank"):\n
+        continue # XXX disabled for now !\n
+\n
+        # XXX we must check for source only if we are intersted in the\n
+        # accounting for source. Today, payment transaction cannot be validated\n
+        # if they do not have a source, so this check is not needed yet.\n
+        if payment is None:\n
+          raise ValidationFailed, N_(\n
+           "Action failed: no source bank account defined for line \'${line}\'.",\n
+            mapping = {\'line\': transaction_line.getId()} )\n
+        else:\n
+          bank_account_currency = payment.getProperty(\'price_currency\')\n
+          if bank_account_currency is not None and \\\n
+                bank_account_currency != transaction_line.getResource():\n
+            raise ValidationFailed, N_(\n
+                  "Action failed: source bank account for line \'${line}\' "\\\n
+                  "uses ${bank_account_currency} as default currency.",\n
+                     mapping = { \'line\' : transaction_line.getId(),\n
+                                 \'bank_account_currency\':\n
+                     unicode(payment.getPriceCurrencyReference(), \'utf8\')})\n
+      \n
+      if (side == DESTINATION) and account.isMemberOf(\n
+                                  "account_type/asset/cash/bank"):\n
+        continue # XXX disabled for now !\n
+        # we check account for destination section only if we are interested in\n
+        # the accounting for this entity.\n
+        if not check_for_destination:\n
+          continue\n
+        if payment is None:\n
+          raise ValidationFailed, N_(\n
+                "Action failed: no destination bank account defined for"\n
+                " line \'${line}\'.",\n
+                mapping = {\'line\': transaction_line.getId()} )\n
+        else:\n
+          bank_account_currency = payment.getProperty(\'price_currency\')\n
+          if bank_account_currency is not None and \\\n
+                bank_account_currency != transaction_line.getResource():\n
+            raise ValidationFailed, N_(\n
+                  "Action failed: bank account for line \'${line}\' "\\\n
+                  "uses ${bank_account_currency} as default currency.",\n
+                     mapping = { \'line\' : transaction_line.getId(),\n
+                                 \'bank_account_currency\':\n
+                     unicode(payment.getPriceCurrencyReference(), \'utf8\')})\n
+  \n
+\n
+  # TODO: should use currency precision instead of hardcoding 100 !\n
+  if int(source_sum*100) != 0:\n
+    raise ValidationFailed, N_(\n
+            \'Action failed: transaction is not balanced for source section.\')\n
+\n
+  if int(destination_sum*100) != 0:\n
+    raise ValidationFailed, N_(\n
+        \'Action failed: transaction is not balanced for destination section.\')\n
+\n
+# make sure we always have a consistent origin, for accounting transaction\n
+# module report tree.\n
+# This is done in before script, because we want to do this while we still have\n
+# the Modify Portal Content permission.\n
+if not transaction.getOrigin():\n
+  origin = portal.portal_categories.origin\n
+  if transaction.getPortalType() in origin.objectIds():\n
+    transaction.setOrigin(transaction.getPortalType())\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getiter_</string>
+                            <string>SOURCE</string>
+                            <string>DESTINATION</string>
+                            <string>_getitem_</string>
+                            <string>transaction</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>valid_section_portal_type_list</string>
+                            <string>N_</string>
+                            <string>container</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>check_for_destination</string>
+                            <string>None</string>
+                            <string>source_section_group</string>
+                            <string>destination_section_group</string>
+                            <string>source_sum</string>
+                            <string>destination_sum</string>
+                            <string>accounting_transaction_line_list</string>
+                            <string>transaction_line</string>
+                            <string>destination_quantity</string>
+                            <string>source_quantity</string>
+                            <string>side</string>
+                            <string>account</string>
+                            <string>section</string>
+                            <string>payment</string>
+                            <string>mirror_payment</string>
+                            <string>third_party</string>
+                            <string>quantity</string>
+                            <string>date</string>
+                            <string>opposition</string>
+                            <string>mirror_section_url</string>
+                            <string>node_url</string>
+                            <string>unicode</string>
+                            <string>dict</string>
+                            <string>bank_account_currency</string>
+                            <string>int</string>
+                            <string>origin</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateTransactionLines</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

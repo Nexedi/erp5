@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Purchase Invoice Transaction or Sale Invoice Transaction.\n
+transaction = state_change[\'object\']\n
+\n
+# Get sections.\n
+source_section = transaction.getSourceSection()\n
+destination_section = transaction.getDestinationSection()\n
+\n
+# Invoice Reference is automatically filled only for Sale Invoice Transaction.\n
+if transaction.getPortalType() == \'Sale Invoice Transaction\':\n
+  if transaction.getReference() in (None, \'\'):\n
+    invoice_id_group = (\'accounting\', \'invoice\', source_section)\n
+    invoice_reference = transaction.generateNewId(id_group = invoice_id_group)\n
+    transaction.setReference(invoice_reference)\n
+\n
+# Generate new values for Source Reference and Destination Reference.\n
+if transaction.getSourceReference() in (None, \'\'):\n
+  source_id_group = (\'accounting\', \'section\', source_section)\n
+  source_reference = transaction.generateNewId(id_group = source_id_group)\n
+  transaction.setSourceReference(source_reference)\n
+if transaction.getDestinationReference() in (None, \'\'):\n
+  destination_id_group = (\'accounting\', \'section\', destination_section)\n
+  destination_reference = transaction.generateNewId(id_group = destination_id_group)\n
+  transaction.setDestinationReference(destination_reference)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>transaction</string>
+                            <string>_getattr_</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>None</string>
+                            <string>invoice_id_group</string>
+                            <string>invoice_reference</string>
+                            <string>source_id_group</string>
+                            <string>source_reference</string>
+                            <string>destination_id_group</string>
+                            <string>destination_reference</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>setReferences</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
