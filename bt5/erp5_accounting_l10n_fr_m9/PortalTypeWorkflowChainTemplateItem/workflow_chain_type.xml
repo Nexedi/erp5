@@ -3,4 +3,8 @@
   <type>Invoice Transmission Sheet</type>
   <workflow>edit_workflow, transmission_sheet_workflow</workflow>
  </chain>
+ <chain>
+  <type>Opposition</type>
+  <workflow>edit_workflow, opposition_workflow</workflow>
+ </chain>
 </workflow_chain>

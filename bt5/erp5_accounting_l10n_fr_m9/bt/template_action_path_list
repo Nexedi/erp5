@@ -1,3 +1,4 @@
+Accounting Transaction Line | view_opposition
 Accounting Transaction Module | jounal_from_selection_m9
 Accounting Transaction | jump_transmission_sheet
 Invoice Transmission Sheet Module | affect_action
@@ -12,5 +13,15 @@ Invoice Transmission Sheet | process_action
 Invoice Transmission Sheet | related_payment_transactions
 Invoice Transmission Sheet | remove_invoice
 Invoice Transmission Sheet | view
+Opposition Module | list_ui
+Opposition Module | print_pdf
+Opposition Module | sort_on
+Opposition Module | view
+Opposition | history
+Opposition | metadata
+Opposition | print_pdf
+Opposition | transactions
+Opposition | view
 Purchase Invoice Transaction | jump_transmission_sheet
+Purchase Invoice Transaction Line | view_opposition
 Sale Invoice Transaction | jump_transmission_sheet

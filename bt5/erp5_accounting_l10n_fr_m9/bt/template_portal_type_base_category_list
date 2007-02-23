@@ -2,3 +2,6 @@ Accounting Transaction | aggregate
 Invoice Transmission Sheet | origin
 Purchase Invoice Transaction | aggregate
 Sale Invoice Transaction | aggregate
+Purchase Invoice Transaction Line | intervention
+Purchase Invoice Transaction Line | market
+Purchase Invoice Transaction Line | order
