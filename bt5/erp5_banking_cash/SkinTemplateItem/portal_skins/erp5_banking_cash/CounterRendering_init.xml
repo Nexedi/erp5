@@ -68,21 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># create a default banking operation line that will be updated later\n
-#context.edit(external_software=\'star\')\n
-\n
-transaction = context\n
-\n
-# XXX it might be better to set resource according to source_payment.\n
-transaction.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurrencyID())\n
-\n
-context.setDestination(context.getBaobabDestination())\n
-\n
-movement = context.newContent(portal_type=\'Banking Operation Line\',\n
-                       id=\'movement\',\n
-                       source=\'account_module/bank_account\', # Set default source\n
-                       destination=\'account_module/bank_account\', # Set default destination\n
-                       )\n
+            <value> <string>context.setSource(context.getBaobabSource())\n
 </string> </value>
         </item>
         <item>
@@ -132,10 +118,8 @@ movement = context.newContent(portal_type=\'Banking Operation Line\',\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>context</string>
-                            <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>movement</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,7 +136,7 @@ movement = context.newContent(portal_type=\'Banking Operation Line\',\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InternalMoneyDeposit_init</string> </value>
+            <value> <string>CounterRendering_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
