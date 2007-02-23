@@ -481,6 +481,12 @@ class ERP5TypeInformation( FactoryTypeInformation,
             # defined categories)
             category_result = [{}]
 
+          # Prepare definition dict once only
+          category_definition_dict = {}
+          for c in definition['category']:
+            bc, value = c.split('/', 1)
+            category_definition_dict.setdefault(bc, []).append(value)
+          # Now create role dict for each roles
           for role in role_text.split(';'):
             role = role.strip()
             if isinstance(category_result, dict):
@@ -496,9 +502,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
               for category_dict in category_result:
                 category_value_dict = {'category_order':category_order_list}
                 category_value_dict.update(category_dict)
-                for c in definition['category']:
-                  bc, value = c.split('/', 1)
-                  category_value_dict[bc] = value
+                category_value_dict.update(category_definition_dict)
                 role_category_list.append(category_value_dict)
 
       # Generate security group ids from category_value_dicts
@@ -522,10 +526,11 @@ class ERP5TypeInformation( FactoryTypeInformation,
           if group_id not in (None, ''):
             if isinstance(group_id, str):
               # Single group is defined (this is usually for group membership)
+              # DEPRECATED due to cartesian product requirement
               role_group_dict[group_id] = 1
             else:
-              # Multiple groups are defined (this is usually for users)
-              # but it could be extended to ad hoc groups
+              # Multiple groups are defined (list of users
+              # or list of group IDs resulting from a cartesian product)
               for user_id in group_id:
                 role_group_dict[user_id] = 1
         role_group_id_dict.setdefault(role, []).extend(role_group_dict.keys())
