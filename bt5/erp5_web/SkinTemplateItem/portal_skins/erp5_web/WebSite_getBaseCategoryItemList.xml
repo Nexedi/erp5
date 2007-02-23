@@ -126,7 +126,7 @@ return result\n
                             <string>result</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>base_category</string>
                           </tuple>
                         </value>

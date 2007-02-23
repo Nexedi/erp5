@@ -84,7 +84,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
     <tal:block metal:fill-slot="layout"\n
                tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
-      <div id="main_content" class="column center">\n
+      <div id="main_content">\n
         <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
           <!-- XXX Why no portal message displayed there ?\n
                 Normally a message should be displayed when saving an object through web interface... -->\n
