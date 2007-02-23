@@ -68,6 +68,9 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -76,7 +79,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_template_portal_type_id_list</string>
@@ -87,6 +96,18 @@
                         <string>my_template_portal_type_base_category_list</string>
                         <string>my_template_action_path_list</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
