@@ -83,8 +83,11 @@ if currency != context.Baobab_getPortalReferenceCurrencyID():\n
   emission_letter = [\'not_defined\']\n
   variation = [\'not_defined\']\n
 else:\n
-  cash_status = None\n
-  emission_letter = None\n
+  cash_status = [\'to_sort\', \'new_emitted\', \'valid\',  \'not_defined\',  \'mutilated\', \'error\']\n
+  site_codification = context.Baobab_getVaultSite(context.getSourceValue().getRelativeUrl()).getCodification()\n
+  emission_letter = [\'not_defined\', ]\n
+  if site_codification not in (\'\', None):\n
+    emission_letter.append(site_codification[0].lower())\n
   variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
@@ -158,6 +161,8 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>cash_status</string>
                             <string>emission_letter</string>
                             <string>variation</string>
+                            <string>site_codification</string>
+                            <string>_getitem_</string>
                             <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>
