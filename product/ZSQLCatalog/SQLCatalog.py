@@ -310,7 +310,6 @@ class Query(QueryMixin):
     else:
       where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
 
-
     if len(where_expression)>0:
       if len(where_expression)==1:
         where_expression = where_expression[0]
@@ -339,7 +338,7 @@ class ComplexQuery(QueryMixin):
   """
   Used in order to concatenate many queries
   """
-  def __init__(self,*args,**kw):
+  def __init__(self, *args, **kw):
     self.query_list = args
     operator = None
     if kw.has_key('operator'):
@@ -347,7 +346,7 @@ class ComplexQuery(QueryMixin):
       del kw['operator']
     if operator is None:
       operator = 'AND'
-    self.operator=operator
+    self.operator = operator
     self.__dict__.update(kw)
 
   def __call__(self):
@@ -356,11 +355,11 @@ class ComplexQuery(QueryMixin):
   def getQueryList(self):
     return self.query_list
 
-  def asSQLExpression(self,key_alias_dict=None,
-                           ignore_empty_string=1,
-                           keyword_search_keys=None,
-                           full_text_search_keys=None,
-                           stat__=0):
+  def asSQLExpression(self, key_alias_dict=None,
+                            ignore_empty_string=1,
+                            keyword_search_keys=None,
+                            full_text_search_keys=None,
+                            stat__=0):
     """
     Build the sql string
     """
@@ -641,6 +640,11 @@ class Catalog( Folder,
       'description' : 'Additional columns obtained through joins',
       'type'    : 'lines',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_scriptable_keys',
+      'title'   : 'Related keys',
+      'description' : 'Virtual columns to generate scriptable scriptable queries',
+      'type'    : 'lines',
+      'mode'    : 'w' },
   )
 
   sql_catalog_produce_reserved = ''
@@ -672,6 +676,7 @@ class Catalog( Folder,
   sql_catalog_topic_search_keys = ()
   sql_catalog_multivalue_keys = ()
   sql_catalog_related_keys = ()
+  sql_catalog_scriptable_keys = ()
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -1665,7 +1670,7 @@ class Catalog( Folder,
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
-                          ignore_empty_string=1, query=None,stat__=0,**kw):
+                          ignore_empty_string=1, query=None, stat__=0, **kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     # Get search arguments:
     if REQUEST is None and (kw is None or kw == {}):
