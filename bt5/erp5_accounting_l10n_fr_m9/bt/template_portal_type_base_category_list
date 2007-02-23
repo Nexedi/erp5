@@ -1,11 +1,16 @@
 Accounting Transaction | aggregate
+Accounting Transaction | origin
 Accounting Transaction | recovery_status
+Balance Transaction | origin
 Balance Transaction | recovery_status
 Payment Transaction | aggregate
+Payment Transaction | origin
 Purchase Invoice Transaction Line | intervention
 Purchase Invoice Transaction Line | market
 Purchase Invoice Transaction Line | order
 Purchase Invoice Transaction | aggregate
+Purchase Invoice Transaction | origin
 Sale Invoice Transaction | aggregate
+Sale Invoice Transaction | origin
 Sale Invoice Transaction | recovery_status
 Transfer | causality

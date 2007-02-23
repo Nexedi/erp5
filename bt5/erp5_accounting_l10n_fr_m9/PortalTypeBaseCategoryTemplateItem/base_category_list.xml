@@ -1,15 +1,19 @@
 <base_category_list>
  <portal_type id="Accounting Transaction">
+  <item>origin</item>
   <item>aggregate</item>
   <item>recovery_status</item>
  </portal_type>
  <portal_type id="Balance Transaction">
+  <item>origin</item>
   <item>recovery_status</item>
  </portal_type>
  <portal_type id="Payment Transaction">
+  <item>origin</item>
   <item>aggregate</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
+  <item>origin</item>
   <item>aggregate</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction Line">
@@ -18,6 +22,7 @@
   <item>order</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
+  <item>origin</item>
   <item>recovery_status</item>
   <item>aggregate</item>
  </portal_type>
