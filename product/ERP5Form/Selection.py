@@ -97,7 +97,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     method_path=None
     params={}
     sort_on=()
-    default_sort_on=None
+    default_sort_on=()
     uids=()
     invert_mode=0
     list_url=''
@@ -127,6 +127,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
                  columns=None, checked_uids=None, name=None, index=None):
         if params is None: params = {}
         if sort_on is None: sort_on = []
+        if default_sort_on is None: default_sort_on = []
         if uids is None: uids = []
         if columns is None: columns = []
         if checked_uids is None: checked_uids = []
