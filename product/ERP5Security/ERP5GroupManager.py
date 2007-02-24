@@ -33,6 +33,14 @@ from zLOG import LOG, WARNING
 
 from ERP5UserManager import SUPER_USER
 
+# It can be useful to set NO_CACHE_MODE to 1 in order to debug
+# complex security issues related to caching groups. For example,
+# the use of scripts instead of external methods for
+# assignment category lookup may make the system unstable and
+# hard to debug. Setting NO_CACHE_MODE allows to debug such
+# issues.
+NO_CACHE_MODE = 0
+
 class ConsistencyError(Exception): pass
 
 manage_addERP5GroupManagerForm = PageTemplateFile(
@@ -170,8 +178,10 @@ class ERP5GroupManager(BasePlugin):
         setSecurityManager(sm)
       return tuple(security_group_list)
 
-    _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
-                                  id='ERP5GroupManager_getGroupsForPrincipal')
+    if not NO_CACHE_MODE:
+      _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
+                                    id='ERP5GroupManager_getGroupsForPrincipal')
+
     return _getGroupsForPrincipal(
                 user_name=principal.getId(),
                 path=self.getPhysicalPath())
