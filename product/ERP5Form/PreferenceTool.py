@@ -42,8 +42,6 @@ from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Document.Preference import Priority
 
 
-class func_code: pass
-
 def updatePreferenceClassPropertySheetList():
   # The Preference class should be imported from the common location
   # in ERP5Type since it could be overloaded in another product
@@ -60,6 +58,7 @@ def updatePreferenceClassPropertySheetList():
   class_property_sheet_list = tuple(property_sheets)
   Preference.property_sheets = class_property_sheet_list
 
+
 def createPreferenceToolAccessorList(portal) :
   """
     Initialize all Preference methods on the preference tool.
@@ -73,17 +72,18 @@ def createPreferenceToolAccessorList(portal) :
   typestool = getToolByName(portal, 'portal_types')
   pref_portal_type = typestool.getTypeInfo('Preference')
   if pref_portal_type is None:
-    LOG('createPreferenceToolAccessor', PROBLEM,
+    LOG('ERP5Form.PreferenceTool', PROBLEM,
            'Preference type information is not installed.')
-  # 'Dynamic' property sheets added through ZMI
-  zmi_property_sheet_list = []
-  for property_sheet in pref_portal_type.property_sheet_list :
-    try:
-      zmi_property_sheet_list.append(
-                  getattr(__import__(property_sheet), property_sheet))
-    except ImportError, e :
-      LOG('createPreferenceToolAccessor', PROBLEM,
-           'unable to import Property Sheet %s' % property_sheet, e)
+  else:
+    # 'Dynamic' property sheets added through ZMI
+    zmi_property_sheet_list = []
+    for property_sheet in pref_portal_type.property_sheet_list :
+      try:
+        zmi_property_sheet_list.append(
+                    getattr(__import__(property_sheet), property_sheet))
+      except ImportError, e :
+        LOG('ERP5Form.PreferenceTool', PROBLEM,
+             'unable to import Property Sheet %s' % property_sheet, e)
   # 'Static' property sheets defined on the class
   # The Preference class should be imported from the common location
   # in ERP5Type since it could be overloaded in another product
@@ -104,7 +104,10 @@ def createPreferenceToolAccessorList(portal) :
       for attribute_name in attr_list:
         method = PreferenceMethod(attribute_name)
         setattr(PreferenceTool, attribute_name, method)
-  
+
+
+class func_code: pass
+
 class PreferenceMethod(Method) :
   """ A method object that lookup the attribute on preferences. """
   # This is required to call the method form the Web
