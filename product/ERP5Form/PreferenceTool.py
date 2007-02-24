@@ -71,12 +71,13 @@ def createPreferenceToolAccessorList(portal) :
   attr_list = []
   typestool = getToolByName(portal, 'portal_types')
   pref_portal_type = typestool.getTypeInfo('Preference')
+
+  # 'Dynamic' property sheets added through ZMI
+  zmi_property_sheet_list = []
   if pref_portal_type is None:
     LOG('ERP5Form.PreferenceTool', PROBLEM,
            'Preference type information is not installed.')
   else:
-    # 'Dynamic' property sheets added through ZMI
-    zmi_property_sheet_list = []
     for property_sheet in pref_portal_type.property_sheet_list :
       try:
         zmi_property_sheet_list.append(
@@ -84,6 +85,7 @@ def createPreferenceToolAccessorList(portal) :
       except ImportError, e :
         LOG('ERP5Form.PreferenceTool', PROBLEM,
              'unable to import Property Sheet %s' % property_sheet, e)
+
   # 'Static' property sheets defined on the class
   # The Preference class should be imported from the common location
   # in ERP5Type since it could be overloaded in another product
