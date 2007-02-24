@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
+          <string>Products.ExternalMethod.ExternalMethod</string>
+          <string>ExternalMethod</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,214 +13,23 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>Script_magic</string> </key>
-            <value> <int>3</int> </value>
-        </item>
-        <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>name_container</string> </key>
-                                <value> <string>container</string> </value>
-                            </item>
-                            <item>
-                                <key> <string>name_context</string> </key>
-                                <value> <string>context</string> </value>
-                            </item>
-                            <item>
-                                <key> <string>name_m_self</string> </key>
-                                <value> <string>script</string> </value>
-                            </item>
-                            <item>
-                                <key> <string>name_subpath</string> </key>
-                                <value> <string>traverse_subpath</string> </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
+            <key> <string>_function</string> </key>
+            <value> <string>getSecurityCategoryFromAssignment</string> </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-This script returns a list of dictionaries which represent\n
-the security groups which a person is member of. It extracts\n
-the categories from the current user assignment.\n
-It is useful in the following cases:\n
-\n
-- associate a document (ex. an accounting transaction)\n
-  to the division which the user was assigned to\n
-  at the time it was created\n
-\n
-- calculate security membership of a user\n
-\n
-The parameters are\n
-\n
-  base_category_list -- list of category values we need to retrieve\n
-  user_name          -- string obtained from getSecurityManager().getUser().getId()\n
-  object             -- object which we want to assign roles to\n
-  portal_type        -- portal type of object\n
-\n
-NOTE: for now, this script requires proxy manager\n
-"""\n
-\n
-category_list = []\n
-\n
-# Get the Person module\n
-person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
-\n
-# It is better to keep getObject(), in this script this\n
-# prevent a very strange bug, sometimes without getObject the\n
-# assignment is not found\n
-person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type=\'Person\', reference=user_name)]\n
-\n
-if len(person_object_list) != 1:\n
-  if len(person_object_list) > 1:\n
-    raise ConsistencyError, "Error: There is more than one Person with reference \'%s\'" % user_name\n
-  else:\n
-    # if a person_object was not found in the module, we do nothing more\n
-    # this happens for example when a manager with no associated person object\n
-    # creates a person_object for a new user\n
-    return []\n
-person_object = person_object_list[0]\n
-\n
-# We look for every valid assignments of this user\n
-for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
-  if assignment.getValidationState() == \'open\':\n
-    category_dict = {}\n
-    for base_category in base_category_list:\n
-      category_value_list = assignment.getValueList(base_category)\n
-      if category_value_list:\n
-        for category_value in category_value_list:\n
-          if child:\n
-            if category_value.getPortalType() == \'Category\':\n
-              while category_value.getPortalType() == \'Category\':\n
-                category_dict.setdefault(base_category, []).append(\'%s*\' % category_value.getRelativeUrl())\n
-                category_value = category_value.getParentValue()\n
-            else:\n
-              category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
-          else:\n
-            category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
-    category_list.append(category_dict)\n
-\n
-return category_list\n
-
-
-]]></string> </value>
+            <key> <string>_module</string> </key>
+            <value> <string>StandardSecurity</string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type, child=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>base_category_list</string>
-                            <string>user_name</string>
-                            <string>object</string>
-                            <string>portal_type</string>
-                            <string>child</string>
-                            <string>category_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>person_module</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>person_object_list</string>
-                            <string>len</string>
-                            <string>ConsistencyError</string>
-                            <string>_getitem_</string>
-                            <string>person_object</string>
-                            <string>assignment</string>
-                            <string>category_dict</string>
-                            <string>base_category</string>
-                            <string>category_value_list</string>
-                            <string>category_value</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
             </value>
         </item>
         <item>
@@ -228,10 +37,8 @@ return category_list\n
             <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
         </item>
         <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
