@@ -37,6 +37,13 @@ class Codification:
             'id'          : 'codification',
             'description' : 'a string which can be used to identify a category',
             'type'        : 'string',
+            'acquisition_base_category' : ('parent',),
+            'acquisition_portal_type'   : ('Category',),
+            'acquisition_copy_value'    : 0,
+            'acquisition_mask_value'    : 1,
+            'acquisition_sync_value'    : 0,
+            'acquisition_accessor_id'   : 'getCodification',
+            'acquisition_depends'       : None,
             'mode'        : 'w',
         },
     )
