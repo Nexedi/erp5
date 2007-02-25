@@ -74,6 +74,8 @@ from Products.PythonScripts.standard import Object\n
 \n
 object_list = []\n
 movement_urls = {}\n
+# retrieve movement_list from the cache\n
+movement_list = container.REQUEST.get(movement_list_key)\n
 \n
 def getListItemUrl(alias, idx, selection_name):\n
   return movement_urls[idx]\n
@@ -141,7 +143,7 @@ return object_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, stat=0, node_relative_url=\'\', movement_list=\'\', **kw</string> </value>
+            <value> <string>selection, stat=0, node_relative_url=\'\', movement_list_key=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -170,17 +172,19 @@ return object_list\n
                             <string>selection</string>
                             <string>stat</string>
                             <string>node_relative_url</string>
-                            <string>movement_list</string>
+                            <string>movement_list_key</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>object_list</string>
                             <string>movement_urls</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>movement_list</string>
                             <string>getListItemUrl</string>
                             <string>idx</string>
                             <string>_getiter_</string>
                             <string>movement</string>
-                            <string>_getattr_</string>
                             <string>debit</string>
                             <string>credit</string>
                             <string>node</string>

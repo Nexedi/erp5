@@ -70,6 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
 portal = context.getPortalObject()\n
+request = portal.REQUEST\n
 result = []\n
 lines = {}\n
 \n
@@ -84,13 +85,18 @@ for transaction in context.\\\n
       lines.setdefault(line.getDestinationValue(), []).append(line)\n
 \n
 for node, movement_list in lines.items():\n
+  # store movement_list in REQUEST (storing persistent \n
+  # objects in selection is forbidden)\n
+  movement_list_key = id(movement_list)\n
+  request.set(movement_list_key, movement_list)\n
+\n
   if node is not None:\n
     result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               form_id=\'AccountingTransaction_viewExplanationReportSection\',\n
               selection_name=\'accounting_transaction_explanation_line_list_selection\',\n
               selection_params=dict(node_relative_url=node.getRelativeUrl(),\n
-                            movement_list=movement_list,\n
+                            movement_list_key=movement_list_key,\n
                             listbox_title=\'%s - %s\' % (node.getId(),\n
                                                        node.getTitle())),\n
               listbox_display_mode = \'FlatListMode\',\n
@@ -150,6 +156,7 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>request</string>
                             <string>result</string>
                             <string>lines</string>
                             <string>_getiter_</string>
@@ -158,6 +165,8 @@ return result\n
                             <string>line</string>
                             <string>node</string>
                             <string>movement_list</string>
+                            <string>id</string>
+                            <string>movement_list_key</string>
                             <string>None</string>
                             <string>dict</string>
                           </tuple>
