@@ -237,12 +237,12 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>field_my_source_section</td>\n
+  <td>field_my_destination_section</td>\n
   <td>organisation_module/my_organisation</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>field_my_destination_section_title</td>\n
+  <td>field_my_source_section_title</td>\n
   <td>Supplier</td>\n
 </tr>\n
 <tr>\n
@@ -252,22 +252,22 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td> <!-- this is the portal type. -->\n
-  <td>Accounting Transaction</td>\n
+  <td>Purchase Invoice Transaction</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>subfield_field_my_start_date_year</td>\n
+  <td>subfield_field_my_stop_date_year</td>\n
   <td>2005</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>subfield_field_my_start_date_month</td>\n
+  <td>subfield_field_my_stop_date_month</td>\n
   <td>01</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>subfield_field_my_start_date_day</td>\n
+  <td>subfield_field_my_stop_date_day</td>\n
   <td>01</td>\n
 </tr>\n
 <tr>\n
@@ -298,32 +298,32 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
   <td>10.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>0.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/input</td>\n
   <td>1.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/input</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
-  <td>0.0</td>\n
-</tr>\n
-<tr>\n
-  <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[5]/input</td>\n
   <td>11.0</td>\n
 </tr>\n
 <!-- }}} -->\n

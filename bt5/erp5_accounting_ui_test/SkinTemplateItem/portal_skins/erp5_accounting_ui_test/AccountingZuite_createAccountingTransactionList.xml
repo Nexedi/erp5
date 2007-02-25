@@ -209,15 +209,15 @@ for month in range(1, month_count + 1):\n
           stop_date=default_date,\n
           resource=euro_resource,\n
       )\n
-    tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   immediate_reindex=immediate_reindex,\n
                   source=getAccountByTitle(\'Receivable\'),\n
                   quantity=-(amount * (1 + vat_rate)))\n
-    tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   immediate_reindex=immediate_reindex,\n
                   source=getAccountByTitle(\'Collected VAT 10%\'),\n
                   quantity=amount * vat_rate)\n
-    tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   immediate_reindex=immediate_reindex,\n
                   source=getAccountByTitle(\'Goods Sales\'),\n
                   quantity=amount)\n
@@ -248,15 +248,15 @@ for month in range(1, month_count + 1):\n
         stop_date=default_date,\n
         resource=euro_resource,\n
     )\n
-  tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+  tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
                 immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Payable\'),\n
                 quantity=-(amount * (1 + vat_rate)))\n
-  tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+  tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
                 immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Refundable VAT 10%\'),\n
                 quantity=amount * vat_rate)\n
-  tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+  tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
                 immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Goods Purchase\'),\n
                 quantity=amount)\n
@@ -282,15 +282,15 @@ if add_draft_transactions:\n
           stop_date=default_date,\n
           resource=euro_resource,\n
       )\n
-    tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Receivable\'),\n
                   quantity=random.randint(300, 400),\n
                   immediate_reindex=immediate_reindex)\n
-    tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Collected VAT 10%\'),\n
                   quantity=random.randint(300, 400),\n
                   immediate_reindex=immediate_reindex)\n
-    tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Goods Sales\'),\n
                   quantity=random.randint(300, 400),\n
                   immediate_reindex=immediate_reindex)\n

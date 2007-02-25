@@ -146,21 +146,21 @@ for month in range(1, month_count + 1):\n
             resource=euro_resource,\n
             immediate_reindex=immediate_reindex,\n
         )\n
-      receivable_qty = -(amount * (1 + vat_rate)) \n
+      receivable_qty = -(amount * (1 + vat_rate))\n
       total_receivable_quantity += receivable_qty\n
-      tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+      tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                     source=getAccountByTitle(\'Receivable\'),\n
                     destination=getAccountByTitle(\'Payable\'),\n
                     quantity=receivable_qty,\n
                     immediate_reindex=immediate_reindex,\n
       )\n
-      tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+      tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                     source=getAccountByTitle(\'Collected VAT 10%\'),\n
                     destination=getAccountByTitle(\'Refundable VAT 10%\'),\n
                     quantity=amount * vat_rate,\n
                     immediate_reindex=immediate_reindex,\n
       )\n
-      tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+      tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                     source=getAccountByTitle(\'Goods Sales\'),\n
                     destination=getAccountByTitle(\'Goods Purchase\'),\n
                     quantity=amount,\n

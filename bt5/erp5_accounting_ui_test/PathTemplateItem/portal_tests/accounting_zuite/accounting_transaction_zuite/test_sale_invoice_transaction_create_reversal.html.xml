@@ -254,7 +254,7 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
-  <td>Accounting Transaction</td>\n
+  <td>Sale Invoice Transaction</td><!-- This is the portal_type -->\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -300,32 +300,32 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
   <td>0.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>10.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/input</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
   <td>1.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/input</td>\n
   <td>11.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[5]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
   <td>0.0</td>\n
 </tr>\n
 <!-- }}} -->\n
