@@ -110,16 +110,17 @@ if context.getStopDate() != context.getStartDate():\n
 if context.getProperty(\'payment_mode\'):\n
   reversal.setProperty(\'payment_mode\', context.getProperty(\'payment_mode\'))\n
 \n
-line_list = context.getMovementList(\n
+line_list = context.AccountingTransaction_getInvoiceTransactionLineList(\n
                 portal_type=context.getPortalAccountingMovementTypeList())\n
+line_list.reverse()\n
+\n
 # guess portal_type to create lines\n
 if line_list:\n
   line_portal_type = line_list[0].getPortalType()\n
 \n
 for line in line_list:\n
-  new_line = reversal.newContent( portal_type=\'Accounting Transaction Line\', )\n
+  new_line = reversal.newContent( portal_type=line_portal_type )\n
   new_line.edit(\n
-    id=line.getId(),\n
     source=line.getSource(portal_type=\'Account\'),\n
     destination=line.getDestination(portal_type=\'Account\'),\n
     quantity= - line.getQuantity(),\n
@@ -129,7 +130,7 @@ for line in line_list:\n
   \n
   # copy some values if they are defined explicitly on line\n
   for prop in [ \'source_section\', \'destination_section\',\n
-                \'source_payment\', \'destination_payment\', ]:\n
+                \'source_payment\', \'destination_payment\', \'resource\' ]:\n
     if line.getProperty(prop) != context.getProperty(prop):\n
       new_line.setProperty(prop, line.getProperty(prop))\n
 \n
