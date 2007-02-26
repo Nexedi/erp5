@@ -103,7 +103,8 @@ class ConversionCacheMixin:
   security.declareProtected(Permissions.View, 'getCacheTime')
   def getCacheTime(self, **format):
     """
-      Checks when if ever was the file produced
+      Checks when 
+if ever was the file produced
     """
     self.updateConversionCache()
     return self._cached_time.get(makeSortedTuple(format), 0)
@@ -344,6 +345,11 @@ class Document(XMLObject):
       force - convert doc even if it has a cached version which seems to be up2date
       **kw can be various things - e.g. resolution
 
+      TODO:
+      - implement guards API so that conversion to certain
+        formats require certain permission
+      - force parameter should be somehow restricted
+        to prevent denial of service attack
     """
     pass
 
@@ -355,6 +361,10 @@ class Document(XMLObject):
       format - the format specied in the form of an extension
       string (ex. jpeg, html, text, txt, etc.)
       **kw can be various things - e.g. resolution
+
+      TODO:
+      - implement guards API so that conversion to certain
+        formats require certain permission
     """
     pass
 
@@ -390,7 +400,7 @@ class Document(XMLObject):
     return searchable_text
 
   # Compatibility with CMF Catalog
-  SearchableText = getSearchableText # XXX-JPS - Here wa have a security issue - ask seb what to do
+  SearchableText = getSearchableText
 
   ### Relation getters
   def getSearchableReferenceList(self):
@@ -410,7 +420,7 @@ class Document(XMLObject):
       self.log('please set document reference regexp in preferences')
       return []
     res = rx_search.finditer(text)
-    res = [(r.group(),r.groupdict()) for r in res]
+    res = [(r.group(), r.groupdict()) for r in res]
     return res
     
   security.declareProtected(Permissions.View, 'getImplicitSuccessorValueList')
@@ -604,6 +614,7 @@ class Document(XMLObject):
       portal_type and reference has the same version and language
       
       XXX should delegate to script with proxy roles
+      XXX-JPS revision ?
     """
     catalog = getToolByName(self, 'portal_catalog', None)
     # XXX why this does not work???
@@ -641,6 +652,8 @@ class Document(XMLObject):
     """
       Returns a list revision strings for a given reference, version, language
       XXX should it return revision strings, or docs (as the func name would suggest)?
+
+      XXX-JPS return values - getRevisionList returns revisions 
     """
     # Use portal_catalog
     if not self._checkCompleteCoordinates():
@@ -660,6 +673,8 @@ class Document(XMLObject):
   def _checkCompleteCoordinates(self):
     """
       test if the doc has all coordinates
+
+      XXX-JPS - revision ?
     """
     reference = self.getReference()
     version = self.getVersion()
@@ -705,6 +720,8 @@ class Document(XMLObject):
   def getOriginalLanguage(self):
     """
       Returns the original language of this document.
+
+      XXX-JPS not implemented yet ?
     """
     # Approach 1: use portal_catalog and creation dates
     # Approach 2: use workflow analysis (delegate to script if necessary)
@@ -887,7 +904,9 @@ class Document(XMLObject):
     """
       API method - some subclasses store data in a certain 'base' format
       (e.g. OOoDocument uses ODF)
+
+      XXX-JPS What is this ? Explain. Name unclear
     """
     pass
 
-# vim: filetype=python syntax=python shiftwidth=2 
+# vim: filetype=python syntax=python shiftwidth=2
