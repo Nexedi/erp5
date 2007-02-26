@@ -48,6 +48,8 @@ class ActiveResult:
   WARNING =  100
   ERROR   =  200
   PANIC   =  300
+  # getProperty default
+  _MARKER = None
 
   def __init__(self,summary='',severity=INFO,detail='',**kw):
     """
@@ -70,11 +72,11 @@ class ActiveResult:
       del kw['object_path']
     self.__dict__.update(kw)
 
-  def getProperty(self,value):
+  def getProperty(self,value,d=_MARKER,**kw):
     """
     A simple getter
     """
-    return getattr(self,value,None)
+    return getattr(self,value,d)
 
   def getResult(self):
     """

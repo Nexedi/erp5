@@ -43,6 +43,8 @@ class Error:
   WARNING =  100
   ERROR   =  200
   PANIC   =  300
+  # Marker for getProperty
+  _MARKER = None
 
   def __init__(self,summary='',severity=INFO,detail='',**kw):
     """
@@ -65,10 +67,10 @@ class Error:
       del kw['object_path']
     self.__dict__.update(kw)
 
-  def getProperty(self,value):
+  def getProperty(self, key, d=_MARKER, **kw):
     """
     A simple getter
     """
-    return getattr(self,value,None)
+    return getattr(self, value, d)
 
 allow_class(Error)
