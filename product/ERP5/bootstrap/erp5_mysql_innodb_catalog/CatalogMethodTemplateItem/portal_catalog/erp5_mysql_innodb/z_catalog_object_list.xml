@@ -159,6 +159,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getViewPermissionOwner</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>hasCellContent</string> </key>
                                 <value>
                                   <dictionary/>
@@ -219,36 +225,37 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>security_uid</string>
-                            <string>getPath</string>
-                            <string>getRelativeUrl</string>
-                            <string>getParentUid</string>
-                            <string>id</string>
-                            <string>getDescription</string>
-                            <string>getTitle</string>
-                            <string>meta_type</string>
-                            <string>getPortalType</string>
-                            <string>opportunity_state</string>
-                            <string>getCorporateRegistrationCode</string>
-                            <string>getEan13Code</string>
-                            <string>getSimulationState</string>
-                            <string>causality_state</string>
-                            <string>invoice_state</string>
-                            <string>validation_state</string>
-                            <string>payment_state</string>
-                            <string>event_state</string>
-                            <string>getImmobilisationState</string>
-                            <string>getReference</string>
-                            <string>getGroupingReference</string>
-                            <string>getSourceReference</string>
-                            <string>getDestinationReference</string>
-                            <string>getStringIndex</string>
-                            <string>getIntIndex</string>
-                            <string>getFloatIndex</string>
-                            <string>hasCellContent</string>
-                            <string>getCreationDate</string>
-                            <string>getModificationDate</string>
+<string>uid</string>
+<string>security_uid</string>
+<string>getViewPermissionOwner</string>
+<string>getPath</string>
+<string>getRelativeUrl</string>
+<string>getParentUid</string>
+<string>id</string>
+<string>getDescription</string>
+<string>getTitle</string>
+<string>meta_type</string>
+<string>getPortalType</string>
+<string>opportunity_state</string>
+<string>getCorporateRegistrationCode</string>
+<string>getEan13Code</string>
+<string>getSimulationState</string>
+<string>causality_state</string>
+<string>invoice_state</string>
+<string>validation_state</string>
+<string>payment_state</string>
+<string>event_state</string>
+<string>getImmobilisationState</string>
+<string>getReference</string>
+<string>getGroupingReference</string>
+<string>getSourceReference</string>
+<string>getDestinationReference</string>
+<string>getStringIndex</string>
+<string>getIntIndex</string>
+<string>getFloatIndex</string>
+<string>hasCellContent</string>
+<string>getCreationDate</string>
+<string>getModificationDate</string>
                           </list>
                         </value>
                     </item>
@@ -267,6 +274,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>uid\r\n
 security_uid\r\n
+getViewPermissionOwner\r\n
 getPath\r\n
 getRelativeUrl\r\n
 getParentUid\r\n
@@ -292,8 +300,8 @@ getDestinationReference\r\n
 getStringIndex\r\n
 getIntIndex\r\n
 getFloatIndex\r\n
-hasCellContent\n
-getCreationDate\n
+hasCellContent\r\n
+getCreationDate\r\n
 getModificationDate</string> </value>
         </item>
         <item>
@@ -341,6 +349,7 @@ VALUES\n
 (\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="getViewPermissionOwner[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,\n
@@ -417,6 +426,7 @@ VALUES\n
 (\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="getViewPermissionOwner[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,\n
