@@ -28,6 +28,7 @@
 
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.CMFCore import CMFCorePermissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
@@ -69,6 +70,8 @@ try:
   from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
 except ImportError:
   pass
+
+DEFAULT_RESULT_LIMIT = 1000
 
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
@@ -139,7 +142,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             # trying to reduce the number of security definitions
             # However, this could be a bad idea if we start to use Owner role
             # as a kind of Assignee and if we need it for worklists.
-            if role != 'Owner':
+            if role != 'Owner': 
               if withnuxgroups:
                 allowed[user + ':' + role] = 1
               else:
@@ -211,14 +214,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       product_path = package_home(globals())
       zsql_dirs = []
 
-      # Common methods
+      # Common methods - for backward compatibility
+      # SQL code distribution is supposed to be business template based nowadays
       if config_id.lower() == 'erp5_mysql':
         zsql_dirs.append(os.path.join(product_path, 'sql', 'common_mysql'))
         zsql_dirs.append(os.path.join(product_path, 'sql', 'erp5_mysql'))
       elif config_id.lower() == 'cps3_mysql':
         zsql_dirs.append(os.path.join(product_path, 'sql', 'common_mysql'))
         zsql_dirs.append(os.path.join(product_path, 'sql', 'cps3_mysql'))
-      # XXX TODO : add other cases
 
       # Iterate over the sql directory. Add all sql methods in that directory.
       for directory in zsql_dirs:
@@ -237,7 +240,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # Make this the default.
       self.default_sql_catalog_id = config_id
-
+     
     security.declareProtected( 'Import/Export objects', 'exportSQLMethods' )
     def exportSQLMethods(self, sql_catalog_id=None, config_id='erp5'):
       """
@@ -258,7 +261,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                          'z_create_record', 'z_related_security', 'z_delete_recorded_object_list',
                          'z_reserve_uid', 'z_getitem_by_path', 'z_show_columns', 'z_getitem_by_path',
                          'z_show_tables', 'z_getitem_by_uid', 'z_unique_values', 'z_produce_reserved_uid_list',)
-
+    
       msg = ''
       for id in catalog.objectIds(spec=('Z SQL Method',)):
         if id in common_sql_list:
@@ -275,7 +278,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           f.write(text)
         finally:
           f.close()
-
+          
       properties = self.manage_catalogExportProperties(sql_catalog_id=sql_catalog_id)
       name = os.path.join(config_sql_dir, 'properties.xml')
       msg += 'Writing %s\n' % (name,)
@@ -284,9 +287,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         f.write(properties)
       finally:
         f.close()
-
+        
       return msg
-
+        
     def _listAllowedRolesAndUsers(self, user):
       security_product = getSecurityProduct(self.acl_users)
       if security_product == SECURITY_USING_PAS:
@@ -394,12 +397,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
         This is supposed to be used with Z SQL Methods to check permissions
         when you list up documents. It is also able to take into account
-        a parameter named local_roles so that list documents only include
+        a parameter named local_roles so that listed documents only include
         those documents for which the user (or the group) was
         associated one of the given local roles.
+
+        XXX allowedRolesAndUsers naming is wrong
       """
       user = _getAuthenticatedUser(self)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
+      role_column_dict = {}
 
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
@@ -415,52 +421,84 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           # Local roles now has precedence (since it comes from a WorkList)
           for user_or_group in allowedRolesAndUsers:
             for role in local_roles:
-              if role == "Owner":
-                # This is for now only a placeholder to handle the case of Owner
-                # which may not be supported (see above comment arround line 135
-                new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
+              # Performance optimisation
+              lower_role = role.lower()
+              if self.getSQLCatalog().getColumnMap().has_key(lower_role):
+                # If a given role exists as a column in the catalog,
+                # then it is considered as single valued and indexed
+                # through the catalog.
+                role_column_dict[lower_role] = user # XXX This should be a list
+                                                    # which also includes all user groups
               else:
+                # Else, we use the standard approach
                 new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
           allowedRolesAndUsers = new_allowedRolesAndUsers
 
-      return allowedRolesAndUsers
+      return allowedRolesAndUsers, role_column_dict
 
-    security.declarePrivate('getSecurityUid')
-    def getSecurityUid(self, **kw):
+    security.declarePrivate('getSecurityQuery')
+    def getSecurityQuery(self, query=None, **kw):
       """
-      Return list of security oid for given roles list
+        Build a query based on allowed roles (DEPRECATED)
+        or on a list of security_uid values. The query takes into
+        account the fact that some roles are catalogued with columns.
       """
+      allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog()
       method = getattr(catalog, catalog.sql_search_security, '')
+      original_query = query
       if method in ('', None):
         # XXX old way, should not be used anylonger
         warnings.warn("The usage of allowedRolesAndUsers is deprecated.\n"
                       "Please update your business template erp5_mysql_innodb.",
                       DeprecationWarning)
-        kw['allowedRolesAndUsers'] = self.getAllowedRolesAndUsers(**kw)
+        if role_column_dict:
+          query_list = []
+          for key, value in role_column_dict.items():
+            new_query = Query(key=value)
+            query_list.append(new_query)
+          operator_kw = {'operator': 'AND'} 
+          query = ComplexQuery(*query_list, **operator_kw)
+          if allowedRolesAndUsers:
+            query = ComplexQuery(Query(allowedRolesAndUsers=allowedRolesAndUsers),
+                                 query, operator='OR')
+        else:
+          query = Query(allowedRolesAndUsers=allowedRolesAndUsers)
       else:
-        allowedRolesAndUsers = ["'%s'" % (role, ) for role in self.getAllowedRolesAndUsers(**kw)]
-        security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
-        kw['security_uid'] = security_uid_list
-      return kw
+        if allowedRolesAndUsers:
+          allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+          security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+        if role_column_dict:
+          query_list = []
+          for key, value in role_column_dict.items():
+            new_query = Query(key=value)
+            query_list.append(new_query)
+          operator_kw = {'operator': 'AND'}
+          query = ComplexQuery(*query_list, **operator_kw)
+          if allowedRolesAndUsers:
+            query = ComplexQuery(Query(security_uid=security_uid_list),
+                                 query, operator='OR')
+        else:
+          query = Query(security_uid=security_uid_list)
+      if original_query is not None:
+        query = ComplexQuery(query, original_query, operator='AND')
+      return query
 
     # searchResults has inherited security assertions.
-    def searchResults(self, REQUEST=None, **kw):
+    def searchResults(self, query=None, **kw):
         """
-            Calls ZCatalog.searchResults with extra arguments that
-            limit the results to what the user is allowed to see.
+        Calls ZCatalog.searchResults with extra arguments that
+        limit the results to what the user is allowed to see.
         """
-        kw = self.getSecurityUid(**kw)
-
         if not _checkPermission(
             CMFCorePermissions.AccessInactivePortalContent, self ):
-            base = aq_base( self )
             now = DateTime()
             kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        kw.setdefault('limit', 1000)
-        return ZCatalog.searchResults(self, REQUEST, **kw)
+        query = self.getSecurityQuery(query=query, **kw)
+        kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
+        return ZCatalog.searchResults(self, query=query, **kw)
 
     __call__ = searchResults
 
@@ -468,16 +506,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def unrestrictedSearchResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.
         """
-        kw.setdefault('limit', 1000)
+        kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
         return ZCatalog.searchResults(self, REQUEST, **kw)
 
-    def countResults(self, REQUEST=None, **kw):
+    def countResults(self, query=None, **kw):
         """
             Calls ZCatalog.countResults with extra arguments that
             limit the results to what the user is allowed to see.
         """
-        kw = self.getSecurityUid(**kw)
-
         # XXX This needs to be set again
         #if not _checkPermission(
         #    CMFCorePermissions.AccessInactivePortalContent, self ):
@@ -486,8 +522,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        return ZCatalog.countResults(self, REQUEST, **kw)
-
+        query = self.getSecurityQuery(query=query, **kw)
+        kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
+        return ZCatalog.countResults(self, query=query, **kw)
+    
     security.declarePrivate('unrestrictedCountResults')
     def unrestrictedCountResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.countResults directly without restrictions.
@@ -679,7 +717,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             base_category_id = name[len(DYNAMIC_METHOD_NAME):]
             method = RelatedBaseCategory(base_category_id)
-          setattr(self.__class__, name,
+          setattr(self.__class__, name, 
                   method)
           klass = aq_base(self).__class__
           if hasattr(klass, 'security'):
