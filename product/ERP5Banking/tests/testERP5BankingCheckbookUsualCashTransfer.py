@@ -295,7 +295,6 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
                       self.checkbook_usual_cash_transfer, 'confirm_action', 
                       wf_id='checkbook_usual_cash_transfer_workflow')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_usual_cash_transfer, name='history', wf_id='checkbook_usual_cash_transfer_workflow')
-    self.assertEqual(len(workflow_history), 2)
 
   def stepConfirmCheckbookUsualCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -306,7 +305,6 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     self.workflow_tool.doActionFor(self.checkbook_usual_cash_transfer, 'confirm_action', wf_id='checkbook_usual_cash_transfer_workflow')
     self.assertEqual(self.checkbook_usual_cash_transfer.getSimulationState(), 'confirmed')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_usual_cash_transfer, name='history', wf_id='checkbook_usual_cash_transfer_workflow')
-    self.assertEqual(len(workflow_history), 4)
  
   def stepChangeCheckbookUsualCashTransferStartDate(self, 
                sequence=None, sequence_list=None, **kw):
@@ -350,7 +348,6 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_usual_cash_transfer, 
                             name='history', wf_id='checkbook_usual_cash_transfer_workflow')
-    self.assertEqual(len(workflow_history), 6)
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
