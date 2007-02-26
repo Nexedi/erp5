@@ -46,6 +46,8 @@ from Products.CMFCore.Expression import Expression
 from Products.PageTemplates.Expressions import getEngine
 from MethodObject import Method
 
+from Products.ERP5Security.ERP5UserManager import SUPER_USER
+
 import os, time, urllib, warnings
 from zLOG import LOG
 
@@ -140,8 +142,11 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             # Added for ERP5 project by JP Smets
             # The reason why we do not want to keep Owner is because we are
             # trying to reduce the number of security definitions
-            # However, this could be a bad idea if we start to use Owner role
-            # as a kind of Assignee and if we need it for worklists.
+            # However, this is a bad idea if we start to use Owner role
+            # as a kind of bamed Assignee and if we need it for worklists. Therefore
+            # we may sometimes catalog the owner user ID whenever the Owner
+            # has view permission (see getAllowedRolesAndUsers bellow
+            # as well as getViewPermissionOwner method in Base)
             if role != 'Owner': 
               if withnuxgroups:
                 allowed[user + ':' + role] = 1
@@ -427,12 +432,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 # If a given role exists as a column in the catalog,
                 # then it is considered as single valued and indexed
                 # through the catalog.
-                role_column_dict[lower_role] = user # XXX This should be a list
-                                                    # which also includes all user groups
+                if user != SUPER_USER:
+                  role_column_dict[lower_role] = str(user) # XXX This should be a list
+                                                           # which also includes all user groups
               else:
                 # Else, we use the standard approach
                 new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
           allowedRolesAndUsers = new_allowedRolesAndUsers
+      else:
+        # We only consider here the Owner role (since it was not indexed)
+        # since some objects may only be visible by their owner
+        # which was not indexed
+        if self.getSQLCatalog().getColumnMap().has_key('owner'):
+          if user != SUPER_USER:
+            role_column_dict['owner'] = str(user)
 
       return allowedRolesAndUsers, role_column_dict
 
@@ -455,7 +468,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
-            new_query = Query(key=value)
+            new_query = Query(**{key : value})
             query_list.append(new_query)
           operator_kw = {'operator': 'AND'} 
           query = ComplexQuery(*query_list, **operator_kw)
@@ -471,11 +484,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
-            new_query = Query(key=value)
+            new_query = Query(**{key : value})
             query_list.append(new_query)
           operator_kw = {'operator': 'AND'}
           query = ComplexQuery(*query_list, **operator_kw)
-          if allowedRolesAndUsers:
+          if allowedRolesAndUsers and security_uid_list:
             query = ComplexQuery(Query(security_uid=security_uid_list),
                                  query, operator='OR')
         else:
