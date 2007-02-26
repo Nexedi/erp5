@@ -91,12 +91,15 @@ for f in fields:\n
     missing_string += \'&missing:list=\' + f\n
   else:\n
     kwargs[f] = value\n
+returned_params = \'&\'.join([f+\'=\'+kwargs[f] for f in kwargs])\n
+context.log(returned_params)\n
 if missing_string:\n
-  params = missing_string + \'&portal_status_message=You did not fill all the required fields\'\n
+  params = returned_params + \'&\' + missing_string + \'&portal_status_message=You did not fill all the required fields\'\n
+  context.log(params)\n
   return req.RESPONSE.redirect(context.absolute_url()+\'?\'+params)\n
 if req.get(\'your_email\') != req.get(\'your_email_repeated\'):\n
   missing_string += \'&missing:list=email&missing:list=email_repeated\'\n
-  params = missing_string + \'&portal_status_message=You entered two different email addresses\'\n
+  params = returned_params + \'&\' + missing_string + \'&portal_status_message=You entered two different email addresses\'\n
   return req.RESPONSE.redirect(context.absolute_url()+\'?\'+params)\n
 \n
 # create a user\n
@@ -165,6 +168,10 @@ return req.RESPONSE.redirect(context.absolute_url()+\'?portal_status_message=\'+
                             <string>f</string>
                             <string>value</string>
                             <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getitem_</string>
+                            <string>returned_params</string>
                             <string>params</string>
                             <string>_apply_</string>
                             <string>user</string>
