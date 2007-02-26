@@ -62,7 +62,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   # Different variables used for this test
   run_all_test = 1
-  quiet = 1
+  quiet = 0
 
   def afterSetUp(self):
     self.login()
@@ -84,26 +84,29 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def getSQLPathList(self):
+  def getSQLPathList(self,connection_id=None):
     """
     Give the full list of path in the catalog
     """
-    sql_connection = self.getSQLConnection()
+    if connection_id is None:
+      sql_connection = self.getSQLConnection()
+    else:
+      sql_connection = getattr(self.getPortal(),connection_id)
     sql = 'select path from catalog'
     result = sql_connection.manage_test(sql)
     path_list = map(lambda x: x['path'],result)
     return path_list
 
-  def checkRelativeUrlInSQLPathList(self,url_list):
-    path_list = self.getSQLPathList()
+  def checkRelativeUrlInSQLPathList(self,url_list,connection_id=None):
+    path_list = self.getSQLPathList(connection_id=connection_id)
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
       self.failUnless(path in path_list)
       LOG('checkRelativeUrlInSQLPathList found path:',0,path)
 
-  def checkRelativeUrlNotInSQLPathList(self,url_list):
-    path_list = self.getSQLPathList()
+  def checkRelativeUrlNotInSQLPathList(self,url_list,connection_id=None):
+    path_list = self.getSQLPathList(connection_id=connection_id)
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
@@ -1268,7 +1271,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject() for x in self.getCatalogTool()(
                parent_title=person_module.getTitle())])
     
-  def test_45_QueryAndComplexQuery(self,quiet=quiet, run=1):
+  def test_45_QueryAndComplexQuery(self,quiet=quiet, run=run_all_test):
     """
     """
     if not run: return
@@ -1314,7 +1317,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
   
-  def test_46_TestLimit(self,quiet=quiet, run=1):
+  def test_46_TestLimit(self,quiet=quiet, run=run_all_test):
     """
     """
     if not run: return
@@ -1327,6 +1330,79 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self._makeOrganisation(title='abc%s' % (i),description='abc')
     self.assertEqual(1000,len(self.getCatalogTool()(portal_type='Organisation')))
     self.assertEqual(1002,len(self.getCatalogTool()(portal_type='Organisation',limit=None)))
+
+  def test_48_ERP5Site_hotReindexAll(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Hot Reindex All'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    self.base_category = portal_category.newContent(portal_type='Base Category',
+                                               title="GreatTitle1")
+    module = portal.getDefaultModule('Organisation')
+    self.organisation = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2")
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+    # Create new connectors
+    self.original_connection_id = 'erp5_sql_connection'
+    self.new_connection_id = 'erp5_sql_connection2'
+    portal.manage_addZMySQLConnection(self.new_connection_id,'',
+                                      'test2 test2')
+    new_connection = portal[self.new_connection_id]
+    new_connection.manage_open_connection()
+    # Create new catalog
+    portal_catalog = self.getCatalogTool()
+    self.original_catalog_id = 'erp5_mysql_innodb'
+    self.new_catalog_id = self.original_catalog_id + '2'
+    cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
+    new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
+    new_catalog_id = 'erp5_mysql_innodb2'
+    portal_catalog.manage_renameObject(id=new_id,new_id=new_catalog_id)
+
+    # Parse all methods in the new catalog in order to change the connector
+    new_catalog = portal_catalog[self.new_catalog_id]
+    for zsql_method in new_catalog.objectValues():
+      setattr(zsql_method,'connection_id',self.new_connection_id)
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_hotReindexAll(self.original_catalog_id,
+                                 self.new_catalog_id)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+    portal = self.getPortal()
+    module = portal.getDefaultModule('Organisation')
+    self.organisation2 = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2")
+    get_transaction().commit()
+    self.tic()
+    path_list = [self.organisation.getRelativeUrl()]
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
+    path_list = [self.organisation2.getRelativeUrl()]
+    self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.original_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
+
+    # Make sure some zsql method use the right connection_id
+    zslq_method = portal.portal_skins.erp5_core.Resource_zGetInventoryList
+    self.assertEquals(getattr(zsql_method,'connection_id'),self.new_connection_id)
+
+    # Do a hot reindex in the reverse way, but this time a more
+    # complicated hot reindex
+    portal_catalog.manage_hotReindexAll(self.new_catalog_id,
+                                 self.original_catalog_id)
+    get_transaction().commit()
+    self.organisation3 = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2")
+    get_transaction().commit()
+    self.tic()
+    path_list = [self.organisation3.getRelativeUrl()]
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
     
   def test_47_Unrestricted(self, quiet=quiet, run=run_all_test):
     """test unrestricted search/count results.
@@ -1341,7 +1417,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uf = self.getPortal().acl_users
     uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
     uf._doAddUser('bob', '', ['Member'], [])
-    
+
     # create a document that only alice can view
     login(self, 'alice')
     folder = self.getOrganisationModule()
@@ -1361,5 +1437,5 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 len(ctool.unrestrictedSearchResults(title='Object Title')))
     self.assertEquals(1,
                 ctool.unrestrictedCountResults(title='Object Title')[0][0])
-
-
+    
+    
