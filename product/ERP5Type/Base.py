@@ -33,6 +33,7 @@ import ExtensionClass
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
+from AccessControl.PermissionRole import rolesForPermissionOn
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 import OFS.History
 
@@ -357,11 +358,14 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                                       method_id)
             else:
               # Wrap method into WorkflowMethod is needed
-              if getattr(klass,method_id,None) is not None:
+              if getattr(klass, method_id, None) is not None:
                 method = getattr(klass, method_id)
                 if callable(method):
                   if not isinstance(method, WorkflowMethod):
                     method = WorkflowMethod(method, method_id)
+                    # We must set the method on the klass
+                    # because klass has priority in lookup over
+                    # _ac_dynamic
                     setattr(klass, method_id, method)
               else:
                 method = getattr(prop_holder, method_id)
@@ -1418,6 +1422,18 @@ class Base( CopyContainer,
       permission_list.append((name, role_list))
 
     return tuple(permission_list)
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getViewPermissionOwner' )
+  def getViewPermissionOwner(self):
+    """
+      Returns the user ID of the owner if Owner role
+      has View permission. Returns None else.
+    """
+    path, user_id = self.getOwnerTuple()
+    if 'Owner' in rolesForPermissionOn(Permissions.View, self):
+      path, user_id = self.getOwnerTuple()
+      return user_id
+    return None
 
   # Private accessors for the implementation of relations based on
   # categories
