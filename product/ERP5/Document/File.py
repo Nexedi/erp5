@@ -191,11 +191,11 @@ class File(Document, CMFFile, ConversionCacheMixin):
 
 
   # DAV Support
-  index_html = CMFFile.index_html # XXX-JPS - Here we have a security issue - ask seb what to do
-  PUT = CMFFile.PUT # XXX-JPS - Here we have a security issue - ask seb what to do
+  index_html = CMFFile.index_html 
+  PUT = CMFFile.PUT
   security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
-  manage_FTPget = CMFFile.manage_FTPget # XXX-JPS - Here we have a security issue - ask seb what to do
-  manage_FTPlist = CMFFile.manage_FTPlist # XXX-JPS - Here we have a security issue - ask seb what to do
-  manage_FTPstat = CMFFile.manage_FTPstat # XXX-JPS - Here we have a security issue - ask seb what to do
+  manage_FTPget = CMFFile.manage_FTPget
+  manage_FTPlist = CMFFile.manage_FTPlist
+  manage_FTPstat = CMFFile.manage_FTPstat
 
 # vim: syntax=python shiftwidth=2 
