@@ -71,16 +71,11 @@
             <value> <string>"""\n
 Public interface to the API method "convertToBase" which produces ODF version\n
 of the document data, also discovering and setting metadata.\n
-\n
-XXX helper script, to be removed\n
 """\n
-\n
+translateString = context.Base_translateString\n
 msg = context.convertToBase()\n
-context.log(script.getId(), msg)\n
-if msg[0] == 0: # if everything was ok\n
-  pass\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=\' + str(msg[1]))\n
-# XXX-JPS Message translation needed\n
+return context.Base_redirect(form_id,\n
+              keep_items = dict(portal_status_message = translateString(msg)))\n
 </string> </value>
         </item>
         <item>
@@ -97,7 +92,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,18 +112,18 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translateString</string>
                             <string>msg</string>
-                            <string>script</string>
-                            <string>_getitem_</string>
-                            <string>str</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

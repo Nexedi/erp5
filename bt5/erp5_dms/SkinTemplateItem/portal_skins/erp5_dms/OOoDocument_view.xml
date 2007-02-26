@@ -67,10 +67,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>left (Document Reference)</string>
+                <string>right (Publication Information)</string>
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>content bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -80,19 +81,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_source_project_title</string>
-                        <string>my_classification</string>
-                        <string>my_dms_category_list</string>
+                        <string>my_description</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>content bottom</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -102,29 +95,49 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_translated_portal_type</string>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_version</string>
-                        <string>my_language</string>
-                        <string>my_short_title</string>
-                        <string>my_int_index</string>
-                        <string>my_translated_validation_state_title</string>
-                        <string>my_source_reference</string>
-                        <string>external_processing_status_message</string>
+                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>left (Document Reference)</string> </key>
                     <value>
                       <list>
-                        <string>my_contributor_title_list</string>
-                        <string>my_description</string>
+                        <string>my_title</string>
+                        <string>my_short_title</string>
+                        <string>my_reference</string>
+                        <string>my_version</string>
+                        <string>my_language</string>
+                        <string>my_int_index</string>
+                        <string>my_file</string>
+                        <string>my_source_reference</string>
+                        <string>my_translated_portal_type</string>
+                        <string>my_translated_external_processing_state_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list>
                         <string>my_subject_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right (Publication Information)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_classification</string>
+                        <string>my_group_list</string>
+                        <string>my_site_list</string>
+                        <string>my_function_list</string>
+                        <string>my_source_project_title</string>
+                        <string>my_publication_section_list</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
