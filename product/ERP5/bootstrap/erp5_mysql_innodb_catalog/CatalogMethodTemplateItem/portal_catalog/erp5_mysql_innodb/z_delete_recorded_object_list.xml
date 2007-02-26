@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid_list</string>
+<string>uid_list</string>
                           </list>
                         </value>
                     </item>
@@ -103,7 +103,6 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-comment>Do not delete rows really, but just mark them as "played" to avoid dead locks</dtml-comment>\n
-<dtml-if path>\n
 UPDATE\n
   record\n
 SET\n
@@ -112,7 +111,6 @@ WHERE\n
 <dtml-in uid_list>\n
   uid = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
-</dtml-if>\n
 
 
 ]]></string> </value>
@@ -152,7 +150,6 @@ WHERE\n
                         <value> <string encoding="cdata"><![CDATA[
 
 <dtml-comment>Do not delete rows really, but just mark them as "played" to avoid dead locks</dtml-comment>\n
-<dtml-if path>\n
 UPDATE\n
   record\n
 SET\n
@@ -161,7 +158,6 @@ WHERE\n
 <dtml-in uid_list>\n
   uid = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
-</dtml-if>\n
 
 
 ]]></string> </value>

@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>security_roles_list</string>
+                            <string>security_roles_list</string>
                           </list>
                         </value>
                     </item>
