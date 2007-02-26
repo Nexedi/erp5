@@ -26,16 +26,17 @@
 ##############################################################################
 
 import xmlrpclib
+from xmlrpclib import Fault
 import base64
 import re
 import zipfile
 import cStringIO
+import socket
 from DateTime import DateTime
 
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
@@ -87,6 +88,9 @@ class OOoDocument(File, ConversionCacheMixin):
     - to stored pure images (use Image for that)
 
     - as a general file conversion system (use portal_transforms for that)
+
+    TODO:
+    - better permissions
   """
   # CMF Type Definition
   meta_type = 'ERP5 OOo Document'
@@ -173,7 +177,7 @@ class OOoDocument(File, ConversionCacheMixin):
     adr = pref.getPreferredOoodocServerAddress()
     nr = pref.getPreferredOoodocServerPortNumber()
     if adr is None or nr is None:
-      raise Exception('you should set conversion server coordinates in preferences')
+      raise ConversionError('You should set conversion server coordinates in preferences')
     return adr, nr
 
   def _mkProxy(self):
@@ -184,30 +188,34 @@ class OOoDocument(File, ConversionCacheMixin):
     """
       code > 0 indicates a problem
       we distinguish data return from message by checking if it is a tuple
+
+      XXX - This is an error. UI translation is the responsability
+      of skins (scripts of page templates).
     """
     m = Message(domain='ui', message=msg)
     return (code, m)
 
   security.declareProtected(Permissions.View, 'convert')
-  def convertToBase(self, force=0, REQUEST=None):
+  def convertToBase(self, REQUEST=None):
     """
       Converts from the initial format to base format (ODF);
       communicates with the conversion server
       and gets converted file as well as metadata
     """
-    def doConvert(force):
-      if force == 0 and self.hasOOFile():
-        return self.returnMessage('OOo file is up do date', 1)
-      try:
-        self._convertToBase()
-      except Exception, e:
-        return self.returnMessage('Problem: %s' % (str(e) or 'undefined'), 2)
-      return self.returnMessage('converted to Open Document Format')
-    msg_ob = doConvert(force)
-    msg = str(msg_ob[1])
-    portal_workflow = getToolByName(self, 'portal_workflow')
-    portal_workflow.doActionFor(self, 'process', comment=msg)
-    return msg_ob
+    try:
+      self._convertToBase()
+      msg = 'Converted to Open Document Format.'
+      self.convertFile(comment=msg) # Invoke workflow method
+    except ConversionError, e:
+      msg = 'Problem: %s' % (str(e) or 'undefined.')
+      self.processFile(comment=msg)
+    except Fault, e:
+      msg = 'Problem: %s' % (repr(e) or 'undefined.')
+      self.processFile(comment=msg)
+    except socket.error, e:
+      msg = 'Problem: %s' % (repr(e) or 'undefined.')
+      self.processFile(comment=msg)
+    return msg
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
   def getTargetFormatItemList(self):
@@ -239,6 +247,8 @@ class OOoDocument(File, ConversionCacheMixin):
   def reset(self):
     """
       make the object a non-converted one, as if it was brand new
+
+      XXX-JPS more explicit name needed
     """
     self.clearConversionCache()
     self.oo_data = None
@@ -252,6 +262,8 @@ class OOoDocument(File, ConversionCacheMixin):
     """
       Checks if the current document can be converted
       into the specified format.
+
+      XXX-JPS more explicit name needed
     """
     allowed = self.getTargetFormatItemList()
     if allowed is None: return False
@@ -469,6 +481,8 @@ class OOoDocument(File, ConversionCacheMixin):
 
       TODO:
         * support of images in html conversion (as subobjects for example)
+
+      XXX-JPS more explicit name needed for method
     """
     if not self.isAllowed(format):
       errstr = '%s format is not supported' % format
