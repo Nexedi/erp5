@@ -129,7 +129,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>UpdateLocalRoles</string> </value>
+            <value> <string>updateLocalRoles</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

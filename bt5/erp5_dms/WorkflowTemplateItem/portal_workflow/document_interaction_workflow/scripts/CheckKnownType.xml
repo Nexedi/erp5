@@ -69,16 +69,25 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-to assign categories from parallel list field\n
+called for registered types, checks if the type is correct\n
+XXX (the same is done in Document_uploadFile - seems that we\n
+have redundancy here)\n
 """\n
 \n
-o = sci.object\n
-request = o.REQUEST\n
-pref = \'subfield_field_my_dms_category_list_\'\n
-for k,v in request.items():\n
-  if k.startswith(pref):\n
-    if v != \'\':\n
-      o.setProperty(k.replace(pref, \'\'), v)\n
+ob=state_change.object\n
+kw=ob.REQUEST\n
+f=kw.get(\'my_file\', None)\n
+\n
+if f is not None and f:\n
+  # if file uploaded, then:\n
+  fname = f.filename\n
+  # we check for appropriate file type (by extension, using content_type_registry)\n
+  # we accept or suggest appropriate portal type\n
+  ctype = context.content_type_registry.findTypeName(fname, None, None)\n
+  if ctype is None:\n
+    raise Exception(\'This file should be created as DMS File\')\n
+  if ctype != ob.getPortalType():\n
+    raise Exception(\'This file should be created as \' + ctype)\n
 </string> </value>
         </item>
         <item>
@@ -95,7 +104,7 @@ for k,v in request.items():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,14 +130,16 @@ for k,v in request.items():\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>sci</string>
+                            <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>o</string>
-                            <string>request</string>
-                            <string>pref</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
-                            <string>v</string>
+                            <string>ob</string>
+                            <string>kw</string>
+                            <string>None</string>
+                            <string>f</string>
+                            <string>fname</string>
+                            <string>context</string>
+                            <string>ctype</string>
+                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +156,11 @@ for k,v in request.items():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AssignCategories</string> </value>
+            <value> <string>CheckKnownType</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>XXX - Used ?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

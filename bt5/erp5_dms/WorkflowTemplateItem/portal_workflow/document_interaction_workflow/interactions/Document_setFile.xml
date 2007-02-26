@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -40,7 +46,8 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>AssignCategories</string>
+                <string>clearCacheUponUpload</string>
+                <string>upload</string>
               </list>
             </value>
         </item>
@@ -56,22 +63,20 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_edit</string> </value>
+            <value> <string>Document_setFile</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_edit</string>
+                <string>_setFile</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Web Page</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>

@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -39,9 +45,7 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>AssignCategories</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -56,29 +60,32 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ExternalDoc_edit</string> </value>
+            <value> <string>OOoDocument_edit</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
-              <list>
-                <string>_edit</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>External Library File</string>
-                <string>External Web Page</string>
+                <string>Drawing</string>
+                <string>Presentation</string>
+                <string>Spreadsheet</string>
+                <string>Text</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>OOoDocument_updateMetadata</string>
+                <string>updateLocalRoles</string>
+              </list>
             </value>
         </item>
         <item>

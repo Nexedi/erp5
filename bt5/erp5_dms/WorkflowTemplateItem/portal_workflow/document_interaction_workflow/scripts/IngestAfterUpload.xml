@@ -69,9 +69,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-called for registered types, checks if the type is correct\n
-XXX (the same is done in Document_uploadFile - seems that we\n
-have redundancy here)\n
+this is not used in current implementation\n
+because we don\'t upload files in edit\n
 """\n
 \n
 ob=state_change.object\n
@@ -80,14 +79,7 @@ f=kw.get(\'my_file\', None)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  fname = f.filename\n
-  # we check for appropriate file type (by extension, using content_type_registry)\n
-  # we accept or suggest appropriate portal type\n
-  ctype = context.content_type_registry.findTypeName(fname, None, None)\n
-  if ctype is None:\n
-    raise Exception(\'This file should be created as DMS File\')\n
-  if ctype != ob.getPortalType():\n
-    raise Exception(\'This file should be created as \' + ctype)\n
+  ob.Document_discoverMetadata(f.filename)\n
 </string> </value>
         </item>
         <item>
@@ -136,10 +128,6 @@ if f is not None and f:\n
                             <string>kw</string>
                             <string>None</string>
                             <string>f</string>
-                            <string>fname</string>
-                            <string>context</string>
-                            <string>ctype</string>
-                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
@@ -156,7 +144,11 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckKnownType</string> </value>
+            <value> <string>IngestAfterUpload</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>XXX - Used ?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -19,23 +19,32 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>current</string> </value>
+            <value> <string>uploaded</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Uploaded</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>process</string>
-                <string>process_action</string>
+                <string>convert_action</string>
+                <string>convert_file</string>
+                <string>edit</string>
+                <string>process_file</string>
+                <string>upload_file</string>
               </tuple>
             </value>
         </item>

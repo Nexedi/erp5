@@ -25,6 +25,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>scripts</string> </value>
         </item>

@@ -69,17 +69,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-this is not used in current implementation\n
-because we don\'t upload files in edit\n
+called for basic (File? Document?) type, checks if the type is unknown\n
+XXX (the same is done in Document_uploadFile - seems that we\n
+have redundancy here)\n
 """\n
 \n
-ob=state_change.object\n
-kw=ob.REQUEST\n
-f=kw.get(\'my_file\', None)\n
+ob = state_change.object\n
+kw = ob.REQUEST\n
+f = kw.get(\'my_file\', None)\n
 \n
 if f is not None and f:\n
   # if file uploaded, then:\n
-  ob.Document_discoverMetadata(f.filename)\n
+  fname = f.filename\n
+  # we check for appropriate file type (by extension, using content_type_registry)\n
+  # we allow only not known types\n
+  ctype = context.content_type_registry.findTypeName(fname, None, None)\n
+  if ctype is not None:\n
+    raise Exception(\'This file should be created as \' + ctype)\n
 </string> </value>
         </item>
         <item>
@@ -128,6 +134,10 @@ if f is not None and f:\n
                             <string>kw</string>
                             <string>None</string>
                             <string>f</string>
+                            <string>fname</string>
+                            <string>context</string>
+                            <string>ctype</string>
+                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,7 +154,11 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IngestAfterUpload</string> </value>
+            <value> <string>CheckUnKnownType</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>XXX - Used ?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

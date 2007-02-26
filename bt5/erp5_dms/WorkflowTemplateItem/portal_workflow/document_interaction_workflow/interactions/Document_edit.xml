@@ -40,7 +40,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>OOo_edit</string>
+                <string>updateLocalRoles</string>
               </list>
             </value>
         </item>
@@ -56,13 +56,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOo_edit</string> </value>
+            <value> <string>Document_edit</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_edit</string>
+                <string>edit</string>
               </list>
             </value>
         </item>
@@ -70,11 +70,9 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Drawing</string>
-                <string>Memo</string>
-                <string>Presentation</string>
-                <string>Spreadsheet</string>
-                <string>Text</string>
+                <string>File</string>
+                <string>Image</string>
+                <string>PDF</string>
               </list>
             </value>
         </item>

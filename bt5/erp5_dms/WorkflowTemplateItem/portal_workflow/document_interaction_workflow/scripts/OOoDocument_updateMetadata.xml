@@ -70,6 +70,9 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
 when OOoDocument is edited, we update metadata in the ODF file\n
+\n
+XXX - This script must be verified, written with clean syntax \n
+and using less horrible methods (request lookup yuk!)\n
 """\n
 \n
 ob=state_change.object\n
@@ -86,7 +89,7 @@ if ob.hasOOFile():\n
       newmeta[mf]=kw[keymf]\n
   if newmeta:\n
     # edit metadata via server\n
-    ob.editMetadata(newmeta)\n
+    ob.activate().editMetadata(newmeta)\n
 </string> </value>
         </item>
         <item>
@@ -97,6 +100,12 @@ if ob.hasOOFile():\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -158,7 +167,7 @@ if ob.hasOOFile():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOo_edit</string> </value>
+            <value> <string>OOoDocument_updateMetadata</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

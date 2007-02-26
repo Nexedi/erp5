@@ -68,14 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob = state_change.object\n
-kw = ob.REQUEST\n
-f = kw.get(\'my_file\', None)\n
-\n
-if f is not None and f:\n
-  # if file uploaded, then:\n
-  if hasattr(ob, \'clearConversionCache\'): # e.g. File doesn\'t have it\n
-    ob.clearConversionCache()\n
+            <value> <string>state_change.object.uploadFile()\n
+state_change.object.activate().convertToBase()\n
 </string> </value>
         </item>
         <item>
@@ -86,6 +80,12 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -120,11 +120,6 @@ if f is not None and f:\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>ob</string>
-                            <string>kw</string>
-                            <string>None</string>
-                            <string>f</string>
-                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
@@ -141,7 +136,11 @@ if f is not None and f:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ClearCacheUponUpload</string> </value>
+            <value> <string>upload</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Move to upload state and activate convert</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
