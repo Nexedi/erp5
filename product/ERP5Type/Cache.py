@@ -30,7 +30,7 @@ import string
 from time import time
 from AccessControl.SecurityInfo import allow_class
 from CachePlugins.BaseCache import CachedMethodError
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
 DEFAULT_CACHE_FACTORY = 'erp5_user_interface'
@@ -44,26 +44,26 @@ def initializePortalCachingProperties(self):
     is_cache_initialized = 1
     ## update cache structure from portal_caches
     self.getPortalObject().portal_caches.updateCache()
-  
+
 class CacheFactory:
   """ CacheFactory is a RAM based object which contains different cache plugin
   objects ordered in a list.
   """
-  
+
   cache_plugins = []
   cache_duration = 180
-  
+
   def __init__(self, cache_plugins, cache_params):
     self.cache_plugins = cache_plugins
     self.cache_duration = cache_params.get('cache_duration')
-    
+
     ## separete local and shared cache plugins
     self.quick_cache = self.cache_plugins[0]
     try:
       self.shared_caches =self.cache_plugins[1:]
     except IndexError:
       self.shared_caches = []
-    
+
     ## set 'check_expire_cache_interval' to the minimal value between
     ## individual 'check_expire_cache_interval' for each cache plugin contained
     l = []
@@ -72,13 +72,13 @@ class CacheFactory:
       l.append(cp.cache_expire_check_interval)
     l = filter(lambda x: x!=None and x!=0, l)
     self.cache_expire_check_interval = min(l)
-    
+
   def __call__(self, callable_object, cache_id, scope, cache_duration=None, *args, **kwd):
     """ When CacheFactory is called it will try to return cached value using
     appropriate cache plugin.
     """
     cache_duration = self.cache_duration
-    
+
     ## Expired Cache (if needed)
     self.expire()
 
@@ -96,14 +96,14 @@ class CacheFactory:
                               cache_entry.cache_duration,
                               cache_entry.calculation_time)
           return value
-            
+
     ## not in any available cache plugins calculate and set to local ..
     start = time()
     value = callable_object(*args, **kwd)
     end = time()
     calculation_time = end - start
     self.quick_cache.set(cache_id, scope, value, cache_duration, calculation_time)
-    
+
     ## .. and update rest of caches in chain except already updated local one
     for shared_cache in self.shared_caches:
       shared_cache.set(cache_id, scope, value, cache_duration, calculation_time)
@@ -116,15 +116,15 @@ class CacheFactory:
       self._last_cache_expire_check_at = now
       for cache_plugin in self.getCachePluginList():
         cache_plugin.expireOldCacheEntries()
-    
+
   def getCachePluginList(self, omit_cache_plugin_name=None):
-    """ get list of all cache plugins except specified by name in omit """ 
+    """ get list of all cache plugins except specified by name in omit """
     rl = []
     for cp in self.cache_plugins:
       if omit_cache_plugin_name != cp.__class__.__name__:
         rl.append(cp)
     return rl
-    
+
   def getCachePluginByClassName(self, cache_plugin_name):
     """ get cache plugin by its class name """
     for cp in self.cache_plugins:
@@ -136,26 +136,26 @@ class CacheFactory:
     """ clear cache for this cache factory """
     for cp in self.cache_plugins:
       cp.clearCache()
- 
+
 class CachingMethod:
   """CachingMethod is a RAM based global Zope class which contains different
   CacheFactory objects for every available ERP5 site instance.
   """
-  
+
   ## cache factories will be initialized for every ERP5 site
   factories = {}
-    
+
   ## replace string table for some control characters not allowed in cache id
   _cache_id_translate_table = string.maketrans("""[]()<>'", """,'__________')
-    
+
   def __init__(self, callable_object, id, cache_duration=180,
                cache_factory=DEFAULT_CACHE_FACTORY):
     """Wrap a callable object in a caching method.
-    
+
     callable_object must be callable.
     id is used to identify what call should be treated as the same call.
-    cache_duration is an old argument kept for backwards compatibility. 
-    cache_duration is specified per cache factory. 
+    cache_duration is an old argument kept for backwards compatibility.
+    cache_duration is specified per cache factory.
     cache_factory is the id of the cache_factory to use.
     """
     if not callable(callable_object):
@@ -167,18 +167,18 @@ class CachingMethod:
     self.callable_object = callable_object
     self.cache_duration = cache_duration
     self.cache_factory = cache_factory
-    
+
   def __call__(self, *args, **kwd):
     """Call the method or return cached value using appropriate cache plugin """
-   
+
     ## cache scope is based on user which is a kwd argument
     scope = kwd.get('scope', DEFAULT_CACHE_SCOPE)
-    
+
     ## generate unique cache id
     cache_id = self.generateCacheId(self.id, *args, **kwd)
 
     try:
-      ## try to get value from cache in a try block 
+      ## try to get value from cache in a try block
       ## which is faster than checking for keys
       # It is very important to take the factories dictionnary
       # on CachingMethod instead of self, we want a global variable
@@ -187,6 +187,7 @@ class CachingMethod:
               *args, **kwd)
     except KeyError:
       ## no caching enabled for this site or no such cache factory
+      LOG("Cache.__call__", WARNING, "Factory %s not found, method %s execute without cache" %(self.cache_factory, self.callable_object))
       value = self.callable_object(*args, **kwd)
     return value
 
@@ -200,8 +201,8 @@ class CachingMethod:
   def generateCacheId(self, method_id, *args, **kwd):
     """ Generate proper cache id based on *args and **kwd  """
     ## generate cache id out of arguments passed.
-    ## depending on arguments we may have different 
-    ## cache_id for same method_id 
+    ## depending on arguments we may have different
+    ## cache_id for same method_id
     cache_id = [method_id]
     key_list = kwd.keys()
     key_list.sort()
@@ -214,7 +215,7 @@ class CachingMethod:
     # sure to replace them
     cache_id = cache_id.translate(self._cache_id_translate_table)
     return cache_id
-                
+
 allow_class(CachingMethod)
 
 # TransactionCache is a cache per transaction. The purpose of this cache is
@@ -247,7 +248,7 @@ def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
   """Clear specified cache factory list."""
   cache_storage = CachingMethod.factories
   for cf_key in cache_factory_list:
-    if cache_storage.has_key(cf_key):	  
+    if cache_storage.has_key(cf_key):
       for cp in cache_storage[cf_key].getCachePluginList():
         cp.clearCache()
 
