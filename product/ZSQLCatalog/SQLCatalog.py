@@ -602,6 +602,11 @@ class Catalog( Folder,
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_index',
+      'description' : 'Method to get the main catalog index',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_unique_values',
       'description' : 'Find unique disctinct values in a column',
       'type'    : 'selection',
@@ -668,6 +673,7 @@ class Catalog( Folder,
   sql_catalog_tables = ''
   sql_search_tables = ()
   sql_catalog_schema = ''
+  sql_catalog_index = ''
   sql_unique_values = ''
   sql_catalog_paths = ''
   sql_catalog_keyword_search_keys =  ()
@@ -1670,6 +1676,63 @@ class Catalog( Folder,
   # Compatibililty SQL Sql
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
+  def getTableIndex(self, table):
+    """
+    Return a map between columns and possible index for a given table
+    """
+    def _getTableIndex(table):
+      table_index = {}
+      method = getattr(self, self.sql_catalog_index, '')
+      if method in ('', None):
+        return {}
+      index = list(method(table=table))
+      for line in index:
+        if table_index.has_key(line.COLUMN_NAME):
+          table_index[line.COLUMN_NAME].append(line.KEY_NAME)
+        else:
+          table_index[line.COLUMN_NAME] = [line.KEY_NAME,]
+      LOG("SQLCatalog.getTableIndex", ERROR, "index = %s for table = %s" \
+          %(table_index, table))
+      return table_index
+    return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
+                         cache_duration=None)(table=table)
+
+
+  def getIndex(self, table, column_list):
+    """
+    Return possible index for a column list in a given table
+    """
+    def _getIndex(table, column_list):
+      index_dict = self.getTableIndex(table)
+      if isinstance(column_list, str):
+        column_list = [column_list,]
+      index_column = []
+      possible_index = {}
+      # Get possible index
+      for column in column_list:
+        if index_dict.has_key(column):
+          for index in index_dict[column]:
+            if not possible_index.has_key(index):
+              possible_index[index] = [column,]
+            else:
+              possible_index[index].append(column)
+      # Return an index list that cover the maximum of rows
+      max_column_len = 0
+      best_index = []
+      for index in possible_index.keys():
+        column_list = possible_index[index]
+        column_list_length = len(column_list)
+        if column_list_length > max_column_len:
+          best_index = [index,]
+          max_column_len = column_list_length
+        elif column_list_length == max_column_len:
+          best_index.append(index)
+      LOG("SQLCatalog.getIndex", ERROR, "best_index = %s for table %s and columns %s" \
+          %(best_index, table, column_list))
+      return best_index
+    return CachingMethod(_getIndex, id='SQLCatalog.getIndex', cache_duration=None)\
+          (table=table, column_list=column_list)
+
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, query=None, stat__=0, **kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
@@ -1891,7 +1954,9 @@ class Catalog( Folder,
       if len(group_by_expression_list)>0:
         group_by_expression = ','.join(group_by_expression_list)
         group_by_expression = str(group_by_expression)
+
     sort_on = None
+    sort_key = []
     if sort_index is not None:
       new_sort_index = []
       for sort in sort_index:
@@ -1911,12 +1976,12 @@ class Catalog( Folder,
         elif len(sort) == 3:
           new_sort_index.append(sort)
       sort_index = new_sort_index
-
       try:
         new_sort_index = []
         for (original_key, so, as_type) in sort_index:
           key = getNewKeyAndUpdateVariables(original_key)
           if key is not None:
+            sort_key.append(key)
             if as_type == 'int':
               key = 'CAST(%s AS SIGNED)' % key
             elif as_type:
@@ -1935,6 +2000,7 @@ class Catalog( Folder,
       except:
         LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
         sort_on = ''
+        sort_key = []
 
     for key in key_list:
       if not key_alias_dict.has_key(key):
@@ -1979,6 +2045,32 @@ class Catalog( Folder,
       limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
     elif limit_expression is not None:
       limit_expression = str(limit_expression)
+
+    # force index if exists when doing sort as mysql doesn't manage them efficiently
+    if len(sort_key) > 0:
+      index_from_table = {}
+      # first group columns from a same table
+      for key in sort_key:
+        related_table, column = key.split('.')
+        table = from_table_dict[related_table]
+        if not index_from_table.has_key(table):
+          index_from_table[table] = [column,]
+        else:
+          index_from_table[table].append(column)
+      # second ask index
+      for table in index_from_table.keys():
+        available_index_list = self.getIndex(table, index_from_table[table])
+        if len(available_index_list) > 0:
+          # tell mysql to use these index
+          table = from_table_dict.pop(related_table)
+          index_list_string = ""
+          for index in available_index_list:
+            if len(index_list_string) == 0:
+              index_list_string += "%s" %index
+            else:
+              index_list_string += ", %s" %index
+          table_with_index =  "%s use index(%s)"  %(related_table, index_list_string)
+          from_table_dict[table_with_index] = table
 
     # Use a dictionary at the moment.
     return { 'from_table_list' : from_table_dict.items(),
