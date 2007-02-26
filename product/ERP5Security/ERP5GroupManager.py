@@ -119,8 +119,8 @@ class ERP5GroupManager(BasePlugin):
         else:
           security_definition_list = mapping_method()
 
-        # get the person from its reference
-        catalog_result = self.portal_catalog(
+        # get the person from its reference - no security check needed
+        catalog_result = self.portal_catalog.unrestrictedSearchResults(
             portal_type="Person", reference=user_name)
         if len(catalog_result) != 1: # we won't proceed with groups
           if len(catalog_result) > 1: # configuration is screwed
@@ -133,8 +133,7 @@ class ERP5GroupManager(BasePlugin):
         person_id = person_object.getId()
 
         # Fetch category values from defined scripts
-        for (method_name, base_category_list) in \
-            security_definition_list:
+        for (method_name, base_category_list) in security_definition_list:
           base_category_list = tuple(base_category_list)
           method = getattr(self, method_name)
           security_category_list = security_category_dict.setdefault(
