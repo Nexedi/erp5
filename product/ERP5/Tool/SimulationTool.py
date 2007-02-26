@@ -607,12 +607,19 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventory')
-    def getCurrentInventory(self, **kw):
+    def getCurrentInventory(self, omit_transit=1,
+                            transit_simulation_state=None,**kw):
       """
       Returns current inventory
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
-      return self.getInventory(**kw)
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
+                               self.getPortalTransitInventoryStateList()
+      if transit_simulation_state is None:
+        self.getPortalTransitInventoryStateList()
+      current_inventory = self.getInventory(omit_transit=omit_transit,
+                                  transit_simulation_state=transit_simulation_state,
+                                  **kw)
+      return current_inventory
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventory')
@@ -634,6 +641,7 @@ class SimulationTool(BaseTool):
       """
       kw['simulation_state'] = tuple(
                    list(self.getPortalFutureInventoryStateList()) + \
+                   list(self.getPortalTransitInventoryStateList()) + \
                    list(self.getPortalReservedInventoryStateList()) + \
                    list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
