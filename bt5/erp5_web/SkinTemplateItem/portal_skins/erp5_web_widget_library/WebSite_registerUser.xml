@@ -94,12 +94,12 @@ for f in fields:\n
 returned_params = \'&\'.join([f+\'=\'+kwargs[f] for f in kwargs])\n
 context.log(returned_params)\n
 if missing_string:\n
-  params = returned_params + \'&\' + missing_string + \'&portal_status_message=You did not fill all the required fields\'\n
+  params = returned_params + \'&\' + missing_string + \'&portal_status_message=You did not fill all the required fields. See below to find out which fields still have to be filled.\'\n
   context.log(params)\n
   return req.RESPONSE.redirect(context.absolute_url()+\'?\'+params)\n
 if req.get(\'your_email\') != req.get(\'your_email_repeated\'):\n
   missing_string += \'&missing:list=email&missing:list=email_repeated\'\n
-  params = returned_params + \'&\' + missing_string + \'&portal_status_message=You entered two different email addresses\'\n
+  params = returned_params + \'&\' + missing_string + \'&portal_status_message=You entered two different email addresses. Please make sure to enter the same email adress in the fields Email Adress and Repeat Email Adress.\'\n
   return req.RESPONSE.redirect(context.absolute_url()+\'?\'+params)\n
 \n
 # create a user\n
@@ -107,7 +107,7 @@ context.log(kwargs)\n
 try:\n
   user = context.WebSite_createUser(**kwargs)\n
   context.log(user)\n
-  msg = \'Thank you for registering. Your password will be sent to the email adress that you provided.\'\n
+  msg = \'Thank you for registering. Your password will be sent to the email adress that you provided once your account has been validated by the appropriate department.\'\n
 except Exception, e:\n
   msg = str(e)\n
 \n
