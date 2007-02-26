@@ -79,6 +79,7 @@ except ImportError:
   disableReadOnlyTransactionCache = doNothing
 
 UID_BUFFER_SIZE = 300
+RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit')
 
 valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
 
@@ -192,8 +193,8 @@ class Query(QueryMixin):
   """
   This allow to define constraints on a sql column
   """
-  def __init__(self,format=None,operator=None,range=None,
-                    search_mode=None,**kw):
+  def __init__(self, format=None, operator=None, range=None,
+                     search_mode=None, **kw):
     self.format = format
     if operator is None:
       operator = 'OR'
@@ -221,7 +222,7 @@ class Query(QueryMixin):
   def asSQLExpression(self, key_alias_dict=None,
                             keyword_search_keys=None,
                             full_text_search_keys=None,
-                            ignore_empty_string=1,stat__=0):
+                            ignore_empty_string=1, stat__=0):
     """
     Build the sql string
     """
@@ -1735,7 +1736,7 @@ class Catalog( Folder,
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, query=None, stat__=0, **kw):
-    """ Builds a complex SQL query to simulate ZCalatog behaviour """
+    """ Builds a complex SQL query to simulate ZCatalog behaviour """
     # Get search arguments:
     if REQUEST is None and (kw is None or kw == {}):
       # We try to get the REQUEST parameter
@@ -1744,8 +1745,8 @@ class Catalog( Folder,
       except AttributeError: pass
 
     #LOG('SQLCatalog.buildSQLQuery, kw',0,kw)
-    # If kw is not set, then use REQUEST instead
-    if kw is None or kw == {}:
+    # If kw and query are not set, then use REQUEST instead
+    if query is None and (kw is None or kw == {}):
       kw = REQUEST
 
     acceptable_key_map = self.getColumnMap()
@@ -1813,7 +1814,7 @@ class Catalog( Folder,
     key_list = [] # the list of column keys
     key_alias_dict = {}
     for key in kw.keys():
-      if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit'):
+      if key not in RESERVED_KEY_LIST:
         value = kw[key]
         current_query = None
         new_query_dict = {}
@@ -2006,7 +2007,7 @@ class Catalog( Folder,
       if not key_alias_dict.has_key(key):
         getNewKeyAndUpdateVariables(key)
     if len(query_dict):
-      for key,query in query_dict.items():
+      for key, query in query_dict.items():
         query_result = query.asSQLExpression(key_alias_dict=key_alias_dict,
                                     full_text_search_keys=full_text_search_keys,
                                     keyword_search_keys=keyword_search_keys,
@@ -2107,23 +2108,16 @@ class Catalog( Folder,
     """ Returns a list of brains from a set of constraints on variables """
     # The used argument is deprecated and is ignored
     method = getattr(self, self.sql_search_results)
-    # Return the result
-    kw['used'] = used
-    kw['REQUEST'] = REQUEST
-    return self.queryResults(method, **kw)
+    return self.queryResults(method, REQUEST=REQUEST, used=used, **kw)
 
   __call__ = searchResults
 
-  def countResults(self, REQUEST=None, used=None, **kw):
+  def countResults(self, REQUEST=None, used=None, stat__=1, **kw):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns the number of items which satisfy the where_expression """
     # Get the search method
     method = getattr(self, self.sql_count_results)
-    # Return the result
-    kw['used'] = used
-    kw['REQUEST'] = REQUEST
-    kw['stat__'] = 1
-    return self.queryResults(method, **kw)
+    return self.queryResults(method, REQUEST=REQUEST, used=used, stat__=stat__, **kw)
 
   def recordObjectList(self, path_list, catalog=1):
     """
