@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Interaction</string>
-          <string>InteractionDefinition</string>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,6 +14,12 @@
       <dictionary>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -31,22 +37,12 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>activate_script_name</string> </key>
-            <value>
-              <list>
-                <string>Parent_updateAllLocalRoles</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>after_script_name</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>accept</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Accept a translation </string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -56,34 +52,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>UpdateLocalRoles</string> </value>
+            <value> <string>accept</string> </value>
         </item>
         <item>
-            <key> <string>method_id</string> </key>
-            <value>
-              <list>
-                <string>edit</string>
-                <string>manage_beforeDelete</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>portal_type_filter</string> </key>
-            <value>
-              <list>
-                <string>Role Definition</string>
-              </list>
-            </value>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>accepted</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Accept Translation</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

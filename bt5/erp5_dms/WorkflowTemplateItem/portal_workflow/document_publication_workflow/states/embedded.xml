@@ -19,6 +19,10 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>A document which is part of another document and which acquired security from it.</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>embedded</string> </value>
         </item>
@@ -26,6 +30,22 @@
             <key> <string>permission_roles</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Embedded</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>

@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>A document shared by limited people in the organisation (ex. team, project, etc.)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Shared</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -48,6 +48,12 @@
               <tuple>
                 <string>archive</string>
                 <string>archive_action</string>
+                <string>hide</string>
+                <string>hide_action</string>
+                <string>publish</string>
+                <string>publish_action</string>
+                <string>release</string>
+                <string>release_action</string>
               </tuple>
             </value>
         </item>

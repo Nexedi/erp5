@@ -62,7 +62,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_edit</string>
+                <string>edit</string>
               </list>
             </value>
         </item>

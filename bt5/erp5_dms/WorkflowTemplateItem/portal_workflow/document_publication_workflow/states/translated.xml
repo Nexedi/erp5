@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.States</string>
+          <string>StateDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>A translated document which needs approval from revisor before submission or acceptance.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>translated</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Translated</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>accept</string>
+                <string>accept_action</string>
+                <string>assign</string>
+                <string>assign_action</string>
+                <string>submit</string>
+                <string>submit_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

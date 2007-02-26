@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.InteractionWorkflow</string>
-          <string>InteractionWorkflowDefinition</string>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
         </tuple>
         <none/>
       </tuple>
@@ -19,26 +19,14 @@
             </value>
         </item>
         <item>
-            <key> <string>_objects</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>groups</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>dms_file_interaction_workflow</string> </value>
+            <value> <string>accept_action</string> </value>
         </item>
       </dictionary>
     </pickle>

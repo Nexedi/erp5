@@ -81,10 +81,7 @@ res = ob.checkConsistency()\n
 if res:\n
   msg= \'The document is not consistent:<br/>\'\n
   msg += \'<br/>\'.join(\'- \' + str(r.message) for r in res)\n
-  context.portal_workflow.doActionFor(ob, \'process\', comment=\'consistency check failed\')\n
   raise ValidationFailed(msg)\n
-else:\n
-  context.portal_workflow.doActionFor(ob, \'process\', comment=\'consistency ok\')\n
 
 
 ]]></string> </value>
@@ -136,7 +133,6 @@ else:\n
                             <string>ob</string>
                             <string>res</string>
                             <string>msg</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
