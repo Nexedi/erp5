@@ -126,7 +126,6 @@ Spreadsheet | metadata
 Spreadsheet | print
 Spreadsheet | related_document
 Spreadsheet | view
-Text | convert
 Text | create_snapshot
 Text | download
 Text | download_ooo
