@@ -234,7 +234,7 @@ class OOoDocument(File, ConversionCacheMixin):
 
     cached_getTargetFormatItemList = CachingMethod(cached_getTargetFormatItemList,
                                         id = "OOoDocument_getTargetFormatItemList",
-                                                   cache_factory='erp5_core_short')
+                                                   cache_factory='erp5_user_interface_short')
     return cached_getTargetFormatItemList(self.getContentType())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTargetFormatList')
