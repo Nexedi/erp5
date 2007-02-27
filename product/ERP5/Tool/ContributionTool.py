@@ -213,7 +213,7 @@ class ContributionTool(BaseTool):
     document.reindexObject()
     return document
 
-  security.declareProtected( Permissions.AddPortalContent, 'fromXML' )
+  security.declareProtected( Permissions.AddPortalContent, 'newXML' )
   def newXML(self, xml):
     """
       Create a new content based on XML data. This is intended for contributing
