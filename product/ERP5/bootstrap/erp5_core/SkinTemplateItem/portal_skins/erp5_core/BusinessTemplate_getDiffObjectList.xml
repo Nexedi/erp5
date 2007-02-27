@@ -103,7 +103,8 @@ else:\n
 def getModifiedObjectList(bt1, bt2):\n
   return bt1.preinstall(compare_to=bt2)\n
 \n
-getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', cache_duration=3)\n
+getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', \\\n
+                        cache_factory=\'erp5_user_interface_medium\')\n
 \n
 if p.portal_templates.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:\n
   modified_object_list = getModifiedObjectList(bt2, bt1)\n

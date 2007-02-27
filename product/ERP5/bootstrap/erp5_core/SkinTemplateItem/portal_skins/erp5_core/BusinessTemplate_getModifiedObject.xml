@@ -77,7 +77,7 @@ def getModifiedObjectList(context):\n
 \n
 getModifiedObjectList = CachingMethod(getModifiedObjectList,\n
                               id=\'BusinessTemplate_getModifiedObjectList\',\n
-                              cache_duration=36000)\n
+                              cache_factory=\'erp5_user_interface_medium\')\n
 \n
 modified_object_list = getModifiedObjectList(context)\n
 keys = modified_object_list.keys()\n

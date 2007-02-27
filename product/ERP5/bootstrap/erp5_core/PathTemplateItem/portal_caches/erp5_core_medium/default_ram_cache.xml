@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>cache_expire_check_interval</string> </key>
-            <value> <int>360</int> </value>
+            <value> <int>5400</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

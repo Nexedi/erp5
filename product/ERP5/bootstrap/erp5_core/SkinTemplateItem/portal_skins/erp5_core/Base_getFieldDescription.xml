@@ -84,7 +84,8 @@ def getFieldDescription():\n
           return property.get(\'description\', \'\')\n
   return desc\n
 \n
-getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', field.aq_parent.getId(), field.getId()), cache_duration=None)\n
+getFieldDescription = CachingMethod(getFieldDescription, \\\n
+       (\'getFieldDescription\', field.aq_parent.getId(), field.getId()), cache_factory=\'erp5_user_interface_long\')\n
 \n
 return getFieldDescription()\n
 </string> </value>
@@ -140,7 +141,6 @@ return getFieldDescription()\n
                             <string>CachingMethod</string>
                             <string>getFieldDescription</string>
                             <string>_getattr_</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
