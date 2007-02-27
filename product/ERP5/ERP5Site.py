@@ -398,7 +398,7 @@ class ERP5Site(FolderMixIn, CMFSite):
 
     getTypeList = CachingMethod(getTypeList,
                                 id=('_getPortalGroupedTypeList', group),
-                                cache_duration=3600)
+                                cache_factory='erp5_core_medium')
     return getTypeList(group)
 
   def _getPortalGroupedCategoryList(self, group):
@@ -415,7 +415,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     getCategoryList = CachingMethod(
                             getCategoryList,
                             id=('_getPortalGroupedCategoryList', group),
-                            cache_duration=3600)
+                            cache_factory='erp5_core_medium')
     return getCategoryList(group)
 
   def _getPortalGroupedStateList(self, group):
@@ -433,7 +433,7 @@ class ERP5Site(FolderMixIn, CMFSite):
 
     getStateList = CachingMethod(getStateList,
                                  id=('_getPortalGroupedStateList', group),
-                                 cache_duration=3600)
+                                 cache_factory='erp5_core_medium')
     return getStateList(group)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -892,7 +892,7 @@ class ERP5Site(FolderMixIn, CMFSite):
       if module is None: # we can't access this one
         continue
       if portal_type in self.portal_types[module.getPortalType()].allowed_content_types:
-       module_name = mod 
+       module_name = mod
        break
     if module_name is not None:
       return module_name
@@ -1076,7 +1076,7 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Order Tool', None)
     if not p.hasObject('portal_tests'):
       addTool('ERP5 Test Tool', None)
-    
+
     # Add ERP5Type Tool
     addTool = p.manage_addProduct['ERP5Type'].manage_addTool
     if not p.hasObject('portal_caches'):
