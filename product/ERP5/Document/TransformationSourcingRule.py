@@ -255,24 +255,24 @@ class TransformationSourcingRule(Rule):
         and blocks expansion process
       """
 
-    # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self, applied_rule):
-      """
-        Returns 1 if divergent rule
-      """
-
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self, applied_rule):
-      """
-        Returns a list Divergence descriptors
-      """
-
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self, applied_rule):
-      """
-        Returns a list Divergence solvers
-      """
+#    # Solvers
+#    security.declareProtected(Permissions.View, 'isDivergent')
+#    def isDivergent(self, applied_rule):
+#      """
+#        Returns 1 if divergent rule
+#      """
+#
+#    security.declareProtected(Permissions.View, 'getDivergenceList')
+#    def getDivergenceList(self, applied_rule):
+#      """
+#        Returns a list Divergence descriptors
+#      """
+#
+#    security.declareProtected(Permissions.View, 'getSolverList')
+#    def getSolverList(self, applied_rule):
+#      """
+#        Returns a list Divergence solvers
+#      """
 
     def isDeliverable(self, m):
       resource = m.getResource()
