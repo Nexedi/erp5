@@ -89,7 +89,7 @@ from Products.ERP5Type.Cache import CachingMethod\n
 getCurrencyItemList = CachingMethod(\n
                           getCurrencyItemList,\n
                           id=\'CurrencyModule_getCurrencyItemList\',\n
-                          cache_duration=30000, )\n
+                          cache_factory = \'erp5_user_interface_short\')\n
                                       \n
 return getCurrencyItemList( include_empty=include_empty,\n
                             portal_path=portal.getPath() )\n
