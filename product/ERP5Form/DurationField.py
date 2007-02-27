@@ -105,7 +105,7 @@ class DurationValidator(Validator.FloatValidator):
                                 validation=1, key=key),
                               REQUEST
                               )
-    if sub_field_value is not None:
+    if sub_field_value not in (None, ''):
       if second_value is not None:
         second_value += sub_field_value * convertion
       else:
