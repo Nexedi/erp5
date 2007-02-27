@@ -84,15 +84,9 @@ if site_uid is not None:\n
                         portal_type=portal_type_list)\n
   append = operation_list.append\n
   for document in document_list:\n
-    # Cash movement in ordered stated are allowed\n
-    portal_type = document.getPortalType()\n
-    if portal_type==\'Cash Movement\':\n
-      if document.getSimulationState()==\'ordered\':\n
-        continue\n
-    elif portal_type==\'Stop Payment\':\n
-      if document.getSimulationState()==\'started\':\n
-        continue\n
-    append(document)\n
+    # Stop Payment and Cash Movement in started state must not block counter day closing.\n
+    if not (document.getPortalType() in (\'Stop Payment\', \'Cash Movement\') and document.getSimulationState()==\'started\'):\n
+      append(document)\n
 \n
 def operation_sort(a,b):\n
   result = cmp(a.getPortalType(),b.getPortalType())\n
@@ -167,7 +161,6 @@ return operation_list\n
                             <string>portal_type_list</string>
                             <string>document_list</string>
                             <string>document</string>
-                            <string>portal_type</string>
                             <string>operation_sort</string>
                           </tuple>
                         </value>
