@@ -63,7 +63,7 @@
           <a tal:define="url python: \'%s/view\' % doc.absolute_url()"\n
             tal:attributes="href url">\n
             <span tal:replace="doc/portal_type"/>:\n
-            <span tal:replace="doc/getTitleOrId"/>\n
+            <span tal:replace="doc/getTitle"/>\n
             <span tal:condition="python: hasattr(doc, \'getVersion\') and doc.getVersion()" \n
                         tal:replace="python: \'ver. %s\' % doc.getVersion()"/>\n
             (<span tal:content="python: doc.getValidationStateTitle()" \n
