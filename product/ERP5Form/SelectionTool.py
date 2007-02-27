@@ -1003,7 +1003,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       signature_cookie_name = cookie_name + '_signature'
       request.RESPONSE.setCookie(signature_cookie_name,signature,max_age=15*60)
 
-    security.declareProtected(ERP5Permissions.View, 'registerCookieInfo')
+    security.declareProtected(ERP5Permissions.View, 'getCookieInfo')
     def getCookieInfo(self,request,cookie_name):
       """
       get info directly from cookie
