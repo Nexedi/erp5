@@ -1957,7 +1957,7 @@ class Catalog( Folder,
         group_by_expression = str(group_by_expression)
 
     sort_on = None
-    sort_key = []
+    sort_key_list = []
     if sort_index is not None:
       new_sort_index = []
       for sort in sort_index:
@@ -1982,7 +1982,7 @@ class Catalog( Folder,
         for (original_key, so, as_type) in sort_index:
           key = getNewKeyAndUpdateVariables(original_key)
           if key is not None:
-            sort_key.append(key)
+            sort_key_list.append(key)
             if as_type == 'int':
               key = 'CAST(%s AS SIGNED)' % key
             elif as_type:
@@ -2001,7 +2001,7 @@ class Catalog( Folder,
       except:
         LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
         sort_on = ''
-        sort_key = []
+        sort_key_list = []
 
     for key in key_list:
       if not key_alias_dict.has_key(key):
@@ -2048,11 +2048,21 @@ class Catalog( Folder,
       limit_expression = str(limit_expression)
 
     # force index if exists when doing sort as mysql doesn't manage them efficiently
-    if len(sort_key) > 0:
+    if len(sort_key_list) > 0:
       index_from_table = {}
       # first group columns from a same table
-      for key in sort_key:
-        related_table, column = key.split('.')
+      LOG("SQLCatalog.buildSQLQuery", ERROR, "sort_key = %s" %sort_key)
+      for key in sort_key_list:
+        try:
+          related_table, column = key.split('.')
+        except ValueError:
+          # key is not of the form table.column
+          # so get table from dict
+          if len(from_table_dict) != 1:
+            continue
+          column = key
+          related_table = from_table_dict.keys()[0]
+
         table = from_table_dict[related_table]
         if not index_from_table.has_key(table):
           index_from_table[table] = [column,]
