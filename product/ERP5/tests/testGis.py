@@ -169,7 +169,7 @@ class TestGis(ERP5TypeTestCase):
 
   def stepCreateAsTextScript(self, sequence=None, **kw) :
     """
-    This script returns a different adress format.
+    This script returns a different address format.
     """
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                            'Address_asText', '', """

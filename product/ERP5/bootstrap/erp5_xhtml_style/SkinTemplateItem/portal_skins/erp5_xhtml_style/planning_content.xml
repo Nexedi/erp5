@@ -83,7 +83,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 <tal:block tal:condition="python:struct.build_error_list != None"\n
            tal:define="struct options/struct;\n
                        basic python:struct.basic;\n
-                       adress python:basic.here.getUrl()">\n
+                       address python:basic.here.getUrl()">\n
   <input type="hidden" name="list_selection_name" value="PLanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')"/>\n
 \n
   <table>\n
@@ -91,7 +91,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
   </h3></td>\n
   <td>\n
     <select name="report_root_url" onChange="submitAction(this.form,\'/portal_selections/setReportRoot\')"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${adress}/portal_selections/setReportRoot\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setReportRoot\')">\n
       <tal:block tal:condition="python:basic.selection is None"\n
                 tal:define="global selection_report_path python:basic.report_root_list[0][0]"/>\n
       <tal:block tal:condition="python:basic.selection is not None"\n
@@ -126,7 +126,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
            tal:define="struct options/struct">\n
 <tal:block tal:define="basic python:struct.basic;\n
                        planning python:struct.planning;\n
-                       adress python:basic.here.getUrl()">\n
+                       address python:basic.here.getUrl()">\n
 \n
 <!-- hidden fields holding some usefull data-->\n
 <input type="hidden" name="list_selection_name" value="PLanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')"/>\n
@@ -148,7 +148,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
    <b tal:replace="nothing"><!-- report path selection --></b>\n
   <td>\n
     <select name="report_root_url" onChange="submitAction(this.form,\'/portal_selections/setReportRoot\')"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${adress}/portal_selections/setReportRoot\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setReportRoot\')">\n
       <tal:block tal:condition="python:basic.selection is None"\n
                 tal:define="global selection_report_path python:basic.report_root_list[0][0]"/>\n
       <tal:block tal:condition="python:basic.selection is not None"\n
@@ -193,14 +193,14 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     <tal:block tal:condition="python:basic.main_axis_info[\'bound_start\']!=0">\n
       <b tal:replace="nothing"> previous page exists </b>\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
-        tal:attributes="src string:${adress}/images/1leftarrowv.png;\n
-          name string:${adress}/portal_selections/previousPage:method"/>\n
+        tal:attributes="src string:${address}/images/1leftarrowv.png;\n
+          name string:${address}/portal_selections/previousPage:method"/>\n
     </tal:block>\n
 \n
     <select name="list_start" title="Change Page" size="1"\n
             onChange=""\n
             tal:condition="python:basic.main_axis_info[\'bound_page_total\'] > 1"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${adress}/portal_selections/setPage\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setPage\')">\n
       <tal:block tal:repeat="current_page_number python:range(basic.main_axis_info[\'bound_page_total\']+1)[1:]">\n
         <tal:block tal:condition="python:current_page_number==basic.main_axis_info[\'bound_page_current\']">\n
           <b tal:replace="nothing"> actual page is selected </b>\n
@@ -220,8 +220,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
       <b tal:replace="nothing"> next page exists </b>\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
-        tal:attributes="src string:${adress}/images/1rightarrowv.png;\n
-          name string:${adress}/portal_selections/nextPage:method"/>\n
+        tal:attributes="src string:${address}/images/1rightarrowv.png;\n
+          name string:${address}/portal_selections/nextPage:method"/>\n
     </tal:block>\n
 \n
   </td>\n
@@ -247,7 +247,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     <!-- processing zoom level select -->\n
     <select name="zoom_level" title="Change Zoom Level" size="1"\n
             onChange=""\n
-            tal:attributes="onChange string:submitAction(this.form,\'${adress}/portal_selections/setZoomLevel\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setZoomLevel\')">\n
       <tal:block tal:repeat="current_zoom_level python:[0.25,0.5,1,2,3,4,8]">\n
         <tal:block tal:condition="python:current_zoom_level==basic.secondary_axis_info[\'zoom_level\']">\n
           <b tal:replace="nothing"> current zoom level is selected </b>\n
@@ -269,15 +269,15 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     <tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=0">\n
       <b tal:replace="nothing"> previous page exists </b>\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Zoom Page" name="" border="0"\n
-        tal:attributes="src string:${adress}/images/1leftarrowv.png;\n
-          name string:${adress}/portal_selections/previousZoom:method"/>\n
+        tal:attributes="src string:${address}/images/1leftarrowv.png;\n
+          name string:${address}/portal_selections/previousZoom:method"/>\n
     </tal:block>\n
 \n
     <!-- pocessing zoom page selection widgets -->\n
     <select name="zoom_start" title="Change Zoom Page" size="1"\n
             onChange=""\n
             tal:condition="python:basic.secondary_axis_info[\'zoom_level\'] > 1"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${adress}/portal_selections/setZoom\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setZoom\')">\n
       <tal:block tal:repeat="current_zoom_page_number python:range(basic.secondary_axis_info[\'zoom_level\'])">\n
         <tal:block tal:condition="python:current_zoom_page_number == basic.secondary_axis_info[\'zoom_start\']">\n
           <b tal:replace="nothing"> actual zoom page is selected </b>\n
@@ -299,8 +299,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     <tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=(basic.secondary_axis_info[\'zoom_level\'] - 1) and basic.secondary_axis_info[\'zoom_level\'] > 1">\n
       <b tal:replace="nothing"> next page exists </b>\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Zoom Page" name="" border="0"\n
-        tal:attributes="src string:${adress}/images/1rightarrowv.png;\n
-          name string:${adress}/portal_selections/nextZoom:method"/>\n
+        tal:attributes="src string:${address}/images/1rightarrowv.png;\n
+          name string:${address}/portal_selections/nextZoom:method"/>\n
     </tal:block>\n
   </td>\n
   </tr>\n
@@ -333,13 +333,13 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 \n
 \n
   <tal:condition tal:condition="python:axis==planning.X">\n
-    <tal:block tal:define="global previous_src string:${adress}/images/1leftarrowv.png;\n
-                           global next_src string:${adress}/images/1rightarrowv.png">\n
+    <tal:block tal:define="global previous_src string:${address}/images/1leftarrowv.png;\n
+                           global next_src string:${address}/images/1rightarrowv.png">\n
     </tal:block>\n
   </tal:condition>\n
   <tal:condition tal:condition="python:axis==planning.Y">\n
-    <tal:block tal:define="global previous_src string:${adress}/images/1toparrow.png;\n
-                           global next_src string:${adress}/images/1bottomarrow.png">\n
+    <tal:block tal:define="global previous_src string:${address}/images/1toparrow.png;\n
+                           global next_src string:${address}/images/1bottomarrow.png">\n
     </tal:block>\n
   </tal:condition>\n
 \n
@@ -351,14 +351,14 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <!-- previous page exists -->\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
         tal:attributes="src previous_src;\n
-                        name string:${adress}/portal_selections/previousPage:method;\n
+                        name string:${address}/portal_selections/previousPage:method;\n
                         id python:axis.name + \'_previous\'"/>\n
     </tal:block>\n
     <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
       <!-- next page exists -->\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
          tal:attributes="src next_src;\n
-                         name string:${adress}/portal_selections/nextPage:method;\n
+                         name string:${address}/portal_selections/nextPage:method;\n
                          id python:axis.name + \'_next\'"/>\n
     </tal:block>\n
 \n
@@ -398,14 +398,14 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <!-- previous page exists -->\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Zoom Page" name="" border="0"\n
          tal:attributes="src previous_src;\n
-                         name string:${adress}/portal_selections/previousZoom:method;\n
+                         name string:${address}/portal_selections/previousZoom:method;\n
                          id python:axis.name + \'_previous\'"/>\n
     </tal:block>\n
     <tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=(basic.secondary_axis_info[\'zoom_level\'] - 1) and basic.secondary_axis_info[\'zoom_level\'] > 1">\n
       <!-- next page exists -->\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Zoom Page" name="" border="0"\n
          tal:attributes="src next_src;\n
-                         name string:${adress}/portal_selections/nextZoom:method;\n
+                         name string:${address}/portal_selections/nextZoom:method;\n
                          id python:axis.name + \'_next\'"/>\n
     </tal:block>\n
   </tal:block>\n

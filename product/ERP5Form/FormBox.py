@@ -47,7 +47,7 @@ class FormBoxWidget(Widget.Widget):
   """
       A widget that display a form within a form.
 
-      A first purpose of this widget is to display adresses in
+      A first purpose of this widget is to display addresses in
       a different order for every localisation.
 
       A second purpose of this widget is to represent a single value
