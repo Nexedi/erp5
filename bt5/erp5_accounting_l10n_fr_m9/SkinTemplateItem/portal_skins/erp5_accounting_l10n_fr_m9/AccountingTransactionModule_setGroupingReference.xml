@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string>"""Set grouping reference for selected lines.\n
+Used as a fast input dialog action.\n
 """\n
 from ZTUtils import make_query\n
 from ZODB.POSException import ConflictError\n
@@ -76,8 +77,8 @@ portal = context.getPortalObject()\n
 getobject = portal.portal_catalog.getobject\n
 N_ = portal.Base_translateString\n
 psm = N_(\'Nothing matches\')\n
+reset = 0\n
 precision = context.REQUEST.get(\'precision\', 2)\n
-\n
 \n
 # XXX when should it be validated ?\n
 if node == \'\':\n
@@ -108,9 +109,9 @@ if update:\n
     for uid in uids:\n
       line = getobject(uid)\n
       if line.AccountingTransaction_isSourceView(): # XXX not optimal !\n
-        total_selected_amount += line.getSourceInventoriatedTotalAssetPrice() or 0\n
+        total_selected_amount += (line.getSourceInventoriatedTotalAssetPrice() or 0)\n
       else:\n
-        total_selected_amount += line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+        total_selected_amount += (line.getDestinationInventoriatedTotalAssetPrice() or 0)\n
         \n
   psm = N_(\'Updated\')\n
   return context.REQUEST.RESPONSE.redirect(\n
@@ -130,7 +131,8 @@ if grouping:\n
   if grouped_line_list:\n
     psm = N_(\'${grouped_line_count} grouped.\',\n
           mapping=dict(grouped_line_count=len(grouped_line_list)))\n
-    \n
+    reset = 1\n
+\n
     # we check if we can mark some transaction as payed.\n
     transaction_list = {}\n
     for line in grouped_line_list:\n
@@ -175,12 +177,12 @@ else:\n
       key = (line.getSource(), line.getDestinationSection())\n
       amount = amount_per_node_mirror_section.get(key, 0)\n
       amount_per_node_mirror_section[key] = amount +\\\n
-                          line.getSourceInventoriatedTotalAssetPrice() or 0\n
+                          (line.getSourceInventoriatedTotalAssetPrice() or 0)\n
     else:\n
       key = (line.getDestination(), line.getSourceSection())\n
       amount = amount_per_node_mirror_section.get(key, 0)\n
       amount_per_node_mirror_section[key] = amount +\\\n
-                      line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+                     (line.getDestinationInventoriatedTotalAssetPrice() or 0)\n
   \n
   valid = 1\n
   for node_mirror_section, amount in amount_per_node_mirror_section.items():\n
@@ -196,6 +198,7 @@ else:\n
   if valid:\n
     psm = N_(\'${ungrouped_line_count} ungrouped.\',\n
           mapping=dict(ungrouped_line_count=len(uids)))\n
+    reset = 1\n
     for line in line_list:\n
       line.AccountingTransactionLine_setGroupingReference(None)\n
   else:\n
@@ -208,6 +211,7 @@ context.REQUEST.RESPONSE.redirect(\n
                           grouping=grouping,\n
                           mirror_section=mirror_section,\n
                           cancel_url=cancel_url,\n
+                          reset=reset,\n
                           portal_status_message=psm))))\n
 </string> </value>
         </item>
@@ -277,6 +281,7 @@ context.REQUEST.RESPONSE.redirect(\n
                             <string>getobject</string>
                             <string>N_</string>
                             <string>psm</string>
+                            <string>reset</string>
                             <string>precision</string>
                             <string>dict</string>
                             <string>total_selected_amount</string>
