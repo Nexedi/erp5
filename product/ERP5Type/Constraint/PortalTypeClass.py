@@ -37,7 +37,7 @@ class PortalTypeClass(Constraint):
     This is usefull to check that all objects of a given portal type are
     consistant and that dynamic methods for the portal type can be
     attached on the class.
-    
+
     Configuration example:
     { 'id'            : 'portal_type_class',
       'description'   : 'The __class__ must be the same as the portal'\
@@ -91,7 +91,7 @@ class PortalTypeClass(Constraint):
     _getClassForPortalTypeCache = CachingMethod(
         _getClassForPortalTypeCache,
         "PortalTypeClass._getClassForPortalTypeCache",
-        cache_duration = 60 * 10
+        cache_factory = 'erp5_core_medium'
         )
     return _getClassForPortalTypeCache(obj.getPortalType())
-    
+

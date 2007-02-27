@@ -87,7 +87,7 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       new_id = str(id)
     if portal_type is None:
-      # XXX This feature is very confusing 
+      # XXX This feature is very confusing
       # And made the code more difficult to update
       portal_type = container.allowedContentTypes()[0].id
 
@@ -99,7 +99,7 @@ class FolderMixIn(ExtensionClass.Base):
         factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
         m = getattr(Document, factory_name)
         return m(container, new_id)
-    
+
     myType = pt.getTypeInfo(container)
     if myType is not None:
       if not myType.allowType( portal_type ):
@@ -115,12 +115,12 @@ class FolderMixIn(ExtensionClass.Base):
     # TODO :the **kw makes it impossible to create content not based on
     # ERP5TypeInformation, because factory method often do not support
     # keywords arguments.
-    
+
     new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
-  
+
   security.declareProtected(
             Permissions.DeletePortalContent, 'deleteContent')
   def deleteContent(self, id):
@@ -144,7 +144,7 @@ class FolderMixIn(ExtensionClass.Base):
       len(self)+1 to make sure generation works on an empty Folder.
     """
     return '%X' % (randint(1, 10000 * (len(self) + 1)), )
- 
+
   def _generateNextId(self):
     """
       Get the last generated Id, increment it until no object with generated
@@ -314,7 +314,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
+
   manage_options = ( CMFBTreeFolder.manage_options +
                      Historical.manage_options +
                      CMFCatalogAware.manage_options
@@ -339,7 +339,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if self._getOb(id, None) is None :
       return id
     return self.generateNewId()
-    
+
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
 
@@ -689,15 +689,15 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     _getVisibleAllowedContentTypeList = CachingMethod(
         _getVisibleAllowedContentTypeList,
         id=("_getAllowedContentTypeTitleList", user, portal_path, portal_type),
-        cache_duration=None)
+        cache_factory='erp5_core_long')
     return _getVisibleAllowedContentTypeList()
-  
+
   security.declarePublic('allowedContentTypes')
   def allowedContentTypes( self ):
     """ List portal_types which can be added in this folder / object.
         Cache results.
         Only paths are cached, because we must not cache objects.
-        This makes the result, even if based on cache, O(n) so it becomes quite 
+        This makes the result, even if based on cache, O(n) so it becomes quite
         costly with many allowed content types.
         Example:
          on Person (12 allowed content types): 1000 calls take 3s.
@@ -717,7 +717,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if not getSecurityManager().checkPermission(
                       Permissions.AddPortalContent, self):
       return []
-    
+
     def _allowedContentTypes( portal_type=None, user=None, portal_path=None ):
       # Sort the list for convenience -yo
       # XXX This is not the best solution, because this does not take
@@ -727,7 +727,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       type_list = CMFBTreeFolder.allowedContentTypes(self)
       type_list.sort(compareTypes)
       return ['/'.join(x.getPhysicalPath()) for x in type_list]
-    
+
     _allowedContentTypes = CachingMethod( _allowedContentTypes,
                                           id = 'allowedContentTypes',
                                           cache_duration = None)
@@ -874,7 +874,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     """
     return self.getPortalObject().portal_preferences\
                               .getDocumentTemplateList(self)
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 'makeTemplate')
   def makeTemplate(self):
     """
@@ -899,7 +899,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     for o in self.objectValues():
       if getattr(aq_base(o), 'makeTemplateInstance', None) is not None:
         o.makeTemplateInstance()
-  
+
   def _delObject(self, id, dp=1):
     """
       _delObject is redefined here in order to make sure

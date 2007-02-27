@@ -122,7 +122,7 @@ def getFormGroupTitleAndId():\n
 \n
 getFormGroupTitleAndId = CachingMethod(getFormGroupTitleAndId,\n
                                        ("ERP5Site_getFormGroupTitleAndId", form.id, form.get_groups(include_empty=0)),\n
-                                       cache_duration=None)\n
+                                       cache_factory=\'erp5_user_interface_long\')\n
 return getFormGroupTitleAndId()\n
 </string> </value>
         </item>
@@ -178,7 +178,6 @@ return getFormGroupTitleAndId()\n
                             <string>form</string>
                             <string>getFormGroupTitleAndId</string>
                             <string>_getattr_</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

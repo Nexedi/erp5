@@ -74,7 +74,7 @@ navigation_box_render = CachingMethod(navigation_box_render,\n
     ("ERP5Site_renderCachedNavigationBox",\n
      context.portal_membership.getAuthenticatedMember().getUserName(),\n
      context.Localizer.get_selected_language()\n
-    ),cache_duration=300)\n
+    ),cache_factory=\'erp5_user_interface_short\')\n
 return navigation_box_render()\n
 </string> </value>
         </item>

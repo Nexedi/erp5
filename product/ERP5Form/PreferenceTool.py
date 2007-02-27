@@ -140,10 +140,11 @@ class PreferenceMethod(Method) :
       if found :
         return value
     _getPreference = CachingMethod( _getPreference,
-            id='PreferenceTool.CachingMethod.%s' % self._preference_name)
+            id='PreferenceTool.CachingMethod.%s' % self._preference_name,
+                                    cache_factory='erp5_user_interface_short')
     user_name = getSecurityManager().getUser().getId()
     return _getPreference(user_name=user_name)
-    
+
 class PreferenceTool(BaseTool):
   """
     PreferenceTool manages User Preferences / User profiles.
@@ -206,10 +207,10 @@ class PreferenceTool(BaseTool):
           prefs.append(pref)
     prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
     return prefs
-    
+
   security.declareProtected(Permissions.View, 'getActivePreference')
   def getActivePreference(self) :
-    """ returns the current preference for the user. 
+    """ returns the current preference for the user.
        Note that this preference may be read only. """
     enabled_prefs = self._getSortedPreferenceList()
     if len(enabled_prefs) > 0 :
@@ -222,7 +223,7 @@ class PreferenceTool(BaseTool):
     """
     if folder is None:
       # as the preference tool is also a Folder, this method is called by
-      # page templates to get the list of document templates for self.   
+      # page templates to get the list of document templates for self.
       folder = self
 
     # We must set the user_id as a parameter to make sure each
@@ -236,7 +237,7 @@ class PreferenceTool(BaseTool):
       return acceptable_templates
     _getDocumentTemplateList = CachingMethod(_getDocumentTemplateList,
                           'portal_preferences.getDocumentTemplateList',
-                          cache_duration=3000)
+                                             cache_factory='erp5_user_interface_medium')
 
     allowed_content_types = map(lambda pti: pti.id,
                                 folder.allowedContentTypes())

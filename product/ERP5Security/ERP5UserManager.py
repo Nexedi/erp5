@@ -108,7 +108,8 @@ class ERP5UserManager(BasePlugin):
             return None
 
         _authenticateCredentials = CachingMethod(_authenticateCredentials,
-                                    id='ERP5UserManager_authenticateCredentials')
+                                                 id='ERP5UserManager_authenticateCredentials',
+                                                 cache_factory='erp5_core_short')
         return _authenticateCredentials(
                       login=credentials.get('login'),
                       password=credentials.get('password'),
@@ -152,7 +153,8 @@ class ERP5UserManager(BasePlugin):
             return tuple(user_info)
 
         _enumerateUsers = CachingMethod(_enumerateUsers,
-                                        id='ERP5UserManager_enumerateUsers')
+                                        id='ERP5UserManager_enumerateUsers',
+                                        cache_factory='erp5_core_short')
 
         if id is None:
           id = login

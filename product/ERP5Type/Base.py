@@ -467,7 +467,7 @@ class Base( CopyContainer,
       return getattr(Base.aq_portal_type[ptype], id, None).__of__(self)
 
     return None
-  
+
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
     return Base.inheritedAttribute('manage_historyCompare')(
@@ -560,7 +560,7 @@ class Base( CopyContainer,
             'unable to create methods for PreferenceTool', e)
         raise
       Base.aq_preference_generated = 1
-    
+
     # Always try to return something after generation
     if generated:
       # We suppose that if we reach this point
@@ -607,11 +607,11 @@ class Base( CopyContainer,
     """
     from ZODB.utils import oid_repr
     return oid_repr(self._p_oid)
-  
+
   def getSerial(self):
     """Return ODB Serial."""
     return self._p_serial
-  
+
   def getHistorySerial(self):
     """Return ODB Serial, in the same format used for history keys"""
     return '.'.join([str(x) for x in unpack('>HHHH', self._p_serial)])
@@ -967,6 +967,7 @@ class Base( CopyContainer,
       self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
     if hasattr(Base.aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
+      LOG("Base.py", 0, "method = %s, name = %s" %(method, accessor_name))
       method(value, **kw)
       return
     if hasattr(Base.aq_portal_type[self.portal_type], public_accessor_name):
@@ -983,7 +984,7 @@ class Base( CopyContainer,
     else:
       ERP5PropertyManager._setProperty(self, key, value, type=type)
     # This should not be there, because this ignore all checks made by
-    # the PropertyManager. If there is problems, please complain to 
+    # the PropertyManager. If there is problems, please complain to
     # seb@nexedi.com
     #except:
     #  # This should be removed if we want strict property checking
@@ -1025,7 +1026,7 @@ class Base( CopyContainer,
     #except ConflictError:
     #  raise
     # This should not be there, because this ignore all checks made by
-    # the PropertyManager. If there is problems, please complain to 
+    # the PropertyManager. If there is problems, please complain to
     # seb@nexedi.com
     #except:
     #  # This should be removed if we want strict property checking
@@ -1487,7 +1488,7 @@ class Base( CopyContainer,
       # We have been provided a string
       path = target
       if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
-    else: 
+    else:
       # We have been provided an object
       # Find the object
       path = target.getRelativeUrl()
@@ -1499,7 +1500,7 @@ class Base( CopyContainer,
   def setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):
     self._setDefaultValue(id, target, spec=spec, filter=filter, portal_type=portal_type)
     self.reindexObject()
-  
+
   security.declareProtected( Permissions.View, '_getDefaultValue' )
   def _getDefaultValue(self, id, spec=(), filter=None, portal_type=()):
     path = self._getDefaultCategoryMembership(id, spec=spec, filter=filter,
@@ -1607,7 +1608,7 @@ class Base( CopyContainer,
                              'getDefaultRelatedProperty' )
   getDefaultRelatedProperty = _getDefaultRelatedProperty
 
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              '_getRelatedPropertyList' )
   def _getRelatedPropertyList(self, id, property_name, spec=(), filter=None,
@@ -1643,15 +1644,15 @@ class Base( CopyContainer,
       references.append(self.portal_catalog.getObject(uid))
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' ) 
+  security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
   _setValueUids = _setValueUidList # DEPRECATED
-  
+
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
   def setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1):
     self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
     self.reindexObject()
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' ) 
+  security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
   setValueUids = setValueUidList # DEPRECATED
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValueUid' )
@@ -1858,7 +1859,7 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.View, 'Title' )
   Title = getTitleOrId
-  
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitleAndId')
   def getTitleAndId(self):
@@ -2314,7 +2315,8 @@ class Base( CopyContainer,
       return getattr(ti, 'acquire_local_roles', True)
 
     cached_getAcquireLocalRoles = CachingMethod(cached_getAcquireLocalRoles,
-                                                id='Base__getAcquireLocalRoles')
+                                                id='Base__getAcquireLocalRoles',
+                                                cache_factory='erp5_core_short')
     return cached_getAcquireLocalRoles(portal_type=self.getPortalType())
 
   security.declareProtected(Permissions.View, 'get_local_permissions')
@@ -2577,7 +2579,7 @@ class Base( CopyContainer,
     """
       Provides a quick access to precision without accessing the resource
       value in ZODB. Here resource is the relative_url of the resource, such as
-      the result of self.getResource(). 
+      the result of self.getResource().
     """
     def cached_getQuantityPrecisionFromResource(resource):
       if resource:
@@ -2588,7 +2590,8 @@ class Base( CopyContainer,
 
     cached_getQuantityPrecisionFromResource = CachingMethod(
                                     cached_getQuantityPrecisionFromResource,
-                                    id='Base_getQuantityPrecisionFromResource')
+                                    id='Base_getQuantityPrecisionFromResource',
+                                    cache_factory='erp5_core_short')
 
     return cached_getQuantityPrecisionFromResource(resource)
 

@@ -1016,7 +1016,7 @@ class Catalog( Folder,
       keys = keys.keys()
       keys.sort()
       return keys
-    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_duration=None)()
+    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_core_long')()
 
   def getColumnMap(self):
     """
@@ -1035,7 +1035,7 @@ class Catalog( Folder,
           if not keys.has_key(key): keys[key] = []
           keys[key].append(table) # Is this inconsistent ?
       return keys
-    return CachingMethod(_getColumnMap, id='SQLCatalog.getColumnMap', cache_duration=None)()
+    return CachingMethod(_getColumnMap, id='SQLCatalog.getColumnMap', cache_factory='erp5_core_long')()
 
   def getResultColumnIds(self):
     """
@@ -1696,7 +1696,7 @@ class Catalog( Folder,
           %(table_index, table))
       return table_index
     return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
-                         cache_duration=None)(table=table)
+                         cache_factory='erp5_core_long')(table=table)
 
 
   def getIndex(self, table, column_list):
@@ -1731,7 +1731,7 @@ class Catalog( Folder,
       LOG("SQLCatalog.getIndex", ERROR, "best_index = %s for table %s and columns %s" \
           %(best_index, table, column_list))
       return best_index
-    return CachingMethod(_getIndex, id='SQLCatalog.getIndex', cache_duration=None)\
+    return CachingMethod(_getIndex, id='SQLCatalog.getIndex', cache_factory='erp5_core_long')\
           (table=table, column_list=column_list)
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,

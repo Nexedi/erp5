@@ -33,7 +33,7 @@ from CachePlugins.BaseCache import CachedMethodError
 from zLOG import LOG, WARNING
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
-DEFAULT_CACHE_FACTORY = 'erp5_user_interface'
+DEFAULT_CACHE_FACTORY = 'erp5_user_interface_short'
 is_cache_initialized = 0
 
 def initializePortalCachingProperties(self):

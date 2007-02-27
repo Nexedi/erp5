@@ -170,7 +170,7 @@ class OOoDocument(File, ConversionCacheMixin):
 
   def _getServerCoordinate(self):
     """
-      Returns OOo conversion server data from 
+      Returns OOo conversion server data from
       preferences
     """
     pref = getToolByName(self, 'portal_preferences')
@@ -233,7 +233,8 @@ class OOoDocument(File, ConversionCacheMixin):
       return [[y,x] for x,y in allowed] # have to reverse tuple order
 
     cached_getTargetFormatItemList = CachingMethod(cached_getTargetFormatItemList,
-                                        id = "OOoDocument_getTargetFormatItemList" )
+                                        id = "OOoDocument_getTargetFormatItemList",
+                                                   cache_factory='erp5_core_short')
     return cached_getTargetFormatItemList(self.getContentType())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTargetFormatList')
@@ -292,7 +293,7 @@ class OOoDocument(File, ConversionCacheMixin):
     sp = self._mkProxy()
     kw = sp.run_convert(self.getSourceReference(), enc(self._unpackData(self.data)))
     self.oo_data = Pdata(dec(kw['data']))
-    # now we get text content 
+    # now we get text content
     text_data = self.extractTextContent()
     self.setTextContent(text_data)
     self._setMetaData(kw['meta'])
@@ -531,5 +532,5 @@ class OOoDocument(File, ConversionCacheMixin):
   manage_FTPstat = File.manage_FTPstat
 
 
-# vim: syntax=python shiftwidth=2 
+# vim: syntax=python shiftwidth=2
 
