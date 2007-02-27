@@ -120,9 +120,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
     def getSelectionNames(self, context=None, REQUEST=None):
-      """
-        Returns the selection names
-      """
       if context is None: context = self
       if not REQUEST:
         REQUEST = get_request()
@@ -597,6 +594,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'setPage')
     def setPage(self, list_selection_name, listbox_uid, query_string=None, uids=None, REQUEST=None):
+      """
+        Set page
+      """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
@@ -703,6 +703,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
     def unfoldDomain(self, REQUEST, form_id=None, query_string=None):
+      """
+        Unfold domain for the current selection
+      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       domain_url = REQUEST.form.get('domain_url',None)
@@ -718,6 +721,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'foldDomain')
     def foldDomain(self, REQUEST, form_id=None, query_string=None):
+      """
+        Fold domain for the current selection
+      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       domain_url = REQUEST.form.get('domain_url',None)
@@ -733,6 +739,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'setReportRoot')
     def setReportRoot(self, REQUEST, form_id=None, query_string=None):
+      """
+        Sets the root report for the current selection
+      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       root_url = REQUEST.form.get('report_root_url','portal_categories')
@@ -744,6 +753,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'unfoldReport')
     def unfoldReport(self, REQUEST, form_id=None, query_string=None):
+      """
+        Unfold report for the current selection
+      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       report_url = REQUEST.form.get('report_url',None)
@@ -756,6 +768,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declareProtected(ERP5Permissions.View, 'foldReport')
     def foldReport(self, REQUEST, form_id=None, query_string=None):
+      """
+        Fold domain for the current selection
+      """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       report_url = REQUEST.form.get('report_url',None)
@@ -1205,6 +1220,7 @@ class TreeListLine:
     self.is_open=is_open
     self.select_domain_dict=select_domain_dict
     self.exception_uid_list=exception_uid_list
+
   def getObject(self):
     return self.object
 
