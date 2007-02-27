@@ -615,7 +615,7 @@ class SimulationTool(BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
                                self.getPortalTransitInventoryStateList()
       if transit_simulation_state is None:
-        self.getPortalTransitInventoryStateList()
+        transit_simulation_state = self.getPortalTransitInventoryStateList()
       current_inventory = self.getInventory(omit_transit=omit_transit,
                                   transit_simulation_state=transit_simulation_state,
                                   **kw)
