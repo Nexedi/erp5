@@ -43,7 +43,7 @@
             <key> <string>type_list</string> </key>
             <value>
               <tuple>
-                <string>current_inventory</string>
+                <string>transit_inventory</string>
               </tuple>
             </value>
         </item>
