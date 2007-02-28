@@ -1381,7 +1381,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
       """
-      from Products.ERP5Form.Selection import DomainSelection
       if base_category is None:
         if context.getPortalType() in ( "Base Category", "Category") :
           base_category = context.getBaseCategoryId()
@@ -1390,13 +1389,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
 
       domain_dict = {base_category: ('portal_categories', context.getRelativeUrl())}
-      selection_domain = DomainSelection(domain_dict = domain_dict).__of__(context)
       if strict_membership:
         catalog_search = self.portal_catalog(portal_type = portal_type,
-		           selection_report = selection_domain)
+                           selection_report = domain_dict)
       else:
         catalog_search = self.portal_catalog(portal_type = portal_type,
-                           selection_domain = selection_domain)
+                           selection_domain = domain_dict)
 
       return catalog_search
 

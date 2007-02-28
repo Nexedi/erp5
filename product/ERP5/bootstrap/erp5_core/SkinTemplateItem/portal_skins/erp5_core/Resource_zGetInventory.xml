@@ -260,9 +260,9 @@ FROM\n
   </dtml-if>\n
 </dtml-in>\n
   <dtml-if selection_domain>,\n
-    <dtml-var "selection_domain.asSQLJoinExpression()"> </dtml-if>\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>,\n
-    <dtml-var "selection_report.asSQLJoinExpression()"> </dtml-if>\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
   , catalog as node, catalog as resource\n
 \n
 WHERE\n
@@ -313,11 +313,10 @@ WHERE\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSQLExpression(join_table=\'stock\',\n
-                                                  join_column=\'node_uid\')">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 \n
 <dtml-if group_by_expression>\n
@@ -397,9 +396,9 @@ FROM\n
   </dtml-if>\n
 </dtml-in>\n
   <dtml-if selection_domain>,\n
-    <dtml-var "selection_domain.asSQLJoinExpression()"> </dtml-if>\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>,\n
-    <dtml-var "selection_report.asSQLJoinExpression()"> </dtml-if>\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
   , catalog as node, catalog as resource\n
 \n
 WHERE\n
@@ -450,11 +449,10 @@ WHERE\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSQLExpression(join_table=\'stock\',\n
-                                                  join_column=\'node_uid\')">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 \n
 <dtml-if group_by_expression>\n

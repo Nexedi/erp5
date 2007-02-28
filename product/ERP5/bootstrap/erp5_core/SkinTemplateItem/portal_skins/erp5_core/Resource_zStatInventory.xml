@@ -271,8 +271,8 @@ FROM\n
      , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
      </dtml-in>\n
   </dtml-if>\n
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSQLJoinExpression()"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "selection_report.asSQLJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
 \n
 WHERE\n
   child.uid = stock.uid\n
@@ -337,10 +337,10 @@ WHERE\n
   </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSQLExpression()">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSQLExpression()">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report)">\n
 </dtml-if>\n
 <dtml-if selection_uids>\n
   AND\n
@@ -414,8 +414,8 @@ FROM\n
      , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
      </dtml-in>\n
   </dtml-if>\n
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSQLJoinExpression()"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "selection_report.asSQLJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
 \n
 WHERE\n
   child.uid = stock.uid\n
@@ -480,10 +480,10 @@ WHERE\n
   </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSQLExpression()">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSQLExpression()">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report)">\n
 </dtml-if>\n
 <dtml-if selection_uids>\n
   AND\n
