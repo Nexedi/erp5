@@ -20,6 +20,10 @@
   <workflow>local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
  </chain>
  <chain>
+  <type>Person</type>
+  <workflow>local_permission_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Presentation</type>
   <workflow>document_publication_workflow, processing_status_workflow, local_permission_interaction_workflow, document_interaction_workflow</workflow>
  </chain>

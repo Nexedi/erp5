@@ -63,6 +63,7 @@
             <value>
               <list>
                 <string>edit</string>
+                <string>submit</string>
               </list>
             </value>
         </item>
@@ -70,6 +71,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
+                <string>Person</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>
                 <string>Text</string>

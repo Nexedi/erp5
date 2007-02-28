@@ -18,6 +18,7 @@ PDF | document_interaction_workflow
 PDF | document_publication_workflow
 PDF | local_permission_interaction_workflow
 PDF | processing_status_workflow
+Person | local_permission_interaction_workflow
 Presentation | document_interaction_workflow
 Presentation | document_publication_workflow
 Presentation | local_permission_interaction_workflow
