@@ -332,7 +332,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           raise
         except:
           obj = None
-        if obj is None:
+        if obj is not None:
           if catalog == 0:
             self.uncatalog_object(o.path, sql_catalog_id=sql_catalog_id)
           elif catalog == 1:
@@ -355,6 +355,16 @@ class ZCatalog(Folder, Persistent, Implicit):
                                        catalog=1)
       # If we were replaying index actions, there is nothing else to do.
 
+  def changeSQLConnectionIds(self, folder, sql_connection_id_dict):
+    if sql_connection_id_dict is not None:
+      if folder.meta_type == 'Z SQL Method':
+        connection_id = folder.connection_id
+        if connection_id in sql_connection_id_dict:
+          folder.connection_id = sql_connection_id_dict[connection_id]
+      elif hasattr(aq_base(folder), 'objectValues'):
+        for object in folder.objectValues():
+          self.changeSQLConnectionIds(object,sql_connection_id_dict)
+
   def exchangeDatabases(self, source_sql_catalog_id, destination_sql_catalog_id,
                         skin_selection_dict, sql_connection_id_dict):
     """
@@ -376,16 +386,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
 
     if sql_connection_id_dict is not None:
-      def changeSQLConnectionIds(folder):
-        if folder.meta_type == 'Z SQL Method':
-          connection_id = folder.connection_id
-          if connection_id in sql_connection_id_dict:
-            folder.connection_id = sql_connection_id_dict[connection_id]
-        elif hasattr(aq_base(folder), 'objectValues'):
-          for object in folder.objectValues():
-            changeSQLConnectionIds(object)
-
-      changeSQLConnectionIds(self.portal_skins)
+      self.changeSQLConnectionIds(self.portal_skins, sql_connection_id_dict)
 
   def manage_hotReindexAll(self, source_sql_catalog_id,
                                  destination_sql_catalog_id,
@@ -393,6 +394,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                                  destination_sql_connection_id_list=None,
                                  skin_name_list=None,
                                  skin_selection_list=None,
+                                 update_destination_sql_catalog=None,
                                  REQUEST=None, RESPONSE=None):
     """
       Starts a hot reindexing.
@@ -463,11 +465,17 @@ class ZCatalog(Folder, Persistent, Implicit):
           sql_connection_id_dict[source_sql_connection_id] = \
               destination_sql_connection_id
 
+    destination_sql_catalog = getattr(self,destination_sql_catalog_id)
+    if update_destination_sql_catalog:
+      self.changeSQLConnectionIds(destination_sql_catalog,
+                                  sql_connection_id_dict)
+
     # First of all, make sure that all root objects have uids.
     # XXX This is a workaround for tools (such as portal_simulation).
     portal = self.getPortalObject()
     for id in portal.objectIds():
       getUid = getattr(portal[id], 'getUid', None)
+      LOG('before getUid portal[id], id',0,id)
       if getUid is not None:
         getUid() # Trigger the uid generation if none is set.
 

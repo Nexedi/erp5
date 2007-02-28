@@ -99,6 +99,16 @@ This requires at least two SQL Catalogs.
 </tr>
 </dtml-let>
 </dtml-in>
+<tr>
+  <td align="left" valign="top">
+    <div class="form-label">
+      Update ZSQL Methods in new catatalog
+    </div>
+  </td>
+  <td align="left" valign="top">
+    <input type="checkbox" name="update_destination_sql_catalog:boolean" CHECKED>
+  </td>
+</tr>
 </dtml-if>
 </dtml-let>
 
