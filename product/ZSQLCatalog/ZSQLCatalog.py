@@ -36,6 +36,8 @@ from ZODB.POSException import ConflictError
 
 from zLOG import LOG
 
+_marker = object()
+
 manage_addZSQLCatalogForm=DTMLFile('dtml/addZSQLCatalog',globals())
 
 HOT_REINDEXING_FINISHED_STATE = 'finished'
@@ -361,7 +363,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         connection_id = folder.connection_id
         if connection_id in sql_connection_id_dict:
           folder.connection_id = sql_connection_id_dict[connection_id]
-      elif hasattr(aq_base(folder), 'objectValues'):
+      elif getattr(aq_base(folder), 'objectValues', _marker) is not _marker:
         for object in folder.objectValues():
           self.changeSQLConnectionIds(object,sql_connection_id_dict)
 
