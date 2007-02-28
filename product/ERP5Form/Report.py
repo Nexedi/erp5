@@ -70,24 +70,28 @@ class ERP5Report(ERP5Form):
     """
         An ERP5Form which allows to aggregate a list of 
         forms each of which is rendered on an object with parameters.
-        
+
         Application: create an accounting book from ERP5 objects 
-        
+
         - Display the total of each account (report)
-        
+
         - List all accounts
-        
+
         - Display the transactions of each account (one form with listbox)
-        
+
         - List all clients
-        
+
         - Display the transactions of each client (one form with listbox)
-        
+
         - List all vendors
-        
+
         - Display the transactions of each vendor (one form with listbox)
-        
-          
+
+        TODO:
+        - Make sure that multiple reports can be run in parallel without conflicts
+
+        - Make sure that multiple reports can be run in parallel without losing
+          consistency (ie. concurrent update of the selection)
     """
     meta_type = "ERP5 Report"
     icon = "www/Form.png"
