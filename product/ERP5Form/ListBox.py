@@ -1911,6 +1911,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     url_column_dict = dict(self.renderer.getUrlColumnList())
     selection = self.renderer.getSelection()
     selection_name = self.renderer.getSelectionName()
+    ignore_layout = self.renderer.request.get('ignore_layout', 0)
 
     html_list = []
 
@@ -1980,7 +1981,9 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 error = sys.exc_info())
         else:
           try:
-            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;reset:int=1' % (brain.absolute_url(), self.index, selection_name)
+            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;ignore_layout:int=%s&amp;reset:int=1' % (
+                      brain.absolute_url(),
+                      self.index, selection_name, ignore_layout)
           except AttributeError:
             pass
 
