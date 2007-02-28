@@ -76,7 +76,7 @@ from Products.ERP5Type.Message import Message\n
 ob = state_change[\'object\']\n
 state = ob.getSimulationState()\n
 \n
-if not ob.Baobab_checkCounterDateOpen(site=ob.getDestination(), date=ob.getStartDate()):\n
+if not ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
