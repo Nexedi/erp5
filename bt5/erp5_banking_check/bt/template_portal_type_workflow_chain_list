@@ -12,9 +12,7 @@ Checkbook Vault Transfer | checkbook_vault_transfer_workflow
 Checkbook Vault Transfer | edit_workflow
 Stop Payment | edit_workflow
 Stop Payment | stop_payment_workflow
-Traveler Check Purchase | accounting_event_interaction_workflow
 Traveler Check Purchase | edit_workflow
 Traveler Check Purchase | traveler_check_purchase_workflow
-Traveler Check Sale | accounting_event_interaction_workflow
 Traveler Check Sale | edit_workflow
 Traveler Check Sale | traveler_check_sale_workflow

@@ -29,10 +29,10 @@
  </chain>
  <chain>
   <type>Traveler Check Purchase</type>
-  <workflow>edit_workflow, accounting_event_interaction_workflow, traveler_check_purchase_workflow</workflow>
+  <workflow>edit_workflow, traveler_check_purchase_workflow</workflow>
  </chain>
  <chain>
   <type>Traveler Check Sale</type>
-  <workflow>edit_workflow, accounting_event_interaction_workflow, traveler_check_sale_workflow</workflow>
+  <workflow>edit_workflow, traveler_check_sale_workflow</workflow>
  </chain>
 </workflow_chain>
