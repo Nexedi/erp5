@@ -79,7 +79,8 @@ except ImportError:
   disableReadOnlyTransactionCache = doNothing
 
 UID_BUFFER_SIZE = 300
-RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit')
+RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
+                     'format', 'search_mode', 'operator')
 
 valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
 
@@ -192,6 +193,8 @@ class QueryMixin:
 class Query(QueryMixin):
   """
   This allow to define constraints on a sql column
+
+  format - %d/%m/%Y
   """
   def __init__(self, format=None, operator=None, range=None,
                      search_mode=None, **kw):
