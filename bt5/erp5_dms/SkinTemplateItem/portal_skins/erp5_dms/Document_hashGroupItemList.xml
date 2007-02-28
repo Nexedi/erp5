@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script repeats function category items\n
+  in such way that it is possible to select multiple\n
+  function categories for the same document\n
+"""\n
+# Initialise result\n
+sub_field_list = []\n
+\n
+# Maximum size of the MultiListField\n
+default_sub_field_property_dict.update({\n
+  \'required\': 0,\n
+  \'field_type\': \'ListField\',\n
+  \'size\': 1,\n
+  \'item_list\': [(\'\', \'\')] + item_list,\n
+  \'value\': None,\n
+})\n
+\n
+z = 0\n
+for i in range(1):\n
+  new_dict = default_sub_field_property_dict.copy()\n
+  new_dict[\'title\'] = \'&nbsp;\'\n
+  new_dict[\'key\'] = str(z)\n
+  z += 1\n
+  sub_field_list.append(new_dict)\n
+\n
+section_list = context.getGroupList()\n
+section_list.reverse()\n
+for value in section_list:\n
+  new_dict = default_sub_field_property_dict.copy()\n
+  new_dict[\'value\'] = value\n
+  new_dict[\'title\'] = \'&nbsp;\'\n
+  new_dict[\'key\'] = str(z)\n
+  z += 1\n
+  sub_field_list.append(new_dict)\n
+\n
+new_dict[\'title\'] = default_sub_field_property_dict[\'title\']\n
+sub_field_list.reverse()\n
+return sub_field_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>item_list</string>
+                            <string>value_list</string>
+                            <string>default_sub_field_property_dict</string>
+                            <string>is_right_display</string>
+                            <string>sub_field_list</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
+                            <string>z</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>new_dict</string>
+                            <string>_write_</string>
+                            <string>str</string>
+                            <string>context</string>
+                            <string>section_list</string>
+                            <string>value</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <dictionary/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_hashGroupItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
