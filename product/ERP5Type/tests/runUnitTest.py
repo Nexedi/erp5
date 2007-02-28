@@ -11,11 +11,11 @@ Options:
   -v, --verbose              produce verbose output
   -h, --help                 this help screen
   -p, --profile              print profiling results at the end
-  --portal_id=STRING         force id of the portal. Usefull when using
+  --portal_id=STRING         force id of the portal. Useful when using
                              --data_fs_path to run tests on an existing
                              Data.fs
-  --data_fs_path=STRING      Path to the orginal Data.fs to run tests on an
-                             existing environment. The Data.fs is openned read
+  --data_fs_path=STRING      Path to the original Data.fs to run tests on an
+                             existing environment. The Data.fs is opened read
                              only
   --recreate_catalog=0 or 1  recreate the content of the sql catalog. Defaults
                              is to recreate, when using an existing Data.fs
@@ -35,7 +35,7 @@ Options:
                              erp5_sql_deferred_connection (if unset, defaults
                              to erp5_sql_connection_string)
   --email_from_address=STRING 
-                             Initialize the email_from_address property of the
+                             Initialise the email_from_address property of the
                              portal, by defaults, CMFActivity failures are sent
                              on localhost from this address, to this address
   --erp5_catalog_storage=STRING
@@ -172,10 +172,11 @@ def runUnitTestList(test_list) :
   # and PortalTestCase.setUp to skip beforeSetUp and afterSetUp
   if os.environ.get('erp5_save_data_fs'):
     from Products.ERP5Type.tests.ERP5TypeTestCase import \
-        dummy_makeSuite, dummy_setUp
+        dummy_makeSuite, dummy_setUp, dummy_tearDown
     from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
     unittest.makeSuite = dummy_makeSuite
     PortalTestCase.setUp = dummy_setUp
+    PortalTestCase.tearDown = dummy_tearDown
 
   filtered_tests_class_names = 0
   for test in test_list:

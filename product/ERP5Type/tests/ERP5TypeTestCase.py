@@ -658,6 +658,14 @@ def dummy_setUp(self):
       self._clear()
       raise
 
+def dummy_tearDown(self):
+  '''
+  This one is overloaded so that it dos not execute beforeTearDown and
+  afterTearDown from the original tests, which would write to the
+  FileStorage when --save is enabled
+  '''
+  pass
+
 def optimize():
   '''Significantly reduces portal creation time.'''
   def __init__(self, text):
