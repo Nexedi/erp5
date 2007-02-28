@@ -282,8 +282,8 @@ FROM\n
   catalog  AS section_bc,\n
   category AS section_membership,\n
   catalog  AS section,\n
-  <dtml-if selection_domain><dtml-var "selection_domain.asSQLJoinExpression()">, </dtml-if>\n
-  <dtml-if selection_report><dtml-var "selection_report.asSQLJoinExpression()">, </dtml-if>\n
+  <dtml-if selection_domain><dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)">, </dtml-if>\n
+  <dtml-if selection_report><dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)">, </dtml-if>\n
   <dtml-if where_expression>, category </dtml-if>\n
   stock\n
   LEFT JOIN catalog AS mirror_section\n
@@ -356,10 +356,10 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSQLExpression()">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 ORDER BY\n
   stock.date, transaction_line.uid\n
@@ -426,8 +426,8 @@ FROM\n
   catalog  AS section_bc,\n
   category AS section_membership,\n
   catalog  AS section,\n
-  <dtml-if selection_domain><dtml-var "selection_domain.asSQLJoinExpression()">, </dtml-if>\n
-  <dtml-if selection_report><dtml-var "selection_report.asSQLJoinExpression()">, </dtml-if>\n
+  <dtml-if selection_domain><dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)">, </dtml-if>\n
+  <dtml-if selection_report><dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)">, </dtml-if>\n
   <dtml-if where_expression>, category </dtml-if>\n
   stock\n
   LEFT JOIN catalog AS mirror_section\n
@@ -500,10 +500,10 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSQLExpression()">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 ORDER BY\n
   stock.date, transaction_line.uid\n

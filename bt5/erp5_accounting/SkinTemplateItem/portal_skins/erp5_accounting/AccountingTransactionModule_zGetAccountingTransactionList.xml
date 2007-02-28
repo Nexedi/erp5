@@ -430,10 +430,10 @@ FROM\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if selection_domain>\n
-    <dtml-var "selection_domain.asSQLJoinExpression()">,\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)">,\n
   </dtml-if>\n
   <dtml-if selection_report>\n
-    <dtml-var "selection_report.asSQLJoinExpression()">,\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)">,\n
   </dtml-if>\n
   <dtml-if use_movement_table> movement,  </dtml-if>\n
   <dtml-if "stat or omit_input or omit_output or node">\n
@@ -448,10 +448,10 @@ WHERE\n
     AND <dtml-var "query[\'where_expression\']">\n
   </dtml-if>\n
   <dtml-if selection_domain>\n
-    AND <dtml-var "selection_domain.asSQLExpression()">\n
+    AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
   </dtml-if>\n
   <dtml-if selection_report>\n
-    AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
+    AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
   </dtml-if>\n
   <dtml-if specific_reference> AND (\n
             catalog.source_reference LIKE\n
@@ -617,10 +617,10 @@ FROM\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if selection_domain>\n
-    <dtml-var "selection_domain.asSQLJoinExpression()">,\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)">,\n
   </dtml-if>\n
   <dtml-if selection_report>\n
-    <dtml-var "selection_report.asSQLJoinExpression()">,\n
+    <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)">,\n
   </dtml-if>\n
   <dtml-if use_movement_table> movement,  </dtml-if>\n
   <dtml-if "stat or omit_input or omit_output or node">\n
@@ -635,10 +635,10 @@ WHERE\n
     AND <dtml-var "query[\'where_expression\']">\n
   </dtml-if>\n
   <dtml-if selection_domain>\n
-    AND <dtml-var "selection_domain.asSQLExpression()">\n
+    AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
   </dtml-if>\n
   <dtml-if selection_report>\n
-    AND <dtml-var "selection_report.asSQLExpression(strict_membership=1)">\n
+    AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
   </dtml-if>\n
   <dtml-if specific_reference> AND (\n
             catalog.source_reference LIKE\n
