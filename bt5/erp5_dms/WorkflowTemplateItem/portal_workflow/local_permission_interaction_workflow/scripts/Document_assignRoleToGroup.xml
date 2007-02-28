@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>sci.object.assignRoleToSecurityGroup()\n
+            <value> <string>ob = sci[\'object\']\n
+ob.assignRoleToSecurityGroup()\n
+ob.log(\'assigned\')\n
 </string> </value>
         </item>
         <item>
@@ -112,6 +114,8 @@
                         <value>
                           <tuple>
                             <string>sci</string>
+                            <string>_getitem_</string>
+                            <string>ob</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
