@@ -81,12 +81,12 @@ class ReportTree:
   """This class describes a report tree.
   """
   def __init__(self, obj = None, is_pure_summary = False, depth = 0, is_open = False,
-               domain_selection = None, exception_uid_list = None, base_category = None):
+               selection_domain = None, exception_uid_list = None, base_category = None):
     self.obj = obj
     self.is_pure_summary = is_pure_summary
     self.depth = depth
     self.is_open = is_open
-    self.domain_selection = domain_selection
+    self.selection_domain = selection_domain
     self.exception_uid_list = exception_uid_list
     if exception_uid_list is None:
       self.exception_uid_set = None
@@ -106,13 +106,13 @@ class ReportSection:
   """This class describes a report section.
   """
   def __init__(self, is_summary = False, object_list = (), object_list_len = 0,
-               is_open = False, domain_selection = None, context = None, offset = 0,
+               is_open = False, selection_domain = None, context = None, offset = 0,
                depth = 0):
     self.is_summary = is_summary
     self.object_list = object_list
     self.object_list_len = object_list_len
     self.is_open = is_open
-    self.domain_selection = domain_selection
+    self.selection_domain = selection_domain
     self.context = context
     self.offset = offset
     self.depth = depth
@@ -1205,7 +1205,7 @@ class ListBoxRenderer:
       domain_dict = {}
       for k, v in new_root_dict.iteritems():
         domain_dict[k] = v[1]
-      domain_selection = DomainSelection(domain_dict = domain_dict)
+      selection_domain = DomainSelection(domain_dict = domain_dict)
 
       if base_category == 'parent':
         exception_uid_list = []
@@ -1225,13 +1225,13 @@ class ListBoxRenderer:
         # Summary (open)
         tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
                                     base_category = base_category,
-                                    is_open = True, domain_selection = domain_selection,
+                                    is_open = True, selection_domain = selection_domain,
                                     exception_uid_list = exception_uid_list))
         if is_report_opened:
           # List (contents, closed, must be strict selection)
           tree_list.append(ReportTree(obj = obj, is_pure_summary = False, depth = depth,
                                       base_category = base_category,
-                                      is_open = False, domain_selection = domain_selection,
+                                      is_open = False, selection_domain = selection_domain,
                                       exception_uid_list = exception_uid_list))
         tree_list.extend(self.makeReportTreeList(root_dict = new_root_dict,
                                                  report_path = report_path,
@@ -1244,7 +1244,7 @@ class ListBoxRenderer:
         # Summary (closed)
         tree_list.append(ReportTree(obj = obj, is_pure_summary = True, depth = depth,
                                     base_category = base_category,
-                                    is_open = False, domain_selection = domain_selection,
+                                    is_open = False, selection_domain = selection_domain,
                                     exception_uid_list = exception_uid_list))
 
     return tree_list
@@ -1454,7 +1454,7 @@ class ListBoxRenderer:
         # FIXME: this code needs optimization. The query should be delayed
         # as late as possible, because this code queries all data, even if
         # it is not displayed.
-        selection.edit(report = report_tree.domain_selection)
+        selection.edit(report = report_tree.selection_domain)
 
         if report_tree.is_pure_summary and self.showStat():
           # Push a new select_expression.
@@ -1479,7 +1479,7 @@ class ListBoxRenderer:
           stat_context.domain_url = report_tree.domain_url
           report_section_list.append(ReportSection(is_summary = True, object_list = [stat_context],
                                                    object_list_len = 1, is_open = report_tree.is_open,
-                                                   domain_selection = report_tree.domain_selection,
+                                                   selection_domain = report_tree.selection_domain,
                                                    context = stat_context, depth = report_tree.depth))
         else:
           selection.edit(params = param_dict)
@@ -1508,7 +1508,7 @@ class ListBoxRenderer:
               report_section_list.append(ReportSection(is_summary = False, object_list = object_list,
                                                        object_list_len = object_list_len,
                                                        is_open = report_tree.is_open,
-                                                       domain_selection = report_tree.domain_selection,
+                                                       selection_domain = report_tree.selection_domain,
                                                        depth = report_tree.depth))
           else:
             stat_context = report_tree.obj.asContext()
@@ -1522,14 +1522,14 @@ class ListBoxRenderer:
                                                        object_list = [object_list[0]],
                                                        object_list_len = 1,
                                                        is_open = True,
-                                                       domain_selection = report_tree.domain_selection,
+                                                       selection_domain = report_tree.selection_domain,
                                                        context = stat_context,
                                                        depth = report_tree.depth))
               report_section_list.append(ReportSection(is_summary = False,
                                                        object_list = object_list,
                                                        object_list_len = object_list_len - 1,
                                                        is_open = True,
-                                                       domain_selection = report_tree.domain_selection,
+                                                       selection_domain = report_tree.selection_domain,
                                                        offset = 1,
                                                        depth = report_tree.depth))
             else:
@@ -1539,7 +1539,7 @@ class ListBoxRenderer:
                                                          object_list = [report_tree.obj],
                                                          object_list_len = 1,
                                                          is_open = report_tree.is_open,
-                                                         domain_selection = report_tree.domain_selection,
+                                                         selection_domain = report_tree.selection_domain,
                                                          context = stat_context,
                                                          depth = report_tree.depth))
               else:
@@ -1548,7 +1548,7 @@ class ListBoxRenderer:
                                                          object_list = [None],
                                                          object_list_len = 1,
                                                          is_open = report_tree.is_open,
-                                                         domain_selection = report_tree.domain_selection,
+                                                         selection_domain = report_tree.selection_domain,
                                                          context = stat_context,
                                                          depth = report_tree.depth))
 
@@ -1661,7 +1661,7 @@ class ListBoxRenderer:
         line = line_class(renderer = self, obj = current_section.object_list[offset],
                           index = index, is_summary = current_section.is_summary,
                           context = current_section.context, is_open = current_section.is_open,
-                          domain_selection = current_section.domain_selection,
+                          selection_domain = current_section.selection_domain,
                           depth = current_section.depth)
         line_list.append(line)
     except IndexError:
@@ -1685,7 +1685,7 @@ class ListBoxRendererLine:
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
   def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
-               is_open = False, domain_selection = None, depth = 0):
+               is_open = False, selection_domain = None, depth = 0):
     """In reality, the object is a brain or a brain-like object.
     """
     self.renderer = renderer
@@ -1694,7 +1694,7 @@ class ListBoxRendererLine:
     self.is_summary = is_summary
     self.context = context
     self.is_open = is_open
-    self.domain_selection = domain_selection
+    self.selection_domain = selection_domain
     self.depth = depth
 
     # Because it is not easy to pass an instance object implicitly to a method
@@ -1761,7 +1761,7 @@ class ListBoxRendererLine:
   def getDomainSelection(self):
     """Return the domain selection. Used only for a summary line.
     """
-    return self.domain_selection
+    return self.selection_domain
 
   def getValueList(self):
     """Return the list of values corresponding to selected columns.

@@ -1242,13 +1242,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     ]
  
     for expected_values in expected_values_list:
-      domain_selection = DomainSelection(domain_dict = {'destination_section':organisation_list[expected_values['id']],
+      selection_domain = DomainSelection(domain_dict = {'destination_section':organisation_list[expected_values['id']],
                                                         'source_section':organisation_list[expected_values['id']]})
       values = expected_values['values']
       for value in values:
         date = value['date']
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, at_date=date, selection_domain=domain_selection)
+        self._testGetInventory(expected=e_inventory, at_date=date, selection_domain=selection_domain)
     
     
   def stepTestGetInventoryListOnSection(self, sequence=None, sequence_list=None, **kw):
