@@ -166,7 +166,7 @@ def _get_default(self, key, value, REQUEST):
         value = REQUEST.form[key]
     except (KeyError, AttributeError):
         # fall back on default
-        return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
+        return self.get_value('default', REQUEST=REQUEST) # It was missing on Formulator
 
     # if we enter a string value while the field expects unicode,
     # convert to unicode first
