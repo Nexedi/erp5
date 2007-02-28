@@ -317,7 +317,8 @@ class Query(QueryMixin):
         where_expression = where_expression[0]
       else:
         where_expression = '(%s)' % (' %s ' % self.getOperator()).join(where_expression)
-    else: where_expression = ''
+    else:
+      where_expression = 'True' # It is better to have a valid default
     return {'where_expression':where_expression,
             'select_expression_list':select_expression}
 
@@ -1013,6 +1014,10 @@ class Catalog( Folder,
         related_tuple = related.split('|')
         related_key = related_tuple[0].strip()
         keys[related_key] = 1
+      for scriptable in self.getSQLCatalogScriptableKeyList():
+        scriptable_tuple = scriptable.split('|')
+        scriptable = scriptable_tuple[0].strip()
+        keys[scriptable] = 1
       keys = keys.keys()
       keys.sort()
       return keys
@@ -1677,6 +1682,12 @@ class Catalog( Folder,
   # Compatibililty SQL Sql
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
+  def getSQLCatalogScriptableKeyList(self):
+    """
+    Return the list of scriptable keys.
+    """
+    return self.sql_catalog_scriptable_keys
+  
   def getTableIndex(self, table):
     """
     Return a map between columns and possible index for a given table
@@ -1813,6 +1824,7 @@ class Catalog( Folder,
     query_dict = {}
     key_list = [] # the list of column keys
     key_alias_dict = {}
+    query_group_by_list = None # Useful to keep a default group_by passed by scriptable keys
     for key in kw.keys():
       if key not in RESERVED_KEY_LIST:
         value = kw[key]
@@ -1823,7 +1835,8 @@ class Catalog( Folder,
         elif scriptable_key_dict.has_key(key):
           # Turn this key into a query by invoking a script
           method = getattr(self, scriptable_key_dict[key])
-          current_query = method(value)
+          current_query = method(value) # May return None
+          if hasattr(current_query, 'order_by'): query_group_by_list = current_query.order_by
         else:
           if isinstance(value, dict):
             for value_key in value.keys():
@@ -1834,8 +1847,9 @@ class Catalog( Folder,
           else:
             new_query_dict[key] = value
           current_query = Query(**new_query_dict)
-        query_dict[key] = current_query
-        key_list.extend(current_query.getSQLKeyList())
+        if current_query is not None:
+          query_dict[key] = current_query
+          key_list.extend(current_query.getSQLKeyList())
 
     if query is not None:
       query_dict['query'] = query
@@ -1940,7 +1954,7 @@ class Catalog( Folder,
       if kw.has_key('group_by_expression'):
         group_by_expression_list.append(kw['group_by_expression'])
       # Grouping
-      group_by_list = kw.get('group_by', None)
+      group_by_list = kw.get('group_by', query_group_by_list)
       if type(group_by_list) is type('a'): group_by_list = [group_by_list]
       if group_by_list is not None:
         try:
