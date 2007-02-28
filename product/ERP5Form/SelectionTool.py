@@ -117,10 +117,16 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
       context = REQUEST['PARENTS'][0]
       form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
-      return getattr(context, form_id)()      
+      return getattr(context, form_id)()
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
     def getSelectionNames(self, context=None, REQUEST=None):
+      """
+        Returns the selection names of the current user.
+
+        NOTE - The naming getSelectionNames is wrong. It
+        should be getSelectionNameList to follow conventions
+      """
       if context is None: context = self
       if not REQUEST:
         REQUEST = get_request()
@@ -596,7 +602,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'setPage')
     def setPage(self, list_selection_name, listbox_uid, query_string=None, uids=None, REQUEST=None):
       """
-        Set page
+         Sets the current displayed page in a selection
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
