@@ -75,6 +75,8 @@ request = context.REQUEST\n
 cache_storage = request.other\n
 portal = context.portal_url.getPortalObject()\n
 N_ = portal.Base_translateString\n
+precision = 2 # XXX M9 uses EUR, so we hardcode 2 places for now\n
+\n
 \n
 at_date = request[\'at_date\']\n
 from_date = request.get(\'from_date\', None) or at_date\n
@@ -119,8 +121,23 @@ def getAccountClass(account_url):\n
     # fr / m9 / ${classe} / ...\n
     classe = account.getGap().split(\'/\')[2]\n
     # XXX this can raise with bad account. add a constraint checker on accounts\n
+    # XXX also this only work if you have only m9 installed. But anyway, it\'s\n
+    # not planned to support m9 and other accounting version on the same\n
+    # instance.\n
     account_class_cache[account_url] = classe\n
     return classe\n
+\n
+origin_id_cache = {}\n
+def getOriginId(origin_url):\n
+  try:\n
+    return origin_id_cache[origin_url]\n
+  except KeyError:\n
+    origin = portal.portal_categories.origin.restrictedTraverse(origin_url)\n
+    origin_id = origin.getId()\n
+    if origin_id in portal.portal_types.objectIds():\n
+      origin_id = \'\'\n
+    origin_id_cache[origin_url] = origin_id\n
+    return origin_id\n
 \n
 for brain in simtool.getMovementHistoryList(\n
         from_date=from_date.earliestTime(),\n
@@ -133,23 +150,32 @@ for brain in simtool.getMovementHistoryList(\n
   if payment_mode_url and not \\\n
         mvt.getPaymentMode(\'\').startswith(payment_mode_url):\n
     continue\n
-  origin = mvt.getOriginId()\n
-  sheet = mvt.getParentValue().getAggregateTitle(portal_type=\'Invoice Transmission Sheet\')\n
+\n
+  origin = getOriginId(mvt.getOrigin())\n
+  sheet = mvt.getParentValue().getAggregateTitle(\n
+                                portal_type=\'Invoice Transmission Sheet\')\n
   if brain.node_relative_url:\n
     # per account and origin\n
     account = per_account_and_origin_cache.setdefault(\n
                                       brain.node_relative_url, {})\n
-    qty = brain.total_price or 0\n
-    total = account.setdefault(origin, 0)\n
-    account[origin] = total + qty\n
+    qty = round(brain.total_price or 0, precision)\n
+    debit = max(qty, 0)\n
+    credit = max(-qty, 0)\n
+\n
+    total_debit, total_credit = account.get(origin, (0, 0))\n
+    account[origin] = ( total_debit + debit, total_credit + credit )\n
     # per origin and sheet\n
     origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
-    total = origin_cache.get((sheet, brain.node_relative_url), 0)\n
-    origin_cache[(sheet, brain.node_relative_url)] = total + qty\n
+    total_debit, total_credit = origin_cache.get(\n
+                              (sheet, brain.node_relative_url), (0, 0))\n
+    origin_cache[(sheet, brain.node_relative_url)] = \\\n
+                                            ( total_debit + debit,\n
+                                              total_credit + credit )\n
     # per account class\n
     cache = per_account_cache[getAccountClass(brain.node_relative_url)]\n
-    total = cache.get(brain.node_relative_url, 0)\n
-    cache[brain.node_relative_url] = total + qty\n
+    total_debit, total_credit = cache.get(brain.node_relative_url, (0, 0))\n
+    cache[brain.node_relative_url] = ( total_debit + debit,\n
+                                       total_credit + credit )\n
 \n
 report_section_list = [ ReportSection(\n
       title=N_(\'Transactions\'),\n
@@ -237,6 +263,7 @@ return report_section_list\n
                             <string>cache_storage</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>precision</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
                             <string>None</string>
@@ -254,14 +281,21 @@ return report_section_list\n
                             <string>per_account_cache</string>
                             <string>account_class_cache</string>
                             <string>getAccountClass</string>
+                            <string>origin_id_cache</string>
+                            <string>getOriginId</string>
                             <string>_getiter_</string>
                             <string>brain</string>
                             <string>mvt</string>
                             <string>origin</string>
                             <string>sheet</string>
                             <string>account</string>
+                            <string>round</string>
                             <string>qty</string>
-                            <string>total</string>
+                            <string>max</string>
+                            <string>debit</string>
+                            <string>credit</string>
+                            <string>total_debit</string>
+                            <string>total_credit</string>
                             <string>_write_</string>
                             <string>origin_cache</string>
                             <string>cache</string>

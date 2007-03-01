@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
-cache_storage = context.REQUEST.other\n
+cache_storage = container.REQUEST.other\n
 line_list = []\n
 portal = context.getPortalObject()\n
 total_debit = 0\n
@@ -82,10 +82,9 @@ account_list.sort()\n
 for account_url in account_list:\n
   values = account_cache[account_url]\n
   account_title = portal.restrictedTraverse(account_url).Account_getFormattedTitle()\n
-  for origin, total_price in values.items():\n
-    debit = max(total_price, 0)\n
+  \n
+  for origin, (debit, credit) in values.items():\n
     total_debit += debit\n
-    credit = -min(total_price, 0)\n
     total_credit += credit\n
     line_list.append(Object(uid=\'new_\',\n
                             origin=origin,\n
@@ -142,9 +141,10 @@ return line_list\n
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>cache_storage</string>
                             <string>line_list</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>total_debit</string>
                             <string>total_credit</string>
@@ -156,10 +156,7 @@ return line_list\n
                             <string>values</string>
                             <string>account_title</string>
                             <string>origin</string>
-                            <string>total_price</string>
-                            <string>max</string>
                             <string>debit</string>
-                            <string>min</string>
                             <string>credit</string>
                             <string>_write_</string>
                           </tuple>

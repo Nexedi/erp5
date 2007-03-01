@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
-cache_storage = context.REQUEST.other\n
+cache_storage = container.REQUEST.other\n
 line_list = []\n
 portal = context.getPortalObject()\n
 total_debit = 0\n
@@ -83,13 +83,9 @@ for origin in origin_list:\n
   values = origin_cache[origin]\n
   items = values.items()\n
   items.sort()\n
-  for (sheet, account_url), total_price in items:\n
+  for (sheet, account_url), (debit, credit) in items:\n
     account = portal.restrictedTraverse(account_url)\n
-\n
-    # XXX assume a precision of 2 places, because we use EUR for M9\n
-    debit = round(max(total_price, 0), 2)\n
     total_debit += debit\n
-    credit = round(-min(total_price, 0), 2)\n
     total_credit += credit\n
     line_list.append(Object(uid=\'new_\',\n
                             origin=origin,\n
@@ -149,9 +145,10 @@ return line_list\n
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>cache_storage</string>
                             <string>line_list</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>total_debit</string>
                             <string>total_credit</string>
@@ -164,13 +161,9 @@ return line_list\n
                             <string>items</string>
                             <string>sheet</string>
                             <string>account_url</string>
-                            <string>total_price</string>
-                            <string>account</string>
-                            <string>round</string>
-                            <string>max</string>
                             <string>debit</string>
-                            <string>min</string>
                             <string>credit</string>
+                            <string>account</string>
                             <string>_write_</string>
                           </tuple>
                         </value>

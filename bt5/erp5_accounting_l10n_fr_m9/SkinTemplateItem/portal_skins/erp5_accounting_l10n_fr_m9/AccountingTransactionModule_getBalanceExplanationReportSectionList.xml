@@ -72,6 +72,7 @@
 from Products.PythonScripts.standard import Object\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
+precision = 2 # XXX M9 use hardcoded precision for now\n
 \n
 account = request.get(\'account\', \'\')\n
 at_date = request[\'at_date\']\n
@@ -146,9 +147,10 @@ for account_value in account_value_list:\n
     transaction = brain.getObject().getParentValue()\n
     dunning_info = transaction.SaleInvoiceTransaction_getDunningInfo()\n
     \n
-    debit = max(brain.total_price, 0)\n
+    qty = round(brain.total_price, precision)\n
+    debit = max(qty, 0)\n
     total_debit += debit\n
-    credit = max(-brain.total_price, 0)\n
+    credit = max(-qty, 0)\n
     total_credit += credit\n
 \n
     movement_list.append(\n
@@ -251,6 +253,7 @@ return report_section_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>request</string>
+                            <string>precision</string>
                             <string>account</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
@@ -279,6 +282,8 @@ return report_section_list\n
                             <string>brain</string>
                             <string>transaction</string>
                             <string>dunning_info</string>
+                            <string>round</string>
+                            <string>qty</string>
                             <string>max</string>
                             <string>debit</string>
                             <string>credit</string>

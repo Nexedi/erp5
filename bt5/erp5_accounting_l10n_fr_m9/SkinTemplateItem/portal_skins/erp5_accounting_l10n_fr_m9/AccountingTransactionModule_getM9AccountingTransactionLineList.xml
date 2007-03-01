@@ -73,17 +73,16 @@ line_list = []\n
 cache_storage = context.REQUEST.other\n
 selection_name = \'accounting_selection\'\n
 accounting_movement_type_list = context.getPortalAccountingMovementTypeList()\n
+precision = 2 # XXX M9 uses EUR for now\n
 \n
-stool = context.getPortalObject().portal_selections\n
+portal = context.getPortalObject()\n
+stool = portal.portal_selections\n
 selection = stool.getSelectionFor(selection_name)\n
 per_account_and_origin_cache = cache_storage.setdefault(\n
                           \'m9_report_per_account_and_origin_summary\', {})\n
 per_origin_and_sheet_cache = cache_storage.setdefault(\n
                           \'m9_report_per_origin_and_sheet_summary\', {})\n
 \n
-simtool = context.portal_simulation\n
-# FIXME: how to pass pass parameter in the selection without\n
-# making them persistent ?\n
 context.REQUEST.other[\'src__\'] = 1\n
 context.REQUEST.other[\'no_limit\'] = 1\n
 context.REQUEST.other[\'search_result_keys\'] = [\'catalog.uid\']\n
@@ -97,9 +96,21 @@ def getPaymentModeCodification(payment_mode):\n
   payment_mode_cache[payment_mode] = category_title\n
   return category_title\n
 \n
+origin_id_cache = {}\n
+def getOriginId(origin_url):\n
+  try:\n
+    return origin_id_cache[origin_url]\n
+  except KeyError:\n
+    origin = portal.portal_categories.origin.restrictedTraverse(origin_url)\n
+    origin_id = origin.getId()\n
+    if origin_id in portal.portal_types.objectIds():\n
+      origin_id = \'\'\n
+    origin_id_cache[origin_url] = origin_id\n
+    return origin_id\n
+\n
 # call getMovementHistory by building a subquery with accounting module\n
 # selection\'s query, using the src__=1 trick from above\n
-for brain in simtool.getMovementHistoryList(\n
+for brain in portal.portal_simulation.getMovementHistoryList(\n
         where_expression="catalog.parent_uid IN (%s)" %\n
                                  stool.callSelectionFor(selection_name),\n
         section_category=selection.getParams().get(\'section_category\'),\n
@@ -109,14 +120,18 @@ for brain in simtool.getMovementHistoryList(\n
 \n
   movement = brain.getObject()\n
   transaction = movement.getParentValue()\n
-  origin = transaction.getProperty(\'origin_id\')\n
+  origin = getOriginId(transaction.getProperty(\'origin\'))\n
   sheet = transaction.getProperty(\'aggregate_title\')\n
   payment_mode_codification = getPaymentModeCodification(\n
                                   transaction.getPaymentMode())\n
+  qty = round((brain.total_price or 0), precision)\n
+  debit = max(qty, 0)\n
+  credit = max(-qty, 0)\n
 \n
   obj = Object(\n
              parent_portal_type=transaction.getTranslatedPortalType(),\n
-             parent_int_index="%05d" % transaction.getIntIndex(0),\n
+             parent_int_index=transaction.getIntIndex() and\n
+                            ("%05d" % transaction.getIntIndex()) or \'\',\n
              payment_mode_codification=payment_mode_codification,\n
              parent_aggregate_title=sheet,\n
              parent_origin_id=origin,\n
@@ -125,25 +140,26 @@ for brain in simtool.getMovementHistoryList(\n
              section_uid=brain.section_uid,\n
              node_relative_url=brain.node_relative_url,\n
              getObject=brain.getObject,\n
-#             asContext=movement.asContext,\n
-#             asContext=lambda *args, **kw: movement, # optim ?\n
-#             Movement_getExplanationUrl=movement.Movement_getExplanationUrl,\n
 \n
              date=brain.date,\n
-             debit=max(brain.total_price, 0),\n
-             credit=max(-(brain.total_price or 0), 0), )\n
+             debit=debit,\n
+             credit=credit )\n
   line_list.append(obj)\n
   \n
   if brain.node_relative_url:\n
     # per account and origin\n
     account = per_account_and_origin_cache.setdefault(\n
                                       brain.node_relative_url, {})\n
-    total = account.setdefault(origin, 0)\n
-    account[origin] = total + (brain.total_price or 0)\n
+    total_debit, total_credit = account.get(origin, (0, 0))\n
+    account[origin] = ( total_debit + debit, total_credit + credit )\n
+                     \n
     # per origin and sheet\n
     origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
-    total = origin_cache.setdefault((sheet, brain.node_relative_url), 0)\n
-    origin_cache[(sheet, brain.node_relative_url)] = total + (brain.total_price or 0)\n
+    total_debit, total_credit = origin_cache.get(\n
+                                    (sheet, brain.node_relative_url), (0, 0))\n
+    origin_cache[(sheet, brain.node_relative_url)] = (\n
+                                total_debit + debit,\n
+                                total_credit + credit )\n
 \n
 return line_list\n
 </string> </value>
@@ -197,15 +213,18 @@ return line_list\n
                             <string>cache_storage</string>
                             <string>selection_name</string>
                             <string>accounting_movement_type_list</string>
+                            <string>precision</string>
+                            <string>portal</string>
                             <string>stool</string>
                             <string>selection</string>
                             <string>per_account_and_origin_cache</string>
                             <string>per_origin_and_sheet_cache</string>
-                            <string>simtool</string>
                             <string>_write_</string>
                             <string>None</string>
                             <string>payment_mode_cache</string>
                             <string>getPaymentModeCodification</string>
+                            <string>origin_id_cache</string>
+                            <string>getOriginId</string>
                             <string>_getiter_</string>
                             <string>brain</string>
                             <string>movement</string>
@@ -213,10 +232,15 @@ return line_list\n
                             <string>origin</string>
                             <string>sheet</string>
                             <string>payment_mode_codification</string>
+                            <string>round</string>
+                            <string>qty</string>
                             <string>max</string>
+                            <string>debit</string>
+                            <string>credit</string>
                             <string>obj</string>
                             <string>account</string>
-                            <string>total</string>
+                            <string>total_debit</string>
+                            <string>total_credit</string>
                             <string>origin_cache</string>
                           </tuple>
                         </value>
