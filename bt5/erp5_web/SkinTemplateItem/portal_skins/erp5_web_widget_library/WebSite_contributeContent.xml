@@ -72,16 +72,20 @@
   A method invoked with parameters provided by the \n
   contribute widget\n
 """\n
-res = context.portal_contributions.newContent(**kw)\n
-after_method_id = kw.get(\'after_method_id\')\n
-if after_method_id:\n
-  after_method = getattr(res, after_method_id)\n
-  after_method() # if not found will raise exception, as it should\n
+try:\n
+  res = context.portal_contributions.newContent(**kw)\n
+  after_method_id = kw.get(\'after_method_id\')\n
+  if after_method_id:\n
+    after_method = getattr(res, after_method_id)\n
+    after_method() # if not found will raise exception, as it should\n
+  msg = context.Base_translateString(\'Document successfully created\')\n
+  target = res\n
+except Exception, e:\n
+  msg = \'There was a problem: ${exception}\'\n
+  msg = context.Base_translateString(msg, mapping=dict(exception=str(e)))\n
+  target = context\n
 \n
-# XXX Translation and Base_redirect\n
-doc_url = res.absolute_url()+\'/view?portal_status_message=Document+created\'\n
-\n
-return context.REQUEST.RESPONSE.redirect(doc_url)\n
+return target.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg))\n
 </string> </value>
         </item>
         <item>
@@ -133,7 +137,12 @@ return context.REQUEST.RESPONSE.redirect(doc_url)\n
                             <string>after_method_id</string>
                             <string>getattr</string>
                             <string>after_method</string>
-                            <string>doc_url</string>
+                            <string>msg</string>
+                            <string>target</string>
+                            <string>Exception</string>
+                            <string>e</string>
+                            <string>dict</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

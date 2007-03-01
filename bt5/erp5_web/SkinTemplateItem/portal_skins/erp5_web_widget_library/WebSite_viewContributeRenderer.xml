@@ -86,7 +86,7 @@
       <input type="submit" name="Memo_makeOOoTemplate:method" value="Make Template" id="maketemplatebutton" disabled="disabled"\n
              style="width:100px;background-image:none;"/>\n
       &nbsp;\n
-      <input type="submit" name="WebSite_contributeFile:method" value="Contribute"/>\n
+      <input type="submit" name="WebSite_contributeContent:method" value="Contribute"/>\n
     </div>\n
       \n
       \n
