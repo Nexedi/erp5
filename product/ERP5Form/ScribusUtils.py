@@ -112,7 +112,7 @@ class ManageModule:
       selection = selection.split (',')
       if portal_skins_folder_name not in selection:
         new_selection = [portal_skins_folder_name,]
-        new_selection.extends(selection)
+        new_selection.extend(selection)
         portal_skins.manage_skinLayers(skinpath = tuple(new_selection),
                                        skin_name = skin_name,
                                        add_skin = 1)
