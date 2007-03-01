@@ -90,6 +90,7 @@ IDEAS:\n
                editable_mode  python: (not is_web_mode) or request.get(\'editable_mode\', False);\n
                editable_mode_backup editable_mode;\n
                dummy          python: request.set(\'editable_mode\', editable_mode);\n
+               dummy          python: request.set(\'is_web_mode\', is_web_mode);\n
                page_template  python: is_web_mode and ((layout_form.meta_type==\'Page Template\' and layout_form.id) or getattr(layout_form, \'pt\', None)) or \'template_erp5_xhtml_style\';">\n
     <tal:block metal:use-macro="python: getattr(here, page_template).macros[\'master\']">\n
       <tal:block metal:fill-slot="context_bar">\n
