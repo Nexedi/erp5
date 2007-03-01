@@ -12,6 +12,8 @@
 #
 ##############################################################################
 
+from zLOG import LOG
+
 # Make sure Interaction Workflows are called even if method not wrapped
 
 from Products.CMFCore.WorkflowTool import WorkflowTool
@@ -25,24 +27,25 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
         By default, the workflow tool takes the first workflow wich
         support the method_id. In ERP5, with Interaction Worfklows, we
         may have many workflows wich can support a worfklow method,
-        that's why we need this patch
+        that's why we need this patch.
 
-        We should have 1 or 0 classic workflow (ie a DCWorkflow), and
-        0 or many Interaction workflows. We should take care that the
-        method will be called once
+        Current implementation supports:
+        - at most 1 DCWorkflow per portal type per method_id
+        - as many Interaction workflows as needed per portal type
+
+        NOTE: automatic transitions are invoked through
+        _findAutomaticTransition in DC Workflows.
+
+        TODO: make it possible to have multiple DC Workflow
+        per portal type per method_id
     """
     # Check workflow containing the workflow method
     wf_list = []
     wfs = self.getWorkflowsFor(ob)
     if wfs:
       for w in wfs:
-#         LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported', 0, 
-#              repr((w.isWorkflowMethodSupported(ob, method_id), 
-#                    w.getId(), ob, method_id )))
         if (hasattr(w, 'isWorkflowMethodSupported')
-          and w.isWorkflowMethodSupported(ob, method_id)):
-          #wf = w
-          #break
+            and w.isWorkflowMethodSupported(ob, method_id)):
           wf_list.append(w)
     else:
       wfs = ()
@@ -58,6 +61,13 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
     for w in wf_list:
       if w.__class__.__name__ != 'InteractionWorkflowDefinition':
         only_interaction_defined = 0
+        # XXX - There is a problem here if the same workflow method
+        # is used by multiple workflows. Function "func" will be
+        # called multiple times. Patch or changes required to mak
+        # sure func is only called once.
+        # Solution consists in reimplementing _invokeWithNotification
+        # at the level of each workflow without notification
+        # (ex. _invokeWithoutNotification)
         result = self._invokeWithNotification(
             [], ob, method_id, w.wrapWorkflowMethod,
             (ob, method_id, func, args, kw), {})

@@ -16,7 +16,8 @@
 
 from Globals import DTMLFile
 from Products.ERP5Type import _dtmldir
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, ObjectMoved, createExprContext, aq_parent, aq_inner
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
+from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
 from AccessControl import getSecurityManager, ClassSecurityInfo, ModuleSecurityInfo
@@ -29,8 +30,6 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
 from zLOG import LOG
-
-
 
 # Patch WorkflowUIMixin to add description on workflows
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
@@ -55,7 +54,6 @@ def WorkflowUIMixin_setProperties( self, title
 
 WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
-
 
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
@@ -142,7 +140,6 @@ class ValidationFailed(Exception):
 DCWorkflow.ValidationFailed = ValidationFailed
 
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
-
 
 
 # Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed
@@ -271,9 +268,40 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     else:
         return new_sdef
 
-
 DCWorkflowDefinition._executeTransition = DCWorkflowDefinition_executeTransition
 from Products.DCWorkflow.utils import modifyRolesForPermission
+
+
+def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
+    '''
+    Allows the user to request a workflow action.  This method
+    must perform its own security checks.
+    '''
+    sdef = self._getWorkflowStateOf(ob)
+    if sdef is None:
+        raise WorkflowException, 'Object is in an undefined state'
+    if method_id not in sdef.transitions:
+        raise Unauthorized(method_id)
+    tdef = self.transitions.get(method_id, None)
+    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
+        raise WorkflowException, (
+            'Transition %s is not triggered by a workflow method'
+            % method_id)
+    if not self._checkTransitionGuard(tdef, ob):
+        raise Unauthorized(method_id)
+    res = func(*args, **kw)
+    try:
+        self._changeStateOf(ob, tdef, kw)
+    except ObjectDeleted:
+        # Re-raise with a different result.
+        raise ObjectDeleted(res)
+    except ObjectMoved, ex:
+        # Re-raise with a different result.
+        raise ObjectMoved(ex.getNewObject(), res)
+    return res
+
+DCWorkflowDefinition.wrapWorkflowMethod = DCWorkflowDefinition_wrapWorkflowMethod
+
 
 # Patch updateRoleMappingsFor so that if 2 workflows define security, then we
 # should do an AND operation between each permission
@@ -454,5 +482,3 @@ def createERP5Workflow(id):
 addWorkflowFactory(createERP5Workflow,
                    id='erp5_workflow',
                    title='ERP5-style empty workflow')
-
-
