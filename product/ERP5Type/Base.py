@@ -967,7 +967,7 @@ class Base( CopyContainer,
       self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
     if hasattr(Base.aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
-      LOG("Base.py", 0, "method = %s, name = %s" %(method, accessor_name))
+      # LOG("Base.py", 0, "method = %s, name = %s" %(method, accessor_name))
       method(value, **kw)
       return
     if hasattr(Base.aq_portal_type[self.portal_type], public_accessor_name):
