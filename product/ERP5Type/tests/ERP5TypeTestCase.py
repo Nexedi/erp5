@@ -24,6 +24,8 @@ def get_request():
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
+IS_PORTAL_EXISTING = 1
+
 import itools.zope
 
 def get_context():
@@ -491,6 +493,7 @@ def setupERP5Site( business_template_list=(),
       business_template_list must be specified correctly
       (e.g. '("erp5_base", )').
     '''
+    global IS_PORTAL_EXISTING
     if portal_name in failed_portal_installation:
       raise RuntimeError, 'Installation of %s already failed, giving up'\
                             % portal_name
@@ -501,7 +504,9 @@ def setupERP5Site( business_template_list=(),
       # make it's REQUEST available during setup
       global current_app
       current_app = app
+
       if not hasattr(aq_base(app), portal_name):
+        IS_PORTAL_EXISTING = 0
         try:
           _start = time.time()
           # Add user and log in
@@ -615,7 +620,7 @@ def setupERP5Site( business_template_list=(),
             for dir in ('Constraint', 'Document', 'PropertySheet'):
               os.system('rm -rf %s/%s.bak' % (instance_home, dir))
               os.system('cp -ar %s/%s %s/%s.bak' % (instance_home, dir, instance_home, dir))
-
+ 
           # Log out
           if not quiet:
             ZopeTestCase._print('Logout ... \n')
@@ -629,6 +634,22 @@ def setupERP5Site( business_template_list=(),
         else:
           get_transaction().commit()
           ZopeTestCase.close(app)
+
+      if os.environ.get('erp5_load_data_fs'):
+        # Import local PropertySheets, Documents
+        # when loading an environnement
+        for id_ in getLocalPropertySheetList():
+          importLocalPropertySheet(id_)
+        for id_ in getLocalDocumentList():
+          importLocalDocument(id_)
+        for id_ in getLocalConstraintList():
+          importLocalConstraint(id_)
+
+      if IS_PORTAL_EXISTING == 1:
+        # Display which test is run when loading for the 1st time
+        IS_PORTAL_EXISTING = 0
+        ZopeTestCase._print('Ran Unit test of %s\n' % title)
+
     except:
       f = StringIO()
       traceback.print_exc(file=f)
