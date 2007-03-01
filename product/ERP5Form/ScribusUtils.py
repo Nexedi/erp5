@@ -114,7 +114,7 @@ class ManageModule:
         new_selection = [portal_skins_folder_name,]
         new_selection.extend(selection)
         portal_skins.manage_skinLayers(skinpath = tuple(new_selection),
-                                       skin_name = skin_name,
+                                       skinname = skin_name,
                                        add_skin = 1)
     return skin_folder
 
