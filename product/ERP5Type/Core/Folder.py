@@ -52,6 +52,7 @@ from random import randint
 import os
 
 from zLOG import LOG, PROBLEM
+import warnings
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
@@ -217,10 +218,20 @@ class FolderMixIn(ExtensionClass.Base):
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
     if kw.has_key('selection_domain'):
-      if kw['selection_domain'].asDomainDict().has_key('parent'):
+      if not isinstance(kw['selection_domain'], dict):
+        warnings.warn("To pass a DomainSelection instance is deprecated.\n"
+                      "Please use a domain dict instead.",
+                      DeprecationWarning)
+        kw['selection_domain'] = kw['selection_domain'].asDomainDict()
+      if kw['selection_domain'].has_key('parent'):
         delete_parent_uid = 1
     if kw.has_key('selection_report'):
-      if kw['selection_report'].asDomainDict().has_key('parent'):
+      if not isinstance(kw['selection_report'], dict):
+        warnings.warn("To pass a DomainSelection instance is deprecated.\n"
+                      "Please use a domain dict instead.",
+                      DeprecationWarning)
+        kw['selection_report'] = kw['selection_report'].asDomainDict()
+      if kw['selection_report'].has_key('parent'):
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
