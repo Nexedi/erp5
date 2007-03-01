@@ -87,7 +87,7 @@ def getModifiedObjectList(bt):\n
   return bt.preinstall(check_dependencies = check_dependencies)\n
 \n
 getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', \\\n
-                                      cache_factory=\'erp5_user_interface_medium\')\n
+                                      cache_factory=\'erp5_ui_medium\')\n
 \n
 bt_objects = {}\n
 \n

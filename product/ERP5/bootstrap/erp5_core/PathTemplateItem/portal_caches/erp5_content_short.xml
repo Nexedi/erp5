@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_user_interface</string> </value>
+            <value> <string>erp5_content_short</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default User Interface</string> </value>
+            <value> <string>Content Short</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

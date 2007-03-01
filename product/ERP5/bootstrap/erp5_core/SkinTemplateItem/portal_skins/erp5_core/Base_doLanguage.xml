@@ -75,7 +75,7 @@ portal = context.getPortalObject()\n
 portal.Localizer.changeLanguage(language_select)\n
 \n
 # XXX should invalidate cached data specific to current user\n
-clearCache()\n
+clearCache(cache_factory_list=("erp5_ui_short",))\n
 </string> </value>
         </item>
         <item>

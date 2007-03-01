@@ -87,7 +87,7 @@ def getModuleItemList(user=None, portal_path=None):\n
 \n
 getModuleItemList = CachingMethod(getModuleItemList,  \n
   id=(\'ERP5Site_getModuleItemList\', context.Localizer.get_selected_language()),\n
-  cache_factory=\'erp5_user_interface_short\')\n
+  cache_factory=\'erp5_ui_short\')\n
 portal_path = context.getPortalObject().getPhysicalPath()\n
 return getModuleItemList(user=user, portal_path=portal_path)\n
 </string> </value>
