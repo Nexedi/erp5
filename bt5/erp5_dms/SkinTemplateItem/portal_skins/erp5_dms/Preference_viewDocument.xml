@@ -80,8 +80,6 @@
                         <string>my_preferred_document_reference_regular_expression</string>
                         <string>my_preferred_document_ingestion_email_notification</string>
                         <string>my_preferred_document_reference_method_id</string>
-                        <string>my_preferred_document_reference_regexp</string>
-                        <string>my_preferred_document_filename_regexp</string>
                       </list>
                     </value>
                 </item>
