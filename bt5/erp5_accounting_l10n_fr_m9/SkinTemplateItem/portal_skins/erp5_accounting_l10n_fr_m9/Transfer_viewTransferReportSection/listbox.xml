@@ -338,7 +338,7 @@
                           <string>Mandat</string>
                         </tuple>
                         <tuple>
-                          <string>AccountingTransaction_getThirdPartyTitle</string>
+                          <string>PaymentTransaction_getMirrorExternalPaymentOrMirrorSectionTitle</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
