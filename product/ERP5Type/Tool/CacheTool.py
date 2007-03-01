@@ -173,10 +173,20 @@ class CacheTool(BaseTool):
         CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache updated.')
-    
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'clearAllCache')
+  def clearAllCache(self, REQUEST=None):
+    """ Clear all cache factories. """
+    ram_cache_root = self.getRamCacheRoot()
+    for cf_key in ram_cache_root.keys():
+      for cp in ram_cache_root[cf_key].getCachePluginList():
+        cp.clearCache()
+    if REQUEST is not None:
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=All cache factories cleared.')
+      
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
   def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,), REQUEST=None):
-    """ Clear cache factory. """
+    """ Clear specified or default cache factory. """
     ram_cache_root = self.getRamCacheRoot()
     for cf_key in cache_factory_list:
       if ram_cache_root.has_key(cf_key):	    
