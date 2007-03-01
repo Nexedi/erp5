@@ -1,0 +1,11 @@
+<hidden_content_type_list>
+ <portal_type id="Contribution Tool">
+  <item>Text</item>
+  <item>Drawing</item>
+  <item>PDF</item>
+  <item>Spreadsheet</item>
+  <item>File</item>
+  <item>Image</item>
+  <item>Presentation</item>
+ </portal_type>
+</hidden_content_type_list>

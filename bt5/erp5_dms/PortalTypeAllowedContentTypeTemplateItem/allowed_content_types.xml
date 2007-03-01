@@ -1,11 +1,20 @@
 <allowed_content_type_list>
- <portal_type id="Document Module">
-  <item>Text</item>
+ <portal_type id="Contribution Tool">
   <item>Spreadsheet</item>
-  <item>Presentation</item>
-  <item>PDF</item>
-  <item>Drawing</item>
   <item>File</item>
+  <item>Text</item>
+  <item>Drawing</item>
+  <item>PDF</item>
+  <item>Presentation</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Document Module">
+  <item>File</item>
+  <item>Spreadsheet</item>
+  <item>Drawing</item>
+  <item>PDF</item>
+  <item>Text</item>
+  <item>Presentation</item>
  </portal_type>
  <portal_type id="Drawing">
   <item>Role Definition</item>
