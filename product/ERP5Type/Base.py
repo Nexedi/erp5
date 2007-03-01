@@ -2316,7 +2316,7 @@ class Base( CopyContainer,
 
     cached_getAcquireLocalRoles = CachingMethod(cached_getAcquireLocalRoles,
                                                 id='Base__getAcquireLocalRoles',
-                                                cache_factory='erp5_core_short')
+                                                cache_factory='erp5_content_short')
     return cached_getAcquireLocalRoles(portal_type=self.getPortalType())
 
   security.declareProtected(Permissions.View, 'get_local_permissions')
@@ -2591,7 +2591,7 @@ class Base( CopyContainer,
     cached_getQuantityPrecisionFromResource = CachingMethod(
                                     cached_getQuantityPrecisionFromResource,
                                     id='Base_getQuantityPrecisionFromResource',
-                                    cache_factory='erp5_core_short')
+                                    cache_factory='erp5_content_short')
 
     return cached_getQuantityPrecisionFromResource(resource)
 

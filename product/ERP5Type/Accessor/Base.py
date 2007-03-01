@@ -104,7 +104,7 @@ def _evaluateTales(instance=None, value=None):
   econtext = createExpressionContext(instance)
   return expression(econtext)
 
-evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_factory='erp5_core_short')
+evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_factory='erp5_content_short')
 
 class Getter(Method):
     """

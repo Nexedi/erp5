@@ -109,7 +109,7 @@ if to_currency is not None:\n
     return result\n
   # The cache duration must not be too long, 300 is the maximum\n
   calculateExchangeFromParameters = CachingMethod(calculateExchangeFromParameters, \n
-                      id = \'calculateExchangeFromParameterss\', cache_factory = \'erp5_user_interface_short\')\n
+                      id = \'calculateExchangeFromParameterss\', cache_factory = \'erp5_ui_short\')\n
   result = calculateExchangeFromParameters(start_date=start_date,\n
                        currency_exchange_type=currency_exchange_type,\n
                        from_currency=from_currency,to_currency=to_currency)\n

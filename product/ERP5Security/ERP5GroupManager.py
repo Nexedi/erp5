@@ -180,7 +180,7 @@ class ERP5GroupManager(BasePlugin):
     if not NO_CACHE_MODE:
       _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
                                              id='ERP5GroupManager_getGroupsForPrincipal',
-                                             cache_factory='erp5_core_short')
+                                             cache_factory='erp5_content_short')
 
     return _getGroupsForPrincipal(
                 user_name=principal.getId(),

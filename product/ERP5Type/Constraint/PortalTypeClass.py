@@ -91,7 +91,7 @@ class PortalTypeClass(Constraint):
     _getClassForPortalTypeCache = CachingMethod(
         _getClassForPortalTypeCache,
         "PortalTypeClass._getClassForPortalTypeCache",
-        cache_factory = 'erp5_core_medium'
+        cache_factory = 'erp5_content_medium'
         )
     return _getClassForPortalTypeCache(obj.getPortalType())
 

@@ -700,7 +700,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     _getVisibleAllowedContentTypeList = CachingMethod(
         _getVisibleAllowedContentTypeList,
         id=("_getAllowedContentTypeTitleList", user, portal_path, portal_type),
-        cache_factory='erp5_core_long')
+        cache_factory='erp5_content_long')
     return _getVisibleAllowedContentTypeList()
 
   security.declarePublic('allowedContentTypes')
@@ -741,7 +741,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
 
     _allowedContentTypes = CachingMethod( _allowedContentTypes,
                                           id = 'allowedContentTypes',
-                                          cache_duration = None)
+                                          cache_factory = 'erp5_content_long')
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
     portal = self.getPortalObject()

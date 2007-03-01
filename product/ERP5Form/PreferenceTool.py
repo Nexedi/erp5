@@ -141,7 +141,7 @@ class PreferenceMethod(Method) :
         return value
     _getPreference = CachingMethod( _getPreference,
             id='PreferenceTool.CachingMethod.%s' % self._preference_name,
-                                    cache_factory='erp5_user_interface_short')
+                                    cache_factory='erp5_ui_short')
     user_name = getSecurityManager().getUser().getId()
     return _getPreference(user_name=user_name)
 
@@ -237,7 +237,7 @@ class PreferenceTool(BaseTool):
       return acceptable_templates
     _getDocumentTemplateList = CachingMethod(_getDocumentTemplateList,
                           'portal_preferences.getDocumentTemplateList',
-                                             cache_factory='erp5_user_interface_medium')
+                                             cache_factory='erp5_ui_medium')
 
     allowed_content_types = map(lambda pti: pti.id,
                                 folder.allowedContentTypes())

@@ -137,7 +137,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
       """
       def getBaseCategoryDict(self):
         return dict.fromkeys(self.getBaseCategoryList(), None)
-      return CachingMethod(getBaseCategoryDict, 'portal_categories.getBaseCategoryDict', cache_factory='erp5_core_long')(self)
+      return CachingMethod(getBaseCategoryDict, 'portal_categories.getBaseCategoryDict', cache_factory='erp5_content_long')(self)
 
     def updateRelatedContent(self, context,
                              previous_category_url, new_category_url):

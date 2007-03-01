@@ -398,7 +398,7 @@ class ERP5Site(FolderMixIn, CMFSite):
 
     getTypeList = CachingMethod(getTypeList,
                                 id=('_getPortalGroupedTypeList', group),
-                                cache_factory='erp5_core_medium')
+                                cache_factory='erp5_content_medium')
     return getTypeList(group)
 
   def _getPortalGroupedCategoryList(self, group):
@@ -415,7 +415,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     getCategoryList = CachingMethod(
                             getCategoryList,
                             id=('_getPortalGroupedCategoryList', group),
-                            cache_factory='erp5_core_medium')
+                            cache_factory='erp5_content_medium')
     return getCategoryList(group)
 
   def _getPortalGroupedStateList(self, group):
@@ -433,7 +433,7 @@ class ERP5Site(FolderMixIn, CMFSite):
 
     getStateList = CachingMethod(getStateList,
                                  id=('_getPortalGroupedStateList', group),
-                                 cache_factory='erp5_core_medium')
+                                 cache_factory='erp5_content_medium')
     return getStateList(group)
 
   security.declareProtected(Permissions.AccessContentsInformation,
