@@ -68,7 +68,7 @@ class Preference( Folder ):
     """Clear caches used by methods of this preference
     # TODO: clear different caches according to the preference priority
     """
-    clearCache(cache_factory_list=('erp5_ui_short'),)
+    clearCache(cache_factory_list=('erp5_ui_short',))
 
   def _edit(self, **kw):
     """edit and clear all caches"""
