@@ -58,7 +58,7 @@ class TestUserManagement(ERP5TypeTestCase):
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
     # XXX Isn't it better to clear the cache when deleting a Person ?
-    clearCache(cache_factory_list=('erp5_core_short', ))
+    clearCache(cache_factory_list=('erp5_content_short', ))
     self.getPersonModule().manage_delObjects([x for x in
                              self.getPersonModule().objectIds()])
     get_transaction().commit()
@@ -248,7 +248,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     # XXX Isn't it better to clear the cache when deleting a Person ?
-    clearCache(cache_factory_list=('erp5_core_short', ))
+    clearCache(cache_factory_list=('erp5_content_short', ))
 
   def loginAsUser(self, username):
     uf = self.portal.acl_users
