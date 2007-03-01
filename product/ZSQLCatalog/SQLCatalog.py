@@ -1690,10 +1690,10 @@ class Catalog( Folder,
     Return the list of scriptable keys.
     """
     return self.sql_catalog_scriptable_keys
-  
+
   def getTableIndex(self, table):
     """
-    Return a map between columns and possible index for a given table
+    Return a map between index and column for a given table
     """
     def _getTableIndex(table):
       table_index = {}
@@ -1702,51 +1702,50 @@ class Catalog( Folder,
         return {}
       index = list(method(table=table))
       for line in index:
-        if table_index.has_key(line.COLUMN_NAME):
-          table_index[line.COLUMN_NAME].append(line.KEY_NAME)
+        if table_index.has_key(line.KEY_NAME):
+          table_index[line.KEY_NAME].append(line.COLUMN_NAME)
         else:
-          table_index[line.COLUMN_NAME] = [line.KEY_NAME,]
-      LOG("SQLCatalog.getTableIndex", ERROR, "index = %s for table = %s" \
+          table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
+      LOG("SQLCatalog.getTableIndex", INFO, "index = %s for table = %s" \
           %(table_index, table))
       return table_index
     return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
                          cache_factory='erp5_core_long')(table=table)
 
 
-  def getIndex(self, table, column_list):
+  def getIndex(self, table, column_list, all_column_list):
     """
     Return possible index for a column list in a given table
     """
-    def _getIndex(table, column_list):
+    def _getIndex(table, column_list, all_column_list):
       index_dict = self.getTableIndex(table)
       if isinstance(column_list, str):
         column_list = [column_list,]
-      index_column = []
-      possible_index = {}
-      # Get possible index
-      for column in column_list:
-        if index_dict.has_key(column):
-          for index in index_dict[column]:
-            if not possible_index.has_key(index):
-              possible_index[index] = [column,]
-            else:
-              possible_index[index].append(column)
-      # Return an index list that cover the maximum of rows
-      max_column_len = 0
-      best_index = []
-      for index in possible_index.keys():
-        column_list = possible_index[index]
-        column_list_length = len(column_list)
-        if column_list_length > max_column_len:
-          best_index = [index,]
-          max_column_len = column_list_length
-        elif column_list_length == max_column_len:
-          best_index.append(index)
-      LOG("SQLCatalog.getIndex", ERROR, "best_index = %s for table %s and columns %s" \
-          %(best_index, table, column_list))
-      return best_index
+      # Get possible that can be used
+      possible_index = []
+      for index in index_dict.keys():
+        index_columns = index_dict[index]
+        for column in index_columns:
+          if column in column_list:
+            if index not in possible_index:
+              possible_index.append(index)
+      if len(possible_index) == 0:
+        return []
+      # Get the most suitable index
+      for index in possible_index:
+        # Make sure all column in index are used by the query
+        index_column = index_dict[index]
+        for column in index_column:
+          if column in column_list or column in all_column_list:
+            continue
+          else:
+            possible_index.remove(index)
+      LOG("SQLCatalog.getIndex", INFO, "index = %s for table %s and columns %s" \
+          %(possible_index, table, column_list))
+      return possible_index
     return CachingMethod(_getIndex, id='SQLCatalog.getIndex', cache_factory='erp5_core_long')\
-          (table=table, column_list=column_list)
+          (table=table, column_list=column_list, all_column_list=all_column_list)
+
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, query=None, stat__=0, **kw):
@@ -2068,7 +2067,6 @@ class Catalog( Folder,
     if len(sort_key_list) > 0:
       index_from_table = {}
       # first group columns from a same table
-      LOG("SQLCatalog.buildSQLQuery", ERROR, "sort_key = %s" %sort_key)
       for key in sort_key_list:
         try:
           related_table, column = key.split('.')
@@ -2087,7 +2085,7 @@ class Catalog( Folder,
           index_from_table[table].append(column)
       # second ask index
       for table in index_from_table.keys():
-        available_index_list = self.getIndex(table, index_from_table[table])
+        available_index_list = self.getIndex(table, index_from_table[table], key_list)
         if len(available_index_list) > 0:
           # tell mysql to use these index
           table = from_table_dict.pop(related_table)
