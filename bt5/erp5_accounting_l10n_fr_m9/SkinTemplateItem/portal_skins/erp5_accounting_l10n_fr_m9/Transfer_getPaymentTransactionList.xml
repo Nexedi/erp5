@@ -68,49 +68,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" The label to display for a payment transaction\n
-"""\n
+            <value> <string>numordre_cache = dict()\n
+def getNumordre(tr):\n
+  \'\'\'calculate numordre and cache it.\n
+  \'\'\'\n
+  try:\n
+    return numordre_cache[tr]\n
+  except KeyError:\n
+    return numordre_cache.setdefault(tr, tr.getProperty(\'noordre\',\n
+                                            tr.getSourceReference()))\n
 \n
-transaction_portal_type = context.getPortalAccountingTransactionTypeList()\n
+def transfer_comparator(a, b):\n
+  \'\'\'Compare 2 accounting transactions.\n
+  \'\'\'\n
+  return cmp(getNumordre(a), getNumordre(b))\n
 \n
-transfer_reference = context.getShortTitle()\n
-if transfer_reference:\n
-  return transfer_reference\n
 \n
-invoice = context.getDefaultCausalityValue(portal_type=transaction_portal_type)\n
+def getPaymentTransactionList():\n
+  transaction_list = context.getAggregateRelatedValueList(\n
+                               portal_type=\'Payment Transaction\')\n
+  transaction_list.sort(transfer_comparator)\n
+  return transaction_list\n
 \n
-if context.getOriginId() == \'OP\':\n
-  libel = ""\n
-  if context.getDescription():\n
-    libel = context.getDescription().splitlines()[0]\n
-  elif invoice is not None and invoice.getDescription():\n
-    libel = (invoice.getDescription() or \'\').splitlines()[0]\n
-  else:\n
-    libel = context.getTitle()\n
-  return "%05d %s" % (context.getIntIndex(), libel)\n
+from Products.ERP5Type.Cache import CachingMethod\n
+no_getPaymentTransactionList = CachingMethod(\n
+                               getPaymentTransactionList,\n
+                               id=\'%s%s\' % (script.getId(),\n
+                                            context.getId()))\n
 \n
-if invoice is not None:\n
-  libel = \'\'\n
-  # XXX an ad hoc local property can be used as int_index.\n
-  if context.getProperty(\'numdd\'):\n
-    libel = context.getProperty(\'numdd\')\n
-  else:\n
-    libel = "%05d" % invoice.getIntIndex()\n
 \n
-  if invoice.AccountingTransaction_isSourceView():\n
-    bank_account = invoice.getDestinationPaymentValue()\n
-    if bank_account.getPortalType() == \'External Payment\':\n
-      libel += \' %s\' % invoice.getDestinationSectionTitle()\n
-  else:\n
-    bank_account = invoice.getSourcePaymentValue()\n
-    if bank_account.getPortalType() == \'External Payment\':\n
-      libel += \' %s\' % invoice.getSourceSectionTitle()\n
-  \n
-  invoice_description = invoice.getDescription() or invoice.getTitle()\n
-  \n
-  return "%s %s" % (libel, invoice_description.splitlines()[0])\n
-\n
-return \'\'\n
+return getPaymentTransactionList()\n
 </string> </value>
         </item>
         <item>
@@ -133,7 +120,7 @@ return \'\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,16 +146,18 @@ return \'\'\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
+                            <string>dict</string>
+                            <string>numordre_cache</string>
+                            <string>getNumordre</string>
+                            <string>transfer_comparator</string>
+                            <string>getPaymentTransactionList</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>_getattr_</string>
+                            <string>script</string>
                             <string>context</string>
-                            <string>transaction_portal_type</string>
-                            <string>transfer_reference</string>
-                            <string>invoice</string>
-                            <string>libel</string>
-                            <string>_getitem_</string>
-                            <string>None</string>
-                            <string>bank_account</string>
-                            <string>invoice_description</string>
+                            <string>no_getPaymentTransactionList</string>
                           </tuple>
                         </value>
                     </item>
@@ -185,7 +174,7 @@ return \'\'\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentTransaction_getTransferReference</string> </value>
+            <value> <string>Transfer_getPaymentTransactionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

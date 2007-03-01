@@ -585,7 +585,7 @@ python:"accounting_module/view?reset:int=1&uid:list=%s" % ("&uid:list=".join([st
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getAggregateRelatedValueList</string> </value>
+            <value> <string>Transfer_getPaymentTransactionList</string> </value>
         </item>
       </dictionary>
     </pickle>
