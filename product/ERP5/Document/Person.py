@@ -180,8 +180,8 @@ class Person(XMLObject):
       self._setReference(value)
       self.reindexObject()
       # invalid the cache for ERP5Security
-      clearCache()
-    
+      clearCache(cache_factory_list=('erp5_core_short', ))
+
     security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
     def setPassword(self, value) :
       """
