@@ -134,8 +134,10 @@ for action in button_action_list:\n
 # Append an exchange button\n
 if len(exchange_action_list):\n
   action = exchange_action_list[0]\n
+  url   = action[\'url\'].replace(absolute_url, editable_absolute_url)\n
+  url = \'%s?dialog_category=object_exchange&cancel_url=%s/view\' % (url, absolute_url)\n
   result.append(dict(\n
-      url   = action[\'url\'].replace(absolute_url, editable_absolute_url),\n
+      url = url,\n
     icon  = \'%s/images/imp-exp.png\' % portal_url,\n
     title = translateString(\'Import / Export\'),\n
     label = "Import / Export Icon",\n
@@ -207,6 +209,7 @@ return result\n
                             <string>action</string>
                             <string>_getitem_</string>
                             <string>len</string>
+                            <string>url</string>
                           </tuple>
                         </value>
                     </item>
