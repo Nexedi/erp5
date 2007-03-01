@@ -45,12 +45,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_owner</string> </key>
             <value>
               <none/>
@@ -91,7 +85,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <tal:block tal:define="object_name form/title;\n
         object_name python:object_name.replace(\' \',\'\');\n
         portal_url here/portal_url;\n
-        object_name string:${object_name}">\n
+        object_name string:${object_name};\n
+        dummy python:request.set(\'editable_mode\', 1)">\n
     <link href="my_css" rel="stylesheet" type="text/css" group="test"\n
           tal:attributes="href string:${object_name}_css.css"/>\n
   </tal:block>\n
@@ -100,11 +95,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          groups python: form.get_groups();\n
                          object_name form/title;\n
                          object_name python:object_name.replace(\' \',\'\')">\n
-\n
-    <tal:block tal:condition="preferred_html_style_developper_mode">\n
+    <tal:block tal:condition="preferred_html_style_developper_mode"> \n
       <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
     </tal:block>\n
-\n
     <tal:block tal:repeat="pagenum python:range(len(groups))"\n
           tal:attributes="class string:my_span">\n
 \n
@@ -335,27 +328,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>

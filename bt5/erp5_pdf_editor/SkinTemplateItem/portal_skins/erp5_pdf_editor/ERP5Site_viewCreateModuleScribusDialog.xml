@@ -86,6 +86,8 @@
                         <string>import_pdf_file</string>
                         <string>import_scribus_file</string>
                         <string>option_html</string>
+                        <string>desired_width</string>
+                        <string>desired_height</string>
                       </list>
                     </value>
                 </item>
