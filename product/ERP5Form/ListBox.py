@@ -1911,7 +1911,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     url_column_dict = dict(self.renderer.getUrlColumnList())
     selection = self.renderer.getSelection()
     selection_name = self.renderer.getSelectionName()
-    ignore_layout = self.renderer.request.get('ignore_layout', 0)
+    ignore_layout = int(self.renderer.request.get('ignore_layout', 0))
 
     html_list = []
 
