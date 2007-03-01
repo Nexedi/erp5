@@ -74,8 +74,12 @@ puts together a search string in a search syntax, depending on\n
 parameters received. It is the reverse of parseSearchString external\n
 method.\n
 """\n
-\n
 req = context.REQUEST\n
+\n
+search_straight = req.get(\'SearchableText\', \'\')\n
+if search_straight != \'\':\n
+  return search_straight\n
+\n
 # words to search in \'any of the words\' form - left intact\n
 search_string = req.get(\'SearchableText_any\',\'\')\n
 \n
@@ -149,6 +153,8 @@ if search_mode and search_mode_map.has_key(search_mode):\n
   search_string += \' mode:%s\' % search_mode_map[search_mode]\n
 \n
 return search_string\n
+\n
+# vim: filetype=python syntax=python shiftwidth=2\n
 </string> </value>
         </item>
         <item>
@@ -202,6 +208,7 @@ return search_string\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>req</string>
+                            <string>search_straight</string>
                             <string>search_string</string>
                             <string>search_phrase</string>
                             <string>search_all</string>
