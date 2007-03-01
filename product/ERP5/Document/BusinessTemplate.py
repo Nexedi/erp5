@@ -56,7 +56,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.RoleInformation import RoleInformation
 import fnmatch
 import re, os, sys, string, tarfile
-from Products.ERP5Type.Cache import clearCache
+from Products.ERP5Type.Cache import clearAllCache
 from DateTime import DateTime
 from OFS.Traversable import NotFound
 from OFS import XMLExportImport
@@ -4161,7 +4161,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
-      clearCache()
+      clearAllCache()
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     def install(self, **kw):
@@ -4217,7 +4217,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           item.uninstall(local_configuration)
       # It is better to clear cache because the uninstallation of a
       # template deletes many things from the portal.
-      clearCache()
+      clearAllCache()
 
     uninstall = WorkflowMethod(uninstall)
 
