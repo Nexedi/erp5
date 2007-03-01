@@ -312,7 +312,60 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>date</string>
+                          <string>Accounting Operation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>explanation_portal_type</string>
+                          <string>Transaction Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>explanation_origin_id</string>
+                          <string>Origin</string>
+                        </tuple>
+                        <tuple>
+                          <string>explanation_int_index</string>
+                          <string>Invoice Transmission Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>explanation_title</string>
+                          <string>Authorization Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>emit_date</string>
+                          <string>Emit Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>nopaye</string>
+                          <string>NOPAYE</string>
+                        </tuple>
+                        <tuple>
+                          <string>mirror_section_title</string>
+                          <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>dunning_code</string>
+                          <string>Dunning Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>dunning_date</string>
+                          <string>Dunning Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>dunning_comment</string>
+                          <string>Dunning Comment</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -326,10 +379,6 @@
                         <tuple>
                           <string>date</string>
                           <string>Accounting Operation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>explanation_portal_type</string>
-                          <string>Transaction Type</string>
                         </tuple>
                         <tuple>
                           <string>explanation_origin_id</string>
