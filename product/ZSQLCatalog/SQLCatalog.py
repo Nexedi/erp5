@@ -80,7 +80,7 @@ except ImportError:
 
 UID_BUFFER_SIZE = 300
 RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
-                     'format', 'search_mode', 'operator')
+                     'format', 'search_mode', 'operator', 'selection_domain', 'selection_report')
 
 valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
 
