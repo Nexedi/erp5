@@ -63,7 +63,7 @@
               <list>
                 <string>left (Page Properties)</string>
                 <string>right (Publication)</string>
-                <string>center</string>
+                <string>center (Description)</string>
                 <string>bottom (Content)</string>
               </list>
             </value>
@@ -81,7 +81,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>center (Description)</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
