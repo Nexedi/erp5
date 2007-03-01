@@ -75,9 +75,7 @@ It does the following:\n
 - determines portal types appropriate for the file type uploaded, and checks if the context portal type\n
   is one of those (this is not a complete check, but all we can do at this stage)\n
 - checks if context already has some data (we do not allow re-upload of files)\n
-If the context has data, it creates a copy of context (with the same portal type most important properties\n
-  copied) and uploads the file into the copy (the rest is handled by portal_contributions)\n
-Otherwise it just uploads the file and calls metadata discovery script.\n
+Otherwise it just uploads the file, bumps up revision number and calls metadata discovery script.\n
 \n
 """\n
 \n
@@ -101,28 +99,22 @@ if candidate_type_list and current_type not in candidate_type_list:\n
                                 mapping = dict(portal_type = current_type, appropriate_type = str(candidate_type_list)))\n
   return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message =portal_status_message, cancel_url = kw[\'cancel_url\']), **kw)\n
 \n
-if context.hasFile(): # this is a re-upload, we create a \'copy\'\n
-  property_list = context.portal_types[current_type].getInstanceBaseCategoryList() # all category memberships\n
-  # we copy many things, ingestion script may then overwrite some of these (if allowed)\n
-  # we rely on ingestion script to determine coordinates\n
-  property_list += [\'title\', \'short_title\', \'index\', \'description\'] # maybe\n
-  vals = {}\n
-  vals[\'source_reference\'] = file_name\n
-  for prop in property_list:\n
-    v = context.getProperty(prop)\n
-    if v is not None:\n
-      vals[prop] = v\n
-  # we create new ob by portal_contributions, supplying current properties as input props\n
-  ob = context.portal_contributions.newContent(portal_type = current_type, file=file, **vals)\n
-  msg = translateString(\'Document already contained file data. A new document was created to which the file was uploaded.\')\n
-else:\n
-  ob = context\n
-  ob.manage_upload(file)\n
-  ob.discoverMetadata(file_name=file_name)\n
-  msg = translateString(\'File uploaded.\')\n
+context.manage_upload(file)\n
+context.discoverMetadata(file_name=file_name)\n
+\n
+# increase revision\n
+try:\n
+  current_revision = int(context.getRevision())\n
+except ValueError:\n
+  current_revision = 0\n
+\n
+rev = \'%03d\' % (current_revision + 1)\n
+context.setRevision(rev)\n
+\n
+msg = translateString(\'File uploaded.\')\n
 \n
 # Return to view mode\n
-return ob.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
+return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
 </string> </value>
         </item>
         <item>
@@ -182,14 +174,10 @@ return ob.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},
                             <string>str</string>
                             <string>portal_status_message</string>
                             <string>_apply_</string>
-                            <string>property_list</string>
-                            <string>vals</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>prop</string>
-                            <string>v</string>
-                            <string>None</string>
-                            <string>ob</string>
+                            <string>int</string>
+                            <string>current_revision</string>
+                            <string>ValueError</string>
+                            <string>rev</string>
                             <string>msg</string>
                           </tuple>
                         </value>
