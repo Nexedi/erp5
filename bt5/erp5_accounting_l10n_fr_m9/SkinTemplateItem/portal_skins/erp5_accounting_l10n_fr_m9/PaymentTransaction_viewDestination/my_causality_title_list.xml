@@ -459,6 +459,10 @@
                           <string>Accounting Transaction</string>
                           <string>Accounting Transaction</string>
                         </tuple>
+                        <tuple>
+                          <string>Balance Transaction</string>
+                          <string>Balance Transaction</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
