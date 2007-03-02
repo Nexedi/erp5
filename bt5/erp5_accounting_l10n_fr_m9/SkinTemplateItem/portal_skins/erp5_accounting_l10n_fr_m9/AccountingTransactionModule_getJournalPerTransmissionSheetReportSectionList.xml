@@ -127,7 +127,7 @@ def getAccountClass(account_url):\n
     account_class_cache[account_url] = classe\n
     return classe\n
 \n
-origin_id_cache = {}\n
+origin_id_cache = {None:\'\', \'\':\'\'}\n
 def getOriginId(origin_url):\n
   try:\n
     return origin_id_cache[origin_url]\n

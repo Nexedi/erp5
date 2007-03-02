@@ -96,7 +96,7 @@ def getPaymentModeCodification(payment_mode):\n
   payment_mode_cache[payment_mode] = category_title\n
   return category_title\n
 \n
-origin_id_cache = {}\n
+origin_id_cache = {None:\'\', \'\':\'\'}\n
 def getOriginId(origin_url):\n
   try:\n
     return origin_id_cache[origin_url]\n
