@@ -70,16 +70,15 @@ class ActivityBuffer(TM):
     finally:
       buffer_dict_lock.release()
 
+  def _getBuffer(self):
+    buffer = buffer_dict[self._activity_tool_path]
     # Create attributes only if they are not present.
-    buffer = self._getBuffer()
     if not hasattr(buffer, 'queued_activity'):
       buffer.queued_activity = []
       buffer.flushed_activity = []
       buffer.message_list_dict = {}
       buffer.uid_set_dict = {}
-
-  def _getBuffer(self):
-    return buffer_dict[self._activity_tool_path]
+    return buffer
 
   def _clearBuffer(self):
     buffer = self._getBuffer()
