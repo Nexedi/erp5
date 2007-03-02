@@ -130,7 +130,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
       'manage_catalogReindex', 'manage_catalogFoundItems',
       'manage_catalogClear', 'manage_editSchema',
-      'manage_reindexIndex', 'manage_main',
+      'manage_main',
       'manage_editFilter',
 
       'manage_hotReindexAll',
@@ -140,7 +140,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     ('Search ZCatalog',
      ['searchResults', '__call__', 'uniqueValuesFor',
-      'getpath', 'schema', 'names', 'columns', 'indexes', 'index_objects',
+      'getpath', 'schema', 'names', 'indexes',
       'all_meta_types', 'valid_roles', 'resolve_url',
       'getobject', 'getObject', 'getObjectList', 'getCatalogSearchTableIds',
       'getCatalogSearchResultKeys', 'getFilterableMethodList', ],

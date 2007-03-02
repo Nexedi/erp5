@@ -255,7 +255,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return self.getAmortisationMethodParameterForItem(None, parameter_list, **kw)
 
 
-  security.declareProtected(Permissions.View, 'getAmortisationMethodParameter')
+  security.declareProtected(Permissions.View, 'getAmortisationMethodParameterForItem')
   def getAmortisationMethodParameterForItem(self, item, parameter_list, split_char=None, split_qty=3, **kw):
     """
     Returns a dictionary containing the value of each parameter
@@ -326,7 +326,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return None
 
 
-  security.declareProtected(Permissions.View, 'getNeededSpecificParameterListForItem()')
+  security.declareProtected(Permissions.View, 'getNeededSpecificParameterListForItem')
   def getNeededSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -339,7 +339,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["needed_specific_parameter_list"]
                                                       
   
-  security.declareProtected(Permissions.View, 'getUncontinuousNeededSpecificParameterListForItem()')
+  security.declareProtected(Permissions.View, 'getUncontinuousNeededSpecificParameterListForItem')
   def getUncontinuousNeededSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -353,7 +353,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["uncontinuous_needed_specific_parameter_list"]
                                                       
                                                           
-  security.declareProtected(Permissions.View, 'getFacultativeSpecificParameterListForItem()')
+  security.declareProtected(Permissions.View, 'getFacultativeSpecificParameterListForItem')
   def getFacultativeSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are

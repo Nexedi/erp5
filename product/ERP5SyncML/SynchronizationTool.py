@@ -129,7 +129,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
   manage_addPublicationForm = DTMLFile( 'dtml/manage_addPublication', globals() )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
-               , 'manageSubsciptions' )
+               , 'manageSubscriptions' )
   manageSubscriptions = DTMLFile( 'dtml/manageSubscriptions', globals() )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
