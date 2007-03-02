@@ -31,12 +31,16 @@ import string
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner, aq_parent
+from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type.Utils import sortValueList
+from Products.ERP5Type.Cache import CachingMethod
+
+DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 
 from zLOG import LOG
 
@@ -176,6 +180,12 @@ class Category(Folder):
       """
       return self.getLogicalPath(item_method='getTranslatedTitle')
 
+    def getCompactLogicalPath(self):
+      """
+        Returns compact logical path, started under base category.
+      """
+      return self.getLogicalPath(item_method='getCompactTitle')
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getIndentedTitle')
     def getIndentedTitle(self):
@@ -278,7 +288,7 @@ class Category(Folder):
     def getCategoryChildTranslatedTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
-      given list of base categories. Uses getTitle as default method
+      given list of base categories. Uses getTranslatedTitle as default method
       """
       return self.getCategoryChildItemList(recursive=recursive,
                       display_id='translated_title', base=base, **kw)
@@ -303,6 +313,16 @@ class Category(Folder):
                                           display_id='title_and_id', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                                       'getCategoryChildCompactTitleItemList')
+    def getCategoryChildCompactTitleItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses title_and_id as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+                                          display_id='compact_title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildLogicalPathItemList')
     def getCategoryChildLogicalPathItemList(self, recursive=1, base=0, **kw):
       """
@@ -320,6 +340,15 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                                display_id='translated_logical_path', base=base, **kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildCompactLogicalPathItemList')
+    def getCategoryChildCompactLogicalPathItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getLogicalPath as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive, display_id='compact_logical_path', base=base, **kw)
+    
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIndentedTitleItemList')
     def getCategoryChildIndentedTitleItemList(self, recursive=1, base=0, **kw):
@@ -342,7 +371,8 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildItemList')
-    def getCategoryChildItemList(self, recursive=1, base=0, **kw):
+    def getCategoryChildItemList(self, recursive=1, base=0,
+                                       cache=DEFAULT_CACHE_FACTORY, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
@@ -360,8 +390,20 @@ class Category(Folder):
 
       recursive -- if set to 0 do not apply recursively
       """
-      value_list = self.getCategoryChildValueList(recursive=recursive,**kw)
-      return Renderer(base=base, **kw).render(value_list)
+      def _renderCategoryChildItemList(recursive=1, base=0, **kw):
+        value_list = self.getCategoryChildValueList(recursive=recursive,**kw)
+        return Renderer(base=base, **kw).render(value_list)
+
+      if not cache:
+        return _renderCategoryChildItemList(recursive=recursive, base=base, **kw)
+
+      # Some methods are language dependent so we include the language in the key
+      localizer = getToolByName(self, 'Localizer')
+      language = localizer.get_selected_language() 
+      m = CachingMethod(_renderCategoryChildItemList,
+                        ('Category_getCategoryChildItemList', language, self.getPath()))
+
+      return m(recursive=recursive, base=base, **kw)
 
     # Alias for compatibility
     security.declareProtected(Permissions.View, 'getFormItemList')

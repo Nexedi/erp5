@@ -1346,6 +1346,18 @@ class Base( CopyContainer,
       objectlist.append(objectlist[-1][element])
     return '/' + join([object.getTitle() for object in objectlist[1:]], '/')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCompactLogicalPath')
+  def getCompactLogicalPath(self, REQUEST=None) :
+    """
+      Returns a compact representation of the absolute path of an object
+      using compact titles when available
+    """
+    pathlist = self.getPhysicalPath()
+    objectlist = [self.getPhysicalRoot()]
+    for element in pathlist[1:] :
+      objectlist.append(objectlist[-1][element])
+    return '/' + join([object.getCompactTitle() for object in objectlist[1:]], '/')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
   def getUrl(self, REQUEST=None):
     """
@@ -1871,9 +1883,9 @@ class Base( CopyContainer,
                             'getTranslatedShortTitleOrId')
   def getTranslatedShortTitleOrId(self):
     """
-    Returns the translated title or the id if the id is empty
+    Returns the translated short title or the id if the id is empty
     """
-    title = self.getTranslatedTitle()
+    title = self.getTranslatedShortTitle()
     if title is not None:
       title = str(title)
       if title == '' or title is None:
@@ -1895,6 +1907,24 @@ class Base( CopyContainer,
         return self.getId()
       else:
         return title
+    return self.getId()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCompactTitle')
+  def getCompactTitle(self):
+    """
+    Returns the translated short title or the reference or
+    the translated title or the ID by order of priority
+
+    NOTE: It could be useful to make this method overridable
+    with a type methode.
+    """
+    if self.hasShortTitle():
+      return self.getTranslatedShortTitle()
+    if self.hasReference():
+      return self.getReference()
+    if self.hasTitle():
+      return self.getTranslatedTitle()
     return self.getId()
 
   # This method allows to sort objects in list is a more reasonable way
