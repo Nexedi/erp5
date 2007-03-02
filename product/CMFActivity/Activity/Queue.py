@@ -143,7 +143,7 @@ class Queue:
                             going to be executed                                                        
     """
     try:
-      if activity_tool.unrestrictedTraverse(message.object_path) is None:
+      if activity_tool.unrestrictedTraverse(message.object_path, None) is None:
         # Do not try to call methods on objects which do not exist
         LOG('WARNING ActivityTool', 0,
            'Object %s does not exist' % '/'.join(message.object_path))
@@ -214,27 +214,23 @@ class Queue:
 
   # Registration Management
   def registerActivityBuffer(self, activity_buffer):
-    class_name = self.__class__.__name__
-    setattr(activity_buffer, '_%s_message_list' % class_name, [])  
+    pass
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
-    class_name = self.__class__.__name__
-    return m in getattr(activity_buffer, '_%s_message_list' % class_name)
+    message_list = activity_buffer.getMessageList(self)
+    return m in message_list
 
   def registerMessage(self, activity_buffer, activity_tool, m):
-    class_name = self.__class__.__name__
-    getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
+    message_list = activity_buffer.getMessageList(self)
+    message_list.append(m)
     m.is_registered = 1
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 0
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
-    class_name = self.__class__.__name__
-    if hasattr(activity_buffer, '_%s_message_list' % class_name):
-      return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))
-    else:
-      return ()
+    message_list = activity_buffer.getMessageList(self)
+    return [m for m in message_list if m.is_registered]
 
   # Required for tests (time shift)
   def timeShift(self, activity_tool, delay):

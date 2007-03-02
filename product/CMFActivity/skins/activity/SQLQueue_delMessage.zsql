@@ -11,4 +11,5 @@ class_file:
 DELETE FROM
   message_queue
 WHERE
-  uid = <dtml-sqlvar uid type="int">
+<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>

@@ -72,7 +72,7 @@ class SQLQueue(RAMQueue):
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
     #LOG("prepareDeleteMessage", 0, str(m.__dict__))
-    activity_tool.SQLQueue_delMessage(uid = m.uid)
+    activity_tool.SQLQueue_delMessage(uid = [m.uid])
 
   def dequeueMessage(self, activity_tool, processing_node):
     readMessage = getattr(activity_tool, 'SQLQueue_readMessage', None)
@@ -147,7 +147,7 @@ class SQLQueue(RAMQueue):
 
 
       if m.is_executed:
-        activity_tool.SQLQueue_delMessage(uid=line.uid)  # Delete it
+        activity_tool.SQLQueue_delMessage(uid=[line.uid])  # Delete it
       else:
         try:
           # If not, abort transaction and start a new one
@@ -234,7 +234,9 @@ class SQLQueue(RAMQueue):
               # The message no longer exists
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
-          self.deleteMessage(activity_tool, m)
+
+      if len(result):
+        activity_tool.SQLQueue_delMessage(uid = [line.uid for line in result])
 
   # def start(self, activity_tool, active_process=None):
   #   uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)

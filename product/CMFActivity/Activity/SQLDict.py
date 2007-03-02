@@ -116,36 +116,28 @@ class SQLDict(RAMDict):
 
   # Registration management
   def registerActivityBuffer(self, activity_buffer):
-    class_name = self.__class__.__name__
-    setattr(activity_buffer, '_%s_uid_dict' % class_name, {})
-    setattr(activity_buffer, '_%s_message_list' % class_name, [])
+    pass
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
-    class_name = self.__class__.__name__
-    uid_dict = getattr(activity_buffer,'_%s_uid_dict' % class_name)
-    return uid_dict.has_key((tuple(m.object_path), m.method_id))
+    uid_set = activity_buffer.getUidSet(self)
+    return (tuple(m.object_path), m.method_id) in uid_set
 
   def registerMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 1
-    class_name = self.__class__.__name__
-    uid_dict = getattr(activity_buffer,'_%s_uid_dict' % class_name)
-    uid_dict[(tuple(m.object_path), m.method_id)] = 1
-    getattr(activity_buffer,'_%s_message_list' % class_name).append(m)
+    uid_set = activity_buffer.getUidSet(self)
+    uid_set.add((tuple(m.object_path), m.method_id))
+    message_list = activity_buffer.getMessageList(self)
+    message_list.append(m)
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 0 # This prevents from inserting deleted messages into the queue
     class_name = self.__class__.__name__
-    uid_dict = getattr(activity_buffer,'_%s_uid_dict' % class_name)
-    if uid_dict.has_key((tuple(m.object_path), m.method_id)):
-      del uid_dict[(tuple(m.object_path), m.method_id)]
+    uid_set = activity_buffer.getUidSet(self)
+    uid_set.discard((tuple(m.object_path), m.method_id))
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
-    class_name = self.__class__.__name__
-    if hasattr(activity_buffer,'_%s_message_list' % class_name):
-      message_list = getattr(activity_buffer,'_%s_message_list' % class_name)
-      return [m for m in message_list if m.is_registered]
-    else:
-      return ()
+    message_list = activity_buffer.getMessageList(self)
+    return [m for m in message_list if m.is_registered]
 
   def getOrderValidationText(self, message):
     # Return an identifier of validators related to ordering.
@@ -456,7 +448,9 @@ class SQLDict(RAMDict):
             else:
               raise ActivityFlushError, (
                   'Could not validate %s on %s' % (m.method_id , path))
-          self.deleteMessage(activity_tool, m)
+
+      if len(result):
+        activity_tool.SQLDict_delMessage(uid = [line.uid for line in result])
 
   def getMessageList(self, activity_tool, processing_node=None,include_processing=0,**kw):
     # YO: reading all lines might cause a deadlock

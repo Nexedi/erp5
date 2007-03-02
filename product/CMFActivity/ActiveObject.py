@@ -134,9 +134,9 @@ class ActiveObject(ExtensionClass.Base):
   def recursiveFlushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
     self.flushActivity(invoke=invoke, **kw)
-    if hasattr(aq_base(self), 'objectValues'):
+    if getattr(aq_base(self), 'objectValues', None) is not None:
       for o in self.objectValues():
-        if hasattr(aq_base(o), 'recursiveFlushActivity'):
+        if getattr(aq_base(o), 'recursiveFlushActivity', None) is not None:
           o.recursiveFlushActivity(invoke=invoke, **kw)
 
   security.declareProtected( permissions.View, 'hasActivity' )

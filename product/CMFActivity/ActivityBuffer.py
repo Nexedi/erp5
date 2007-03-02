@@ -26,23 +26,29 @@
 from Shared.DC.ZRDB.TM import TM
 from zLOG import LOG, ERROR, INFO
 import sys
-from thread import allocate_lock, get_ident
+import threading
 
 try:
   from transaction import get as get_transaction
 except ImportError:
   pass
 
+# This variable is used to store thread-local buffered information.
+# This must be RAM-based, because the use of a volatile attribute does
+# not guarantee that the information persists until the end of a
+# transaction, but we need to assure that the information is accessible
+# for flushing activities. So the approach here is that information is
+# stored in RAM, and removed at _finish and _abort, so that the information
+# would not span over transactions.
+buffer_dict_lock = threading.Lock()
+buffer_dict = {}
+
 class ActivityBuffer(TM):
 
   _p_oid=_p_changed=_registered=None
 
   def __init__(self, activity_tool=None):
-    self._use_TM = self._transactions = 1
-    if self._use_TM:
-      self._tlock = allocate_lock()
-      self._tthread = None
-    self._lock = allocate_lock()
+    self.requires_prepare = 0
 
     # Directly store the activity tool as an attribute. At the beginning
     # the activity tool was stored as a part of the key in queued_activity and
@@ -57,18 +63,51 @@ class ActivityBuffer(TM):
     # so store only the required information.
     self._activity_tool_path = activity_tool.getPhysicalPath()
 
+    try:
+      buffer_dict_lock.acquire()
+      if self._activity_tool_path not in buffer_dict:
+        buffer_dict[self._activity_tool_path] = threading.local()
+    finally:
+      buffer_dict_lock.release()
+
+    # Create attributes only if they are not present.
+    buffer = self._getBuffer()
+    if not hasattr(buffer, 'queued_activity'):
+      buffer.queued_activity = []
+      buffer.flushed_activity = []
+      buffer.message_list_dict = {}
+      buffer.uid_set_dict = {}
+
+  def _getBuffer(self):
+    return buffer_dict[self._activity_tool_path]
+
+  def _clearBuffer(self):
+    buffer = self._getBuffer()
+    del buffer.queued_activity[:]
+    del buffer.flushed_activity[:]
+    buffer.message_list_dict.clear()
+    buffer.uid_set_dict.clear()
+
+  def getMessageList(self, activity):
+    buffer = self._getBuffer()
+    return buffer.message_list_dict.setdefault(activity, []) 
+
+  def getUidSet(self, activity):
+    buffer = self._getBuffer()
+    return buffer.uid_set_dict.setdefault(activity, set())
+
   # Keeps a list of messages to add and remove
   # at end of transaction
   def _begin(self, *ignored):
+    LOG('ActivityBuffer', 0, '_begin %r' % (self,))
     from ActivityTool import activity_list
-    self._tlock.acquire()
-    self._tthread = get_ident()
     self.requires_prepare = 1
     try:
-      self.queued_activity = []
-      self.flushed_activity = []
-      for activity in activity_list:              # Reset registration for each transaction
+
+      # Reset registration for each transaction.
+      for activity in activity_list:
         activity.registerActivityBuffer(self)
+
       # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of
       # patching Trasaction.
       transaction = get_transaction()
@@ -79,56 +118,46 @@ class ActivityBuffer(TM):
     except:
       LOG('ActivityBuffer', ERROR, "exception during _begin",
           error=sys.exc_info())
-      self._tlock.release()
       raise
 
   def _finish(self, *ignored):
-    if not self._tlock.locked() or self._tthread != get_ident():
-      LOG('ActivityBuffer', INFO, "ignoring _finish")
-      return
+    LOG('ActivityBuffer', 0, '_finish %r' % (self,))
     try:
       try:
         # Try to push / delete all messages
-        for (activity, message) in self.flushed_activity:
-          #LOG('ActivityBuffer finishDeleteMessage', ERROR, str(message.method_id))
+        buffer = self._getBuffer()
+        for (activity, message) in buffer.flushed_activity:
           activity.finishDeleteMessage(self._activity_tool_path, message)
-        for (activity, message) in self.queued_activity:
-          #LOG('ActivityBuffer finishQueueMessage', ERROR, str(message.method_id))
+        for (activity, message) in buffer.queued_activity:
           activity.finishQueueMessage(self._activity_tool_path, message)
       except:
         LOG('ActivityBuffer', ERROR, "exception during _finish",
             error=sys.exc_info())
         raise
     finally:
-      self._tlock.release()
+      self._clearBuffer()
 
   def _abort(self, *ignored):
-    if not self._tlock.locked() or self._tthread != get_ident():
-      LOG('ActivityBuffer', 0, "ignoring _abort")
-      return
-    self._tlock.release()
+    self._clearBuffer()
 
   def tpc_prepare(self, transaction, sub=None):
-    if sub is not None: # Do nothing if it is a subtransaction
+    # Do nothing if it is a subtransaction
+    if sub is not None:
       return
-    if not self.requires_prepare: return
+
+    if not self.requires_prepare:
+      return
+
     self.requires_prepare = 0
-    if not self._tlock.locked() or self._tthread != get_ident():
-      LOG('ActivityBuffer', 0, "ignoring tpc_prepare")
-      return
     try:
       # Try to push / delete all messages
-      for (activity, message) in self.flushed_activity:
-        #LOG('ActivityBuffer prepareDeleteMessage', ERROR, str(message.method_id))
+      buffer = self._getBuffer()
+      for (activity, message) in buffer.flushed_activity:
         activity.prepareDeleteMessage(self._activity_tool, message)
       activity_dict = {}
-      for (activity, message) in self.queued_activity:
-        key = activity
-        if key not in activity_dict:
-          activity_dict[key] = []
-        activity_dict[key].append(message)
-      for key, message_list in activity_dict.items():
-        activity = key
+      for (activity, message) in buffer.queued_activity:
+        activity_dict.setdefault(activity, []).append(message)
+      for activity, message_list in activity_dict.iteritems():
         if hasattr(activity, 'prepareQueueMessageList'):
           activity.prepareQueueMessageList(self._activity_tool, message_list)
         else:
@@ -144,11 +173,13 @@ class ActivityBuffer(TM):
     # Activity is called to prevent queuing some messages (useful for example
     # to prevent reindexing objects multiple times)
     if not activity.isMessageRegistered(self, activity_tool, message):
-      self.queued_activity.append((activity, message))
+      buffer = self._getBuffer()
+      buffer.queued_activity.append((activity, message))
       # We register queued messages so that we can
       # unregister them
       activity.registerMessage(self, activity_tool, message)
 
   def deferredDeleteMessage(self, activity_tool, activity, message):
     self._register()
-    self.flushed_activity.append((activity, message))
+    buffer = self._getBuffer()
+    buffer.flushed_activity.append((activity, message))

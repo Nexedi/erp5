@@ -641,15 +641,15 @@ class ActivityTool (Folder, UniqueObject):
       self._v_activity_buffer._register() # Required if called by flush, outside activate
       return activity.unregisterMessage(self._v_activity_buffer, self, message)
 
-    def flush(self, object, invoke=0, **kw):
+    def flush(self, obj, invoke=0, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
       if getattr(self, '_v_activity_buffer', None) is None:
         self._v_activity_buffer = ActivityBuffer(activity_tool=self)
-      if type(object) is TupleType:
-        object_path = object
+      if isinstance(obj, tuple):
+        object_path = obj
       else:
-        object_path = object.getPhysicalPath()
+        object_path = obj.getPhysicalPath()
       for activity in activity_list:
         activity.flush(self, object_path, invoke=invoke, **kw)
 
