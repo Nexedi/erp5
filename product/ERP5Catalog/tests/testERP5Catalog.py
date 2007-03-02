@@ -1438,4 +1438,47 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(1,
                 ctool.unrestrictedCountResults(title='Object Title')[0][0])
     
-    
+  def test_49_IndexInOrderedSearchFolder(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Index In Ordered Search Folder'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+    catalog = portal_catalog.objectValues()[0]
+
+    person = person_module.newContent(id='a',portal_type='Person',title='a',description='z')
+    person.immediateReindexObject()
+    person = person_module.newContent(id='b',portal_type='Person',title='a',description='y')
+    person.immediateReindexObject()
+    person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
+    person.immediateReindexObject()
+    index_columns = getattr(catalog, 'sql_catalog_index_on_order_keys', None)
+    self.assertNotEqual(index_columns, None)
+    self.assertEqual(len(index_columns), 0)
+    # Check catalog don't tell to use index if nothing defined
+    sql = person_module.searchFolder(src__=1)
+    self.failUnless('use index' not in sql)
+    sql = person_module.searchFolder(src__=1, sort_on=[('id','ascending')])
+    self.failUnless('use index' not in sql)
+    sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
+    self.failUnless('use index' not in sql)
+    # Defined that catalog must tell to use index when order by catalog.title
+    index_columns = ('catalog.title',)
+    setattr(catalog, 'sql_catalog_index_on_order_keys', index_columns)
+    index_columns = getattr(catalog, 'sql_catalog_index_on_order_keys', None)
+    self.assertNotEqual(index_columns, None)
+    self.assertEqual(len(index_columns), 1)
+    # Check catalog tell to use index only when ordering by catalog.title
+    sql = person_module.searchFolder(src__=1)
+    self.failUnless('use index' not in sql)
+    sql = person_module.searchFolder(src__=1, sort_on=[('id','ascending')])
+    self.failUnless('use index' not in sql)
+    sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
+    self.failUnless('use index' in sql)
+
