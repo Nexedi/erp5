@@ -641,6 +641,11 @@ class Catalog( Folder,
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_index_on_order_keys',
+      'description' : 'Columns which should be used by specifying an index when sorting on them',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getSortColumnIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_topic_search_keys',
       'description' : 'Columns which should be considered as topic index',
       'type'    : 'lines',
@@ -686,6 +691,7 @@ class Catalog( Folder,
   sql_search_result_keys = ()
   sql_catalog_topic_search_keys = ()
   sql_catalog_multivalue_keys = ()
+  sql_catalog_index_on_order_keys = ()
   sql_catalog_related_keys = ()
   sql_catalog_scriptable_keys = ()
 
@@ -1051,6 +1057,20 @@ class Catalog( Folder,
     """
     keys = {}
     for table in self.getCatalogSearchTableIds():
+      field_list = self._getCatalogSchema(table=table)
+      for field in field_list:
+        keys['%s.%s' % (table, field)] = 1
+    keys = keys.keys()
+    keys.sort()
+    return keys
+
+  def getSortColumnIds(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids that can be used for a sort
+    """
+    keys = {}
+    for table in self.getTableIds():
       field_list = self._getCatalogSchema(table=table)
       for field in field_list:
         keys['%s.%s' % (table, field)] = 1
@@ -2078,6 +2098,12 @@ class Catalog( Folder,
           related_table = from_table_dict.keys()[0]
 
         table = from_table_dict[related_table]
+        # Check if it's a column for which we want to specify index
+        index_columns = getattr(self, 'sql_catalog_index_on_order_keys', [])
+        sort_column = '%s.%s' %(table, column)
+        if not sort_column in index_columns:
+          continue
+        # Group columns
         if not index_from_table.has_key(table):
           index_from_table[table] = [column,]
         else:
