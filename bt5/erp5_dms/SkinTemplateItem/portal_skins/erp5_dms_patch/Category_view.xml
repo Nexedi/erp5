@@ -121,6 +121,7 @@
                     <value>
                       <list>
                         <string>my_codification</string>
+                        <string>my_reference</string>
                         <string>my_int_index</string>
                       </list>
                     </value>
