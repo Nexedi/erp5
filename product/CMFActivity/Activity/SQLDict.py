@@ -406,7 +406,6 @@ class SQLDict(RAMDict):
       # Parse each message in registered
       for m in activity_tool.getRegisteredMessageList(self):
         if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
-          activity_tool.unregisterMessage(self, m)
           #if not method_dict.has_key(method_id or m.method_id):
           if not method_dict.has_key(m.method_id):
             method_dict[m.method_id] = 1 # Prevents calling invoke twice
@@ -423,6 +422,10 @@ class SQLDict(RAMDict):
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'The document %s does not exist' % path)
+              else:
+                raise ActivityFlushError, (
+                    'Could not validate %s on %s' % (m.method_id , path))
+          activity_tool.unregisterMessage(self, m)
       # Parse each message in SQL dict
       result = readMessageList(path=path, method_id=method_id,
                                processing_node=None,include_processing=0)
@@ -435,7 +438,6 @@ class SQLDict(RAMDict):
           # node and minimize network traffic with ZEO server
           method_dict[method_id] = 1
           m = self.loadMessage(line.message, uid = line.uid)
-          self.deleteMessage(activity_tool, m)
           if invoke:
             # First Validate
             validate_value = m.validate(self, activity_tool)
@@ -447,10 +449,14 @@ class SQLDict(RAMDict):
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (m.method_id , path))
-            if validate_value is INVALID_PATH:
+            elif validate_value is INVALID_PATH:
               # The message no longer exists
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
+            else:
+              raise ActivityFlushError, (
+                  'Could not validate %s on %s' % (m.method_id , path))
+          self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None,include_processing=0,**kw):
     # YO: reading all lines might cause a deadlock

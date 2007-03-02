@@ -222,7 +222,6 @@ class SQLQueue(RAMQueue):
           # Only invoke once (it would be different for a queue)
           method_dict[method_id] = 1
           m = self.loadMessage(line.message, uid = line.uid)
-          self.deleteMessage(activity_tool, m)
           if invoke:
             # First Validate
             if m.validate(self, activity_tool) is VALID:
@@ -235,6 +234,7 @@ class SQLQueue(RAMQueue):
               # The message no longer exists
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
+          self.deleteMessage(activity_tool, m)
 
   # def start(self, activity_tool, active_process=None):
   #   uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)

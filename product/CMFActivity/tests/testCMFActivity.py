@@ -40,7 +40,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
-from Products.CMFActivity.Errors import ActivityPendingError
+from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
 from Products.ERP5Type.Document.Organisation import Organisation
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
@@ -551,6 +551,37 @@ class TestCMFActivity(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(o.getCorporateName(), 'cd')
+
+  def TryFlushActivityWithAfterTag(self, activity):
+    """
+      Ensure the order of an execution by a tag
+    """
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = portal.organisation._getOb(self.company_id)
+
+    o.setTitle('?')
+    o.setDescription('?')
+    self.assertEquals(o.getTitle(), '?')
+    self.assertEquals(o.getDescription(), '?')
+    get_transaction().commit()
+    self.tic()
+
+    o.activate(after_tag = 'toto', activity = activity).setDescription('b')
+    o.activate(tag = 'toto', activity = activity).setTitle('a')
+    get_transaction().commit()
+    tool = self.getActivityTool()
+    self.assertRaises(ActivityFlushError,tool.manageInvoke,o.getPath(),'setDescription')
+    tool.manageInvoke(o.getPath(),'setTitle')
+    get_transaction().commit()
+    self.assertEquals(o.getTitle(), 'a')
+    self.assertEquals(o.getDescription(), '?')
+    self.tic()
+    self.assertEquals(len(tool.getMessageList()),0)
+    self.assertEquals(o.getTitle(), 'a')
+    self.assertEquals(o.getDescription(), 'b')
 
   def CheckScheduling(self, activity):
     """
@@ -1582,6 +1613,24 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
     self.TryErrorsWhileFinishingCommitDB('SQLQueue')
+
+  def test_74_TryFlushActivityWithAfterTagSQLDict(self, quiet=0, run=run_all_test):
+    # Test if after_tag can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry Flus Activity With After Tag With SQL Dict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryFlushActivityWithAfterTag('SQLDict')
+
+  def test_75_TryFlushActivityWithAfterTagWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if after_tag can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry Flush Activity With After Tag With SQL Queue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryFlushActivityWithAfterTag('SQLQueue')
 
 
 if __name__ == '__main__':
