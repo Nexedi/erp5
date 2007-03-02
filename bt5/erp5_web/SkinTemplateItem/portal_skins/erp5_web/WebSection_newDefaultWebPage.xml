@@ -88,7 +88,8 @@ context.setDefaultAggregateValue(web_page)\n
 \n
 # Return the new page in the section context\n
 return web_page.Base_redirect(\'view\',\n
-          keep_items = dict(portal_status_message = translateString("New default Web Page for section ${web_section}.",\n
+          keep_items = dict(editable_mode=1,\n
+            portal_status_message = translateString("New default Web Page for section ${web_section}.",\n
           mapping = dict(web_section = title))))\n
 </string> </value>
         </item>

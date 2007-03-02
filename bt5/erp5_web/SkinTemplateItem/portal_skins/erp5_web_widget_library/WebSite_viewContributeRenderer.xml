@@ -107,7 +107,7 @@
         Theme\n
       </div>\n
     </div>\n
-    <input style="float:right" type="submit" name="WebSite_contributeLink:method" value="Contribute"/>\n
+    <input style="float:right" type="submit" name="WebSite_linkContent:method" value="Contribute"/>\n
     <div class="clear"></div>\n
   </div>\n
   \n
@@ -145,7 +145,7 @@
             </span>\n
           </li>\n
           <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'External Library File\', user)">\n
-            <a href="Base_createContent?portal_type=External Library File" value="" i18n:translate="" i18n:domain="ui">Library File</a>\n
+            <a href="ERP?portal_type=External Library File" value="" i18n:translate="" i18n:domain="ui">Library File</a>\n
           </li>\n
         </ul>\n
       </ul>\n
@@ -199,10 +199,10 @@
         <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Contacts:</li>\n
         <ul>\n
           <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Organisation\', user)">\n
-            <a href="Base_createContent?portal_type=Organisation" value="" i18n:translate="" i18n:domain="ui">Organisation</a>\n
+            <a href="ERP5Site_newContent?portal_type=Organisation" value="" i18n:translate="" i18n:domain="ui">Organisation</a>\n
           </li>\n
           <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Person\', user)">\n
-            <a href="Base_createContent?portal_type=Person" value="" i18n:translate="" i18n:domain="ui">Person</a>\n
+            <a href="ERP5Site_newContent?portal_type=Person" value="" i18n:translate="" i18n:domain="ui">Person</a>\n
           </li>\n
         </ul>\n
       </ul>\n
@@ -212,13 +212,26 @@
   </div>\n
 </div>\n
 \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSite_viewContributeRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

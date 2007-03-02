@@ -48,7 +48,6 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
 <div id="home_search">\n
   <tal:block metal:use-macro="here/WebSite_viewSearchRenderer/macros/main"/>\n
 </div>\n
@@ -61,14 +60,14 @@
   <div class="box left" tal:define="global TASK_LEN python: 20">\n
     <tal:block metal:use-macro="here/WebSite_viewDashboardRenderer/macros/act"/>\n
   </div>\n
-  \n
-  <div class="box left" tal:define="NEWS_LEN python: 20">\n
+    <div class="box left" tal:define="NEWS_LEN python: 20">\n
     <tal:block metal:use-macro="here/WebSite_viewDashboardRenderer/macros/learn"/>\n
   </div>\n
   \n
   <div class="box left">\n
     <tal:block metal:use-macro="here/WebSite_viewDashboardRenderer/macros/evaluate"/>\n
   </div>\n
+\n
 </div>
 
 ]]></string> </value>
