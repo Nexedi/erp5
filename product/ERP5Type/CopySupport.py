@@ -29,6 +29,8 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.CMFActivity.Errors import ActivityPendingError
 
+_marker = object()
+
 from zLOG import LOG
 
 class CopyContainer:
@@ -238,7 +240,7 @@ class CopyContainer:
 
     # Give the Owner local role to the current user, zope only does this if no
     # local role has been defined on the object, which breaks ERP5Security
-    if hasattr(self_base, '__ac_local_roles__'):
+    if getattr(self_base, '__ac_local_roles__', _marker) is not _marker:
       user=getSecurityManager().getUser()
       if user is not None:
         userid=user.getId()
@@ -265,7 +267,7 @@ class CopyContainer:
 
     # Clear the workflow history
     # XXX This need to be tested again
-    if hasattr(self_base, 'workflow_history'):
+    if getattr(self_base, 'workflow_history', _marker) is not _marker:
       self_base.workflow_history = PersistentMapping()
 
     # Pass - need to find a way to pass calls...
@@ -328,7 +330,7 @@ class CopyContainer:
       for subobjects in values, opaque_values:
           for ob in subobjects:
               s = getattr(ob, '_p_changed', 0)
-              if hasattr(aq_base(ob), name):
+              if getattr(aq_base(ob), name, _marker) is not _marker:
                 getattr(ob, name)(*args)
               if s is None: ob._p_deactivate()
 
@@ -343,8 +345,8 @@ class CopyContainer:
           # Make sure there is not activity for this object
           self.flushActivity(invoke=0)
           uid = getattr(self,'uid',None)
-          if uid is None and path is None:
-            path = catalog.getUrl(self)
+          if uid is None:
+            return
           # Set the path as deleted, sql wich generate no locks
           # Set also many columns in order to make sure lines
           # marked as deleted will not be selected
@@ -371,7 +373,7 @@ class CopyContainer:
       if idxs is None: idxs = []
       if idxs == []:
           # Update the modification date.
-          if hasattr(aq_base(self), 'notifyModified'):
+          if getattr(aq_base(self), 'notifyModified', _marker) is not _marker:
               self.notifyModified()
       catalog = getToolByName(self, 'portal_catalog', None)
       if catalog is not None:
