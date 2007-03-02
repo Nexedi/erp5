@@ -221,19 +221,18 @@ class ParallelListField(ZMIField):
     return html
 
   security.declareProtected('Access contents information', 'get_value')
-  def get_value(self, id, **kw):
+  def get_value(self, id, REQUEST=None, **kw):
     """
     Get value for id.
     Optionally pass keyword arguments that get passed to TALES
     expression.
     """
-    REQUEST = kw.get('REQUEST')
     key = '_v_plf_%s' % id
     if (REQUEST is not None) and \
        (REQUEST.has_key(key)):
       result = REQUEST.get(key)
     else:
-      result = ZMIField.get_value(self, id, **kw)
+      result = ZMIField.get_value(self, id, REQUEST=REQUEST, **kw)
     return result
 
 def generateSubForm(self, value, REQUEST):
@@ -253,7 +252,7 @@ def generateSubForm(self, value, REQUEST):
     'value': [],
     'is_right_display': 0,
     'size': 5,
-    'editable' : self.get_value('editable')
+    'editable' : self.get_value('editable', REQUEST=REQUEST)
   }
 
   hash_list = []
