@@ -100,6 +100,7 @@ class TestERP5BankingTravelerCheckSaleMixin:
                'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
     # check destination
     self.assertEqual(self.traveler_check_sale.getBaobabDestination(), None)
+    self.setDocumentSourceReference(self.traveler_check_sale)
 
   def afterSetUp(self):
     """

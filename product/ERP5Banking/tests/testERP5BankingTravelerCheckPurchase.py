@@ -182,6 +182,7 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     self.assertEqual(self.traveler_check_purchase.getBaobabSource(), None)
     # check destination
     self.assertEqual(self.traveler_check_purchase.getBaobabDestination(), None)
+    self.setDocumentSourceReference(self.traveler_check_purchase)
 
 
   def stepCreateTravelerCheckPurchaseLineList(self, sequence=None, sequence_list=None, **kwd):
