@@ -494,6 +494,7 @@ def setupERP5Site( business_template_list=(),
       (e.g. '("erp5_base", )').
     '''
     global IS_PORTAL_EXISTING
+    from Products.ERP5Type.Base import _aq_reset
     if portal_name in failed_portal_installation:
       raise RuntimeError, 'Installation of %s already failed, giving up'\
                             % portal_name
@@ -597,7 +598,6 @@ def setupERP5Site( business_template_list=(),
                      for m in portal_activities.getMessageList()],)
 
           # Reset aq dynamic, so all unit tests will start again
-          from Products.ERP5Type.Base import _aq_reset
           _aq_reset()
 
           if os.environ.get('erp5_save_data_fs'):
@@ -644,6 +644,7 @@ def setupERP5Site( business_template_list=(),
           importLocalDocument(id_)
         for id_ in getLocalConstraintList():
           importLocalConstraint(id_)
+        _aq_reset()
 
       if IS_PORTAL_EXISTING == 1:
         # Display which test is run when loading for the 1st time
