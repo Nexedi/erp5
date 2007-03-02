@@ -98,7 +98,7 @@ class ActivityBuffer(TM):
   # Keeps a list of messages to add and remove
   # at end of transaction
   def _begin(self, *ignored):
-    LOG('ActivityBuffer', 0, '_begin %r' % (self,))
+    # LOG('ActivityBuffer', 0, '_begin %r' % (self,))
     from ActivityTool import activity_list
     self.requires_prepare = 1
     try:
@@ -120,7 +120,7 @@ class ActivityBuffer(TM):
       raise
 
   def _finish(self, *ignored):
-    LOG('ActivityBuffer', 0, '_finish %r' % (self,))
+    # LOG('ActivityBuffer', 0, '_finish %r' % (self,))
     try:
       try:
         # Try to push / delete all messages
