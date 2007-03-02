@@ -43,6 +43,10 @@ from DateTime import DateTime
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
+      HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
+from Products.CMFActivity.Errors import ActivityFlushError
+
 
 try:
   from transaction import get as get_transaction
@@ -1331,6 +1335,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(1000,len(self.getCatalogTool()(portal_type='Organisation')))
     self.assertEqual(1002,len(self.getCatalogTool()(portal_type='Organisation',limit=None)))
 
+  def playActivityList(self, method_id_list):
+    get_transaction().commit()
+    portal_activities = self.getActivityTool()
+    for i in range(0,100):
+      message_list = portal_activities.getMessageList()
+      for message in message_list:
+        #if message.method_id=='setHotReindexingState':
+        #  import pdb;pdb.set_trace()
+        if message.method_id in method_id_list:
+          try:
+            portal_activities.manageInvoke(message.object_path,message.method_id)
+          except ActivityFlushError,m:
+            pass
+      get_transaction().commit()
+
   def test_48_ERP5Site_hotReindexAll(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -1340,6 +1359,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     portal = self.getPortal()
     portal_category = self.getCategoryTool()
+    portal_activities = self.getActivityTool()
     self.base_category = portal_category.newContent(portal_type='Base Category',
                                                title="GreatTitle1")
     module = portal.getDefaultModule('Organisation')
@@ -1381,28 +1401,69 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     path_list = [self.organisation.getRelativeUrl()]
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
     path_list = [self.organisation2.getRelativeUrl()]
-    self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.original_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
 
     # Make sure some zsql method use the right connection_id
     zslq_method = portal.portal_skins.erp5_core.Resource_zGetInventoryList
     self.assertEquals(getattr(zsql_method,'connection_id'),self.new_connection_id)
+
+    self.assertEquals(portal_catalog.getHotReindexingState(),
+                      HOT_REINDEXING_FINISHED_STATE)
 
     # Do a hot reindex in the reverse way, but this time a more
     # complicated hot reindex
     portal_catalog.manage_hotReindexAll(self.new_catalog_id,
                                  self.original_catalog_id)
     get_transaction().commit()
+    self.assertEquals(portal_catalog.getHotReindexingState(),
+                      HOT_REINDEXING_RECORDING_STATE)
     self.organisation3 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
+    # Try something more complicated, create new object, reindex it
+    # and then delete it
+    self.deleted_organisation = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2")
+    self.deleted_organisation.immediateReindexObject()
+    get_transaction().commit()
+    deleted_url = self.deleted_organisation.getRelativeUrl()
+    module.manage_delObjects(ids=[self.deleted_organisation.getId()])
+    get_transaction().commit()
+    # We will invoke acitivities one by one in order to make sure we can test
+    # the double indexing state of hot reindexing
+    self.playActivityList(('Folder_reindexAll',
+                         'InventoryModule_reindexMovementList',
+                         'immediateReindexObject',
+                         'Folder_reindexObjectList',
+                         'unindexObject',
+                         'recursiveImmediateReindexObject',
+                         'playBackRecordedObjectList',
+                         'getId',
+                         'setHotReindexingState'))
+    self.assertEquals(portal_catalog.getHotReindexingState(),
+                      HOT_REINDEXING_DOUBLE_INDEXING_STATE)
+    # Now we have started an double indexing
+    self.next_deleted_organisation = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2",id='toto')
+    next_deleted_url = self.next_deleted_organisation.getRelativeUrl()
+    get_transaction().commit()
+    self.playActivityList(( 'immediateReindexObject',
+                         'recursiveImmediateReindexObject',))
+    path_list=[next_deleted_url]
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
+    module.manage_delObjects(ids=[self.next_deleted_organisation.getId()])
     get_transaction().commit()
     self.tic()
     path_list = [self.organisation3.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
+    path_list = [deleted_url,next_deleted_url]
+    self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.new_connection_id)
+    self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.original_connection_id)
     
   def test_47_Unrestricted(self, quiet=quiet, run=run_all_test):
     """test unrestricted search/count results.
