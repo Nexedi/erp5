@@ -1522,7 +1522,7 @@ class Catalog( Folder,
     method = getattr(self, method_name)
     method(uid = uid)
 
-  def uncatalogObject(self, path=None,uid=None):
+  def uncatalogObject(self, path=None, uid=None):
     """
     Uncatalog and object from the Catalog.
 

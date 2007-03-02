@@ -714,7 +714,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if destination_catalog.id != catalog.id:
-          if self.hot_reindexing_state == 'recording':
+          if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList(url_list, 1)
           else:
             destination_catalog.catalogObjectList(wrapped_object_list,**kw)
@@ -725,16 +725,18 @@ class ZCatalog(Folder, Persistent, Implicit):
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
     catalog = self.getSQLCatalog(sql_catalog_id)
+    if uid is None:
+      raise TypeError, "sorry uncatalog_object supports only uid"
     if catalog is not None:
       catalog.uncatalogObject(uid=uid,path=path)
 
       if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if destination_catalog.id != catalog.id:
-          if self.hot_reindexing_state == 'recording':
+          if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList([uid], 0)
           else:
-            destination_catalog.uncatalogObject(uid)
+            destination_catalog.uncatalogObject(uid=uid)
 
   def beforeUncatalogObject(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
