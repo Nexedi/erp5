@@ -112,7 +112,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       after_view = time()
       req_time = (after_view - before_view)/100.
       if not quiet:
-          print "time to view object form %s < %s < %s\n" %(MIN_OBJECT_VIEW, req_time, MAX_OBJECT_VIEW)
+          print "time to view object form %.4f < %.4f < %.4f\n" %(MIN_OBJECT_VIEW, req_time, MAX_OBJECT_VIEW)
       self.failUnless(MIN_OBJECT_VIEW < req_time < MAX_OBJECT_VIEW)
 
     def test_01_viewBarModule(self, quiet=quiet, run=run_all_test):
@@ -163,9 +163,9 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
         min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
         max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
         if not quiet:
-            print "nb objects = %s\n\tadd = %s < %s < %s" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
-            print "\ttic = %s < %s < %s" %(MIN_TIC, tic_value, MAX_TIC)
-            print "\tview = %s < %s < %s" %(min_view, module_value, max_view)
+            print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
+            print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
+            print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
             print 
         self.failUnless(min_view < module_value < max_view)
         self.failUnless(MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION)
