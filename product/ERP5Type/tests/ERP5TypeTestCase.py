@@ -435,6 +435,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getAlarmTool(self):
       return getattr(self.getPortal(), 'portal_alarms', None)
 
+    def getActivityTool(self):
+      return getattr(self.getPortal(), 'portal_activities', None)
+
     def getOrganisationModule(self):
       return getattr(self.getPortal(), 'organisation_module',
           getattr(self.getPortal(), 'organisation', None))
