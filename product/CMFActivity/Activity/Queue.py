@@ -159,7 +159,6 @@ class Queue:
           error=sys.exc_info())
       # Do not try to call methods on objects which cause errors
       return EXCEPTION
-    LOG('Queue.validate, return',0,'VALID')
     return VALID
 
   def isAwake(self, activity_tool, processing_node):
