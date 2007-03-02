@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_career_subordination_title</string> </value>
+            <value> <string>my_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -259,7 +259,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>subordination</string> </value>
+                    <value> <string>reference</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -270,6 +270,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -342,6 +346,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
@@ -352,15 +364,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
+                          <string>Bar</string>
+                          <string>Bar</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
-                    <value> <string>setCareerSubordinationUid</string> </value>
+                    <value> <string>setReference</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -378,7 +390,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Organisation</string> </value>
+                    <value> <string>Bar</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
