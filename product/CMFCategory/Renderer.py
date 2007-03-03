@@ -41,6 +41,7 @@ class Renderer(Filter):
   def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
                      display_method = None, sort_method = None, filter_method = None,
+                     filter_node=0, filter_leave=0,
                      is_right_display = 0, translate_display = 0, 
                      translatation_domain = None, display_base_category = 0,
                      base_category = None, base = 1,
@@ -50,6 +51,12 @@ class Renderer(Filter):
                       (getProperty(display_id) -> getDisplayId)
 
     - *display_method*: a callable method which is used to calculate the value to display
+
+    - *filter_method*: a method to filter items in the list
+
+    - *filter_node*: do not keep node categories
+
+    - *filter_leave*: do not keep leave categories
 
     - *sort_id*: the id of the attribute to "call" to calculate the value used for sorting.
                 Sorting is only applied to default ItemList items.
@@ -103,7 +110,8 @@ class Renderer(Filter):
     """
     #LOG('Renderer', 0, 'spec = %s, filter = %s, portal_type = %s, display_id = %s, sort_id = %s, display_method = %s, sort_method = %s, is_right_display = %s, translate_display = %s, translatation_domain = %s, base_category = %s, base = %s, display_none_category = %s, current_category = %s' % (repr(spec), repr(filter), repr(portal_type), repr(display_id), repr(sort_id), repr(display_method), repr(sort_method), repr(is_right_display), repr(translate_display), repr(translatation_domain), repr(base_category), repr(base), repr(display_none_category), repr(current_category)))
     Filter.__init__(self, spec=spec, filter=filter,
-                    portal_type=portal_type, filter_method=filter_method)
+                    portal_type=portal_type, filter_method=filter_method,
+                    filter_node=filter_node, filter_leave=filter_leave)
     self.display_id = display_id
     self.sort_id = sort_id
     self.display_method = display_method
