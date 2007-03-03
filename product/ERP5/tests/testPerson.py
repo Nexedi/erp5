@@ -57,20 +57,24 @@ class TestPerson(ERP5TypeTestCase):
     return ('erp5_base',)
   
   def afterSetUp(self):
+    self.portal = self.getPortal()
     self.login()
-    
+  
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
+  
+  def _makeOne(self, *args, **kw):
+    from Products.ERP5Type.Document.Person import Person
+    return Person(*args, **kw).__of__(self.portal)
 
   def test_01_CopyPastePersonObject(self, quiet=0, run=run_all_test):
     """ Test copy/paste a Person object. """
     if not run:
       return
-    portal = self.getPortal()
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person')
     person.setReference('ivan')
@@ -92,6 +96,43 @@ class TestPerson(ERP5TypeTestCase):
     ## because we setup Person object from business template 
     ## its reference must NOT be resetted
     self.assertEquals(person_copy_obj.getReference(), person.getReference())
+
+  # title & first_name, last_name
+  def testEmptyTitle(self):
+    p = self._makeOne('person')
+    self.assertEquals('', p.getTitle())
+  
+  def testSetFirstName(self):
+    p = self._makeOne('person')
+    p.setFirstName('first')
+    self.assertEquals('first', p.getFirstName())
+
+  def testSetLastName(self):
+    p = self._makeOne('person')
+    p.setLastName('last')
+    self.assertEquals('last', p.getLastName())
+
+  def testTitleFromFirstLastName(self):
+    p = self._makeOne('person')
+    p.setFirstName('first')
+    p.setLastName('last')
+    self.assertEquals('first last', p.getTitle())
+
+  def testEditFirstNameLastName(self):
+    # using 'edit' method
+    p = self._makeOne('person')
+    p.edit( first_name='first',
+            last_name='last' )
+    self.assertEquals('first', p.getFirstName())
+    self.assertEquals('last', p.getLastName())
+    self.assertEquals('first last', p.getTitle())
+
+  def testEditTitleFirstNameLastName(self):
+    p = self._makeOne('person')
+    p.edit( first_name='first',
+            last_name='last',
+            title='title' )
+    # no infinite loop :) but there's no guarantee on the behaviour
 
 if __name__ == '__main__':
     framework()
