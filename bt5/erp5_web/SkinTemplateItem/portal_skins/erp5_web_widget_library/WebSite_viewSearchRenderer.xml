@@ -56,7 +56,7 @@ Description:\n
 \n
 <tal:block metal:define-macro="main">\n
   <tal:block metal:use-macro="here/global_definitions_au/macros/main"/>\n
-  <div class="tabber" id="mytabber1" tal:define="search_type_list here/WebSite_getSearchableTypeList">\n
+  <div class="tabber" id="mytabber1">\n
   \n
     <div class="tabbertab">\n
       <h2 value="" i18n:translate="" i18n:domain="ui">Search</h2>\n
@@ -64,11 +64,23 @@ Description:\n
         <div>\n
           <input type="text" size="40" name="new_advanced_search_text" id="SearchableText" class="autofocus"/>\n
           <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n
-          <select size="1" class="input" name="search_portal_type">\n
-            <option value="all" selected value="" i18n:translate="" i18n:domain="ui">Any Documents</option>\n
-            <option tal:repeat="portal_type search_type_list"\n
-                    tal:content="portal_type"\n
-                    tal:attributes="value portal_type"/>\n
+          <select size="1" class="input" name="new_advanced_search_portal_type">\n
+            <tal:block metal:define-macro="search_type_option_list">\n
+              <option value="" selected value="" i18n:translate="" i18n:domain="ui">Everything</option>\n
+              <option value="all" selected value="" i18n:translate="" i18n:domain="ui">All Documents</option>\n
+              <tal:block tal:repeat="portal_item here/ERP5Site_getSearchableDocumentTypeItemList">\n
+                <option tal:attributes="value python:portal_item[1]"\n
+                        tal:content="python:portal_item[0]">Standard Type</option>\n
+              </tal:block>\n
+              <option value="" i18n:translate="" i18n:domain="ui">-- Directory --</option>\n
+              <option value="Person" i18n:translate="" i18n:domain="ui">Person</option>\n
+              <option value="Organisation" i18n:translate="" i18n:domain="ui">Organisation</option>\n
+              <option value="" i18n:translate="" i18n:domain="ui">-- Quick Search --</option>\n
+              <tal:block tal:repeat="portal_item here/ERP5Site_getQuickSearchableTypeItemList">\n
+                <option tal:attributes="value python:portal_item[1]"\n
+                        tal:content="python:portal_item[0]">Standard Type</option>\n
+              </tal:block>\n
+            </tal:block>\n
           </select>\n
           <input type="submit" name="searches/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
         </div>\n
@@ -129,15 +141,15 @@ Description:\n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Query</h2>\n
       <div>\n
-        <textarea cols="40" rows="2" name="description"></textarea>\n
+        <textarea cols="80" rows="4" name="query_description"></textarea>\n
         <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n
         <select size="1" class="input" name="query_portal_type">\n
           <option value="all" selected value="" i18n:translate="" i18n:domain="ui">Any Documents</option>\n
-          <option tal:repeat="portal_type search_type_list"\n
-                  tal:content="portal_type"\n
-                  tal:attributes="value portal_type"/>\n
+          <option tal:repeat="portal_type_item here/ERP5Site_getSearchableDocumentTypeItemList"\n
+                  tal:content="python:portal_type_item[0]"\n
+                  tal:attributes="value python:portal_type_item[1]"/>\n
         </select>\n
-        <input type="submit" name="Base_postQuery:method" value="Send Query to Expert"/>\n
+        <input type="submit" name="WebSite_postQueryWithType:method" value="Send Query to Expert"/>\n
         <div class="clear"></div>\n
       </div>\n
     </div>\n
@@ -149,8 +161,20 @@ Description:\n
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSite_viewSearchRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -59,7 +59,7 @@
   <div class="tabbertab">\n
     <h2>Contribute</h2>\n
     <div class="fieldset">\n
-      <div tal:define="search_type_list here/WebSite_getSearchableTypeList">\n
+      <div tal:define="search_type_list here/ERP5Site_getSearchableDocumentTypeList">\n
         <label for="doctype" i18n:translate="" i18n:domain="ui">Type</label>\n
         <select size="1" name="doctype" id="doctype" onchange="toggleMakeTemplateButton(this);">\n
           <option value="" i18n:translate="" i18n:domain="ui">-- Select Document Type --</option>\n
