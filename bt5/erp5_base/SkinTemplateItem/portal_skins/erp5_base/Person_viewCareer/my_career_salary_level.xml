@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories.salary_level.getCategoryChildLogicalPathItemList(sort_id="int_index")</string> </value>
+            <value> <string>python: here.portal_categories.salary_level.getCategoryChildCompactLogicalPathItemList(sort_id="int_index")</string> </value>
         </item>
       </dictionary>
     </pickle>

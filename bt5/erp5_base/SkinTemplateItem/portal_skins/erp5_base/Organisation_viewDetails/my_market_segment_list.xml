@@ -276,7 +276,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:tuple(here.portal_categories.market_segment.getCategoryChildLogicalPathItemList())</string> </value>
+            <value> <string>python:tuple(here.portal_categories.market_segment.getCategoryChildCompactLogicalPathItemList())</string> </value>
         </item>
       </dictionary>
     </pickle>

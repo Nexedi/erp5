@@ -302,7 +302,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/agent_privilege/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>here/portal_categories/agent_privilege/getCategoryChildCompactLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

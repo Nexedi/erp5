@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/grade/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>here/portal_categories/grade/getCategoryChildCompactLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
