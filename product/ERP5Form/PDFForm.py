@@ -52,10 +52,10 @@ try:
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
-# FIXME: Programs linked against mandriva libgcj v 3.4.0 ave a strange
-# issue that make them impossible to popen within zope.
-# That's why we do not use the 'real' pdftk but a replacement program,
-# pdftk-emulation available from nexedi's RPM repositories.
+# Programs linked against mandriva libgcj v 3.4.0 ave a strange issue that make
+# them impossible to popen within zope.  That's why we do not use the 'real'
+# pdftk but a replacement program, pdftk-emulation available from nexedi's RPM
+# repositories.
 PDFTK_EXECUTABLE = "pdftk-emulation"
 
 # With python >= 2.4 and zope >= 2.7.8, pdftk-emulation is no longer needed
@@ -71,9 +71,8 @@ if python_version >= 204 and zope_version >= 20708:
   PDFTK_EXECUTABLE = "pdftk"
 
 
-class PDFTk :
-  """
-  A class to wrapp calls to pdftk executable, found at
+class PDFTk:
+  """A class to wrapp calls to pdftk executable, found at
     http://www.accesspdf.com/pdftk/
   """
   def catPages(self, pdfFile, cat_option) :
@@ -193,6 +192,7 @@ class PDFTk :
     fdf += "trailer\x0d<<\x0d/Root 1 0 R \x0d\x0d>>\x0d%%EOF\x0d\x0a"
     return fdf
 
+
 # Constructors
 manage_addPDFForm = DTMLFile("dtml/PDFForm_add", globals())
 def addPDFForm(self, id, title="", pdf_file=None,  REQUEST=None):
@@ -203,7 +203,7 @@ def addPDFForm(self, id, title="", pdf_file=None,  REQUEST=None):
   # upload content
   if pdf_file:
     self._getOb(id).manage_upload(pdf_file)
-    self._getOb(id).content_type="application/pdf"
+    self._getOb(id).content_type = "application/pdf"
 
   if REQUEST :
     u = REQUEST['URL1']
@@ -211,9 +211,9 @@ def addPDFForm(self, id, title="", pdf_file=None,  REQUEST=None):
       u = "%s/%s" % (u, quote(id))
     REQUEST.RESPONSE.redirect(u+'/manage_main')
 
+
 class CalculatedValues :
-  """
-  This class holds a reference to calculated values, for use in TALES,
+  """This class holds a reference to calculated values, for use in TALES,
   because in PDF Form filling, there is lots of references to others cell
   values (sums ...). This class will be in TALES context under the key 'cell'
 
@@ -237,20 +237,36 @@ class CalculatedValues :
       # doesn't complain that NoneType doesn't support + when a1 not found
     return self.__values[attr]
   __getattr__ = __getitem__
-
 allow_class(CalculatedValues)
+
+
+class CircularReferencyError(ValueError):
+  """A circular reference is found trying to evaluate cell TALES."""
+
 
 class EmptyERP5PdfFormError(Exception):
   """Error thrown when you try to display an empty Pdf. """
 allow_class(EmptyERP5PdfFormError)
 
+
 class PDFForm(File):
-  """
-    This class allows to fill PDF Form with TALES expressions,
+  """This class allows to fill PDF Form with TALES expressions,
     using a TALES expression for each cell.
+
+  TODO:
+    * cache compiled TALES
+    * set _v_errors when setting invalid TALES (setCellTALES can raise, but
+      not doEditCells)
   """
+
   meta_type = "ERP5 PDF Form"
   icon = "www/PDFForm.png"
+
+  # Those 2 are ugly names, but we keep compatibility
+  # the page range we want to print (a TALES expr)
+  __page_range__ = ''
+  # the method to format values (a TALES expr)
+  __format_method__ = ''
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -277,21 +293,16 @@ class PDFForm(File):
       filter(lambda option:option['label'] != "View", File.manage_options)
   )
 
+  # XXX This non thread-safeness is probably a problem under high load
   pdftk = PDFTk()
 
-  def __init__ (self, id, title, pdf_file) :
+  def __init__ (self, id, title='', pdf_file=''):
     # holds all the cell informations, even those not related to this form
-    self.all_cells        = PersistentMapping()
+    self.all_cells = PersistentMapping()
     # holds the cells related to this pdf form
-    self.cells            = PersistentMapping()
-    # the page range we want to print
-    self.__page_range__ = ""
-    # the method to format values
-    self.__format_method__ = ""
+    self.cells = PersistentMapping()
 
-    if not pdf_file :
-      raise ValueError ("The pdf form file should not be empty")
-    # File constructor will call manage_upload, so we don't need to call it
+    # File constructor will set the file content
     File.__init__(self, id, title, pdf_file)
 
   security.declareProtected(Permissions.ManagePortal, 'manage_upload')
@@ -389,7 +400,7 @@ class PDFForm(File):
       return
     raise ValueError, "Unable to download from any url from the "\
                       "`download_url` property."
-    
+
   security.declareProtected(Permissions.ManagePortal,
                            'deletePdfContent')
   def deletePdfContent(self) :
@@ -425,7 +436,7 @@ class PDFForm(File):
     return pdf
 
   security.declareProtected(Permissions.ManagePortal, 'doEditCells')
-  def doEditCells(self, REQUEST):
+  def doEditCells(self, REQUEST, RESPONSE=None):
     """ This is the action to the 'Edit Cell TALES' tab. """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError, "File is locked via WebDAV"
@@ -434,12 +445,9 @@ class PDFForm(File):
       self.setCellTALES(k, REQUEST.get(str(k), v))
     self.__format_method__ = REQUEST.get("__format_method__")
     self.__page_range__ = REQUEST.get("__page_range__")
-
-    message = "Saved changes."
-    if getattr(self, '_v_warnings', None):
-      message = ("<strong>Warning:</strong> <i>%s</i>"
-                % '<br>'.join(self._v_warnings))
-    return self.manage_cells(manage_tabs_message=message)
+    
+    if RESPONSE:
+      return self.manage_cells(manage_tabs_message="Saved changes.")
 
   security.declareProtected(Permissions.View, 'generatePDF')
   def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
@@ -450,8 +458,7 @@ class PDFForm(File):
     context = { 'here' : self.aq_parent,
                 'context' : self.aq_parent,
                 'request' : REQUEST }
-    if hasattr(self, "__format_method__") \
-            and self.__format_method__ not in ('', None) :
+    if self.__format_method__:
       compiled_tales = getEngine().compile(self.__format_method__)
       format_method = getEngine().getContext(context).evaluate(compiled_tales)
       # try to support both method name and method object
@@ -465,7 +472,7 @@ class PDFForm(File):
             'format method (%r) is not callable' % format_method)
     data = str(self.data)
     pdf = self.pdftk.fillFormWithDict(data, values)
-    if self.__page_range__ not in ('', None) :
+    if self.__page_range__:
       compiled_tales = getEngine().compile(self.__page_range__)
       page_range = getEngine().getContext(context).evaluate(compiled_tales)
       if page_range :
@@ -517,8 +524,8 @@ class PDFForm(File):
           uncalculated_values.remove(cell_name)
           values[cell_name] = value
       if len(uncalculated_values) == uncalculated_values_len :
-        raise ValueError, "Circular reference: unable to evaluate cells " \
-              + `uncalculated_values`
+        raise CircularReferencyError("Unable to evaluate cells: %r"
+                                       % (uncalculated_values, ))
 
   security.declareProtected(Permissions.View, 'getCellNames')
   def getCellNames(self, REQUEST=None) :
@@ -579,9 +586,6 @@ class PDFForm(File):
   security.declareProtected(Permissions.View, 'getFormatMethodTALES')
   def getFormatMethodTALES(self):
     """ returns the TALES expression for the format method attribute """
-    # backward compat
-    if not hasattr(self, "__format_method__") :
-      self.__format_method__ = ""
     return self.__format_method__
 
   security.declareProtected(Permissions.ManagePortal, 'setFormatMethodTALES')
