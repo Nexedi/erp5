@@ -94,6 +94,7 @@ elif doAction0 == \'add\':\n
                                    container=context,\n
                                    id=str(new_id))\n
   preserved_parameters[\'portal_status_message\'] = N_("Object Created.")\n
+  preserved_parameters[\'editable_mode\'] = 1\n
   redirect_url = \'%s/view\' % (new_content.absolute_url(), )\n
   # The created object is not a part of the selection, so prevent from displaying the selection navigation controls\n
   kw[\'selection_index\']=None\n
