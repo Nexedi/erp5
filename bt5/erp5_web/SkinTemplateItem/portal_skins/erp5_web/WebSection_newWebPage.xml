@@ -87,9 +87,6 @@ web_page = web_page_module.newContent(portal_type = \'Web Page\', \n
 category_list = context.getMembershipCriterionCategoryList()\n
 web_page.setCategoryList(category_list)\n
 \n
-# Create relation between section and page\n
-context.setDefaultAggregateValue(web_page)\n
-\n
 # Return the new page in the section context\n
 return web_page.Base_redirect(\'view\',\n
           keep_items = dict(editable_mode=1,\n
