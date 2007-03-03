@@ -68,31 +68,30 @@ class TestPerson(ERP5TypeTestCase):
 
   def test_01_CopyPastePersonObject(self, quiet=0, run=run_all_test):
     """ Test copy/paste a Person object. """
-    if not run: 
+    if not run:
       return
-    if not quiet:
-      portal = self.getPortal()
-      person_module = self.getPersonModule()
-      person = person_module.newContent(portal_type='Person')
-      person.setReference('ivan')
+    portal = self.getPortal()
+    person_module = self.getPersonModule()
+    person = person_module.newContent(portal_type='Person')
+    person.setReference('ivan')
 
-      ## copy object as if using ERP5/ZMI UI
-      person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
-      person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
-      person_copy_obj = person_module[person_copy_id]
-      ## because we copy/paste Person object in the same ERP5 
-      ## instance its reference must be resetted
-      self.assertEquals(person_copy_obj.getReference(), None)
-      
-      ## set object as if installed from bt5 (simulate it)
-      request = self.app.REQUEST
-      request.set('is_business_template_installation', 1)
-      person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
-      person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
-      person_copy_obj = person_module[person_copy_id]
-      ## because we setup Person object from business template 
-      ## its reference must NOT be resetted
-      self.assertEquals(person_copy_obj.getReference(), person.getReference())
+    ## copy object as if using ERP5/ZMI UI
+    person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
+    person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
+    person_copy_obj = person_module[person_copy_id]
+    ## because we copy/paste Person object in the same ERP5 
+    ## instance its reference must be resetted
+    self.assertEquals(person_copy_obj.getReference(), None)
+    
+    ## set object as if installed from bt5 (simulate it)
+    request = self.app.REQUEST
+    request.set('is_business_template_installation', 1)
+    person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
+    person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
+    person_copy_obj = person_module[person_copy_id]
+    ## because we setup Person object from business template 
+    ## its reference must NOT be resetted
+    self.assertEquals(person_copy_obj.getReference(), person.getReference())
 
 if __name__ == '__main__':
     framework()
