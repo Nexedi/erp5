@@ -522,6 +522,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
         return ZCatalog.searchResults(self, REQUEST, **kw)
 
+    # We use a string for permissions here due to circular reference in import
+    # from ERP5Type.Permissions
+    security.declareProtected('Search ZCatalog', 'getObject')
+    def getObject(self, query=None, **kw):
+        """
+        A method to factor common code used to search a single
+        object in the database.
+        """
+        result = self.searchResults(query=query, **kw)
+        try:
+          return result[0].getObject()
+        except IndexError:
+          return None
+    
     def countResults(self, query=None, **kw):
         """
             Calls ZCatalog.countResults with extra arguments that
