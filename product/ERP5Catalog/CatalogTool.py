@@ -524,8 +524,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     # We use a string for permissions here due to circular reference in import
     # from ERP5Type.Permissions
-    security.declareProtected('Search ZCatalog', 'getObject')
-    def getObject(self, query=None, **kw):
+    security.declareProtected('Search ZCatalog', 'getResultValue')
+    def getResultValue(self, query=None, **kw):
         """
         A method to factor common code used to search a single
         object in the database.
