@@ -46,7 +46,7 @@ product_path = package_home( globals() )
 # Define object classes and tools
 from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
-                 TrashTool, ContributionTool 
+                 TrashTool, ContributionTool, NotificationTool
 import ERP5Site
 object_classes = ( ERP5Site.ERP5Site,
                  )
@@ -62,6 +62,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  DeliveryTool.DeliveryTool,
                  TrashTool.TrashTool,
                  ContributionTool.ContributionTool,
+                 NotificationTool.NotificationTool,
                 )
 content_classes = ()
 content_constructors = ()
