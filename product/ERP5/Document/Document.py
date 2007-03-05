@@ -750,7 +750,7 @@ class Document(XMLObject):
       user_login = str(getSecurityManager().getUser())
     method = self._getTypeBasedMethod('getPropertyDictFromUserLogin',
         fallback_script_id='Document_getPropertyDictFromUserLogin')
-    return method()
+    return method(user_login)
 
   security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromContent')
   def getPropertyDictFromContent(self):
