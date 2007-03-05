@@ -1632,6 +1632,22 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryFlushActivityWithAfterTag('SQLQueue')
 
+  def test_76_ActivateKwForNewContent(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck reindex message uses activate_kw passed to newContent'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+
+    o1 = self.getOrganisationModule().newContent(
+                                  activate_kw=dict(tag='The Tag'))
+    get_transaction().commit()
+    messages_for_o1 = [m for m in self.getActivityTool().getMessageList()
+                       if m.object_path == o1.getPhysicalPath()]
+    self.assertNotEquals(0, len(messages_for_o1))
+    for m in messages_for_o1:
+      self.assertEquals(m.activity_kw.get('tag'), 'The Tag')
+
 
 if __name__ == '__main__':
     framework()
