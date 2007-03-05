@@ -37,11 +37,9 @@
     # fit the constraints.
 
 
-import pdb
-
 import string, types, sys
 
-# class monitoring access security control
+# Class monitoring access security control
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
@@ -85,8 +83,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     - return a dict of values to update objects in case no errors have been
       found. Otherwise save in the REQUEST the list of error blocks so that
       they can be displayed in a special way.
-    """
-
+    """ 
     # init params
     value = None
     form = field.aq_parent
@@ -95,7 +92,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # recover usefull properties
     block_moved_string = REQUEST.get('block_moved','')
     block_previous_string = REQUEST.get('previous_block_moved','')
-
 
     ##################################################
     ############## REBUILD STRUCTURE #################
@@ -158,7 +154,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       return None
     # block_moved_list is updated
 
-
     # dict aimed to hold all informations about block
     final_block_dict = {}
     # dict holding all the activities that will need an update because at least
@@ -169,7 +164,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     warning_activity_list = []
     error_block_list = []
     error_info_dict = {}
-
 
     ##################################################
     ########## GETTING BLOCK INFORMATIONS ############
@@ -279,7 +273,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         activity_dict[final_block['activity_origin'].name] = [final_block]
 
 
-
     ##################################################
     # getting object_dict to update object properties once activities are up to
     # date. Activities values will be updated directly on the 
@@ -333,7 +326,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
             activity_desc['axis_start'] = start_value
             activity_desc['axis_stop'] = stop_value
 
-
     ##################################################
     ############### UPDATING OBJECTS #################
     ##################################################
@@ -363,7 +355,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       if can_update_stop  and axis_stop  != None:
         update_dict[object_name][stop_property]  = axis_stop
 
-
     # testing if need to raise errors
     if len(errors_list) > 0:
       # need to raise an error
@@ -387,11 +378,9 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # for updating data
     return update_dict
 
-
-
   def getBlockPositionFromString(self, block_string):
     """
-    takes a string with block data and convert it to a list of dicts
+    Takes a string with block data and convert it to a list of dicts
     """
     block_list = []
     if block_string != '':
@@ -475,7 +464,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     return None
 
 
-
   def getDestinationBounds(self, structure, block_moved, block_object,
                                  planning_coordinates, axis_length,
                                  destination_group=None):
@@ -528,8 +516,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
 
     return [new_start,new_stop, error]
 
-
-
   def getActivityBounds(self, activity, activity_block_moved_list,
                               activity_block_list):
     """
@@ -545,7 +531,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # getting list moved block names
     block_moved_name_list = map(lambda x: x['block_moved']['name'],
                                 activity_block_moved_list)
-
 
     for activity_block in activity_block_list:
       if activity_block.name in block_moved_name_list:
@@ -582,7 +567,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     #  new_stop  = activity.secondary_axis_end
 
     return [new_start,new_stop]
-
 
   def getObjectDict(self, structure):
     """
@@ -638,16 +622,12 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
                        })
     return object_dict
 
-
 class PlanningBoxWidget(Widget.Widget):
   """
   PlanningBox main class used to run all the process in order to generate
   the structure of the Planning including all internal properties.
   Contains BasicStructure and PlanningStructure instances
   """
-
-
-
   property_names = Widget.Widget.property_names +\
   ['js_enabled',
    # kind of display : horizontal or vertical
@@ -803,13 +783,11 @@ class PlanningBoxWidget(Widget.Widget):
       default = 5,
       required=1)
 
-
   report_root_list = fields.ListTextAreaField('report_root_list',
       title="Report Root",
       description=("A list of domains which define the possible root."),
       default=[],
       required=0)
-
 
   selection_name = fields.StringField('selection_name',
       title='Selection Name',
@@ -817,13 +795,11 @@ class PlanningBoxWidget(Widget.Widget):
       default='planning_0',
       required=1)
 
-
   portal_types = fields.ListTextAreaField('portal_types',
       title="Portal Types",
       description=("Portal Types of objects to list. Required."),
       default=[],
       required=0)
-
 
   sort = fields.ListTextAreaField('sort',
       title='Default Sort',
@@ -831,22 +807,17 @@ class PlanningBoxWidget(Widget.Widget):
       default=[],
       required=0)
 
-
   list_method = fields.MethodField('list_method',
       title='List Method',
       description=("Method to use to list objects"),
       default='searchFolder',
       required=0)
 
-
   title_line = fields.StringField('title_line',
       title="specific method which fetches the title of each line",
       description=("specific method for inserting title in line"),
       default='',
       required=0)
-
-
-
 
   x_start_bloc = fields.StringField('x_start_bloc',
       title='specific property to get start of blocks (ex. start_date)',
@@ -867,7 +838,6 @@ class PlanningBoxWidget(Widget.Widget):
       description=('Method for building height of blocks objects'),
       default='quantity',
       required=0)
-
 
   constraint_method = fields.StringField('constraint_method',
       title='name of constraint method between blocks',
@@ -907,7 +877,6 @@ class PlanningBoxWidget(Widget.Widget):
       description=('script for building secondary axis'),
       default='Planning_generateAxis',
       required=1)
-
 
   info_center = fields.StringField('info_center',
       title='specific method of data called for inserting info in\
@@ -956,8 +925,6 @@ class PlanningBoxWidget(Widget.Widget):
       default=2,
       required=0)
 
-
-
   def render_css(self,field, key, value, REQUEST):
     """
     first method called for rendering by PageTemplate form_view
@@ -967,15 +934,12 @@ class PlanningBoxWidget(Widget.Widget):
     """
 
     here = REQUEST['here']
-
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
     self.render_structure(field=field, key=key, value=value,
                                     REQUEST=REQUEST, here=here)
-
-
 
     # getting CSS script generator
     planning_css_method = getattr(REQUEST['here'],'planning_css')
@@ -986,11 +950,9 @@ class PlanningBoxWidget(Widget.Widget):
 
     return CSS_data
 
-
-
   def render(self,field,key,value,REQUEST):
     """
-    method called to render the HTML code relative to the planning.
+    Method called to render the HTML code relative to the planning.
     for that recover the structure previouly saved in the REQUEST, and then
     call a special Page Template aimed to render
     """
@@ -1007,7 +969,6 @@ class PlanningBoxWidget(Widget.Widget):
     # return HTML data
     return HTML_data
 
-
   def render_structure(self, field, key, value, REQUEST, here):
     """ this method is the begining of the rendering procedure. it calls all
         methods needed to generate BasicStructure with ERP5 objects, and then
@@ -1018,8 +979,6 @@ class PlanningBoxWidget(Widget.Widget):
         """
     # XXX testing : uncoment to put selection to null => used for debugging
     #here.portal_selections.setSelectionFor(selection_name, None)
-
-
 
     ####### DATA DEFINITION #######
     self.build_error_list = None
@@ -1121,7 +1080,6 @@ class BasicStructure:
         objects with their values
     4 - create report_sections
     """
-
     default_params ={}
     current_section = None
     #params = self.selection.getParams()
@@ -1151,8 +1109,6 @@ class BasicStructure:
     self.selection.edit(report_opened=is_report_opened)
     portal_categories = getattr(self.form,'portal_categories',None)
     portal_domains = getattr(self.form,'portal_domains',None)
-
-
 
     ##################################################
     ############### BUILDING QUERY ###################
@@ -1206,7 +1162,6 @@ class BasicStructure:
     else:
       show_stat = 1
 
-
     ##################################################
     ############ BUILDING REPORT_TREE ################
     ##################################################
@@ -1247,8 +1202,11 @@ class BasicStructure:
                                     base_category=None, depth=0,
                                     unfolded_list=selection_report_current,
                                     selection_name=self.selection_name,
-     report_depth=report_depth,is_report_opened=is_report_opened,
-     sort_on=self.selection.sort_on,form_id=self.form.id)
+                                    report_depth=report_depth,
+				    list_method=self.list_method,
+                                    is_report_opened=is_report_opened,
+                                    sort_on=self.selection.sort_on,
+                                    form_id=self.form.id)
 
     ##################################################
     ########### BUILDING REPORT_GROUPS ###############
@@ -1275,7 +1233,7 @@ class BasicStructure:
     # now iterating through report_tree_list
     for object_tree_line in report_tree_list:
       # prepare query by defining selection report object
-      self.selection.edit(report = object_tree_line.getSelectDomainDict())
+      
 
       # defining info_dict, holding all information about the current object.
       info_dict = None
@@ -1376,7 +1334,6 @@ class BasicStructure:
               self.nbr_groups += 1
 
 
-
     # reset to original value
     self.selection.edit(report = None)
     #self.selection.edit(report_list=None) # comment to save report_list status
@@ -1441,7 +1398,6 @@ class BasicStructure:
       # Found error while setting secondary axis bounds
       return status
 
-
     ##################################################
     ####### SAVING NEW PROPERTIES INTO REQUEST #######
     ##################################################
@@ -1450,7 +1406,6 @@ class BasicStructure:
      self.here.portal_selections.setSelectionFor(self.selection_name,
                                                  self.selection,
                                                  REQUEST = self.REQUEST)
-
 
     ##################################################
     ######### BUILDING GROUP_OBJECT STRUCTURE ########
@@ -1468,8 +1423,6 @@ class BasicStructure:
     # everything is fine
     return 1
 
-
-
   def getSecondaryAxisOccurence(self):
     """
     get secondary_axis occurences in order to define begin and end bounds.
@@ -1479,7 +1432,7 @@ class BasicStructure:
     secondary_axis_occurence = []
 
     # defining the objects requested for calendar mode testing
-    if self.selection_report_path == 'parent':
+    if 'parent' in self.selection_report_path :
       calendar_mode = 0
     else:
       calendar_mode = 1 # assuming calendar_mode = 1 by default.
@@ -1563,8 +1516,6 @@ class BasicStructure:
     self.calendar_range = calendar_range
     self.secondary_axis_occurence =  secondary_axis_occurence
 
-
-
   def getSecondaryAxisInfo(self, axis_dict):
     """
     secondary_axis_ocurence holds couples of data (begin,end) related to
@@ -1631,10 +1582,9 @@ class BasicStructure:
     # everything is OK, returning 'true' flag
     return 1
 
-
   def getMainAxisInfo(self, axis_dict):
     """
-    getting main axis properties (total pages, current page, groups per page)
+    Getting main axis properties (total pages, current page, groups per page)
     and setting selection bounds (start & stop).
     beware this justs calculate the position of the first group present on the
     page (same for the last one), applying the selection is another thing in
@@ -1645,7 +1595,6 @@ class BasicStructure:
     if axis_dict['bound_axis_groups'] == None:
       #XXX raise exception : no group nb/page defined
       pass
-
 
     # setting begin & end bounds
     axis_dict['bound_begin'] = 0
@@ -1693,7 +1642,6 @@ class BasicStructure:
 
       self.params['list_lines'] = axis_dict['bound_axis_groups']
       self.params['list_start'] = axis_dict['bound_start']
-
 
   def buildGroupStructure(self):
       """
@@ -1822,7 +1770,7 @@ class BasicGroup:
     info_botright_method = \
                   getattr(self.object.getObject(),info_botright,None)
     # if method recovered is not null, then updating
-    if info_center_method!=None: 
+    if info_center_method!=None:
       info['info_center'] = str(info_center_method())
     if info_topright_method!=None:
       info['info_topright'] = str(info_topright_method())
@@ -1992,7 +1940,6 @@ class BasicGroup:
       else:
         block_end = None
 
-
       # testing if activity is visible according to the current zoom selection
       # over the secondary_axis
       if block_begin == None:
@@ -2055,8 +2002,6 @@ class BasicGroup:
           self.basic_activity_list = []
           self.basic_activity_list.append(activity)
 
-
-
 class BasicActivity:
   """ Represents an activity, a task, in the group it belongs to. Beware
       nothing about multitask rendering. """
@@ -2082,15 +2027,12 @@ class BasicActivity:
     self.property_dict = property_dict # dict containing specific properties
 
 
-
-
 class PlanningStructure:
   """ class aimed to generate the Planning final structure, including :
       - activities with their blocs (so contains Activity structure)
       - Axis informations (contains Axis Structure).
       The zoom properties on secondary axis are applied to this structure.
       """
-
 
   def __init__ (self):
     self.main_axis = ''
@@ -2171,7 +2113,6 @@ class PlanningStructure:
     """
     build secondary axis structure
     """
-
     # defining min and max delimiter number
     delimiter_min_number = basic_structure.field.get_value('delimiter')
     if basic_structure.calendar_mode:
@@ -2778,7 +2719,7 @@ class Position:
     self.absolute_begin = absolute_begin
     self.absolute_end = absolute_end
     self.absolute_range = absolute_range
-    # selative size in % of the current axis size
+    # relative size in % of the current axis size
     self.relative_begin = relative_begin
     self.relative_end = relative_end
     self.relative_range = relative_range
@@ -2786,7 +2727,7 @@ class Position:
 
 class Axis:
   """
-  Structure holding informations about a specified axis.Can be X or Y axis.
+  Structure holding informations about a specified axis. Can be X or Y axis.
   Is aimed to handle axis with any kind of unit : continuous or listed (
   including possibly a listed ReportTree).
   Two of them are needed in a PlanningStructure to have X and Y axis.
@@ -2901,7 +2842,7 @@ class AxisGroup:
 
   def addActivity(self, activity=None, axis_element_already_insered= 0):
     """
-    procedure that permits to add activity to the corresponding AxisElement in
+    Procedure that permits to add activity to the corresponding AxisElement in
     an AxisGroup. can create new Axis Element in the actual Axisgroup if
     necessary. Permits representation of MULTITASKING
     """

@@ -615,7 +615,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
     # PlanningBox related methods
 
     security.declareProtected(ERP5Permissions.View, 'setZoomLevel')
-    def setZoomLevel(self, uids=None, REQUEST=None):
+    def setZoomLevel(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set graphic zoom level in PlanningBox
       """
@@ -634,10 +634,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
           params['zoom_start'] = zoom_start
         selection.edit(params= params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST)
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                           query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'setZoom')
-    def setZoom(self, uids=None, REQUEST=None):
+    def setZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set graphic zoom in PlanningBox
       """
@@ -651,10 +652,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
         params['zoom_start'] = zoom_start
         selection.edit(params= params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST)
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                           query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'nextZoom')
-    def nextZoom(self, uids=None, REQUEST=None):
+    def nextZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set next graphic zoom start in PlanningBox
       """
@@ -668,10 +670,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
         params['zoom_start'] = int(zoom_start) + 1
         selection.edit(params= params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST)
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                           query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'previousZoom')
-    def previousZoom(self, uids=None, REQUEST=None):
+    def previousZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set previous graphic zoom in PlanningBox
       """
@@ -685,7 +688,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         params['zoom_start'] = int(zoom_start) - 1
         selection.edit(params= params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST)
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+			                   query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
     def setDomainRoot(self, REQUEST, form_id=None, query_string=None):
@@ -1278,7 +1282,10 @@ class TreeListLine:
     return self.exception_uid_list
 
 
-def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1, sort_on = (('id', 'ASC'),)):
+def makeTreeList(here, form, root_dict, report_path, base_category, 
+		  depth, unfolded_list, form_id, selection_name, 
+		  report_depth, is_report_opened=1, list_method=None,
+		  sort_on = (('id', 'ASC'),)):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
@@ -1326,30 +1333,44 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
 
   tree_list = []
   if root is None: return tree_list
-
+  
   if base_category == 'parent':
-    if hasattr(aq_base(root), 'objectValues'):
-      # If this is a folder, try to browse the hierarchy
-      for zo in root.searchFolder(sort_on=sort_on):
-        o = zo.getObject()
-        if o is not None:
-          new_root_dict = root_dict.copy()
-          new_root_dict[None] = new_root_dict[base_category] = o
+    # Use searchFolder as default
+    if list_method is None:
+      if hasattr(aq_base(root), 'objectValues'):
+        # If this is a folder, try to browse the hierarchy
+        object_list = root.searchFolder(sort_on=sort_on)
+    elif hasattr(aq_base(root), list_method.__name__ ):
+      object_list = list_method()
+    else:      
+      object_list = []
+    for zo in object_list:
+      o = zo.getObject()
+      if o is not None:
+        new_root_dict = root_dict.copy()
+        new_root_dict[None] = new_root_dict[base_category] = o
 
-          selection_domain = DomainSelection(domain_dict = new_root_dict)
-          if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
-            exception_uid_list = [] # Object we do not want to display
+        selection_domain = DomainSelection(domain_dict = new_root_dict)
+        if (report_depth is not None and depth <= (report_depth - 1)) or \
+                                          o.getRelativeUrl() in unfolded_list:
+          exception_uid_list = [] # Object we do not want to display
 
-            for sub_zo in o.searchFolder(sort_on=sort_on):
-              sub_o = sub_zo.getObject()
-              if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
-                exception_uid_list.append(sub_o.getUid())
-            tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, exception_uid_list)] # Summary (open)
-            if is_report_opened :
-              tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)] # List (contents, closed, must be strict selection)
-            tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened, sort_on=sort_on)
-          else:
-            tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
+          for sub_zo in o.searchFolder(sort_on=sort_on):
+            sub_o = sub_zo.getObject()
+            if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
+              exception_uid_list.append(sub_o.getUid())
+          # Summary (open)
+          tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, exception_uid_list)] 
+          if is_report_opened :
+            # List (contents, closed, must be strict selection)
+            tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)] 
+          
+          tree_list += makeTreeList(here, form, new_root_dict, report_path, 
+      		    base_category, depth + 1, unfolded_list, form_id, 
+      		    selection_name, report_depth, 
+      		    is_report_opened=is_report_opened, sort_on=sort_on)
+        else:
+          tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:
     # process to recover objects in case a generation script is used
     if hasattr(root,'getChildDomainValueList'):
