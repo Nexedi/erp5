@@ -233,12 +233,19 @@ class TestAmount(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+
 class TestMovement(ERP5TypeTestCase):
   """Tests for Movement class
   """
   def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()
+
+  def getPortalName(self):
+    forced_portal_id = os.environ.get('erp5_tests_portal_id')
+    if forced_portal_id:
+      return str(forced_portal_id)
+    return 'movement_test'
 
   def _makeOne(self, *args, **kw):
     from Products.ERP5.Document.Movement import Movement
@@ -329,6 +336,7 @@ class TestMovement(ERP5TypeTestCase):
   
   # TODO: test asset price
 
+
 class TestAccountingTransactionLine(TestMovement):
   """Tests for Accounting Transaction Line class, which have an overloaded
   'edit' method.
@@ -382,6 +390,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
   
   # TODO: more asset price tests
+
 
 if __name__ == '__main__':
   framework()
