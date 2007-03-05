@@ -246,6 +246,9 @@ def disableReadOnlyTransactionCache(context):
 
 def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
   """Clear specified cache factory list."""
+  LOG("Cache.clearCache", \
+      WARNING, \
+      "Global function clearCache() is deprecated. Use portal_caches.clearCache() instead.")
   cache_storage = CachingMethod.factories
   for cf_key in cache_factory_list:
     if cache_storage.has_key(cf_key):
