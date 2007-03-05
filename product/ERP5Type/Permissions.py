@@ -58,6 +58,7 @@ ViewManagementScreens = permissions.ViewManagementScreens
 ManageProperties = permissions.ManageProperties
 FTPAccess = permissions.FTPAccess
 ImportExportObjects = ac_permissions.import_export_objects
+UseMailhostServices = ac_permissions.use_mailhost_services
 
 # Default CMF Core Permissions
 ListFolderContents = permissions.ListFolderContents
