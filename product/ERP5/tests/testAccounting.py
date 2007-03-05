@@ -26,22 +26,15 @@
 #
 ##############################################################################
 
-"""
-  Tests some functionnalities of accounting.
+"""Tests some accounting functionality.
 
 """
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
 
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
+import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from Products.ERP5.Document.Delivery import Delivery
 from DateTime import DateTime
@@ -50,6 +43,167 @@ SOURCE = 'source'
 DESTINATION = 'destination'
 RUN_ALL_TESTS = 1
 QUIET = 1
+
+# Associate transaction portal type to the corresponding line portal type.
+transaction_to_line_mapping = {
+    'Accounting Transaction': 'Accounting Transaction Line',
+    'Balance Transaction': 'Balance Transaction Line',
+    'Purchase Invoice Transaction': 'Purchase Invoice Transaction Line',
+    'Sale Invoice Transaction': 'Sale Invoice Transaction Line',
+    'Payment Transaction': 'Accounting Transaction Line',
+    'Closing Transaction': 'Closing Transaction Line',
+  }
+
+
+class AccountingTestCase(ERP5TypeTestCase):
+  """A test case for all accounting tests.
+
+  Like in erp5_accounting_ui_test, the testing environment is made of:
+
+  Currencies:
+    * EUR with precision 2
+    * USD with precision 2
+    * JPY with precision 0
+
+  Regions:
+    * region/europe/west/france
+    
+  Group:
+    * group/demo_group
+    * group/demo_group/sub1
+    * group/demo_group/sub2
+    * group/client
+    * group/vendor'
+    
+  Payment Mode:
+    * payment_mode/cash
+    * payment_mode/check
+  
+  Organisations:
+    * `self.section` an organisation in region europe/west/france
+    using EUR as default currency, without any openned accounting period by
+    default. This organisation is member of group/demo_group/sub1
+    * self.client_1, self.client_2 & self.vendor, some other organisations
+  
+  Accounts:
+      All accounts are associated to a virtual GAP category named "My Accounting
+    Standards":
+    * bank
+    * collected_vat
+    * equity
+    * fixed_assets
+    * goods_purchase
+    * goods_sales
+    * payable
+    * receivable
+    * refundable_vat
+    * stocks
+  
+  Tests starts with a preference activated for self.my_organisation, logged in
+  as a user with Assignee, Assignor and Author role.
+
+  All documents created appart from this configuration will be deleted in
+  teardown. So users of this test case are encouraged to create new documents
+  rather than modifying default documents. 
+  """
+  
+  username = 'username'
+
+  @reindex
+  def _makeOne(self, portal_type='Accounting Transaction', lines=None, **kw):
+    """Creates an accounting transaction, and edit it with kw.
+    
+    The default settings is for self.section.
+    You can pass a list of mapping as lines, then lines will be created
+    using this information.
+    """
+    created_by_builder = kw.pop('created_by_builder', lines is not None)
+    kw.setdefault('start_date', DateTime())
+    kw.setdefault('resource', 'currency_module/euro')
+    if portal_type in ('Purchase Invoice Transaction', ):
+      if 'destination_section' not in kw:
+        kw.setdefault('destination_section_value', self.section)
+    else:
+      if 'source_section' not in kw:
+        kw.setdefault('source_section_value', self.section)
+    tr = self.accounting_module.newContent(portal_type=portal_type,
+                         created_by_builder=created_by_builder, **kw)
+    if lines:
+      for line in lines:
+        line.setdefault('portal_type', transaction_to_line_mapping[portal_type])
+        tr.newContent(**line)
+    return tr
+
+
+  def login(self):
+    """login with Assignee, Assignor & Author roles."""
+    uf = self.getPortal().acl_users
+    uf._doAddUser(self.username, '', ['Assignee', 'Assignor', 'Author'], [])
+    user = uf.getUserById(self.username).__of__(uf)
+    newSecurityManager(None, user)
+
+
+  def setUp(self):
+    """Setup the fixture.
+    """
+    ERP5TypeTestCase.setUp(self)
+    self.portal = self.getPortal()
+    self.account_module = self.portal.account_module
+    self.accounting_module = self.portal.accounting_module
+    self.organisation_module = self.portal.organisation_module
+    self.person_module = self.portal.person_module
+    self.currency_module = self.portal.currency_module
+    self.section = self.organisation_module.my_organisation
+    
+    # make sure documents are validated
+    for module in (self.account_module, self.organisation_module,
+                   self.person_module):
+      for doc in module.objectValues():
+        doc.validate()
+    
+    # and the preference enabled
+    self.portal.portal_preferences.accounting_zuite_preference\
+                      .manage_addLocalRoles(self.username, ('Auditor', ))
+    self.portal.portal_preferences.accounting_zuite_preference.enable()
+    
+    # and all this available to catalog
+    get_transaction().commit()
+    self.tic()
+
+
+  def tearDown(self):
+    """Remove all documents, except the default ones.
+    """
+    get_transaction().abort()
+    allowAccountingTransactionDeletion()
+    self.accounting_module.manage_delObjects(
+                      list(self.accounting_module.objectIds()))
+    self.organisation_module.manage_delObjects([x for x in 
+          self.accounting_module.objectIds() if x not in ('my_organisation',
+            'client_1', 'client_2', 'client_3')])
+    self.organisation_module.my_organisation.manage_delObjects([x.getId()
+        for x in self.organisation_module.my_organisation.objectValues(
+                                   portal_type='Accounting Period')])
+    self.person_module.manage_delObjects([x for x in 
+          self.person_module.objectIds() if x not in ('john_smith',)])
+    self.account_module.manage_delObjects([x for x in 
+          self.account_module.objectIds() if x not in ('bank', 'collected_vat',
+            'equity', 'fixed_assets', 'goods_purchase', 'goods_sales',
+            'payable', 'receivable', 'refundable_vat', 'stocks',)])
+    self.portal.portal_preferences.manage_delObjects([x for x in
+          self.portal.portal_preferences.objectIds() if x not in
+          ('accounting_zuite_preference', 'default_site_preference')])
+    self.portal.portal_simulation.manage_delObjects(list(
+          self.portal.portal_simulation.objectIds()))
+    get_transaction().commit()
+    self.tic()
+    ERP5TypeTestCase.tearDown(self)
+
+
+  def getBusinessTemplateList(self):
+    """Returns list of BT to be installed."""
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+            'erp5_accounting_ui_test')
 
 
 def manage_beforeDelete(self, item, container):
@@ -69,9 +223,10 @@ def allowAccountingTransactionDeletion():
     # registry has been initialized.
     pass
 
+
 class TestAccounting(ERP5TypeTestCase):
-  """Test Accounting. """
-  
+  """The first test for Accounting
+  """
   def getAccountingModule(self):
     return getattr(self.getPortal(), 'accounting_module',
            getattr(self.getPortal(), 'accounting', None))
@@ -1408,7 +1563,7 @@ class TestAccounting(ERP5TypeTestCase):
     # this transaction can be validated
     eq([], payment.checkConsistency())
     self.workflow_tool.doActionFor(payment, 'stop_action')
-    self.assertEquals('stopped', payment.getSimulationState())
+    eq('stopped', payment.getSimulationState())
 
   def test_Invoice_createRelatedPaymentTransactionSimple(self):
     """Simple case of creating a related payment transaction.
@@ -1536,12 +1691,8 @@ class TestAccounting(ERP5TypeTestCase):
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
     
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestAccounting))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestAccounting))
+  return suite
 
